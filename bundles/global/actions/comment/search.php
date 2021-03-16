@@ -7,7 +7,7 @@ if (isset($_POST["general_product_id"])) {
 
 $data = paginateData([
     "select" => "c.comment_id, c.comment, c.rating, u.nickname, c.created_at,
-        JSON_ARRAYAGG(JSON_OBJECT('option_id', product_feature_option_id, 'value', value)) options_json",
+        JSON_ARRAYAGG(JSON_OBJECT('option_id', pfo.product_feature_option_id, 'value', pfo.value)) options_json",
     "from" => "
         comment c
         LEFT JOIN user u USING(user_id)
@@ -24,5 +24,12 @@ foreach ($data["rows"] as $key => $row) {
     $data["rows"][$key]["created_at"] = dateDifference($row["created_at"]);
 }
 
+$data["options"] = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1)
+    FROM comment c
+    INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
+    INNER JOIN product_feature_option pfo USING (product_feature_option_id)
+    WHERE $where
+    GROUP BY pfo.product_feature_option_id
+    ORDER BY COUNT(1) DESC");
 
 Request::jsonResponse($data);

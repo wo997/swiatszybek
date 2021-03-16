@@ -11,20 +11,14 @@
 			n.o(e, t) || Object.defineProperty(e, t, { enumerable: !0, get: i });
 		}),
 		(n.r = function (e) {
-			"undefined" != typeof Symbol &&
-				Symbol.toStringTag &&
-				Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }),
+			"undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }),
 				Object.defineProperty(e, "__esModule", { value: !0 });
 		}),
 		(n.t = function (e, t) {
 			if ((1 & t && (e = n(e)), 8 & t)) return e;
 			if (4 & t && "object" == typeof e && e && e.__esModule) return e;
 			var i = Object.create(null);
-			if (
-				(n.r(i),
-				Object.defineProperty(i, "default", { enumerable: !0, value: e }),
-				2 & t && "string" != typeof e)
-			)
+			if ((n.r(i), Object.defineProperty(i, "default", { enumerable: !0, value: e }), 2 & t && "string" != typeof e))
 				for (var o in e)
 					n.d(
 						i,
@@ -54,8 +48,7 @@
 })([
 	function (e, t, n) {
 		"use strict";
-		Object.defineProperty(t, "__esModule", { value: !0 }),
-			(t.portalCreator = t.Fragment = t.default = void 0);
+		Object.defineProperty(t, "__esModule", { value: !0 }), (t.portalCreator = t.Fragment = t.default = void 0);
 		var i = n(170);
 		function o(e) {
 			return (o =
@@ -64,21 +57,11 @@
 							return typeof e;
 					  }
 					: function (e) {
-							return e &&
-								"function" == typeof Symbol &&
-								e.constructor === Symbol &&
-								e !== Symbol.prototype
-								? "symbol"
-								: typeof e;
+							return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 					  })(e);
 		}
 		var r = function (e, t) {
-			for (
-				var n = arguments.length, r = new Array(n > 2 ? n - 2 : 0), a = 2;
-				a < n;
-				a++
-			)
-				r[a - 2] = arguments[a];
+			for (var n = arguments.length, r = new Array(n > 2 ? n - 2 : 0), a = 2; a < n; a++) r[a - 2] = arguments[a];
 			return "function" == typeof e
 				? (function (e, t, n) {
 						var o = Object.assign({}, e.defaultProps || {}, t, { children: n }),
@@ -88,19 +71,14 @@
 							case "FRAGMENT":
 								return (0, i.createFragmentFrom)(n);
 							case "PORTAL":
-								return (
-									r.target.appendChild((0, i.createFragmentFrom)(n)),
-									document.createComment("Portal Used")
-								);
+								return r.target.appendChild((0, i.createFragmentFrom)(n)), document.addComment("Portal Used");
 							default:
 								return a;
 						}
 				  })(e, t, r)
 				: "string" == typeof e
 				? (function (e, t, n) {
-						var o = (0, i.isSVG)(e)
-								? document.createElementNS("http://www.w3.org/2000/svg", e)
-								: document.createElement(e),
+						var o = (0, i.isSVG)(e) ? document.createElementNS("http://www.w3.org/2000/svg", e) : document.createElement(e),
 							r = (0, i.createFragmentFrom)(n);
 						return (
 							o.appendChild(r),
@@ -112,11 +90,7 @@
 									: "className" === e
 									? o.setAttribute("class", t[e])
 									: "xlinkHref" === e
-									? o.setAttributeNS(
-											"http://www.w3.org/1999/xlink",
-											"xlink:href",
-											t[e]
-									  )
+									? o.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", t[e])
 									: "dangerouslySetInnerHTML" === e
 									? (o.innerHTML = t[e].__html)
 									: o.setAttribute(e, t[e]);
@@ -124,11 +98,7 @@
 							o
 						);
 				  })(e, t, r)
-				: console.error(
-						"jsx-render does not handle ".concat(
-							"undefined" == typeof tag ? "undefined" : o(tag)
-						)
-				  );
+				: console.error("jsx-render does not handle ".concat("undefined" == typeof tag ? "undefined" : o(tag)));
 		};
 		t.default = r;
 		t.Fragment = function () {
@@ -138,11 +108,7 @@
 			function t() {
 				return "PORTAL";
 			}
-			return (
-				(t.target = document.body),
-				e && e.nodeType === Node.ELEMENT_NODE && (t.target = e),
-				t
-			);
+			return (t.target = document.body), e && e.nodeType === Node.ELEMENT_NODE && (t.target = e), t;
 		};
 	},
 	function (e, t, n) {
@@ -155,8 +121,7 @@
 				pl: {
 					map: "Mapa",
 					list: "Lista",
-					search_by_city_or_address:
-						"Szukaj po mieście, adresie i nazwie paczkomatu",
+					search_by_city_or_address: "Szukaj po mieście, adresie i nazwie paczkomatu",
 					search_by_city_or_address_only: "Szukaj po mieście i adresie",
 					search: "Szukaj",
 					select_point: "Wybierz punkt...",
@@ -185,20 +150,14 @@
 					avizo_name: "Punkt Awizo",
 					pok_description: "Punkt Obsługi Przesyłek",
 					avizo_description: "Punkt odbioru przesyłki listowej lub kurierskiej",
-					parcel_locker_description:
-						"Maszyna do nadawania i odbioru przesyłek 24/7",
-					avizo_locker_description:
-						"Maszyna do odbioru przesyłek awizowanych 24/7",
+					parcel_locker_description: "Maszyna do nadawania i odbioru przesyłek 24/7",
+					avizo_locker_description: "Maszyna do odbioru przesyłek awizowanych 24/7",
 					air_on_airport: "Maszyna na lotnisku",
 					air_outside_airport: "Maszyna poza lotniskiem",
-					air_on_airport_description:
-						"Maszyna znajdująca się na terenie lotniska",
-					air_outside_airport_description:
-						"Maszyna znajdująca się poza terenem lotniska",
-					nfk_description:
-						"Siedziba główna (magazyn) InPost w danym mieście lub regionie",
-					pop_description:
-						"Placówka, w której można nadać lub odebrać przesyłkę paczkomatową",
+					air_on_airport_description: "Maszyna znajdująca się na terenie lotniska",
+					air_outside_airport_description: "Maszyna znajdująca się poza terenem lotniska",
+					nfk_description: "Siedziba główna (magazyn) InPost w danym mieście lub regionie",
+					pop_description: "Placówka, w której można nadać lub odebrać przesyłkę paczkomatową",
 					office_description: "Centrala i oddziały firmy",
 					allegro_courier_description: "Punkt Obsługi Przesyłek",
 					of: "z",
@@ -207,8 +166,7 @@
 					zoom_in_to_see_points: "Przybliż, aby wyświetlić punkty",
 					phone_short: "tel. ",
 					pay_by_link: "Formy płatności",
-					is_next:
-						'Brak możliwości nadania bez etykiety "Wygodnie wprost z Paczkomatu"',
+					is_next: 'Brak możliwości nadania bez etykiety "Wygodnie wprost z Paczkomatu"',
 					show_filters: "Chcę zrealizować usługę...",
 					MON: "Poniedziałek",
 					TUE: "Wtorek",
@@ -225,8 +183,7 @@
 				"pl-PL": {
 					map: "Mapa",
 					list: "Lista",
-					search_by_city_or_address:
-						"Szukaj po mieście, adresie i nazwie paczkomatu",
+					search_by_city_or_address: "Szukaj po mieście, adresie i nazwie paczkomatu",
 					search_by_city_or_address_only: "Szukaj po mieście i adresie",
 					search: "Szukaj",
 					select_point: "Wybierz punkt...",
@@ -252,20 +209,14 @@
 					parcel_locker_name: "Paczkomat",
 					avizo_name: "Punkt Awizo",
 					avizo_description: "Punkt odbioru przesyłki listowej lub kurierskiej",
-					parcel_locker_description:
-						"Maszyna do nadawania i odbioru przesyłek 24/7",
-					avizo_locker_description:
-						"Maszyna do odbioru przesyłek awizowanych 24/7",
+					parcel_locker_description: "Maszyna do nadawania i odbioru przesyłek 24/7",
+					avizo_locker_description: "Maszyna do odbioru przesyłek awizowanych 24/7",
 					air_on_airport: "Maszyna na lotnisku",
 					air_outside_airport: "Maszyna poza lotniskiem",
-					air_on_airport_description:
-						"Maszyna znajdująca się na terenie lotniska",
-					air_outside_airport_description:
-						"Maszyna znajdująca się poza terenem lotniska",
-					nfk_description:
-						"Siedziba główna (magazyn) InPost w danym mieście lub regionie",
-					pop_description:
-						"Placówka, w której można nadać lub odebrać przesyłkę paczkomatową",
+					air_on_airport_description: "Maszyna znajdująca się na terenie lotniska",
+					air_outside_airport_description: "Maszyna znajdująca się poza terenem lotniska",
+					nfk_description: "Siedziba główna (magazyn) InPost w danym mieście lub regionie",
+					pop_description: "Placówka, w której można nadać lub odebrać przesyłkę paczkomatową",
 					office_description: "Centrala i oddziały firmy",
 					allegro_courier_description: "Punkt Obsługi Przesyłek",
 					of: "z",
@@ -274,8 +225,7 @@
 					zoom_in_to_see_points: "Przybliż, aby wyświetlić punkty",
 					phone_short: "tel. ",
 					pay_by_link: "Formy płatności",
-					is_next:
-						'Brak możliwości nadania bez etykiety "Wygodnie wprost z Paczkomatu"',
+					is_next: 'Brak możliwości nadania bez etykiety "Wygodnie wprost z Paczkomatu"',
 					show_filters: "Chcę zrealizować usługę...",
 					MON: "Poniedziałek",
 					TUE: "Wtorek",
@@ -316,14 +266,10 @@
 					pok_name: "Customer Service Point",
 					parcel_locker_superpop_short: "Customer Service Point",
 					pok_name_short: "POP",
-					pop_description:
-						"<strong>InPost PUDO</strong> location, where you can collect or send your parcel",
-					avizo_description:
-						"Point where you can collect your Parcel or Letter for which we left attempted delivery notice",
-					parcel_locker_description:
-						"Parcel Locker where you can collect or send your parcels 24/7",
-					avizo_locker_description:
-						"Parcel Locker where you can collect your parcels 24/7",
+					pop_description: "<strong>InPost PUDO</strong> location, where you can collect or send your parcel",
+					avizo_description: "Point where you can collect your Parcel or Letter for which we left attempted delivery notice",
+					parcel_locker_description: "Parcel Locker where you can collect or send your parcels 24/7",
+					avizo_locker_description: "Parcel Locker where you can collect your parcels 24/7",
 					air_on_airport: "Airport Locker",
 					air_outside_airport: "Outside Airport Locker",
 					air_on_airport_description: "Machine within airport area",
@@ -338,8 +284,7 @@
 					zoom_in_to_see_points: "Zoom in to view points",
 					phone_short: "tel ",
 					pay_by_link: "Payment options",
-					is_next:
-						"Only parcel collection and pre-labeled parcel lodgement available at this location",
+					is_next: "Only parcel collection and pre-labeled parcel lodgement available at this location",
 					MON: "Monday",
 					TUE: "Tuesday",
 					WED: "Wednesday",
@@ -353,8 +298,7 @@
 				fr: {
 					map: "Carte",
 					list: "Liste",
-					search_by_city_or_address:
-						"Saisissez votre ville, adresse ou casier à colis",
+					search_by_city_or_address: "Saisissez votre ville, adresse ou casier à colis",
 					search_by_city_or_address_only: "Saisissez votre ville ou adresse",
 					search: "Rechercher",
 					parcel_locker: "Consigne Abricolis",
@@ -374,15 +318,13 @@
 					pop_name: "Point de service à la clientèle",
 					parcel_locker_superpop: "Point de service à la clientèle",
 					avizo_name: "Point Avizo",
-					avizo_description:
-						"Point de réception de lettres et de colis après l'avisage",
+					avizo_description: "Point de réception de lettres et de colis après l'avisage",
 					parcel_locker_description: "Abricolis InPost 24h/24 et 7j/7",
 					avizo_locker_description: "Abricolis InPost 24h/24 et 7j/7",
 					air_on_airport: "Distributeur de Colis Aéroport",
 					air_outside_airport: "Distributeur de Colis en dehors Aéroport",
 					air_on_airport_description: "Machine dans zone d'aéroport",
-					air_outside_airport_description:
-						"Machine à l'extérieur de zone d'aéroport",
+					air_outside_airport_description: "Machine à l'extérieur de zone d'aéroport",
 					nfk_description: "Agence principale d'InPost",
 					office_description: "Siège sociale d'InPost",
 					allegro_courier_description: "Punkty Nadania Allegro Kurier InPost",
@@ -394,8 +336,7 @@
 					zoom_in_to_see_points: "Zoom avant pour les points de vue",
 					phone_short: "tél ",
 					pay_by_link: "Modes de paiement ",
-					is_next:
-						"Uniquement réception de colis et envoi de colis pré-étiquetés",
+					is_next: "Uniquement réception de colis et envoi de colis pré-étiquetés",
 					show_filters: "Je veux mettre en place un service...",
 					MON: "lundi",
 					TUE: "mardi",
@@ -417,12 +358,7 @@
 							return typeof e;
 					  }
 					: function (e) {
-							return e &&
-								"function" == typeof Symbol &&
-								e.constructor === Symbol &&
-								e !== Symbol.prototype
-								? "symbol"
-								: typeof e;
+							return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 					  })(e);
 		}
 		n.d(t, "g", function () {
@@ -457,32 +393,15 @@
 			}),
 			Array.prototype.find ||
 				(Array.prototype.find = function (e) {
-					if (null == this)
-						throw new TypeError(
-							"Array.prototype.find called on null or undefined"
-						);
-					if ("function" != typeof e)
-						throw new TypeError("predicate must be a function");
-					for (
-						var t,
-							n = Object(this),
-							i = n.length >>> 0,
-							o = arguments[1],
-							r = 0;
-						r < i;
-						r++
-					)
+					if (null == this) throw new TypeError("Array.prototype.find called on null or undefined");
+					if ("function" != typeof e) throw new TypeError("predicate must be a function");
+					for (var t, n = Object(this), i = n.length >>> 0, o = arguments[1], r = 0; r < i; r++)
 						if (((t = n[r]), e.call(o, t, r, n))) return t;
 				}),
 			(Array.prototype.indexOf = function (e) {
 				var t = this.length,
 					n = Number(arguments[1]) || 0;
-				for (
-					(n = n < 0 ? Math.ceil(n) : Math.floor(n)) < 0 && (n += t);
-					n < t;
-					n++
-				)
-					if (n in this && this[n] === e) return n;
+				for ((n = n < 0 ? Math.ceil(n) : Math.floor(n)) < 0 && (n += t); n < t; n++) if (n in this && this[n] === e) return n;
 				return -1;
 			}),
 			(Array.prototype.filter = function (e) {
@@ -518,23 +437,11 @@
 			g = function (e, t) {
 				t || (t = window.location.href), (e = e.replace(/[\[\]]/g, "\\$&"));
 				var n = new RegExp("[?&]" + e + "(=([^&#]*)|&|#|$)").exec(t);
-				return n
-					? n[2]
-						? decodeURIComponent(n[2].replace(/\+/g, " "))
-						: ""
-					: null;
+				return n ? (n[2] ? decodeURIComponent(n[2].replace(/\+/g, " ")) : "") : null;
 			},
 			y = {
 				checkArguments: function (e, t, n) {
-					if (n.length != t)
-						throw (
-							e +
-							" function requires " +
-							t +
-							" arguments (" +
-							n.length +
-							" given)."
-						);
+					if (n.length != t) throw e + " function requires " + t + " arguments (" + n.length + " given).";
 				},
 				htmlToElement: function (e) {
 					var t = document.createElement("template");
@@ -548,11 +455,7 @@
 								r = e[i];
 							"object" == u(r)
 								? r instanceof Array
-									? n.push(
-											encodeURIComponent(o) +
-												"=" +
-												encodeURIComponent(r.join(","))
-									  )
+									? n.push(encodeURIComponent(o) + "=" + encodeURIComponent(r.join(",")))
 									: n.push(this.serialize(r, o))
 								: n.push(encodeURIComponent(o) + "=" + encodeURIComponent(r));
 						}
@@ -566,11 +469,7 @@
 						i
 							? ((e = e || []),
 							  t.forEach(function (t, i) {
-									void 0 === o[i]
-										? (o[i] = t)
-										: "object" === u(t)
-										? (o[i] = n.merge(e[i], t))
-										: -1 === e.indexOf(t) && o.push(t);
+									void 0 === o[i] ? (o[i] = t) : "object" === u(t) ? (o[i] = n.merge(e[i], t)) : -1 === e.indexOf(t) && o.push(t);
 							  }))
 							: (e &&
 									"object" === u(e) &&
@@ -578,9 +477,7 @@
 										o[t] = e[t];
 									}),
 							  Object.keys(t).forEach(function (i) {
-									"object" === u(t[i]) && t[i] && e[i]
-										? (o[i] = n.merge(e[i], t[i]))
-										: (o[i] = t[i]);
+									"object" === u(t[i]) && t[i] && e[i] ? (o[i] = n.merge(e[i], t[i])) : (o[i] = t[i]);
 							  })),
 						o
 					);
@@ -618,23 +515,14 @@
 						}
 				},
 				all: function (e, t) {
-					for (var n = !0, i = 0; i < e.length; i++)
-						-1 === t.indexOf(e[i]) && (n = !1);
+					for (var n = !0, i = 0; i < e.length; i++) -1 === t.indexOf(e[i]) && (n = !1);
 					return n;
 				},
 				asyncLoad: function (e, t, n) {
-					if (
-						document.body &&
-						((a = e), !document.querySelector('script[src="' + a + '"]'))
-					) {
+					if (document.body && ((a = e), !document.querySelector('script[src="' + a + '"]'))) {
 						var i = t || "text/javascript",
 							r = document.createElement("script");
-						n && (r.id = n),
-							(r.async = "async"),
-							(r.defer = "defer"),
-							(r.type = i),
-							(r.src = e),
-							document.body.appendChild(r);
+						n && (r.id = n), (r.async = "async"), (r.defer = "defer"), (r.type = i), (r.src = e), document.body.appendChild(r);
 					} else
 						o()(function () {
 							y.asyncLoad(e, t, n);
@@ -642,17 +530,10 @@
 					var a;
 				},
 				asyncLoadCss: function (e, t, n) {
-					if (
-						document.body &&
-						((a = e), !document.querySelector('link[href="' + a + '"]'))
-					) {
+					if (document.body && ((a = e), !document.querySelector('link[href="' + a + '"]'))) {
 						var i = t || "text/css",
 							r = document.createElement("link");
-						n && (r.id = n),
-							(r.rel = "stylesheet"),
-							(r.type = i),
-							(r.href = e),
-							document.body.appendChild(r);
+						n && (r.id = n), (r.rel = "stylesheet"), (r.type = i), (r.href = e), document.body.appendChild(r);
 					} else
 						o()(function () {
 							y.asyncLoadCss(e, t, n);
@@ -669,10 +550,7 @@
 						i = this.deg2rad(e[1] - t[1]),
 						o =
 							Math.sin(n / 2) * Math.sin(n / 2) +
-							Math.cos(this.deg2rad(e[0])) *
-								Math.cos(this.deg2rad(t[0])) *
-								Math.sin(i / 2) *
-								Math.sin(i / 2);
+							Math.cos(this.deg2rad(e[0])) * Math.cos(this.deg2rad(t[0])) * Math.sin(i / 2) * Math.sin(i / 2);
 					return 6371 * (2 * Math.atan2(Math.sqrt(o), Math.sqrt(1 - o)));
 				},
 				deg2rad: function (e) {
@@ -711,9 +589,7 @@
 							return e.params.days - t.params.days;
 						})
 						.find(function (n) {
-							return (
-								n.params.days >= y.dateDiffInDays(new Date(e[t]), new Date())
-							);
+							return n.params.days >= y.dateDiffInDays(new Date(e[t]), new Date());
 						});
 				},
 				pointType: function (e, t) {
@@ -723,8 +599,7 @@
 							var o = n[i];
 							if (y.in(o, e.type)) return b(o + "_short");
 						}
-					return y.in("allegro_courier", e.type) &&
-						"allegro_courier" === t[t.length - 1]
+					return y.in("allegro_courier", e.type) && "allegro_courier" === t[t.length - 1]
 						? b("allegro_courier_name")
 						: y.in("pok", e.type) || y.in("pop", e.type)
 						? b("pok_name_short")
@@ -737,23 +612,11 @@
 				sortCurrentPointsByDistance: function (e, t) {
 					if (e.length > 0)
 						return e.sort(function (e, n) {
-							var i =
-									"osm" === window.easyPackConfig.mapType
-										? l.a.map.getCenter().lat
-										: t.getCenter().lat(),
-								o =
-									"osm" === window.easyPackConfig.mapType
-										? l.a.map.getCenter().lng
-										: t.getCenter().lng();
+							var i = "osm" === window.easyPackConfig.mapType ? l.a.map.getCenter().lat : t.getCenter().lat(),
+								o = "osm" === window.easyPackConfig.mapType ? l.a.map.getCenter().lng : t.getCenter().lng();
 							return (
-								y.calculateDistance(
-									[i, o],
-									[e.location.latitude, e.location.longitude]
-								) -
-								y.calculateDistance(
-									[i, o],
-									[n.location.latitude, n.location.longitude]
-								)
+								y.calculateDistance([i, o], [e.location.latitude, e.location.longitude]) -
+								y.calculateDistance([i, o], [n.location.latitude, n.location.longitude])
 							);
 						});
 				},
@@ -767,8 +630,7 @@
 							var o = n[i];
 							if (y.in(o, e.type)) return b(o);
 						}
-					return y.in("allegro_courier", e.type) &&
-						"allegro_courier" === t[t.length - 1]
+					return y.in("allegro_courier", e.type) && "allegro_courier" === t[t.length - 1]
 						? b("allegro_courier_name")
 						: y.in("pok", e.type) || y.in("pop", e.type)
 						? b("pok_name")
@@ -779,28 +641,13 @@
 						: e.name;
 				},
 				openingHours: function (e) {
-					if (null !== e)
-						return e
-							.split(",")
-							.join(", ")
-							.replace("PT", "PT ")
-							.replace("SB", "SB ")
-							.replace("NIEDZIŚW", "NIEDZIŚW ");
+					if (null !== e) return e.split(",").join(", ").replace("PT", "PT ").replace("SB", "SB ").replace("NIEDZIŚW", "NIEDZIŚW ");
 				},
 				assetUrl: function (e) {
-					return r.easyPackConfig.assetsServer && -1 == e.indexOf("http")
-						? r.easyPackConfig.assetsServer + e
-						: e;
+					return r.easyPackConfig.assetsServer && -1 == e.indexOf("http") ? r.easyPackConfig.assetsServer + e : e;
 				},
 				routeLink: function (e, t) {
-					return (
-						"https://www.google.com/maps/dir/" +
-						(null === e ? "" : e[0] + "," + e[1]) +
-						"/" +
-						t.latitude +
-						"," +
-						t.longitude
-					);
+					return "https://www.google.com/maps/dir/" + (null === e ? "" : e[0] + "," + e[1]) + "/" + t.latitude + "," + t.longitude;
 				},
 				hasCustomMapAndListInRow: function () {
 					return window.easyPackConfig.customMapAndListInRow.enabled;
@@ -813,37 +660,21 @@
 				if (
 					((window.easyPackUserConfig = e),
 					(window.easyPackConfig = r.easyPackConfig),
-					void 0 === window.easyPackConfig.region &&
-						(window.easyPackConfig.region = e.defaultLocale),
+					void 0 === window.easyPackConfig.region && (window.easyPackConfig.region = e.defaultLocale),
 					!t)
 				) {
-					var n =
-						e.instance ||
-						e.defaultLocale ||
-						window.easyPackConfig.defaultLocale;
-					window.easyPackConfig = y.merge(
-						window.easyPackConfig,
-						a.instanceConfig[n] || {}
-					);
+					var n = e.instance || e.defaultLocale || window.easyPackConfig.defaultLocale;
+					window.easyPackConfig = y.merge(window.easyPackConfig, a.instanceConfig[n] || {});
 				}
 				var i;
 				for (
 					window.easyPackConfig = y.merge(window.easyPackConfig, e),
 						Array.isArray(window.easyPackConfig.points.fields) &&
 							(window.easyPackConfig.points.fields = c.typesHelpers.getUniqueValues(
-								window.easyPackConfig.points.fields.concat([
-									"name",
-									"type",
-									"location",
-									"address",
-									"functions",
-								])
+								window.easyPackConfig.points.fields.concat(["name", "type", "location", "address", "functions"])
 							)),
 						g("names"),
-						v(
-							["infoboxLibraryUrl", "markersUrl", "iconsUrl", "loadingIcon"],
-							window.easyPackConfig
-						),
+						v(["infoboxLibraryUrl", "markersUrl", "iconsUrl", "loadingIcon"], window.easyPackConfig),
 						v(
 							[
 								"typeSelectedIcon",
@@ -881,9 +712,7 @@
 				return (
 					o.open(n, t),
 					(o.onreadystatechange = function () {
-						4 == o.readyState &&
-							200 == o.status &&
-							i(JSON.parse(o.responseText));
+						4 == o.readyState && 200 == o.status && i(JSON.parse(o.responseText));
 					}),
 					o.send(null),
 					o
@@ -899,12 +728,8 @@
 			},
 			k = function () {
 				switch (
-					((window.easyPack.googleMapsApi &&
-						window.easyPack.googleMapsApi.initialized) ||
-						(window.easyPack.googleMapsApi = {}),
-					(window.easyPack.leafletMapsApi &&
-						window.easyPack.leafletMapsApi.initialized) ||
-						(window.easyPack.leafletMapsApi = {}),
+					((window.easyPack.googleMapsApi && window.easyPack.googleMapsApi.initialized) || (window.easyPack.googleMapsApi = {}),
+					(window.easyPack.leafletMapsApi && window.easyPack.leafletMapsApi.initialized) || (window.easyPack.leafletMapsApi = {}),
 					window.easyPackConfig.mapType)
 				) {
 					case "google":
@@ -917,10 +742,8 @@
 			_ = function () {
 				if (
 					((easyPack.googleMapsApi.ready = !0),
-					"google" === window.easyPackConfig.searchType &&
-						((easyPack.googleMapsApi.ready = !1), P()),
-					!window.easyPack.leafletMapsApi ||
-						!window.easyPack.leafletMapsApi.initialized)
+					"google" === window.easyPackConfig.searchType && ((easyPack.googleMapsApi.ready = !1), P()),
+					!window.easyPack.leafletMapsApi || !window.easyPack.leafletMapsApi.initialized)
 				) {
 					(window.easyPack.leafletMapsApi.initialized = !0),
 						y.asyncLoad(r.easyPackConfig.leafletMapApi),
@@ -934,9 +757,7 @@
 							y.asyncLoad(r.easyPackConfig.leafletFullScreenApi),
 							y.asyncLoad(r.easyPackConfig.leafletControlJs),
 							y.asyncLoadCss(window.easyPackConfig.leafletMarkerClusterMapCss),
-							y.asyncLoadCss(
-								window.easyPackConfig.leafletMarkerClusterMapDefaultCss
-							),
+							y.asyncLoadCss(window.easyPackConfig.leafletMarkerClusterMapDefaultCss),
 							y.asyncLoad(r.easyPackConfig.leafletMarkerClusterMapApi),
 							(easyPack.leafletMapsApi.ready = !0),
 							clearInterval(e));
@@ -944,8 +765,7 @@
 				}
 			},
 			P = function () {
-				(window.easyPack.googleMapsApi &&
-					window.easyPack.googleMapsApi.initialized) ||
+				(window.easyPack.googleMapsApi && window.easyPack.googleMapsApi.initialized) ||
 					((window.easyPack.googleMapsApi.initialized = !0),
 					(window.easyPack.googleMapsApi.initialize = function () {
 						y.asyncLoad(window.easyPackConfig.infoboxLibraryUrl),
@@ -979,26 +799,12 @@
 					b = w.prototype || (w.prototype = {});
 				for (l in (h && (n = t), n))
 					(p = ((u = !f && v && void 0 !== v[l]) ? v : n)[l]),
-						(d =
-							m && u
-								? s(p, i)
-								: y && "function" == typeof p
-								? s(Function.call, p)
-								: p),
+						(d = m && u ? s(p, i) : y && "function" == typeof p ? s(Function.call, p) : p),
 						v && a(v, l, p, e & c.U),
 						w[l] != p && r(w, l, d),
 						y && b[l] != p && (b[l] = p);
 			};
-		(i.core = o),
-			(c.F = 1),
-			(c.G = 2),
-			(c.S = 4),
-			(c.P = 8),
-			(c.B = 16),
-			(c.W = 32),
-			(c.U = 64),
-			(c.R = 128),
-			(e.exports = c);
+		(i.core = o), (c.F = 1), (c.G = 2), (c.S = 4), (c.P = 8), (c.B = 16), (c.W = 32), (c.U = 64), (c.R = 128), (e.exports = c);
 	},
 	function (e, t, n) {
 		"use strict";
@@ -1023,13 +829,7 @@
 									c === Object.keys(e).length - 1 &&
 										e[s][o] &&
 										!1 === a &&
-										(a = r.isArrayContaintsPropWithSearchValue(
-											e[s][o],
-											t,
-											n,
-											i,
-											o
-										));
+										(a = r.isArrayContaintsPropWithSearchValue(e[s][o], t, n, i, o));
 							});
 						}),
 						a
@@ -1044,11 +844,7 @@
 						e.forEach(function (e) {
 							Object.keys(e).forEach(function (a, s) {
 								e[a][t] === n && o.push(a),
-									s === Object.keys(e).length - 1 &&
-										e[a][i] &&
-										(o = o.concat(
-											r.seachInArrayOfObjectsKeyWithCondition(e[a][i], t, n, i)
-										));
+									s === Object.keys(e).length - 1 && e[a][i] && (o = o.concat(r.seachInArrayOfObjectsKeyWithCondition(e[a][i], t, n, i)));
 							});
 						}),
 						o
@@ -1082,8 +878,7 @@
 					);
 				},
 				getUniqueValues: function (e) {
-					for (var t = [], n = 0; n < e.length; n++)
-						-1 === t.indexOf(e[n]) && t.push(e[n]);
+					for (var t = [], n = 0; n < e.length; n++) -1 === t.indexOf(e[n]) && t.push(e[n]);
 					return t;
 				},
 				removeDuplicates: function (e, t) {
@@ -1124,13 +919,7 @@
 								e[i].additional && (t = t.concat(e[i].additional)),
 									o === Object.keys(e).length - 1 &&
 										e[i].childs &&
-										(t = t.concat(
-											n.seachInArrayOfObjectsKeyWithCondition(
-												e[i].childs,
-												"additional",
-												"childs"
-											)
-										));
+										(t = t.concat(n.seachInArrayOfObjectsKeyWithCondition(e[i].childs, "additional", "childs")));
 							});
 						}),
 						n.getUniqueValues(t)
@@ -1149,10 +938,7 @@
 					return (
 						t.forEach(function (t) {
 							Object.keys(t).forEach(function (o) {
-								o === e && (i = t[o]),
-									void 0 !== t[o].childs &&
-										null === i &&
-										n.getObjectForType(e, t[o].childs);
+								o === e && (i = t[o]), void 0 !== t[o].childs && null === i && n.getObjectForType(e, t[o].childs);
 							});
 						}),
 						i
@@ -1166,11 +952,7 @@
 						n.childs.some(function (t, i) {
 							void 0 === t[e] &&
 								n.childs.length === i - 1 &&
-								n.childs.unshift(
-									JSON.parse(
-										'{"' + r.getNameForType(e) + '": { "enabled": "true"}}'
-									)
-								);
+								n.childs.unshift(JSON.parse('{"' + r.getNameForType(e) + '": { "enabled": "true"}}'));
 						}),
 						n.childs.forEach(function (e) {
 							Object.keys(e).forEach(function (e) {
@@ -1181,8 +963,7 @@
 					);
 				},
 				in: function (e, t) {
-					for (var n = [], i = 0; i < t.length; i++)
-						n[i] = (t[i] || "").replace("_only", "");
+					for (var n = [], i = 0; i < t.length; i++) n[i] = (t[i] || "").replace("_only", "");
 					return n.indexOf(e.valueOf()) >= 0;
 				},
 				isNoOneChildSelected: function (e, t, n) {
@@ -1193,11 +974,7 @@
 						n.childs.some(function (t, i) {
 							void 0 === t[e] &&
 								n.childs.length === i - 1 &&
-								n.childs.unshift(
-									JSON.parse(
-										'{"' + r.getNameForType(e) + '": { "enabled": "true"}}'
-									)
-								);
+								n.childs.unshift(JSON.parse('{"' + r.getNameForType(e) + '": { "enabled": "true"}}'));
 						}),
 						n.childs.forEach(function (e) {
 							Object.keys(e).forEach(function (e) {
@@ -1274,11 +1051,7 @@
 				sortByPriorities: function (e) {
 					var t = this;
 					return e.sort(function (e, n) {
-						return t.getPriorityForTypes(e) > t.getPriorityForTypes(n)
-							? -1
-							: t.getPriorityForTypes(e) < t.getPriorityForTypes(n)
-							? 1
-							: 0;
+						return t.getPriorityForTypes(e) > t.getPriorityForTypes(n) ? -1 : t.getPriorityForTypes(e) < t.getPriorityForTypes(n) ? 1 : 0;
 					});
 				},
 				getPriorityForTypes: function (e) {
@@ -1346,8 +1119,7 @@
 			types: [],
 			addLeafletCluster: function () {
 				o()(function () {
-					L.markerClusterGroup &&
-						((f.firstPointsInit = !1), f.initLeafletCluster());
+					L.markerClusterGroup && ((f.firstPointsInit = !1), f.initLeafletCluster());
 				}, 0);
 			},
 			initLeafletCluster: function () {
@@ -1385,10 +1157,8 @@
 					(f.markers_parcel_locker = new L.layerGroup()),
 					f.markerGroup.addLayer(f.markers),
 					f.types.indexOf("pop") > -1 && f.markerGroup.addLayer(f.markers_pop),
-					f.types.indexOf("parcel_locker_superpop") > -1 &&
-						f.markerGroup.addLayer(f.markers_pop_parcel_locker),
-					(f.types.indexOf("parcel_locker") > -1 ||
-						f.types.indexOf("parcel_locker_only") > -1) &&
+					f.types.indexOf("parcel_locker_superpop") > -1 && f.markerGroup.addLayer(f.markers_pop_parcel_locker),
+					(f.types.indexOf("parcel_locker") > -1 || f.types.indexOf("parcel_locker_only") > -1) &&
 						f.markerGroup.addLayer(f.markers_parcel_locker),
 					f.map.addLayer(f.markerGroup);
 			},
@@ -1437,8 +1207,7 @@
 										})
 									)
 								),
-							f.map.getZoom() <
-								window.easyPackConfig.map.visiblePointsMinZoom &&
+							f.map.getZoom() < window.easyPackConfig.map.visiblePointsMinZoom &&
 								f.map.setZoom(window.easyPackConfig.map.visiblePointsMinZoom)),
 						e.items
 							.filter(function (e) {
@@ -1449,10 +1218,7 @@
 								);
 							})
 							.forEach(function (e) {
-								(f.firstPointsInit = !0),
-									f.points.push(e),
-									f.tmpPoints.push(e),
-									f.addPointsByType(e, r);
+								(f.firstPointsInit = !0), f.points.push(e), f.tmpPoints.push(e), f.addPointsByType(e, r);
 							}),
 						f.filterPointsByTypes(this.types),
 						(f.tmpPoints = e.items)),
@@ -1462,8 +1228,7 @@
 						f.markers &&
 							(f.currentFilters.length
 								? f.sortPointsByFilters(f.currentFilters)
-								: f.firstPointsInit ||
-								  ((f.firstPointsInit = !0), f.addExistingPoints(r)));
+								: f.firstPointsInit || ((f.firstPointsInit = !0), f.addExistingPoints(r)));
 					}, 100);
 			},
 			addExistingPoints: function (e) {
@@ -1485,8 +1250,7 @@
 								!f.tmpPoints.filter(function (e) {
 									return e.name === f.points[t].name;
 								}).length > 0 &&
-								(f.tmpPoints.push(f.points[t]),
-								f.addPointsByType(f.points[t], e));
+								(f.tmpPoints.push(f.points[t]), f.addPointsByType(f.points[t], e));
 						},
 						n = 0;
 					n < f.points.length;
@@ -1528,9 +1292,7 @@
 								}, n)
 								.on("click", f.onMarkerClick)
 						),
-						this.markers_parcel_locker.addLayer(
-							f.mapPoints[f.mapPoints.length - 1]
-						)),
+						this.markers_parcel_locker.addLayer(f.mapPoints[f.mapPoints.length - 1])),
 					e.type.indexOf("parcel_locker") > -1 &&
 						e.type.indexOf("pop") > -1 &&
 						(f.mapPoints.push(
@@ -1546,9 +1308,7 @@
 								}, n)
 								.on("click", f.onMarkerClick)
 						),
-						this.markers_pop_parcel_locker.addLayer(
-							f.mapPoints[f.mapPoints.length - 1]
-						)),
+						this.markers_pop_parcel_locker.addLayer(f.mapPoints[f.mapPoints.length - 1])),
 					e.type.indexOf("parcel_locker") > -1 ||
 						e.type.indexOf("pop") > -1 ||
 						(f.mapPoints.push(
@@ -1573,18 +1333,12 @@
 					});
 			},
 			filterPointsByTypes: function () {
-				var e =
-					arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : [];
-				e.length && e.indexOf("pop") > -1
-					? f.markerGroup.addLayer(f.markers_pop)
-					: f.markerGroup.removeLayer(f.markers_pop),
-					(e.length && e.indexOf("parcel_locker") > -1) ||
-					e.indexOf("parcel_locker_only") > -1
+				var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : [];
+				e.length && e.indexOf("pop") > -1 ? f.markerGroup.addLayer(f.markers_pop) : f.markerGroup.removeLayer(f.markers_pop),
+					(e.length && e.indexOf("parcel_locker") > -1) || e.indexOf("parcel_locker_only") > -1
 						? f.markerGroup.addLayer(f.markers_parcel_locker)
 						: f.markerGroup.removeLayer(f.markers_parcel_locker),
-					e.indexOf("parcel_locker") > -1 ||
-					e.indexOf("pop") > -1 ||
-					e.indexOf("parcel_locker_superpop") > -1
+					e.indexOf("parcel_locker") > -1 || e.indexOf("pop") > -1 || e.indexOf("parcel_locker_superpop") > -1
 						? f.markerGroup.addLayer(f.markers_pop_parcel_locker)
 						: f.markerGroup.removeLayer(f.markers_pop_parcel_locker),
 					e.indexOf("parcel_locker") > -1 || e.indexOf("pop") > -1
@@ -1594,8 +1348,7 @@
 					f.processNewPoints(f.points, !0, f.types[0]);
 			},
 			setMapView: function () {
-				var e =
-						arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {},
+				var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {},
 					t = arguments.length > 1 ? arguments[1] : void 0,
 					n = arguments.length > 2 ? arguments[2] : void 0;
 				switch (t) {
@@ -1603,21 +1356,17 @@
 						f.map.setView(new L.LatLng(e.latitude, e.longitude), n);
 						break;
 					case !1:
-						"none" === document.getElementById("map-leaflet").style.display &&
-							f.map.setView(new L.LatLng(e.latitude, e.longitude), n);
+						"none" === document.getElementById("map-leaflet").style.display && f.map.setView(new L.LatLng(e.latitude, e.longitude), n);
 				}
 			},
 			close: function () {
 				document.getElementById("widget-modal") &&
 					null !== document.getElementById("widget-modal").parentNode &&
-					(document.getElementById("widget-modal").parentNode.style.display =
-						"none");
+					(document.getElementById("widget-modal").parentNode.style.display = "none");
 			},
 			popUpRenderingMethod: function (e) {
 				var t = f.initialLocation ? f.initialLocation : null,
-					n =
-						window.easyPackConfig.points.showPoints &&
-						window.easyPackConfig.points.showPoints.length > 0;
+					n = window.easyPackConfig.points.showPoints && window.easyPackConfig.points.showPoints.length > 0;
 				var i;
 				return s()(
 					"div",
@@ -1629,10 +1378,7 @@
 							"h1",
 							null,
 							Object(r.j)(
-								"pok" === e.type[0].toLowerCase() ||
-									"pop" === e.type[0].toLowerCase()
-									? "parcel_locker_superpop"
-									: e.type[0].toLowerCase()
+								"pok" === e.type[0].toLowerCase() || "pop" === e.type[0].toLowerCase() ? "parcel_locker_superpop" : e.type[0].toLowerCase()
 							)
 						),
 						s()("p", null, e.name),
@@ -1641,14 +1387,10 @@
 							dangerouslySetInnerHTML: {
 								__html:
 									((i = ""),
-									window.easyPackConfig.descriptionInWindow &&
-										(i += e.location_description + "<br />"),
-									(i += window.easyPackConfig.addressFormat.replace(
-										/{(.*?)}/g,
-										function (t, n) {
-											return e.address_details[n] || e[n] || "";
-										}
-									))),
+									window.easyPackConfig.descriptionInWindow && (i += e.location_description + "<br />"),
+									(i += window.easyPackConfig.addressFormat.replace(/{(.*?)}/g, function (t, n) {
+										return e.address_details[n] || e[n] || "";
+									}))),
 							},
 						}),
 						e.opening_hours
@@ -1661,13 +1403,7 @@
 									Object(r.j)("openingHours") + ":"
 							  )
 							: s()("p", null),
-						e.opening_hours
-							? s()(
-									"p",
-									{ className: "mobile-details-content" },
-									e.opening_hours
-							  )
-							: s()("p", null)
+						e.opening_hours ? s()("p", { className: "mobile-details-content" }, e.opening_hours) : s()("p", null)
 					),
 					s()(
 						"div",
@@ -1779,22 +1515,15 @@
 			return (
 				(function (e) {
 					if (Array.isArray(e)) {
-						for (var t = 0, n = new Array(e.length); t < e.length; t++)
-							n[t] = e[t];
+						for (var t = 0, n = new Array(e.length); t < e.length; t++) n[t] = e[t];
 						return n;
 					}
 				})(e) ||
 				(function (e) {
-					if (
-						Symbol.iterator in Object(e) ||
-						"[object Arguments]" === Object.prototype.toString.call(e)
-					)
-						return Array.from(e);
+					if (Symbol.iterator in Object(e) || "[object Arguments]" === Object.prototype.toString.call(e)) return Array.from(e);
 				})(e) ||
 				(function () {
-					throw new TypeError(
-						"Invalid attempt to spread non-iterable instance"
-					);
+					throw new TypeError("Invalid attempt to spread non-iterable instance");
 				})()
 			);
 		}
@@ -1813,57 +1542,36 @@
 				(n.max_distance = t),
 				(n.limit = n.limit || window.easyPackConfig.map.closestLimit),
 				window.easyPackConfig.points.showPoints.length > 0 &&
-					(delete n.max_distance,
-					(n.name = window.easyPackConfig.points.showPoints.join(","))),
+					(delete n.max_distance, (n.name = window.easyPackConfig.points.showPoints.join(","))),
 				new g(n, o || {}, i, r).closest();
 		}
 		function d(e, t, n, i, o, r) {
-			(n.relative_point = e),
-				(n.per_page = window.easyPackConfig.map.preloadLimit),
-				new g(n, r || {}, i, o).allAsync();
+			(n.relative_point = e), (n.per_page = window.easyPackConfig.map.preloadLimit), new g(n, r || {}, i, o).allAsync();
 		}
 		function f(e, t, n) {
-			if (
-				e.location_date &&
-				window.easyPackConfig.points.markerConditions.length > 0
-			) {
+			if (e.location_date && window.easyPackConfig.points.markerConditions.length > 0) {
 				var i = a.d.getMarkerConditionByDays(e, "location_date");
-				if (i && i.icon_name)
-					return window.easyPackConfig.markersUrl + i.icon_name + ".png";
+				if (i && i.icon_name) return window.easyPackConfig.markersUrl + i.icon_name + ".png";
 			}
-			return (
-				window.easyPackConfig.markersUrl + y(e, t).replace("_only", "") + ".png"
-			);
+			return window.easyPackConfig.markersUrl + y(e, t).replace("_only", "") + ".png";
 		}
 		var h = function (e, t, n) {
-			if (
-				e &&
-				e.location_date &&
-				window.easyPackConfig.points.markerConditions.length > 0
-			) {
+			if (e && e.location_date && window.easyPackConfig.points.markerConditions.length > 0) {
 				var i = a.d.getMarkerConditionByDays(e, "location_date");
-				if (i && i.icon_name)
-					return window.easyPackConfig.iconsUrl + i.icon_name + ".png";
+				if (i && i.icon_name) return window.easyPackConfig.iconsUrl + i.icon_name + ".png";
 			}
-			return (
-				window.easyPackConfig.iconsUrl + y(e, t).replace("_only", "") + ".png"
-			);
+			return window.easyPackConfig.iconsUrl + y(e, t).replace("_only", "") + ".png";
 		};
 		function g(e, t, n, i) {
 			(this.callback = n), (this.abortCallback = i), (this.mapObj = t);
 			var o = e.optimized
-				? [
-						window.easyPackConfig.points.fields[1],
-						window.easyPackConfig.points.fields[2],
-				  ]
+				? [window.easyPackConfig.points.fields[1], window.easyPackConfig.points.fields[2]]
 				: window.easyPackConfig.points.fields;
 			return (
 				(this.params = { fields: o, status: ["Operating"] }),
 				e.functions && 0 === e.functions.length && delete e.functions,
-				!0 === window.easyPackConfig.showOverLoadedLockers &&
-					this.params.status.push("Overloaded"),
-				window.easyPackConfig.showNonOperatingLockers &&
-					this.params.status.push("NonOperating"),
+				!0 === window.easyPackConfig.showOverLoadedLockers && this.params.status.push("Overloaded"),
+				window.easyPackConfig.showNonOperatingLockers && this.params.status.push("NonOperating"),
 				(this.params = a.d.merge(this.params, e)),
 				(this.params.status = l(new Set(this.params.status))),
 				this
@@ -1871,10 +1579,7 @@
 		}
 		function y(e, t) {
 			if (e.type.length > 1) {
-				if (
-					((e.type = s.typesHelpers.sortByPriorities(e.type)),
-					t && t.length > 0 && void 0 !== t[0])
-				) {
+				if (((e.type = s.typesHelpers.sortByPriorities(e.type)), t && t.length > 0 && void 0 !== t[0])) {
 					t = s.typesHelpers.sortByPriorities(t);
 					for (var n = 0; n < e.type.length; n++) {
 						var i = e.type[n].replace("_only", "");
@@ -1897,8 +1602,7 @@
 				var e = this,
 					t = 1,
 					n = 0;
-				(e.allPoints = []),
-					(e.params.type = s.typesHelpers.getUniqueValues(e.params.type));
+				(e.allPoints = []), (e.params.type = s.typesHelpers.getUniqueValues(e.params.type));
 				var i = window.easyPackConfig.apiEndpoint,
 					u = "points_" + i,
 					p = "last_modified_" + i,
@@ -1910,9 +1614,7 @@
 							functions: window.easyPackConfig.points.functions,
 						}));
 				var h = c.localStorageHelpers.getDecompressed(d),
-					g =
-						window.easyPackConfig.points.showPoints &&
-						window.easyPackConfig.points.showPoints.length > 0,
+					g = window.easyPackConfig.points.showPoints && window.easyPackConfig.points.showPoints.length > 0,
 					y = !1,
 					m = ["functions", "status", "fields", "type"],
 					v = s.typesHelpers.getStringFromObjectProperties(m, e.params);
@@ -1920,24 +1622,15 @@
 					var w = s.typesHelpers.getStringFromObjectProperties(m, h);
 					(y = w !== v) &&
 						(c.localStorageHelpers.remove(u),
-						c.localStorageHelpers.putCompressed(
-							d,
-							s.typesHelpers.getSpecifiedObjectProperties(m, e.params)
-						));
-				} else
-					c.localStorageHelpers.putCompressed(
-						d,
-						s.typesHelpers.getSpecifiedObjectProperties(m, e.params)
-					);
+						c.localStorageHelpers.putCompressed(d, s.typesHelpers.getSpecifiedObjectProperties(m, e.params)));
+				} else c.localStorageHelpers.putCompressed(d, s.typesHelpers.getSpecifiedObjectProperties(m, e.params));
 				window.easyPackConfig.filters && delete e.params.functions;
 				var b = c.localStorageHelpers.getDecompressed(u),
 					k = 0;
 				null !== b &&
 					b.length > 0 &&
 					(y ||
-						((e.params.updated_from = new Date(
-							c.localStorageHelpers.get(p)
-						).toISOString()),
+						((e.params.updated_from = new Date(c.localStorageHelpers.get(p)).toISOString()),
 						(e.params.updated_to = new Date().toISOString()),
 						(e.params.per_page = 10),
 						(e.params.fields += ",status"),
@@ -1952,9 +1645,7 @@
 						(delete e.params.updated_from,
 						delete e.params.updated_to,
 						(e.params.per_page = window.easyPackConfig.map.preloadLimit),
-						(e.params.name = window.easyPackConfig.points.showPoints.join(
-							","
-						))),
+						(e.params.name = window.easyPackConfig.points.showPoints.join(","))),
 					o()(function () {
 						Object(r.c)(
 							e.params,
@@ -1966,25 +1657,17 @@
 										c.localStorageHelpers.remove(u),
 										delete e.params.updated_from,
 										delete e.params.updated_to,
-										(e.params.per_page =
-											window.easyPackConfig.map.preloadLimit),
+										(e.params.per_page = window.easyPackConfig.map.preloadLimit),
 										(e.params.status = ["Operating"]),
-										!0 === window.easyPackConfig.showOverLoadedLockers &&
-											e.params.status.push("Overloaded"),
-										window.easyPackConfig.showNonOperatingLockers &&
-											e.params.status.push("NonOperating"),
+										!0 === window.easyPackConfig.showOverLoadedLockers && e.params.status.push("Overloaded"),
+										window.easyPackConfig.showNonOperatingLockers && e.params.status.push("NonOperating"),
 										o()(function () {
 											e.allAsync();
 										}, 20),
 										!1
 									);
 								var d = 0;
-								if (
-									(null !== b && (d = b.length),
-									(a = e.allPoints).push.apply(a, l(i.items)),
-									f.push(i.page),
-									b && d > 0 && !g)
-								) {
+								if ((null !== b && (d = b.length), (a = e.allPoints).push.apply(a, l(i.items)), f.push(i.page), b && d > 0 && !g)) {
 									if (null !== c.localStorageHelpers.get(p)) {
 										var h = i.items.length > 0,
 											m = [].concat(l(b), l(i.items)).reverse(),
@@ -1992,27 +1675,21 @@
 										(e.allPoints = v.filter(function (e) {
 											return !(e.status && "Removed" === e.status);
 										})),
-											h &&
-												i.total_pages < 2 &&
-												c.localStorageHelpers.putCompressed(u, e.allPoints),
+											h && i.total_pages < 2 && c.localStorageHelpers.putCompressed(u, e.allPoints),
 											c.localStorageHelpers.put(p, new Date().toISOString());
 									}
 									var w = window.easyPackConfig.map.chunkLimit,
 										k = e.allPoints.slice(0, w),
 										_ = k.length,
 										P = e.allPoints.length;
-									y
-										? (P = i.count)
-										: P < P + i.count - i.items.length &&
-										  (P += i.count - i.items.length),
+									y ? (P = i.count) : P < P + i.count - i.items.length && (P += i.count - i.items.length),
 										e.callback({ items: k, count: P });
 									for (var C = 1; C < Math.ceil(P / w); C++)
 										var x = o()(function () {
 											var t = _,
 												n = _ + w,
 												i = e.allPoints.slice(t, n);
-											e.callback({ items: i, count: P }),
-												(_ += i.length) === P && clearTimeout(x);
+											e.callback({ items: i, count: P }), (_ += i.length) === P && clearTimeout(x);
 										}, C * window.easyPackConfig.map.timeOutPerChunkFromCache);
 								} else
 									g ||
@@ -2024,11 +1701,7 @@
 									t++,
 									n > 0 &&
 										(function i() {
-											for (
-												var o = 0;
-												o < window.easyPackConfig.map.requestLimit;
-												o++
-											) {
+											for (var o = 0; o < window.easyPackConfig.map.requestLimit; o++) {
 												if (t > n) return;
 												(e.params.page = t),
 													Object(r.c)(
@@ -2042,14 +1715,10 @@
 																	c.localStorageHelpers.putCompressed(
 																		u,
 																		e.allPoints.filter(function (e) {
-																			return !(
-																				e.status && "Removed" === e.status
-																			);
+																			return !(e.status && "Removed" === e.status);
 																		})
 																	),
-																o === window.easyPackConfig.map.requestLimit &&
-																	n >= t &&
-																	i();
+																o === window.easyPackConfig.map.requestLimit && n >= t && i();
 														},
 														e.abortCallback
 													),
@@ -2095,8 +1764,7 @@
 						try {
 							return a(e, t, n);
 						} catch (e) {}
-					if ("get" in n || "set" in n)
-						throw TypeError("Accessors not supported!");
+					if ("get" in n || "set" in n) throw TypeError("Accessors not supported!");
 					return "value" in n && (e[t] = n.value), e;
 			  };
 	},
@@ -2122,15 +1790,10 @@
 			o = n.n(i),
 			r = {
 				get: function (e) {
-					if ("pl" === easyPackConfig.instance)
-						return window.localStorage.getItem(e);
+					if ("pl" === easyPackConfig.instance) return window.localStorage.getItem(e);
 				},
 				getDecompressed: function (e) {
-					return "pl" !== easyPackConfig.instance
-						? []
-						: r.get(e)
-						? JSON.parse(o.a.decompressFromBase64(r.get(e)))
-						: "";
+					return "pl" !== easyPackConfig.instance ? [] : r.get(e) ? JSON.parse(o.a.decompressFromBase64(r.get(e))) : "";
 				},
 				put: function (e, t) {
 					"pl" === easyPackConfig.instance &&
@@ -2164,23 +1827,15 @@
 			assetsServer: "https://geowidget.easypack24.net",
 			infoboxLibraryUrl: "/js/lib/infobox.min.js",
 			leafletMapApi: "https://unpkg.com/leaflet@1.4.0/dist/leaflet.js",
-			leafletMarkerClusterMapApi:
-				"https://unpkg.com/leaflet.markercluster@1.4.0/dist/leaflet.markercluster.js",
-			leafletFullScreenApi:
-				"https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js",
+			leafletMarkerClusterMapApi: "https://unpkg.com/leaflet.markercluster@1.4.0/dist/leaflet.markercluster.js",
+			leafletFullScreenApi: "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js",
 			leafletMapCss: "https://unpkg.com/leaflet@1.4.0/dist/leaflet.css",
-			leafletMarkerClusterMapCss:
-				"https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.css",
-			leafletMarkerClusterMapDefaultCss:
-				"https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.Default.css",
-			leafletFullScreenCss:
-				"https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css",
-			leafletControlJs:
-				"https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js",
-			leafletControlCss:
-				"https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css",
-			fontAwesomeCss:
-				"https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
+			leafletMarkerClusterMapCss: "https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.css",
+			leafletMarkerClusterMapDefaultCss: "https://unpkg.com/leaflet.markercluster@1.4.0/dist/MarkerCluster.Default.css",
+			leafletFullScreenCss: "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css",
+			leafletControlJs: "https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js",
+			leafletControlCss: "https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css",
+			fontAwesomeCss: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css",
 			markersUrl: "/images/desktop/markers/",
 			iconsUrl: "/images/desktop/icons/",
 			loadingIcon: "/images/desktop/icons/ajax-loader.gif",
@@ -2197,19 +1852,8 @@
 				allowedToolTips: ["pok", "pop"],
 				functions: [],
 				showPoints: [],
-				markerConditions: [
-					{ icon_name: "nowy_granatowy", params: { days: 60 } },
-				],
-				fields: [
-					"name",
-					"type",
-					"location",
-					"address",
-					"address_details",
-					"functions",
-					"location_date",
-					"opening_hours",
-				],
+				markerConditions: [{ icon_name: "nowy_granatowy", params: { days: 60 } }],
+				fields: ["name", "type", "location", "address", "address_details", "functions", "location_date", "opening_hours"],
 			},
 			defaultParams: [{ source: "geov4_pl" }],
 			showOverLoadedLockers: !1,
@@ -2217,10 +1861,7 @@
 			searchPointsResultLimit: 5,
 			customDetailsCallback: !1,
 			customMapAndListInRow: { enabled: !1, itemsPerPage: 8 },
-			listItemFormat: [
-				"<b>{name}</b>",
-				"<strong>{address_details.street}</strong> {address_details.building_number}",
-			],
+			listItemFormat: ["<b>{name}</b>", "<strong>{address_details.street}</strong> {address_details.building_number}"],
 			display: { showTypesFilters: !0, showSearchBar: !0 },
 			mapType: "osm",
 			searchType: "osm",
@@ -2314,13 +1955,7 @@
 				l && (r(n, "name") || o(n, "name", t)),
 					e[t] !== n &&
 						(l && (r(n, a) || o(n, a, e[t] ? "" + e[t] : c.join(String(t)))),
-						e === i
-							? (e[t] = n)
-							: s
-							? e[t]
-								? (e[t] = n)
-								: o(e, t, n)
-							: (delete e[t], o(e, t, n)));
+						e === i ? (e[t] = n) : s ? (e[t] ? (e[t] = n) : o(e, t, n)) : (delete e[t], o(e, t, n)));
 			})(Function.prototype, "toString", function () {
 				return ("function" == typeof this && this[a]) || s.call(this);
 			});
@@ -2333,11 +1968,7 @@
 			s = function (e, t, n, i) {
 				var o = String(r(e)),
 					s = "<" + t;
-				return (
-					"" !== n &&
-						(s += " " + n + '="' + String(i).replace(a, "&quot;") + '"'),
-					s + ">" + o + "</" + t + ">"
-				);
+				return "" !== n && (s += " " + n + '="' + String(i).replace(a, "&quot;") + '"'), s + ">" + o + "</" + t + ">";
 			};
 		e.exports = function (e, t) {
 			var n = {};
@@ -2478,18 +2109,7 @@
 				d = 5 == e || p,
 				f = t || s;
 			return function (t, s, h) {
-				for (
-					var g,
-						y,
-						m = r(t),
-						v = o(m),
-						w = i(s, h, 3),
-						b = a(v.length),
-						k = 0,
-						_ = n ? f(t, b) : c ? f(t, 0) : void 0;
-					b > k;
-					k++
-				)
+				for (var g, y, m = r(t), v = o(m), w = i(s, h, 3), b = a(v.length), k = 0, _ = n ? f(t, b) : c ? f(t, 0) : void 0; b > k; k++)
 					if ((d || k in v) && ((y = w((g = v[k]), k, m)), e))
 						if (n) _[k] = y;
 						else if (y)
@@ -2617,8 +2237,7 @@
 					throw G(e + " is not a typed array!");
 				},
 				Oe = function (e, t) {
-					if (!(k(e) && ye in e))
-						throw G("It is not a typed array constructor!");
+					if (!(k(e) && ye in e)) throw G("It is not a typed array constructor!");
 					return new e(t);
 				},
 				je = function (e, t) {
@@ -2648,24 +2267,14 @@
 						p = void 0 !== u,
 						d = j(s);
 					if (null != d && !P(d)) {
-						for (a = d.call(s), i = [], t = 0; !(r = a._next()).done; t++)
-							i.push(r.value);
+						for (a = d.call(s), i = [], t = 0; !(r = a._next()).done; t++) i.push(r.value);
 						s = i;
 					}
-					for (
-						p && c > 2 && (u = l(u, arguments[2], 2)),
-							t = 0,
-							n = g(s.length),
-							o = Oe(this, n);
-						n > t;
-						t++
-					)
-						o[t] = p ? u(s[t], t) : s[t];
+					for (p && c > 2 && (u = l(u, arguments[2], 2)), t = 0, n = g(s.length), o = Oe(this, n); n > t; t++) o[t] = p ? u(s[t], t) : s[t];
 					return o;
 				},
 				Le = function () {
-					for (var e = 0, t = arguments.length, n = Oe(this, t); t > e; )
-						n[e] = arguments[e++];
+					for (var e = 0, t = arguments.length, n = Oe(this, t); t > e; ) n[e] = arguments[e++];
 					return n;
 				},
 				Me =
@@ -2678,12 +2287,7 @@
 				},
 				Ne = {
 					copyWithin: function (e, t) {
-						return z.call(
-							xe(this),
-							e,
-							t,
-							arguments.length > 2 ? arguments[2] : void 0
-						);
+						return z.call(xe(this), e, t, arguments.length > 2 ? arguments[2] : void 0);
 					},
 					every: function (e) {
 						return Y(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
@@ -2692,37 +2296,22 @@
 						return B.apply(xe(this), arguments);
 					},
 					filter: function (e) {
-						return je(
-							this,
-							$(xe(this), e, arguments.length > 1 ? arguments[1] : void 0)
-						);
+						return je(this, $(xe(this), e, arguments.length > 1 ? arguments[1] : void 0));
 					},
 					find: function (e) {
 						return Q(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					findIndex: function (e) {
-						return ee(
-							xe(this),
-							e,
-							arguments.length > 1 ? arguments[1] : void 0
-						);
+						return ee(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					forEach: function (e) {
 						J(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					indexOf: function (e) {
-						return ne(
-							xe(this),
-							e,
-							arguments.length > 1 ? arguments[1] : void 0
-						);
+						return ne(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					includes: function (e) {
-						return te(
-							xe(this),
-							e,
-							arguments.length > 1 ? arguments[1] : void 0
-						);
+						return te(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					join: function (e) {
 						return le.apply(xe(this), arguments);
@@ -2731,11 +2320,7 @@
 						return ae.apply(xe(this), arguments);
 					},
 					map: function (e) {
-						return ke(
-							xe(this),
-							e,
-							arguments.length > 1 ? arguments[1] : void 0
-						);
+						return ke(xe(this), e, arguments.length > 1 ? arguments[1] : void 0);
 					},
 					reduce: function (e) {
 						return se.apply(xe(this), arguments);
@@ -2744,12 +2329,7 @@
 						return ce.apply(xe(this), arguments);
 					},
 					reverse: function () {
-						for (
-							var e, t = xe(this).length, n = Math.floor(t / 2), i = 0;
-							i < n;
-
-						)
-							(e = this[i]), (this[i++] = this[--t]), (this[t] = e);
+						for (var e, t = xe(this).length, n = Math.floor(t / 2), i = 0; i < n; ) (e = this[i]), (this[i++] = this[--t]), (this[t] = e);
 						return this;
 					},
 					some: function (e) {
@@ -2762,11 +2342,7 @@
 						var n = xe(this),
 							i = n.length,
 							o = m(e, i);
-						return new (M(n, n[me]))(
-							n.buffer,
-							n.byteOffset + o * n.BYTES_PER_ELEMENT,
-							g((void 0 === t ? i : m(t, i)) - o)
-						);
+						return new (M(n, n[me]))(n.buffer, n.byteOffset + o * n.BYTES_PER_ELEMENT, g((void 0 === t ? i : m(t, i)) - o));
 					},
 				},
 				Ie = function (e, t) {
@@ -2794,13 +2370,7 @@
 					},
 				},
 				ze = function (e, t) {
-					return (
-						k(e) &&
-						e[we] &&
-						"symbol" != typeof t &&
-						t in e &&
-						String(+t) == String(t)
-					);
+					return k(e) && e[we] && "symbol" != typeof t && t in e && String(+t) == String(t);
 				},
 				De = function (e, t) {
 					return ze(e, (t = v(t, !0))) ? p(2, e[t]) : U(e, t);
@@ -2866,10 +2436,7 @@
 								set: function (e) {
 									return (function (e, n, i) {
 										var o = e._d;
-										c &&
-											(i =
-												(i = Math.round(i)) < 0 ? 0 : i > 255 ? 255 : 255 & i),
-											o.v[f](n * t + o.o, i, _e);
+										c && (i = (i = Math.round(i)) < 0 ? 0 : i > 255 ? 255 : 255 & i), o.v[f](n * t + o.o, i, _e);
 									})(this, n, e);
 								},
 								enumerable: !0,
@@ -2885,13 +2452,7 @@
 									p = 0,
 									f = 0;
 								if (k(n)) {
-									if (
-										!(
-											n instanceof V ||
-											"ArrayBuffer" == (c = b(n)) ||
-											"SharedArrayBuffer" == c
-										)
-									)
+									if (!(n instanceof V || "ArrayBuffer" == (c = b(n)) || "SharedArrayBuffer" == c))
 										return we in n ? Se(h, n) : Te.call(h, n);
 									(r = n), (f = Ce(i, t));
 									var m = n.byteLength;
@@ -2901,12 +2462,7 @@
 									} else if ((a = g(o) * t) + f > m) throw W("Wrong length!");
 									s = a / t;
 								} else (s = y(n)), (r = new V((a = s * t)));
-								for (
-									d(e, "_d", { b: r, o: f, l: a, e: s, v: new K(r) });
-									p < s;
-
-								)
-									j(e, p++);
+								for (d(e, "_d", { b: r, o: f, l: a, e: s, v: new K(r) }); p < s; ) j(e, p++);
 						  })),
 						  (P = h.prototype = C(Re)),
 						  d(P, "constructor", h))
@@ -2924,9 +2480,7 @@
 								return (
 									u(e, h, l),
 									k(n)
-										? n instanceof V ||
-										  "ArrayBuffer" == (r = b(n)) ||
-										  "SharedArrayBuffer" == r
+										? n instanceof V || "ArrayBuffer" == (r = b(n)) || "SharedArrayBuffer" == r
 											? void 0 !== o
 												? new m(n, Ce(i, t), o)
 												: void 0 !== i
@@ -2938,12 +2492,9 @@
 										: new m(y(n))
 								);
 						  })),
-						  J(
-								v !== Function.prototype ? O(m).concat(O(v)) : O(m),
-								function (e) {
-									e in h || d(h, e, m[e]);
-								}
-						  ),
+						  J(v !== Function.prototype ? O(m).concat(O(v)) : O(m), function (e) {
+								e in h || d(h, e, m[e]);
+						  }),
 						  (h.prototype = P),
 						  i || (P.constructor = h));
 					var S = P[he],
@@ -2990,9 +2541,7 @@
 							a.P +
 								a.F *
 									(r(function () {
-										return (
-											[1, 2].toLocaleString() != new h([1, 2]).toLocaleString()
-										);
+										return [1, 2].toLocaleString() != new h([1, 2]).toLocaleString();
 									}) ||
 										!r(function () {
 											P.toLocaleString.call([1, 2]);
@@ -3028,10 +2577,7 @@
 								.concat(l.a["easypack-widget"], " .")
 								.concat(l.a["details-actions"], " .")
 								.concat(l.a.action, " a { background: url(")
-								.concat(
-									window.easyPackConfig.map.pointIconDark,
-									") no-repeat; }"
-								),
+								.concat(window.easyPackConfig.map.pointIconDark, ") no-repeat; }"),
 							0
 						),
 						this.params.style.sheet.insertRule(
@@ -3050,10 +2596,7 @@
 				};
 			u.prototype = {
 				render: function () {
-					if (
-						((this.pointData = this.response),
-						window.easyPackConfig.customDetailsCallback)
-					)
+					if (((this.pointData = this.response), window.easyPackConfig.customDetailsCallback))
 						window.easyPackConfig.customDetailsCallback(this.pointData);
 					else {
 						var e,
@@ -3067,93 +2610,53 @@
 								ref: Object(r.g)(function () {
 									void 0 !== t.params.pointDetails &&
 										null !== t.params.pointDetails &&
-										(t.params.placeholder.removeChild(
-											t.params.pointDetails.element
-										),
+										(t.params.placeholder.removeChild(t.params.pointDetails.element),
 										(t.params.pointDetails = null),
 										t.params.setPointDetails(null),
-										window.easyPackConfig.closeTooltip &&
-											t.params.closeInfoBox());
+										window.easyPackConfig.closeTooltip && t.params.closeInfoBox());
 								}),
 							})
 						)),
-							(this.wrapper = s()(
-								"div",
-								{ className: l.a["details-wrapper"] },
-								this.content
-							)),
-							(this.element = s()(
-								"div",
-								{ className: l.a["point-details"] },
-								this.wrapper
-							)),
+							(this.wrapper = s()("div", { className: l.a["details-wrapper"] }, this.content)),
+							(this.element = s()("div", { className: l.a["point-details"] }, this.wrapper)),
 							(this.routeLink = s()(
 								"a",
 								{
 									className: l.a["route-link"],
 									target: "_new",
-									href: r.d.routeLink(
-										this.params.initialLocation,
-										this.marker.point.location
-									),
+									href: r.d.routeLink(this.params.initialLocation, this.marker.point.location),
 								},
 								Object(r.j)("plan_route")
 							)),
 							(this.planRoute = s()(
 								"div",
 								{
-									className: ""
-										.concat(l.a.action, " ")
-										.concat(l.a["plan-route"]),
+									className: "".concat(l.a.action, " ").concat(l.a["plan-route"]),
 								},
 								this.routeLink
 							)),
-							(this.actions = s()(
-								"div",
-								{ className: l.a["details-actions"] },
-								this.planRoute
-							)),
+							(this.actions = s()("div", { className: l.a["details-actions"] }, this.planRoute)),
 							this.params.isMobile && this.wrapper.appendChild(this.actions),
-							(this.title = s()(
-								"h1",
-								null,
-								r.d.pointName(
-									this.marker.point,
-									this.params.widget.currentTypes
-								)
-							)),
-							(this.pointBox = s()(
-								"div",
-								{ className: l.a["point-box"] },
-								this.title
-							)),
+							(this.title = s()("h1", null, r.d.pointName(this.marker.point, this.params.widget.currentTypes))),
+							(this.pointBox = s()("div", { className: l.a["point-box"] }, this.title)),
 							(this.address = s()("p", {
 								className: l.a.address,
 								dangerouslySetInnerHTML: {
 									__html:
 										((e = ""),
-										window.easyPackConfig.descriptionInWindow &&
-											(e += t.response.location_description + "<br>"),
-										(e += window.easyPackConfig.addressFormat.replace(
-											/{(.*?)}/g,
-											function (e, n) {
-												var i = e.replace("{", "").replace("}", ""),
-													o =
-														null === t.response.address_details[i]
-															? ""
-															: t.response.address_details[i];
-												return void 0 === o && (o = t.marker.point[i]), o;
-											}
-										))),
+										window.easyPackConfig.descriptionInWindow && (e += t.response.location_description + "<br>"),
+										(e += window.easyPackConfig.addressFormat.replace(/{(.*?)}/g, function (e, n) {
+											var i = e.replace("{", "").replace("}", ""),
+												o = null === t.response.address_details[i] ? "" : t.response.address_details[i];
+											return void 0 === o && (o = t.marker.point[i]), o;
+										}))),
 								},
 							})),
 							this.pointBox.appendChild(this.address),
 							void 0 !== t.response.name &&
 								null !== t.response.name &&
 								r.d.in("pok", t.response.type) &&
-								this.pointBox.appendChild(
-									s()("p", { className: l.a.name }, t.response.name)
-								),
+								this.pointBox.appendChild(s()("p", { className: l.a.name }, t.response.name)),
 							this.params.isMobile || this.pointBox.appendChild(this.actions),
 							this.content.appendChild(this.pointBox),
 							(this.description = s()("div", {
@@ -3165,11 +2668,7 @@
 								"{locale}",
 								window.easyPackConfig.defaultLocale
 							)),
-							(this.photoUrl =
-								window.easyPackConfig.assetsServer +
-								window.easyPackConfig.map.photosUrl +
-								this.marker.point.name +
-								".jpg");
+							(this.photoUrl = window.easyPackConfig.assetsServer + window.easyPackConfig.map.photosUrl + this.marker.point.name + ".jpg");
 						if (
 							((this.photo = s()("img", {
 								src: this.photoUrl,
@@ -3180,30 +2679,17 @@
 										t.content.insertBefore(t.photoElement, t.description);
 								}),
 							})),
-							0 ===
-								this.params.placeholder.getElementsByClassName(
-									l.a["point-details"]
-								).length ||
+							0 === this.params.placeholder.getElementsByClassName(l.a["point-details"]).length ||
 								void 0 === this.params.pointDetails ||
 								null === this.params.pointDetails)
 						)
 							this.params.placeholder.appendChild(this.element),
-								this.params.pointDetails &&
-									(this.params.pointDetails.element = this.element);
+								this.params.pointDetails && (this.params.pointDetails.element = this.element);
 						else {
-							var n = document
-								.getElementById(this.params.placeholder.id)
-								.querySelector(
-									"." + this.params.pointDetails.element.className
-								);
-							n.parentNode.removeChild(n),
-								document
-									.getElementById(this.params.placeholder.id)
-									.appendChild(this.element);
+							var n = document.getElementById(this.params.placeholder.id).querySelector("." + this.params.pointDetails.element.className);
+							n.parentNode.removeChild(n), document.getElementById(this.params.placeholder.id).appendChild(this.element);
 						}
-						(this.params.pointDetails = this),
-							this.params.setPointDetails(this),
-							this.fetchDetails();
+						(this.params.pointDetails = this), this.params.setPointDetails(this), this.fetchDetails();
 					}
 				},
 				fetchDetails: function () {
@@ -3220,30 +2706,19 @@
 					var e = this;
 					if (null !== e.description) {
 						var t = e.pointData.location_description;
-						(this.locationDescriptionTerm = s()(
-							"div",
-							{ className: l.a.term },
-							Object(r.j)("locationDescription")
-						)),
-							(this.locationDescriptionDefinition = s()(
-								"div",
-								{ className: l.a.definition },
-								t
-							)),
+						(this.locationDescriptionTerm = s()("div", { className: l.a.term }, Object(r.j)("locationDescription"))),
+							(this.locationDescriptionDefinition = s()("div", { className: l.a.definition }, t)),
 							(this.locationDescription = s()(
 								"div",
 								{ className: l.a.item },
 								this.locationDescriptionTerm,
 								this.locationDescriptionDefinition
 							)),
-							(null !== e.pointData.is_next &&
-								e.pointData.is_next &&
-								"fr" === easyPackConfig.region) ||
+							(null !== e.pointData.is_next && e.pointData.is_next && "fr" === easyPackConfig.region) ||
 								this.description.appendChild(this.locationDescription),
 							this.renderOpeningHours();
 						var n = e.pointData.payment_point_descr;
-						void 0 === easyPack.config.languages &&
-							(easyPack.config.languages = ["pl"]),
+						void 0 === easyPack.config.languages && (easyPack.config.languages = ["pl"]),
 							2 !== easyPack.config.languages.length &&
 								null != n &&
 								((this.payByLink = document.createElement("div")),
@@ -3287,9 +2762,7 @@
 							void 0 === this.openingHoursTerm &&
 								((this.openingHoursTerm = document.createElement("div")),
 								(this.openingHoursTerm.className = l.a.term),
-								(this.openingHoursTerm.innerHTML = Object(r.j)(
-									"openingHours"
-								))),
+								(this.openingHoursTerm.innerHTML = Object(r.j)("openingHours"))),
 							void 0 === this.openingHoursDefinition &&
 								((this.openingHoursDefinition = document.createElement("div")),
 								(this.openingHoursDefinition.className = l.a.definition),
@@ -3311,19 +2784,13 @@
 									var o = Object(r.j)(e.replace("|", "").replace(";", ""));
 									0 === n
 										? t.push(o)
-										: i[n].match(/(\|)(.*?)(\;)/g)[0] !==
-										  i[n - 1].match(/(\|)(.*?)(\;)/g)[0]
+										: i[n].match(/(\|)(.*?)(\;)/g)[0] !== i[n - 1].match(/(\|)(.*?)(\;)/g)[0]
 										? t.push(o)
-										: i[n].match(/(\|)(.*?)(\;)/g)[0] !==
-												i[n + 1].match(/(\|)(.*?)(\;)/g)[0] && t.push(o);
+										: i[n].match(/(\|)(.*?)(\;)/g)[0] !== i[n + 1].match(/(\|)(.*?)(\;)/g)[0] && t.push(o);
 								});
 							var o = [];
 							t.forEach(function (e, t) {
-								0 !== t && t % 2 == 1
-									? void 0 !== o[t - 1]
-										? (o[t - 1] += "-" + e)
-										: (o[t - 1] = e)
-									: o.push(e);
+								0 !== t && t % 2 == 1 ? (void 0 !== o[t - 1] ? (o[t - 1] += "-" + e) : (o[t - 1] = e)) : o.push(e);
 							}),
 								(e = ""),
 								o.forEach(function (t, i) {
@@ -3338,16 +2805,11 @@
 				},
 				rerender: function () {
 					(this.routeLink.innerHTML = Object(r.j)("plan_route")),
-						(this.title.innerHTML = r.d.pointName(
-							this.marker.point,
-							this.params.widget.currentTypes
-						)),
+						(this.title.innerHTML = r.d.pointName(this.marker.point, this.params.widget.currentTypes)),
 						void 0 !== this.locationDescriptionTerm &&
 							((this.locationDescriptionDefinition.innerHTML = this.pointData.location_description),
 							this.locationDescriptionDefinition.innerHTML.length > 0 &&
-								(this.locationDescriptionTerm.innerHTML = Object(r.j)(
-									"locationDescription"
-								))),
+								(this.locationDescriptionTerm.innerHTML = Object(r.j)("locationDescription"))),
 						void 0 !== this.pointData.opening_hours &&
 							null !== this.pointData.opening_hours &&
 							(this.openingHoursTerm.innerHTML = Object(r.j)("openingHours")),
@@ -3371,11 +2833,9 @@
 		e.exports = function (e, t) {
 			if (!i(e)) return e;
 			var n, o;
-			if (t && "function" == typeof (n = e.toString) && !i((o = n.call(e))))
-				return o;
+			if (t && "function" == typeof (n = e.toString) && !i((o = n.call(e)))) return o;
 			if ("function" == typeof (n = e.valueOf) && !i((o = n.call(e)))) return o;
-			if (!t && "function" == typeof (n = e.toString) && !i((o = n.call(e))))
-				return o;
+			if (!t && "function" == typeof (n = e.toString) && !i((o = n.call(e)))) return o;
 			throw TypeError("Can't convert object to primitive value");
 		};
 	},
@@ -3400,10 +2860,7 @@
 				KEY: i,
 				NEED: !1,
 				fastKey: function (e, t) {
-					if (!o(e))
-						return "symbol" == typeof e
-							? e
-							: ("string" == typeof e ? "S" : "P") + e;
+					if (!o(e)) return "symbol" == typeof e ? e : ("string" == typeof e ? "S" : "P") + e;
 					if (!r(e, i)) {
 						if (!c(e)) return "F";
 						if (!t) return "E";
@@ -3462,10 +2919,7 @@
 						return e && a.indexOf(Object.prototype.toString.call(e)) > -1;
 					};
 		function c(e) {
-			if (
-				("string" != typeof e && (e = String(e)),
-				/[^a-z0-9\-#$%&'*+.^_`|~]/i.test(e))
-			)
+			if (("string" != typeof e && (e = String(e)), /[^a-z0-9\-#$%&'*+.^_`|~]/i.test(e)))
 				throw new TypeError("Invalid character in header field name");
 			return e.toLowerCase();
 		}
@@ -3541,14 +2995,9 @@
 								? (this._bodyFormData = e)
 								: r.searchParams && URLSearchParams.prototype.isPrototypeOf(e)
 								? (this._bodyText = e.toString())
-								: r.arrayBuffer &&
-								  r.blob &&
-								  (t = e) &&
-								  DataView.prototype.isPrototypeOf(t)
-								? ((this._bodyArrayBuffer = g(e.buffer)),
-								  (this._bodyInit = new Blob([this._bodyArrayBuffer])))
-								: r.arrayBuffer &&
-								  (ArrayBuffer.prototype.isPrototypeOf(e) || s(e))
+								: r.arrayBuffer && r.blob && (t = e) && DataView.prototype.isPrototypeOf(t)
+								? ((this._bodyArrayBuffer = g(e.buffer)), (this._bodyInit = new Blob([this._bodyArrayBuffer])))
+								: r.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(e) || s(e))
 								? (this._bodyArrayBuffer = g(e))
 								: (this._bodyText = e = Object.prototype.toString.call(e))
 							: (this._bodyText = ""),
@@ -3559,26 +3008,19 @@
 								? this.headers.set("content-type", this._bodyBlob.type)
 								: r.searchParams &&
 								  URLSearchParams.prototype.isPrototypeOf(e) &&
-								  this.headers.set(
-										"content-type",
-										"application/x-www-form-urlencoded;charset=UTF-8"
-								  ));
+								  this.headers.set("content-type", "application/x-www-form-urlencoded;charset=UTF-8"));
 				}),
 				r.blob &&
 					((this.blob = function () {
 						var e = d(this);
 						if (e) return e;
 						if (this._bodyBlob) return Promise.resolve(this._bodyBlob);
-						if (this._bodyArrayBuffer)
-							return Promise.resolve(new Blob([this._bodyArrayBuffer]));
-						if (this._bodyFormData)
-							throw new Error("could not read FormData body as blob");
+						if (this._bodyArrayBuffer) return Promise.resolve(new Blob([this._bodyArrayBuffer]));
+						if (this._bodyFormData) throw new Error("could not read FormData body as blob");
 						return Promise.resolve(new Blob([this._bodyText]));
 					}),
 					(this.arrayBuffer = function () {
-						return this._bodyArrayBuffer
-							? d(this) || Promise.resolve(this._bodyArrayBuffer)
-							: this.blob().then(h);
+						return this._bodyArrayBuffer ? d(this) || Promise.resolve(this._bodyArrayBuffer) : this.blob().then(h);
 					})),
 				(this.text = function () {
 					var e,
@@ -3586,28 +3028,15 @@
 						n,
 						i = d(this);
 					if (i) return i;
-					if (this._bodyBlob)
-						return (
-							(e = this._bodyBlob),
-							(t = new FileReader()),
-							(n = f(t)),
-							t.readAsText(e),
-							n
-						);
+					if (this._bodyBlob) return (e = this._bodyBlob), (t = new FileReader()), (n = f(t)), t.readAsText(e), n;
 					if (this._bodyArrayBuffer)
 						return Promise.resolve(
 							(function (e) {
-								for (
-									var t = new Uint8Array(e), n = new Array(t.length), i = 0;
-									i < t.length;
-									i++
-								)
-									n[i] = String.fromCharCode(t[i]);
+								for (var t = new Uint8Array(e), n = new Array(t.length), i = 0; i < t.length; i++) n[i] = String.fromCharCode(t[i]);
 								return n.join("");
 							})(this._bodyArrayBuffer)
 						);
-					if (this._bodyFormData)
-						throw new Error("could not read FormData body as text");
+					if (this._bodyFormData) throw new Error("could not read FormData body as text");
 					return Promise.resolve(this._bodyText);
 				}),
 				r.formData &&
@@ -3638,8 +3067,7 @@
 				this.map[c(e)] = l(t);
 			}),
 			(p.prototype.forEach = function (e, t) {
-				for (var n in this.map)
-					this.map.hasOwnProperty(n) && e.call(t, this.map[n], n, this);
+				for (var n in this.map) this.map.hasOwnProperty(n) && e.call(t, this.map[n], n, this);
 			}),
 			(p.prototype.keys = function () {
 				var e = [];
@@ -3685,13 +3113,9 @@
 					o || null == e._bodyInit || ((o = e._bodyInit), (e.bodyUsed = !0));
 			} else this.url = String(e);
 			if (
-				((this.credentials =
-					t.credentials || this.credentials || "same-origin"),
+				((this.credentials = t.credentials || this.credentials || "same-origin"),
 				(!t.headers && this.headers) || (this.headers = new p(t.headers)),
-				(this.method =
-					((n = t.method || this.method || "GET"),
-					(i = n.toUpperCase()),
-					m.indexOf(i) > -1 ? i : n)),
+				(this.method = ((n = t.method || this.method || "GET"), (i = n.toUpperCase()), m.indexOf(i) > -1 ? i : n)),
 				(this.mode = t.mode || this.mode || null),
 				(this.signal = t.signal || this.signal),
 				(this.referrer = null),
@@ -3763,8 +3187,7 @@
 		function P(e, t) {
 			return new Promise(function (n, i) {
 				var o = new v(e, t);
-				if (o.signal && o.signal.aborted)
-					return i(new _("Aborted", "AbortError"));
+				if (o.signal && o.signal.aborted) return i(new _("Aborted", "AbortError"));
 				var a = new XMLHttpRequest();
 				function s() {
 					a.abort();
@@ -3791,8 +3214,7 @@
 									}),
 								t),
 						};
-					i.url =
-						"responseURL" in a ? a.responseURL : i.headers.get("X-Request-URL");
+					i.url = "responseURL" in a ? a.responseURL : i.headers.get("X-Request-URL");
 					var o = "response" in a ? a.response : a.responseText;
 					n(new b(o, i));
 				}),
@@ -3806,9 +3228,7 @@
 						i(new _("Aborted", "AbortError"));
 					}),
 					a.open(o.method, o.url, !0),
-					"include" === o.credentials
-						? (a.withCredentials = !0)
-						: "omit" === o.credentials && (a.withCredentials = !1),
+					"include" === o.credentials ? (a.withCredentials = !0) : "omit" === o.credentials && (a.withCredentials = !1),
 					"responseType" in a && r.blob && (a.responseType = "blob"),
 					o.headers.forEach(function (e, t) {
 						a.setRequestHeader(t, e);
@@ -3851,11 +3271,7 @@
 			);
 		}
 		(P.polyfill = !0),
-			self.fetch ||
-				((self.fetch = P),
-				(self.Headers = p),
-				(self.Request = v),
-				(self.Response = b)),
+			self.fetch || ((self.fetch = P), (self.Headers = p), (self.Request = v), (self.Response = b)),
 			n.d(t, "b", function () {
 				return E;
 			}),
@@ -3910,10 +3326,8 @@
 					i = C({}, i, e);
 				}),
 				(i.status = ["Operating"]),
-				!0 === window.easyPackConfig.showOverLoadedLockers &&
-					i.status.push("Overloaded"),
-				window.easyPackConfig.showNonOperatingLockers &&
-					i.status.push("NonOperating"),
+				!0 === window.easyPackConfig.showOverLoadedLockers && i.status.push("Overloaded"),
+				window.easyPackConfig.showNonOperatingLockers && i.status.push("NonOperating"),
 				i.filters && 0 === i.filters.length && delete i.filters,
 				(i.name = e),
 				(window.requestPath = "/point"),
@@ -3971,11 +3385,7 @@
 		var n = 0,
 			i = Math.random();
 		e.exports = function (e) {
-			return "Symbol(".concat(
-				void 0 === e ? "" : e,
-				")_",
-				(++n + i).toString(36)
-			);
+			return "Symbol(".concat(void 0 === e ? "" : e, ")_", (++n + i).toString(36));
 		};
 	},
 	function (e, t) {
@@ -4026,15 +3436,7 @@
 			Object.create ||
 			function (e, t) {
 				var n;
-				return (
-					null !== e
-						? ((s.prototype = i(e)),
-						  (n = new s()),
-						  (s.prototype = null),
-						  (n[a] = e))
-						: (n = c()),
-					void 0 === t ? n : o(n, t)
-				);
+				return null !== e ? ((s.prototype = i(e)), (n = new s()), (s.prototype = null), (n[a] = e)) : (n = c()), void 0 === t ? n : o(n, t);
 			};
 	},
 	function (e, t, n) {
@@ -4077,8 +3479,7 @@
 	function (e, t, n) {
 		var i = n(9);
 		e.exports = function (e, t) {
-			if (!i(e) || e._t !== t)
-				throw TypeError("Incompatible receiver, " + t + " required!");
+			if (!i(e) || e._t !== t) throw TypeError("Incompatible receiver, " + t + " required!");
 			return e;
 		};
 	},
@@ -4087,9 +3488,7 @@
 			o = n(21),
 			r = n(11)("toStringTag");
 		e.exports = function (e, t, n) {
-			e &&
-				!o((e = n ? e : e.prototype), r) &&
-				i(e, r, { configurable: !0, value: t });
+			e && !o((e = n ? e : e.prototype), r) && i(e, r, { configurable: !0, value: t });
 		};
 	},
 	function (e, t, n) {
@@ -4109,12 +3508,7 @@
 				n && (o[n] = c), i(i.P + i.F * s, "String", o);
 			},
 			p = (u.trim = function (e, t) {
-				return (
-					(e = String(o(e))),
-					1 & t && (e = e.replace(c, "")),
-					2 & t && (e = e.replace(l, "")),
-					e
-				);
+				return (e = String(o(e))), 1 & t && (e = e.replace(c, "")), 2 & t && (e = e.replace(l, "")), e;
 			});
 		e.exports = u;
 	},
@@ -4142,8 +3536,7 @@
 	},
 	function (e, t) {
 		e.exports = function (e, t, n, i) {
-			if (!(e instanceof t) || (void 0 !== i && i in e))
-				throw TypeError(n + ": incorrect invocation!");
+			if (!(e instanceof t) || (void 0 !== i && i in e)) throw TypeError(n + ": incorrect invocation!");
 			return e;
 		};
 	},
@@ -4261,10 +3654,7 @@
 			}
 			return (
 				(t = r(t) || 0),
-				i(n) &&
-					((y = !!n.leading),
-					(p = (m = "maxWait" in n) ? s(r(n.maxWait) || 0, t) : p),
-					(v = "trailing" in n ? !!n.trailing : v)),
+				i(n) && ((y = !!n.leading), (p = (m = "maxWait" in n) ? s(r(n.maxWait) || 0, t) : p), (v = "trailing" in n ? !!n.trailing : v)),
 				(P.cancel = function () {
 					void 0 !== f && clearTimeout(f), (g = 0), (l = h = u = f = void 0);
 				}),
@@ -4311,17 +3701,11 @@
 					disableAutoPan: !1,
 					maxWidth: 160,
 					boxStyle: { width: "200px" },
-					pixelOffset:
-						"google" === window.easyPackConfig.mapType
-							? new google.maps.Size(-170, -16)
-							: { height: 0, width: 0 },
+					pixelOffset: "google" === window.easyPackConfig.mapType ? new google.maps.Size(-170, -16) : { height: 0, width: 0 },
 					zIndex: null,
 					closeBoxMargin: "0px",
 					closeBoxURL: easyPackConfig.map.closeIcon,
-					infoBoxClearance:
-						"google" === window.easyPackConfig.mapType
-							? new google.maps.Size(1, 1)
-							: { height: 0, width: 0 },
+					infoBoxClearance: "google" === window.easyPackConfig.mapType ? new google.maps.Size(1, 1) : { height: 0, width: 0 },
 					isHidden: !1,
 					pane: "floatPane",
 					enableEventPropagation: !1,
@@ -4353,16 +3737,13 @@
 			close: function () {
 				(this.infoBoxObj.close(), document.getElementById("widget-modal")) &&
 					null !== document.getElementById("widget-modal").parentNode &&
-					(document.getElementById("widget-modal").parentNode.style.display =
-						"none");
+					(document.getElementById("widget-modal").parentNode.style.display = "none");
 			},
 			prepareContent: function (e) {
 				var t,
 					n = this,
 					i = n.widget.initialLocation ? n.widget.initialLocation : null,
-					o =
-						window.easyPackConfig.points.showPoints &&
-						window.easyPackConfig.points.showPoints.length > 0;
+					o = window.easyPackConfig.points.showPoints && window.easyPackConfig.points.showPoints.length > 0;
 				(this.windowElement = null),
 					(this.windowElement = c()(
 						"div",
@@ -4377,8 +3758,7 @@
 									"h1",
 									null,
 									Object(r.j)(
-										"pok" === e.type[0].toLowerCase() ||
-											"pop" === e.type[0].toLowerCase()
+										"pok" === e.type[0].toLowerCase() || "pop" === e.type[0].toLowerCase()
 											? "parcel_locker_superpop"
 											: e.type[0].toLowerCase()
 									)
@@ -4389,14 +3769,10 @@
 									dangerouslySetInnerHTML: {
 										__html:
 											((t = ""),
-											window.easyPackConfig.descriptionInWindow &&
-												(t += e.location_description + "<br />"),
-											(t += window.easyPackConfig.addressFormat.replace(
-												/{(.*?)}/g,
-												function (t, n) {
-													return e.address_details[n] || e[n] || "";
-												}
-											))),
+											window.easyPackConfig.descriptionInWindow && (t += e.location_description + "<br />"),
+											(t += window.easyPackConfig.addressFormat.replace(/{(.*?)}/g, function (t, n) {
+												return e.address_details[n] || e[n] || "";
+											}))),
 									},
 								}),
 								e.opening_hours
@@ -4409,14 +3785,7 @@
 											Object(r.j)("openingHours") + ":"
 									  )
 									: c()("p", null),
-								e.opening_hours
-									? c()(
-											"p",
-											{ className: "mobile-details-content" },
-											" ",
-											e.opening_hours
-									  )
-									: c()("p", null)
+								e.opening_hours ? c()("p", { className: "mobile-details-content" }, " ", e.opening_hours) : c()("p", null)
 							),
 							c()(
 								"div",
@@ -4474,10 +3843,7 @@
 					));
 			},
 			rerender: function () {
-				this.close(),
-					this.prepareContent(this.response),
-					(this.options.content = this.windowElement),
-					this.open();
+				this.close(), this.prepareContent(this.response), (this.options.content = this.windowElement), this.open();
 			},
 		};
 	},
@@ -4511,9 +3877,7 @@
 					u = r(a, l);
 				if (e && n != n) {
 					for (; l > u; ) if ((s = c[u++]) != s) return !0;
-				} else
-					for (; l > u; u++)
-						if ((e || u in c) && c[u] === n) return e || u || 0;
+				} else for (; l > u; u++) if ((e || u in c) && c[u] === n) return e || u || 0;
 				return !e && -1;
 			};
 		};
@@ -4565,12 +3929,7 @@
 			var e = i(this),
 				t = "";
 			return (
-				e.global && (t += "g"),
-				e.ignoreCase && (t += "i"),
-				e.multiline && (t += "m"),
-				e.unicode && (t += "u"),
-				e.sticky && (t += "y"),
-				t
+				e.global && (t += "g"), e.ignoreCase && (t += "i"), e.multiline && (t += "m"), e.unicode && (t += "u"), e.sticky && (t += "y"), t
 			);
 		};
 	},
@@ -4582,14 +3941,10 @@
 			var n = e.exec;
 			if ("function" == typeof n) {
 				var r = n.call(e, t);
-				if ("object" != typeof r)
-					throw new TypeError(
-						"RegExp exec method returned something other than an Object or null"
-					);
+				if ("object" != typeof r) throw new TypeError("RegExp exec method returned something other than an Object or null");
 				return r;
 			}
-			if ("RegExp" !== i(e))
-				throw new TypeError("RegExp#exec called on incompatible receiver");
+			if ("RegExp" !== i(e)) throw new TypeError("RegExp#exec called on incompatible receiver");
 			return o.call(e, t);
 		};
 	},
@@ -4654,11 +4009,7 @@
 			if (!f || !h || ("replace" === e && !u) || ("split" === e && !p)) {
 				var g = /./[d],
 					y = n(a, d, ""[e], function (e, t, n, i, o) {
-						return t.exec === c
-							? f && !o
-								? { done: !0, value: g.call(t, n, i) }
-								: { done: !0, value: e.call(n, t, i) }
-							: { done: !1 };
+						return t.exec === c ? (f && !o ? { done: !0, value: g.call(t, n, i) } : { done: !0, value: e.call(n, t, i) }) : { done: !1 };
 					}),
 					m = y[0],
 					v = y[1];
@@ -4700,12 +4051,8 @@
 				w = 0;
 			if ("function" != typeof m) throw TypeError(e + " is not iterable!");
 			if (r(m)) {
-				for (f = s(e.length); f > w; w++)
-					if ((y = t ? v(a((h = e[w]))[0], h[1]) : v(e[w])) === l || y === u)
-						return y;
-			} else
-				for (g = m.call(e); !(h = g._next()).done; )
-					if ((y = o(g, v, h.value, t)) === l || y === u) return y;
+				for (f = s(e.length); f > w; w++) if ((y = t ? v(a((h = e[w]))[0], h[1]) : v(e[w])) === l || y === u) return y;
+			} else for (g = m.call(e); !(h = g._next()).done; ) if ((y = o(g, v, h.value, t)) === l || y === u) return y;
 		}).BREAK = l),
 			(t.RETURN = u);
 	},
@@ -4791,15 +4138,8 @@
 					(O || S) && (P("delete"), P("has"), y && P("get")),
 					(S || x) && P(b),
 					m && k.clear && delete k.clear;
-			} else
-				(w = g.getConstructor(t, e, y, b)), a(w.prototype, n), (s.NEED = !0);
-			return (
-				f(w, e),
-				(_[e] = w),
-				o(o.G + o.W + o.F * (w != v), _),
-				m || g.setStrong(w, e, y),
-				w
-			);
+			} else (w = g.getConstructor(t, e, y, b)), a(w.prototype, n), (s.NEED = !0);
+			return f(w, e), (_[e] = w), o(o.G + o.W + o.F * (w != v), _), m || g.setStrong(w, e, y), w;
 		};
 	},
 	function (e, t, n) {
@@ -4813,15 +4153,11 @@
 				l = !(!o.ArrayBuffer || !o.DataView),
 				u = l,
 				p = 0,
-				d = "Int8Array,Uint8Array,Uint8ClampedArray,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array".split(
-					","
-				);
+				d = "Int8Array,Uint8Array,Uint8ClampedArray,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array".split(",");
 			p < 9;
 
 		)
-			(i = o[d[p++]])
-				? (r(i.prototype, s, !0), r(i.prototype, c, !0))
-				: (u = !1);
+			(i = o[d[p++]]) ? (r(i.prototype, s, !0), r(i.prototype, c, !0)) : (u = !1);
 		e.exports = { ABV: l, CONSTR: u, TYPED: s, VIEW: c };
 	},
 	function (e, t, n) {
@@ -4849,9 +4185,7 @@
 		};
 	},
 	function (e, t) {
-		e.exports = "constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(
-			","
-		);
+		e.exports = "constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf".split(",");
 	},
 	function (e, t, n) {
 		var i = n(6).document;
@@ -4861,8 +4195,7 @@
 		var i = n(9),
 			o = n(8),
 			r = function (e, t) {
-				if ((o(e), !i(t) && null !== t))
-					throw TypeError(t + ": can't set as prototype!");
+				if ((o(e), !i(t) && null !== t)) throw TypeError(t + ": can't set as prototype!");
 			};
 		e.exports = {
 			set:
@@ -4870,12 +4203,7 @@
 				("__proto__" in {}
 					? (function (e, t, i) {
 							try {
-								(i = n(25)(
-									Function.call,
-									n(28).f(Object.prototype, "__proto__").set,
-									2
-								))(e, []),
-									(t = !(e instanceof Array));
+								(i = n(25)(Function.call, n(28).f(Object.prototype, "__proto__").set, 2))(e, []), (t = !(e instanceof Array));
 							} catch (e) {
 								t = !0;
 							}
@@ -4896,15 +4224,7 @@
 		e.exports = function (e, t, n) {
 			var r,
 				a = t.constructor;
-			return (
-				a !== n &&
-					"function" == typeof a &&
-					(r = a.prototype) !== n.prototype &&
-					i(r) &&
-					o &&
-					o(e, r),
-				e
-			);
+			return a !== n && "function" == typeof a && (r = a.prototype) !== n.prototype && i(r) && o && o(e, r), e;
 		};
 	},
 	function (e, t, n) {
@@ -4930,16 +4250,9 @@
 	function (e, t) {
 		var n = Math.expm1;
 		e.exports =
-			!n ||
-			n(10) > 22025.465794806718 ||
-			n(10) < 22025.465794806718 ||
-			-2e-17 != n(-2e-17)
+			!n || n(10) > 22025.465794806718 || n(10) < 22025.465794806718 || -2e-17 != n(-2e-17)
 				? function (e) {
-						return 0 == (e = +e)
-							? e
-							: e > -1e-6 && e < 1e-6
-							? e + (e * e) / 2
-							: Math.exp(e) - 1;
+						return 0 == (e = +e) ? e : e > -1e-6 && e < 1e-6 ? e + (e * e) / 2 : Math.exp(e) - 1;
 				  }
 				: n;
 	},
@@ -4957,11 +4270,7 @@
 					? e
 						? ""
 						: void 0
-					: (r = s.charCodeAt(c)) < 55296 ||
-					  r > 56319 ||
-					  c + 1 === l ||
-					  (a = s.charCodeAt(c + 1)) < 56320 ||
-					  a > 57343
+					: (r = s.charCodeAt(c)) < 55296 || r > 56319 || c + 1 === l || (a = s.charCodeAt(c + 1)) < 56320 || a > 57343
 					? e
 						? s.charAt(c)
 						: r
@@ -5013,10 +4322,7 @@
 				S = g ? (P ? k("entries") : j) : void 0,
 				E = ("Array" == t && x.entries) || O;
 			if (
-				(E &&
-					(b = u(E.call(new e()))) !== Object.prototype &&
-					b.next &&
-					(l(b, _, !0), i || "function" == typeof b[p] || a(b, p, f)),
+				(E && (b = u(E.call(new e()))) !== Object.prototype && b.next && (l(b, _, !0), i || "function" == typeof b[p] || a(b, p, f)),
 				P &&
 					O &&
 					"values" !== O.name &&
@@ -5133,9 +4439,7 @@
 				var e = this._t,
 					t = this._k,
 					n = this._i++;
-				return !e || n >= e.length
-					? ((this._t = void 0), o(1))
-					: o(0, "keys" == t ? n : "values" == t ? e[n] : [n, e[n]]);
+				return !e || n >= e.length ? ((this._t = void 0), o(1)) : o(0, "keys" == t ? n : "values" == t ? e[n] : [n, e[n]]);
 			},
 			"values"
 		)),
@@ -5152,12 +4456,7 @@
 			a = RegExp.prototype.exec,
 			s = String.prototype.replace,
 			c = a,
-			l =
-				((i = /a/),
-				(o = /b*/g),
-				a.call(i, "a"),
-				a.call(o, "a"),
-				0 !== i.lastIndex || 0 !== o.lastIndex),
+			l = ((i = /a/), (o = /b*/g), a.call(i, "a"), a.call(o, "a"), 0 !== i.lastIndex || 0 !== o.lastIndex),
 			u = void 0 !== /()??/.exec("")[1];
 		(l || u) &&
 			(c = function (e) {
@@ -5175,8 +4474,7 @@
 						i &&
 						i.length > 1 &&
 						s.call(i[0], n, function () {
-							for (o = 1; o < arguments.length - 2; o++)
-								void 0 === arguments[o] && (i[o] = void 0);
+							for (o = 1; o < arguments.length - 2; o++) void 0 === arguments[o] && (i[o] = void 0);
 						}),
 					i
 				);
@@ -5239,12 +4537,8 @@
 						g.now(a(v, e, 1));
 				  })
 				: h
-				? ((r = (o = new h()).port2),
-				  (o.port1.onmessage = w),
-				  (i = a(r.postMessage, r, 1)))
-				: u.addEventListener &&
-				  "function" == typeof postMessage &&
-				  !u.importScripts
+				? ((r = (o = new h()).port2), (o.port1.onmessage = w), (i = a(r.postMessage, r, 1)))
+				: u.addEventListener && "function" == typeof postMessage && !u.importScripts
 				? ((i = function (e) {
 						u.postMessage(e + "", "*");
 				  }),
@@ -5310,8 +4604,7 @@
 					? ((o = e != e ? 1 : 0), (i = c))
 					: ((i = S(E(e) / T)),
 					  e * (r = j(2, -i)) < 1 && (i--, (r *= 2)),
-					  (e += i + l >= 1 ? u / r : u * j(2, 1 - l)) * r >= 2 &&
-							(i++, (r /= 2)),
+					  (e += i + l >= 1 ? u / r : u * j(2, 1 - l)) * r >= 2 && (i++, (r /= 2)),
 					  i + l >= c
 							? ((o = 0), (i = c))
 							: i + l >= 1
@@ -5333,11 +4626,7 @@
 				l = e[c--],
 				u = 127 & l;
 			for (l >>= 7; s > 0; u = 256 * u + e[c], c--, s -= 8);
-			for (
-				i = u & ((1 << -s) - 1), u >>= -s, s += t;
-				s > 0;
-				i = 256 * i + e[c], c--, s -= 8
-			);
+			for (i = u & ((1 << -s) - 1), u >>= -s, s += t; s > 0; i = 256 * i + e[c], c--, s -= 8);
 			if (0 === u) u = 1 - a;
 			else {
 				if (u === r) return i ? NaN : l ? -C : C;
@@ -5381,8 +4670,7 @@
 		function G(e, t, n, i, o, r) {
 			var a = f(+n);
 			if (a + t > e[M]) throw P(w);
-			for (var s = e[L]._b, c = a + e[A], l = i(+o), u = 0; u < t; u++)
-				s[c + u] = l[r ? u : t - u - 1];
+			for (var s = e[L]._b, c = a + e[A], l = i(+o), u = 0; u < t; u++) s[c + u] = l[r ? u : t - u - 1];
 		}
 		if (a.ABV) {
 			if (
@@ -5437,15 +4725,10 @@
 					var i = e[M],
 						o = p(t);
 					if (o < 0 || o > i) throw P("Wrong offset!");
-					if (o + (n = void 0 === n ? i - o : d(n)) > i)
-						throw P("Wrong length!");
+					if (o + (n = void 0 === n ? i - o : d(n)) > i) throw P("Wrong length!");
 					(this[L] = e), (this[A] = o), (this[M] = n);
 				}),
-				o &&
-					(U(b, "byteLength", "_l"),
-					U(k, "buffer", "_b"),
-					U(k, "byteLength", "_l"),
-					U(k, "byteOffset", "_o")),
+				o && (U(b, "byteLength", "_l"), U(k, "buffer", "_b"), U(k, "byteLength", "_l"), U(k, "byteOffset", "_o")),
 				c(k[v], {
 					getInt8: function (e) {
 						return (W(this, 1, e)[0] << 24) >> 24;
@@ -5498,11 +4781,7 @@
 						G(this, 8, e, H, t, arguments[2]);
 					},
 				});
-		m(b, "ArrayBuffer"),
-			m(k, "DataView"),
-			s(k[v], a.VIEW, !0),
-			(t.ArrayBuffer = b),
-			(t.DataView = k);
+		m(b, "ArrayBuffer"), m(k, "DataView"), s(k[v], a.VIEW, !0), (t.ArrayBuffer = b), (t.DataView = k);
 	},
 	function (e, t) {
 		var n = (e.exports =
@@ -5549,10 +4828,7 @@
 						pop: { enabled: !0, additional: "parcel_locker_superpop" },
 					},
 				],
-				listItemFormat: [
-					"<b>{name}</b>",
-					"{address_details.street} {address_details.building_number}",
-				],
+				listItemFormat: ["<b>{name}</b>", "{address_details.street} {address_details.building_number}"],
 				map: { searchCountry: "Polska" },
 				defaultParams: [{ source: "geov4_pl" }],
 			},
@@ -5575,10 +4851,7 @@
 			uk: {
 				apiEndpoint: "https://api-uk-points.easypack24.net/v1",
 				instance: "uk",
-				listItemFormat: [
-					"<b>{name}</b>",
-					"{address_details.street} {address_details.building_number}",
-				],
+				listItemFormat: ["<b>{name}</b>", "{address_details.street} {address_details.building_number}"],
 				mapType: "google",
 				searchType: "google",
 				map: {
@@ -5588,26 +4861,13 @@
 				},
 				defaultParams: [{ source: "geov4_uk" }],
 				points: {
-					fields: [
-						"name",
-						"type",
-						"location",
-						"address",
-						"address_details",
-						"functions",
-						"location_date",
-						"opening_hours",
-						"services",
-					],
+					fields: ["name", "type", "location", "address", "address_details", "functions", "location_date", "opening_hours", "services"],
 				},
 			},
 			ca: {
 				apiEndpoint: "https://api-ca-points.easypack24.net/v1",
 				instance: "ca",
-				listItemFormat: [
-					"<b>{name}</b>",
-					"{address_details.street} {address_details.building_number}",
-				],
+				listItemFormat: ["<b>{name}</b>", "{address_details.street} {address_details.building_number}"],
 				defaultParams: [{ source: "geov4_ca" }],
 				mapType: "google",
 				searchType: "google",
@@ -5645,15 +4905,7 @@
 						a()(
 							"div",
 							{ className: c.a["scroll-box"], id: "scroll-box" },
-							a()(
-								"div",
-								{ className: c.a.viewport },
-								a()(
-									"div",
-									{ className: c.a.overview },
-									a()("ul", { id: "point-list" })
-								)
-							)
+							a()("div", { className: c.a.viewport }, a()("div", { className: c.a.overview }, a()("ul", { id: "point-list" })))
 						)
 					)
 				));
@@ -5664,27 +4916,17 @@
 					: this.listElement.classList.remove(c.a["loading-content"]);
 			},
 			addPoint: function (e, t, n, r) {
-				if (
-					!(
-						this.points.length > window.easyPackConfig.map.limitPointsOnList ||
-						this.points.indexOf(e.name) >= 0
-					)
-				) {
+				if (!(this.points.length > window.easyPackConfig.map.limitPointsOnList || this.points.indexOf(e.name) >= 0)) {
 					this.points.push(e.name);
-					var s = e.dynamic
-							? e.icon
-							: Object(i.d)(e, r || this.params.currentTypes),
+					var s = e.dynamic ? e.icon : Object(i.d)(e, r || this.params.currentTypes),
 						l = this,
-						u = window.easyPackConfig.listItemFormat[0].replace(
-							/{(.*?)}/g,
-							function (t, n) {
-								return "name" === n
-									? o.d.pointName(e, l.params.currentTypes)
-									: n.split(".").reduce(function (e, t) {
-											return e[t];
-									  }, e);
-							}
-						),
+						u = window.easyPackConfig.listItemFormat[0].replace(/{(.*?)}/g, function (t, n) {
+							return "name" === n
+								? o.d.pointName(e, l.params.currentTypes)
+								: n.split(".").reduce(function (e, t) {
+										return e[t];
+								  }, e);
+						}),
 						p = e.address_details
 							? window.easyPackConfig.listItemFormat
 									.filter(function (e, t) {
@@ -5737,17 +4979,14 @@
 								}, null)
 							)
 						);
-					document.getElementById("point-list") &&
-						document.getElementById("point-list").appendChild(d);
+					document.getElementById("point-list") && document.getElementById("point-list").appendChild(d);
 				}
 			},
 			render: function (e) {
 				e.appendChild(this.build());
 			},
 			clear: function () {
-				document.getElementById("point-list") &&
-					((document.getElementById("point-list").innerHTML = ""),
-					(this.points = []));
+				document.getElementById("point-list") && ((document.getElementById("point-list").innerHTML = ""), (this.points = []));
 			},
 		};
 	},
@@ -5774,32 +5013,16 @@
 					(this.paginatedList = o()(
 						"div",
 						{ className: c.a["list-widget"] },
-						o()(
-							"div",
-							{ className: c.a["list-wrapper"], id: "point-list" },
-							this.list
-						),
-						r.d.hasCustomMapAndListInRow() &&
-							o()(
-								"div",
-								{ className: c.a["pagination-wrapper"] },
-								this.paginationList
-							)
+						o()("div", { className: c.a["list-wrapper"], id: "point-list" }, this.list),
+						r.d.hasCustomMapAndListInRow() && o()("div", { className: c.a["pagination-wrapper"] }, this.paginationList)
 					)),
 					this.paginatedList
 				);
 			},
 			addPoint: function (e, t, n, i) {
-				if (
-					!(
-						this.points.length > window.easyPackConfig.map.limitPointsOnList ||
-						this.points.indexOf(e.name) >= 0
-					)
-				) {
+				if (!(this.points.length > window.easyPackConfig.map.limitPointsOnList || this.points.indexOf(e.name) >= 0)) {
 					this.points.push(e.name);
-					var s = e.dynamic
-							? e.icon
-							: Object(a.d)(e, i || this.params.currentTypes),
+					var s = e.dynamic ? e.icon : Object(a.d)(e, i || this.params.currentTypes),
 						l = o()(
 							"li",
 							null,
@@ -5809,47 +5032,25 @@
 									className: c.a.row,
 									style: { "background-image": "url(".concat(s, ")") },
 								},
-								o()(
-									"div",
-									{ className: c.a["col-point-type"] },
-									r.d.pointType(e, this.params.currentTypes)
-								),
+								o()("div", { className: c.a["col-point-type"] }, r.d.pointType(e, this.params.currentTypes)),
 								o()("div", {
 									className: c.a["col-point-type-name"],
 									dangerouslySetInnerHTML: {
-										__html:
-											r.d.pointType(e, this.params.currentTypes) +
-											"<br/>" +
-											e.name,
+										__html: r.d.pointType(e, this.params.currentTypes) + "<br/>" + e.name,
 									},
 								}),
-								o()(
-									"div",
-									{ className: c.a["col-city"] },
-									null === e.address_details.city ? "" : e.address_details.city
-								),
+								o()("div", { className: c.a["col-city"] }, null === e.address_details.city ? "" : e.address_details.city),
 								o()(
 									"div",
 									{
-										className: ""
-											.concat(c.a["col-sm"], " ")
-											.concat(c.a["col-street"]),
+										className: "".concat(c.a["col-sm"], " ").concat(c.a["col-street"]),
 									},
-									this.getAddress(e, ["street", "building_number"])
-										.replace(",", "")
-										.replace("<br/>", "")
+									this.getAddress(e, ["street", "building_number"]).replace(",", "").replace("<br/>", "")
 								),
 								o()("div", {
-									className: ""
-										.concat(c.a["col-sm"], " ")
-										.concat(c.a["col-address"]),
+									className: "".concat(c.a["col-sm"], " ").concat(c.a["col-address"]),
 									dangerouslySetInnerHTML: {
-										__html: this.getAddress(e, [
-											"street",
-											"building_number",
-											"post_code",
-											"city",
-										]),
+										__html: this.getAddress(e, ["street", "building_number", "post_code", "city"]),
 									},
 								}),
 								o()("div", { className: c.a["col-name"] }, e.name),
@@ -5875,9 +5076,7 @@
 													className: c.a["details-show-more"],
 													href: "#".concat(e.name),
 													ref: Object(r.g)(function () {
-														return window.easyPackConfig.customDetailsCallback(
-															e
-														);
+														return window.easyPackConfig.customDetailsCallback(e);
 													}),
 												},
 												Object(r.j)("more") + " ➝"
@@ -5890,32 +5089,25 @@
 				}
 			},
 			getAddress: function (e, t) {
-				return window.easyPackConfig.addressFormat.replace(
-					/{(.*?)}/g,
-					function (n, i) {
-						if (-1 !== t.indexOf(i)) {
-							var o,
-								r = n.replace("{", "").replace("}", "");
-							return (
-								void 0 !== e.address_details &&
-									(o =
-										null === e.address_details[r] ? "" : e.address_details[r]),
-								void 0 === o && (o = e[r]),
-								o || ""
-							);
-						}
-						return "";
+				return window.easyPackConfig.addressFormat.replace(/{(.*?)}/g, function (n, i) {
+					if (-1 !== t.indexOf(i)) {
+						var o,
+							r = n.replace("{", "").replace("}", "");
+						return (
+							void 0 !== e.address_details && (o = null === e.address_details[r] ? "" : e.address_details[r]),
+							void 0 === o && (o = e[r]),
+							o || ""
+						);
 					}
-				);
+					return "";
+				});
 			},
 			paginate: function (e, t) {
 				var n = this.list.getElementsByTagName("li");
 				Math.ceil(n.length / t) < e || 0 === e
 					? this.clearPagination()
 					: (Object.keys(n).forEach(function (i, o) {
-							o < t * (e - 1) || o >= t * e
-								? n[i].setAttribute("class", c.a.hidden)
-								: n[i].setAttribute("class", "");
+							o < t * (e - 1) || o >= t * e ? n[i].setAttribute("class", c.a.hidden) : n[i].setAttribute("class", "");
 					  }),
 					  this.renderPagination(e, t, n));
 			},
@@ -5954,9 +5146,7 @@
 								return o()(
 									"li",
 									{
-										className: ""
-											.concat(c.a.pagingPrev, " ")
-											.concat(1 === e ? c.a.disabled : ""),
+										className: "".concat(c.a.pagingPrev, " ").concat(1 === e ? c.a.disabled : ""),
 										ref: Object(r.g)(function () {
 											1 < e && a.paginate(e - 1, t);
 										}),
@@ -5972,27 +5162,13 @@
 									: p.map(function (t, n) {
 											var r = n + 1;
 											return (function (t) {
-												return (
-													(t > e - 2 && t < e + 2) ||
-													(e <= 4 && t <= 4) ||
-													(t >= s - 4 && e >= s - 4)
-												);
+												return (t > e - 2 && t < e + 2) || (e <= 4 && t <= 4) || (t >= s - 4 && e >= s - 4);
 											})(r)
 												? o()(l, { index: n + 1 })
 												: 1 === r
-												? o()(
-														i.Fragment,
-														null,
-														o()(l, { index: r }),
-														o()(u, null)
-												  )
+												? o()(i.Fragment, null, o()(l, { index: r }), o()(u, null))
 												: r === s
-												? o()(
-														i.Fragment,
-														null,
-														o()(u, null),
-														o()(l, { index: r })
-												  )
+												? o()(i.Fragment, null, o()(u, null), o()(l, { index: r }))
 												: void 0;
 									  });
 							}, null),
@@ -6000,9 +5176,7 @@
 								return o()(
 									"li",
 									{
-										className: ""
-											.concat(c.a.pagingNext, " ")
-											.concat(s === e ? c.a.disabled : ""),
+										className: "".concat(c.a.pagingNext, " ").concat(s === e ? c.a.disabled : ""),
 										ref: Object(r.g)(function () {
 											s !== e && a.paginate(e + 1, t);
 										}),
@@ -6051,10 +5225,7 @@
 							.concat(s.a["easypack-widget"], " .")
 							.concat(s.a["view-chooser"], " .")
 							.concat(s.a["list-btn"], " { background: url(")
-							.concat(
-								window.easyPackConfig.map.listIcon,
-								") no-repeat left; }"
-							),
+							.concat(window.easyPackConfig.map.listIcon, ") no-repeat left; }"),
 						0
 					),
 					this.build();
@@ -6062,11 +5233,7 @@
 		c.prototype = {
 			build: function () {
 				var e = this;
-				(this.mapButton = r()(
-					"div",
-					{ className: "".concat(s.a.btn, " ").concat(s.a["map-btn"]) },
-					Object(i.j)("map")
-				)),
+				(this.mapButton = r()("div", { className: "".concat(s.a.btn, " ").concat(s.a["map-btn"]) }, Object(i.j)("map"))),
 					(this.mapWrapper = r()(
 						"div",
 						{
@@ -6089,11 +5256,7 @@
 						},
 						this.mapButton
 					)),
-					(this.listButton = r()(
-						"div",
-						{ className: "".concat(s.a.btn, " ").concat(s.a["list-btn"]) },
-						Object(i.j)("list")
-					)),
+					(this.listButton = r()("div", { className: "".concat(s.a.btn, " ").concat(s.a["list-btn"]) }, Object(i.j)("list"))),
 					(this.listWrapper = r()(
 						"div",
 						{
@@ -6110,41 +5273,28 @@
 									default:
 										e.params.leafletMap.style.visibility = "hidden";
 								}
-								(document.querySelector(".list-widget").style.visibility =
-									"visible"),
-									(e.params.list.listElement.style.display = "flex");
+								(document.querySelector(".list-widget").style.visibility = "visible"), (e.params.list.listElement.style.display = "flex");
 							}),
 						},
 						this.listButton
 					)),
-					(this.wrapper = r()(
-						"div",
-						{ className: s.a["view-chooser"] },
-						this.mapWrapper,
-						this.listWrapper
-					));
+					(this.wrapper = r()("div", { className: s.a["view-chooser"] }, this.mapWrapper, this.listWrapper));
 			},
 			resetState: function () {
-				switch (
-					((this.listWrapper.dataset.active = "false"),
-					(this.mapWrapper.dataset.active = "true"),
-					window.easyPackConfig.mapType)
-				) {
+				switch (((this.listWrapper.dataset.active = "false"), (this.mapWrapper.dataset.active = "true"), window.easyPackConfig.mapType)) {
 					case "google":
 						this.params.mapElement.style.display = "block";
 						break;
 					default:
 						this.params.leafletMap.style.visibility = "visible";
 				}
-				document.innerWidth <= 768 &&
-					(this.params.list.listElement.style.display = "none");
+				document.innerWidth <= 768 && (this.params.list.listElement.style.display = "none");
 			},
 			render: function (e) {
 				e.appendChild(this.wrapper);
 			},
 			rerender: function () {
-				(this.mapButton.innerHTML = Object(i.j)("map")),
-					(this.listButton.innerHTML = Object(i.j)("list"));
+				(this.mapButton.innerHTML = Object(i.j)("map")), (this.listButton.innerHTML = Object(i.j)("list"));
 			},
 		};
 	},
@@ -6167,16 +5317,11 @@
 				this.statusElement = r()(
 					"div",
 					{ className: "status-bar" },
-					r()(
-						"span",
-						{ className: s.a["current-status"] },
-						Object(i.j)("loading")
-					),
+					r()("span", { className: s.a["current-status"] }, Object(i.j)("loading")),
 					r()(
 						"div",
 						{
-							className:
-								"loader-inner ball-spin-fade-loader ball-spin-fade-loader-mp hidden",
+							className: "loader-inner ball-spin-fade-loader ball-spin-fade-loader-mp hidden",
 						},
 						r()("div", null),
 						r()("div", null),
@@ -6198,30 +5343,18 @@
 					this.statusElement.childNodes[1].classList.remove("hidden");
 			},
 			hide: function () {
-				this.statusElement.className = "".concat(
-					s.a["status-bar--hidden"],
-					" "
-				);
+				this.statusElement.className = "".concat(s.a["status-bar--hidden"], " ");
 			},
 			showInfoAboutZoom: function () {
 				(this.statusElement.className = "".concat(s.a["status-bar"])),
-					(this.statusElement.childNodes[0].innerHTML = Object(i.j)(
-						"zoom_in_to_see_points"
-					)),
+					(this.statusElement.childNodes[0].innerHTML = Object(i.j)("zoom_in_to_see_points")),
 					this.statusElement.childNodes[1].classList.add("hidden");
 			},
 			update: function (e, t) {
 				0 !== e &&
 					e <= t &&
 					((this.statusElement.className = s.a["status-bar"]),
-					(this.statusElement.childNodes[0].innerHTML =
-						e +
-						" " +
-						Object(i.j)("of") +
-						" " +
-						t +
-						" " +
-						Object(i.j)("points_loaded")));
+					(this.statusElement.childNodes[0].innerHTML = e + " " + Object(i.j)("of") + " " + t + " " + Object(i.j)("points_loaded")));
 			},
 		};
 	},
@@ -6237,23 +5370,15 @@
 			a = n(364),
 			s = n.n(a),
 			c = function (e, t, n) {
-				(this.widget = e),
-					(this.module = t),
-					(this.placeholder = n),
-					this.build();
+				(this.widget = e), (this.module = t), (this.placeholder = n), this.build();
 			};
 		c.prototype = {
 			build: function () {
 				var e = this,
 					t = [];
 				if (void 0 !== e.module.userConfig.languages)
-					for (var n = 0, o = e.module.userConfig.languages.length; n < o; n++)
-						t.push(e.module.userConfig.languages[n]);
-				else
-					for (var a in window.easyPackLocales)
-						window.easyPackLocales.hasOwnProperty(a) &&
-							"pl-PL" !== a &&
-							t.push(a);
+					for (var n = 0, o = e.module.userConfig.languages.length; n < o; n++) t.push(e.module.userConfig.languages[n]);
+				else for (var a in window.easyPackLocales) window.easyPackLocales.hasOwnProperty(a) && "pl-PL" !== a && t.push(a);
 				return r()(
 					"div",
 					{ className: s.a["language-bar"] },
@@ -6269,14 +5394,11 @@
 										(easyPack.locale = this.value),
 										e.module.init(e.module.userConfig, !0),
 										e.widget.refreshPoints(),
-										document.getElementsByClassName("info-box-wrapper").length >
-											0 && e.widget.infoWindow.rerender(),
+										document.getElementsByClassName("info-box-wrapper").length > 0 && e.widget.infoWindow.rerender(),
 										e.widget.searchObj && e.widget.searchObj.rerender(),
-										e.widget.typesFilterObj &&
-											e.widget.typesFilterObj.rerender(),
+										e.widget.typesFilterObj && e.widget.typesFilterObj.rerender(),
 										e.widget.viewChooserObj.rerender(),
-										null !== e.widget.detailsObj &&
-											e.widget.detailsObj.rerender();
+										null !== e.widget.detailsObj && e.widget.detailsObj.rerender();
 								}),
 							},
 							r()(function () {
@@ -6297,10 +5419,8 @@
 		var i,
 			o = (function () {
 				var e = String.fromCharCode,
-					t =
-						"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-					n =
-						"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",
+					t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+					n = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",
 					i = {};
 				function o(e, t) {
 					if (!i[e]) {
@@ -6353,14 +5473,7 @@
 							  });
 					},
 					compressToUint8Array: function (e) {
-						for (
-							var t = r.compress(e),
-								n = new Uint8Array(2 * t.length),
-								i = 0,
-								o = t.length;
-							i < o;
-							i++
-						) {
+						for (var t = r.compress(e), n = new Uint8Array(2 * t.length), i = 0, o = t.length; i < o; i++) {
 							var a = t.charCodeAt(i);
 							(n[2 * i] = a >>> 8), (n[2 * i + 1] = a % 256);
 						}
@@ -6368,12 +5481,7 @@
 					},
 					decompressFromUint8Array: function (t) {
 						if (null == t) return r.decompress(t);
-						for (
-							var n = new Array(t.length / 2), i = 0, o = n.length;
-							i < o;
-							i++
-						)
-							n[i] = 256 * t[2 * i] + t[2 * i + 1];
+						for (var n = new Array(t.length / 2), i = 0, o = n.length; i < o; i++) n[i] = 256 * t[2 * i] + t[2 * i + 1];
 						var a = [];
 						return (
 							n.forEach(function (t) {
@@ -6423,8 +5531,7 @@
 						for (r = 0; r < e.length; r += 1)
 							if (
 								((c = e.charAt(r)),
-								Object.prototype.hasOwnProperty.call(a, c) ||
-									((a[c] = d++), (s[c] = !0)),
+								Object.prototype.hasOwnProperty.call(a, c) || ((a[c] = d++), (s[c] = !0)),
 								(l = u + c),
 								Object.prototype.hasOwnProperty.call(a, l))
 							)
@@ -6432,65 +5539,37 @@
 							else {
 								if (Object.prototype.hasOwnProperty.call(s, u)) {
 									if (u.charCodeAt(0) < 256) {
-										for (i = 0; i < f; i++)
-											(g <<= 1),
-												y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++;
+										for (i = 0; i < f; i++) (g <<= 1), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++;
 										for (o = u.charCodeAt(0), i = 0; i < 8; i++)
-											(g = (g << 1) | (1 & o)),
-												y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-												(o >>= 1);
+											(g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 									} else {
-										for (o = 1, i = 0; i < f; i++)
-											(g = (g << 1) | o),
-												y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-												(o = 0);
+										for (o = 1, i = 0; i < f; i++) (g = (g << 1) | o), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o = 0);
 										for (o = u.charCodeAt(0), i = 0; i < 16; i++)
-											(g = (g << 1) | (1 & o)),
-												y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-												(o >>= 1);
+											(g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 									}
 									0 == --p && ((p = Math.pow(2, f)), f++), delete s[u];
 								} else
 									for (o = a[u], i = 0; i < f; i++)
-										(g = (g << 1) | (1 & o)),
-											y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-											(o >>= 1);
-								0 == --p && ((p = Math.pow(2, f)), f++),
-									(a[l] = d++),
-									(u = String(c));
+										(g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
+								0 == --p && ((p = Math.pow(2, f)), f++), (a[l] = d++), (u = String(c));
 							}
 						if ("" !== u) {
 							if (Object.prototype.hasOwnProperty.call(s, u)) {
 								if (u.charCodeAt(0) < 256) {
-									for (i = 0; i < f; i++)
-										(g <<= 1),
-											y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++;
+									for (i = 0; i < f; i++) (g <<= 1), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++;
 									for (o = u.charCodeAt(0), i = 0; i < 8; i++)
-										(g = (g << 1) | (1 & o)),
-											y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-											(o >>= 1);
+										(g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 								} else {
-									for (o = 1, i = 0; i < f; i++)
-										(g = (g << 1) | o),
-											y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-											(o = 0);
+									for (o = 1, i = 0; i < f; i++) (g = (g << 1) | o), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o = 0);
 									for (o = u.charCodeAt(0), i = 0; i < 16; i++)
-										(g = (g << 1) | (1 & o)),
-											y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-											(o >>= 1);
+										(g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 								}
 								0 == --p && ((p = Math.pow(2, f)), f++), delete s[u];
 							} else
-								for (o = a[u], i = 0; i < f; i++)
-									(g = (g << 1) | (1 & o)),
-										y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-										(o >>= 1);
+								for (o = a[u], i = 0; i < f; i++) (g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 							0 == --p && ((p = Math.pow(2, f)), f++);
 						}
-						for (o = 2, i = 0; i < f; i++)
-							(g = (g << 1) | (1 & o)),
-								y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++,
-								(o >>= 1);
+						for (o = 2, i = 0; i < f; i++) (g = (g << 1) | (1 & o)), y == t - 1 ? ((y = 0), h.push(n(g)), (g = 0)) : y++, (o >>= 1);
 						for (;;) {
 							if (((g <<= 1), y == t - 1)) {
 								h.push(n(g));
@@ -6536,8 +5615,7 @@
 								for (a = 0, c = Math.pow(2, 8), l = 1; l != c; )
 									(s = m.val & m.position),
 										(m.position >>= 1),
-										0 == m.position &&
-											((m.position = n), (m.val = i(m.index++))),
+										0 == m.position && ((m.position = n), (m.val = i(m.index++))),
 										(a |= (s > 0 ? 1 : 0) * l),
 										(l <<= 1);
 								u = e(a);
@@ -6546,8 +5624,7 @@
 								for (a = 0, c = Math.pow(2, 16), l = 1; l != c; )
 									(s = m.val & m.position),
 										(m.position >>= 1),
-										0 == m.position &&
-											((m.position = n), (m.val = i(m.index++))),
+										0 == m.position && ((m.position = n), (m.val = i(m.index++))),
 										(a |= (s > 0 ? 1 : 0) * l),
 										(l <<= 1);
 								u = e(a);
@@ -6568,8 +5645,7 @@
 									for (a = 0, c = Math.pow(2, 8), l = 1; l != c; )
 										(s = m.val & m.position),
 											(m.position >>= 1),
-											0 == m.position &&
-												((m.position = n), (m.val = i(m.index++))),
+											0 == m.position && ((m.position = n), (m.val = i(m.index++))),
 											(a |= (s > 0 ? 1 : 0) * l),
 											(l <<= 1);
 									(p[f++] = e(a)), (u = f - 1), d--;
@@ -6578,8 +5654,7 @@
 									for (a = 0, c = Math.pow(2, 16), l = 1; l != c; )
 										(s = m.val & m.position),
 											(m.position >>= 1),
-											0 == m.position &&
-												((m.position = n), (m.val = i(m.index++))),
+											0 == m.position && ((m.position = n), (m.val = i(m.index++))),
 											(a |= (s > 0 ? 1 : 0) * l),
 											(l <<= 1);
 									(p[f++] = e(a)), (u = f - 1), d--;
@@ -6592,10 +5667,7 @@
 								if (u !== f) return null;
 								g = r + r.charAt(0);
 							}
-							y.push(g),
-								(p[f++] = r + g.charAt(0)),
-								(r = g),
-								0 == --d && ((d = Math.pow(2, h)), h++);
+							y.push(g), (p[f++] = r + g.charAt(0)), (r = g), 0 == --d && ((d = Math.pow(2, h)), h++);
 						}
 					},
 				};
@@ -6619,13 +5691,7 @@
 			s = "[object Undefined]",
 			c = i ? i.toStringTag : void 0;
 		e.exports = function (e) {
-			return null == e
-				? void 0 === e
-					? s
-					: a
-				: c && c in Object(e)
-				? o(e)
-				: r(e);
+			return null == e ? (void 0 === e ? s : a) : c && c in Object(e) ? o(e) : r(e);
 		};
 	},
 	function (e, t, n) {
@@ -6714,8 +5780,7 @@
 			? Object.defineProperties
 			: function (e, t) {
 					o(e);
-					for (var n, a = r(t), s = a.length, c = 0; s > c; )
-						i.f(e, (n = a[c++]), t[n]);
+					for (var n, a = r(t), s = a.length, c = 0; s > c; ) i.f(e, (n = a[c++]), t[n]);
 					return e;
 			  };
 	},
@@ -6723,10 +5788,7 @@
 		var i = n(23),
 			o = n(44).f,
 			r = {}.toString,
-			a =
-				"object" == typeof window && window && Object.getOwnPropertyNames
-					? Object.getOwnPropertyNames(window)
-					: [];
+			a = "object" == typeof window && window && Object.getOwnPropertyNames ? Object.getOwnPropertyNames(window) : [];
 		e.exports.f = function (e) {
 			return a && "[object Window]" == r.call(e)
 				? (function (e) {
@@ -6763,20 +5825,8 @@
 				);
 			})
 				? function (e, t) {
-						for (
-							var n = a(e), c = arguments.length, l = 1, u = o.f, p = r.f;
-							c > l;
-
-						)
-							for (
-								var d,
-									f = s(arguments[l++]),
-									h = u ? i(f).concat(u(f)) : i(f),
-									g = h.length,
-									y = 0;
-								g > y;
-
-							)
+						for (var n = a(e), c = arguments.length, l = 1, u = o.f, p = r.f; c > l; )
+							for (var d, f = s(arguments[l++]), h = u ? i(f).concat(u(f)) : i(f), g = h.length, y = 0; g > y; )
 								p.call(f, (d = h[y++])) && (n[d] = f[d]);
 						return n;
 				  }
@@ -6829,9 +5879,7 @@
 				case 3:
 					return i ? e(t[0], t[1], t[2]) : e.call(n, t[0], t[1], t[2]);
 				case 4:
-					return i
-						? e(t[0], t[1], t[2], t[3])
-						: e.call(n, t[0], t[1], t[2], t[3]);
+					return i ? e(t[0], t[1], t[2], t[3]) : e.call(n, t[0], t[1], t[2], t[3]);
 			}
 			return e.apply(n, t);
 		};
@@ -6930,8 +5978,7 @@
 						(s = u[d]), (d += f);
 						break;
 					}
-					if (((d += f), c ? d < 0 : p <= d))
-						throw TypeError("Reduce of empty array with no initial value");
+					if (((d += f), c ? d < 0 : p <= d)) throw TypeError("Reduce of empty array with no initial value");
 				}
 			for (; c ? d >= 0 : p > d; d += f) d in u && (s = t(s, u[d], d, l));
 			return s;
@@ -6952,11 +5999,7 @@
 					l = arguments.length > 2 ? arguments[2] : void 0,
 					u = Math.min((void 0 === l ? a : o(l, a)) - c, a - s),
 					p = 1;
-				for (
-					c < s && s < c + u && ((p = -1), (c += u - 1), (s += u - 1));
-					u-- > 0;
-
-				)
+				for (c < s && s < c + u && ((p = -1), (c += u - 1), (s += u - 1)); u-- > 0; )
 					c in n ? (n[s] = n[c]) : delete n[s], (s += p), (c += p);
 				return n;
 			};
@@ -6972,9 +6015,7 @@
 		n(2)({ target: "RegExp", proto: !0, forced: i !== /./.exec }, { exec: i });
 	},
 	function (e, t, n) {
-		n(15) &&
-			"g" != /./g.flags &&
-			n(14).f(RegExp.prototype, "flags", { configurable: !0, get: n(66) });
+		n(15) && "g" != /./g.flags && n(14).f(RegExp.prototype, "flags", { configurable: !0, get: n(66) });
 	},
 	function (e, t, n) {
 		"use strict";
@@ -7044,16 +6085,8 @@
 									try {
 										s
 											? (o || (2 == e._h && F(e), (e._h = 1)),
-											  !0 === s
-													? (n = i)
-													: (u && u.enter(),
-													  (n = s(i)),
-													  u && (u.exit(), (a = !0))),
-											  n === t.promise
-													? l(P("Promise-chain cycle"))
-													: (r = M(n))
-													? r.call(n, c, l)
-													: c(n))
+											  !0 === s ? (n = i) : (u && u.enter(), (n = s(i)), u && (u.exit(), (a = !0))),
+											  n === t.promise ? l(P("Promise-chain cycle")) : (r = M(n)) ? r.call(n, c, l) : c(n))
 											: l(i);
 									} catch (e) {
 										u && !a && u.exit(), l(e);
@@ -7081,9 +6114,7 @@
 									? C.emit("unhandledRejection", o, e)
 									: (n = c.onunhandledrejection)
 									? n({ promise: e, reason: o })
-									: (i = c.console) &&
-									  i.error &&
-									  i.error("Unhandled promise rejection", o);
+									: (i = c.console) && i.error && i.error("Unhandled promise rejection", o);
 							})),
 							(e._h = S || I(e) ? 2 : 1)),
 						(e._a = void 0),
@@ -7098,19 +6129,12 @@
 			F = function (e) {
 				m.call(c, function () {
 					var t;
-					S
-						? C.emit("rejectionHandled", e)
-						: (t = c.onrejectionhandled) && t({ promise: e, reason: e._v });
+					S ? C.emit("rejectionHandled", e) : (t = c.onrejectionhandled) && t({ promise: e, reason: e._v });
 				});
 			},
 			B = function (e) {
 				var t = this;
-				t._d ||
-					((t._d = !0),
-					((t = t._w || t)._v = e),
-					(t._s = 2),
-					t._a || (t._a = t._c.slice()),
-					A(t, !0));
+				t._d || ((t._d = !0), ((t = t._w || t)._v = e), (t._s = 2), t._a || (t._a = t._c.slice()), A(t, !0));
 			},
 			z = function (e) {
 				var t,
@@ -7144,13 +6168,7 @@
 				}
 			}),
 			((i = function (e) {
-				(this._c = []),
-					(this._a = void 0),
-					(this._s = 0),
-					(this._d = !1),
-					(this._v = void 0),
-					(this._h = 0),
-					(this._n = !1);
+				(this._c = []), (this._a = void 0), (this._s = 0), (this._d = !1), (this._v = void 0), (this._h = 0), (this._n = !1);
 			}).prototype = n(53)(j.prototype, {
 				then: function (e, t) {
 					var n = T(y(this, j));
@@ -7170,9 +6188,7 @@
 			})),
 			(r = function () {
 				var e = new i();
-				(this.promise = e),
-					(this.resolve = l(z, e, 1)),
-					(this.reject = l(B, e, 1));
+				(this.promise = e), (this.resolve = l(z, e, 1)), (this.reject = l(B, e, 1));
 			}),
 			(w.f = T = function (e) {
 				return e === j || e === a ? new r(e) : o(e);
@@ -7245,8 +6261,7 @@
 		function o(e) {
 			var t, n;
 			(this.promise = new e(function (e, i) {
-				if (void 0 !== t || void 0 !== n)
-					throw TypeError("Bad Promise constructor");
+				if (void 0 !== t || void 0 !== n) throw TypeError("Bad Promise constructor");
 				(t = e), (n = i);
 			})),
 				(this.resolve = i(t)),
@@ -7290,19 +6305,12 @@
 		e.exports = {
 			getConstructor: function (e, t, n, l) {
 				var u = e(function (e, i) {
-					s(e, u, t, "_i"),
-						(e._t = t),
-						(e._i = o(null)),
-						(e._f = void 0),
-						(e._l = void 0),
-						(e[g] = 0),
-						null != i && c(i, n, e[l], e);
+					s(e, u, t, "_i"), (e._t = t), (e._i = o(null)), (e._f = void 0), (e._l = void 0), (e[g] = 0), null != i && c(i, n, e[l], e);
 				});
 				return (
 					r(u.prototype, {
 						clear: function () {
-							for (var e = h(this, t), n = e._i, i = e._f; i; i = i.n)
-								(i.r = !0), i.p && (i.p = i.p.n = void 0), delete n[i.i];
+							for (var e = h(this, t), n = e._i, i = e._f; i; i = i.n) (i.r = !0), i.p && (i.p = i.p.n = void 0), delete n[i.i];
 							(e._f = e._l = void 0), (e[g] = 0);
 						},
 						delete: function (e) {
@@ -7311,24 +6319,13 @@
 							if (i) {
 								var o = i.n,
 									r = i.p;
-								delete n._i[i.i],
-									(i.r = !0),
-									r && (r.n = o),
-									o && (o.p = r),
-									n._f == i && (n._f = o),
-									n._l == i && (n._l = r),
-									n[g]--;
+								delete n._i[i.i], (i.r = !0), r && (r.n = o), o && (o.p = r), n._f == i && (n._f = o), n._l == i && (n._l = r), n[g]--;
 							}
 							return !!i;
 						},
 						forEach: function (e) {
 							h(this, t);
-							for (
-								var n,
-									i = a(e, arguments.length > 1 ? arguments[1] : void 0, 3);
-								(n = n ? n.n : this._f);
-
-							)
+							for (var n, i = a(e, arguments.length > 1 ? arguments[1] : void 0, 3); (n = n ? n.n : this._f); )
 								for (i(n.v, n.k, this); n && n.r; ) n = n.p;
 						},
 						has: function (e) {
@@ -7435,20 +6432,14 @@
 			(e.exports = {
 				getConstructor: function (e, t, n, r) {
 					var l = e(function (e, i) {
-						s(e, l, t, "_i"),
-							(e._t = t),
-							(e._i = h++),
-							(e._l = void 0),
-							null != i && c(i, n, e[r], e);
+						s(e, l, t, "_i"), (e._t = t), (e._i = h++), (e._l = void 0), null != i && c(i, n, e[r], e);
 					});
 					return (
 						i(l.prototype, {
 							delete: function (e) {
 								if (!a(e)) return !1;
 								var n = o(e);
-								return !0 === n
-									? g(p(this, t)).delete(e)
-									: n && u(n, this._i) && delete n[this._i];
+								return !0 === n ? g(p(this, t)).delete(e) : n && u(n, this._i) && delete n[this._i];
 							},
 							has: function (e) {
 								if (!a(e)) return !1;
@@ -7511,8 +6502,7 @@
 			r = n(55).f;
 		e.exports = function (e) {
 			return function (t) {
-				for (var n, a = o(t), s = i(a), c = s.length, l = 0, u = []; c > l; )
-					r.call(a, (n = s[l++])) && u.push(e ? [n, a[n]] : a[n]);
+				for (var n, a = o(t), s = i(a), c = s.length, l = 0, u = []; c > l; ) r.call(a, (n = s[l++])) && u.push(e ? [n, a[n]] : a[n]);
 				return u;
 			};
 		};
@@ -7557,12 +6547,7 @@
 			return (
 				(t = o(void 0 === t ? e.length - 1 : t, 0)),
 				function () {
-					for (
-						var r = arguments, a = -1, s = o(r.length - t, 0), c = Array(s);
-						++a < s;
-
-					)
-						c[a] = r[t + a];
+					for (var r = arguments, a = -1, s = o(r.length - t, 0), c = Array(s); ++a < s; ) c[a] = r[t + a];
 					a = -1;
 					for (var l = Array(t + 1); ++a < t; ) l[a] = r[a];
 					return (l[t] = n(c)), i(e, this, l);
@@ -7646,10 +6631,7 @@
 					u
 						.call(p)
 						.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")
-						.replace(
-							/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,
-							"$1.*?"
-						) +
+						.replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") +
 					"$"
 			);
 		e.exports = function (e) {
@@ -7701,9 +6683,7 @@
 	function (e, t, n) {
 		var i,
 			o = n(164),
-			r = (i = /[^.]+$/.exec((o && o.keys && o.keys.IE_PROTO) || ""))
-				? "Symbol(src)_1." + i
-				: "";
+			r = (i = /[^.]+$/.exec((o && o.keys && o.keys.IE_PROTO) || "")) ? "Symbol(src)_1." + i : "";
 		e.exports = function (e) {
 			return !!r && r in e;
 		};
@@ -7774,12 +6754,7 @@
 				var t = document.createDocumentFragment();
 				return (
 					e.forEach(function e(n) {
-						if (
-							n instanceof HTMLElement ||
-							n instanceof SVGElement ||
-							n instanceof Comment ||
-							n instanceof DocumentFragment
-						)
+						if (n instanceof HTMLElement || n instanceof SVGElement || n instanceof Comment || n instanceof DocumentFragment)
 							t.appendChild(n);
 						else if ("string" == typeof n || "number" == typeof n) {
 							var i = document.createTextNode(n);
@@ -7797,12 +6772,10 @@
 		(window.easyPack = {}),
 			(window.easyPack.googleMapsApi = {}),
 			(window.easyPack.googleMapsApi.initialize = function () {
-				(window.easyPack.googleMapsApi.ready = !0),
-					i.d.asyncLoad(window.easyPackConfig.infoboxLibraryUrl);
+				(window.easyPack.googleMapsApi.ready = !0), i.d.asyncLoad(window.easyPackConfig.infoboxLibraryUrl);
 			}),
 			(window.easyPack.googleMapsApi.initializeDropdown = function () {
-				(easyPack.googleMapsApi.ready = !0),
-					window.easyPack.dropdownWidgetObj.afterLoad();
+				(easyPack.googleMapsApi.ready = !0), window.easyPack.dropdownWidgetObj.afterLoad();
 			});
 	},
 	function (e, t) {
@@ -7841,16 +6814,11 @@
 	function (e, t, n) {
 		"use strict";
 		function i(e, t) {
-			if (null == e)
-				throw new TypeError("Cannot convert first argument to object");
+			if (null == e) throw new TypeError("Cannot convert first argument to object");
 			for (var n = Object(e), i = 1; i < arguments.length; i++) {
 				var o = arguments[i];
 				if (null != o)
-					for (
-						var r = Object.keys(Object(o)), a = 0, s = r.length;
-						a < s;
-						a++
-					) {
+					for (var r = Object.keys(Object(o)), a = 0, s = r.length; a < s; a++) {
 						var c = r[a],
 							l = Object.getOwnPropertyDescriptor(o, c);
 						void 0 !== l && l.enumerable && (n[c] = o[c]);
@@ -7886,20 +6854,7 @@
 	},
 	function (e, t, n) {
 		"use strict";
-		n(178),
-			n(321),
-			n(323),
-			n(326),
-			n(328),
-			n(330),
-			n(332),
-			n(334),
-			n(336),
-			n(338),
-			n(340),
-			n(342),
-			n(344),
-			n(348);
+		n(178), n(321), n(323), n(326), n(328), n(330), n(332), n(334), n(336), n(338), n(340), n(342), n(344), n(348);
 	},
 	function (e, t, n) {
 		n(179),
@@ -8124,8 +7079,7 @@
 					v(n),
 					o(z, t)
 						? (n.enumerable
-								? (o(e, N) && e[N][t] && (e[N][t] = !1),
-								  (n = P(n, { enumerable: _(0, !1) })))
+								? (o(e, N) && e[N][t] && (e[N][t] = !1), (n = P(n, { enumerable: _(0, !1) })))
 								: (o(e, N) || E(e, N, _(1, {})), (e[N][t] = !0)),
 						  G(e, t, n))
 						: E(e, t, n)
@@ -8133,49 +7087,34 @@
 			},
 			K = function (e, t) {
 				v(e);
-				for (var n, i = y((t = b(t))), o = 0, r = i.length; r > o; )
-					V(e, (n = i[o++]), t[n]);
+				for (var n, i = y((t = b(t))), o = 0, r = i.length; r > o; ) V(e, (n = i[o++]), t[n]);
 				return e;
 			},
 			J = function (e) {
 				var t = F.call(this, (e = k(e, !0)));
-				return (
-					!(this === H && o(z, e) && !o(D, e)) &&
-					(!(t || !o(this, e) || !o(z, e) || (o(this, N) && this[N][e])) || t)
-				);
+				return !(this === H && o(z, e) && !o(D, e)) && (!(t || !o(this, e) || !o(z, e) || (o(this, N) && this[N][e])) || t);
 			},
 			$ = function (e, t) {
 				if (((e = b(e)), (t = k(t, !0)), e !== H || !o(z, t) || o(D, t))) {
 					var n = S(e, t);
-					return (
-						!n || !o(z, t) || (o(e, N) && e[N][t]) || (n.enumerable = !0), n
-					);
+					return !n || !o(z, t) || (o(e, N) && e[N][t]) || (n.enumerable = !0), n;
 				}
 			},
 			X = function (e) {
-				for (var t, n = T(b(e)), i = [], r = 0; n.length > r; )
-					o(z, (t = n[r++])) || t == N || t == c || i.push(t);
+				for (var t, n = T(b(e)), i = [], r = 0; n.length > r; ) o(z, (t = n[r++])) || t == N || t == c || i.push(t);
 				return i;
 			},
 			Y = function (e) {
-				for (
-					var t, n = e === H, i = T(n ? D : b(e)), r = [], a = 0;
-					i.length > a;
-
-				)
-					!o(z, (t = i[a++])) || (n && !o(H, t)) || r.push(z[t]);
+				for (var t, n = e === H, i = T(n ? D : b(e)), r = [], a = 0; i.length > a; ) !o(z, (t = i[a++])) || (n && !o(H, t)) || r.push(z[t]);
 				return r;
 			};
 		R ||
 			(s(
 				(L = function () {
-					if (this instanceof L)
-						throw TypeError("Symbol is not a constructor!");
+					if (this instanceof L) throw TypeError("Symbol is not a constructor!");
 					var e = d(arguments.length > 0 ? arguments[0] : void 0),
 						t = function (n) {
-							this === H && t.call(D, n),
-								o(this, N) && o(this[N], e) && (this[N][e] = !1),
-								G(this, e, _(1, n));
+							this === H && t.call(D, n), o(this, N) && o(this[N], e) && (this[N][e] = !1), G(this, e, _(1, n));
 						};
 					return r && W && G(H, e, { configurable: !0, set: t }), Z(e);
 				}).prototype,
@@ -8195,9 +7134,7 @@
 			})),
 			a(a.G + a.W + a.F * !R, { Symbol: L });
 		for (
-			var Q = "hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables".split(
-					","
-				),
+			var Q = "hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables".split(","),
 				ee = 0;
 			Q.length > ee;
 
@@ -8236,26 +7173,17 @@
 							(!R ||
 								l(function () {
 									var e = L();
-									return (
-										"[null]" != A([e]) ||
-										"{}" != A({ a: e }) ||
-										"{}" != A(Object(e))
-									);
+									return "[null]" != A([e]) || "{}" != A({ a: e }) || "{}" != A(Object(e));
 								})),
 					"JSON",
 					{
 						stringify: function (e) {
-							for (var t, n, i = [e], o = 1; arguments.length > o; )
-								i.push(arguments[o++]);
+							for (var t, n, i = [e], o = 1; arguments.length > o; ) i.push(arguments[o++]);
 							if (((n = t = i[1]), (w(t) || void 0 !== e) && !q(e)))
 								return (
 									m(t) ||
 										(t = function (e, t) {
-											if (
-												("function" == typeof n && (t = n.call(this, e, t)),
-												!q(t))
-											)
-												return t;
+											if (("function" == typeof n && (t = n.call(this, e, t)), !q(t))) return t;
 										}),
 									(i[1] = t),
 									A.apply(M, i)
@@ -8278,9 +7206,7 @@
 		e.exports = function (e) {
 			var t = i(e),
 				n = o.f;
-			if (n)
-				for (var a, s = n(e), c = r.f, l = 0; s.length > l; )
-					c.call(e, (a = s[l++])) && t.push(a);
+			if (n) for (var a, s = n(e), c = r.f, l = 0; s.length > l; ) c.call(e, (a = s[l++])) && t.push(a);
 			return t;
 		};
 	},
@@ -8492,8 +7418,7 @@
 							default:
 								return +t;
 						}
-						for (var a, c = t.slice(2), l = 0, u = c.length; l < u; l++)
-							if ((a = c.charCodeAt(l)) < 48 || a > o) return NaN;
+						for (var a, c = t.slice(2), l = 0, u = c.length; l < u; l++) if ((a = c.charCodeAt(l)) < 48 || a > o) return NaN;
 						return parseInt(c, i);
 					}
 				}
@@ -8538,12 +7463,10 @@
 			l = [0, 0, 0, 0, 0, 0],
 			u = "Number.toFixed: incorrect invocation!",
 			p = function (e, t) {
-				for (var n = -1, i = t; ++n < 6; )
-					(i += e * l[n]), (l[n] = i % 1e7), (i = c(i / 1e7));
+				for (var n = -1, i = t; ++n < 6; ) (i += e * l[n]), (l[n] = i % 1e7), (i = c(i / 1e7));
 			},
 			d = function (e) {
-				for (var t = 6, n = 0; --t >= 0; )
-					(n += l[t]), (l[t] = c(n / e)), (n = (n % e) * 1e7);
+				for (var t = 6, n = 0; --t >= 0; ) (n += l[t]), (l[t] = c(n / e)), (n = (n % e) * 1e7);
 			},
 			f = function () {
 				for (var e = 6, t = ""; --e >= 0; )
@@ -8554,11 +7477,7 @@
 				return t;
 			},
 			h = function (e, t, n) {
-				return 0 === t
-					? n
-					: t % 2 == 1
-					? h(e, t - 1, n * e)
-					: h(e * e, t / 2, n);
+				return 0 === t ? n : t % 2 == 1 ? h(e, t - 1, n * e) : h(e * e, t / 2, n);
 			};
 		i(
 			i.P +
@@ -8600,17 +7519,10 @@
 							(t = 52 - t) > 0)
 						) {
 							for (p(0, n), i = l; i >= 7; ) p(1e7, 0), (i -= 7);
-							for (p(h(10, i, 1), 0), i = t - 1; i >= 23; )
-								d(1 << 23), (i -= 23);
+							for (p(h(10, i, 1), 0), i = t - 1; i >= 23; ) d(1 << 23), (i -= 23);
 							d(1 << i), p(1, 1), d(2), (y = f());
 						} else p(0, n), p(1 << -t, 0), (y = f() + a.call("0", l));
-					return (y =
-						l > 0
-							? g +
-							  ((s = y.length) <= l
-									? "0." + a.call("0", l - s) + y
-									: y.slice(0, s - l) + "." + y.slice(s - l))
-							: g + y);
+					return (y = l > 0 ? g + ((s = y.length) <= l ? "0." + a.call("0", l - s) + y : y.slice(0, s - l) + "." + y.slice(s - l)) : g + y);
 				},
 			}
 		);
@@ -8697,32 +7609,18 @@
 			o = n(128),
 			r = Math.sqrt,
 			a = Math.acosh;
-		i(
-			i.S +
-				i.F *
-					!(a && 710 == Math.floor(a(Number.MAX_VALUE)) && a(1 / 0) == 1 / 0),
-			"Math",
-			{
-				acosh: function (e) {
-					return (e = +e) < 1
-						? NaN
-						: e > 94906265.62425156
-						? Math.log(e) + Math.LN2
-						: o(e - 1 + r(e - 1) * r(e + 1));
-				},
-			}
-		);
+		i(i.S + i.F * !(a && 710 == Math.floor(a(Number.MAX_VALUE)) && a(1 / 0) == 1 / 0), "Math", {
+			acosh: function (e) {
+				return (e = +e) < 1 ? NaN : e > 94906265.62425156 ? Math.log(e) + Math.LN2 : o(e - 1 + r(e - 1) * r(e + 1));
+			},
+		});
 	},
 	function (e, t, n) {
 		var i = n(2),
 			o = Math.asinh;
 		i(i.S + i.F * !(o && 1 / o(0) > 0), "Math", {
 			asinh: function e(t) {
-				return isFinite((t = +t)) && 0 != t
-					? t < 0
-						? -e(-t)
-						: Math.log(t + Math.sqrt(t * t + 1))
-					: t;
+				return isFinite((t = +t)) && 0 != t ? (t < 0 ? -e(-t) : Math.log(t + Math.sqrt(t * t + 1))) : t;
 			},
 		});
 	},
@@ -8748,9 +7646,7 @@
 		var i = n(2);
 		i(i.S, "Math", {
 			clz32: function (e) {
-				return (e >>>= 0)
-					? 31 - Math.floor(Math.log(e + 0.5) * Math.LOG2E)
-					: 32;
+				return (e >>>= 0) ? 31 - Math.floor(Math.log(e + 0.5) * Math.LOG2E) : 32;
 			},
 		});
 	},
@@ -8786,11 +7682,7 @@
 					n,
 					o = Math.abs(e),
 					l = i(e);
-				return o < c
-					? l * (o / c / a + 1 / r - 1 / r) * c * a
-					: (n = (t = (1 + a / r) * o) - (t - o)) > s || n != n
-					? l * (1 / 0)
-					: l * n;
+				return o < c ? l * (o / c / a + 1 / r - 1 / r) * c * a : (n = (t = (1 + a / r) * o) - (t - o)) > s || n != n ? l * (1 / 0) : l * n;
 			};
 	},
 	function (e, t, n) {
@@ -8799,9 +7691,7 @@
 		i(i.S, "Math", {
 			hypot: function (e, t) {
 				for (var n, i, r = 0, a = 0, s = arguments.length, c = 0; a < s; )
-					c < (n = o(arguments[a++]))
-						? ((r = r * (i = c / n) * i + 1), (c = n))
-						: (r += n > 0 ? (i = n / c) * i : n);
+					c < (n = o(arguments[a++])) ? ((r = r * (i = c / n) * i + 1), (c = n)) : (r += n > 0 ? (i = n / c) * i : n);
 				return c === 1 / 0 ? 1 / 0 : c * Math.sqrt(r);
 			},
 		});
@@ -8822,12 +7712,7 @@
 						i = +t,
 						o = 65535 & n,
 						r = 65535 & i;
-					return (
-						0 |
-						(o * r +
-							((((65535 & (n >>> 16)) * r + o * (65535 & (i >>> 16))) << 16) >>>
-								0))
-					);
+					return 0 | (o * r + ((((65535 & (n >>> 16)) * r + o * (65535 & (i >>> 16))) << 16) >>> 0));
 				},
 			}
 		);
@@ -8869,9 +7754,7 @@
 			"Math",
 			{
 				sinh: function (e) {
-					return Math.abs((e = +e)) < 1
-						? (o(e) - o(-e)) / 2
-						: (r(e - 1) - r(-e - 1)) * (Math.E / 2);
+					return Math.abs((e = +e)) < 1 ? (o(e) - o(-e)) / 2 : (r(e - 1) - r(-e - 1)) * (Math.E / 2);
 				},
 			}
 		);
@@ -8904,13 +7787,8 @@
 		i(i.S + i.F * (!!a && 1 != a.length), "String", {
 			fromCodePoint: function (e) {
 				for (var t, n = [], i = arguments.length, a = 0; i > a; ) {
-					if (((t = +arguments[a++]), o(t, 1114111) !== t))
-						throw RangeError(t + " is not a valid code point");
-					n.push(
-						t < 65536
-							? r(t)
-							: r(55296 + ((t -= 65536) >> 10), (t % 1024) + 56320)
-					);
+					if (((t = +arguments[a++]), o(t, 1114111) !== t)) throw RangeError(t + " is not a valid code point");
+					n.push(t < 65536 ? r(t) : r(55296 + ((t -= 65536) >> 10), (t % 1024) + 56320));
 				}
 				return n.join("");
 			},
@@ -8922,15 +7800,7 @@
 			r = n(12);
 		i(i.S, "String", {
 			raw: function (e) {
-				for (
-					var t = o(e.raw),
-						n = r(t.length),
-						i = arguments.length,
-						a = [],
-						s = 0;
-					n > s;
-
-				)
+				for (var t = o(e.raw), n = r(t.length), i = arguments.length, a = [], s = 0; n > s; )
 					a.push(String(t[s++])), s < i && a.push(String(arguments[s]));
 				return a.join("");
 			},
@@ -8957,9 +7827,7 @@
 				var e,
 					t = this._t,
 					n = this._i;
-				return n >= t.length
-					? { value: void 0, done: !0 }
-					: ((e = i(t, n)), (this._i += e.length), { value: e, done: !1 });
+				return n >= t.length ? { value: void 0, done: !0 } : ((e = i(t, n)), (this._i += e.length), { value: e, done: !1 });
 			}
 		);
 	},
@@ -8996,10 +7864,7 @@
 			o = n(87);
 		i(i.P + i.F * n(89)("includes"), "String", {
 			includes: function (e) {
-				return !!~o(this, e, "includes").indexOf(
-					e,
-					arguments.length > 1 ? arguments[1] : void 0
-				);
+				return !!~o(this, e, "includes").indexOf(e, arguments.length > 1 ? arguments[1] : void 0);
 			},
 		});
 	},
@@ -9016,9 +7881,7 @@
 		i(i.P + i.F * n(89)("startsWith"), "String", {
 			startsWith: function (e) {
 				var t = r(this, e, "startsWith"),
-					n = o(
-						Math.min(arguments.length > 1 ? arguments[1] : void 0, t.length)
-					),
+					n = o(Math.min(arguments.length > 1 ? arguments[1] : void 0, t.length)),
 					i = String(e);
 				return a ? a.call(t, i, n) : t.slice(n, n + i.length) === i;
 			},
@@ -9233,8 +8096,7 @@
 		var i = n(8),
 			o = n(35);
 		e.exports = function (e) {
-			if ("string" !== e && "number" !== e && "default" !== e)
-				throw TypeError("Incorrect hint");
+			if ("string" !== e && "number" !== e && "default" !== e) throw TypeError("Incorrect hint");
 			return o(i(this), "number" != e);
 		};
 	},
@@ -9272,15 +8134,9 @@
 						y = void 0 !== g,
 						m = 0,
 						v = u(d);
-					if (
-						(y && (g = i(g, h > 2 ? arguments[2] : void 0, 2)),
-						null == v || (f == Array && s(v)))
-					)
-						for (n = new f((t = c(d.length))); t > m; m++)
-							l(n, m, y ? g(d[m], m) : d[m]);
-					else
-						for (p = v.call(d), n = new f(); !(o = p._next()).done; m++)
-							l(n, m, y ? a(p, g, [o.value, m], !0) : o.value);
+					if ((y && (g = i(g, h > 2 ? arguments[2] : void 0, 2)), null == v || (f == Array && s(v))))
+						for (n = new f((t = c(d.length))); t > m; m++) l(n, m, y ? g(d[m], m) : d[m]);
+					else for (p = v.call(d), n = new f(); !(o = p._next()).done; m++) l(n, m, y ? a(p, g, [o.value, m], !0) : o.value);
 					return (n.length = m), n;
 				},
 			}
@@ -9300,14 +8156,7 @@
 			"Array",
 			{
 				of: function () {
-					for (
-						var e = 0,
-							t = arguments.length,
-							n = new ("function" == typeof this ? this : Array)(t);
-						t > e;
-
-					)
-						o(n, e, arguments[e++]);
+					for (var e = 0, t = arguments.length, n = new ("function" == typeof this ? this : Array)(t); t > e; ) o(n, e, arguments[e++]);
 					return (n.length = t), n;
 				},
 			}
@@ -9343,13 +8192,8 @@
 				slice: function (e, t) {
 					var n = s(this.length),
 						i = r(this);
-					if (((t = void 0 === t ? n : t), "Array" == i))
-						return c.call(this, e, t);
-					for (
-						var o = a(e, n), l = a(t, n), u = s(l - o), p = new Array(u), d = 0;
-						d < u;
-						d++
-					)
+					if (((t = void 0 === t ? n : t), "Array" == i)) return c.call(this, e, t);
+					for (var o = a(e, n), l = a(t, n), u = s(l - o), p = new Array(u), d = 0; d < u; d++)
 						p[d] = "String" == i ? this.charAt(o + d) : this[o + d];
 					return p;
 				},
@@ -9401,9 +8245,7 @@
 			var t;
 			return (
 				o(e) &&
-					("function" != typeof (t = e.constructor) ||
-						(t !== Array && !o(t.prototype)) ||
-						(t = void 0),
+					("function" != typeof (t = e.constructor) || (t !== Array && !o(t.prototype)) || (t = void 0),
 					i(t) && null === (t = t[r]) && (t = void 0)),
 				void 0 === t ? Array : t
 			);
@@ -9495,12 +8337,7 @@
 				var t = o(this),
 					n = a(t.length),
 					i = n - 1;
-				for (
-					arguments.length > 1 && (i = Math.min(i, r(arguments[1]))),
-						i < 0 && (i = n + i);
-					i >= 0;
-					i--
-				)
+				for (arguments.length > 1 && (i = Math.min(i, r(arguments[1]))), i < 0 && (i = n + i); i >= 0; i--)
 					if (i in t && t[i] === e) return i || 0;
 				return -1;
 			},
@@ -9567,10 +8404,7 @@
 			n(15) &&
 			(!h ||
 				n(7)(function () {
-					return (
-						(f[n(11)("match")] = !1),
-						l(d) != d || l(f) == f || "/a/i" != l(d, "i")
-					);
+					return (f[n(11)("match")] = !1), l(d) != d || l(f) == f || "/a/i" != l(d, "i");
 				}))
 		) {
 			l = function (e, t) {
@@ -9579,16 +8413,7 @@
 					r = void 0 === t;
 				return !n && i && e.constructor === l && r
 					? e
-					: o(
-							h
-								? new u(i && !r ? e.source : e, t)
-								: u(
-										(i = e instanceof l) ? e.source : e,
-										i && r ? c.call(e) : t
-								  ),
-							n ? this : p,
-							l
-					  );
+					: o(h ? new u(i && !r ? e.source : e, t) : u((i = e instanceof l) ? e.source : e, i && r ? c.call(e) : t), n ? this : p, l);
 			};
 			for (
 				var g = function (e) {
@@ -9628,15 +8453,7 @@
 		})
 			? s(function () {
 					var e = i(this);
-					return "/".concat(
-						e.source,
-						"/",
-						"flags" in e
-							? e.flags
-							: !r && e instanceof RegExp
-							? o.call(e)
-							: void 0
-					);
+					return "/".concat(e.source, "/", "flags" in e ? e.flags : !r && e instanceof RegExp ? o.call(e) : void 0);
 			  })
 			: "toString" != a.name &&
 			  s(function () {
@@ -9666,9 +8483,7 @@
 					c.lastIndex = 0;
 					for (var p, d = [], f = 0; null !== (p = a(c, l)); ) {
 						var h = String(p[0]);
-						(d[f] = h),
-							"" === h && (c.lastIndex = r(l, o(c.lastIndex), u)),
-							f++;
+						(d[f] = h), "" === h && (c.lastIndex = r(l, o(c.lastIndex), u)), f++;
 					}
 					return 0 === f ? null : d;
 				},
@@ -9715,14 +8530,7 @@
 					}
 					for (var b, k = "", _ = 0, P = 0; P < v.length; P++) {
 						w = v[P];
-						for (
-							var C = String(w[0]),
-								x = l(u(a(w.index), d.length), 0),
-								O = [],
-								j = 1;
-							j < w.length;
-							j++
-						)
+						for (var C = String(w[0]), x = l(u(a(w.index), d.length), 0), O = [], j = 1; j < w.length; j++)
 							O.push(void 0 === (b = w[j]) ? b : String(b));
 						var S = w.groups;
 						if (f) {
@@ -9760,13 +8568,7 @@
 								if (0 === u) return n;
 								if (u > l) {
 									var d = p(u / 10);
-									return 0 === d
-										? n
-										: d <= l
-										? void 0 === r[d - 1]
-											? o.charAt(1)
-											: r[d - 1] + o.charAt(1)
-										: n;
+									return 0 === d ? n : d <= l ? (void 0 === r[d - 1] ? o.charAt(1) : r[d - 1] + o.charAt(1)) : n;
 								}
 								s = r[u - 1];
 						}
@@ -9796,9 +8598,7 @@
 						l = s.lastIndex;
 					o(l, 0) || (s.lastIndex = 0);
 					var u = r(s, c);
-					return (
-						o(s.lastIndex, l) || (s.lastIndex = l), null === u ? -1 : u.index
-					);
+					return o(s.lastIndex, l) || (s.lastIndex = l), null === u ? -1 : u.index;
 				},
 			];
 		});
@@ -9837,11 +8637,7 @@
 										a,
 										s,
 										c = [],
-										u =
-											(e.ignoreCase ? "i" : "") +
-											(e.multiline ? "m" : "") +
-											(e.unicode ? "u" : "") +
-											(e.sticky ? "y" : ""),
+										u = (e.ignoreCase ? "i" : "") + (e.multiline ? "m" : "") + (e.unicode ? "u" : "") + (e.sticky ? "y" : ""),
 										p = 0,
 										f = void 0 === t ? 4294967295 : t >>> 0,
 										h = new RegExp(e.source, u + "g");
@@ -9849,9 +8645,7 @@
 									!(
 										(a = h.lastIndex) > p &&
 										(c.push(o.slice(p, r.index)),
-										r.length > 1 &&
-											r.index < o.length &&
-											d.apply(c, r.slice(1)),
+										r.length > 1 && r.index < o.length && d.apply(c, r.slice(1)),
 										(s = r[0].length),
 										(p = a),
 										c.length >= f)
@@ -9859,12 +8653,7 @@
 
 								)
 									h.lastIndex === r.index && h.lastIndex++;
-								return (
-									p === o.length
-										? (!s && h.test("")) || c.push("")
-										: c.push(o.slice(p)),
-									c.length > f ? c.slice(0, f) : c
-								);
+								return p === o.length ? (!s && h.test("")) || c.push("") : c.push(o.slice(p)), c.length > f ? c.slice(0, f) : c;
 						  }
 						: "0".split(void 0, 0).length
 						? function (e, t) {
@@ -9884,11 +8673,7 @@
 							d = String(this),
 							g = r(l, RegExp),
 							y = l.unicode,
-							m =
-								(l.ignoreCase ? "i" : "") +
-								(l.multiline ? "m" : "") +
-								(l.unicode ? "u" : "") +
-								(f ? "y" : "g"),
+							m = (l.ignoreCase ? "i" : "") + (l.multiline ? "m" : "") + (l.unicode ? "u" : "") + (f ? "y" : "g"),
 							v = new g(f ? l : "^(?:" + l.source + ")", m),
 							w = void 0 === t ? 4294967295 : t >>> 0;
 						if (0 === w) return [];
@@ -9897,15 +8682,10 @@
 							v.lastIndex = f ? k : 0;
 							var P,
 								C = c(v, f ? d : d.slice(k));
-							if (
-								null === C ||
-								(P = p(s(v.lastIndex + (f ? 0 : k)), d.length)) === b
-							)
-								k = a(d, k, y);
+							if (null === C || (P = p(s(v.lastIndex + (f ? 0 : k)), d.length)) === b) k = a(d, k, y);
 							else {
 								if ((_.push(d.slice(b, k)), _.length === w)) return _;
-								for (var x = 1; x <= C.length - 1; x++)
-									if ((_.push(C[x]), _.length === w)) return _;
+								for (var x = 1; x <= C.length - 1; x++) if ((_.push(C[x]), _.length === w)) return _;
 								k = b = P;
 							}
 						}
@@ -10043,11 +8823,7 @@
 				get: function (e) {
 					if (u(e)) {
 						var t = h(e);
-						return !0 === t
-							? y(p(this, "WeakMap")).get(e)
-							: t
-							? t[this._i]
-							: void 0;
+						return !0 === t ? y(p(this, "WeakMap")).get(e) : t ? t[this._i] : void 0;
 					}
 				},
 				set: function (e, t) {
@@ -10500,13 +9276,7 @@
 				var t,
 					n,
 					i = r(this);
-				return (
-					s(e),
-					(t = a(i.length)),
-					(n = c(i, 0)),
-					o(n, i, i, t, 0, 1, e, arguments[1]),
-					n
-				);
+				return s(e), (t = a(i.length)), (n = c(i, 0)), o(n, i, i, t, 0, 1, e, arguments[1]), n;
 			},
 		}),
 			n(46)("flatMap");
@@ -10521,12 +9291,7 @@
 		e.exports = function e(t, n, c, l, u, p, d, f) {
 			for (var h, g, y = u, m = 0, v = !!d && a(d, f, 3); m < l; ) {
 				if (m in c) {
-					if (
-						((h = v ? v(c[m], m, n) : c[m]),
-						(g = !1),
-						o(h) && (g = void 0 !== (g = h[s]) ? !!g : i(h)),
-						g && p > 0)
-					)
+					if (((h = v ? v(c[m], m, n) : c[m]), (g = !1), o(h) && (g = void 0 !== (g = h[s]) ? !!g : i(h)), g && p > 0))
 						y = e(t, n, h, r(h.length), y, p - 1) - 1;
 					else {
 						if (y >= 9007199254740991) throw TypeError();
@@ -10616,12 +9381,7 @@
 			s = n(91);
 		i(i.S, "Object", {
 			getOwnPropertyDescriptors: function (e) {
-				for (
-					var t, n, i = r(e), c = a.f, l = o(i), u = {}, p = 0;
-					l.length > p;
-
-				)
-					void 0 !== (n = c(i, (t = l[p++]))) && s(u, t, n);
+				for (var t, n, i = r(e), c = a.f, l = o(i), u = {}, p = 0; l.length > p; ) void 0 !== (n = c(i, (t = l[p++]))) && s(u, t, n);
 				return u;
 			},
 		});
@@ -10772,8 +9532,7 @@
 				v = f[m],
 				w = a[m],
 				b = w && w.prototype;
-			if (b && (b[u] || s(b, u, d), b[p] || s(b, p, m), (c[m] = d), v))
-				for (y in i) b[y] || r(b, y, i[y], !0);
+			if (b && (b[u] || s(b, u, d), b[p] || s(b, p, m), (c[m] = d), v)) for (y in i) b[y] || r(b, y, i[y], !0);
 		}
 	},
 	function (e, t, n) {
@@ -10819,8 +9578,7 @@
 									if (((i = n.done ? f : p), c.arg === h)) continue;
 									return { value: c.arg, done: n.done };
 								}
-								"throw" === c.type &&
-									((i = f), (n.method = "throw"), (n.arg = c.arg));
+								"throw" === c.type && ((i = f), (n.method = "throw"), (n.arg = c.arg));
 							}
 						};
 					})(e, n, a)),
@@ -10897,24 +9655,13 @@
 				var i = e.iterator[n.method];
 				if (i === t) {
 					if (((n.delegate = null), "throw" === n.method)) {
-						if (
-							e.iterator.return &&
-							((n.method = "return"),
-							(n.arg = t),
-							C(e, n),
-							"throw" === n.method)
-						)
-							return h;
-						(n.method = "throw"),
-							(n.arg = new TypeError(
-								"The iterator does not provide a 'throw' method"
-							));
+						if (e.iterator.return && ((n.method = "return"), (n.arg = t), C(e, n), "throw" === n.method)) return h;
+						(n.method = "throw"), (n.arg = new TypeError("The iterator does not provide a 'throw' method"));
 					}
 					return h;
 				}
 				var o = l(i, e.iterator, n.arg);
-				if ("throw" === o.type)
-					return (n.method = "throw"), (n.arg = o.arg), (n.delegate = null), h;
+				if ("throw" === o.type) return (n.method = "throw"), (n.arg = o.arg), (n.delegate = null), h;
 				var r = o.arg;
 				return r
 					? r.done
@@ -10924,25 +9671,18 @@
 						  (n.delegate = null),
 						  h)
 						: r
-					: ((n.method = "throw"),
-					  (n.arg = new TypeError("iterator result is not an object")),
-					  (n.delegate = null),
-					  h);
+					: ((n.method = "throw"), (n.arg = new TypeError("iterator result is not an object")), (n.delegate = null), h);
 			}
 			function x(e) {
 				var t = { tryLoc: e[0] };
-				1 in e && (t.catchLoc = e[1]),
-					2 in e && ((t.finallyLoc = e[2]), (t.afterLoc = e[3])),
-					this.tryEntries.push(t);
+				1 in e && (t.catchLoc = e[1]), 2 in e && ((t.finallyLoc = e[2]), (t.afterLoc = e[3])), this.tryEntries.push(t);
 			}
 			function O(e) {
 				var t = e.completion || {};
 				(t.type = "normal"), delete t.arg, (e.completion = t);
 			}
 			function j(e) {
-				(this.tryEntries = [{ tryLoc: "root" }]),
-					e.forEach(x, this),
-					this.reset(!0);
+				(this.tryEntries = [{ tryLoc: "root" }]), e.forEach(x, this), this.reset(!0);
 			}
 			function S(e) {
 				if (e) {
@@ -10952,8 +9692,7 @@
 					if (!isNaN(e.length)) {
 						var o = -1,
 							a = function n() {
-								for (; ++o < e.length; )
-									if (i.call(e, o)) return (n.value = e[o]), (n.done = !1), n;
+								for (; ++o < e.length; ) if (i.call(e, o)) return (n.value = e[o]), (n.done = !1), n;
 								return (n.value = t), (n.done = !0), n;
 							};
 						return (a.next = a);
@@ -10970,16 +9709,11 @@
 				(m[s] = y.displayName = "GeneratorFunction"),
 				(e.isGeneratorFunction = function (e) {
 					var t = "function" == typeof e && e.constructor;
-					return (
-						!!t &&
-						(t === y || "GeneratorFunction" === (t.displayName || t.name))
-					);
+					return !!t && (t === y || "GeneratorFunction" === (t.displayName || t.name));
 				}),
 				(e.mark = function (e) {
 					return (
-						Object.setPrototypeOf
-							? Object.setPrototypeOf(e, m)
-							: ((e.__proto__ = m), s in e || (e[s] = "GeneratorFunction")),
+						Object.setPrototypeOf ? Object.setPrototypeOf(e, m) : ((e.__proto__ = m), s in e || (e[s] = "GeneratorFunction")),
 						(e.prototype = Object.create(k)),
 						e
 					);
@@ -11037,11 +9771,7 @@
 							this.tryEntries.forEach(O),
 							!e)
 						)
-							for (var n in this)
-								"t" === n.charAt(0) &&
-									i.call(this, n) &&
-									!isNaN(+n.slice(1)) &&
-									(this[n] = t);
+							for (var n in this) "t" === n.charAt(0) && i.call(this, n) && !isNaN(+n.slice(1)) && (this[n] = t);
 					},
 					stop: function () {
 						this.done = !0;
@@ -11053,13 +9783,7 @@
 						if (this.done) throw e;
 						var n = this;
 						function o(i, o) {
-							return (
-								(s.type = "throw"),
-								(s.arg = e),
-								(n.next = i),
-								o && ((n.method = "next"), (n.arg = t)),
-								!!o
-							);
+							return (s.type = "throw"), (s.arg = e), (n.next = i), o && ((n.method = "next"), (n.arg = t)), !!o;
 						}
 						for (var r = this.tryEntries.length - 1; r >= 0; --r) {
 							var a = this.tryEntries[r],
@@ -11074,8 +9798,7 @@
 								} else if (c) {
 									if (this.prev < a.catchLoc) return o(a.catchLoc, !0);
 								} else {
-									if (!l)
-										throw new Error("try statement without catch or finally");
+									if (!l) throw new Error("try statement without catch or finally");
 									if (this.prev < a.finallyLoc) return o(a.finallyLoc);
 								}
 							}
@@ -11084,28 +9807,14 @@
 					abrupt: function (e, t) {
 						for (var n = this.tryEntries.length - 1; n >= 0; --n) {
 							var o = this.tryEntries[n];
-							if (
-								o.tryLoc <= this.prev &&
-								i.call(o, "finallyLoc") &&
-								this.prev < o.finallyLoc
-							) {
+							if (o.tryLoc <= this.prev && i.call(o, "finallyLoc") && this.prev < o.finallyLoc) {
 								var r = o;
 								break;
 							}
 						}
-						r &&
-							("break" === e || "continue" === e) &&
-							r.tryLoc <= t &&
-							t <= r.finallyLoc &&
-							(r = null);
+						r && ("break" === e || "continue" === e) && r.tryLoc <= t && t <= r.finallyLoc && (r = null);
 						var a = r ? r.completion : {};
-						return (
-							(a.type = e),
-							(a.arg = t),
-							r
-								? ((this.method = "next"), (this.next = r.finallyLoc), h)
-								: this.complete(a)
-						);
+						return (a.type = e), (a.arg = t), r ? ((this.method = "next"), (this.next = r.finallyLoc), h) : this.complete(a);
 					},
 					complete: function (e, t) {
 						if ("throw" === e.type) throw e.arg;
@@ -11113,9 +9822,7 @@
 							"break" === e.type || "continue" === e.type
 								? (this.next = e.arg)
 								: "return" === e.type
-								? ((this.rval = this.arg = e.arg),
-								  (this.method = "return"),
-								  (this.next = "end"))
+								? ((this.rval = this.arg = e.arg), (this.method = "return"), (this.next = "end"))
 								: "normal" === e.type && t && (this.next = t),
 							h
 						);
@@ -11123,8 +9830,7 @@
 					finish: function (e) {
 						for (var t = this.tryEntries.length - 1; t >= 0; --t) {
 							var n = this.tryEntries[t];
-							if (n.finallyLoc === e)
-								return this.complete(n.completion, n.afterLoc), O(n), h;
+							if (n.finallyLoc === e) return this.complete(n.completion, n.afterLoc), O(n), h;
 						}
 					},
 					catch: function (e) {
@@ -11142,11 +9848,7 @@
 						throw new Error("illegal catch attempt");
 					},
 					delegateYield: function (e, n, i) {
-						return (
-							(this.delegate = { iterator: S(e), resultName: n, nextLoc: i }),
-							"next" === this.method && (this.arg = t),
-							h
-						);
+						return (this.delegate = { iterator: S(e), resultName: n, nextLoc: i }), "next" === this.method && (this.arg = t), h;
 					},
 				}),
 				e
@@ -11213,19 +9915,9 @@
 								: g && "function" == typeof p
 								? r(Function.call, p)
 								: p),
-						g &&
-							(((v.virtual || (v.virtual = {}))[l] = p),
-							e & c.R && w && !w[l] && a(w, l, p)));
+						g && (((v.virtual || (v.virtual = {}))[l] = p), e & c.R && w && !w[l] && a(w, l, p)));
 			};
-		(c.F = 1),
-			(c.G = 2),
-			(c.S = 4),
-			(c.P = 8),
-			(c.B = 16),
-			(c.W = 32),
-			(c.U = 64),
-			(c.R = 128),
-			(e.exports = c);
+		(c.F = 1), (c.G = 2), (c.S = 4), (c.P = 8), (c.B = 16), (c.W = 32), (c.U = 64), (c.R = 128), (e.exports = c);
 	},
 	function (e, t, n) {
 		var i = n(353);
@@ -11279,8 +9971,7 @@
 						try {
 							return a(e, t, n);
 						} catch (e) {}
-					if ("get" in n || "set" in n)
-						throw TypeError("Accessors not supported!");
+					if ("get" in n || "set" in n) throw TypeError("Accessors not supported!");
 					return "value" in n && (e[t] = n.value), e;
 			  };
 	},
@@ -11318,11 +10009,9 @@
 		e.exports = function (e, t) {
 			if (!i(e)) return e;
 			var n, o;
-			if (t && "function" == typeof (n = e.toString) && !i((o = n.call(e))))
-				return o;
+			if (t && "function" == typeof (n = e.toString) && !i((o = n.call(e)))) return o;
 			if ("function" == typeof (n = e.valueOf) && !i((o = n.call(e)))) return o;
-			if (!t && "function" == typeof (n = e.toString) && !i((o = n.call(e))))
-				return o;
+			if (!t && "function" == typeof (n = e.toString) && !i((o = n.call(e)))) return o;
 			throw TypeError("Can't convert object to primitive value");
 		};
 	},
@@ -11351,8 +10040,7 @@
 					typeof (o = function () {
 						"use strict";
 						function e(e, t) {
-							if (!(e instanceof t))
-								throw new TypeError("Cannot call a class as a function");
+							if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
 						}
 						function t(e, t) {
 							for (var n = 0; n < t.length; n++) {
@@ -11381,10 +10069,7 @@
 								})(e, t);
 						}
 						function a(e) {
-							if (void 0 === e)
-								throw new ReferenceError(
-									"this hasn't been initialised - super() hasn't been called"
-								);
+							if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
 							return e;
 						}
 						function s(e, t, n) {
@@ -11393,12 +10078,7 @@
 									? Reflect.get
 									: function (e, t, n) {
 											var i = (function (e, t) {
-												for (
-													;
-													!Object.prototype.hasOwnProperty.call(e, t) &&
-													null !== (e = o(e));
-
-												);
+												for (; !Object.prototype.hasOwnProperty.call(e, t) && null !== (e = o(e)); );
 												return e;
 											})(e, t);
 											if (i) {
@@ -11421,20 +10101,14 @@
 										{
 											key: "addEventListener",
 											value: function (e, t) {
-												e in this.listeners || (this.listeners[e] = []),
-													this.listeners[e].push(t);
+												e in this.listeners || (this.listeners[e] = []), this.listeners[e].push(t);
 											},
 										},
 										{
 											key: "removeEventListener",
 											value: function (e, t) {
 												if (e in this.listeners)
-													for (
-														var n = this.listeners[e], i = 0, o = n.length;
-														i < o;
-														i++
-													)
-														if (n[i] === t) return void n.splice(i, 1);
+													for (var n = this.listeners[e], i = 0, o = n.length; i < o; i++) if (n[i] === t) return void n.splice(i, 1);
 											},
 										},
 										{
@@ -11468,12 +10142,8 @@
 									var t, n, r;
 									return (
 										e(this, i),
-										((n = this),
-										(r = o(i).call(this)),
-										(t =
-											!r || ("object" != typeof r && "function" != typeof r)
-												? a(n)
-												: r)).listeners || c.call(a(t)),
+										((n = this), (r = o(i).call(this)), (t = !r || ("object" != typeof r && "function" != typeof r) ? a(n) : r))
+											.listeners || c.call(a(t)),
 										Object.defineProperty(a(t), "aborted", {
 											value: !1,
 											writable: !0,
@@ -11489,10 +10159,7 @@
 								}
 								return (
 									(function (e, t) {
-										if ("function" != typeof t && null !== t)
-											throw new TypeError(
-												"Super expression must either be null or a function"
-											);
+										if ("function" != typeof t && null !== t) throw new TypeError("Super expression must either be null or a function");
 										(e.prototype = Object.create(t && t.prototype, {
 											constructor: { value: e, writable: !0, configurable: !0 },
 										})),
@@ -11508,14 +10175,8 @@
 										{
 											key: "dispatchEvent",
 											value: function (e) {
-												"abort" === e.type &&
-													((this.aborted = !0),
-													"function" == typeof this.onabort &&
-														this.onabort.call(this, e)),
-													s(o(i.prototype), "dispatchEvent", this).call(
-														this,
-														e
-													);
+												"abort" === e.type && ((this.aborted = !0), "function" == typeof this.onabort && this.onabort.call(this, e)),
+													s(o(i.prototype), "dispatchEvent", this).call(this, e);
 											},
 										},
 									]),
@@ -11542,13 +10203,8 @@
 												} catch (t) {
 													"undefined" != typeof document
 														? document.createEvent
-															? (e = document.createEvent("Event")).initEvent(
-																	"abort",
-																	!1,
-																	!1
-															  )
-															: ((e = document.createEventObject()).type =
-																	"abort")
+															? (e = document.createEvent("Event")).initEvent("abort", !1, !1)
+															: ((e = document.createEventObject()).type = "abort")
 														: (e = {
 																type: "abort",
 																bubbles: !1,
@@ -11570,18 +10226,12 @@
 							})();
 						function p(e) {
 							return e.__FORCE_INSTALL_ABORTCONTROLLER_POLYFILL
-								? (console.log(
-										"__FORCE_INSTALL_ABORTCONTROLLER_POLYFILL=true is set, will force install polyfill"
-								  ),
-								  !0)
-								: ("function" == typeof e.Request &&
-										!e.Request.prototype.hasOwnProperty("signal")) ||
-										!e.AbortController;
+								? (console.log("__FORCE_INSTALL_ABORTCONTROLLER_POLYFILL=true is set, will force install polyfill"), !0)
+								: ("function" == typeof e.Request && !e.Request.prototype.hasOwnProperty("signal")) || !e.AbortController;
 						}
 						"undefined" != typeof Symbol &&
 							Symbol.toStringTag &&
-							((u.prototype[Symbol.toStringTag] = "AbortController"),
-							(l.prototype[Symbol.toStringTag] = "AbortSignal")),
+							((u.prototype[Symbol.toStringTag] = "AbortController"), (l.prototype[Symbol.toStringTag] = "AbortSignal")),
 							(function (e) {
 								if (p(e))
 									if (e.fetch) {
@@ -11623,12 +10273,7 @@
 												var l = n;
 												return {
 													fetch: function (e, t) {
-														var n =
-															c && c.prototype.isPrototypeOf(e)
-																? e.signal
-																: t
-																? t.signal
-																: void 0;
+														var n = c && c.prototype.isPrototypeOf(e) ? e.signal : t ? t.signal : void 0;
 														if (n) {
 															var i;
 															try {
@@ -11646,10 +10291,7 @@
 																	{ once: !0 }
 																);
 															});
-															return (
-																t && t.signal && delete t.signal,
-																Promise.race([o, l(e, t)])
-															);
+															return t && t.signal && delete t.signal, Promise.race([o, l(e, t)]);
 														}
 														return l(e, t);
 													},
@@ -11672,10 +10314,7 @@
 												configurable: !0,
 												value: l,
 											});
-									} else
-										console.warn(
-											"fetch() is not available, cannot install abortcontroller-polyfill"
-										);
+									} else console.warn("fetch() is not available, cannot install abortcontroller-polyfill");
 							})("undefined" != typeof self ? self : i);
 					})
 						? o.call(t, n, t, e)
@@ -11704,19 +10343,11 @@
 							return typeof e;
 					  }
 					: function (e) {
-							return e &&
-								"function" == typeof Symbol &&
-								e.constructor === Symbol &&
-								e !== Symbol.prototype
-								? "symbol"
-								: typeof e;
+							return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 					  })(e);
 		}
 		var y = function (e, t, n) {
-			(this.params = t),
-				(this.kind = n || "checkbox"),
-				(this.selectedTypes = e),
-				this.build(e);
+			(this.params = t), (this.kind = n || "checkbox"), (this.selectedTypes = e), this.build(e);
 		};
 		function m(e) {
 			return (m =
@@ -11725,12 +10356,7 @@
 							return typeof e;
 					  }
 					: function (e) {
-							return e &&
-								"function" == typeof Symbol &&
-								e.constructor === Symbol &&
-								e !== Symbol.prototype
-								? "symbol"
-								: typeof e;
+							return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 					  })(e);
 		}
 		function v(e, t, n) {
@@ -11747,8 +10373,7 @@
 				(this.maxZoom_ = i.maxZoom || null),
 				(this.styles_ = i.styles || []),
 				(this.imagePath_ = i.imagePath || this.MARKER_CLUSTER_IMAGE_PATH_),
-				(this.imageExtension_ =
-					i.imageExtension || this.MARKER_CLUSTER_IMAGE_EXTENSION_),
+				(this.imageExtension_ = i.imageExtension || this.MARKER_CLUSTER_IMAGE_EXTENSION_),
 				(this.zoomOnClick_ = !0),
 				null != i.zoomOnClick && (this.zoomOnClick_ = i.zoomOnClick),
 				(this.averageCenter_ = !1),
@@ -11794,9 +10419,7 @@
 				this.selectedTypes = e;
 				var t = this,
 					n = this.selectedTypes.filter(function (e) {
-						return !p.typesHelpers
-							.getAllAdditionalTypes(window.easyPackConfig.extendedTypes)
-							.includes(e);
+						return !p.typesHelpers.getAllAdditionalTypes(window.easyPackConfig.extendedTypes).includes(e);
 					});
 				(this.currentType = a()(
 					"div",
@@ -11805,25 +10428,16 @@
 						style: {
 							"background-image":
 								void 0 !== n[0] && n.length < 2
-									? "url('"
-											.concat(window.easyPackConfig.iconsUrl)
-											.concat(n[0].replace("_only", ""), ".png')")
+									? "url('".concat(window.easyPackConfig.iconsUrl).concat(n[0].replace("_only", ""), ".png')")
 									: "none",
 							"padding-left": void 0 !== n[0] && n.length < 2 ? "42px" : "10px",
 						},
 					},
-					window.easyPackConfig.mobileFiltersAsCheckbox
-						? this.getJoinedCurrentTypes()
-						: Object(c.j)(n[0])
+					window.easyPackConfig.mobileFiltersAsCheckbox ? this.getJoinedCurrentTypes() : Object(c.j)(n[0])
 				)),
-					0 === e.length &&
-						(this.currentType.innerHTML = Object(c.j)("select")),
+					0 === e.length && (this.currentType.innerHTML = Object(c.j)("select")),
 					(this.list = a()("ul", { className: h.a["types-list"] })),
-					(this.listWrapper = a()(
-						"div",
-						{ className: h.a["list-wrapper"] },
-						this.list
-					)),
+					(this.listWrapper = a()("div", { className: h.a["list-wrapper"] }, this.list)),
 					(this.currentTypeWrapper = a()(
 						"div",
 						{ className: h.a["current-type-wrapper"] },
@@ -11831,28 +10445,18 @@
 							className: "".concat(h.a.btn, " ").concat(h.a["btn-select-type"]),
 							dangerouslySetInnerHTML: { __html: "&#9660;" },
 							ref: Object(c.g)(function () {
-								null === t.listWrapper.offsetParent
-									? (t.listWrapper.dataset.show = "true")
-									: (t.listWrapper.dataset.show = "false");
+								null === t.listWrapper.offsetParent ? (t.listWrapper.dataset.show = "true") : (t.listWrapper.dataset.show = "false");
 							}),
 						}),
 						this.currentType
 					)),
-					(this.wrapper = a()(
-						"div",
-						{ className: h.a["type-filter"] },
-						this.currentTypeWrapper,
-						this.getTypes()
-					)),
+					(this.wrapper = a()("div", { className: h.a["type-filter"] }, this.currentTypeWrapper, this.getTypes())),
 					this.params.style.sheet.insertRule(
 						"."
 							.concat(h.a["easypack-widget"], " .")
 							.concat(h.a["type-filter"], " .")
 							.concat(h.a["btn-radio"], " { background: url(")
-							.concat(
-								window.easyPackConfig.map.typeSelectedRadio,
-								") no-repeat 0 -27px; }"
-							),
+							.concat(window.easyPackConfig.map.typeSelectedRadio, ") no-repeat 0 -27px; }"),
 						0
 					),
 					this.params.style.sheet.insertRule(
@@ -11860,34 +10464,18 @@
 							.concat(h.a["easypack-widget"], " .")
 							.concat(h.a["type-filter"], " .")
 							.concat(h.a["btn-checkbox"], " { background: url(")
-							.concat(
-								window.easyPackConfig.map.typeSelectedIcon,
-								") no-repeat center; }"
-							),
+							.concat(window.easyPackConfig.map.typeSelectedIcon, ") no-repeat center; }"),
 						0
 					);
 			},
 			getJoinedCurrentTypes: function () {
 				return this.selectedTypes
 					.map(function (e) {
-						if (
-							p.typesHelpers.isParent(e, p.typesHelpers.getExtendedCollection())
-						) {
-							var t = p.typesHelpers.getObjectForType(
-								e,
-								p.typesHelpers.getExtendedCollection()
-							);
-							return null !== t && t.name
-								? Object(c.j)(t.name)
-								: Object(c.j)(e);
+						if (p.typesHelpers.isParent(e, p.typesHelpers.getExtendedCollection())) {
+							var t = p.typesHelpers.getObjectForType(e, p.typesHelpers.getExtendedCollection());
+							return null !== t && t.name ? Object(c.j)(t.name) : Object(c.j)(e);
 						}
-						if (
-							-1 ===
-							p.typesHelpers
-								.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection())
-								.indexOf(e)
-						)
-							return Object(c.j)(e);
+						if (-1 === p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()).indexOf(e)) return Object(c.j)(e);
 					})
 					.filter(function (e) {
 						return e;
@@ -11934,33 +10522,19 @@
 					e.forEach(function (e) {
 						var i = c.d.findObjectByPropertyName(t, e) || {};
 						e = "pok" === e ? "pop" : e;
-						var o =
-								"url(" +
-								window.easyPackConfig.iconsUrl +
-								e.replace("_only", "") +
-								".png)",
+						var o = "url(" + window.easyPackConfig.iconsUrl + e.replace("_only", "") + ".png)",
 							r = e,
 							s = i.enabled || !0,
-							l =
-								'url("' +
-								window.easyPackConfig.map.tooltipPointerIcon +
-								'") no-repeat left bottom',
-							u =
-								window.easyPackConfig.markersUrl +
-								e.replace("_only", "") +
-								".png",
+							l = 'url("' + window.easyPackConfig.map.tooltipPointerIcon + '") no-repeat left bottom',
+							u = window.easyPackConfig.markersUrl + e.replace("_only", "") + ".png",
 							d = Object(c.j)(e),
 							f = Object(c.j)(e + "_description");
 						n.checkedParent = !1;
 						var y,
-							m =
-								c.d.in(e, n.selectedTypes) ||
-								("object" === g(i) && c.d.in(e, n.selectedTypes));
+							m = c.d.in(e, n.selectedTypes) || ("object" === g(i) && c.d.in(e, n.selectedTypes));
 						m && n.checked++,
 							void 0 !== i.childs &&
-								(i.childs.unshift(
-									JSON.parse('{"' + e + '": { "enabled": "true"}}')
-								),
+								(i.childs.unshift(JSON.parse('{"' + e + '": { "enabled": "true"}}')),
 								(y = a()(
 									"div",
 									{ className: h.a["dropdown-wrapper"] },
@@ -11975,10 +10549,7 @@
 													o && n.checked++;
 													var r = a()("button", {
 														type: "button",
-														className: ""
-															.concat(h.a.btn, " ")
-															.concat(h.a["btn-".concat(n.kind)], " ")
-															.concat(h.a["type-".concat(n.kind)]),
+														className: "".concat(h.a.btn, " ").concat(h.a["btn-".concat(n.kind)], " ").concat(h.a["type-".concat(n.kind)]),
 													});
 													return (
 														n.items.push(r),
@@ -11988,17 +10559,11 @@
 																"data-type": i,
 																"data-checked": o,
 																style: {
-																	"background-image": "url("
-																		.concat(window.easyPackConfig.iconsUrl)
-																		.concat(i.replace("_only", ""), ".png"),
+																	"background-image": "url(".concat(window.easyPackConfig.iconsUrl).concat(i.replace("_only", ""), ".png"),
 																},
 															},
 															r,
-															a()(
-																"span",
-																{ className: h.a.label },
-																Object(c.j)(i.replace("_only", ""))
-															)
+															a()("span", { className: h.a.label }, Object(c.j)(i.replace("_only", "")))
 														)
 													);
 												}
@@ -12006,8 +10571,7 @@
 										})
 									)
 								)));
-						var v =
-								void 0 === i.childs ? h.a["has-tooltip"] : h.a["no-tooltip"],
+						var v = void 0 === i.childs ? h.a["has-tooltip"] : h.a["no-tooltip"],
 							w = a()("button", {
 								type: "button",
 								readonly: !1 === s,
@@ -12016,9 +10580,7 @@
 									.concat(h.a.btn, " ")
 									.concat(h.a["btn-".concat(n.kind)], "  ")
 									.concat(h.a["type-".concat(n.kind)], " ")
-									.concat(
-										void 0 !== i.childs ? h.a["no-tooltip"] : h.a["has-tooltip"]
-									),
+									.concat(void 0 !== i.childs ? h.a["no-tooltip"] : h.a["has-tooltip"]),
 							});
 						n.items.push(w), i.name && (d = Object(c.j)(i.name));
 						var b = a()(
@@ -12027,11 +10589,7 @@
 								a()(
 									"div",
 									{ className: h.a["type-tooltip"] },
-									a()(
-										"div",
-										{ className: h.a["icon-wrapper"] },
-										a()("img", { src: "".concat(u.replace("_only", "")) })
-									),
+									a()("div", { className: h.a["icon-wrapper"] }, a()("img", { src: "".concat(u.replace("_only", "")) })),
 									a()("div", { className: h.a.description }, f)
 								)
 							),
@@ -12039,11 +10597,7 @@
 								"li",
 								{
 									style: { "background-image": void 0 === i.childs ? o : "" },
-									className: "".concat(
-										void 0 !== i.childs
-											? "".concat(h.a["has-subtypes"], " ").concat(h.a.group)
-											: h.a["no-subtypes"]
-									),
+									className: "".concat(void 0 !== i.childs ? "".concat(h.a["has-subtypes"], " ").concat(h.a.group) : h.a["no-subtypes"]),
 									"data-type": r,
 									"data-checked": m,
 								},
@@ -12061,18 +10615,12 @@
 										className: h.a.arrow,
 										ref: Object(c.g)(function (e) {
 											e.stopPropagation(),
-												e.target.dataset
-													? (e.target.dataset.dropdown = "false")
-													: e.target.setAttribute("data-dropdown", "false");
+												e.target.dataset ? (e.target.dataset.dropdown = "false") : e.target.setAttribute("data-dropdown", "false");
 											var t = this.parentNode.dataset.dropdown;
-											this.parentNode.dataset.dropdown =
-												void 0 === t || "closed" === t ? "open" : "closed";
+											this.parentNode.dataset.dropdown = void 0 === t || "closed" === t ? "open" : "closed";
 										}),
 										style: {
-											background: "url(".concat(
-												easyPackConfig.map.pointerIcon,
-												") no-repeat center bottom / 15px"
-											),
+											background: "url(".concat(easyPackConfig.map.pointerIcon, ") no-repeat center bottom / 15px"),
 										},
 									}),
 								void 0 !== i.childs && y,
@@ -12088,89 +10636,52 @@
 				var t,
 					n = this.list.getElementsByClassName("btn");
 				for (t = 0; t < n.length; t++) {
-					n[t].className = ""
-						.concat(h.a.btn, "  ")
-						.concat(h.a["btn-".concat(this.kind)], " ")
-						.concat(h.a["type-".concat(this.kind)]);
+					n[t].className = "".concat(h.a.btn, "  ").concat(h.a["btn-".concat(this.kind)], " ").concat(h.a["type-".concat(this.kind)]);
 				}
 			},
 			update: function (e) {
-				for (
-					var t = this.list.getElementsByTagName("li"),
-						n = p.typesHelpers.getExtendedCollection(),
-						i = 0;
-					i < t.length;
-					i++
-				) {
+				for (var t = this.list.getElementsByTagName("li"), n = p.typesHelpers.getExtendedCollection(), i = 0; i < t.length; i++) {
 					var o = t[i],
 						r = o.getAttribute("data-type");
-					c.d.in(r, e)
-						? o.setAttribute("data-checked", "true")
-						: o.setAttribute("data-checked", "false");
+					c.d.in(r, e) ? o.setAttribute("data-checked", "true") : o.setAttribute("data-checked", "false");
 					var a = c.d.findObjectByPropertyName(n, r) || {};
 					o.querySelector("button.".concat(h.a["main-type"])) &&
-						this.updateDataClass(
-							r,
-							o.querySelector("button.".concat(h.a["main-type"])),
-							a,
-							e
-						);
+						this.updateDataClass(r, o.querySelector("button.".concat(h.a["main-type"])), a, e);
 				}
-				(this.selectedTypes = e),
-					"osm" === window.easyPackConfig.mapType && d.a.filterPointsByTypes(e);
+				(this.selectedTypes = e), "osm" === window.easyPackConfig.mapType && d.a.filterPointsByTypes(e);
 				var s = e.filter(function (e) {
-					return !p.typesHelpers
-						.getAllAdditionalTypes(window.easyPackConfig.extendedTypes)
-						.includes(e);
+					return !p.typesHelpers.getAllAdditionalTypes(window.easyPackConfig.extendedTypes).includes(e);
 				});
 				(this.currentType.innerHTML = Object(c.j)(e[0])),
 					window.easyPackConfig.mobileFiltersAsCheckbox
 						? (this.currentType.innerHTML = this.getJoinedCurrentTypes())
 						: (this.currentType.innerHTML = Object(c.j)(s[0])),
-					0 === e.length &&
-						(this.currentType.innerHTML = Object(c.j)("select")),
+					0 === e.length && (this.currentType.innerHTML = Object(c.j)("select")),
 					void 0 !== s[0] && s.length < 2
-						? ((this.currentType.style.backgroundImage =
-								"url(" +
-								window.easyPackConfig.iconsUrl +
-								s[0].replace("_only", "") +
-								".png)"),
+						? ((this.currentType.style.backgroundImage = "url(" + window.easyPackConfig.iconsUrl + s[0].replace("_only", "") + ".png)"),
 						  (this.currentType.style.paddingLeft = "42px"))
-						: ((this.currentType.style.backgroundImage = "none"),
-						  (this.currentType.style.paddingLeft = "10px")),
+						: ((this.currentType.style.backgroundImage = "none"), (this.currentType.style.paddingLeft = "10px")),
 					this.currentTypeWrapper.appendChild(this.currentType);
 			},
 			render: function (e) {
-				this.items.length > 1 && e.appendChild(this.wrapper),
-					(this.placeholder = e);
+				this.items.length > 1 && e.appendChild(this.wrapper), (this.placeholder = e);
 			},
 			rerender: function () {
 				var e = this.selectedTypes.filter(function (e) {
-					return !p.typesHelpers
-						.getAllAdditionalTypes(window.easyPackConfig.extendedTypes)
-						.includes(e);
+					return !p.typesHelpers.getAllAdditionalTypes(window.easyPackConfig.extendedTypes).includes(e);
 				});
 				window.easyPackConfig.mobileFiltersAsCheckbox
 					? (this.currentType.innerHTML = this.getJoinedCurrentTypes())
 					: (this.currentType.innerHTML = Object(c.j)(e[0]));
-				for (
-					var t = this.list.getElementsByTagName("li"), n = 0;
-					n < t.length;
-					++n
-				) {
+				for (var t = this.list.getElementsByTagName("li"), n = 0; n < t.length; ++n) {
 					var i = t[n];
 					i.getElementsByClassName(h.a.description).length > 0 &&
-						(i.getElementsByClassName(h.a.description)[0].innerHTML = Object(
-							c.j
-						)(i.dataset.type + "_description")),
-						(i.getElementsByClassName(h.a.label)[0].innerHTML = Object(c.j)(
-							i.dataset.type
-						));
+						(i.getElementsByClassName(h.a.description)[0].innerHTML = Object(c.j)(i.dataset.type + "_description")),
+						(i.getElementsByClassName(h.a.label)[0].innerHTML = Object(c.j)(i.dataset.type));
 				}
 			},
 		}),
-			(v.prototype.MARKER_CLUSTER_IMAGE_PATH_ =
-				"http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m"),
+			(v.prototype.MARKER_CLUSTER_IMAGE_PATH_ = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m"),
 			(v.prototype.MARKER_CLUSTER_IMAGE_EXTENSION_ = "png"),
 			(v.prototype.extend = function (e, t) {
 				return function (e) {
@@ -12192,15 +10703,7 @@
 						});
 			}),
 			(v.prototype.fitMapToMarkers = function () {
-				for (
-					var e,
-						t = this.getMarkers(),
-						n = new google.maps.LatLngBounds(),
-						i = 0;
-					(e = t[i]);
-					i++
-				)
-					n.extend(e.getPosition());
+				for (var e, t = this.getMarkers(), n = new google.maps.LatLngBounds(), i = 0; (e = t[i]); i++) n.extend(e.getPosition());
 				this.map_.fitBounds(n);
 			}),
 			(v.prototype.setStyles = function (e) {
@@ -12228,8 +10731,7 @@
 				return this.maxZoom_;
 			}),
 			(v.prototype.calculator_ = function (e, t) {
-				for (var n = 0, i = e.length, o = i; 0 !== o; )
-					(o = parseInt(o / 10, 10)), n++;
+				for (var n = 0, i = e.length, o = i; 0 !== o; ) (o = parseInt(o / 10, 10)), n++;
 				return { text: i, index: (n = Math.min(n, t)) };
 			}),
 			(v.prototype.setCalculator = function (e) {
@@ -12302,14 +10804,8 @@
 			}),
 			(v.prototype.getExtendedBounds = function (e) {
 				var t = this.getProjection(),
-					n = new google.maps.LatLng(
-						e.getNorthEast().lat(),
-						e.getNorthEast().lng()
-					),
-					i = new google.maps.LatLng(
-						e.getSouthWest().lat(),
-						e.getSouthWest().lng()
-					),
+					n = new google.maps.LatLng(e.getNorthEast().lat(), e.getNorthEast().lng()),
+					i = new google.maps.LatLng(e.getSouthWest().lat(), e.getSouthWest().lng()),
 					o = t.fromLatLngToDivPixel(n);
 				(o.x += this.gridSize_), (o.y -= this.gridSize_);
 				var r = t.fromLatLngToDivPixel(i);
@@ -12327,8 +10823,7 @@
 			(v.prototype.resetViewport = function (e) {
 				for (var t, n = 0; (t = this.clusters_[n]); n++) t.remove();
 				var i;
-				for (n = 0; (i = this.markers_[n]); n++)
-					(i.isAdded = !1), e && i.setMap(null);
+				for (n = 0; (i = this.markers_[n]); n++) (i.isAdded = !1), e && i.setMap(null);
 				this.clusters_ = [];
 			}),
 			(v.prototype.repaint = function () {
@@ -12349,44 +10844,30 @@
 					i = ((t.lng() - e.lng()) * Math.PI) / 180,
 					o =
 						Math.sin(n / 2) * Math.sin(n / 2) +
-						Math.cos((e.lat() * Math.PI) / 180) *
-							Math.cos((t.lat() * Math.PI) / 180) *
-							Math.sin(i / 2) *
-							Math.sin(i / 2);
+						Math.cos((e.lat() * Math.PI) / 180) * Math.cos((t.lat() * Math.PI) / 180) * Math.sin(i / 2) * Math.sin(i / 2);
 				return 6371 * (2 * Math.atan2(Math.sqrt(o), Math.sqrt(1 - o)));
 			}),
 			(v.prototype.addToClosestCluster_ = function (e) {
-				for (
-					var t, n = 4e4, i = null, o = (e.getPosition(), 0);
-					(t = this.clusters_[o]);
-					o++
-				) {
+				for (var t, n = 4e4, i = null, o = (e.getPosition(), 0); (t = this.clusters_[o]); o++) {
 					var r = t.getCenter();
 					if (r) {
 						var a = this.distanceBetweenPoints_(r, e.getPosition());
 						a < n && ((n = a), (i = t));
 					}
 				}
-				i && i.isMarkerInClusterBounds(e)
-					? i.addMarker(e)
-					: ((t = new w(this)).addMarker(e), this.clusters_.push(t));
+				i && i.isMarkerInClusterBounds(e) ? i.addMarker(e) : ((t = new w(this)).addMarker(e), this.clusters_.push(t));
 			}),
 			(v.prototype.createClusters_ = function () {
 				if (this.ready_)
 					for (
 						var e,
-							t = new google.maps.LatLngBounds(
-								this.map_.getBounds().getSouthWest(),
-								this.map_.getBounds().getNorthEast()
-							),
+							t = new google.maps.LatLngBounds(this.map_.getBounds().getSouthWest(), this.map_.getBounds().getNorthEast()),
 							n = this.getExtendedBounds(t),
 							i = 0;
 						(e = this.markers_[i]);
 						i++
 					)
-						!e.isAdded &&
-							this.isMarkerInBounds_(e, n) &&
-							this.addToClosestCluster_(e);
+						!e.isAdded && this.isMarkerInBounds_(e, n) && this.addToClosestCluster_(e);
 			}),
 			(w.prototype.isMarkerAlreadyAdded = function (e) {
 				if (this.markers_.indexOf) return -1 != this.markers_.indexOf(e);
@@ -12400,20 +10881,16 @@
 						var t = this.markers_.length + 1,
 							n = (this.center_.lat() * (t - 1) + e.getPosition().lat()) / t,
 							i = (this.center_.lng() * (t - 1) + e.getPosition().lng()) / t;
-						(this.center_ = new google.maps.LatLng(n, i)),
-							this.calculateBounds_();
+						(this.center_ = new google.maps.LatLng(n, i)), this.calculateBounds_();
 					}
 				} else (this.center_ = e.getPosition()), this.calculateBounds_();
 				(e.isAdded = !0), this.markers_.push(e);
 				var o = this.markers_.length;
 				if (
-					(o < this.minClusterSize_ &&
-						e.getMap() != this.map_ &&
-						e.setMap(this.map_),
+					(o < this.minClusterSize_ && e.getMap() != this.map_ && e.setMap(this.map_),
 					this.map_.getZoom() <= this.markerClusterer_.maxZoom_)
 				) {
-					if (o == this.minClusterSize_)
-						for (var r = 0; r < o; r++) this.markers_[r].setMap(null);
+					if (o == this.minClusterSize_) for (var r = 0; r < o; r++) this.markers_[r].setMap(null);
 					o >= this.minClusterSize_ && e.setMap(null);
 				}
 				return this.updateIcon(), !0;
@@ -12422,21 +10899,12 @@
 				return this.markerClusterer_;
 			}),
 			(w.prototype.getBounds = function () {
-				for (
-					var e,
-						t = new google.maps.LatLngBounds(this.center_, this.center_),
-						n = this.getMarkers(),
-						i = 0;
-					(e = n[i]);
-					i++
-				)
+				for (var e, t = new google.maps.LatLngBounds(this.center_, this.center_), n = this.getMarkers(), i = 0; (e = n[i]); i++)
 					t.extend(e.getPosition());
 				return t;
 			}),
 			(w.prototype.remove = function () {
-				this.clusterIcon_.remove(),
-					(this.markers_.length = 0),
-					delete this.markers_;
+				this.clusterIcon_.remove(), (this.markers_.length = 0), delete this.markers_;
 			}),
 			(w.prototype.getSize = function () {
 				return this.markers_.length;
@@ -12461,28 +10929,22 @@
 				var e = this.map_.getZoom(),
 					t = this.markerClusterer_.getMaxZoom();
 				if (t && e > t) for (var n = 0; this.markers_[n]; n++);
-				else if (this.markers_.length < this.minClusterSize_)
-					this.clusterIcon_.hide();
+				else if (this.markers_.length < this.minClusterSize_) this.clusterIcon_.hide();
 				else {
 					var i = this.markerClusterer_.getStyles().length,
 						o = this.markerClusterer_.getCalculator()(this.markers_, i);
-					this.clusterIcon_.setCenter(this.center_),
-						this.clusterIcon_.setSums(o),
-						this.clusterIcon_.show();
+					this.clusterIcon_.setCenter(this.center_), this.clusterIcon_.setSums(o), this.clusterIcon_.show();
 				}
 			}),
 			(b.prototype.triggerClusterClick = function () {
 				var e = this.cluster_.getMarkerClusterer();
 				google.maps.event.trigger(e, "clusterclick", this.cluster_),
-					e.isZoomOnClick() &&
-						(this.map_.fitBounds(this.cluster_.getBounds()),
-						this.map_.setZoom(this.map_.getZoom() + 1));
+					e.isZoomOnClick() && (this.map_.fitBounds(this.cluster_.getBounds()), this.map_.setZoom(this.map_.getZoom() + 1));
 			}),
 			(b.prototype.onAdd = function () {
 				if (((this.div_ = document.createElement("DIV")), this.visible_)) {
 					var e = this.getPosFromLatLng_(this.center_);
-					(this.div_.style.cssText = this.createCss(e)),
-						(this.div_.innerHTML = this.sums_.text);
+					(this.div_.style.cssText = this.createCss(e)), (this.div_.innerHTML = this.sums_.text);
 				}
 				this.getPanes().overlayMouseTarget.appendChild(this.div_);
 				var t = this;
@@ -12492,17 +10954,12 @@
 			}),
 			(b.prototype.getPosFromLatLng_ = function (e) {
 				var t = this.getProjection().fromLatLngToDivPixel(e);
-				return (
-					(t.x -= parseInt(this.width_ / 2, 10)),
-					(t.y -= parseInt(this.height_ / 2, 10)),
-					t
-				);
+				return (t.x -= parseInt(this.width_ / 2, 10)), (t.y -= parseInt(this.height_ / 2, 10)), t;
 			}),
 			(b.prototype.draw = function () {
 				if (this.visible_) {
 					var e = this.getPosFromLatLng_(this.center_);
-					(this.div_.style.top = e.y + "px"),
-						(this.div_.style.left = e.x + "px");
+					(this.div_.style.top = e.y + "px"), (this.div_.style.left = e.x + "px");
 				}
 			}),
 			(b.prototype.hide = function () {
@@ -12511,8 +10968,7 @@
 			(b.prototype.show = function () {
 				if (this.div_) {
 					var e = this.getPosFromLatLng_(this.center_);
-					(this.div_.style.cssText = this.createCss(e)),
-						(this.div_.style.display = "");
+					(this.div_.style.cssText = this.createCss(e)), (this.div_.style.display = "");
 				}
 				this.visible_ = !0;
 			}),
@@ -12520,18 +10976,10 @@
 				this.setMap(null);
 			}),
 			(b.prototype.onRemove = function () {
-				this.div_ &&
-					this.div_.parentNode &&
-					(this.hide(),
-					this.div_.parentNode.removeChild(this.div_),
-					(this.div_ = null));
+				this.div_ && this.div_.parentNode && (this.hide(), this.div_.parentNode.removeChild(this.div_), (this.div_ = null));
 			}),
 			(b.prototype.setSums = function (e) {
-				(this.sums_ = e),
-					(this.text_ = e.text),
-					(this.index_ = e.index),
-					this.div_ && (this.div_.innerHTML = e.text),
-					this.useStyle();
+				(this.sums_ = e), (this.text_ = e.text), (this.index_ = e.index), this.div_ && (this.div_.innerHTML = e.text), this.useStyle();
 			}),
 			(b.prototype.useStyle = function () {
 				var e = Math.max(0, this.sums_.index - 1);
@@ -12554,43 +11002,13 @@
 				var n = this.backgroundPosition_ ? this.backgroundPosition_ : "0 0";
 				t.push("background-position:" + n + ";"),
 					"object" === m(this.anchor_)
-						? ("number" == typeof this.anchor_[0] &&
-						  this.anchor_[0] > 0 &&
-						  this.anchor_[0] < this.height_
-								? t.push(
-										"height:" +
-											(this.height_ - this.anchor_[0]) +
-											"px; padding-top:" +
-											this.anchor_[0] +
-											"px;"
-								  )
-								: t.push(
-										"height:" +
-											this.height_ +
-											"px; line-height:" +
-											this.height_ +
-											"px;"
-								  ),
-						  "number" == typeof this.anchor_[1] &&
-						  this.anchor_[1] > 0 &&
-						  this.anchor_[1] < this.width_
-								? t.push(
-										"width:" +
-											(this.width_ - this.anchor_[1]) +
-											"px; padding-left:" +
-											this.anchor_[1] +
-											"px;"
-								  )
+						? ("number" == typeof this.anchor_[0] && this.anchor_[0] > 0 && this.anchor_[0] < this.height_
+								? t.push("height:" + (this.height_ - this.anchor_[0]) + "px; padding-top:" + this.anchor_[0] + "px;")
+								: t.push("height:" + this.height_ + "px; line-height:" + this.height_ + "px;"),
+						  "number" == typeof this.anchor_[1] && this.anchor_[1] > 0 && this.anchor_[1] < this.width_
+								? t.push("width:" + (this.width_ - this.anchor_[1]) + "px; padding-left:" + this.anchor_[1] + "px;")
 								: t.push("width:" + this.width_ + "px; text-align:center;"))
-						: t.push(
-								"height:" +
-									this.height_ +
-									"px; line-height:" +
-									this.height_ +
-									"px; width:" +
-									this.width_ +
-									"px; text-align:center;"
-						  );
+						: t.push("height:" + this.height_ + "px; line-height:" + this.height_ + "px; width:" + this.width_ + "px; text-align:center;");
 				var i = this.textColor_ ? this.textColor_ : "black",
 					o = this.textSize_ ? this.textSize_ : 11;
 				return (
@@ -12645,8 +11063,7 @@
 				function (e) {
 					for (var t = 1; t < arguments.length; t++) {
 						var n = arguments[t];
-						for (var i in n)
-							Object.prototype.hasOwnProperty.call(n, i) && (e[i] = n[i]);
+						for (var i in n) Object.prototype.hasOwnProperty.call(n, i) && (e[i] = n[i]);
 					}
 					return e;
 				}).apply(this, arguments);
@@ -12654,10 +11071,8 @@
 		var P = function (e) {
 			this.widget = e;
 			return (
-				window.easyPackConfig.points.functions.length > 0 &&
-					(this.widget.isFilter = !0),
-				(d.a.currentFilters = this.currentFilters =
-					window.easyPackConfig.points.functions || []),
+				window.easyPackConfig.points.functions.length > 0 && (this.widget.isFilter = !0),
+				(d.a.currentFilters = this.currentFilters = window.easyPackConfig.points.functions || []),
 				this.build(),
 				this
 			);
@@ -12689,8 +11104,7 @@
 							"osm" === window.easyPackConfig.mapType
 								? (d.a.clearLayers(), d.a.sortPointsByFilters(e.currentFilters))
 								: (e.widget.loadClosestPoints([], !0, e.currentFilters),
-								  0 !== e.currentFilters.length &&
-										e.widget.clusterer.clearMarkers()),
+								  0 !== e.currentFilters.length && e.widget.clusterer.clearMarkers()),
 							o()(function () {
 								e.getPointsByFilter();
 							}, 100);
@@ -12698,49 +11112,40 @@
 				"pl" === window.easyPackConfig.instance
 					? Object(k.a)({}, function (e) {
 							e.forEach(function (e, n) {
-								return document
-									.getElementById("".concat(h.a["filters-widget__list"]))
-									.appendChild(
+								return document.getElementById("".concat(h.a["filters-widget__list"])).appendChild(
+									a()(
+										"li",
+										{
+											key: n,
+											className: "".concat(h.a["filters-widget__elem"]),
+										},
 										a()(
-											"li",
-											{
-												key: n,
-												className: "".concat(h.a["filters-widget__elem"]),
-											},
-											a()(
-												"input",
-												_(
-													{
-														type: "checkbox",
-														id: e.name,
-														"data-filter": e.name,
-														ref: Object(c.g)(t),
-													},
-													c.d.in(e.name, window.easyPackConfig.points.functions)
-														? { checked: !0 }
-														: {}
-												)
-											),
-											a()("label", {
-												For: e.name,
-												dangerouslySetInnerHTML: {
-													__html:
-														void 0 === e[window.easyPackConfig.defaultLocale]
-															? e.name
-															: e[window.easyPackConfig.defaultLocale],
+											"input",
+											_(
+												{
+													type: "checkbox",
+													id: e.name,
+													"data-filter": e.name,
+													ref: Object(c.g)(t),
 												},
-											})
-										)
-									);
+												c.d.in(e.name, window.easyPackConfig.points.functions) ? { checked: !0 } : {}
+											)
+										),
+										a()("label", {
+											For: e.name,
+											dangerouslySetInnerHTML: {
+												__html: void 0 === e[window.easyPackConfig.defaultLocale] ? e.name : e[window.easyPackConfig.defaultLocale],
+											},
+										})
+									)
+								);
 							});
 					  })
 					: (window.easyPackConfig.filters = !1),
 					(this.filtersElement = a()(
 						"div",
 						{
-							className: ""
-								.concat(h.a["filters-widget"], " ")
-								.concat(h.a.hidden),
+							className: "".concat(h.a["filters-widget"], " ").concat(h.a.hidden),
 							"data-open": !1,
 						},
 						a()("div", {
@@ -12753,24 +11158,14 @@
 					));
 			},
 			refreshAllTypes: function (e) {
-				"google" === window.easyPackConfig.mapType &&
-					this.widget.clusterer.clearMarkers(),
-					this.widget.showType(
-						this.widget.currentTypes[0],
-						this.widget.currentTypes
-					);
+				"google" === window.easyPackConfig.mapType && this.widget.clusterer.clearMarkers(),
+					this.widget.showType(this.widget.currentTypes[0], this.widget.currentTypes);
 			},
 			getPointsByFilter: function () {
 				var e = this;
-				if (
-					e.currentFilters.length > 0 &&
-					this.widget.currentTypes.length > 0
-				) {
-					(e.filtersElement.className = ""
-						.concat(h.a["filters-widget"], " ")
-						.concat(h.a.loading)),
-						"google" === window.easyPackConfig.mapType &&
-							e.widget.clusterer.clearMarkers(),
+				if (e.currentFilters.length > 0 && this.widget.currentTypes.length > 0) {
+					(e.filtersElement.className = "".concat(h.a["filters-widget"], " ").concat(h.a.loading)),
+						"google" === window.easyPackConfig.mapType && e.widget.clusterer.clearMarkers(),
 						e.widget.listObj.clear();
 					for (var t = 0; t < e.widget.currentTypes.length; t++) {
 						var n = e.widget.currentTypes[t];
@@ -12788,16 +11183,12 @@
 							i.forEach(function (t) {
 								e.widget.listObj.addPoint(t.point, e.widget.addListener(t), n);
 							}),
-								"google" === window.easyPackConfig.mapType &&
-									e.widget.clusterer.addMarkers(i);
+								"google" === window.easyPackConfig.mapType && e.widget.clusterer.addMarkers(i);
 						}
 					}
-					e.widget.loadClosestPoints(),
-						(e.filtersElement.className = h.a["filters-widget"]),
-						e.widget.statusBarObj.hide();
+					e.widget.loadClosestPoints(), (e.filtersElement.className = h.a["filters-widget"]), e.widget.statusBarObj.hide();
 				} else {
-					"google" === window.easyPackConfig.mapType &&
-						e.widget.clusterer.clearMarkers(),
+					"google" === window.easyPackConfig.mapType && e.widget.clusterer.clearMarkers(),
 						(e.filtersElement.className = h.a["filters-widget"]),
 						e.widget.listObj.clear();
 					for (t = 0; t < e.widget.currentTypes.length; t++)
@@ -12843,19 +11234,14 @@
 				});
 				var t = function () {
 					!0 === this.classList.contains(h.a.opened)
-						? (this.classList.remove(h.a.opened),
-						  e.widget.filtersObj.filtersElement.classList.add(h.a.hidden))
-						: (this.classList.add(h.a.opened),
-						  e.widget.filtersObj.filtersElement.classList.remove(h.a.hidden));
+						? (this.classList.remove(h.a.opened), e.widget.filtersObj.filtersElement.classList.add(h.a.hidden))
+						: (this.classList.add(h.a.opened), e.widget.filtersObj.filtersElement.classList.remove(h.a.hidden));
 				};
 				this.searchButton = a()("button", {
 					className: "".concat(h.a.btn, " ").concat(h.a["btn-search"]),
 					type: "button",
 					style: {
-						"background-image": "url(".concat(
-							window.easyPackConfig.iconsUrl,
-							"search.png)"
-						),
+						"background-image": "url(".concat(window.easyPackConfig.iconsUrl, "search.png)"),
 					},
 				});
 				var n = function (e) {
@@ -12865,10 +11251,7 @@
 							"button",
 							{
 								"data-open": !1,
-								className: ""
-									.concat(h.a.btn, " ")
-									.concat(h.a["btn-filters"], " ")
-									.concat(e.class),
+								className: "".concat(h.a.btn, " ").concat(h.a["btn-filters"], " ").concat(e.class),
 								type: "button",
 								ref: Object(c.g)(t),
 							},
@@ -12876,10 +11259,7 @@
 							a()("span", {
 								className: h.a["btn-filters__arrow"],
 								style: {
-									"background-image": "url(".concat(
-										window.easyPackConfig.iconsUrl,
-										"filters.png)"
-									),
+									"background-image": "url(".concat(window.easyPackConfig.iconsUrl, "filters.png)"),
 								},
 							})
 						)
@@ -12895,21 +11275,13 @@
 						a()(
 							"div",
 							{
-								className: ""
-									.concat(h.a["search-group"], " ")
-									.concat(
-										window.easyPackConfig.filters ? h.a["with-filters"] : ""
-									),
+								className: "".concat(h.a["search-group"], " ").concat(window.easyPackConfig.filters ? h.a["with-filters"] : ""),
 							},
 							this.searchInput,
 							a()(
 								"span",
 								{
-									className: ""
-										.concat(h.a["search-group-btn"], " ")
-										.concat(
-											window.easyPackConfig.filters ? h.a["with-filters"] : ""
-										),
+									className: "".concat(h.a["search-group-btn"], " ").concat(window.easyPackConfig.filters ? h.a["with-filters"] : ""),
 								},
 								this.mobileFiltersButton,
 								this.searchButton
@@ -12939,55 +11311,35 @@
 					(this.searchObj = e),
 						(this.mapObj = t),
 						(this.params = n),
-						(this.maxPointsResult =
-							window.easyPackConfig.searchPointsResultLimit);
+						(this.maxPointsResult = window.easyPackConfig.searchPointsResultLimit);
 					var i = this;
 					if ("google" === window.easyPackConfig.searchType) {
 						var o = new google.maps.places.AutocompleteService();
-						i.placesService = new google.maps.places.PlacesService(
-							i.mapObj.currentFilters ? i.mapObj : i.mapObj.mapObj
-						);
+						i.placesService = new google.maps.places.PlacesService(i.mapObj.currentFilters ? i.mapObj : i.mapObj.mapObj);
 					}
 					i.loaderToggle(!1);
 					var r = u()(function (e) {
 						var t = document.getElementById("listvillages");
 						if (e.target.value.length > 2 && 13 !== e.which) {
 							if ((i.loaderToggle(!0), t)) {
-								for (var n = t.getElementsByClassName(h.a.place); n[0]; )
-									n[0].parentNode.removeChild(n[0]);
-								for (n = t.getElementsByClassName(h.a.point); n[0]; )
-									n[0].parentNode.removeChild(n[0]);
+								for (var n = t.getElementsByClassName(h.a.place); n[0]; ) n[0].parentNode.removeChild(n[0]);
+								for (n = t.getElementsByClassName(h.a.point); n[0]; ) n[0].parentNode.removeChild(n[0]);
 							}
 							var r = e.target.value.replace(/ul\.\s?/i, "");
 							if (0 !== r.length) {
 								var a = r + " " + window.easyPackConfig.map.searchCountry;
 								switch (window.easyPackConfig.searchType) {
 									case "osm":
-										Object(c.a)(
-											window.easyPackConfig.searchApiUrl +
-												"?q=" +
-												encodeURIComponent(r) +
-												"&format=jsonv2",
-											"GET",
-											function (e) {
-												var t = [];
-												if (e.length)
-													for (
-														var n = 0;
-														n < e.length && (t.push(e[n]), !(n >= 4));
-														n++
-													);
-												i.displaySuggestions(t, "OK", i);
-											}
-										);
+										Object(c.a)(window.easyPackConfig.searchApiUrl + "?q=" + encodeURIComponent(r) + "&format=jsonv2", "GET", function (e) {
+											var t = [];
+											if (e.length) for (var n = 0; n < e.length && (t.push(e[n]), !(n >= 4)); n++);
+											i.displaySuggestions(t, "OK", i);
+										});
 										break;
 									case "google":
-										o.getPlacePredictions(
-											{ input: a, types: ["geocode"] },
-											function (e, t) {
-												return i.displaySuggestions(e, t, i);
-											}
-										);
+										o.getPlacePredictions({ input: a, types: ["geocode"] }, function (e, t) {
+											return i.displaySuggestions(e, t, i);
+										});
 								}
 								r.length >= 6 &&
 									(window.abortController &&
@@ -12997,10 +11349,7 @@
 									i.displayPointsResults(r));
 							}
 						} else null !== t && e.target.value.length <= 2 && (t.classList.add(h.a.hidden), t.parentElement.removeChild(t), i.loaderToggle(!1));
-						13 === e.which &&
-							document.getElementsByClassName(h.a["inpost-search__item-list"])
-								.length > 0 &&
-							i.selectFirstResult();
+						13 === e.which && document.getElementsByClassName(h.a["inpost-search__item-list"]).length > 0 && i.selectFirstResult();
 					}, 400);
 					this.searchObj.searchInput.addEventListener(
 						"keyup",
@@ -13018,43 +11367,30 @@
 						null === document.getElementById("listvillages")
 							? (i = a()("div", {
 									id: "listvillages",
-									className: ""
-										.concat(h.a["inpost-search__list"], " ")
-										.concat(h.a.hidden),
+									className: "".concat(h.a["inpost-search__list"], " ").concat(h.a.hidden),
 							  }))
-							: (i = document.getElementById("listvillages")).classList.remove(
-									h.a.hidden
-							  );
-						for (var r = i.getElementsByClassName(h.a.place); r[0]; )
-							r[0].parentNode.removeChild(r[0]);
+							: (i = document.getElementById("listvillages")).classList.remove(h.a.hidden);
+						for (var r = i.getElementsByClassName(h.a.place); r[0]; ) r[0].parentNode.removeChild(r[0]);
 						var s = function (e) {
 							switch (
-								((n.searchObj.searchInput.value = e.target.querySelector(
-									".pac-matched"
-								).innerHTML),
-								window.easyPackConfig.searchType)
+								((n.searchObj.searchInput.value = e.target.querySelector(".pac-matched").innerHTML), window.easyPackConfig.searchType)
 							) {
 								case "google":
 									if ("osm" === window.easyPackConfig.mapType)
-										new google.maps.Geocoder().geocode(
-											{ placeId: e.target.dataset.placeid },
-											function (e, t) {
-												"OK" === t &&
-													d.a.setMapView(
-														{
-															latitude: e[0].geometry.location.lat(),
-															longitude: e[0].geometry.location.lng(),
-														},
-														!0,
-														window.easyPackConfig.map.autocompleteZoom
-													);
-											}
-										);
+										new google.maps.Geocoder().geocode({ placeId: e.target.dataset.placeid }, function (e, t) {
+											"OK" === t &&
+												d.a.setMapView(
+													{
+														latitude: e[0].geometry.location.lat(),
+														longitude: e[0].geometry.location.lng(),
+													},
+													!0,
+													window.easyPackConfig.map.autocompleteZoom
+												);
+										});
 									else
 										(O.searchObj.searchInput.value = this.childNodes[0].childNodes[0].innerHTML),
-											void 0 !== this.childNodes[1] &&
-												(O.searchObj.searchInput.value +=
-													", " + this.childNodes[1].innerHTML),
+											void 0 !== this.childNodes[1] && (O.searchObj.searchInput.value += ", " + this.childNodes[1].innerHTML),
 											O.setCenter(e.target.dataset.placeid);
 									break;
 								case "osm":
@@ -13068,14 +11404,8 @@
 											window.easyPackConfig.map.autocompleteZoom
 										);
 									else if ("google" === window.easyPackConfig.mapType) {
-										var t = new google.maps.LatLng(
-											this.dataset.lat,
-											this.dataset.lng
-										);
-										O.mapObj.mapObj.setCenter(t),
-											O.mapObj.mapObj.setZoom(
-												window.easyPackConfig.map.detailsMinZoom
-											);
+										var t = new google.maps.LatLng(this.dataset.lat, this.dataset.lng);
+										O.mapObj.mapObj.setCenter(t), O.mapObj.mapObj.setZoom(window.easyPackConfig.map.detailsMinZoom);
 									}
 							}
 						};
@@ -13085,17 +11415,10 @@
 									return a()(
 										"div",
 										{
-											"data-placeid":
-												"google" === window.easyPackConfig.searchType
-													? e.place_id
-													: null,
-											"data-lat":
-												"osm" === window.easyPackConfig.searchType ? e.lat : "",
-											"data-lng":
-												"osm" === window.easyPackConfig.searchType ? e.lon : "",
-											className: ""
-												.concat(h.a["inpost-search__item-list"], " ")
-												.concat(h.a.place),
+											"data-placeid": "google" === window.easyPackConfig.searchType ? e.place_id : null,
+											"data-lat": "osm" === window.easyPackConfig.searchType ? e.lat : "",
+											"data-lng": "osm" === window.easyPackConfig.searchType ? e.lon : "",
+											className: "".concat(h.a["inpost-search__item-list"], " ").concat(h.a.place),
 											ref: Object(c.g)(s),
 										},
 										a()(
@@ -13110,9 +11433,7 @@
 													className: "pac-matched",
 													style: { "pointer-events": "none" },
 												},
-												"google" === window.easyPackConfig.searchType
-													? e.description
-													: e.display_name
+												"google" === window.easyPackConfig.searchType ? e.description : e.display_name
 											)
 										)
 									);
@@ -13138,22 +11459,16 @@
 						n = this,
 						i = document.getElementsByClassName(h.a["search-widget"])[0];
 					null === document.getElementById("listvillages")
-						? (((t = document.createElement("div")).id = "listvillages"),
-						  (t.className = "".concat(h.a["inpost-search__list"], " ")))
-						: (t = document.getElementById("listvillages")).classList.remove(
-								h.a.hidden
-						  );
-					for (var r = t.getElementsByClassName(h.a.point); r[0]; )
-						r[0].parentNode.removeChild(r[0]);
+						? (((t = document.createElement("div")).id = "listvillages"), (t.className = "".concat(h.a["inpost-search__list"], " ")))
+						: (t = document.getElementById("listvillages")).classList.remove(h.a.hidden);
+					for (var r = t.getElementsByClassName(h.a.point); r[0]; ) r[0].parentNode.removeChild(r[0]);
 					var a = document.createElement("div"),
 						s = document.createElement("span"),
 						c = document.createElement("span"),
 						l = document.createElement("span"),
 						u = document.createTextNode(""),
 						p = document.createTextNode("");
-					(a.className = ""
-						.concat(h.a["inpost-search__item-list"], " ")
-						.concat(h.a.point)),
+					(a.className = "".concat(h.a["inpost-search__item-list"], " ").concat(h.a.point)),
 						(s.className = h.a["inpost-search__item-list--query"]),
 						(c.className = h.a["pac-matched"]),
 						l.appendChild(p),
@@ -13167,10 +11482,7 @@
 								if (e.name) {
 									(i.textContent = e.name),
 										(e.action = function () {
-											var t =
-													arguments.length > 0 &&
-													void 0 !== arguments[0] &&
-													arguments[0],
+											var t = arguments.length > 0 && void 0 !== arguments[0] && arguments[0],
 												i = window.easyPack.pointsToSearch.find(function (t) {
 													return t.name === e.name;
 												});
@@ -13178,16 +11490,9 @@
 												case "google":
 													if (!t) {
 														var r = new google.maps.LatLngBounds();
-														r.extend(
-															new google.maps.LatLng(
-																e.location.latitude,
-																e.location.longitude
-															)
-														),
+														r.extend(new google.maps.LatLng(e.location.latitude, e.location.longitude)),
 															n.mapObj.mapObj.fitBounds(r),
-															O.mapObj.mapObj.setZoom(
-																window.easyPackConfig.map.detailsMinZoom
-															);
+															O.mapObj.mapObj.setZoom(window.easyPackConfig.map.detailsMinZoom);
 													}
 													n.mapObj.loader(!0),
 														i
@@ -13197,12 +11502,7 @@
 															  }, 100);
 													break;
 												default:
-													t ||
-														d.a.setMapView(
-															e.location,
-															!0,
-															window.easyPackConfig.map.detailsMinZoom
-														),
+													t || d.a.setMapView(e.location, !0, window.easyPackConfig.map.detailsMinZoom),
 														n.mapObj.loader(!0),
 														i
 															? i.action()
@@ -13216,24 +11516,19 @@
 										l.appendChild(r),
 										l.addEventListener("click", function () {
 											(O.searchObj.searchInput.value = this.childNodes[0].childNodes[0].innerHTML),
-												void 0 !== this.childNodes[1] &&
-													(O.searchObj.searchInput.value +=
-														", " + this.childNodes[1].innerHTML),
+												void 0 !== this.childNodes[1] && (O.searchObj.searchInput.value += ", " + this.childNodes[1].innerHTML),
 												e.action();
 										}),
 										n.loaderToggle(!1);
 									var p = !0;
-									document
-										.getElementById("listvillages")
-										.childNodes.forEach(function (t) {
-											p && (p = t.innerHTML !== e.name);
-										}),
+									document.getElementById("listvillages").childNodes.forEach(function (t) {
+										p && (p = t.innerHTML !== e.name);
+									}),
 										p && t.insertAdjacentElement("beforeend", l);
 								}
 							},
 							{
-								functions:
-									n.mapObj.currentFilters || n.mapObj.filtersObj.currentFilters,
+								functions: n.mapObj.currentFilters || n.mapObj.filtersObj.currentFilters,
 								type: n.mapObj.types || n.mapObj.currentTypes,
 							}
 						),
@@ -13249,21 +11544,16 @@
 								? n.classList.add(h.a.hidden)
 								: t !== h.a["inpost-search__item-list"]
 								? n.classList.add(h.a.hidden)
-								: t === h.a["inpost-search__list"] &&
-								  n.classList.remove(h.a.hidden));
+								: t === h.a["inpost-search__list"] && n.classList.remove(h.a.hidden));
 					}),
 						this.searchObj.searchButton.addEventListener("click", function () {
 							e.selectFirstResult();
 						});
 				},
 				selectFirstResult: function () {
-					this.mapObj &&
-						this.mapObj.currentInfoWindow &&
-						this.mapObj.currentInfoWindow.close();
+					this.mapObj && this.mapObj.currentInfoWindow && this.mapObj.currentInfoWindow.close();
 					for (
-						var e = document.getElementsByClassName(
-								h.a["inpost-search__item-list"]
-							),
+						var e = document.getElementsByClassName(h.a["inpost-search__item-list"]),
 							t = document.getElementById("easypack-search").value,
 							n = null,
 							i = 0;
@@ -13271,75 +11561,48 @@
 						i++
 					) {
 						var o = e[i].childNodes[0].childNodes[0].innerHTML.toLowerCase();
-						e[i].childNodes.length > 1 &&
-							(o += ", " + e[i].childNodes[1].innerHTML.toLowerCase()),
+						e[i].childNodes.length > 1 && (o += ", " + e[i].childNodes[1].innerHTML.toLowerCase()),
 							null === n && 0 === o.search(t.toLowerCase()) && (n = e[i]);
 					}
-					var r = document
-						.getElementsByClassName(h.a["inpost-search__item-list"])
-						.item(0);
+					var r = document.getElementsByClassName(h.a["inpost-search__item-list"]).item(0);
 					if ((null !== n && (r = n), null != r))
 						if (r.dataset.placeid) {
 							this.searchObj.searchInput.value = "";
 							for (var a = 0; a < r.children.length; a++) {
 								var s = r.children.item(a);
 								s.children.length > 0 && (s = s.children[0]),
-									(this.searchObj.searchInput.value =
-										this.searchObj.searchInput.value + s.innerHTML + ", ");
+									(this.searchObj.searchInput.value = this.searchObj.searchInput.value + s.innerHTML + ", ");
 							}
 							switch (
 								("osm" === window.easyPackConfig.searchType
-									? (this.searchObj.searchInput.value = this.searchObj.searchInput.value.slice(
-											0,
-											-4
-									  ))
-									: (this.searchObj.searchInput.value = this.searchObj.searchInput.value.slice(
-											0,
-											-2
-									  )),
+									? (this.searchObj.searchInput.value = this.searchObj.searchInput.value.slice(0, -4))
+									: (this.searchObj.searchInput.value = this.searchObj.searchInput.value.slice(0, -2)),
 								window.easyPackConfig.searchType)
 							) {
 								case "google":
 									if ("osm" === window.easyPackConfig.mapType)
-										new google.maps.Geocoder().geocode(
-											{ placeId: r.dataset.placeid },
-											function (e, t) {
-												"OK" === t &&
-													d.a.setMapView(
-														{
-															latitude: e[0].geometry.location.lat(),
-															longitude: e[0].geometry.location.lng(),
-														},
-														!0,
-														window.easyPackConfig.map.autocompleteZoom
-													);
-											}
-										);
+										new google.maps.Geocoder().geocode({ placeId: r.dataset.placeid }, function (e, t) {
+											"OK" === t &&
+												d.a.setMapView(
+													{
+														latitude: e[0].geometry.location.lat(),
+														longitude: e[0].geometry.location.lng(),
+													},
+													!0,
+													window.easyPackConfig.map.autocompleteZoom
+												);
+										});
 									else this.setCenter(r.dataset.placeid);
-									document
-										.getElementById("listvillages")
-										.classList.add(h.a.hidden);
+									document.getElementById("listvillages").classList.add(h.a.hidden);
 									break;
 								case "osm":
 									if ("osm" === window.easyPackConfig.mapType)
-										d.a.setMapView(
-											{ latitude: r.dataset.lat, longitude: r.dataset.lng },
-											!0,
-											window.easyPackConfig.map.autocompleteZoom
-										);
+										d.a.setMapView({ latitude: r.dataset.lat, longitude: r.dataset.lng }, !0, window.easyPackConfig.map.autocompleteZoom);
 									else if ("google" === window.easyPackConfig.mapType) {
-										var c = new google.maps.LatLng(
-											r.dataset.lat,
-											r.dataset.lng
-										);
-										O.mapObj.setCenter(c),
-											O.mapObj.setZoom(
-												window.easyPackConfig.map.detailsMinZoom
-											);
+										var c = new google.maps.LatLng(r.dataset.lat, r.dataset.lng);
+										O.mapObj.setCenter(c), O.mapObj.setZoom(window.easyPackConfig.map.detailsMinZoom);
 									}
-									document
-										.getElementById("listvillages")
-										.classList.add(h.a.hidden);
+									document.getElementById("listvillages").classList.add(h.a.hidden);
 							}
 						} else r.dataset.placeid || r.click();
 					this.searchObj.searchInput.blur();
@@ -13348,18 +11611,13 @@
 					if (this.loader)
 						e && this.loader.classList.contains(h.a.hidden)
 							? this.loader.classList.remove(h.a.hidden)
-							: e ||
-							  this.loader.classList.contains(h.a.hidden) ||
-							  this.loader.classList.add(h.a.hidden);
+							: e || this.loader.classList.contains(h.a.hidden) || this.loader.classList.add(h.a.hidden);
 					else {
 						var t = a()(
 							"div",
 							{
 								id: "searchLoader",
-								className: ""
-									.concat(h.a["loading-icon-wrapper"], " ")
-									.concat(h.a["loader-wrapper"], " ")
-									.concat(h.a.hidden),
+								className: "".concat(h.a["loading-icon-wrapper"], " ").concat(h.a["loader-wrapper"], " ").concat(h.a.hidden),
 							},
 							a()(
 								"div",
@@ -13374,10 +11632,7 @@
 								a()("div", null)
 							)
 						);
-						this.loader = this.searchObj.searchInput.parentNode.insertBefore(
-							t,
-							this.searchObj.searchInput.parentNode.lastChild
-						);
+						this.loader = this.searchObj.searchInput.parentNode.insertBefore(t, this.searchObj.searchInput.parentNode.lastChild);
 					}
 				},
 				setCenter: function (e) {
@@ -13387,29 +11642,16 @@
 							e &&
 								(e.geometry.viewport && "osm" === window.easyPackConfig.mapType
 									? d.a.map.fitBounds([
-											[
-												e.geometry.viewport.getNorthEast().lat(),
-												e.geometry.viewport.getNorthEast().lng(),
-											],
-											[
-												e.geometry.viewport.getSouthWest().lat(),
-												e.geometry.viewport.getSouthWest().lng(),
-											],
+											[e.geometry.viewport.getNorthEast().lat(), e.geometry.viewport.getNorthEast().lng()],
+											[e.geometry.viewport.getSouthWest().lat(), e.geometry.viewport.getSouthWest().lng()],
 									  ])
-									: e.geometry.viewport &&
-									  "google" === window.easyPackConfig.mapType
+									: e.geometry.viewport && "google" === window.easyPackConfig.mapType
 									? (O.mapObj.mapObj.fitBounds(e.geometry.viewport),
 									  setTimeout(function () {
-											O.mapObj.mapObj.getZoom() <
-												window.easyPackConfig.map.visiblePointsMinZoom &&
-												O.mapObj.mapObj.setZoom(
-													window.easyPackConfig.map.visiblePointsMinZoom
-												);
+											O.mapObj.mapObj.getZoom() < window.easyPackConfig.map.visiblePointsMinZoom &&
+												O.mapObj.mapObj.setZoom(window.easyPackConfig.map.visiblePointsMinZoom);
 									  }, 300))
-									: (O.mapObj.setCenter(e.geometry.location),
-									  O.mapObj.setZoom(
-											window.easyPackConfig.map.detailsMinZoom
-									  ))),
+									: (O.mapObj.setCenter(e.geometry.location), O.mapObj.setZoom(window.easyPackConfig.map.detailsMinZoom))),
 							document.getElementById("listvillages").classList.add(h.a.hidden);
 					});
 				},
@@ -13428,12 +11670,7 @@
 							return typeof e;
 					  }
 					: function (e) {
-							return e &&
-								"function" == typeof Symbol &&
-								e.constructor === Symbol &&
-								e !== Symbol.prototype
-								? "symbol"
-								: typeof e;
+							return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
 					  })(e);
 		}
 		function F(e) {
@@ -13472,10 +11709,7 @@
 					f = e,
 					g = !1,
 					m = ((i = i), !1),
-					w =
-						(window.easyPackConfig.map.types,
-						window.easyPackConfig.points.types,
-						window.easyPackConfig.map.defaultLocation),
+					w = (window.easyPackConfig.map.types, window.easyPackConfig.points.types, window.easyPackConfig.map.defaultLocation),
 					b = w,
 					k = [],
 					_ = {},
@@ -13505,8 +11739,7 @@
 					(window.easyPack.pointCallback = t);
 				var X = this;
 				this.closeModal = function () {
-					document.getElementById("widget-modal").parentNode.style.display =
-						"none";
+					document.getElementById("widget-modal").parentNode.style.display = "none";
 				};
 				var Y = function (e) {
 					(window.easyPackConfig.closeFullScreenModeOnPointSelect &&
@@ -13521,12 +11754,8 @@
 							: document.webkitExitFullscreen
 							? document.webkitExitFullscreen()
 							: document.msExitFullscreen && document.msExitFullscreen()),
-					window.easyPack.pointCallback ||
-						window.easyPackConfig.customDetailsCallback) &&
-						(
-							window.easyPackConfig.customDetailsCallback ||
-							window.easyPack.pointCallback
-						)(e, X);
+					window.easyPack.pointCallback || window.easyPackConfig.customDetailsCallback) &&
+						(window.easyPackConfig.customDetailsCallback || window.easyPack.pointCallback)(e, X);
 				};
 				(X.isMobile = K),
 					(d.a.pointCallback = Y),
@@ -13549,114 +11778,56 @@
 						if (m) {
 							r.slice(0);
 							if (
-								((K && !0 === window.easyPackConfig.mobileFiltersAsCheckbox) ||
-								!K
-									? p.typesHelpers.isParent(
-											e,
-											p.typesHelpers.getExtendedCollection()
-									  ) &&
+								((K && !0 === window.easyPackConfig.mobileFiltersAsCheckbox) || !K
+									? p.typesHelpers.isParent(e, p.typesHelpers.getExtendedCollection()) &&
 									  (t =
 											void 0 !== t
-												? t.concat(
-														p.typesHelpers.getAllChildsForGroup(
-															e,
-															p.typesHelpers.getExtendedCollection()
-														)
-												  )
-												: p.typesHelpers.getAllChildsForGroup(
-														e,
-														p.typesHelpers.getExtendedCollection()
-												  ) || [])
+												? t.concat(p.typesHelpers.getAllChildsForGroup(e, p.typesHelpers.getExtendedCollection()))
+												: p.typesHelpers.getAllChildsForGroup(e, p.typesHelpers.getExtendedCollection()) || [])
 									: K &&
 									  !window.easyPackConfig.mobileFiltersAsCheckbox &&
-									  ("google" === window.easyPackConfig.mapType &&
-											z.clearMarkers(),
-									  window.easyPackConfig.points.types.includes(e) &&
-											r.indexOf(e) < 0 &&
-											r.unshift(e),
+									  ("google" === window.easyPackConfig.mapType && z.clearMarkers(),
+									  window.easyPackConfig.points.types.includes(e) && r.indexOf(e) < 0 && r.unshift(e),
 									  (r = [
 											r.filter(function (e) {
-												return !p.typesHelpers
-													.getAllAdditionalTypes(
-														p.typesHelpers.getExtendedCollection()
-													)
-													.includes(e);
+												return !p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()).includes(e);
 											})[0],
-									  ]).length > 0 &&
-											(r = r.concat(
-												p.typesHelpers.getAllAdditionalTypes(
-													p.typesHelpers.getExtendedCollection()
-												)
-											))),
+									  ]).length > 0 && (r = r.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection())))),
 								(t =
 									void 0 !== t
-										? t.concat(
-												p.typesHelpers.getAllAdditionalTypes(
-													p.typesHelpers.getExtendedCollection()
-												)
-										  )
-										: p.typesHelpers.getAllAdditionalTypes(
-												p.typesHelpers.getExtendedCollection()
-										  )),
+										? t.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()))
+										: p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection())),
 								K && !window.easyPackConfig.mobileFiltersAsCheckbox)
 							)
 								"google" === window.easyPackConfig.mapType && z.clearMarkers(),
 									(r = [
 										r.filter(function (e) {
-											return !p.typesHelpers
-												.getAllAdditionalTypes(
-													p.typesHelpers.getExtendedCollection()
-												)
-												.includes(e);
+											return !p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()).includes(e);
 										})[0],
-									]).length > 0 &&
-										(r = r.concat(
-											p.typesHelpers.getAllAdditionalTypes(
-												p.typesHelpers.getExtendedCollection()
-											)
-										));
+									]).length > 0 && (r = r.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection())));
 							else if ((-1 === r.indexOf(e) && r.push(e), void 0 !== t))
-								for (var n = 0; n < t.length; n++)
-									-1 === r.indexOf(t[n]) && r.push(t[n]);
+								for (var n = 0; n < t.length; n++) -1 === r.indexOf(t[n]) && r.push(t[n]);
 							if (
 								(1 ===
 									r.filter(function (e) {
 										return e.includes("_only");
 									}).length &&
 									(r = r.filter(function (e) {
-										return !p.typesHelpers
-											.getAllAdditionalTypes(
-												p.typesHelpers.getExtendedCollection()
-											)
-											.includes(e);
+										return !p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()).includes(e);
 									})),
 								void 0 !== r)
 							) {
-								(r = p.typesHelpers.sortByPriorities(r)),
-									"google" === window.easyPackConfig.mapType &&
-										z.clearMarkers();
+								(r = p.typesHelpers.sortByPriorities(r)), "google" === window.easyPackConfig.mapType && z.clearMarkers();
 								for (var i = 0; i < r.length; i++)
-									if (
-										c.d.in(r[i], r) &&
-										void 0 !== _[r[i].replace("_only", "")]
-									) {
+									if (c.d.in(r[i], r) && void 0 !== _[r[i].replace("_only", "")]) {
 										var a = _[r[i].replace("_only", "")].filter(function (e) {
-											return (
-												!e.point.functions ||
-												c.d.all(X.filtersObj.currentFilters, e.point.functions)
-											);
+											return !e.point.functions || c.d.all(X.filtersObj.currentFilters, e.point.functions);
 										});
-										Q(a, r[i]),
-											"google" === window.easyPackConfig.mapType &&
-												z.addMarkers(a);
+										Q(a, r[i]), "google" === window.easyPackConfig.mapType && z.addMarkers(a);
 									}
 								X.statusBarObj.clear(), oe(r, !0, X.filtersObj.currentFilters);
 							}
-							W && W.update(r),
-								je(),
-								ne(),
-								(H.params.currentTypes = r),
-								K && (W.listWrapper.dataset.show = "false");
+							W && W.update(r), je(), ne(), (H.params.currentTypes = r), K && (W.listWrapper.dataset.show = "false");
 						} else
 							o()(function () {
 								X.showType(e);
@@ -13679,67 +11850,35 @@
 							ne();
 					}),
 					(X.addType = function (e) {
-						void 0 === J[e.id] && (J[e.id] = []),
-							(J[e.id] = e),
-							window.easyPackConfig.points.types.push(e);
+						void 0 === J[e.id] && (J[e.id] = []), (J[e.id] = e), window.easyPackConfig.points.types.push(e);
 					}),
 					(X.refreshPoints = function () {
 						H.clear(),
 							window.easyPack.pointsToSearch.forEach(function (e) {
-								H.addPoint(
-									F({}, e, { type: e.types }),
-									pe(B[e.name]),
-									X.currentTypes
-								);
+								H.addPoint(F({}, e, { type: e.types }), pe(B[e.name]), X.currentTypes);
 							});
 					}),
 					(X.addPoint = function (e) {
-						if (
-							((e.dynamic = !0),
-							void 0 !== J[e.type[0]] && (e.icon = J[e.type[0]].icon),
-							c.d.in(e.type, r))
-						)
-							le([e], !0, e.type);
-						else
-							for (var t = 0; e.type.length > t; t++)
-								void 0 === $[e.type[t]] && ($[e.type[t]] = []),
-									$[e.type[t]].push(e);
+						if (((e.dynamic = !0), void 0 !== J[e.type[0]] && (e.icon = J[e.type[0]].icon), c.d.in(e.type, r))) le([e], !0, e.type);
+						else for (var t = 0; e.type.length > t; t++) void 0 === $[e.type[t]] && ($[e.type[t]] = []), $[e.type[t]].push(e);
 					}),
 					(X.searchPlace = function (e) {
 						if (m)
-							switch (
-								(G && (G.searchInput.value = e),
-								window.easyPackConfig.searchType)
-							) {
+							switch ((G && (G.searchInput.value = e), window.easyPackConfig.searchType)) {
 								case "osm":
-									Object(c.a)(
-										window.easyPackConfig.searchApiUrl +
-											"?q=" +
-											e +
-											"&format=jsonv2",
-										"GET",
-										function (e) {
-											if ("osm" === window.easyPackConfig.mapType && e.length)
-												d.a.setMapView(
-													{ latitude: e[0].lat, longitude: e[0].lon },
-													!0,
-													window.easyPackConfig.map.detailsMinZoom
-												);
-											else if (
-												"google" === window.easyPackConfig.mapType &&
-												e.length
-											) {
-												var t = new google.maps.LatLng(e[0].lat, e[0].lon);
-												q.setCenter(t);
-											}
+									Object(c.a)(window.easyPackConfig.searchApiUrl + "?q=" + e + "&format=jsonv2", "GET", function (e) {
+										if ("osm" === window.easyPackConfig.mapType && e.length)
+											d.a.setMapView({ latitude: e[0].lat, longitude: e[0].lon }, !0, window.easyPackConfig.map.detailsMinZoom);
+										else if ("google" === window.easyPackConfig.mapType && e.length) {
+											var t = new google.maps.LatLng(e[0].lat, e[0].lon);
+											q.setCenter(t);
 										}
-									);
+									});
 									break;
 								case "google":
 									new google.maps.Geocoder().geocode(
 										{
-											address:
-												e + " " + window.easyPackConfig.map.searchCountry,
+											address: e + " " + window.easyPackConfig.map.searchCountry,
 										},
 										function (t, n) {
 											if (
@@ -13748,18 +11887,10 @@
 												!t[0].partial_match &&
 												"google" === window.easyPackConfig.mapType
 											) {
-												var i = new google.maps.LatLng(
-													t[0].geometry.location.lat(),
-													t[0].geometry.location.lng()
-												);
-												q.setCenter(i),
-													G &&
-														(G.searchButton.click(), (G.searchInput.value = e));
+												var i = new google.maps.LatLng(t[0].geometry.location.lat(), t[0].geometry.location.lng());
+												q.setCenter(i), G && (G.searchButton.click(), (G.searchInput.value = e));
 											}
-											n === google.maps.GeocoderStatus.OK &&
-											t.length > 0 &&
-											!t[0].partial_match &&
-											"osm" === window.easyPackConfig.mapType
+											n === google.maps.GeocoderStatus.OK && t.length > 0 && !t[0].partial_match && "osm" === window.easyPackConfig.mapType
 												? (d.a.setMapView(
 														{
 															latitude: t[0].geometry.location.lat(),
@@ -13768,8 +11899,7 @@
 														!0,
 														window.easyPackConfig.map.maxZoom
 												  ),
-												  G &&
-														(G.searchButton.click(), (G.searchInput.value = e)))
+												  G && (G.searchButton.click(), (G.searchInput.value = e)))
 												: n !== google.maps.GeocoderStatus.OK ||
 												  (0 !== t.length && !t[0].partial_match) ||
 												  (G && (G.searchInput.value = ""));
@@ -13788,8 +11918,7 @@
 									if (!e.error) {
 										var t = de(e, null);
 										"google" === window.easyPackConfig.mapType
-											? (z.addMarker(t),
-											  new google.maps.event.trigger(t, "click"))
+											? (z.addMarker(t), new google.maps.event.trigger(t, "click"))
 											: (d.a.setMapView(
 													{
 														latitude: e.location.latitude,
@@ -13803,14 +11932,7 @@
 														n = !1,
 														i = void 0;
 													try {
-														for (
-															var o,
-																r = d.a.markerGroup
-																	.getLayers()
-																	[Symbol.iterator]();
-															!(e = (o = r._next()).done);
-															e = !0
-														) {
+														for (var o, r = d.a.markerGroup.getLayers()[Symbol.iterator](); !(e = (o = r._next()).done); e = !0) {
 															var a = o.value;
 															if (a.options.alt === t.point.name) {
 																a.openPopup();
@@ -13846,61 +11968,32 @@
 						void 0 !== s && s.close();
 					}),
 					ie = function (e) {
-						var t =
-							arguments.length > 1 && void 0 !== arguments[1]
-								? arguments[1]
-								: null;
+						var t = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : null;
 						if (e.length > 0)
 							return e.sort(function (e, n) {
-								var i =
-										"osm" === window.easyPackConfig.mapType
-											? d.a.map.getCenter().lat
-											: t.getCenter().lat(),
-									o =
-										"osm" === window.easyPackConfig.mapType
-											? d.a.map.getCenter().lng
-											: t.getCenter().lng();
+								var i = "osm" === window.easyPackConfig.mapType ? d.a.map.getCenter().lat : t.getCenter().lat(),
+									o = "osm" === window.easyPackConfig.mapType ? d.a.map.getCenter().lng : t.getCenter().lng();
 								return (
-									c.d.calculateDistance(
-										[i, o],
-										[e.location.latitude, e.location.longitude]
-									) -
-									c.d.calculateDistance(
-										[i, o],
-										[n.location.latitude, n.location.longitude]
-									)
+									c.d.calculateDistance([i, o], [e.location.latitude, e.location.longitude]) -
+									c.d.calculateDistance([i, o], [n.location.latitude, n.location.longitude])
 								);
 							});
 					};
 				X.sortCurrentPointsByDistance = ie;
 				var oe = function (e, t, n) {
 					if (
-						("google" === window.easyPackConfig.mapType
-							? q.getZoom()
-							: d.a.map.getZoom()) >=
-						window.easyPackConfig.map.visiblePointsMinZoom
+						("google" === window.easyPackConfig.mapType ? q.getZoom() : d.a.map.getZoom()) >= window.easyPackConfig.map.visiblePointsMinZoom
 					) {
-						if (
-							(void 0 === (n = X.filtersObj.currentFilters) && (n = []),
-							r.length > 0 || n.length > 0)
-						) {
+						if ((void 0 === (n = X.filtersObj.currentFilters) && (n = []), r.length > 0 || n.length > 0)) {
 							var i = window.easyPackConfig.map.defaultDistance;
 							"google" === window.easyPackConfig.mapType
-								? (i =
-										g && void 0 !== q.getBounds()
-											? ye()
-											: window.easyPackConfig.map.defaultDistance)
+								? (i = g && void 0 !== q.getBounds() ? ye() : window.easyPackConfig.map.defaultDistance)
 								: "osm" === window.easyPackConfig.mapType &&
-								  (i =
-										g && void 0 !== d.a.map.getBounds()
-											? ye()
-											: window.easyPackConfig.map.defaultDistance),
+								  (i = g && void 0 !== d.a.map.getBounds() ? ye() : window.easyPackConfig.map.defaultDistance),
 								0 === i && (i = window.easyPackConfig.map.defaultDistance);
 							var o = X.isFilter ? { type: r, functions: n } : { type: r };
 							H.loading(!0),
-								window.abortController &&
-									window.abortController.abort &&
-									window.abortController.abort(),
+								window.abortController && window.abortController.abort && window.abortController.abort(),
 								Object(x.b)(
 									w,
 									i,
@@ -13908,33 +12001,20 @@
 									function (t) {
 										if (
 											(H.clear(),
-											"google" !== window.easyPackConfig.mapType &&
-												d.a.addLeafletPoints({ items: t }, [], !1, "", n, !0),
+											"google" !== window.easyPackConfig.mapType && d.a.addLeafletPoints({ items: t }, [], !1, "", n, !0),
 											r.includes("parcel_locker_only") &&
 												(t = t.filter(function (e) {
-													return (
-														1 === e.type.length &&
-														e.type.includes("parcel_locker")
-													);
+													return 1 === e.type.length && e.type.includes("parcel_locker");
 												})),
 											re(!1),
 											X.statusBarObj.hide(),
 											t.length && (t = ie(t, q)),
 											void 0 === e && (e = r[0]),
 											le(t, !0, e),
-											(document.getElementById(
-												"point-list"
-											).style.pointerEvents = "all"),
+											(document.getElementById("point-list").style.pointerEvents = "all"),
 											document.getElementsByClassName("list-point-link").length)
 										)
-											for (
-												var i = document.getElementsByClassName(
-														"list-point-link"
-													),
-													o = 0;
-												o < i.length;
-												o++
-											)
+											for (var i = document.getElementsByClassName("list-point-link"), o = 0; o < i.length; o++)
 												i.item(o).style.cursor = "pointer";
 									},
 									d.a.map,
@@ -13952,9 +12032,7 @@
 				};
 				X.loadClosestPoints = oe;
 				var re = function (e) {
-					e
-						? V.mapLoader.classList.remove(h.a.hidden)
-						: V.mapLoader.classList.add(h.a.hidden);
+					e ? V.mapLoader.classList.remove(h.a.hidden) : V.mapLoader.classList.add(h.a.hidden);
 				};
 				X.loader = re;
 				var ae = function () {
@@ -13982,9 +12060,7 @@
 										"div",
 										{
 											id: h.a["map-list-flex"],
-											className: c.d.hasCustomMapAndListInRow()
-												? h.a["map-list-in-row"]
-												: h.a["map-list-flex"],
+											className: c.d.hasCustomMapAndListInRow() ? h.a["map-list-in-row"] : h.a["map-list-flex"],
 										},
 										a()("div", {
 											className: h.a["map-widget"],
@@ -13998,16 +12074,12 @@
 									"div",
 									{
 										id: "loader",
-										className: ""
-											.concat(h.a["loading-icon-wrapper"], " ")
-											.concat(h.a["loader-wrapper"], " ")
-											.concat(h.a.hidden),
+										className: "".concat(h.a["loading-icon-wrapper"], " ").concat(h.a["loader-wrapper"], " ").concat(h.a.hidden),
 									},
 									a()(
 										"div",
 										{
-											className:
-												"ball-spin-fade-loader ball-spin-fade-loader-mp",
+											className: "ball-spin-fade-loader ball-spin-fade-loader-mp",
 										},
 										a()("div", null),
 										a()("div", null),
@@ -14028,35 +12100,26 @@
 								(d.a.loader = X.loader),
 								(d.a.element = document.getElementById("map-leaflet")),
 								"google" === window.easyPackConfig.searchType &&
-									((q = new google.maps.Map(document.getElementById("map"), t)),
-									(X.mapObj = q)),
+									((q = new google.maps.Map(document.getElementById("map"), t)), (X.mapObj = q)),
 								(V.mapLoader = l),
 								re(!0),
-								document.getElementById("widget-modal") &&
-									document
-										.getElementById("widget-modal")
-										.children[0].classList.remove(h.a.hidden),
+								document.getElementById("widget-modal") && document.getElementById("widget-modal").children[0].classList.remove(h.a.hidden),
 								(d.a.map = L.map("map-leaflet", {
 									preferCanvas: !1,
 									minZoom: t.minZoom,
 									closePopupOnClick: !1,
 									maxZoom: 18,
 								}).setView([b[0], b[1]], t.zoom)),
-								L.tileLayer(
-									"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-									{
-										attribution:
-											'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-									}
-								).addTo(d.a.map),
+								L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+									attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+								}).addTo(d.a.map),
 								d.a.addLeafletCluster(),
 								L.tileLayer(window.easyPackConfig.osm.tiles, {
 									maxZoom: 18,
 								}).addTo(d.a.map),
 								d.a.element.appendChild(l),
 								o()(function () {
-									d.a.map.addControl(new L.Control.Fullscreen()),
-										L.control.locate().addTo(d.a.map);
+									d.a.map.addControl(new L.Control.Fullscreen()), L.control.locate().addTo(d.a.map);
 								}, 1e3),
 								xe(),
 								window.easyPackConfig.display.showSearchBar && Ce(),
@@ -14065,52 +12128,22 @@
 								_e(),
 								Pe(i, f),
 								p.typesHelpers
-									.seachInArrayOfObjectsKeyWithCondition(
-										p.typesHelpers.getExtendedCollection(),
-										"enabled",
-										!0,
-										"childs"
-									)
-									.concat(
-										p.typesHelpers.getAllAdditionalTypes(
-											p.typesHelpers.getExtendedCollection()
-										)
-									),
+									.seachInArrayOfObjectsKeyWithCondition(p.typesHelpers.getExtendedCollection(), "enabled", !0, "childs")
+									.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection())),
 								d.a.map.on(
 									"moveend",
 									u()(function () {
 										if (window.easyPack.mapReady) {
 											var e = d.a.map.getCenter();
-											if (
-												((w = [e.lat, e.lng]),
-												d.a.map.getZoom() >=
-													window.easyPackConfig.map.visiblePointsMinZoom)
-											) {
+											if (((w = [e.lat, e.lng]), d.a.map.getZoom() >= window.easyPackConfig.map.visiblePointsMinZoom)) {
 												if (
-													(document.getElementById("point-list") &&
-														(document.getElementById(
-															"point-list"
-														).style.pointerEvents = "none"),
-													document.getElementsByClassName("list-point-link")
-														.length)
+													(document.getElementById("point-list") && (document.getElementById("point-list").style.pointerEvents = "none"),
+													document.getElementsByClassName("list-point-link").length)
 												)
-													for (
-														var t = document.getElementsByClassName(
-																"list-point-link"
-															),
-															n = 0;
-														n < t.length;
-														n++
-													)
+													for (var t = document.getElementsByClassName("list-point-link"), n = 0; n < t.length; n++)
 														t.item(n).style.cursor = "wait";
-												X.statusBarObj.clear(),
-													H.loading(!0),
-													oe(r, !0, X.filtersObj.currentFilters);
-											} else
-												re(!1),
-													X.statusBarObj.showInfoAboutZoom(),
-													H.clear(),
-													d.a.clearLayers();
+												X.statusBarObj.clear(), H.loading(!0), oe(r, !0, X.filtersObj.currentFilters);
+											} else re(!1), X.statusBarObj.showInfoAboutZoom(), H.clear(), d.a.clearLayers();
 										}
 									}, 400)
 								),
@@ -14125,8 +12158,7 @@
 											var e = d.a.map.getCenter();
 											w = [e.lat, e.lng];
 									  }, 300)
-									: e(document.getElementById(f)) &&
-									  (window.easyPack.once = !0);
+									: e(document.getElementById(f)) && (window.easyPack.once = !0);
 							}, 100);
 							n && n(X);
 						} else
@@ -14152,9 +12184,7 @@
 										"div",
 										{
 											id: h.a["map-list-flex"],
-											className: c.d.hasCustomMapAndListInRow()
-												? h.a["map-list-in-row"]
-												: h.a["map-list-flex"],
+											className: c.d.hasCustomMapAndListInRow() ? h.a["map-list-in-row"] : h.a["map-list-flex"],
 										},
 										a()("div", {
 											className: h.a["map-widget"],
@@ -14167,16 +12197,12 @@
 									"div",
 									{
 										id: "loader",
-										className: ""
-											.concat(h.a["loading-icon-wrapper"], " ")
-											.concat(h.a["loader-wrapper"], " ")
-											.concat(h.a.hidden),
+										className: "".concat(h.a["loading-icon-wrapper"], " ").concat(h.a["loader-wrapper"], " ").concat(h.a.hidden),
 									},
 									a()(
 										"div",
 										{
-											className:
-												"ball-spin-fade-loader ball-spin-fade-loader-mp",
+											className: "ball-spin-fade-loader ball-spin-fade-loader-mp",
 										},
 										a()("div", null),
 										a()("div", null),
@@ -14204,10 +12230,7 @@
 								window.addEventListener("orientationchange", function () {
 									google.maps.event.trigger(q, "resize");
 								}),
-								document.getElementById("widget-modal") &&
-									document
-										.getElementById("widget-modal")
-										.children[0].classList.remove(h.a.hidden),
+								document.getElementById("widget-modal") && document.getElementById("widget-modal").children[0].classList.remove(h.a.hidden),
 								xe(),
 								window.easyPackConfig.display.showSearchBar && Ce(),
 								be(),
@@ -14228,15 +12251,11 @@
 										var e = q.getCenter();
 										(w = [e.lat(), e.lng()]),
 											X.statusBarObj.clear(),
-											q.getZoom() >=
-											window.easyPackConfig.map.visiblePointsMinZoom
+											q.getZoom() >= window.easyPackConfig.map.visiblePointsMinZoom
 												? X.isFilter
 													? oe([], !0, X.filtersObj.currentFilters)
 													: oe()
-												: (X.statusBarObj.showInfoAboutZoom(),
-												  H.clear(),
-												  re(!1),
-												  z.clearMarkers());
+												: (X.statusBarObj.showInfoAboutZoom(), H.clear(), re(!1), z.clearMarkers());
 									}, 400)
 								),
 								window.easyPackConfig.points.showPoints.length,
@@ -14274,10 +12293,7 @@
 				var de = function (e, t) {
 					switch (window.easyPackConfig.mapType) {
 						case "google":
-							var n = new google.maps.LatLng(
-									e.location.latitude,
-									e.location.longitude
-								),
+							var n = new google.maps.LatLng(e.location.latitude, e.location.longitude),
 								i = void 0 !== J[e.type] ? J[e.type].marker : Object(x.e)(e, r),
 								o = new google.maps.Marker({
 									position: n,
@@ -14289,8 +12305,7 @@
 							break;
 						default:
 							(n = L.latLng(e.location.latitude, e.location.longitude)),
-								(i =
-									void 0 !== J[e.type] ? J[e.type].marker : Object(x.e)(e, r)),
+								(i = void 0 !== J[e.type] ? J[e.type].marker : Object(x.e)(e, r)),
 								(o = {
 									position: n,
 									point: e,
@@ -14328,20 +12343,9 @@
 								(function (e) {
 									switch (window.easyPackConfig.mapType) {
 										case "osm":
-											return d.a.map
-												.getBounds()
-												.contains(
-													L.latLng(e.location.latitude, e.location.longitude)
-												);
+											return d.a.map.getBounds().contains(L.latLng(e.location.latitude, e.location.longitude));
 										default:
-											return q
-												.getBounds()
-												.contains(
-													new google.maps.LatLng(
-														e.location.latitude,
-														e.location.longitude
-													)
-												);
+											return q.getBounds().contains(new google.maps.LatLng(e.location.latitude, e.location.longitude));
 									}
 								})(e) || window.easyPackConfig.points.showPoints.length > 0
 							);
@@ -14350,12 +12354,7 @@
 								return void 0 === B[e.name];
 							})
 							.forEach(function (e) {
-								if (
-									(!0,
-									e.location &&
-										0 !== e.location.latitude &&
-										0 !== e.location.longitude)
-								)
+								if ((!0, e.location && 0 !== e.location.latitude && 0 !== e.location.longitude))
 									if (k.indexOf(e.name) > -1 && !0 === t) {
 										var n = B[e.name];
 										-1 ===
@@ -14363,10 +12362,7 @@
 												name: e.name,
 												types: e.type,
 												action: pe(n),
-											}) &&
-											window.easyPack.pointsToSearch.push(
-												F({ name: e.name, types: e.type, action: pe(n) }, e)
-											);
+											}) && window.easyPack.pointsToSearch.push(F({ name: e.name, types: e.type, action: pe(n) }, e));
 									} else {
 										var o = de(e, null);
 										-1 ===
@@ -14374,10 +12370,7 @@
 												name: e.name,
 												types: e.type,
 												action: pe(o),
-											}) &&
-											window.easyPack.pointsToSearch.push(
-												F({ name: e.name, types: e.type, action: pe(o) }, e)
-											),
+											}) && window.easyPack.pointsToSearch.push(F({ name: e.name, types: e.type, action: pe(o) }, e)),
 											k.push(e.name),
 											e.type
 												.filter(function (e) {
@@ -14389,17 +12382,13 @@
 														p.typesHelpers.in(t.replace("_only", ""), r) &&
 															void 0 === B[e.name] &&
 															null !== o.point.functions &&
-															c.d.all(
-																X.filtersObj.currentFilters,
-																o.point.functions
-															) &&
+															c.d.all(X.filtersObj.currentFilters, o.point.functions) &&
 															i.push(o),
 														(B[e.name] = o);
 												});
 									}
 							}),
-						(e =
-							"osm" === window.easyPackConfig.mapType && e.length ? ie(e) : e),
+						(e = "osm" === window.easyPackConfig.mapType && e.length ? ie(e) : e),
 						"google" === window.easyPackConfig.mapType &&
 							window.easyPackConfig.points.showPoints.length > 0 &&
 							window.easyPack.pointsToSearch.length > 0 &&
@@ -14407,10 +12396,7 @@
 					) {
 						var a = new google.maps.LatLngBounds();
 						window.easyPack.pointsToSearch.forEach(function (e) {
-							var t = new google.maps.LatLng(
-								e.location.latitude,
-								e.location.longitude
-							);
+							var t = new google.maps.LatLng(e.location.latitude, e.location.longitude);
 							a.extend(t);
 						}),
 							(window.easyPack.showPointsInitialized = !0),
@@ -14447,16 +12433,12 @@
 							o()(function () {
 								z.addMarkers(i), (i = []);
 							}, 0),
-						c.d.hasCustomMapAndListInRow() &&
-							H.paginate(1, c.d.getPaginationPerPage()),
+						c.d.hasCustomMapAndListInRow() && H.paginate(1, c.d.getPaginationPerPage()),
 						H.loading(!1);
 				};
 				d.a.processNewPoints = this.processNewPoints = fe;
 				var he = function (e, t) {
-						var n =
-							void 0 === J[e.point.type]
-								? Object(x.e)(e.point, r)
-								: J[e.point.type].marker;
+						var n = void 0 === J[e.point.type] ? Object(x.e)(e.point, r) : J[e.point.type].marker;
 						switch (window.easyPackConfig.mapType) {
 							case "google":
 								e.setIcon(n);
@@ -14488,31 +12470,16 @@
 												}, 50);
 												break;
 											default:
-												d.a.setMapView(
-													{ latitude: e.lat(), longitude: e.lng() },
-													!0,
-													15
-												),
-													document.getElementsByClassName("map-wrapper")
-														.length > 0 &&
-														!document
-															.getElementsByClassName("map-wrapper")
-															.item(0)
-															.getAttribute("data-active") &&
+												d.a.setMapView({ latitude: e.lat(), longitude: e.lng() }, !0, 15),
+													document.getElementsByClassName("map-wrapper").length > 0 &&
+														!document.getElementsByClassName("map-wrapper").item(0).getAttribute("data-active") &&
 														X.viewChooserObj.resetState(),
 													o()(function () {
 														var e = !0,
 															n = !1,
 															i = void 0;
 														try {
-															for (
-																var o,
-																	r = d.a.markerGroup
-																		.getLayers()
-																		[Symbol.iterator]();
-																!(e = (o = r._next()).done);
-																e = !0
-															) {
+															for (var o, r = d.a.markerGroup.getLayers()[Symbol.iterator](); !(e = (o = r._next()).done); e = !0) {
 																var a = o.value;
 																if (a.options.alt === t.point.name) {
 																	a.openPopup();
@@ -14536,26 +12503,16 @@
 								a < r.length;
 								a++
 							)
-								r[a] &&
-									r[a].getElementsByTagName("img")[0] &&
-									r[a].getElementsByTagName("img")[0].click();
+								r[a] && r[a].getElementsByTagName("img")[0] && r[a].getElementsByTagName("img")[0].click();
 							if (
 								(K &&
 									!c.d.hasCustomMapAndListInRow() &&
-									(X.viewChooserObj.listWrapper.setAttribute(
-										"data-active",
-										"false"
-									),
-									X.viewChooserObj.mapWrapper.setAttribute(
-										"data-active",
-										"true"
-									),
+									(X.viewChooserObj.listWrapper.setAttribute("data-active", "false"),
+									X.viewChooserObj.mapWrapper.setAttribute("data-active", "true"),
 									"google" === window.easyPackConfig.mapType
 										? (X.mapElement.style.display = "block")
-										: ((document.getElementById("map-leaflet").style.display =
-												"flex"),
-										  (document.getElementById("map-leaflet").style.visibility =
-												"visible")),
+										: ((document.getElementById("map-leaflet").style.display = "flex"),
+										  (document.getElementById("map-leaflet").style.visibility = "visible")),
 									(X.listObj.listElement.style.display = "none")),
 								(n =
 									"google" === window.easyPackConfig.mapType
@@ -14704,32 +12661,18 @@
 					ye = function () {
 						var e;
 						"google" === window.easyPackConfig.mapType
-							? void 0 !== q.getBounds() &&
-							  (e = [
-									q.getBounds().getNorthEast().lat(),
-									q.getBounds().getNorthEast().lng(),
-							  ])
-							: void 0 !== d.a.map.getBounds() &&
-							  (e = [
-									d.a.map.getBounds().getNorthEast().lat,
-									d.a.map.getBounds().getNorthEast().lng,
-							  ]);
+							? void 0 !== q.getBounds() && (e = [q.getBounds().getNorthEast().lat(), q.getBounds().getNorthEast().lng()])
+							: void 0 !== d.a.map.getBounds() && (e = [d.a.map.getBounds().getNorthEast().lat, d.a.map.getBounds().getNorthEast().lng]);
 						var t = window.easyPackConfig.map.distanceMultiplier;
 						return e
 							? ("google" === window.easyPackConfig.mapType
-									? void 0 !== q.getCenter() &&
-									  (w = [q.getCenter().lat(), q.getCenter().lng()])
-									: void 0 !== d.a.map.getBounds() &&
-									  (w = [
-											d.a.map.getBounds().getCenter().lat,
-											d.a.map.getBounds().getCenter().lng,
-									  ]),
+									? void 0 !== q.getCenter() && (w = [q.getCenter().lat(), q.getCenter().lng()])
+									: void 0 !== d.a.map.getBounds() && (w = [d.a.map.getBounds().getCenter().lat, d.a.map.getBounds().getCenter().lng]),
 							  c.d.calculateDistance([w[0], w[1]], [e[0], e[1]]) * t)
 							: c.d.calculateDistance([w[0], w[1]], [0, 0]) * t;
 					},
 					me = function () {
-						(D = document.createElement("div")).className =
-							h.a["loading-icon-wrapper"];
+						(D = document.createElement("div")).className = h.a["loading-icon-wrapper"];
 						var e = a()(
 							"div",
 							{ className: "ball-spin-fade-loader ball-spin-fade-loader-mp" },
@@ -14746,11 +12689,7 @@
 					},
 					ve = function () {
 						var e;
-						(e = window.easyPackConfig.mobileFiltersAsCheckbox
-							? "checkbox"
-							: K
-							? "radio"
-							: "checkbox"),
+						(e = window.easyPackConfig.mobileFiltersAsCheckbox ? "checkbox" : K ? "radio" : "checkbox"),
 							(W = new y(r, { currentTypes: r, style: Z }, e)),
 							(X.typesFilterObj = W),
 							W.render(V);
@@ -14761,32 +12700,19 @@
 								t = W.items;
 							K ||
 								document.addEventListener("click", function () {
-									for (
-										var e = document.getElementsByClassName(
-												h.a["has-subtypes"]
-											),
-											t = 0;
-										t < e.length;
-										t++
-									)
+									for (var e = document.getElementsByClassName(h.a["has-subtypes"]), t = 0; t < e.length; t++)
 										e[t].dataset.dropdown = "closed";
 								});
 							var n = function (e) {
 								var t = e.parentNode.getAttribute("data-type");
 								switch (window.easyPackConfig.mapType) {
 									case "google":
-										X.statusBarObj.showInfoAboutZoom(),
-											H.clear(),
-											z.clearMarkers();
+										X.statusBarObj.showInfoAboutZoom(), H.clear(), z.clearMarkers();
 										break;
 									default:
 										d.a.map.invalidateSize(), H.clear(), d.a.clearLayers();
 								}
-								K && !window.easyPackConfig.mobileFiltersAsCheckbox
-									? X.showType(t)
-									: c.d.in(t, r)
-									? X.hideType(t)
-									: X.showType(t);
+								K && !window.easyPackConfig.mobileFiltersAsCheckbox ? X.showType(t) : c.d.in(t, r) ? X.hideType(t) : X.showType(t);
 							};
 							for (e = 0; e < t.length; e++) {
 								var i = t[e];
@@ -14800,9 +12726,7 @@
 						}
 					},
 					be = function () {
-						(H = c.d.hasCustomMapAndListInRow()
-							? new S.paginatedListWidget({ currentTypes: r })
-							: new j.listWidget({ currentTypes: r })),
+						(H = c.d.hasCustomMapAndListInRow() ? new S.paginatedListWidget({ currentTypes: r }) : new j.listWidget({ currentTypes: r })),
 							(d.a.listObj = X.listObj = H),
 							H.render(document.getElementById(h.a["map-list-flex"]));
 					},
@@ -14818,25 +12742,16 @@
 					_e = function () {
 						(R = new T.statusBar(X)),
 							(X.statusBarObj = R),
-							R.render(
-								"osm" === window.easyPackConfig.mapType
-									? document.getElementById("map-leaflet")
-									: document.getElementById("map")
-							);
+							R.render("osm" === window.easyPackConfig.mapType ? document.getElementById("map-leaflet") : document.getElementById("map"));
 					},
 					Pe = function (e, t) {
 						e.config.langSelection &&
 							new M.languageBar(X, e, t).render(
-								"osm" === window.easyPackConfig.mapType
-									? document.getElementById("map-leaflet")
-									: document.getElementById("map")
+								"osm" === window.easyPackConfig.mapType ? document.getElementById("map-leaflet") : document.getElementById("map")
 							);
 					},
 					Ce = function () {
-						(G = new C(X)),
-							(X.searchObj = G),
-							V.insertBefore(G.render(), V.firstChild),
-							Oe();
+						(G = new C(X)), (X.searchObj = G), V.insertBefore(G.render(), V.firstChild), Oe();
 					},
 					xe = function () {
 						var e = new P(X);
@@ -14871,26 +12786,13 @@
 							  je(),
 							  (d.a.params.isMobile = K = !0),
 							  (X.isMobile = !0),
-							  (V.className = ""
-									.concat(h.a["easypack-widget"], " ")
-									.concat(h.a.mobile)),
-							  W &&
-									(window.easyPackConfig.mobileFiltersAsCheckbox ||
-										W.setKind("radio"),
-									(W.listWrapper.dataset.show = "false")),
+							  (V.className = "".concat(h.a["easypack-widget"], " ").concat(h.a.mobile)),
+							  W && (window.easyPackConfig.mobileFiltersAsCheckbox || W.setKind("radio"), (W.listWrapper.dataset.show = "false")),
 							  r.length > 1 &&
 									(window.easyPackConfig.mobileFiltersAsCheckbox ||
 										((r = [r[0]]),
-										p.typesHelpers.getObjectForType(
-											r[0],
-											p.typesHelpers.getExtendedCollection()
-										).additional &&
-											(r = [
-												p.typesHelpers.getObjectForType(
-													r[0],
-													p.typesHelpers.getExtendedCollection()
-												).additional,
-											].concat(r))),
+										p.typesHelpers.getObjectForType(r[0], p.typesHelpers.getExtendedCollection()).additional &&
+											(r = [p.typesHelpers.getObjectForType(r[0], p.typesHelpers.getExtendedCollection()).additional].concat(r))),
 									W && W.update(r)))
 							: K &&
 							  (ne(),
@@ -14903,27 +12805,13 @@
 					Ee = function e(t) {
 						var n = r.indexOf(t);
 						if (n > -1) {
-							if (window.pendingRequests.length > 0)
-								for (var i = 0; window.pendingRequests.length > i; i++);
+							if (window.pendingRequests.length > 0) for (var i = 0; window.pendingRequests.length > i; i++);
 							else !0;
 							(k = []),
-								p.typesHelpers.isParent(
-									t,
-									p.typesHelpers.getExtendedCollection()
-								) &&
-									p.typesHelpers.isAllChildSelected(
-										t,
-										r,
-										c.d.findObjectByPropertyName(
-											p.typesHelpers.getExtendedCollection(),
-											t
-										) || {}
-									) &&
+								p.typesHelpers.isParent(t, p.typesHelpers.getExtendedCollection()) &&
+									p.typesHelpers.isAllChildSelected(t, r, c.d.findObjectByPropertyName(p.typesHelpers.getExtendedCollection(), t) || {}) &&
 									p.typesHelpers
-										.getAllChildsForGroup(
-											t,
-											p.typesHelpers.getExtendedCollection()
-										)
+										.getAllChildsForGroup(t, p.typesHelpers.getExtendedCollection())
 										.filter(function (e) {
 											return e !== t;
 										})
@@ -14931,56 +12819,30 @@
 											e(t);
 										}),
 								r.splice(n, 1);
-							var o = p.typesHelpers.getParentIfAvailable(
-								t,
-								p.typesHelpers.getExtendedCollection()
-							);
+							var o = p.typesHelpers.getParentIfAvailable(t, p.typesHelpers.getExtendedCollection());
 							null !== o &&
-								p.typesHelpers.isNoOneChildSelected(
-									o,
-									r,
-									p.typesHelpers.getObjectForType(
-										o,
-										p.typesHelpers.getExtendedCollection()
-									)
-								) &&
+								p.typesHelpers.isNoOneChildSelected(o, r, p.typesHelpers.getObjectForType(o, p.typesHelpers.getExtendedCollection())) &&
 								e(o),
 								(t = t.replace("_only", "")),
-								void 0 !== _[t] &&
-									(Q(_[t]),
-									"google" === window.easyPackConfig.mapType &&
-										z.removeMarkers(_[t])),
+								void 0 !== _[t] && (Q(_[t]), "google" === window.easyPackConfig.mapType && z.removeMarkers(_[t])),
 								p.typesHelpers.isOnlyAdditionTypes(
 									r.filter(function (e) {
 										return e;
 									}),
 									p.typesHelpers.getExtendedCollection()
 								) &&
-									p.typesHelpers
-										.getAllAdditionalTypes(
-											p.typesHelpers.getExtendedCollection()
-										)
-										.forEach(function (t) {
-											e(t);
-										}),
+									p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()).forEach(function (t) {
+										e(t);
+									}),
 								"google" === window.easyPackConfig.mapType && z.clearMarkers(),
 								r.length > 0 &&
-									("google" === window.easyPackConfig.mapType &&
-										z.clearMarkers(),
+									("google" === window.easyPackConfig.mapType && z.clearMarkers(),
 									r.forEach(function (e) {
 										if (void 0 !== _[e.replace("_only", "")]) {
 											var t = _[e.replace("_only", "")].filter(function (e) {
-												return (
-													!e.point.functions ||
-													c.d.all(
-														X.filtersObj.currentFilters,
-														e.point.functions
-													)
-												);
+												return !e.point.functions || c.d.all(X.filtersObj.currentFilters, e.point.functions);
 											});
-											Q(t),
-												"google" === window.easyPackConfig.mapType &&
-													z.addMarkers(t);
+											Q(t), "google" === window.easyPackConfig.mapType && z.addMarkers(t);
 										}
 									})),
 								X.statusBarObj.clear(),
@@ -14992,57 +12854,25 @@
 					};
 				return (
 					(function () {
-						for (
-							var e = 0;
-							e < window.easyPackConfig.points.types.length;
-							e++
-						) {
+						for (var e = 0; e < window.easyPackConfig.points.types.length; e++) {
 							if ("object" === I(window.easyPackConfig.points.types[e])) {
-								"pok" === window.easyPackConfig.points.types[e].name &&
-									(window.easyPackConfig.points.types[e].name = "pop");
+								"pok" === window.easyPackConfig.points.types[e].name && (window.easyPackConfig.points.types[e].name = "pop");
 								break;
 							}
-							"pok" === window.easyPackConfig.points.types[e] &&
-								(window.easyPackConfig.points.types[e] = "pop");
+							"pok" === window.easyPackConfig.points.types[e] && (window.easyPackConfig.points.types[e] = "pop");
 						}
 						c.d.in("pok", window.easyPackConfig.map.initialTypes) &&
-							(window.easyPackConfig.map.initialTypes = window.easyPackConfig.map.initialTypes.map(
-								function (e) {
-									return "pok" === e ? "pop" : e;
-								}
-							)),
-							(r = c.d.intersection(
-								window.easyPackConfig.map.initialTypes,
-								window.easyPackConfig.points.types
-							));
-						var t = p.typesHelpers.seachInArrayOfObjectsKeyWithCondition(
-							p.typesHelpers.getExtendedCollection(),
-							"enabled",
-							!0,
-							"childs"
-						);
-						(t = t.concat(
-							p.typesHelpers.getAllAdditionalTypes(
-								p.typesHelpers.getExtendedCollection()
-							) || []
-						)).length > 0 &&
+							(window.easyPackConfig.map.initialTypes = window.easyPackConfig.map.initialTypes.map(function (e) {
+								return "pok" === e ? "pop" : e;
+							})),
+							(r = c.d.intersection(window.easyPackConfig.map.initialTypes, window.easyPackConfig.points.types));
+						var t = p.typesHelpers.seachInArrayOfObjectsKeyWithCondition(p.typesHelpers.getExtendedCollection(), "enabled", !0, "childs");
+						(t = t.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()) || [])).length > 0 &&
 							(r = c.d.intersection(r, t)).length > 0 &&
-							(r = r.concat(
-								p.typesHelpers.getAllAdditionalTypes(
-									p.typesHelpers.getExtendedCollection()
-								)
-							)).forEach(function (e) {
-								p.typesHelpers.isParent(
-									e,
-									p.typesHelpers.getExtendedCollection()
-								) &&
-									(r = (r = r.concat([
-										p.typesHelpers.getNameForType(e),
-									])).concat(
-										p.typesHelpers.getAllChildsForGroup(
-											e,
-											p.typesHelpers.getExtendedCollection()
-										)
+							(r = r.concat(p.typesHelpers.getAllAdditionalTypes(p.typesHelpers.getExtendedCollection()))).forEach(function (e) {
+								p.typesHelpers.isParent(e, p.typesHelpers.getExtendedCollection()) &&
+									(r = (r = r.concat([p.typesHelpers.getNameForType(e)])).concat(
+										p.typesHelpers.getAllChildsForGroup(e, p.typesHelpers.getExtendedCollection())
 									));
 							}),
 							0 === r.length && (r = [easyPackConfig.map.initialTypes[0]]);
@@ -15050,8 +12880,7 @@
 					(function e() {
 						var t = document.getElementById(f);
 						if (t) {
-							(d.a.params.placeholder = V = t),
-								(V.className = h.a["easypack-widget"]);
+							(d.a.params.placeholder = V = t), (V.className = h.a["easypack-widget"]);
 							var n = V.ownerDocument;
 							(d.a.params.style = Z = n.createElement("style")),
 								Z.appendChild(n.createTextNode("")),
@@ -15070,12 +12899,7 @@
 						navigator.geolocation &&
 						navigator.geolocation.getCurrentPosition(
 							function (e) {
-								(w = [e.coords.latitude, e.coords.longitude]),
-									(d.a.initialLocation = w),
-									(b = w),
-									(U = !0),
-									ae(),
-									ue(w);
+								(w = [e.coords.latitude, e.coords.longitude]), (d.a.initialLocation = w), (b = w), (U = !0), ae(), ue(w);
 							},
 							function () {
 								ae();
@@ -15125,19 +12949,14 @@
 								width: "100%",
 								height: "100%",
 								"max-width": "".concat(this.options.width, "px"),
-								"max-height": "".concat(
-									this.options.height > 590 ? this.options.height : 590,
-									"px"
-								),
+								"max-height": "".concat(this.options.height > 590 ? this.options.height : 590, "px"),
 								"z-index": "99999999!important",
 							},
 						},
 						a()(
 							"div",
 							{
-								className: ""
-									.concat(h.a["widget-modal__topbar"], " ")
-									.concat(h.a[""]),
+								className: "".concat(h.a["widget-modal__topbar"], " ").concat(h.a[""]),
 							},
 							a()("div", {
 								className: h.a["widget-modal__close"],
@@ -15155,12 +12974,7 @@
 		};
 		var H = n(17),
 			R = function (e, t, n) {
-				switch (
-					(this.build(e, t),
-					(this.callback = t),
-					(n.dropdownWidgetObj = this),
-					window.easyPackConfig.searchType)
-				) {
+				switch ((this.build(e, t), (this.callback = t), (n.dropdownWidgetObj = this), window.easyPackConfig.searchType)) {
 					case "osm":
 						window.easyPack.dropdownWidgetObj.afterLoad();
 						break;
@@ -15181,9 +12995,7 @@
 					"span",
 					{ className: h.a["easypack-dropdown__arrow"] },
 					a()("img", {
-						src: ""
-							.concat(window.easyPackConfig.assetsServer, "/")
-							.concat(window.easyPackConfig.map.filtersIcon),
+						src: "".concat(window.easyPackConfig.assetsServer, "/").concat(window.easyPackConfig.map.filtersIcon),
 					})
 				));
 			this.dropdownSelect = a()(
@@ -15208,9 +13020,7 @@
 							(i = o()(
 								function () {
 									var e = this.value.replace(/ul\.\s?/i, "");
-									0 !== e.length &&
-										((r.loadingIcon.className = "easypack-loading"),
-										r.searchPoints(e, r.callback));
+									0 !== e.length && ((r.loadingIcon.className = "easypack-loading"), r.searchPoints(e, r.callback));
 								}.bind(this),
 								250
 							));
@@ -15222,9 +13032,7 @@
 				(this.loadingIcon = a()(
 					"div",
 					{
-						className: ""
-							.concat(h.a["easypack-loading"], " ")
-							.concat(h.a.hidden),
+						className: "".concat(h.a["easypack-loading"], " ").concat(h.a.hidden),
 					},
 					a()(
 						"div",
@@ -15242,12 +13050,7 @@
 				(this.dropdownContent = a()(
 					"div",
 					{ className: h.a["easypack-dropdown__content"] },
-					a()(
-						"div",
-						{ className: "search-input-loader-wrapper" },
-						s,
-						this.loadingIcon
-					),
+					a()("div", { className: "search-input-loader-wrapper" }, s, this.loadingIcon),
 					this.dropdownList
 				)),
 				(this.dropdownContainer = a()(
@@ -15259,45 +13062,33 @@
 				n.appendChild(this.dropdownContainer);
 		}),
 			(R.prototype.afterLoad = function () {
-				(this.loadingIcon.className = h.a["easypack-loading"]),
-					this.searchFn(H.easyPackConfig.map.defaultLocation, this.callback);
+				(this.loadingIcon.className = h.a["easypack-loading"]), this.searchFn(H.easyPackConfig.map.defaultLocation, this.callback);
 			}),
 			(R.prototype.searchPoints = function (e, t) {
 				var n = this;
 				switch (((n.loadedPoints = []), window.easyPackConfig.searchType)) {
 					case "osm":
-						Object(c.a)(
-							window.easyPackConfig.searchApiUrl + "?q=" + e + "&format=jsonv2",
-							"GET",
-							function (e) {
-								if (e.length) {
-									var i = e[0].lat,
-										o = e[0].lon;
-									(n.dropdownList.innerHTML = ""), n.searchFn([i, o], t);
-								}
+						Object(c.a)(window.easyPackConfig.searchApiUrl + "?q=" + e + "&format=jsonv2", "GET", function (e) {
+							if (e.length) {
+								var i = e[0].lat,
+									o = e[0].lon;
+								(n.dropdownList.innerHTML = ""), n.searchFn([i, o], t);
 							}
-						);
+						});
 						break;
 					case "google":
 						(this.autocompleteService = new google.maps.places.AutocompleteService()),
 							(this.geocoder = new google.maps.Geocoder()),
-							this.autocompleteService.getPlacePredictions(
-								{ input: e, types: ["geocode"] },
-								function (e, i) {
-									e.length > 0 &&
-										n.geocoder.geocode(
-											{ placeId: e[0].place_id },
-											function (e, i) {
-												if (e.length > 0) {
-													var o = e[0].geometry.location.lat(),
-														r = e[0].geometry.location.lng();
-													(n.dropdownList.innerHTML = ""),
-														n.searchFn([o, r], t);
-												}
-											}
-										);
-								}
-							);
+							this.autocompleteService.getPlacePredictions({ input: e, types: ["geocode"] }, function (e, i) {
+								e.length > 0 &&
+									n.geocoder.geocode({ placeId: e[0].place_id }, function (e, i) {
+										if (e.length > 0) {
+											var o = e[0].geometry.location.lat(),
+												r = e[0].geometry.location.lng();
+											(n.dropdownList.innerHTML = ""), n.searchFn([o, r], t);
+										}
+									});
+							});
 				}
 			}),
 			(R.prototype.searchFn = function (e, t) {
@@ -15332,17 +13123,11 @@
 											(n.dropdownContainer.dataset.open = "false");
 									}),
 								},
-								e[i].address.line1 +
-									", " +
-									e[i].address.line2 +
-									", " +
-									e[i].name
+								e[i].address.line1 + ", " + e[i].address.line2 + ", " + e[i].name
 							);
 							n.dropdownList.appendChild(o);
 						}
-						n.loadingIcon.className = ""
-							.concat(h.a.hidden, " ")
-							.concat(h.a["easypack-loading"]);
+						n.loadingIcon.className = "".concat(h.a.hidden, " ").concat(h.a["easypack-loading"]);
 					}
 				);
 			});
@@ -15369,8 +13154,7 @@
 					n || (window.easyPack.pointsToSearch = []),
 						null !== Object(c.c)("names") &&
 							"" !== Object(c.c)("names") &&
-							(t.points || (t.points = {}),
-							(t.points.showPoints = [Object(c.c)("names")])),
+							(t.points || (t.points = {}), (t.points.showPoints = [Object(c.c)("names")])),
 						Object(c.b)(t, n),
 						n || (Object(c.e)(), c.d.loadWebfonts()),
 						(e.config = window.easyPackConfig),
@@ -15378,9 +13162,7 @@
 						(window.easyPack.locale = window.easyPackConfig.defaultLocale);
 				},
 				asyncInit: function () {
-					void 0 !== window.easyPackAsyncInit
-						? window.easyPackAsyncInit()
-						: o()(e.asyncInit, 250);
+					void 0 !== window.easyPackAsyncInit ? window.easyPackAsyncInit() : o()(e.asyncInit, 250);
 				},
 				pointsToSearch: [],
 			};
@@ -15392,22 +13174,13 @@
 						(window.addEventListener("resize", function (e) {
 							e.target.innerWidth < 768
 								? (document.querySelector(".view-chooser > .map-widget") &&
-										((document.querySelector(
-											".view-chooser > .map-widget"
-										).dataset.active = "true"),
-										(document.querySelector(
-											".view-chooser > .list-wrapper"
-										).dataset.active = "false")),
-								  (document.querySelector(".map-widget").style.visibility =
-										"visible"),
-								  (document.querySelector(".list-widget").style.visibility =
-										"hidden"))
-								: ((document.querySelector(".map-widget").style.visibility =
-										"visible"),
-								  (document.querySelector(".list-widget").style.visibility =
-										"visible"),
-								  (document.querySelector(".list-widget").style.display =
-										"flex"));
+										((document.querySelector(".view-chooser > .map-widget").dataset.active = "true"),
+										(document.querySelector(".view-chooser > .list-wrapper").dataset.active = "false")),
+								  (document.querySelector(".map-widget").style.visibility = "visible"),
+								  (document.querySelector(".list-widget").style.visibility = "hidden"))
+								: ((document.querySelector(".map-widget").style.visibility = "visible"),
+								  (document.querySelector(".list-widget").style.visibility = "visible"),
+								  (document.querySelector(".list-widget").style.display = "flex"));
 						}),
 						document.getElementById(t))
 					)
@@ -15422,25 +13195,16 @@
 				(e.modalMap = function (t, n) {
 					return (
 						document.getElementById("widget-modal")
-							? (e.map.isMobile &&
-									void 0 !== e.map.viewChooserObj &&
-									e.map.viewChooserObj.resetState(),
-							  (document.getElementById(
-									"widget-modal"
-							  ).parentNode.style.display = "flex"))
+							? (e.map.isMobile && void 0 !== e.map.viewChooserObj && e.map.viewChooserObj.resetState(),
+							  (document.getElementById("widget-modal").parentNode.style.display = "flex"))
 							: (new D(n),
 							  (e.map = new z("widget-modal__map", t, null, e)),
 							  (e.map.isModal = !0),
 							  (e.map.isMobile = !0),
 							  window.addEventListener("resize", function (t) {
-									(n.width && n.width <= 768) ||
-									(!n.width && window.innerWidth <= 768)
-										? document
-												.getElementById("widget-modal__map")
-												.classList.add("mobile")
-										: document
-												.getElementById("widget-modal__map")
-												.classList.remove("mobile"),
+									(n.width && n.width <= 768) || (!n.width && window.innerWidth <= 768)
+										? document.getElementById("widget-modal__map").classList.add("mobile")
+										: document.getElementById("widget-modal__map").classList.remove("mobile"),
 										e.map.viewChooserObj.resetState();
 							  })),
 						e.map

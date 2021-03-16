@@ -29,4 +29,12 @@ select {
 	font-weight: 700;
 }
 
+.semi-bold {
+	font-weight: 600;
+}
+
+.bold {
+	font-weight: 900;
+}
+
 /* buttons */

@@ -89,6 +89,30 @@ foreach ($general_product_variants as $key => $variant) {
 }
 $general_product_variants = array_values($general_product_variants);
 
+$variants_less_html = "";
+foreach ($general_product_variants as $general_product_variant) {
+    $name = $general_product_variant["name"];
+    $variants_less_html .= "
+        <span class=\"label\">$name</span>
+        <div class=\"radio_group\">
+    ";
+    foreach ([
+        ["product_feature_option_id" => 0, "value" => "Wszystkie"], ...$general_product_variant["variant_options"]
+    ] as $variant_option) {
+        $product_feature_option_id = $variant_option["product_feature_option_id"];
+        $value = $variant_option["value"];
+        $variants_less_html .= "
+            <div>
+                <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
+                    <p-checkbox data-value=\"$product_feature_option_id\"></p-checkbox>
+                    $value
+                </div>
+            </div>
+        ";
+    }
+    $variants_less_html .= "</div>";
+}
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -106,7 +130,7 @@ $general_product_variants = array_values($general_product_variants);
 
     <?php if (isset($_GET["komentarz"])) { ?>
         domload(() => {
-            showModal(`createComment`);
+            showModal(`addComment`);
         })
     <?php } ?>
 </script>
@@ -290,14 +314,30 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <h2>Podobne produkty</h2>
         </div>
 
-        <div style="max-width: 1000px;margin: 0 auto">
+        <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
             <div>
-                <span class="label medium inline comments_label">Komentarze <span class="count"></span></span>
+                <span class="label medium bold inline comments_label">Komentarze <span class="count"></span></span>
                 <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                    <button class="btn primary small space_btn_left add_comment_btn_top hidden" onclick="showModal(`createComment`,{source:this});">
+                    <button class="btn primary small space_btn_left add_comment_btn_top hidden" onclick="showModal(`addComment`,{source:this});">
                         Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
                     </button>
                 <?php endif ?>
+                <button class="btn subtle small space_btn_left show_filters"> Filtruj wyniki <i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="comments_filters expand_y hidden animate_hidden">
+                <div class="coms_container">
+                    <div class="label first">Wyszukaj wg frazy:</div>
+                    <input class="field inline">
+
+                    <div class="variants_container">
+                        <?= $variants_less_html ?>
+                    </div>
+
+                    <div class="space_top"></div>
+                    <button class="btn primary search_btn"> Pokaż wyniki <i class="fas fa-search"></i></button>
+                    <button class="btn subtle hide_btn"> Ukryj filtry <i class="fas fa-angle-double-up"></i></button>
+                </div>
             </div>
 
             <list-comp class="comments striped" data-primary="comment_id">
@@ -309,7 +349,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
             <?php if (User::getCurrent()->isLoggedIn()) : ?>
                 <div class="label medium">Podziel się swoją opinią</div>
-                <button class="btn primary" onclick="showModal(`createComment`,{source:this});">
+                <button class="btn primary" onclick="showModal(`addComment`,{source:this});">
                     Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
                 </button>
             <?php else : ?>
@@ -331,7 +371,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 <?php endif ?>
 
 <?php if (User::getCurrent()->isLoggedIn()) : ?>
-    <div id="createComment" data-modal data-dismissable>
+    <div id="addComment" data-modal data-dismissable>
         <div class="modal_body" style="width: 600px;">
             <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
@@ -343,27 +383,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <div class="scroll_panel scroll_shadow panel_padding">
                 <div>
                     <div class="variants_container">
-                        <?php
-                        foreach ($general_product_variants as $general_product_variant) {
-                        ?>
-                            <span class="label"><?= $general_product_variant["name"] ?></span>
-                            <div class="radio_group">
-                                <?php
-                                foreach ([
-                                    ["product_feature_option_id" => 0, "value" => "Wszystkie"], ...$general_product_variant["variant_options"]
-                                ] as $variant_option) {
-                                ?>
-                                    <div>
-                                        <div class="checkbox_area inline" style="margin-top: 7px;">
-                                            <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
-                                            <?= $variant_option["value"] ?>
-                                        </div>
-                                    </div>
-                                <?php
-                                }
-                                ?>
-                            </div>
-                        <?php } ?>
+                        <?= $variants_less_html ?>
                     </div>
 
                     <div class="label">

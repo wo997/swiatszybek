@@ -184,7 +184,7 @@ cart-products-comp.has_products {
 	margin: 5px 0 15px;
 }
 
-.createComment {
+.addComment {
 	.submit_btn {
 		width: 100% /*170px*/;
 		margin-left: auto;
@@ -284,6 +284,7 @@ comment-comp.comp {
 		margin-right: 5px;
 		min-width: 36px;
 		text-align: center;
+		box-shadow: 0 1px 2px 0 #0003;
 	}
 
 	@media only screen and (max-width: 600px) {
@@ -292,6 +293,29 @@ comment-comp.comp {
 		}
 		.option {
 			margin-top: 5px;
+		}
+	}
+}
+
+.comments_filters {
+	.coms_container {
+		padding: 10px;
+		background: #fafafa;
+		border: 1px solid #ccc;
+		margin: 5px 0 15px;
+		border-radius: 4px;
+		position: relative;
+	}
+	.field.inline {
+		width: 100%;
+		max-width: 300px;
+	}
+	.variants_container {
+		margin-bottom: 3px;
+	}
+	@media only screen and (max-width: 600px) {
+		.field.inline {
+			max-width: none;
 		}
 	}
 }

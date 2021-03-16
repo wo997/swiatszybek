@@ -363,6 +363,7 @@ domload(() => {
 
 // comments
 domload(() => {
+	// search
 	/** @type {ListComp} */
 	// @ts-ignore
 	const comments_list = $("list-comp.comments");
@@ -396,9 +397,23 @@ domload(() => {
 
 	searchComments();
 
-	const createComment = $("#createComment");
+	// filters
+	const comments_filters = $(".product_comments .comments_filters");
+	const show_filters = $(".product_comments .show_filters");
+	show_filters.addEventListener("click", () => {
+		if (expand(comments_filters, true) === undefined) {
+			scrollIntoView(comments_filters);
+		}
+		show_filters.classList.add("hidden");
+	});
+	$(".product_comments .comments_filters .hide_btn").addEventListener("click", () => {
+		expand(comments_filters, false);
+		show_filters.classList.remove("hidden");
+	});
 
-	if (createComment) {
+	// add comment form
+	const addComment = $("#addComment");
+	if (addComment) {
 		/**
 		 *
 		 * @param {PiepNode} rating_picker
@@ -442,20 +457,20 @@ domload(() => {
 			}
 		});
 
-		createComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
-		const label = createComment._child(".variants_container .label");
+		addComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
+		const label = addComment._child(".variants_container .label");
 		if (label) {
 			label.classList.add("first");
 		}
 
-		createComment._child(".submit_btn").addEventListener("click", () => {
+		addComment._child(".submit_btn").addEventListener("click", () => {
 			const rating = +def(rating_picker.dataset.rating, "");
-			const nickname_input = createComment._child(".nickname");
+			const nickname_input = addComment._child(".nickname");
 			const nickname = nickname_input._get_value();
-			const comment_input = createComment._child(".comment");
+			const comment_input = addComment._child(".comment");
 			const comment = comment_input._get_value().trim();
 
-			const options = createComment
+			const options = addComment
 				._children(".variants_container p-checkbox.checked")
 				.map((c) => +c.dataset.value)
 				.filter((e) => e);
@@ -466,12 +481,12 @@ domload(() => {
 			}
 
 			if (rating || confirm("Czy chcesz dodać komentarz bez oceny?")) {
-				showLoader(createComment);
+				showLoader(addComment);
 
 				comment_input._set_value("");
 				rating_picker.dataset.rating = "";
 				generateRating(rating_picker);
-				createComment._children(".variants_container .radio_group ").map((c) => c._set_value(0, { quiet: true }));
+				addComment._children(".variants_container .radio_group ").map((c) => c._set_value(0, { quiet: true }));
 
 				xhr({
 					url: "/comment/add",
@@ -480,8 +495,8 @@ domload(() => {
 						comment: { comment, general_product_id, rating, options },
 					},
 					success: (res) => {
-						hideModal("createComment");
-						hideLoader(createComment);
+						hideModal("addComment");
+						hideLoader(addComment);
 						showNotification("Dodano komentarz", { type: "success", one_line: true });
 						scrollIntoView($(".comments_label"), {
 							callback: () => {
