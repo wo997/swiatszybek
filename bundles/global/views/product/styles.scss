@@ -197,6 +197,17 @@ cart-products-comp.has_products {
 			width: 100%;
 		}
 	}
+	.price_diff,
+	.price_diff_before {
+		display: none;
+	}
+	.count {
+		display: none;
+	}
+}
+
+.addComment,
+.notifyProductAvailable {
 	@media only screen and (max-width: 499px) {
 		.desktop {
 			display: none;
@@ -206,13 +217,6 @@ cart-products-comp.has_products {
 		.mobile {
 			display: none;
 		}
-	}
-	.price_diff,
-	.price_diff_before {
-		display: none;
-	}
-	.count {
-		display: none;
 	}
 }
 

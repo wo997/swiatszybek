@@ -338,7 +338,7 @@ function setVariantData() {
 	const case_can_buy_product = $(".case_can_buy_product");
 	case_can_buy_product.classList.toggle("can_buy", can_buy_product);
 
-	expand($(".notify_when_product_available"), !!(single_product && single_product.stock <= 0));
+	expand($(".case_notify_available"), !!(single_product && single_product.stock <= 0));
 
 	productImagesChange();
 
@@ -533,3 +533,7 @@ domload(() => {
 		});
 	}
 });
+
+// notify when product back in stock
+
+domload(() => {});

@@ -124,6 +124,13 @@ foreach ($general_product_variants as $general_product_variant) {
     $variants_less_html .= "</div>";
 }
 
+$user_data = DB::fetchRow("SELECT nickname, email FROM user WHERE user_id = ?", [User::getCurrent()->getId()]);
+$user_nickname = $user_data ? $user_data["nickname"] : "";
+if (!$user_nickname || trim($user_nickname) === "") {
+    $user_nickname = "Gość";
+}
+$user_email = $user_data ? $user_data["email"] : "";
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -281,9 +288,9 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
             <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
 
-            <div class="expand_y hidden animate_hidden notify_when_product_available">
+            <div class="expand_y hidden animate_hidden case_notify_available">
                 <div style="padding-top:7px">
-                    <button class="btn primary medium fill">Powiadom o dostępności <i class="fas fa-bell"></i></button>
+                    <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
                 </div>
             </div>
 
@@ -293,7 +300,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <button class="btn subtle sub_qty">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <input type="text" class="field inline val_qty" value="1" data-number inputmode="numeric">
+                    <input class="field inline val_qty" value="1" data-number inputmode="numeric">
                     <button class="btn subtle add_qty">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -405,13 +412,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                     <label>
                         <div class="label">Pseudonim</div>
-                        <?php
-                        $nickname = DB::fetchVal("SELECT nickname FROM user WHERE user_id = " . User::getCurrent()->getId());
-                        if (!$nickname || trim($nickname) === "") {
-                            $nickname = "Gość";
-                        }
-                        ?>
-                        <input type="text" class="field nickname" value="<?= htmlspecialchars($nickname) ?>">
+                        <input class="field nickname" value="<?= htmlspecialchars($user_nickname) ?>">
                     </label>
 
                     <label>
@@ -426,6 +427,28 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         </div>
     </div>
 <?php endif ?>
+
+<div id="notifyProductAvailable" data-modal data-dismissable>
+    <div class="modal_body" style="width: 600px;">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+        <h3 class="modal_header">
+            <span class="desktop">Powiadom o dostępności</span>
+            <span class="mobile">Powiadomienie</span>
+        </h3>
+
+        <div class="scroll_panel scroll_shadow panel_padding">
+            <div>
+                <div>2137 osób oczekuje na produkt: zielony szajsung S8</div>
+                <div class="label">Adres e-mail</div>
+                <input class="field email" data-validate="email" value="<?= htmlspecialchars($user_nickname) ?>">
+                <div>Dołączysz do kolejki</div>
+                <button class="btn primary submit_btn">Potwierdź <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
     <div class="right_side_menu">
