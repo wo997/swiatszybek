@@ -423,6 +423,15 @@ domload(() => {
 		searchComments();
 	});
 
+	$$(".variants_container .radio_group").forEach((e) => {
+		e._set_value("0", { quiet: true });
+		e.addEventListener("change", () => {
+			if (e._get_value() === "") {
+				e._set_value("0", { quiet: true });
+			}
+		});
+	});
+
 	search_btn.addEventListener("click", () => {
 		searchComments();
 		smoothScroll(search_btn.getBoundingClientRect().top + search_btn.offsetHeight + 5 - main_header_height.offsetHeight);
@@ -473,7 +482,6 @@ domload(() => {
 			}
 		});
 
-		addComment._children(".variants_container .radio_group").forEach((e) => e._set_value(0));
 		const label = addComment._child(".variants_container .label");
 		if (label) {
 			label.classList.add("first");

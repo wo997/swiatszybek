@@ -211,6 +211,9 @@ cart-products-comp.has_products {
 	.price_diff_before {
 		display: none;
 	}
+	.count {
+		display: none;
+	}
 }
 
 .rating_picker {
@@ -285,6 +288,7 @@ comment-comp.comp {
 		min-width: 36px;
 		text-align: center;
 		box-shadow: 0 1px 2px 0 #0003;
+		font-weight: 600;
 	}
 
 	@media only screen and (max-width: 600px) {

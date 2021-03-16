@@ -103,7 +103,7 @@ foreach ($general_product_variants as $general_product_variant) {
     $name = $general_product_variant["name"];
     $variants_less_html .= "
         <span class=\"label\">$name</span>
-        <div class=\"radio_group\">
+        <div class=\"radio_group unselectable\">
     ";
     foreach ([
         ["product_feature_option_id" => 0, "value" => "Wszystkie"], ...$general_product_variant["variant_options"]
