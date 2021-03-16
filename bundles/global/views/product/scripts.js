@@ -367,25 +367,37 @@ domload(() => {
 	/** @type {ListComp} */
 	// @ts-ignore
 	const comments_list = $("list-comp.comments");
+	const comments_filters = $(".product_comments .comments_filters");
+	const show_filters = $(".product_comments .show_filters");
+	const addComment = $("#addComment");
+	const search_btn = $(".product_comments .search_btn");
 
 	listComp(comments_list, undefined);
 
 	const searchComments = () => {
 		const datatable_params = {};
-		// if (data.sort) {
 		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
-		// }
-		//datatable_params.filters = data.filters;
 		datatable_params.row_count = 30; //data.pagination_data.row_count;
 		datatable_params.page_id = 0; //data.pagination_data.page_id;
-		//datatable_params.quick_search = data.quick_search;
+
+		const params = {
+			general_product_id,
+			datatable_params,
+		};
+
+		if (show_filters.classList.contains("hidden")) {
+			// filters are active when button is hidden
+			const phrase = $(".product_comments .phrase")._get_value();
+			datatable_params.quick_search = phrase;
+
+			params.options = $$(".product_comments .variants_container p-checkbox.checked")
+				.map((c) => +c.dataset.value)
+				.filter((e) => e);
+		}
 
 		xhr({
 			url: "/comment/search",
-			params: {
-				general_product_id,
-				datatable_params,
-			},
+			params,
 			success: (res) => {
 				comments_list._data = res.rows;
 				comments_list._render();
@@ -398,21 +410,25 @@ domload(() => {
 	searchComments();
 
 	// filters
-	const comments_filters = $(".product_comments .comments_filters");
-	const show_filters = $(".product_comments .show_filters");
 	show_filters.addEventListener("click", () => {
 		if (expand(comments_filters, true) === undefined) {
 			scrollIntoView(comments_filters);
 		}
 		show_filters.classList.add("hidden");
+		searchComments();
 	});
 	$(".product_comments .comments_filters .hide_btn").addEventListener("click", () => {
 		expand(comments_filters, false);
 		show_filters.classList.remove("hidden");
+		searchComments();
+	});
+
+	search_btn.addEventListener("click", () => {
+		searchComments();
+		smoothScroll(search_btn.getBoundingClientRect().top + search_btn.offsetHeight + 5 - main_header_height.offsetHeight);
 	});
 
 	// add comment form
-	const addComment = $("#addComment");
 	if (addComment) {
 		/**
 		 *

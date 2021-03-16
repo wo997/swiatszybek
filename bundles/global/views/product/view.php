@@ -89,6 +89,15 @@ foreach ($general_product_variants as $key => $variant) {
 }
 $general_product_variants = array_values($general_product_variants);
 
+$options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1) count
+    FROM comment c
+    INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
+    INNER JOIN product_feature_option pfo USING (product_feature_option_id)
+    WHERE general_product_id = $general_product_id
+    GROUP BY pfo.product_feature_option_id
+    ORDER BY COUNT(1) DESC");
+$options_map = getAssociativeArray($options, "product_feature_option_id");
+
 $variants_less_html = "";
 foreach ($general_product_variants as $general_product_variant) {
     $name = $general_product_variant["name"];
@@ -101,11 +110,13 @@ foreach ($general_product_variants as $general_product_variant) {
     ] as $variant_option) {
         $product_feature_option_id = $variant_option["product_feature_option_id"];
         $value = $variant_option["value"];
+        $count = isset($options_map[$product_feature_option_id]) ? $options_map[$product_feature_option_id]["count"] : 0;
+        $count = $count ? "($count)" : "";
         $variants_less_html .= "
             <div>
                 <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
                     <p-checkbox data-value=\"$product_feature_option_id\"></p-checkbox>
-                    $value
+                    $value <span class=\"count\">$count</span>
                 </div>
             </div>
         ";
@@ -327,8 +338,8 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
             <div class="comments_filters expand_y hidden animate_hidden">
                 <div class="coms_container">
-                    <div class="label first">Wyszukaj wg frazy:</div>
-                    <input class="field inline">
+                    <div class="label first">Wyszukaj w komentarzu:</div>
+                    <input class="field inline phrase">
 
                     <div class="variants_container">
                         <?= $variants_less_html ?>
@@ -336,7 +347,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                     <div class="space_top"></div>
                     <button class="btn primary search_btn"> Pokaż wyniki <i class="fas fa-search"></i></button>
-                    <button class="btn subtle hide_btn"> Ukryj filtry <i class="fas fa-angle-double-up"></i></button>
+                    <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
                 </div>
             </div>
 
