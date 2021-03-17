@@ -304,6 +304,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <div class="expand_y hidden animate_hidden case_notify_available">
                 <div style="padding-top:7px">
                     <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
+                    ile osob oczekuje: 2137
                 </div>
             </div>
 
@@ -440,7 +441,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 <?php endif ?>
 
 <div id="notifyProductAvailable" data-modal data-dismissable>
-    <div class="modal_body" style="width: 600px;">
+    <div class="modal_body" style="width: 400px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
         <h3 class="modal_header">
@@ -450,11 +451,43 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <div>
-                <div>2137 osób oczekuje na produkt: zielony szajsung S8</div>
-                <div class="label">Adres e-mail</div>
-                <input class="field email" data-validate="email" value="<?= htmlspecialchars($user_nickname) ?>">
-                <div>Dołączysz do kolejki</div>
-                <button class="btn primary submit_btn">Potwierdź <i class="fas fa-check"></i></button>
+                <div style="display: flex;align-items:center;margin-bottom:10px">
+                    <div>
+                        Gdy <span class="full_product_name"><?= $full_product_name ?></span>
+                        pojawi się w magazynie otrzymasz powiadomienie na swój adres e-mail.
+                    </div>
+                    <i class="fas fa-hourglass-half" style="color: #ddd;font-size: 3em;margin-left: 10px;"></i>
+                </div>
+
+                <div>2137 osób jest już w kolejce!</div>
+
+                <div class="label" style="margin-top:10px;">Adres e-mail</div>
+                <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>">
+                <button class="btn primary submit_btn fill" style="margin-top:10px;">Potwierdź <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notifyProductSuccess" data-modal>
+    <div class="modal_body" style="width: 392px;">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+        <h3 class="modal_header">
+            Jesteś w kolejce!
+        </h3>
+
+        <div class="scroll_panel scroll_shadow panel_padding">
+            <div>
+                <div style="display: flex;align-items:center;margin-bottom:10px">
+                    <div>
+                        Oczekuj na powiadomienie pod adresem <span class="email"></span>.
+                        Zadbamy o to by <span class="full_product_name"><?= $full_product_name ?></span> pojawił się niedługo z naszym sklepie.
+                    </div>
+                    <i class="fas fa-check-circle" style="color: var(--success-clr);font-size: 3em;margin-left: 10px;"></i>
+                </div>
+
+                <button class="btn primary close_btn fill" onclick="hideAllModals()">OK </button>
             </div>
         </div>
     </div>

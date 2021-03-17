@@ -210,7 +210,8 @@ cart-products-comp.has_products {
 }
 
 .addComment,
-.notifyProductAvailable {
+.notifyProductAvailable,
+.notifyProductSuccess {
 	@media only screen and (max-width: 499px) {
 		.desktop {
 			display: none;

@@ -576,4 +576,33 @@ function initProductCommentsCallback() {
 
 // notify when product back in stock
 
-domload(() => {});
+domload(() => {
+	const notifyProductAvailable = $("#notifyProductAvailable .modal_body");
+	const email_input = notifyProductAvailable._child(".field.email");
+
+	const submit_btn = notifyProductAvailable._child(".submit_btn");
+
+	submit_btn.addEventListener("click", () => {
+		const errors = validateInputs([email_input]);
+		if (errors.length > 0) {
+			return;
+		}
+
+		const email = email_input._get_value();
+		showLoader(notifyProductAvailable);
+		xhr({
+			url: "/product_queue/add",
+			params: {
+				product_queue: { email, product_id: single_product.product_id },
+			},
+			success: (res) => {
+				hideLoader(notifyProductAvailable);
+				// gotta be first
+				showModal("notifyProductSuccess");
+				hideModal("notifyProductAvailable");
+
+				$("#notifyProductSuccess .email")._set_content(email);
+			},
+		});
+	});
+});
