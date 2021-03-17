@@ -114,6 +114,9 @@
 }
 
 @media only screen and (max-width: 849px) {
+	.product_imgs > .wo997_slider:first-child {
+		height: 100vw; // boost UX & SEO
+	}
 	.product_offer {
 		margin: 20px auto;
 	}

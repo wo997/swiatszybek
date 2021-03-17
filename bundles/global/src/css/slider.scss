@@ -2,7 +2,7 @@
 
 .wo997_slider:not(.wo997_slider_ready) {
 	/*display: none;*/
-	visibility: hidden; // cool
+	visibility: hidden; // cool, you probably wanna use it, noticed a tiny boost in pagespeed insights
 }
 
 .wo997_slider {
@@ -13,6 +13,7 @@
 
 .wo997_slides_container {
 	overflow: hidden;
+	line-height: 0;
 }
 
 .wo997_slides_wrapper {

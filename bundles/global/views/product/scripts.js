@@ -364,11 +364,18 @@ domload(() => {
 });
 
 // comments
-domload(() => {
+window.addEventListener("scroll", initProductCommentsCallback);
+domload(initProductCommentsCallback);
+function initProductCommentsCallback() {
 	// search
 	/** @type {ListComp} */
 	// @ts-ignore
 	const comments_list = $("list-comp.comments");
+	if (comments_list.getBoundingClientRect().top > window.innerHeight + 200) {
+		return;
+	}
+	window.removeEventListener("scroll", initProductCommentsCallback);
+
 	const comments_filters = $(".product_comments .comments_filters");
 	const show_filters = $(".product_comments .show_filters");
 	const addComment = $("#addComment");
@@ -538,7 +545,7 @@ domload(() => {
 			}
 		});
 	}
-});
+}
 
 // notify when product back in stock
 
