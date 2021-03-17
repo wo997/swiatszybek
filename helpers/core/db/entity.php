@@ -344,7 +344,7 @@ class Entity
             // if ($this->getProp($prop_name !== $val) {
             //     var_dump();
             // }
-            if ($only_new && $this->getProp($prop_name) !== false) {
+            if ($only_new && $this->getProp($prop_name) !== null) {
                 continue;
             }
             $this->setProp($prop_name, $val);
