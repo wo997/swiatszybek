@@ -394,7 +394,7 @@ function initProductCommentsCallback() {
 	paginationComp(comments_pagination, undefined, {
 		total_rows: +$(".product_comments .results_info_count").innerText,
 		page_id: 0,
-		row_count: 15,
+		row_count: 10,
 		row_count_options: [10, 15, 30],
 	});
 

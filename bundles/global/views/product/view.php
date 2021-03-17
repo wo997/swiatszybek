@@ -104,7 +104,7 @@ $comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.valu
     ORDER BY COUNT(1) DESC");
 $comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");
 
-$comments_data = getProductCommentsSearch($general_product_id, json_encode(["page_id" => 0, "row_count" => 15]));
+$comments_data = getProductCommentsSearch($general_product_id, json_encode(["page_id" => 0, "row_count" => 10]));
 
 $variants_less_html = "";
 foreach ($general_product_variants as $general_product_variant) {
