@@ -20,6 +20,11 @@ if ($option_ids_str) {
     $option_ids = [];
 }
 
+$full_product_name = $general_product_data["name"];
+foreach ($option_names as $option_name) {
+    $full_product_name .= " " . $option_name;
+}
+
 $product_link = getProductLink($general_product_id, $general_product_data["name"], $option_ids, $option_names);
 
 if (!$general_product_data) {
@@ -142,7 +147,7 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 <?php startSection("head_content"); ?>
 
-<title><?= $general_product_data["name"] ?></title>
+<title><?= $full_product_name ?></title>
 
 <link rel="canonical" href="<?= SITE_URL . getProductLink($general_product_id, $general_product_data["name"]) ?>" />
 
@@ -166,7 +171,7 @@ $user_email = $user_data ? $user_data["email"] : "";
         {
             "@context": "https://schema.org/",
             "@type": "Product",
-            "name": "<?= htmlspecialchars($general_product_data["name"]) ?>",
+            "name": "<?= htmlspecialchars($full_product_name) ?>",
             "url": "<?= SITE_URL . "/" . Request::$url ?>",
             "image": [
                 "<?= $general_product_data["cache_thumbnail"] ?>"
@@ -205,7 +210,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 ?>
 
     <div class="sticky_product">
-        <span class="clamp_lines clamp_2"><?= $general_product_data["name"] ?></span>
+        <span class="clamp_lines clamp_2 full_product_name"><?= $full_product_name ?></span>
         <div class="img_wrapper">
             <img data-height="1w" class="product_img wo997_img">
         </div>

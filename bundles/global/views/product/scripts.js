@@ -258,6 +258,8 @@ function variantChanged() {
 		// workaround here
 		document.title = full_name;
 
+		$$(".full_product_name").forEach((e) => e._set_content(full_name));
+
 		setVariantData();
 	}
 }
