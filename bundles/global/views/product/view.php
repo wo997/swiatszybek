@@ -40,14 +40,9 @@ if ($product_link_base !== Request::$url) {
     Request::redirect($true_product_link);
 }
 
-// $link = Request::urlParam(2);
-// if ($link != $general_product_data["link"] && $general_product_data["link"]) {
-//     Request::redirect(getProductLink($general_product_data["general_product_id"], $general_product_data["link"]));
-// }
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, name, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
-$general_product_products = DB::fetchArr("SELECT * FROM product WHERE general_product_id = $general_product_id AND active = 1");
-
-$general_product_imgs_json = $general_product_data["__images_json"]; //DB::fetchArr("SELECT * FROM product_img WHERE general_product_id = $general_product_id ORDER BY pos ASC"); // AND active = 1
+$general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);
 
 foreach ($general_product_products as &$product) {
@@ -304,7 +299,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <div class="expand_y hidden animate_hidden case_notify_available">
                 <div style="padding-top:7px">
                     <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                    ile osob oczekuje: 2137
+                    <div class="semi-bold selected_product_queue_pretty" style="margin-top:7px"></div>
                 </div>
             </div>
 
@@ -459,7 +454,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <i class="fas fa-hourglass-half" style="color: #ddd;font-size: 3em;margin-left: 10px;"></i>
                 </div>
 
-                <div>2137 osób jest już w kolejce!</div>
+                <div class="selected_product_queue_pretty"></div>
 
                 <div class="label" style="margin-top:10px;">Adres e-mail</div>
                 <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>">
@@ -472,7 +467,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     </div>
 </div>
 
-<div id="notifyProductSuccess" data-modal>
+<div id="notifyProductSuccess" data-modal data-dismissable>
     <div class="modal_body" style="width: 392px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 

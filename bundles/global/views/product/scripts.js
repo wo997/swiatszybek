@@ -334,6 +334,11 @@ function setVariantData() {
 		selected_product_was_price += html`<span style="width:4px" class="price_space"></span> zł`;
 	}
 
+	const queue_count = single_product.__queue_count;
+	$$(".selected_product_queue_pretty").forEach((e) =>
+		e._set_content(queue_count === 0 ? "Nie ma nikogo w kolejce!" : `Ilość osób w kolejce: ${queue_count}`)
+	);
+
 	$(".selected_product_price")._set_content(selected_product_price);
 	$(".selected_product_was_price")._set_content(selected_product_was_price);
 	$(".selected_product_qty")._set_content(`${single_product && single_product.active ? single_product.stock + " szt." : "―"}`);
