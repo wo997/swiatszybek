@@ -54,6 +54,9 @@ EventListener::register("before_save_product_feature_option_entity", function ($
 
     // shit happens, data may be broken, chill
     if (!$product_feature) {
+        //var_dump("DELETE", $product_feature_option->getAllProps());
+        // var_dump($product_feature_option->getGlobalId());
+        // the definition was wrong and it couldn't spot the parent property at all, solved!
         $product_feature_option->setWillDelete();
     } else {
         $feature_data_type = $product_feature->getProp("data_type");

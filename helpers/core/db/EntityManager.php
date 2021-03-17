@@ -32,8 +32,8 @@ class EntityManager
             ];
         }
 
-        if (isset($data["props"])) {
-            self::$entities[$name]["props"] = array_merge($data["props"], self::$entities[$name]["props"]);
+        if (isset($data["props"]) && is_array($data["props"])) {
+            self::$entities[$name]["props"] = array_merge($data["props"], def(self::$entities[$name], "props", []));
         }
 
         // if (isset($data["sortable"])) {
@@ -100,9 +100,11 @@ class EntityManager
                 /** @var Entity */
                 $entity = self::$objects[$global_id];
                 $entity->setProps($props, true);
+
                 return $entity;
             }
         }
+
 
         try {
             $obj = new Entity($name, $props);
@@ -280,7 +282,7 @@ class EntityManager
 
         $children_props = DB::fetchArr("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         foreach ($children_props as $child_props) {
-            $child = self::getEntity($child_entity_name, $child_props, true);
+            $child = self::getEntity($child_entity_name, $child_props);
             if ($child) {
                 $child->addParent($obj);
                 $children[] = $child;

@@ -314,7 +314,10 @@ class Entity
         $prop_type = def($prop_data, "type", "");
 
         if (!$prop_data) {
-            //var_dump("failed at prop: $prop_name"); // use it when u need
+            // if ($this->getId() === 2052) {
+            //     var_dump("failed at prop: $prop_name {$this->name}"); // use it when u need
+            //     var_dump(EntityManager::getEntityData("product_feature_option"));
+            // }
             return; // error?
         }
 
