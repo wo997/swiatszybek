@@ -286,7 +286,7 @@ function listComp(comp, parent, data = []) {
 						}
 					} else {
 						row_index++;
-						child.dataset.row_index = row_index;
+						child.dataset.row_index = row_index + "";
 					}
 
 					// @ts-ignore

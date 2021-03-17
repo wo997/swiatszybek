@@ -63,7 +63,9 @@ domload(() => {
 		});
 	});
 
-	setProductFeaturesFromUrl();
+	setTimeout(() => {
+		setProductFeaturesFromUrl();
+	});
 
 	// TEMPORARY
 	const vdo = $(".vdo");
@@ -106,7 +108,7 @@ domload(() => {
 
 		adding_product_from_cart = true;
 
-		let offset = 170;
+		let offset = 220;
 		if (!user_cart.products.find((p) => p.product_id === product_id)) {
 			// new
 			offset += 140; // probably enough to contain a row
@@ -371,9 +373,11 @@ domload(() => {
 	const show_filters = $(".product_comments .show_filters");
 	const addComment = $("#addComment");
 	const search_btn = $(".product_comments .search_btn");
+	const add_comment_btn_top = $(".add_comment_btn_top");
+
 	let filters_open = false;
 
-	listComp(comments_list, undefined);
+	listComp(comments_list, undefined, general_product_comments_rows);
 
 	const searchComments = () => {
 		const datatable_params = {};
@@ -402,16 +406,12 @@ domload(() => {
 			success: (res) => {
 				comments_list._data = res.rows;
 				comments_list._render();
-				$(".comments_label .count")._set_content(`(${res.total_rows})`);
-				const add_comment_btn_top = $(".add_comment_btn_top");
-				if ($(".add_comment_btn_top")) {
+				if (add_comment_btn_top) {
 					add_comment_btn_top.classList.toggle("hidden", res.rows.length < 10);
 				}
 			},
 		});
 	};
-
-	searchComments();
 
 	// filters
 	show_filters.addEventListener("click", () => {

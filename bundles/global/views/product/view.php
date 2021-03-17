@@ -89,14 +89,17 @@ foreach ($general_product_variants as $key => $variant) {
 }
 $general_product_variants = array_values($general_product_variants);
 
-$options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1) count
+// comments
+$comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1) count
     FROM comment c
     INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
     INNER JOIN product_feature_option pfo USING (product_feature_option_id)
     WHERE general_product_id = $general_product_id
     GROUP BY pfo.product_feature_option_id
     ORDER BY COUNT(1) DESC");
-$options_map = getAssociativeArray($options, "product_feature_option_id");
+$comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");
+
+$comments_data = getProductCommentsSearch($general_product_data, json_encode(["page_id" => 0, "row_count" => 25]));
 
 $variants_less_html = "";
 foreach ($general_product_variants as $general_product_variant) {
@@ -114,7 +117,7 @@ foreach ($general_product_variants as $general_product_variant) {
     foreach ($general_product_variant["variant_options"] as $variant_option) {
         $product_feature_option_id = $variant_option["product_feature_option_id"];
         $value = $variant_option["value"];
-        $count = isset($options_map[$product_feature_option_id]) ? $options_map[$product_feature_option_id]["count"] : "0";
+        $count = isset($comments_options_map[$product_feature_option_id]) ? $comments_options_map[$product_feature_option_id]["count"] : "0";
         $variants_less_html .= "
             <div>
                 <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
@@ -127,6 +130,7 @@ foreach ($general_product_variants as $general_product_variant) {
     $variants_less_html .= "</div>";
 }
 
+// user data
 $user_data = DB::fetchRow("SELECT nickname, email FROM user WHERE user_id = ?", [User::getCurrent()->getId()]);
 $user_nickname = $user_data ? $user_data["nickname"] : "";
 if (!$user_nickname || trim($user_nickname) === "") {
@@ -148,6 +152,7 @@ $user_email = $user_data ? $user_data["email"] : "";
     const general_product_products = <?= json_encode($general_product_products) ?>;
     const general_product_imgs = <?= $general_product_imgs_json ?>;
     const general_product_variants = <?= json_encode($general_product_variants) ?>;
+    const general_product_comments_rows = <?= json_encode($comments_data["rows"]) ?>;
 
     <?php if (isset($_GET["komentarz"])) { ?>
         domload(() => {
@@ -337,7 +342,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
             <div>
-                <span class="label medium bold inline comments_label">Komentarze <span class="count"></span></span>
+                <span class="label medium bold inline comments_label">Komentarze (<?= $comments_data["total_rows"] ?>)</span>
                 <?php if (User::getCurrent()->isLoggedIn()) : ?>
                     <button class="btn primary small space_btn_left add_comment_btn_top hidden" onclick="showModal(`addComment`,{source:this});">
                         Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>

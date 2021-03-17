@@ -125,6 +125,7 @@ function getRelevanceQuery($fields, $words)
  * order?: string
  * quick_search?: string
  * page_id?: number
+ * row_count?: number
  * }
  */
 
