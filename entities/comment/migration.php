@@ -9,6 +9,11 @@ DB::createTable("comment", [
     ["name" => "created_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
 ]);
 
+DB::createTable("general_product", [
+    ["name" => "__avg_rating", "type" => "DECIMAL(2,1)", "index" => "index"],
+    ["name" => "__rating_count", "type" => "INT", "index" => "index"],
+]);
+
 DB::createTable("comment_to_product_feature_option", [
     ["name" => "comment_id", "type" => "INT", "index" => "index"],
     ["name" => "product_feature_option_id", "type" => "INT", "index" => "index"],

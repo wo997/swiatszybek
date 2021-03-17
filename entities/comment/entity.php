@@ -14,6 +14,8 @@ EntityManager::register("comment", [
 EntityManager::register("general_product", [
     "props" => [
         "comments" => ["type" => "comment[]"],
+        "__avg_rating" => ["type" => "number"],
+        "__rating_count" => ["type" => "number"],
     ],
 ]);
 

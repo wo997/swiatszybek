@@ -4,6 +4,7 @@ EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
         "status_id" => ["type" => "number"],
+        //"user_id" => ["type" => "number"],
         "main_address" => ["type" => "address"],
         "courier_address" => ["type" => "address"],
         "parcel_locker" => ["type" => "parcel_locker"],
@@ -24,7 +25,7 @@ EntityManager::register("user", [
     ],
 ]);
 
-EntityManager::oneToMany("user", "shop_orders", "shop_order");
+//EntityManager::oneToMany("user", "shop_orders", "shop_order");
 
 EntityManager::oneToOne("shop_order", "main_address", "address");
 

@@ -378,6 +378,11 @@ function initProductCommentsCallback() {
 	if (comments_list.getBoundingClientRect().top > window.innerHeight + 200) {
 		return;
 	}
+	comments_list.addEventListener("change", () => {
+		if (add_comment_btn_top) {
+			add_comment_btn_top.classList.toggle("hidden", comments_list._data.length < 8);
+		}
+	});
 	window.removeEventListener("scroll", initProductCommentsCallback);
 
 	const comments_filters = $(".product_comments .comments_filters");
@@ -435,9 +440,6 @@ function initProductCommentsCallback() {
 				}
 				comments_list._data = res.rows;
 				comments_list._render();
-				if (add_comment_btn_top) {
-					add_comment_btn_top.classList.toggle("hidden", res.rows.length < 10);
-				}
 			},
 		});
 	};

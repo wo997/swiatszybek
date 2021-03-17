@@ -6,7 +6,7 @@ EntityManager::register("general_product", [
         "__img_url" => ["type" => "string"],
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
-        "__search" => ["type" => "TEXT"],
+        "__search" => ["type" => "string"],
     ],
 ]);
 
@@ -132,7 +132,6 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $search = "";
     $search .= replacePolishLetters($general_product->getProp("name"));
 
-
     /** @var Entity[] ProductCategory */
     $general_product_categories = $general_product->getProp("categories");
     foreach ($general_product_categories as $category) {
@@ -142,6 +141,22 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $search = getSearchableString($search);
     $general_product->setProp("__search", $search);
+
+    /** @var Entity[] Comment */
+    $comments = $general_product->getProp("comments"); // considering fetching it only when the comment said to do so, or it was fetched previously ezy?
+    $rating_count = 0;
+    $rating_sum = 0;
+    foreach ($comments as $comment) {
+        $rating = intval($comment->getProp("rating"));
+        if ($rating) {
+            // count just existing ones, not 0s
+            $rating_count++;
+            $rating_sum += $rating;
+        }
+    }
+    $avg_rating = $rating_count > 0 ? round(10 * $rating_sum / $rating_count) * 0.1 : 0;
+    $general_product->setProp("__rating_count", $rating_count);
+    $general_product->setProp("__avg_rating", $avg_rating);
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {

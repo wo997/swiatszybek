@@ -314,6 +314,7 @@ class Entity
         $prop_type = def($prop_data, "type", "");
 
         if (!$prop_data) {
+            //var_dump("failed at prop: $prop_name"); // use it when u need
             return; // error?
         }
 
@@ -394,10 +395,13 @@ class Entity
 
         foreach ($parent_names as $parent_name => $parent_data) {
             if (!in_array($parent_name, $fetched_parent_names)) {
-                $parent = EntityManager::getEntityById($parent_name, $this->getProp(EntityManager::getEntityIdColumn($parent_name)));
-                if ($parent) {
-                    $parent->setProp($parent_data["prop"]);
-                    $this->addParent($parent);
+                $parent_id = $this->getProp(EntityManager::getEntityIdColumn($parent_name));
+                if ($parent_id > 0) { // only the existing ones for sure, otherwise empty garbage is created
+                    $parent = EntityManager::getEntityById($parent_name, $parent_id);
+                    if ($parent) {
+                        $parent->setProp($parent_data["prop"]);
+                        $this->addParent($parent);
+                    }
                 }
             }
         }
