@@ -371,6 +371,7 @@ domload(() => {
 	const show_filters = $(".product_comments .show_filters");
 	const addComment = $("#addComment");
 	const search_btn = $(".product_comments .search_btn");
+	let filters_open = false;
 
 	listComp(comments_list, undefined);
 
@@ -385,7 +386,7 @@ domload(() => {
 			datatable_params,
 		};
 
-		if (show_filters.classList.contains("hidden")) {
+		if (filters_open) {
 			// filters are active when button is hidden
 			const phrase = $(".product_comments .phrase")._get_value();
 			datatable_params.quick_search = phrase;
@@ -402,7 +403,10 @@ domload(() => {
 				comments_list._data = res.rows;
 				comments_list._render();
 				$(".comments_label .count")._set_content(`(${res.total_rows})`);
-				$(".add_comment_btn_top").classList.toggle("hidden", res.rows.length < 10);
+				const add_comment_btn_top = $(".add_comment_btn_top");
+				if ($(".add_comment_btn_top")) {
+					add_comment_btn_top.classList.toggle("hidden", res.rows.length < 10);
+				}
 			},
 		});
 	};
@@ -411,6 +415,7 @@ domload(() => {
 
 	// filters
 	show_filters.addEventListener("click", () => {
+		filters_open = true;
 		if (expand(comments_filters, true) === undefined) {
 			scrollIntoView(comments_filters);
 		}
@@ -418,6 +423,7 @@ domload(() => {
 		searchComments();
 	});
 	$(".product_comments .comments_filters .hide_btn").addEventListener("click", () => {
+		filters_open = false;
 		expand(comments_filters, false);
 		show_filters.classList.remove("hidden");
 		searchComments();
