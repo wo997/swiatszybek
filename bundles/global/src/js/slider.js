@@ -252,7 +252,7 @@ function initSlider(elem) {
 
 			slider.slide_nodes = slides_wrapper._direct_children();
 			slider.slide_nodes.forEach((e, index) => {
-				e.dataset.slide_id = index;
+				e.dataset.slide_id = index + "";
 			});
 		},
 		select_slide: (id) => {
@@ -270,7 +270,7 @@ function initSlider(elem) {
 
 	const slides_wrapper = node._child(".wo997_slides_wrapper");
 
-	const slider_container = node._parent();
+	//const slider_container = node._parent();
 
 	slider.slides_wrapper = slides_wrapper;
 
