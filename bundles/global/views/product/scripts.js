@@ -366,8 +366,10 @@ domload(() => {
 });
 
 // comments
-window.addEventListener("scroll", initProductCommentsCallback);
-domload(initProductCommentsCallback);
+domload(() => {
+	window.addEventListener("scroll", initProductCommentsCallback);
+	initProductCommentsCallback();
+});
 function initProductCommentsCallback() {
 	// search
 	/** @type {ListComp} */
@@ -517,9 +519,9 @@ function initProductCommentsCallback() {
 			}
 		});
 
-		const label = addComment._child(".variants_container .label");
-		if (label) {
-			label.classList.add("first");
+		const first_label = addComment._child(".label");
+		if (first_label) {
+			first_label.classList.add("first");
 		}
 
 		addComment._child(".submit_btn").addEventListener("click", () => {

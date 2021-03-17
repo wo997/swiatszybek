@@ -258,6 +258,8 @@ class EntityManager
             }
         }
 
+        $children = array_values($children);
+
         return $children;
     }
 
@@ -473,14 +475,14 @@ class EntityManager
     }
 
     /**
-     * Note that it's the same as OneToMany
+     * Note that it's the same as oneToMany
      * 
      * @param  string $parent_name !entity_name
      * @param  string $prop_name !entity_prop_name
      * @param  string $child_name !entity_name
      * @param  OneRelationOptions $options
      */
-    public static function OneToOne($parent_name, $prop_name, $child_name, $options = [])
+    public static function oneToOne($parent_name, $prop_name, $child_name, $options = [])
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
             "prop" => $prop_name,
@@ -500,7 +502,7 @@ class EntityManager
      * @param  string $child_name !entity_name
      * @param  OneRelationOptions $options
      */
-    public static function OneToMany($parent_name, $prop_name, $child_name, $options = [])
+    public static function oneToMany($parent_name, $prop_name, $child_name, $options = [])
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
             "prop" => $prop_name,

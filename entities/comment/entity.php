@@ -11,4 +11,12 @@ EntityManager::register("comment", [
     ],
 ]);
 
+EntityManager::register("general_product", [
+    "props" => [
+        "comments" => ["type" => "comment[]"],
+    ],
+]);
+
 EntityManager::manyToMany("comment", "product_feature_option", "comment_to_product_feature_option");
+
+EntityManager::oneToMany("general_product", "comments", "comment");

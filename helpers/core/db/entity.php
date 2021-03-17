@@ -53,6 +53,11 @@ class Entity
             foreach (array_keys($entity_data["parents"]) as $parent_entity_name) {
                 $parent_entity_column_id = EntityManager::getEntityIdColumn($parent_entity_name);
                 $parent_id = def($props, $parent_entity_column_id, -1);
+                // if you ever get stuck here, the child must contain it's parent in definition, for example general_product_id will point to the parent
+                // if (is_array($props)) {
+                // } else {
+                //     $parent_id = intval($props);
+                // }
                 if ($parent_id !== -1) {
                     $parent = EntityManager::getEntityById($parent_entity_name, $parent_id);
                     if ($parent) {

@@ -16,7 +16,7 @@ EntityManager::register("shop_order", [
     ],
 ]);
 
-EntityManager::OneToMany("shop_order", "ordered_products", "ordered_product", ["parent_required" => true]);
+EntityManager::oneToMany("shop_order", "ordered_products", "ordered_product", ["parent_required" => true]);
 
 EntityManager::register("user", [
     "props" => [
@@ -24,13 +24,13 @@ EntityManager::register("user", [
     ],
 ]);
 
-EntityManager::OneToMany("user", "shop_orders", "shop_order");
+EntityManager::oneToMany("user", "shop_orders", "shop_order");
 
-EntityManager::OneToOne("shop_order", "main_address", "address");
+EntityManager::oneToOne("shop_order", "main_address", "address");
 
-EntityManager::OneToOne("shop_order", "courier_address", "address");
+EntityManager::oneToOne("shop_order", "courier_address", "address");
 
-EntityManager::OneToOne("shop_order", "parcel_locker", "parcel_locker");
+EntityManager::oneToOne("shop_order", "parcel_locker", "parcel_locker");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
