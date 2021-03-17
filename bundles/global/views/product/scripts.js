@@ -386,7 +386,7 @@ function initProductCommentsCallback() {
 
 	listComp(comments_list, undefined, general_product_comments_rows);
 
-	const searchComments = () => {
+	const searchComments = (callback) => {
 		const datatable_params = {};
 		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
 		datatable_params.row_count = 30; //data.pagination_data.row_count;
@@ -411,6 +411,9 @@ function initProductCommentsCallback() {
 			url: "/comment/search",
 			params,
 			success: (res) => {
+				if (callback) {
+					callback();
+				}
 				comments_list._data = res.rows;
 				comments_list._render();
 				if (add_comment_btn_top) {
@@ -423,17 +426,19 @@ function initProductCommentsCallback() {
 	// filters
 	show_filters.addEventListener("click", () => {
 		filters_open = true;
-		if (expand(comments_filters, true) === undefined) {
-			scrollIntoView(comments_filters);
-		}
-		show_filters.classList.add("hidden");
-		searchComments();
+		searchComments(() => {
+			if (expand(comments_filters, true) === undefined) {
+				scrollIntoView(comments_filters);
+			}
+			show_filters.classList.add("hidden");
+		});
 	});
 	$(".product_comments .comments_filters .hide_btn").addEventListener("click", () => {
 		filters_open = false;
-		expand(comments_filters, false);
-		show_filters.classList.remove("hidden");
-		searchComments();
+		searchComments(() => {
+			expand(comments_filters, false);
+			show_filters.classList.remove("hidden");
+		});
 	});
 
 	$$(".variants_container .radio_group").forEach((e) => {
