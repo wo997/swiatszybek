@@ -549,6 +549,7 @@ function mainSearchProducts(force = false) {
 					displayNoProducts();
 				} else {
 					product_list._set_content(res.html);
+					productBlocksLoaded();
 				}
 			}
 			if (res.total_rows !== undefined) {

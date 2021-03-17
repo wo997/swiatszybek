@@ -18,7 +18,37 @@
 	font-size: 1.1em;
 }
 
+.product_row {
+	display: flex;
+	flex-flow: row wrap;
+}
+.product_rating {
+	//margin-left: auto;
+	font-size: 0.9em;
+}
+.product_price {
+	margin-right: 5px;
+}
+.product_rating .stars {
+	font-size: 0.9em;
+}
+.rating,
+.rating_picker {
+	.far.fa-star {
+		color: #555;
+	}
+	.fas.fa-star,
+	.fa-star-half-alt {
+		color: #fd2;
+	}
+	& > i {
+		padding-right: 0.1em;
+	}
+}
 .product_stock {
+	& {
+		width: 100%;
+	}
 	&::before {
 		content: "";
 		margin-right: 5px;

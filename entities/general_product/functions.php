@@ -94,7 +94,8 @@ function getGlobalProductsSearch($url, $options = [])
         "select" => "
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
-            JSON_ARRAYAGG(p.__options_json) products_options_jsons_json
+            JSON_ARRAYAGG(p.__options_json) products_options_jsons_json,
+            __avg_rating, __rating_count
         ",
         "from" => $from,
         "group" => "general_product_id",
@@ -123,6 +124,8 @@ function getGlobalProductsSearch($url, $options = [])
         $min_gross_price = $product["min_gross_price"];
         $max_gross_price = $product["max_gross_price"];
         $sum_stock = $product["sum_stock"];
+        $avg_rating = $product["__avg_rating"];
+        $rating_count = $product["__rating_count"];
 
         $display_price = $min_gross_price . " zł";
         if ($min_gross_price !== $max_gross_price) {
@@ -203,8 +206,7 @@ function getGlobalProductsSearch($url, $options = [])
             </a>
             <div class=\"product_row\">
                 <span class=\"product_price pln\">$display_price</span>
-                <span class=\"product_rating\"></span>
-                <br>
+                <span class=\"product_rating rating\"><span class=\"stars\">$avg_rating</span> ($rating_count)</span>
                 <span class=\"product_stock $stock_class\"></span>
             </div>
         </div>";

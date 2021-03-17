@@ -241,19 +241,6 @@ cart-products-comp.has_products {
 		cursor: pointer;
 	}
 }
-.rating,
-.rating_picker {
-	.far.fa-star {
-		color: #555;
-	}
-	.fas.fa-star,
-	.fa-star-half-alt {
-		color: #fd2;
-	}
-	& > i {
-		padding-right: 0.1em;
-	}
-}
 
 list-comp.comments {
 	--list_row_padding: 15px 0;

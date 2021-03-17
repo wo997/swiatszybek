@@ -387,7 +387,7 @@ function initProductCommentsCallback() {
 
 	const comments_filters = $(".product_comments .comments_filters");
 	const show_filters = $(".product_comments .show_filters");
-	const addComment = $("#addComment");
+	const addComment = $("#addComment .modal_body");
 	const search_btn = $(".product_comments .search_btn");
 	const add_comment_btn_top = $(".add_comment_btn_top");
 
