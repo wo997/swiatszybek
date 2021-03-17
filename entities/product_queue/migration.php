@@ -6,3 +6,7 @@ DB::createTable("product_queue", [
     ["name" => "email", "type" => "VARCHAR(255)", "index" => "index"],
     ["name" => "submitted_at", "type" => "DATETIME"],
 ]);
+
+DB::createTable("product", [
+    ["name" => "__queue_count", "type" => "INT", "index" => "index"],
+]);

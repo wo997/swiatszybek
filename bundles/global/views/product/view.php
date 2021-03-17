@@ -463,7 +463,10 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
                 <div class="label" style="margin-top:10px;">Adres e-mail</div>
                 <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>">
-                <button class="btn primary submit_btn fill" style="margin-top:10px;">Potwierdź <i class="fas fa-check"></i></button>
+                <div style="margin-top:10px;display:flex">
+                    <button class="btn subtle fill" style="margin-right:10px" onclick="hideAllModals()">Anuluj</button>
+                    <button class="btn primary submit_btn fill">Potwierdź</button>
+                </div>
             </div>
         </div>
     </div>
@@ -482,7 +485,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 <div style="display: flex;align-items:center;margin-bottom:10px">
                     <div>
                         Oczekuj na powiadomienie pod adresem <span class="email"></span>.
-                        Zadbamy o to by <span class="full_product_name"><?= $full_product_name ?></span> pojawił się niedługo z naszym sklepie.
+                        Zadbamy o to by <span class="full_product_name"><?= $full_product_name ?></span> pojawił się w naszym sklepie jak najszybciej!
                     </div>
                     <i class="fas fa-check-circle" style="color: var(--success-clr);font-size: 3em;margin-left: 10px;"></i>
                 </div>
