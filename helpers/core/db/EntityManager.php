@@ -286,15 +286,12 @@ class EntityManager
                 $children[] = $child;
             }
         }
-
         foreach ($obj->children_about_to_join as $key => $child) {
             if ($child->getName() === $child_entity_name) {
                 $children[] = $child;
-                unset($children[$key]);
+                unset($obj->children_about_to_join[$key]);
             }
         }
-
-        $children = array_values($children);
 
         return $children;
     }
