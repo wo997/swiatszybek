@@ -104,7 +104,7 @@ $comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.valu
     ORDER BY COUNT(1) DESC");
 $comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");
 
-$comments_data = getProductCommentsSearch($general_product_data, json_encode(["page_id" => 0, "row_count" => 25]));
+$comments_data = getProductCommentsSearch($general_product_id, json_encode(["page_id" => 0, "row_count" => 15]));
 
 $variants_less_html = "";
 foreach ($general_product_variants as $general_product_variant) {
@@ -347,7 +347,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
             <div>
-                <span class="label medium bold inline comments_label">Komentarze (<?= $comments_data["total_rows"] ?>)</span>
+                <span class="label medium bold inline comments_label">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
                 <?php if (User::getCurrent()->isLoggedIn()) : ?>
                     <button class="btn primary small space_btn_left add_comment_btn_top hidden" onclick="showModal(`addComment`,{source:this});">
                         Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
@@ -374,9 +374,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <list-comp class="comments striped" data-primary="comment_id">
                 <comment-comp></comment-comp>
             </list-comp>
-            <!-- <div class="case_no_comments">
-                Brak komentarzy!
-            </div> -->
+            <pagination-comp class="comments"></pagination-comp>
 
             <?php if (User::getCurrent()->isLoggedIn()) : ?>
                 <div class="label medium">Podziel się swoją opinią</div>

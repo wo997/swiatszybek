@@ -230,7 +230,7 @@ function paginateData($params = [])
     $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";
 
     if ($group) {
-        $countQuery = "SELECT COUNT(*) FROM($countQuery) t";
+        $countQuery = "SELECT COUNT(1) FROM($countQuery) t";
     }
 
     $total_rows = DB::fetchVal($countQuery);

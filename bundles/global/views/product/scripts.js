@@ -388,11 +388,26 @@ function initProductCommentsCallback() {
 
 	listComp(comments_list, undefined, general_product_comments_rows);
 
+	/** @type {PaginationComp} */
+	// @ts-ignore
+	const comments_pagination = $(`pagination-comp.comments`);
+	paginationComp(comments_pagination, undefined, {
+		total_rows: +$(".product_comments .results_info_count").innerText,
+		page_id: 0,
+		row_count: 15,
+		row_count_options: [10, 15, 30],
+	});
+
+	comments_pagination.addEventListener("change", () => {
+		searchComments();
+	});
+
 	const searchComments = (callback) => {
 		const datatable_params = {};
+		// just newest on top is ok
 		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
-		datatable_params.row_count = 30; //data.pagination_data.row_count;
-		datatable_params.page_id = 0; //data.pagination_data.page_id;
+		datatable_params.row_count = comments_pagination._data.row_count;
+		datatable_params.page_id = comments_pagination._data.page_id;
 
 		const params = {
 			general_product_id,

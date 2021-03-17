@@ -342,6 +342,7 @@ function createComp(node, parent_comp, data, options) {
 	}
 
 	comp.classList.add("ready");
+	comp._render();
 }
 
 /**
