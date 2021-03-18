@@ -4,7 +4,7 @@ try {
     $product_queue_data = json_decode($_POST["product_queue"], true);
 
     $product_queue_data["email"] = trim($product_queue_data["email"]);
-    if (DB::fetchVal("SELECT 1 FROM product_queue WHERE email LIKE ?", [$product_queue_data["email"]])) {
+    if (DB::fetchVal("SELECT 1 FROM product_queue WHERE product_id = ? AND email LIKE ?", [$product_queue_data["product_id"], $product_queue_data["email"]])) {
         Request::jsonResponse(["success" => true]);
         // alrady added but dont say it lol
         //Request::jsonResponse(["success" => false, "message" => ""]);

@@ -1,4 +1,5 @@
-<?php //route[{ADMIN}/komentarze] 
+<?php //route[{ADMIN}/komentarze]
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -7,8 +8,6 @@
 
 <?php startSection("body_content"); ?>
 
-<h1>Komentarze</h1>
-
-<div class="mytable"></div>
+<datatable-comp class="comments"></datatable-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>

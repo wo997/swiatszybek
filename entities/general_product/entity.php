@@ -130,7 +130,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $general_product->setProp("__options_json", $all_options ? json_encode($all_options) : "{}");
 
     $search = "";
-    $search .= replacePolishLetters($general_product->getProp("name"));
+    $search .= $general_product->getProp("name");
 
     /** @var Entity[] ProductCategory */
     $general_product_categories = $general_product->getProp("categories");

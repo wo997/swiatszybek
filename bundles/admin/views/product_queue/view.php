@@ -1,14 +1,13 @@
-<?php //route[{ADMIN}/oczekujacy] 
+<?php //route[{ADMIN}/oczekujacy]
+
 ?>
 
 <?php startSection("head_content"); ?>
 
-<title>Oczekujący</title>
+<title>Oczekujący na produkty</title>
 
 <?php startSection("body_content"); ?>
 
-<h1>Oczekujący na produkty</h1>
-
-<div class="mytable"></div>
+<datatable-comp class="product_queue"></datatable-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>

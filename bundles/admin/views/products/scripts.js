@@ -20,7 +20,7 @@ domload(() => {
 			{ label: "W magazynie", key: "stock", width: "1", sortable: true, searchable: "number" },
 			{
 				label: "Akcja",
-				key: "stock",
+				key: "",
 				width: "100px",
 				render: (data) => {
 					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">

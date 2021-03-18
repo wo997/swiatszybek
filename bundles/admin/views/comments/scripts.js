@@ -1,93 +1,52 @@
 /* js[view] */
 
 domload(() => {
-	createDatatable({
-		name: "mytable",
-		lang: {
-			subject: "komentarzy",
-		},
-		url: "/search_comments",
-		params: () => {
-			return {};
-		},
-		definition: [
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const datatable_comp = $("datatable-comp.comments");
+
+	datatableComp(datatable_comp, undefined, {
+		search_url: STATIC_URLS["ADMIN"] + "/comment/search",
+		columns: [
+			{ label: "Produkt", key: "general_product_name", width: "1", searchable: "string" },
+			{ label: "Komentarz", key: "comment", width: "2", searchable: "string" },
 			{
-				title: "Pseudonim",
-				width: "10%",
-				render: (r) => {
-					return `${r.pseudonim}`;
+				label: "Ocena",
+				key: "rating",
+				width: "110px",
+				sortable: true,
+				render: (data) => {
+					return html`<span class="rating stars">${data.rating}</span>`;
 				},
 			},
+			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
+			{ label: "Kiedy", key: "created_at", width: "108px", searchable: "date" },
 			{
-				title: "Komentarz",
-				width: "30%",
-				className: "auto-width",
-				render: (r) => {
-					return `${r.tresc}`;
+				label: "Akcja",
+				key: "",
+				width: "100px",
+				render: (data) => {
+					return html`
+						<a class="btn subtle small" data-tooltip="Ukryj komentarz"> <i class="fas fa-eye-slash"></i> </a>
+						<a
+							class="btn subtle small"
+							href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"
+							data-tooltip="Edytuj produkt"
+						>
+							<i class="fas fa-cog"></i>
+						</a>
+					`;
 				},
-				escape: false,
-			},
-			{
-				title: "Kiedy",
-				width: "10%",
-				render: (r) => {
-					return `${r.dodano}`;
-				},
-			},
-			{
-				title: "Ocena",
-				width: "10%",
-				render: (r) => {
-					return `${r.rating}`;
-				},
-				escape: false,
-			},
-			{
-				title: "Produkt",
-				width: "10%",
-				render: (r) => {
-					return `<a href="${r.link}">${r.title}</a>`;
-				},
-				escape: false,
-			},
-			{
-				title: "",
-				width: "10%",
-				render: (r) => {
-					var action = "";
-					action = `<button class='btn red' style='margin-left:10px' onclick='commentAction(${r.comment_id},-1)'>Usuń</button>`;
-					if (r.accepted == 0)
-						action += `<button class='btn primary' style='margin-left:10px' onclick='commentAction(${r.comment_id},1)'>Akceptuj</button>`;
-					return action;
-				},
-				escape: false,
 			},
 		],
-		controls: `
-                    <div class='float_icon'>
-                        <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <select data-param="status" class="field inline">
-                        <option value=''>Wszystkie</option>
-                        <option value='n'>Niezatwierdzone</option>
-                    </select>
-                `,
+		primary_key: "comment_id",
+		empty_html: html`Brak komentarzy`,
+		label: "Komentarze",
+		selectable: true,
+		save_state_name: "comments",
+	});
+
+	datatable_comp.addEventListener("change", () => {
+		starsLoaded();
 	});
 });
-
-function commentAction(i, action) {
-	if (action == -1 && !confirm("Czy aby na pewno chcesz usunąć komentarz?")) return;
-	ajax(
-		"/commentAction",
-		{
-			comment_id: i,
-			action: action,
-		},
-		() => {
-			currPage = 0;
-			mytable.search();
-		},
-		() => {}
-	);
-}

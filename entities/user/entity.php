@@ -17,5 +17,20 @@ EntityManager::register("user", [
         "cart_json" => ["type" => "string"],
         "privelege_id" => ["type" => "number"],
         "nickname" => ["type" => "string"],
+        "__search" => ["type" => "string"],
     ],
 ]);
+
+EventListener::register("before_save_user_entity", function ($params) {
+    /** @var Entity User */
+    $user = $params["obj"];
+
+    $search = "";
+    $search .= replacePolishLetters($user->getProp("first_name"));
+    $search .= replacePolishLetters($user->getProp("last_name"));
+    $search .= replacePolishLetters($user->getProp("email"));
+    $search .= replacePolishLetters($user->getProp("phone"));
+
+    $search = getSearchableString($search);
+    $user->setProp("__search", $search);
+});

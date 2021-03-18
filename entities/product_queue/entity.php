@@ -5,6 +5,7 @@ EntityManager::register("product_queue", [
         "product_id" => ["type" => "number"],
         "email" => ["type" => "string"],
         "submitted_at" => ["type" => "string"],
+        "email_sent_at" => ["type" => "string"],
     ],
 ]);
 
