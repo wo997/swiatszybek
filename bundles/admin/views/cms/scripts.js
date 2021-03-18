@@ -184,7 +184,9 @@ domload(() => {
 
 	piep_editor.addEventListener("paste", (e) => {
 		e.preventDefault();
+		// "text/html" is cool but dont use it yet
 		const text = e.clipboardData.getData("text/plain");
+		// this text can contain html cool
 		console.log(text);
 		// TODO: do do
 	});
@@ -212,17 +214,19 @@ domload(() => {
 		const v_node = virtual_node_data ? virtual_node_data.node : undefined;
 
 		if (ev.key.length === 1 && sel) {
-			ev.preventDefault();
+			if (!ev.ctrlKey) {
+				ev.preventDefault();
 
-			const text = v_node.text;
-			if (typeof text === "string") {
-				v_node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
-				recreateDom();
+				const text = v_node.text;
+				if (typeof text === "string") {
+					v_node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
+					recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
+					const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 
-				if (node_ref) {
-					selectElementContentsByIndex(node_ref, focusOffset + 1);
+					if (node_ref) {
+						selectElementContentsByIndex(node_ref, focusOffset + 1);
+					}
 				}
 			}
 		}

@@ -13,6 +13,11 @@
 	.piep_editor_content {
 	}
 
+	.piep_editor_content * {
+		border: 1px solid #ddd;
+		margin: 2px;
+	}
+
 	::selection {
 		color: green;
 		background: yellow;
