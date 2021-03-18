@@ -70,6 +70,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 
 						row_data[key] = value;
 						if (dt._data.search_url) {
+							dt.classList.add("searching");
 							const column = dt._data.columns.find((col) => col.key === key);
 							if (column) {
 								console.log(column.editable_callback(row_data));

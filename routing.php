@@ -29,6 +29,7 @@ function getAdminNavitationTree()
 $admin_navigations_tree = [
     ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
     ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj kod rabatowy'],
+    ["url" => "/zamowienia", "title" => '<i class="fas fa-th-large"></i> Pulpit'],
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [

@@ -42,6 +42,7 @@ datatable-comp {
 	}
 	&.searching .table_body {
 		filter: contrast(0.9);
+		pointer-events: none;
 	}
 	.table_body .dt_cell {
 		& > .cell_wrapper {
