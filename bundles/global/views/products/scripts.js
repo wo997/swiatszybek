@@ -45,6 +45,8 @@ domload(() => {
 	sticky_results_info = $(".results_info");
 	products_category_name = $(".category_name");
 
+	products_all.classList.add("ready");
+
 	initPrices();
 	initRangeFilters();
 	initProductFeatures();

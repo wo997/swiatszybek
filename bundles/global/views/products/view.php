@@ -316,48 +316,6 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                         </div>
                     </li>
                 </ul>
-
-                <!-- <div class="search_header">
-                    <i class="fas fa-search"></i>
-                    Szukaj
-                    <button class='btn subtle case_search small' onclick='clearSearch()' data-tooltip='Wyczyść filtr' data-tooltip_position='right' style='margin:-10px 0'>
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class='float_icon  search_wrapper glue_children'>
-                    <input type="text" placeholder="Nazwa produktu..." class="field products_search ignore-glue" onchange="productsSearchChange(this)">
-                    <i class="fas fa-search"></i>
-                    <button class="btn primary case_mobile search-btn can-disappear">
-                        <img class="search_icon" src="/src/img/search_icon.svg">
-                    </button>
-                </div> -->
-
-                <!-- <div class="sorting-wrapper">
-                    <div class="search_header">
-                        <i class="fas fa-sort-amount-down-alt"></i>
-                        Sortuj
-                    </div>
-                    <label class="order_by_item">
-                        <input type="radio" name="order_by" value="sale" class="sale_option">
-                        <span><i class="fas fa-star"></i> Bestsellery</span>
-                    </label>
-                    <label class="order_by_item">
-                        <input type="radio" name="order_by" value="new">
-                        <span><i class="fas fa-plus-circle"></i> Najnowsze</span>
-                    </label>
-                    <label class="order_by_item">
-                        <input type="radio" name="order_by" value="cheap">
-                        <span><i class="fas fa-dollar-sign"></i> Najtańsze</span>
-                    </label>
-                    <label class="order_by_item case_no_search">
-                        <input type="radio" name="order_by" value="random" class="random_option">
-                        <span><i class="fas fa-dice-three"></i> Losowo</span>
-                    </label>
-                    <label class="order_by_item case_search">
-                        <input type="radio" name="order_by" value="relevance" class="relevance_option">
-                        <span><img src="/src/img/target_icon.svg" style="width: 1em;transform: translateY(2px);"> Trafność</span>
-                    </label>
-                </div> -->
             </div>
         </div>
     </div>

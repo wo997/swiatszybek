@@ -1,10 +1,9 @@
 /* css[global] */
 
 header.main {
-	&.ready {
-		position: fixed;
-	}
 	& {
+		position: sticky;
+		top: 0;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -55,30 +54,6 @@ header.main {
 		box-shadow: 0 3px 3px 0 #0004;
 		border: 1px solid #ccc;
 		cursor: default;
-	}
-
-	&.modals_only {
-		& {
-			justify-content: space-between;
-		}
-
-		.main_search_wrapper,
-		.last_viewed_products_menu_btn,
-		.wishlist_menu_btn {
-			display: none !important;
-		}
-	}
-
-	&.use_modals {
-		.headerbtn_menu {
-			display: none !important;
-		}
-	}
-
-	&:not(.modals_only) {
-		.mobile_search_btn {
-			display: none !important;
-		}
 	}
 
 	.headerbtn {
@@ -145,14 +120,6 @@ header.main {
 		}
 	}
 
-	&:not(.menu_collapsed) .mobile_menu_btn,
-	&.menu_collapsed nav {
-		display: none !important;
-	}
-	nav:not(.bottom) a {
-		border-radius: var(--header-btn-radius);
-	}
-
 	.cart_menu {
 		& {
 			min-width: 250px;
@@ -215,17 +182,6 @@ header.main {
 	object-fit: contain;
 }
 
-@media only screen and (min-width: 800px) {
-	.case_mobile {
-		display: none !important;
-	}
-}
-@media only screen and (max-width: 799px) {
-	.case_desktop {
-		display: none !important;
-	}
-}
-
 .search_wrapper {
 	.btn {
 		padding: 0;
@@ -247,9 +203,5 @@ header.main {
 }
 
 :root {
-	--header_height: 0; // no need to set a default value, it's done on domload as well as putting the header as fixed node
-}
-.header_height {
-	flex-shrink: 0;
-	height: var(--header_height);
+	--header_height: 0;
 }

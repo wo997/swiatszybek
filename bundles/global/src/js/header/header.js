@@ -16,19 +16,18 @@ function headerResizeCallback() {
 		return;
 	}
 
-	header_modals_only = window.innerWidth < 700;
-	main_header.classList.toggle("modals_only", header_modals_only);
+	//header_modals_only = window.innerWidth < 700;
+	//main_header.classList.toggle("modals_only", header_modals_only);
 
-	header_use_modals = header_modals_only || IS_TOUCH_DEVICE;
-	main_header.classList.toggle("use_modals", header_use_modals);
+	//header_use_modals = header_modals_only || IS_TOUCH_DEVICE;
+	//main_header.classList.toggle("use_modals", header_use_modals);
 
-	main_header.classList.remove("menu_collapsed");
-	main_header_nav.classList.remove("bottom");
-	main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
-	const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
-	main_header.classList.toggle("menu_collapsed", menu_collapsed);
+	//main_header.classList.remove("menu_collapsed");
+	//main_header_nav.classList.remove("bottom");
+	//main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
+	//const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
+	//main_header.classList.toggle("menu_collapsed", menu_collapsed);
 	document.documentElement.style.setProperty("--header_height", `${main_header.offsetHeight}px`);
-	main_header.classList.add("ready");
 
 	const main_search_wrapper = $(".main_search_wrapper");
 	const r = main_search_wrapper.getBoundingClientRect();
