@@ -511,8 +511,6 @@ function mainSearchProducts(force = false) {
 		url += "?" + url_search;
 	}
 
-	setProductsFilterCountFromUrl();
-
 	if (!force) {
 		if (current_url_search === url_search) {
 			return;
@@ -523,6 +521,8 @@ function mainSearchProducts(force = false) {
 		// title does not work lol
 		history.replaceState(undefined, full_name, url);
 	}
+
+	setProductsFilterCountFromUrl();
 
 	// workaround here
 	document.title = full_name;

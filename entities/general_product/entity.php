@@ -60,11 +60,14 @@ EventListener::register("before_save_general_product_entity", function ($params)
         }
     }
     $alone_options = [];
+    $alone_option_ids = [];
     foreach ($all_options as $feature_id => $option_ids) {
         if (count($option_ids) === 1) {
             $alone_options[] = EntityManager::getEntityById("product_feature_option", $option_ids[0]);
+            $alone_option_ids[] = $option_ids[0];
         }
     }
+    $alone_option_ids_csv = join(",", $alone_option_ids);
 
     foreach ($products as $product) {
         $product_id = $product->getId();
@@ -110,9 +113,15 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $product_name = $general_product->getProp("name");
 
         if ($sorted_feature_ids_str) {
+            $where = "product_id = $product_id";
+            if ($alone_option_ids_csv) {
+                $where .= " AND product_feature_option_id NOT IN ($alone_option_ids_csv)";
+            }
+
+            // works because we never set both things at once, I mean products and features
             $option_values = DB::fetchCol("SELECT pfo.value
                 FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
-                WHERE product_id = $product_id
+                WHERE $where
                 ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
 
             foreach ($option_values as $option_name) {
