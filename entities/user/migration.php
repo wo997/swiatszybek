@@ -17,4 +17,5 @@ DB::createTable("user", [
     ["name" => "privelege_id", "type" => "TINYINT"],
     //["name" => "last_active_at", "type" => "DATETIME"],
     ["name" => "nickname", "type" => "VARCHAR(255)"],
+    ["name" => "__search", "type" => "VARCHAR(255)"],
 ]);

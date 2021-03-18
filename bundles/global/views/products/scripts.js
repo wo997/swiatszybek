@@ -418,10 +418,6 @@ function mainSearchProducts(force = false) {
 		return;
 	}
 
-	if (search_product_list_xhr) {
-		search_product_list_xhr.abort();
-	}
-
 	const options_data = getSelectedOptionsData();
 	pp_selected_option_groups = options_data.map((e) => e.option_ids);
 
@@ -533,6 +529,10 @@ function mainSearchProducts(force = false) {
 
 	results_info_count_spinner.classList.add("visible");
 	product_list.style.opacity = "0.7";
+
+	if (search_product_list_xhr) {
+		search_product_list_xhr.abort();
+	}
 
 	search_product_list_xhr = xhr({
 		url: "/product/search",
