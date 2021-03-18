@@ -436,7 +436,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 <?php endif ?>
 
 <div id="notifyProductAvailable" data-modal data-dismissable>
-    <div class="modal_body" style="width: 400px;">
+    <div class="modal_body" style="width: 480px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
         <h3 class="modal_header">
@@ -446,18 +446,19 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <div>
-                <div style="display: flex;align-items:center;margin-bottom:10px">
-                    <div>
-                        Gdy <span class="full_product_name"><?= $full_product_name ?></span>
-                        pojawi się w magazynie otrzymasz powiadomienie na swój adres e-mail.
+                <div style="position:relative">
+                    <img src="/src/img/hourglass.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 10px;bottom: 52px;transform: rotate(7deg);width: 68px;">
+                    <div style="position:relative;text-align:center">
+                        <div style="padding:10px 0">
+                            Otrzymasz powiadomienie gdy produkt pojawi się w sklepie:
+                            <div class="full_product_name semi-bold"><?= $full_product_name ?></div>
+                        </div>
+
+                        <div class="label" style="margin-top:10px;">Podaj swój adres e-mail</div>
+                        <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>" style="text-align: center;">
                     </div>
-                    <i class="fas fa-hourglass-half" style="color: #ddd;font-size: 3em;margin-left: 10px;"></i>
                 </div>
 
-                <div class="selected_product_queue_pretty"></div>
-
-                <div class="label" style="margin-top:10px;">Adres e-mail</div>
-                <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>">
                 <div style="margin-top:10px;display:flex">
                     <button class="btn subtle fill" style="margin-right:10px" onclick="hideAllModals()">Anuluj</button>
                     <button class="btn primary submit_btn fill">Potwierdź</button>
@@ -476,79 +477,80 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
         </h3>
 
         <div class="scroll_panel scroll_shadow panel_padding">
-            <div>
-                <div style="display: flex;align-items:center;margin-bottom:10px">
-                    <div>
-                        Oczekuj na powiadomienie pod adresem <span class="email"></span>.
-                        Zadbamy o to by <span class="full_product_name"><?= $full_product_name ?></span> pojawił się w naszym sklepie jak najszybciej!
+            <div style="position:relative;text-align:center;padding: 10px 0">
+                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 35px;width: 110px;">
+                <div style="position:relative;margin-bottom:10px;">
+                    Oczekuj na powiadomienie pod adresem <span class="email"></span>.
+                    <div style="margin-top:7px">
+                        Zadbamy o to by
+                        <span class="full_product_name"><?= $full_product_name ?></span>
+                        pojawił(y) się w naszym sklepie jak najszybciej!
                     </div>
-                    <i class="fas fa-check-circle" style="color: var(--success-clr);font-size: 3em;margin-left: 10px;"></i>
                 </div>
+            </div>
 
-                <button class="btn primary close_btn fill" onclick="hideAllModals()">OK </button>
+            <button class="btn primary close_btn fill" onclick="hideAllModals()">OK </button>
+        </div>
+    </div>
+
+
+    <?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
+        <div class="right_side_menu">
+            <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
+                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-cog"></i>
+            </button>
+            <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
+
+            <?php if (1 /*$general_product_data["published"] === 1*/) {
+                $clr = "var(--success-clr)";
+                $info_label = "<i class='fas fa-eye'></i> Widoczny";
+                $btn_label = 'Ukryj';
+                $btn_class = 'subtle';
+            } else {
+                $clr = "var(--error-clr)";
+                $info_label = "<i class='fas fa-eye-slash'></i> Ukryty!";
+                $btn_label = 'Upublicznij';
+                $btn_class = 'primary';
+            }
+            ?>
+
+            <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:600;text-align:center">
+                <?= $info_label ?>
+            </div>
+            <button class="btn <?= $btn_class ?> fill" onclick="toggleProductPublish()"><?= $btn_label ?></button>
+
+            <div style="height:10px"></div>
+
+            <div>
+                <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
             </div>
         </div>
-    </div>
-</div>
 
+        <script>
+            // function toggleProductPublish() {
+            //     xhr({
+            //         url: STATIC_URLS["ADMIN"] + "/set_publish",
+            //         params: {
+            //             table: "products",
+            //             primary: "general_product_id",
+            //             primary_id: <?= $general_product_id ?>,
+            //             published: <?= 1 // - $general_product_data["published"] 
+                                        ?>,
+            //         },
+            //         success: () => {
+            //             window.location.reload();
+            //         },
+            //     });
+            // }
 
-<?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
-    <div class="right_side_menu">
-        <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
-            <i class="fas fa-chevron-right"></i>
-            <i class="fas fa-cog"></i>
-        </button>
-        <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
+            <?php if (false) : //$general_product_data["published"] == 0) : 
+            ?>
+                domload(() => {
+                    toggleRightSideMenu();
+                })
+            <?php endif ?>
+        </script>
+    <?php endif ?>
 
-        <?php if (1 /*$general_product_data["published"] === 1*/) {
-            $clr = "var(--success-clr)";
-            $info_label = "<i class='fas fa-eye'></i> Widoczny";
-            $btn_label = 'Ukryj';
-            $btn_class = 'subtle';
-        } else {
-            $clr = "var(--error-clr)";
-            $info_label = "<i class='fas fa-eye-slash'></i> Ukryty!";
-            $btn_label = 'Upublicznij';
-            $btn_class = 'primary';
-        }
-        ?>
-
-        <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:600;text-align:center">
-            <?= $info_label ?>
-        </div>
-        <button class="btn <?= $btn_class ?> fill" onclick="toggleProductPublish()"><?= $btn_label ?></button>
-
-        <div style="height:10px"></div>
-
-        <div>
-            <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
-        </div>
-    </div>
-
-    <script>
-        // function toggleProductPublish() {
-        //     xhr({
-        //         url: STATIC_URLS["ADMIN"] + "/set_publish",
-        //         params: {
-        //             table: "products",
-        //             primary: "general_product_id",
-        //             primary_id: <?= $general_product_id ?>,
-        //             published: <?= 1 // - $general_product_data["published"] 
-                                    ?>,
-        //         },
-        //         success: () => {
-        //             window.location.reload();
-        //         },
-        //     });
-        // }
-
-        <?php if (false) : //$general_product_data["published"] == 0) : 
-        ?>
-            domload(() => {
-                toggleRightSideMenu();
-            })
-        <?php endif ?>
-    </script>
-<?php endif ?>
-
-<?php include "bundles/global/templates/default.php"; ?>
+    <?php include "bundles/global/templates/default.php"; ?>
