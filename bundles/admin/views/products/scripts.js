@@ -12,12 +12,34 @@ domload(() => {
 				label: "Zdjęcie",
 				width: "65px",
 				render: (data) =>
-					html`<img data-src="${data.__img_url}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;" />`,
+					html`<img data-src="${data.img_url}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;" />`,
 				flex: true,
 			},
 			{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
-			{ label: "Publiczny", key: "published", width: "1", sortable: true, searchable: "boolean" },
-			{ label: "W magazynie", key: "stock", width: "1", sortable: true, searchable: "number" },
+			{
+				label: "Aktywny",
+				key: "active",
+				width: "1",
+				sortable: true,
+				searchable: "boolean",
+				editable: "checkbox",
+				editable_callback: (data) => {
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/general_product/save",
+						params: {
+							general_product: {
+								general_product_id: data.general_product_id,
+								active: data.active,
+							},
+						},
+						success: (res) => {
+							showNotification(`${data.name}: ${data.active ? "aktywny" : "nieaktywny"}`, { type: "success", one_line: true });
+							datatable_comp._backend_search();
+						},
+					});
+				},
+			},
+			{ label: "W magazynie", key: "stock_all", width: "1", sortable: true, searchable: "number" },
 			{
 				label: "Akcja",
 				key: "",

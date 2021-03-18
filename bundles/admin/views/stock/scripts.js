@@ -1,76 +1,60 @@
 /* js[view] */
 
 domload(() => {
-	var tableName = "mytable";
-	createDatatable({
-		name: tableName,
-		url: STATIC_URLS["ADMIN"] + "/search_variant",
-		lang: {
-			subject: "wariantów",
-		},
-		width: 1100,
-		primary: "variant_id",
-		db_table: "variant",
-		//sortable: true,
-		params: () => {
-			return {
-				order: "product_id ASC",
-			};
-		},
-		definition: [
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const datatable_comp = $("datatable-comp.stock");
+
+	datatableComp(datatable_comp, undefined, {
+		search_url: STATIC_URLS["ADMIN"] + "/product/search",
+		columns: [
 			{
-				title: "Produkt",
-				width: "70%",
-				field: "title",
-				render: (r) => {
-					return `<a class="link" href='${STATIC_URLS["ADMIN"]}/produkt/${r.product_id}'>${escapeHTML(r.title)}</a>`;
-				},
-				escape: false,
-				searchable: "text",
+				label: "Zdjęcie",
+				width: "65px",
+				render: (data) =>
+					html`<img data-src="${data.img_url}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;" />`,
+				flex: true,
+			},
+			{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
+			{
+				label: "W magazynie",
+				key: "stock",
+				width: "1",
 				sortable: true,
-			},
-			{
-				title: "Wariant",
-				width: "30%",
-				field: "name",
-				searchable: "text",
-			},
-			{
-				title: "Ilość w magazynie",
-				width: "180px",
-				render: (r) => {
-					return `<input type="number" value="${r.stock}" onchange="dostawa(this.value, ${r.stock}, ${r.variant_id})">`;
+				searchable: "number",
+				editable: "number",
+				editable_callback: (data) => {
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/product/save",
+						params: {
+							product: {
+								product_id: data.product_id,
+								stock: data.stock,
+							},
+						},
+						success: (res) => {
+							showNotification(`${data.name}: ${data.stock}szt.`, { type: "success", one_line: true });
+							datatable_comp._backend_search();
+						},
+					});
 				},
-				escape: false,
 			},
-			getPublishedDefinition({
-				field: "v.published",
-			}),
+			{
+				label: "Akcja",
+				key: "",
+				width: "100px",
+				render: (data) => {
+					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
+						Edytuj <i class="fas fa-cog"></i>
+					</a>`;
+				},
+			},
 		],
-		controlsRight: `
-            <div class='float_icon space-right'>
-              <input type="text" placeholder="Szukaj..." data-param="search" class="field inline">
-              <i class="fas fa-search"></i>
-            </div>
-          `,
+		primary_key: "product_id",
+		empty_html: html`Brak produktów`,
+		label: "Stan magazynowy",
+		after_label: html`<a href="${STATIC_URLS["ADMIN"]}/produkt" class="btn primary"> Nowy produkt <i class="fas fa-plus"></i> </a> `,
+		selectable: true,
+		save_state_name: "stock",
 	});
 });
-
-function dostawa(now, was, variant_id) {
-	// TODO: ajax deprecated
-	ajax(
-		`${STATIC_URLS["ADMIN"]}/change_variant_stock`,
-		{
-			stock_difference: now - was,
-			variant_id: variant_id,
-		},
-		(response) => {
-			mytable.search();
-			showNotification(`Pomyślnie zmieniono stan magazynowy na <b>${now} szt.</b>`, {
-				one_line: true,
-				type: "success",
-			});
-		},
-		null
-	);
-}

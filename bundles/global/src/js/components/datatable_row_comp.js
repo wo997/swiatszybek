@@ -31,14 +31,18 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 				/** @type {DatatableComp} */
 				// @ts-ignore
 				const dt = comp._parent_comp._parent_comp;
+				const getRowData = (row_id) => {
+					const id_key = dt._data.search_url ? dt._data.primary_key : "_row_id";
+					return dt._data ? dt._data.dataset.find((d) => d[id_key] === row_id) : undefined;
+				};
 
 				const cells_html = getDatatableRowHtml(dt, data);
 
 				setNodeChildren(comp._nodes.dt_row, cells_html);
 
 				const row = comp._parent();
-				const _row_id = +row.dataset.primary;
-				const row_data = dt._data ? dt._data.dataset.find((d) => d._row_id === _row_id) : undefined;
+				const row_id = +row.dataset.primary;
+				const row_data = getRowData(row_id);
 
 				registerForms(comp._nodes.dt_row);
 
@@ -53,18 +57,29 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 				row._children("[data-bind]:not(.binded)").forEach((input) => {
 					input.classList.add("binded");
 					const key = input.dataset.bind;
+
 					input.addEventListener("change", () => {
+						const row_data = getRowData(row_id); // make sure u recreate the ref
+
+						const value = input._get_value();
+						const prev_value = row_data[key];
+						if (prev_value === value) {
+							// nothing happened
+							return;
+						}
+
+						row_data[key] = value;
 						if (dt._data.search_url) {
-							console.warn("TODO");
+							const column = dt._data.columns.find((col) => col.key === key);
+							if (column) {
+								console.log(column.editable_callback(row_data));
+							} else {
+								console.error(`Column key "${key}" is missing`);
+							}
 						} else {
-							const row_data = dt._data.dataset.find((d) => d._row_id === _row_id); // recreate ref
-							const value = input._get_value();
-							const prev_value = row_data[key];
-							row_data[key] = value;
 							dt.dispatchEvent(
 								new CustomEvent("editable_change", {
 									detail: {
-										_row_id,
 										row_data,
 										key,
 										prev_value,

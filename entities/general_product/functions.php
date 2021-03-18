@@ -19,7 +19,7 @@ function getGlobalProductsSearch($url, $options = [])
     /** @var DatatableParams */
     $datatable_params = ["page_id" => $page_id, "row_count" => $row_count, "filters" => []];
 
-    $where = "1";
+    $where = "gp.active";
 
     $unique_option_ids = [];
 

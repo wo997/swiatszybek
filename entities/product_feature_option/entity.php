@@ -57,6 +57,9 @@ EventListener::register("before_save_product_feature_option_entity", function ($
         //var_dump("DELETE", $product_feature_option->getAllProps());
         // var_dump($product_feature_option->getGlobalId());
         // the definition was wrong and it couldn't spot the parent property at all, solved!
+
+        // HEY, the entity manager should know that already, it knows whether a parent is required,
+        // so u might want to drop this line of code and leave just a check
         $product_feature_option->setWillDelete();
     } else {
         $feature_data_type = $product_feature->getProp("data_type");

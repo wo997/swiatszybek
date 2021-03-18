@@ -9,6 +9,7 @@
  *  searchable?: string
  *  render?(data: any)
  *  editable?: string
+ *  editable_callback?(data)
  *  batch_edit?: boolean
  *  map_name?: string
  *  quick_filter?: boolean
@@ -155,7 +156,7 @@ function datatableComp(comp, parent, data) {
 	}
 
 	const rewriteState = (src, to) => {
-		["filters", "quick_search", "sort", "pagination_data", "rows"].forEach((key) => {
+		["filters", "quick_search", "sort", "pagination_data", "dataset"].forEach((key) => {
 			const d = src[key];
 			if (d) {
 				to[key] = d;
@@ -177,6 +178,9 @@ function datatableComp(comp, parent, data) {
 		}
 		const state = JSON.parse(state_json);
 		rewriteState(state, data_obj);
+		data_obj.rows = data_obj.dataset.map((d) => {
+			return { row_data: d };
+		});
 	};
 
 	comp._backend_search = () => {
@@ -219,7 +223,8 @@ function datatableComp(comp, parent, data) {
 				data.pagination_data.page_count = res.page_count;
 				data.pagination_data.total_rows = res.total_rows;
 
-				data.rows = res.rows.map((d) => {
+				data.dataset = res.rows;
+				data.rows = data.dataset.map((d) => {
 					return { row_data: d };
 				});
 
