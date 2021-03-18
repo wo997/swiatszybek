@@ -341,7 +341,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
         <div class="results_info">
             <span>
                 Znaleziono wyników:
-                <div style="position:relative;display:inline-block; margin-left:3px">
+                <div class="spinner_wrapper inline" style="margin-left:1px">
                     <span class="products_total_rows"><?= $products_search_data["total_rows"] ?></span>
                     <div class="spinner overlay"></div>
                 </div>

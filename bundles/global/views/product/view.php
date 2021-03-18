@@ -317,7 +317,10 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 <br>
                 <button class="btn fill medium buy_btn main_buy_btn">
                     Dodaj do koszyka
-                    <i class="fas fa-plus-circle"></i>
+                    <div style="display:inline-block;" class="spinner_wrapper inline">
+                        <i class="fas fa-plus"></i>
+                        <div class="spinner overlay white"></div>
+                    </div>
                 </button>
             </div>
 
@@ -362,7 +365,13 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </div>
 
                     <div class="space_top"></div>
-                    <button class="btn primary search_btn"> Pokaż wyniki <i class="fas fa-search"></i></button>
+                    <button class="btn primary search_btn">
+                        Pokaż wyniki
+                        <div class="spinner_wrapper inline">
+                            <i class="fas fa-search"></i>
+                            <div class="spinner overlay white"></div>
+                        </div>
+                    </button>
                     <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
                 </div>
             </div>

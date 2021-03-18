@@ -32,6 +32,12 @@ function registerScrollShadows() {
 		};
 
 		pan.addEventListener("scroll", panelScrollCallback);
+		pan.addEventListener("click", () => {
+			panelScrollCallback();
+			setTimeout(() => {
+				panelScrollCallback();
+			}, 100);
+		});
 		window.addEventListener("resize", panelScrollCallback);
 		window.addEventListener("modal_shown", panelScrollCallback);
 		panelScrollCallback();

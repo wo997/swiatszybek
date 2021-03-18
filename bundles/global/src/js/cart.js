@@ -20,6 +20,7 @@ domload(() => {
 	initBuy();
 });
 
+// prevent multiple requests
 let adding_product_from_cart = false;
 
 function initBuy() {

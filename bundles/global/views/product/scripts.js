@@ -90,7 +90,8 @@ domload(() => {
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
 
-	$(".main_buy_btn").addEventListener("click", () => {
+	const main_buy_btn = $(".main_buy_btn");
+	main_buy_btn.addEventListener("click", () => {
 		if (adding_product_from_cart) {
 			return;
 		}
@@ -108,12 +109,14 @@ domload(() => {
 
 		adding_product_from_cart = true;
 
+		const spinner_wrapper = main_buy_btn._child(".spinner_wrapper");
+		spinner_wrapper.classList.add("spinning");
+
 		let offset = 220;
 		if (!user_cart.products.find((p) => p.product_id === product_id)) {
 			// new
 			offset += 140; // probably enough to contain a row
 		}
-		scrollIntoView(cart_products_comp, { offset });
 
 		xhr({
 			url: "/cart/add-product",
@@ -125,6 +128,9 @@ domload(() => {
 				user_cart = res.user_cart;
 				loadedUserCart();
 				adding_product_from_cart = false;
+				spinner_wrapper.classList.remove("spinning");
+
+				scrollIntoView(cart_products_comp, { offset });
 			},
 		});
 	});
@@ -334,10 +340,12 @@ function setVariantData() {
 		selected_product_was_price += html`<span style="width:4px" class="price_space"></span> zł`;
 	}
 
-	const queue_count = single_product.__queue_count;
-	$$(".selected_product_queue_pretty").forEach((e) =>
-		e._set_content(queue_count === 0 ? "Nie ma nikogo w kolejce!" : `Ilość osób w kolejce: ${queue_count}`)
-	);
+	let product_queue_pretty = "";
+	const queue_count = single_product ? single_product.__queue_count : undefined;
+	if (queue_count !== undefined) {
+		product_queue_pretty = queue_count === 0 ? "Nie ma nikogo w kolejce!" : `Ilość osób w kolejce: ${queue_count}`;
+	}
+	$$(".selected_product_queue_pretty").forEach((e) => e._set_content(product_queue_pretty));
 
 	$(".selected_product_price")._set_content(selected_product_price);
 	$(".selected_product_was_price")._set_content(selected_product_was_price);
@@ -478,9 +486,10 @@ function initProductCommentsCallback() {
 	});
 
 	search_btn.addEventListener("click", () => {
-		showLoader(coms_container);
+		const spinner_wrapper = search_btn._child(".spinner_wrapper");
+		spinner_wrapper.classList.add("spinning");
 		searchComments(() => {
-			hideLoader(coms_container);
+			spinner_wrapper.classList.remove("spinning");
 			smoothScroll(search_btn.getBoundingClientRect().top + search_btn.offsetHeight + 5 - header_height);
 		});
 	});

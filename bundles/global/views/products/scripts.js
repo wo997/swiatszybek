@@ -17,7 +17,7 @@ let product_list;
 /** @type {PiepNode} */
 let results_info_count;
 /** @type {PiepNode} */
-let results_info_count_spinner;
+let results_info_count_spinner_wrapper;
 /** @type {PiepNode} */
 let search_phrase;
 /** @type {PiepNode} */
@@ -41,7 +41,8 @@ domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
 	results_info_count = $(".results_info .products_total_rows");
-	results_info_count_spinner = results_info_count._next();
+	results_info_count_spinner_wrapper = $(".results_info .spinner_wrapper");
+
 	sticky_results_info = $(".results_info");
 	products_category_name = $(".category_name");
 
@@ -527,7 +528,7 @@ function mainSearchProducts(force = false) {
 	// workaround here
 	document.title = full_name;
 
-	results_info_count_spinner.classList.add("visible");
+	results_info_count_spinner_wrapper.classList.add("spinning");
 	product_list.style.opacity = "0.7";
 
 	if (search_product_list_xhr) {
@@ -542,7 +543,7 @@ function mainSearchProducts(force = false) {
 		success: (res = {}) => {
 			search_product_list_xhr = undefined;
 
-			results_info_count_spinner.classList.remove("visible");
+			results_info_count_spinner_wrapper.classList.remove("spinning");
 			product_list.style.opacity = "1";
 
 			products_all.style.height = products_all.offsetHeight + "px";

@@ -7,8 +7,8 @@
 	height: var(--spinner-size);
 }
 .spinner {
-	--spinner-size: 1.3em;
-	--spinner-width: 0.15em;
+	--spinner-size: 1.2em;
+	--spinner-width: 0.2em;
 	--spinner-color: #000;
 	display: inline-block;
 	border: var(--spinner-width) solid var(--spinner-color);
@@ -30,12 +30,30 @@
 		left: 50%;
 		top: 50%;
 		margin: calc(var(--spinner-size) * -0.5);
-		transition: 0.15s opacity;
-		background: var(--spinner-background);
-		--spinner-background: #fff;
 	}
 
 	&:not(.visible) {
 		opacity: 0;
+	}
+}
+
+.spinner.white {
+	--spinner-color: #fff;
+}
+
+.spinner_wrapper {
+	position: relative;
+}
+.spinner_wrapper {
+	& > * {
+		transition: 0.15s opacity;
+	}
+	&.spinning {
+		& > *:not(.spinner) {
+			opacity: 0;
+		}
+		& > .spinner {
+			opacity: 1;
+		}
 	}
 }
