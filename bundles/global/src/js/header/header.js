@@ -10,6 +10,7 @@ let main_header_height;
 let main_header_nav;
 let header_modals_only = false;
 let header_use_modals = false;
+let header_height = 0;
 
 function headerResizeCallback() {
 	if (!main_header) {
@@ -27,7 +28,8 @@ function headerResizeCallback() {
 	//main_header_nav.classList.toggle("bottom", main_header.offsetHeight > 100);
 	//const menu_collapsed = header_use_modals || main_header_nav.offsetWidth > main_header.offsetWidth + 1;
 	//main_header.classList.toggle("menu_collapsed", menu_collapsed);
-	document.documentElement.style.setProperty("--header_height", `${main_header.offsetHeight}px`);
+	header_height = main_header.offsetHeight;
+	document.documentElement.style.setProperty("--header_height", `${header_height}px`);
 
 	const main_search_wrapper = $(".main_search_wrapper");
 	const r = main_search_wrapper.getBoundingClientRect();

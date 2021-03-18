@@ -63,7 +63,7 @@ domload(() => {
 		buy_without_registration.addEventListener("click", () => {
 			expand(case_choosen_account, true, { full_height_all_time: true });
 			const rect = buy_without_registration.getBoundingClientRect();
-			const diff = rect.top + rect.height - main_header_height.offsetHeight;
+			const diff = rect.top + rect.height - header_height;
 			if (diff > 0) {
 				smoothScroll(diff);
 			}
@@ -81,7 +81,7 @@ domload(() => {
 		expand(case_form_filled, true, { full_height_all_time: true });
 
 		const rect = delivery_input.getBoundingClientRect();
-		const diff = rect.top + rect.height - main_header_height.offsetHeight;
+		const diff = rect.top + rect.height - header_height;
 		if (diff > 0) {
 			smoothScroll(diff);
 		}

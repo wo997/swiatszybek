@@ -395,6 +395,7 @@ function initProductCommentsCallback() {
 	const addComment = $("#addComment .modal_body");
 	const search_btn = $(".product_comments .search_btn");
 	const add_comment_btn_top = $(".add_comment_btn_top");
+	const coms_container = $(".product_comments .coms_container");
 
 	let filters_open = false;
 
@@ -477,8 +478,11 @@ function initProductCommentsCallback() {
 	});
 
 	search_btn.addEventListener("click", () => {
-		searchComments();
-		smoothScroll(search_btn.getBoundingClientRect().top + search_btn.offsetHeight + 5 - main_header_height.offsetHeight);
+		showLoader(coms_container);
+		searchComments(() => {
+			hideLoader(coms_container);
+			smoothScroll(search_btn.getBoundingClientRect().top + search_btn.offsetHeight + 5 - header_height);
+		});
 	});
 
 	// add comment form
