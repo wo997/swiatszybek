@@ -27,6 +27,8 @@ function getAdminNavitationTree()
 }
 
 $admin_navigations_tree = [
+    ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
+    ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj kod rabatowy'],
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [
@@ -39,7 +41,6 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
             ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Nowy produkt'],
             //["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],

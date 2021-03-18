@@ -40,7 +40,7 @@ if ($product_link_base !== Request::$url) {
     Request::redirect($true_product_link);
 }
 
-$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, name, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);
@@ -478,13 +478,13 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <div style="position:relative;text-align:center;padding: 10px 0">
-                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 35px;width: 110px;">
+                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 30px;width: 110px;">
                 <div style="position:relative;margin-bottom:10px;">
                     Oczekuj na powiadomienie pod adresem <span class="email"></span>.
                     <div style="margin-top:7px">
                         Zadbamy o to by
                         <span class="full_product_name"><?= $full_product_name ?></span>
-                        pojawił(y) się w naszym sklepie jak najszybciej!
+                        pojawił się w naszym sklepie jak najszybciej!
                     </div>
                 </div>
             </div>
