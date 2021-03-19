@@ -152,12 +152,15 @@ function traverseFeatures()
                 continue;
             }
         } else {
-            $data = DB::fetchRow("SELECT MIN(double_value) min_value, MAX(double_value) max_value FROM product_feature_option
+            $double_values = DB::fetchArr("SELECT double_value, COUNT(1) as count FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                 INNER JOIN product p USING(product_id)
-                WHERE product_feature_id = $product_feature_id AND $where_products_0");
-            $min_value = $data["min_value"];
-            $max_value = $data["max_value"];
+                WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value ASC");
+
+            $first_value = def($double_values, 0, null);
+            $last_value = def($double_values, count($double_values) - 1, null);
+            $min_value = $first_value ? $first_value["double_value"] : 0;
+            $max_value = $last_value ? $last_value["double_value"] : 0;
 
             if ($min_value === $max_value) {
                 continue;
@@ -238,6 +241,7 @@ $products_search_data_0 = getGlobalProductsSearch(
     ["return_all_ids" => true]
 );
 
+// it's important to split it cause when the where query gets thicc (fe. extended phrase search) we shouldnt repeat it but focus on already known ids
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "1";
 $where_general_products_0 = "general_product_id IN (SELECT DISTINCT general_product_id FROM product WHERE $where_products_0)";

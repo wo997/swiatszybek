@@ -33,7 +33,7 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 			datatable: {
 				columns: [
 					{ label: "Cecha", key: "product_feature_id", width: "1", map_name: "product_feature", searchable: "select" },
-					{ label: "Opcja", key: "name", width: "1", sortable: true, searchable: "string" },
+					{ label: "Opcja", key: "value", width: "1", sortable: true, searchable: "string" },
 					{
 						label: "Akcja",
 						width: "135px",
