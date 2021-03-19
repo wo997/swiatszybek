@@ -14,7 +14,7 @@ if ($product_category_id !== -1) {
     $product_category_data = $default_category_data;
 }
 
-$all_category_ids = array_map(fn ($x) => $x["id"], json_decode($product_category_data["__category_path_json"], true));
+$all_category_ids = array_column(json_decode($product_category_data["__category_path_json"], true), "id");
 
 function traverseCategories($parent_id = -1, $level = 0)
 {
@@ -204,6 +204,14 @@ function traverseFeatures()
                 }
 
                 $quick_list_html =  "<ul class=\"\">";
+                while (count($double_values) > 2) {
+                    $double_values_copy = $double_values;
+
+                    $lowest_count = min(array_column($double_values_copy, "count"));
+                    //var_dump(">>>>>", $lowest_count);
+                    break;
+                    //foreach ($double_values_copy)
+                }
                 foreach ($double_values as $double_value) {
                     $value = $double_value["double_value"];
                     $count = $double_value["count"];

@@ -39,7 +39,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $features[] = ["id" => $general_product_feature->getProp("product_feature_id"), "pos" => $general_product_feature->getMeta()["pos"]];
     }
     usort($features, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
-    $sorted_feature_ids_str = join(",", array_map(fn ($a) => $a["id"], $features));
+    $sorted_feature_ids_str = join(",", array_column($features, "id"));
 
     $main_img_url = "";
 

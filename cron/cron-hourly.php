@@ -47,9 +47,7 @@ function inviteToGiveComment($hour = 18, $daysAfterSent = 14)
         foreach ($zamowienia as $z) {
             $basket = json_decode($z['basket'], true);
 
-            $ids = trim(json_encode(array_map(function ($v) {
-                return $v['i'];
-            }, $basket)), "[]");
+            $ids = trim(json_encode(array_column($basket, "i")), "[]");
 
             $products = DB::fetchArr("SELECT product_id, link FROM products WHERE product_id IN ($ids)");
             $links = [];

@@ -13,9 +13,7 @@ function getProductCategoryLink($category_path, $option_ids = [])
     $link = "/produkty";
     if ($category && $category["id"] !== -1) {
         $link .= "/" . $category["id"];
-        $link .= "/" . escapeUrl(implode(" ", array_map(function ($x) {
-            return $x["name"];
-        }, $category_path)));
+        $link .= "/" . escapeUrl(implode(" ", array_column($category_path, "name")));
     }
     if ($option_ids) {
         $link .= "?v=" . join("-", $option_ids);
