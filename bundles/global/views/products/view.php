@@ -153,7 +153,7 @@ function traverseFeatures()
             }
         } else {
             if ($product_feature["data_type"] === "double_value") {
-                $double_values = DB::fetchArr("SELECT double_value as v, COUNT(1) as c FROM product_feature_option
+                $double_values = DB::fetchArr("SELECT double_value as v, COUNT(DISTINCT general_product_id) as c FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                 INNER JOIN product p USING(product_id)
                 WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
@@ -214,7 +214,7 @@ function traverseFeatures()
                     $to_select = "";
                 }
 
-                $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\">";
+                $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\" class=\"double_value_quick_list\">";
 
                 setRangesFromLongDataset($double_values, 4);
 
@@ -223,10 +223,10 @@ function traverseFeatures()
                     $max = def($double_value, "max", 0);
                     $count = $double_value["c"];
                     $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
-                    $search_value = $value;
+                    $search_value = getSafeNumber($value);
                     if ($max) {
                         $pretty_val .= " - " . prettyPrintPhysicalMeasure($max, $physical_measure);
-                        $search_value .= "do" . $max;
+                        $search_value .= "do" . getSafeNumber($max);
                     }
 
                     $quick_list_html .= "<li class=\"option_row\">";

@@ -54,3 +54,11 @@ function setRangesFromLongDataset(&$values, $max_ranges = 10)
         }
     }
 }
+
+
+function getSafeNumber($number)
+{
+    $accuracy = 100000;
+    // 0.09 becomes 009, you can easily tell that the dot comes after first 0
+    return preg_replace('/^0./', "0", round($accuracy * $number) / $accuracy);
+}

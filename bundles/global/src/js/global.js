@@ -476,19 +476,18 @@ function swapNodes(a, b) {
 	bParent.replaceChild(a, bHolder);
 }
 
-function removeClasses(className, selector = null) {
-	if (selector === null) selector = `.${className}`;
-	var classList = null;
-	if (Array.isArray(className)) {
-		classList = className;
-	} else {
-		classList = [className];
-	}
-	for (let cn of classList) {
-		$$(selector).forEach((e) => {
-			e.classList.remove(cn);
+/**
+ *
+ * @param {string} selector
+ * @param {string[]} classes
+ * @param {PiepNode} parent
+ */
+function removeClasses(selector, classes, parent = undefined) {
+	$(def(parent, document))
+		._children(selector)
+		.forEach((e) => {
+			e.classList.remove(...classes);
 		});
-	}
 }
 
 /**

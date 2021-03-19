@@ -64,7 +64,7 @@ domload(() => {
 		const target = $(ev.target);
 		const clear_filters_btn = target._parent(".clear_filters_btn", { skip: 0 });
 		if (clear_filters_btn) {
-			$$(".searching_wrapper .option_checkbox").forEach((option_checkbox) => {
+			$$(".searching_wrapper .option_checkbox, .searching_wrapper .option_range_checkbox").forEach((option_checkbox) => {
 				option_checkbox._set_value(0, { quiet: true });
 			});
 
@@ -151,6 +151,23 @@ function setSearchPhraseFromUrl() {
 	search_phrase._set_value(search_phrase_val, { quiet: true });
 }
 
+/**
+ *
+ * @param {string} number
+ * @returns
+ */
+const restore_number = (number) => {
+	number = (number + "").replace(/^0/, "0.");
+	return numberFromStr(number);
+};
+
+const safe_number = (number) => {
+	const accuracy = 100000;
+
+	// 0.09 becomes 009, you can easily tell that the dot comes after first 0
+	return (Math.round(accuracy * number) / accuracy + "").replace(/^0./, "0");
+};
+
 function setRangesFromUrl() {
 	const url_params = new URLSearchParams(current_url_search);
 
@@ -158,22 +175,16 @@ function setRangesFromUrl() {
 	const r = def(url_params.get("r"), "");
 
 	r.split("-").forEach((range_data) => {
-		let [product_feature_id, from, to] = range_data.split(/[_do]/);
+		let [product_feature_id, fromto] = range_data.split("_");
+		if (!fromto) {
+			return;
+		}
+		let [from, to] = fromto.split("do");
 		const range_filter = $(`.range_filter[data-product_feature_id="${product_feature_id}"]`);
 
 		if (!range_filter) {
 			return;
 		}
-
-		/**
-		 *
-		 * @param {string} number
-		 * @returns
-		 */
-		const restore_number = (number) => {
-			number = (number + "").replace(/^0/, "0.");
-			return numberFromStr(number);
-		};
 
 		const input_from = range_filter._child("input.from");
 		const unit_from = range_filter._child("select.from");
@@ -196,6 +207,35 @@ function setRangesFromUrl() {
 
 		setField(input_from, unit_from, from);
 		setField(input_to, unit_to, to);
+
+		const double_value_quick_list = $(`.double_value_quick_list[data-product_feature_id="${product_feature_id}"]`);
+
+		if (!double_value_quick_list) {
+			return;
+		}
+
+		/** @type {PiepNode} */
+		let min_checkbox;
+		/** @type {PiepNode} */
+		let max_checkbox;
+		double_value_quick_list._direct_children().forEach((li) => {
+			const checkbox = li._child(".option_range_checkbox");
+			const val_str = checkbox.dataset.value;
+			const [chck_from, chck_to] = val_str.split("do");
+			if (chck_from !== undefined && chck_from == from) {
+				min_checkbox = checkbox;
+			}
+			if (chck_to !== undefined && chck_to == to) {
+				max_checkbox = checkbox;
+			}
+		});
+		if (min_checkbox && max_checkbox) {
+			double_value_quick_list
+				._children(".option_range_checkbox")
+				.forEach((e) => e._set_value(e === min_checkbox || e === max_checkbox ? 1 : 0, { quiet: true }));
+		} else {
+			showTab(double_value_quick_list._parent(".tab_menu"), 2);
+		}
 	});
 }
 
@@ -259,6 +299,16 @@ function initProductFeatures() {
 
 	$$(".product_features .option_range_checkbox").forEach((checkbox) => {
 		checkbox.addEventListener("change", () => {
+			const ul = checkbox._parent("ul");
+			const checked = ul._children(".option_range_checkbox.checked");
+			if (checked.length > 2) {
+				checked.forEach((chck) => {
+					if (chck !== checkbox) {
+						chck._set_value(0, { quiet: true });
+					}
+				});
+			}
+
 			mainSearchProducts();
 		});
 	});
@@ -270,6 +320,61 @@ function initProductFeatures() {
 
 	feature_filter_count = $(".searching_wrapper .feature_filter_count");
 	setProductsFilterCountFromUrl();
+}
+
+/**
+ *
+ * @returns
+ */
+function updatePrettyCheckboxRanges() {
+	const ranges = {};
+	$$(".product_features .double_value_quick_list").forEach((ul) => {
+		let r_min = 1000000000;
+		let r_max = -r_min;
+		/** @type {PiepNode} */
+		let min_checkbox;
+		/** @type {PiepNode} */
+		let max_checkbox;
+
+		ul._children(".option_range_checkbox.checked").forEach((chck) => {
+			let [from, to] = chck.dataset.value.split("do");
+			if (from !== undefined) {
+				const fromv = restore_number(from);
+				if (fromv < r_min) {
+					r_min = fromv;
+					min_checkbox = chck;
+				}
+			}
+			if (from) {
+				if (to === undefined) {
+					to = from;
+				}
+				const tov = restore_number(to);
+				if (tov > r_max) {
+					r_max = tov;
+					max_checkbox = chck;
+				}
+			}
+		});
+		//console.log(r_min, r_max, min_checkbox, max_checkbox);
+		removeClasses(".angle_up", ["angle_up"], ul);
+		removeClasses(".angle_down", ["angle_down"], ul);
+
+		if (min_checkbox || max_checkbox) {
+			ranges[ul.dataset.product_feature_id] = [r_min, r_max];
+		}
+
+		if (max_checkbox && max_checkbox && min_checkbox !== max_checkbox) {
+			max_checkbox.classList.add("angle_up");
+			min_checkbox.classList.add("angle_down");
+		}
+
+		ul._direct_children().forEach((li) => {
+			li._child(".option_range_checkbox")._get_value();
+		});
+	});
+
+	return ranges;
 }
 
 function setProductsFilterCountFromUrl() {
@@ -337,6 +442,7 @@ function productsPopState() {
 	setRangesFromUrl();
 	setSearchPhraseFromUrl();
 	setProductsFilterCountFromUrl();
+	updatePrettyCheckboxRanges();
 	mainSearchProducts(true);
 }
 
@@ -474,22 +580,6 @@ function mainSearchProducts(force = false) {
 		url_params.append("ile", product_list_pagination_comp._data.row_count + "");
 	}
 
-	const feature_list_ranges = {};
-	$$(".product_features .tab_content:not(.hidden) .option_range_checkbox.checked").forEach((checkbox) => {
-		const product_feature_id = +checkbox._parent("[data-product_feature_id]").dataset.product_feature_id;
-		if (!feature_list_ranges[product_feature_id]) {
-			feature_list_ranges[product_feature_id] = [];
-		}
-		feature_list_ranges[product_feature_id].push(checkbox.dataset.value);
-	});
-
-	url_params.append(
-		"rz",
-		Object.entries(feature_list_ranges)
-			.map(([fea_id, str]) => fea_id + "_" + str.join("i"))
-			.join("-")
-	);
-
 	let url_from_ranges = [];
 	$$(".product_features .tab_content:not(.hidden) .range_filter").forEach((range_filter) => {
 		const input_from = range_filter._child("input.from");
@@ -517,15 +607,18 @@ function mainSearchProducts(force = false) {
 		}
 
 		if (from_selected || to_selected) {
-			const safe_number = (number) => {
-				const accuracy = 100000;
-
-				// 0.09 becomes 009, you can easily tell that the dot comes after first 0
-				return (Math.round(accuracy * number) / accuracy + "").replace(/^0./, "0");
-			};
 			const values = (from_selected ? safe_number(from) : "") + "do" + (to_selected ? safe_number(to) : "");
 			url_from_ranges.push(`${product_feature_id}_${values}`);
 		}
+	});
+
+	const feature_list_ranges = updatePrettyCheckboxRanges();
+	Object.entries(feature_list_ranges).forEach(([product_feature_id, minmax]) => {
+		if (url_from_ranges.find((e) => e.startsWith(`${product_feature_id}_`))) {
+			return;
+		}
+		const values = safe_number(minmax[0]) + "do" + safe_number(minmax[1]);
+		url_from_ranges.push(`${product_feature_id}_${values}`);
 	});
 
 	if (url_from_ranges.length > 0) {

@@ -120,6 +120,18 @@
 	.option_row > .checkbox_area {
 		display: inline-block;
 	}
+
+	.angle_up .check {
+		transform: translate(-41%, -37%) rotate(135deg);
+	}
+	.angle_down .check {
+		transform: translate(-41%, -74%) rotate(-45deg);
+	}
+	.angle_up .check,
+	.angle_down .check {
+		width: 0.8em;
+		height: 0.8em;
+	}
 }
 
 @media only screen and (min-width: 850px) {
