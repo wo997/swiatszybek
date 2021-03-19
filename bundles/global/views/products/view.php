@@ -229,7 +229,7 @@ function traverseFeatures()
 
                     $quick_list_html .= "<li class=\"option_row\">";
                     $quick_list_html .= "<div class=\"checkbox_area\">";
-                    $quick_list_html .= "<p-checkbox class=\"inline square\" data-value=\"$value\"></p-checkbox>";
+                    $quick_list_html .= "<p-checkbox class=\"inline square black_light \" data-value=\"$value\"></p-checkbox>";
                     $quick_list_html .= " <span class=\"feature_option_label\">$pretty_val</span>";
                     $quick_list_html .= " <span class=\"count\">($count)</span>";
                     $quick_list_html .= "</div> ";

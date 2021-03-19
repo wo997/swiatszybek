@@ -12,6 +12,7 @@
 		text-align: center;
 		flex-basis: 0;
 		position: relative;
+		user-select: none;
 	}
 	&:not(:last-child) {
 		margin-right: -1px;
