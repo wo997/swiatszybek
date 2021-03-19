@@ -152,58 +152,77 @@ function traverseFeatures()
                 continue;
             }
         } else {
-            $double_values = DB::fetchArr("SELECT double_value, COUNT(1) as count FROM product_feature_option
+            if ($product_feature["data_type"] === "double_value") {
+                $double_values = DB::fetchArr("SELECT double_value, COUNT(1) as count FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                 INNER JOIN product p USING(product_id)
-                WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value ASC");
+                WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
 
-            $first_value = def($double_values, 0, null);
-            $last_value = def($double_values, count($double_values) - 1, null);
-            $min_value = $first_value ? $first_value["double_value"] : 0;
-            $max_value = $last_value ? $last_value["double_value"] : 0;
+                $first_value = def($double_values, 0, null);
+                $last_value = def($double_values, count($double_values) - 1, null);
+                $min_value = $last_value ? $last_value["double_value"] : 0;
+                $max_value = $first_value ? $first_value["double_value"] : 0;
 
-            if ($min_value === $max_value) {
-                continue;
-            }
-
-            $physical_measure = $product_feature["physical_measure"];
-
-            $pretty_min = prettyPrintPhysicalMeasure($min_value, $physical_measure);
-            $pretty_max = prettyPrintPhysicalMeasure($max_value, $physical_measure);
-
-            $feature_label .= " ($pretty_min - $pretty_max)";
-
-            $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-            if ($physical_measure_data) {
-                $options = "";
-                $units = $physical_measure_data["units"];
-                $unit_count = count($units);
-                for ($i = 0; $i < $unit_count; $i++) {
-                    $unit = $units[$i];
-                    $factor = $unit["factor"];
-                    $name = $unit["name"];
-
-                    if ($max_value + 0.000001 < $factor) {
-                        continue;
-                    }
-
-                    $next_unit = def($units, $i + 1, null);
-                    if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
-                        continue;
-                    }
-
-                    $options .= "<option value=\"$factor\">$name</option>";
+                if ($min_value === $max_value) {
+                    continue;
                 }
 
-                $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";
-                $to_select = "<select class=\"field inline blank unit_picker to\">$options</select>";
-            } else {
-                $from_select = "";
-                $to_select = "";
-            }
+                $physical_measure = $product_feature["physical_measure"];
 
-            if ($product_feature["data_type"] === "double_value") {
-                $feature_body = <<<HTML
+                $pretty_min = prettyPrintPhysicalMeasure($min_value, $physical_measure);
+                $pretty_max = prettyPrintPhysicalMeasure($max_value, $physical_measure);
+
+                $feature_label .= " ($pretty_min - $pretty_max)";
+
+                $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
+                if ($physical_measure_data) {
+                    $options = "";
+                    $units = $physical_measure_data["units"];
+                    $unit_count = count($units);
+                    for ($i = 0; $i < $unit_count; $i++) {
+                        $unit = $units[$i];
+                        $factor = $unit["factor"];
+                        $name = $unit["name"];
+
+                        if ($max_value + 0.000001 < $factor) {
+                            continue;
+                        }
+
+                        $next_unit = def($units, $i + 1, null);
+                        if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
+                            continue;
+                        }
+
+                        $options .= "<option value=\"$factor\">$name</option>";
+                    }
+
+                    $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";
+                    $to_select = "<select class=\"field inline blank unit_picker to\">$options</select>";
+                } else {
+                    $from_select = "";
+                    $to_select = "";
+                }
+
+                $quick_list_html =  "<ul class=\"\">";
+                foreach ($double_values as $double_value) {
+                    $value = $double_value["double_value"];
+                    $count = $double_value["count"];
+
+                    $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
+
+                    $quick_list_html .= "<li class=\"option_row\">";
+                    $quick_list_html .= "<div class=\"checkbox_area\">";
+                    $quick_list_html .= "<p-checkbox class=\"inline square\" data-value=\"$value\"></p-checkbox>";
+                    $quick_list_html .= " <span class=\"feature_option_label\">$pretty_val</span>";
+                    $quick_list_html .= " <span class=\"count\">($count)</span>";
+                    $quick_list_html .= "</div> ";
+                    $quick_list_html .= "</li>";
+                }
+                $quick_list_html .= "</ul>";
+
+                $feature_body .= $quick_list_html;
+
+                $feature_body .= <<<HTML
                 <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
                     <div class="flex_column" style="margin-right:var(--form_spacing);">
                         Od
