@@ -113,6 +113,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
         $product_name = $general_product->getProp("name");
 
+        $specific_option_ids = [];
+        $specific_option_values = [];
         if ($sorted_feature_ids_str) {
             $where = "product_id = $product_id";
             if ($alone_option_ids_csv) {
@@ -120,19 +122,27 @@ EventListener::register("before_save_general_product_entity", function ($params)
             }
 
             // works because we never set both things at once, I mean products and features
-            $option_values = DB::fetchCol("SELECT pfo.value
+            $option_values = DB::fetchArr("SELECT pfo.value, product_feature_option_id
                 FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
                 WHERE $where
                 ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
 
-            foreach ($option_values as $option_name) {
-                if ($option_name) {
-                    $product_name .= " | " . $option_name;
+            foreach ($option_values as $option) {
+                if ($option["value"]) {
+                    $product_name .= " | " . $option["value"];
                 }
             }
+
+            $specific_option_ids = array_column($option_values, "product_feature_option_id");
+            $specific_option_values = array_column($option_values, "value");
         }
 
+        $product_url = "";
+
         $product->setProp("__name", $product_name);
+
+        $product_url = getProductLink($general_product->getId(), $general_product->getProp("name"), $specific_option_ids, $specific_option_values);
+        $product->setProp("__url", $product_url);
     }
 
     $general_product->setProp("__img_url", $main_img_url);

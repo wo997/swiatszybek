@@ -28,13 +28,9 @@ EventListener::register("before_save_product_entity", function ($params) {
     $product = $params["obj"];
     /** @var Entity[] ProductFeatureOption */
     $feature_options = $product->getProp("feature_options");
-    $option_ids = [];
     $options = [];
-    $option_names = [];
     foreach ($feature_options as $feature_option) {
         $option_id = $feature_option->getId();
-        $option_ids[] = $option_id;
-        $option_names[] = $feature_option->getProp("value");
 
         /** @var Entity ProductFeature */
         $feature = $feature_option->getParent("product_feature");
@@ -51,14 +47,4 @@ EventListener::register("before_save_product_entity", function ($params) {
         }
     }
     $product->setProp("__options_json", $options ? json_encode($options) : "{}");
-
-    /** @var Entity GeneralProduct */
-    $general_product = $product->getParent("general_product");
-    if ($general_product) {
-        $link = getProductLink($general_product->getId(), $general_product->getProp("name"), $option_ids, $option_names);
-        $product->setProp("__url", $link);
-    } else {
-        // garbage
-        $product->setWillDelete();
-    }
 });

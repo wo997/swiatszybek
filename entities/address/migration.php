@@ -16,4 +16,7 @@ DB::createTable("address", [
     ["name" => "building_number", "type" => "VARCHAR(255)"],
     ["name" => "flat_number", "type" => "VARCHAR(255)"],
     ["name" => "__display_name", "type" => "VARCHAR(255)"],
+    ["name" => "__address_line_1", "type" => "VARCHAR(255)"],
+    ["name" => "__address_line_2", "type" => "VARCHAR(255)"],
+    ["name" => "__display_address", "type" => "VARCHAR(255)"],
 ]);

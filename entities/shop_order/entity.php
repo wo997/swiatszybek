@@ -69,7 +69,7 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
 
         $shop_order->setProp("status_id", 1);
 
-        $shop_order->setProp("user", User::getCurrent()->getId());
+        $shop_order->setProp("user_id", User::getCurrent()->getId());
 
         $user_cart->empty();
         $user_cart->save();

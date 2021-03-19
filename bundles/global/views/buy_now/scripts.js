@@ -9,7 +9,7 @@ let choose_parcel_locker = undefined;
 
 /**
  * @typedef {{
- *	code: string,
+ *	name: string,
  *	country: string,
  *	post_code: string,
  *	city: string,
@@ -299,7 +299,7 @@ window.easyPackAsyncInit = () => {
 		const address_details = point.address_details;
 
 		choose_parcel_locker = {
-			code: point.name,
+			name: point.name,
 			country: "Polska",
 			post_code: address_details.post_code,
 			city: address_details.city,
@@ -311,7 +311,7 @@ window.easyPackAsyncInit = () => {
 		const buy_now_form = $(".buy_now_form");
 		const choosen_parcel_locker = buy_now_form._child(".choosen_parcel_locker");
 		choosen_parcel_locker._set_content(html`
-			<div class="label">${choose_parcel_locker.code}</div>
+			<div class="label">${choose_parcel_locker.name}</div>
 			<p>${choose_parcel_locker.street} ${choose_parcel_locker.building_number}, ${choose_parcel_locker.city}</p>
 		`);
 
