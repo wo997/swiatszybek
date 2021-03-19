@@ -153,15 +153,26 @@ function traverseFeatures()
             }
         } else {
             if ($product_feature["data_type"] === "double_value") {
-                $double_values = DB::fetchArr("SELECT double_value, COUNT(1) as count FROM product_feature_option
+                $double_values = DB::fetchArr("SELECT double_value as v, COUNT(1) as c FROM product_feature_option
                 INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                 INNER JOIN product p USING(product_id)
                 WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
 
+                // $time = microtime(true);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // $double_values = array_merge($double_values, $double_values);
+                // var_dump("TIME ON " . count($double_values) . ": " . ((microtime(true) - $time) * 1000) . "<br>\n");
+
                 $first_value = def($double_values, 0, null);
                 $last_value = def($double_values, count($double_values) - 1, null);
-                $min_value = $last_value ? $last_value["double_value"] : 0;
-                $max_value = $first_value ? $first_value["double_value"] : 0;
+                $min_value = $last_value ? $last_value["v"] : 0;
+                $max_value = $first_value ? $first_value["v"] : 0;
 
                 if ($min_value === $max_value) {
                     continue;
@@ -204,19 +215,17 @@ function traverseFeatures()
                 }
 
                 $quick_list_html =  "<ul class=\"\">";
-                while (count($double_values) > 2) {
-                    $double_values_copy = $double_values;
 
-                    $lowest_count = min(array_column($double_values_copy, "count"));
-                    //var_dump(">>>>>", $lowest_count);
-                    break;
-                    //foreach ($double_values_copy)
-                }
+                setRangesFromLongDataset($double_values, 4);
+
                 foreach ($double_values as $double_value) {
-                    $value = $double_value["double_value"];
-                    $count = $double_value["count"];
-
+                    $value = $double_value["v"];
+                    $max = def($double_value, "max", 0);
+                    $count = $double_value["c"];
                     $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
+                    if ($max) {
+                        $pretty_val .= " - " . prettyPrintPhysicalMeasure($max, $physical_measure);
+                    }
 
                     $quick_list_html .= "<li class=\"option_row\">";
                     $quick_list_html .= "<div class=\"checkbox_area\">";
