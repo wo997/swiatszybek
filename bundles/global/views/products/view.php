@@ -214,7 +214,7 @@ function traverseFeatures()
                     $to_select = "";
                 }
 
-                $quick_list_html =  "<ul class=\"\">";
+                $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\">";
 
                 setRangesFromLongDataset($double_values, 4);
 
@@ -223,13 +223,15 @@ function traverseFeatures()
                     $max = def($double_value, "max", 0);
                     $count = $double_value["c"];
                     $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
+                    $search_value = $value;
                     if ($max) {
                         $pretty_val .= " - " . prettyPrintPhysicalMeasure($max, $physical_measure);
+                        $search_value .= "do" . $max;
                     }
 
                     $quick_list_html .= "<li class=\"option_row\">";
                     $quick_list_html .= "<div class=\"checkbox_area\">";
-                    $quick_list_html .= "<p-checkbox class=\"inline square black_light \" data-value=\"$value\"></p-checkbox>";
+                    $quick_list_html .= "<p-checkbox class=\"inline square black_light option_range_checkbox\" data-value=\"$search_value\"></p-checkbox>";
                     $quick_list_html .= " <span class=\"feature_option_label\">$pretty_val</span>";
                     $quick_list_html .= " <span class=\"count\">($count)</span>";
                     $quick_list_html .= "</div> ";
