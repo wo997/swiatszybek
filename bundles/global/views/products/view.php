@@ -237,25 +237,38 @@ function traverseFeatures()
                 }
                 $quick_list_html .= "</ul>";
 
-                $feature_body .= $quick_list_html;
-
                 $feature_body .= <<<HTML
-                <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
-                    <div class="flex_column" style="margin-right:var(--form_spacing);">
-                        Od
-                        <div class="glue_children">
-                            <input class="field inline from" inputmode="numeric">
-                            $from_select
+                    <div class="tab_menu">
+                        <div class="tab_header glue_children" style="margin-bottom:7px;">
+                            <div class="tab_option current" data-tab_id="1">
+                                Lista
+                            </div>
+                            <div class="tab_option" data-tab_id="2">
+                                Przedział
+                            </div>
+                        </div>
+                        <div class="tab_content" data-tab_id="1">
+                            $quick_list_html
+                        </div>
+                        <div class="tab_content hidden" data-tab_id="2">
+                            <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
+                                <div class="flex_column" style="margin-right:var(--form_spacing);">
+                                    Od
+                                    <div class="glue_children">
+                                        <input class="field inline from" inputmode="numeric">
+                                        $from_select
+                                    </div>
+                                </div>
+                                <div class="flex_column">
+                                    Do
+                                    <div class="glue_children">
+                                        <input class="field inline to" inputmode="numeric">
+                                        $to_select
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex_column">
-                        Do
-                        <div class="glue_children">
-                            <input class="field inline to" inputmode="numeric">
-                            $to_select
-                        </div>
-                    </div>
-                </div>
 HTML;
             } else {
                 echo "missing html !!!";

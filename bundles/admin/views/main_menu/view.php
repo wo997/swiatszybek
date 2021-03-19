@@ -37,29 +37,29 @@
             <div class="category-picker" name="parent_id" data-source="menu" data-single></div>
 
             <div class="label">Powiązanie</div>
-            <div class="tab-menu tab-menu-link">
-                <div class="tab-header">
-                    <div class="tab-option" data-tab_id="1">
+            <div class="tab_menu tab_menu-link">
+                <div class="tab_header">
+                    <div class="tab_option" data-tab_id="1">
                         Link URL
                     </div>
-                    <div class="tab-option" data-tab_id="2">
+                    <div class="tab_option" data-tab_id="2">
                         Strona CMS
                     </div>
-                    <div class="tab-option" data-tab_id="3">
+                    <div class="tab_option" data-tab_id="3">
                         Produkt
                     </div>
                 </div>
-                <div class="tab-content hidden" data-tab_id="1">
+                <div class="tab_content hidden" data-tab_id="1">
                     <div class="label">Wpisz link do strony - URL</div>
                     <input type="text" name="url" autocomplete="off" class="field" data-validate>
                 </div>
-                <div class="tab-content hidden" data-tab_id="2">
+                <div class="tab_content hidden" data-tab_id="2">
                     <div class="field-wrapper">
                         <div class="label">Wskaż stronę CMS</div>
                         <div class="strony"></div>
                     </div>
                 </div>
-                <div class="tab-content hidden" data-tab_id="3">
+                <div class="tab_content hidden" data-tab_id="3">
                     <div class="field-wrapper">
                         <div class="label">Wskaż produkt</div>
                         <div class="produkty"></div>

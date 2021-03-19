@@ -1,26 +1,32 @@
 /* css[global] */
 
-.tab-option {
-	padding: 5px 10px;
-	background: #fff;
-	margin-bottom: -1px;
-	margin-right: 5px;
-	border: 1px solid #ccc;
-	background: #fafafa;
-	color: #666;
-	cursor: pointer;
-}
-
-.tab-header {
-	display: flex;
-}
-.tab-content {
-	padding: 5px;
-	border: 1px solid #bbb;
-}
-
-.tab-option.current {
-	background: #fff;
-	color: black;
-	border-bottom-color: white;
+.tab_option {
+	& {
+		padding: 5px 10px;
+		border: 1px solid #ccc;
+		background: #fff;
+		color: #777;
+		cursor: pointer;
+		flex-grow: 1;
+		border-radius: 4px;
+		text-align: center;
+		flex-basis: 0;
+		position: relative;
+	}
+	&:not(:last-child) {
+		margin-right: -1px;
+	}
+	&.current {
+		// background: #eee;
+		// font-weight: 600;
+		background: #f0f0ff;
+		color: #379;
+		font-weight: 600;
+		border-color: #69a;
+		z-index: 10;
+	}
+	&:not(.current):hover {
+		background: #eee;
+		box-shadow: 0 2px 3px 0 #0003;
+	}
 }

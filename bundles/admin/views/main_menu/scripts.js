@@ -188,7 +188,7 @@ function loadCategoryForm(formId, data, isNew) {
 	var tab_id = 1;
 	if (data.cms_id) tab_id = 2;
 	if (data.product_id) tab_id = 3;
-	showTab($(".tab-menu-link"), tab_id);
+	showTab($(".tab_menu-link"), tab_id);
 
 	formElement._child(".caseCanDelete").classList.toggle("hidden", isNew);
 	formElement._child(`.btn.red`).toggleAttribute("disabled", !canDelete);
@@ -201,7 +201,7 @@ function saveCategoryForm(remove = false) {
 		return;
 	}
 
-	$$(".tab-menu-link .tab-content.hidden input").forEach((e) => {
+	$$(".tab_menu-link .tab_content.hidden input").forEach((e) => {
 		e.value = "";
 	});
 
