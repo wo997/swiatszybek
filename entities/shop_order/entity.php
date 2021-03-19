@@ -14,6 +14,7 @@ EntityManager::register("shop_order", [
         "delivery_id" => ["type" => "number"],
         "rebate_codes" => ["type" => "string"],
         "ordered_products" => ["type" => "ordered_product[]"],
+        "ordered_at" => ["type" => "string"],
     ],
 ]);
 

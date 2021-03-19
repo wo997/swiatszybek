@@ -13,6 +13,7 @@ domload(() => {
 			{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
 			{ label: "Wartość", key: "total_price", width: "1", sortable: true, searchable: "string" },
 			{ label: "Status", key: "status_id", width: "1", sortable: true, searchable: "string" },
+			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
 			{
 				label: "Akcja",
 				key: "stock",
