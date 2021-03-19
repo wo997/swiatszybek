@@ -20,6 +20,15 @@ Reference: <?= $shop_order->getProp("reference") ?>
 
 <br>
 
+<?php
+$user = $shop_order->getParent("user");
+if ($user) {
+    echo json_encode($user->getSimpleProps(), JSON_PRETTY_PRINT) . "<br><br>";
+}
+
+?>
+
+
 <?= json_encode($shop_order->getAllProps(), JSON_PRETTY_PRINT) ?>
 
 <?php include "bundles/global/templates/default.php"; ?>

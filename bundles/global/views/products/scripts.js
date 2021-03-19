@@ -438,6 +438,9 @@ window.addEventListener("popstate", () => {
 
 function productsPopState() {
 	current_url_search = def(window.location.search, "");
+	if (current_url_search.charAt(0)) {
+		current_url_search = current_url_search.substr(1);
+	}
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
 	setSearchPhraseFromUrl();
