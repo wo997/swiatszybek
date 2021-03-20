@@ -47,6 +47,9 @@ domload(() => {
 				const images_json = product_img_wrapper.dataset.images;
 				if (images_json) {
 					const images = JSON.parse(images_json);
+					if (images.length < 2) {
+						return;
+					}
 					product_img_wrapper.insertAdjacentHTML("beforeend", html`<img class="wo997_img product_img overlay" />`);
 					const base_img = product_img_wrapper._first();
 					const overlay = product_img_wrapper._last();
@@ -90,7 +93,7 @@ domload(() => {
 			const base_img = was_focused_product_img_wrapper._first();
 			const overlay = was_focused_product_img_wrapper._last();
 
-			if (overlay) {
+			if (overlay && images.length > 1) {
 				overlay.style.opacity = "1";
 				overlay.setAttribute("src", images[0].img_url);
 				setTimeout(() => {

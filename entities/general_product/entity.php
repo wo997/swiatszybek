@@ -39,7 +39,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $features[] = ["id" => $general_product_feature->getProp("product_feature_id"), "pos" => $general_product_feature->getMeta()["pos"]];
     }
     usort($features, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
-    $sorted_feature_ids_str = join(",", array_column($features, "id"));
+    $sorted_feature_ids = array_column($features, "id");
+    $sorted_feature_ids_str = join(",", $sorted_feature_ids);
 
     $main_img_url = "";
 
@@ -68,10 +69,10 @@ EventListener::register("before_save_general_product_entity", function ($params)
             $alone_option_ids[] = $option_ids[0];
         }
     }
-    $alone_option_ids_csv = join(",", $alone_option_ids);
+    //$alone_option_ids_csv = join(",", $alone_option_ids);
 
     foreach ($products as $product) {
-        $product_id = $product->getId();
+        //$product_id = $product->getId();
 
         /** @var Entity[] ProductFeatureOption */
         $feature_options = $product->getProp("feature_options");
@@ -116,25 +117,31 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $specific_option_ids = [];
         $specific_option_values = [];
         if ($sorted_feature_ids_str) {
-            $where = "product_id = $product_id";
-            if ($alone_option_ids_csv) {
-                $where .= " AND product_feature_option_id NOT IN ($alone_option_ids_csv)";
+            /** @var Entity[] ProductFeatureOption */
+            $product_feature_options = $product->getProp("feature_options");
+
+            $product_feature_options_data = [];
+            foreach ($product_feature_options as $product_feature_option) {
+                $product_feature_option_id = $product_feature_option->getId();
+                if (in_array($product_feature_option_id, $alone_option_ids)) {
+                    continue;
+                }
+                $product_feature_options_data[] = [
+                    "value" => $product_feature_option->getProp("value"),
+                    "pos" => array_search($product_feature_option->getProp("product_feature_id"), $sorted_feature_ids),
+                    "id" => $product_feature_option_id,
+                ];
             }
+            usort($product_feature_options_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
 
-            // works because we never set both things at once, I mean products and features
-            $option_values = DB::fetchArr("SELECT pfo.value, product_feature_option_id
-                FROM product_to_feature_option INNER JOIN product_feature_option pfo USING (product_feature_option_id)
-                WHERE $where
-                ORDER BY FIELD(product_feature_id,$sorted_feature_ids_str)");
-
-            foreach ($option_values as $option) {
-                if ($option["value"]) {
-                    $product_name .= " | " . $option["value"];
+            foreach ($product_feature_options_data as $option_data) {
+                if ($option_data["value"]) {
+                    $product_name .= " | " . $option_data["value"];
                 }
             }
 
-            $specific_option_ids = array_column($option_values, "product_feature_option_id");
-            $specific_option_values = array_column($option_values, "value");
+            $specific_option_ids = array_column($product_feature_options_data, "id");
+            $specific_option_values = array_column($product_feature_options_data, "value");
         }
 
         $product_url = "";

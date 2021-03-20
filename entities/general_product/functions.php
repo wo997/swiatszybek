@@ -26,7 +26,7 @@ function getGlobalProductsSearch($url, $options = [])
     $from = "
         general_product gp
         INNER JOIN product p USING (general_product_id)
-        INNER JOIN general_product_to_category gptc USING (general_product_id)
+        LEFT JOIN general_product_to_category gptc USING (general_product_id)
     ";
 
     $query_counter = 0;

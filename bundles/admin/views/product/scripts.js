@@ -23,6 +23,7 @@ domload(() => {
 	data.general_product_id = general_product_data ? general_product_data.general_product_id : -1;
 	if (general_product_data) {
 		data.name = general_product_data.name;
+		data.active = general_product_data.active;
 
 		data.product_feature_ids = [];
 		for (const feature of general_product_data.features.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
