@@ -29,22 +29,28 @@
 }
 
 .buy_now_container {
-	margin: 0 auto;
-	width: 100%;
-}
+	& {
+		margin: 0 auto;
+		width: 100%;
+	}
 
-.add_rebate_code_btn,
-.cart_summary {
-	margin-top: var(--form_spacing);
-}
+	.add_rebate_code_btn,
+	.cart_summary {
+		margin-top: var(--form_spacing);
+	}
 
-.cart_summary {
-	font-weight: 600;
-}
+	.cart_summary {
+		font-weight: 600;
+	}
 
-.buy_products .list_row {
-	padding-left: 5px;
-	padding-right: 5px;
+	.buy_products .list_row {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+	.account_buttons {
+		max-width: 350px;
+	}
 }
 
 .rebate_code_block {
@@ -67,30 +73,28 @@
 	}
 }
 
-.account_buttons {
-	max-width: 350px;
-}
-
 @media only screen and (max-width: 999px) {
 	.buy_now_container {
-		max-width: 600px;
-	}
+		& {
+			max-width: 600px;
+		}
 
-	.desktop_view {
-		display: none;
-	}
+		.desktop_view {
+			display: none;
+		}
 
-	.cart_summary_wrapper {
-		text-align: center;
-	}
+		.cart_summary_wrapper {
+			text-align: center;
+		}
 
-	.buy_products_wrapper {
-		margin-bottom: 20px;
-	}
+		.buy_products_wrapper {
+			margin-bottom: 20px;
+		}
 
-	.choosen_account {
-		max-width: 350px;
-		margin: auto;
+		.choosen_account {
+			max-width: 350px;
+			margin: auto;
+		}
 	}
 }
 
@@ -107,37 +111,39 @@
 		margin-top: 100px;
 	}
 
-	.products_cart_panel {
-		max-height: min(calc(100vh - var(--header_height) - 365px), 500px);
-	}
+	.buy_now_container {
+		.products_cart_panel {
+			max-height: min(calc(100vh - var(--header_height) - 365px), 500px);
+		}
 
-	.buy_now_form {
-		margin-left: 50%;
-		width: 500px;
-		transform: translateX(-100%);
-		margin-top: 100px;
-	}
+		.buy_now_form {
+			margin-left: 50%;
+			width: 500px;
+			transform: translateX(-100%);
+			margin-top: 100px;
+		}
 
-	.buy_now_form h1 {
-		height: 0;
-		margin: 0;
-		transform: translateY(-60px);
-	}
+		.buy_now_form h1 {
+			height: 0;
+			margin: 0;
+			transform: translateY(-60px);
+		}
 
-	.mobile_view {
-		display: none;
-	}
+		.mobile_view {
+			display: none;
+		}
 
-	.cart_summary_wrapper {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-	}
+		.cart_summary_wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+		}
 
-	.cart_summary {
-		text-align: right;
-		margin-top: 10px;
-		line-height: 1.7;
+		.cart_summary {
+			text-align: right;
+			margin-top: 10px;
+			line-height: 1.7;
+		}
 	}
 }
 

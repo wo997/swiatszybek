@@ -44,33 +44,57 @@ $ordered_products = $shop_order->getProp("ordered_products");
 ?>
 
 <div class="order_all">
-    <div class="label big center">Zamówienie #<?= $shop_order->getId() ?></div>
+    <h1 class="h1 center">Zamówienie #<?= $shop_order->getId() ?></h1>
 
     <div class="order_container">
         <div class="order_details">
-            <div class="label medium">Klient</div>
-            <div><?= $main_address->getProp("__display_name") ?></div>
+            <div class="label big first">Dane kontaktowe</div>
 
-            <div class="label medium">Adres</div>
+            <?php if ($main_address->getProp("party") === "company") : ?>
+                <div class="label">Firma</div>
+                <div><?= $main_address->getProp("__display_name") ?></div>
+
+                <div class="label">NIP</div>
+                <div><?= $main_address->getProp("nip") ?></div>
+            <?php else : ?>
+                <div class="label">Imię i nazwisko</div>
+                <div><?= $main_address->getProp("__display_name") ?></div>
+            <?php endif ?>
+
+            <div class="label">Email</div>
+            <div><?= $main_address->getProp("email") ?></div>
+
+            <div class="label">Nr telefonu</div>
+            <div><?= $main_address->getProp("phone") ?></div>
+
+            <div class="label">Adres</div>
             <div><?= $main_address->getProp("__address_line_1") ?></div>
             <div><?= $main_address->getProp("__address_line_2") ?></div>
 
             <?php if ($courier_address) : ?>
-                <div class="label medium">Adres dostawy</div>
+                <div class="label big bold">Kurier</div>
+                <div class="label">Adres dostawy</div>
                 <div><?= $courier_address->getProp("__address_line_1") ?></div>
                 <div><?= $courier_address->getProp("__address_line_2") ?></div>
+                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("__display_address")) ?>">
+                    Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
+                </a>
             <?php endif ?>
 
             <?php if ($parcel_locker) : ?>
-                <div class="label medium">Adres dostawy</div>
+                <div class="label big">Paczkomat</div>
+                <div class="label">Adres dostawy</div>
                 <div><?= $parcel_locker->getProp("name") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_2") ?></div>
+                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode("Paczkomat " . $parcel_locker->getProp("name")) ?>">
+                    Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
+                </a>
             <?php endif ?>
         </div>
 
         <div class="order_products">
-            <div class="label medium">Produkty</div>
+            <div class="label big first">Produkty</div>
 
             <ul>
                 <?php

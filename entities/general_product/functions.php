@@ -23,11 +23,11 @@ function getGlobalProductsSearch($url, $options = [])
 
     $unique_option_ids = [];
 
-    $from = "
-        general_product gp
-        INNER JOIN product p USING (general_product_id)
-        LEFT JOIN general_product_to_category gptc USING (general_product_id)
-    ";
+    $from = "general_product gp INNER JOIN product p USING (general_product_id)";
+    if ($product_category_id !== -1) {
+        $from .= "INNER JOIN general_product_to_category gptc USING (general_product_id)";
+        $where .= " AND gptc.product_category_id = $product_category_id";
+    }
 
     $query_counter = 0;
     foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
@@ -71,10 +71,6 @@ function getGlobalProductsSearch($url, $options = [])
                 $max = floatval(preg_replace("/^0/", "0.", $max)) + 0.000001;
                 $where .= " AND pfo_$query_counter.double_value <= $max";
             }
-        }
-
-        if ($product_category_id !== -1) {
-            $where .= " AND gptc.product_category_id = $product_category_id";
         }
 
         if ($price_min !== "") {

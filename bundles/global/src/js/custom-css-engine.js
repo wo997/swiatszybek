@@ -30,9 +30,10 @@ function setCustomHeights() {
 			height = height.replace("w", "");
 			const real_height = Math.floor(r.width * parseFloat(height));
 
-			if (Math.abs(r.height - real_height) > 2) {
-				node.style.height = `${real_height}px`;
-			}
+			// sometimes it's just the right size by default, probably when it was set by this script actually
+			// if (Math.abs(r.height - real_height) > 2) {
+			// }
+			node.style.height = `${real_height}px`;
 		} else {
 			node.style.height = height;
 		}
