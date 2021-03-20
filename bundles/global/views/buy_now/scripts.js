@@ -58,8 +58,9 @@ domload(() => {
 	const accept_regulations_check = buy_now_form._child(".accept_regulations");
 
 	if (IS_LOGGED) {
-		expand(case_choosen_account, true);
-		expand(choosen_account, false);
+		// done in the view
+		// expand(case_choosen_account, true);
+		// expand(choosen_account, false);
 	} else {
 		buy_without_registration.addEventListener("click", () => {
 			expand(case_choosen_account, true, { full_height_all_time: true });

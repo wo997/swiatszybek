@@ -6,9 +6,8 @@
 
 #modal_wrapper {
 	position: fixed;
-	width: 100vw;
+	width: 100%;
 	height: calc(var(--vh, 1vh) * 100);
-	/*background-color: rgba(0, 0, 0, 0.4);*/
 	top: 0;
 	left: 0;
 	z-index: 1500;

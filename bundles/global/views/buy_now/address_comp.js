@@ -77,13 +77,13 @@ function addressComp(comp, parent, data = undefined) {
 					<div class="checkbox_area box">
 						<div>
 							<p-checkbox data-value="person"></p-checkbox>
-							<span>Osoba prywatna</span>
+							<span class="semi-bold">Osoba prywatna</span>
 						</div>
 					</div>
 					<div class="checkbox_area box">
 						<div>
 							<p-checkbox data-value="company"></p-checkbox>
-							<span>Firma</span>
+							<span class="semi-bold">Firma</span>
 						</div>
 					</div>
 				</div>

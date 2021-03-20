@@ -65,6 +65,7 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
         //     $ordered_products[] = $ordered_product;
         // }
         // $shop_order->setProp("ordered_products", $ordered_products);
+
         $shop_order->setProp("ordered_products", $cart_data["products"]); // ezy
 
         $shop_order->setProp("status_id", 1);

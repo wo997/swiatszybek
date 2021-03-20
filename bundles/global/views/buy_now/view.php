@@ -56,7 +56,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <div class="buy_now_form">
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
-        <div class="expand_y choosen_account">
+        <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
             <div class="label big first">Wybór konta</div>
 
             <p class="semi-bold">Zalety korzystania z konta LSIT.pl</p>
@@ -80,7 +80,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
         </div>
 
-        <div class="expand_y animate_hidden hidden case_choosen_account">
+        <div class="expand_y case_choosen_account <?= !User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
             <div class="label big first your_address_label">Twój adres</div>
             <address-comp class="main_address"></address-comp>
 
@@ -89,19 +89,22 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <div class="checkbox_area box">
                     <div>
                         <p-checkbox data-value="courier"></p-checkbox>
-                        <span>Kurier</span>
+                        <span class="semi-bold">Kurier</span>
+                        <span class="pln">20 zł</span>
                     </div>
                 </div>
                 <div class="checkbox_area box">
                     <div>
                         <p-checkbox data-value="parcel_locker"></p-checkbox>
-                        <span>Paczkomat</span>
+                        <span class="semi-bold">Paczkomat</span>
+                        <span class="pln">15 zł</span>
                     </div>
                 </div>
                 <div class="checkbox_area box">
                     <div>
                         <p-checkbox data-value="in_person"></p-checkbox>
-                        <span>Odbiór osobisty</span>
+                        <span class="semi-bold">Odbiór osobisty</span>
+                        <span class="pln">0 zł</span>
                     </div>
                 </div>
             </div>
@@ -111,8 +114,8 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <div class="label big">Adres wysyłki</div>
 
             <div class="checkbox_area">
+                <span class="semi-bold block" style="margin-bottom:5px">Chcę użyć innego adresu do wysyłki</span>
                 <p-checkbox class="courier_address_different"></p-checkbox>
-                <span class="semi-bold">Chcę użyć innego adresu do wysyłki</span>
             </div>
 
             <div class="expand_y animate_hidden hidden case_courier_address_different">
