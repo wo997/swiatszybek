@@ -97,6 +97,20 @@ function getPhysicalMeasures()
                 ],
             ]
         ],
+        "price" => [
+            "description" => "Cena",
+            "base_unit" => "zł",
+            "units" => [
+                [
+                    "name" => "gr",
+                    "factor" => 0.01
+                ],
+                [
+                    "name" => "zł",
+                    "factor" => 1
+                ],
+            ]
+        ],
     ];
 }
 

@@ -11,11 +11,6 @@ function getGlobalProductsSearch($url, $options = [])
     $page_id = intval(def($get_vars, "str", 1)) - 1;
     $row_count = intval(def($get_vars, "ile", 25));
 
-    $price_str = def($get_vars, "cena", "");
-    $price_parts = explode("do", $price_str);
-    $price_min = def($price_parts, 0, "");
-    $price_max = def($price_parts, 1, "");
-
     /** @var DatatableParams */
     $datatable_params = ["page_id" => $page_id, "row_count" => $row_count, "filters" => []];
 
@@ -62,22 +57,26 @@ function getGlobalProductsSearch($url, $options = [])
         $max = strpos($range_str, "do") === false ? $min : def($val_parts, 1, "");
 
         if ($min !== "" || $max !== "") {
-            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id AND pfo_$query_counter.product_feature_id = $product_feature_id";
+            $is_cena = $product_feature_id === "cena";
+            if (!$is_cena) {
+                $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id AND pfo_$query_counter.product_feature_id = $product_feature_id";
+            }
             if ($min !== "") {
                 $min = floatval(preg_replace("/^0/", "0.", $min)) - 0.000001;
-                $where .= " AND pfo_$query_counter.double_value >= $min";
+                if ($is_cena) {
+                    $where .= " AND gross_price >= $min";
+                } else {
+                    $where .= " AND pfo_$query_counter.double_value >= $min";
+                }
             }
             if ($max !== "") {
                 $max = floatval(preg_replace("/^0/", "0.", $max)) + 0.000001;
-                $where .= " AND pfo_$query_counter.double_value <= $max";
+                if ($is_cena) {
+                    $where .= " AND gross_price <= $max";
+                } else {
+                    $where .= " AND pfo_$query_counter.double_value <= $max";
+                }
             }
-        }
-
-        if ($price_min !== "") {
-            $where .= " AND p.gross_price >= " . floatval($price_min);
-        }
-        if ($price_max !== "") {
-            $where .= " AND p.gross_price <= " . floatval($price_max);
         }
     }
 

@@ -139,6 +139,16 @@ function traverseFeatures()
         return "";
     }
     $html = "";
+
+    $product_features[] = [
+        "product_feature_id" => "cena",
+        "name" => "Cena",
+        "data_type" => "double_value",
+        "physical_measure" => "price",
+        "list_type" => "",
+        "extra" => "[]",
+    ];
+
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
 
@@ -153,10 +163,16 @@ function traverseFeatures()
             }
         } else {
             if ($product_feature["data_type"] === "double_value") {
-                $double_values = DB::fetchArr("SELECT double_value as v, COUNT(DISTINCT general_product_id) as c FROM product_feature_option
-                INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
-                INNER JOIN product p USING(product_id)
-                WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
+                $is_cena = $product_feature["product_feature_id"] === "cena";
+                if ($is_cena) {
+                    $double_values = DB::fetchArr("SELECT p.gross_price as v, COUNT(DISTINCT general_product_id) as c FROM product p
+                        WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
+                } else {
+                    $double_values = DB::fetchArr("SELECT double_value as v, COUNT(DISTINCT general_product_id) as c FROM product_feature_option
+                        INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
+                        INNER JOIN product p USING(product_id)
+                        WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
+                }
 
                 // $time = microtime(true);
                 // $double_values = array_merge($double_values, $double_values);
@@ -185,38 +201,20 @@ function traverseFeatures()
 
                 $feature_label .= " ($pretty_min - $pretty_max)";
 
-                $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-                if ($physical_measure_data) {
-                    $options = "";
-                    $units = $physical_measure_data["units"];
-                    $unit_count = count($units);
-                    for ($i = 0; $i < $unit_count; $i++) {
-                        $unit = $units[$i];
-                        $factor = $unit["factor"];
-                        $name = $unit["name"];
-
-                        if ($max_value + 0.000001 < $factor) {
-                            continue;
-                        }
-
-                        $next_unit = def($units, $i + 1, null);
-                        if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
-                            continue;
-                        }
-
-                        $options .= "<option value=\"$factor\">$name</option>";
-                    }
-
-                    $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";
-                    $to_select = "<select class=\"field inline blank unit_picker to\">$options</select>";
-                } else {
-                    $from_select = "";
-                    $to_select = "";
-                }
-
                 $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\" class=\"double_value_quick_list\">";
 
                 setRangesFromLongDataset($double_values, 4);
+
+                $unit_map = [];
+
+                $add_unit = function (&$unit_map, $pretty_val) {
+                    if ($unit = def(explode(" ", $pretty_val), 1)) {
+                        if (!isset($unit_map[$unit])) {
+                            $unit_map[$unit] = 0;
+                        }
+                        $unit_map[$unit]++;
+                    }
+                };
 
                 foreach ($double_values as $double_value) {
                     $value = $double_value["v"];
@@ -224,9 +222,12 @@ function traverseFeatures()
                     $count = $double_value["c"];
                     $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
                     $search_value = getSafeNumber($value);
+                    $add_unit($unit_map, $pretty_val);
                     if ($max) {
-                        $pretty_val .= " - " . prettyPrintPhysicalMeasure($max, $physical_measure);
+                        $max_pretty_val = prettyPrintPhysicalMeasure($max, $physical_measure);
+                        $pretty_val .= " - " . $max_pretty_val;
                         $search_value .= "do" . getSafeNumber($max);
+                        $add_unit($unit_map, $max_pretty_val);
                     }
 
                     $quick_list_html .= "<li class=\"option_row\">";
@@ -238,6 +239,46 @@ function traverseFeatures()
                     $quick_list_html .= "</li>";
                 }
                 $quick_list_html .= "</ul>";
+
+                $most_unit = "";
+                $most_unit_cnt = 0;
+                foreach ($unit_map as $unit => $unit_cnt) {
+                    if ($unit_cnt > $most_unit_cnt) {
+                        $most_unit_cnt = $unit_cnt;
+                        $most_unit = $unit;
+                    }
+                }
+
+                $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
+                if ($physical_measure_data) {
+                    $options = "";
+                    $units = $physical_measure_data["units"];
+                    $unit_count = count($units);
+                    for ($i = 0; $i < $unit_count; $i++) {
+                        $unit = $units[$i];
+                        $factor = $unit["factor"];
+                        $name = $unit["name"];
+
+                        $selected = $name === $most_unit ? "selected" : "";
+
+                        if ($max_value + 0.000001 < $factor) {
+                            continue;
+                        }
+
+                        $next_unit = def($units, $i + 1, null);
+                        if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
+                            continue;
+                        }
+
+                        $options .= "<option value=\"$factor\" $selected>$name</option>";
+                    }
+
+                    $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";
+                    $to_select = "<select class=\"field inline blank unit_picker to\">$options</select>";
+                } else {
+                    $from_select = "";
+                    $to_select = "";
+                }
 
                 $feature_body .= <<<HTML
                     <div class="tab_menu">
@@ -350,26 +391,6 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 </div>
                 <ul class="product_features">
                     <?= traverseFeatures() ?>
-
-                    <li class="feature_row">
-                        <span class="feature_label">Cena (<?= $prices_data["min_gross_price"] . " zł - " . $prices_data["max_gross_price"] . " zł" ?>)</span>
-                        <div class="flex_children_width">
-                            <div class="flex_column" style="margin-right:var(--form_spacing);">
-                                Od
-                                <div class="float_icon flex">
-                                    <input class="field inline price_min" inputmode="numeric">
-                                    <i>zł</i>
-                                </div>
-                            </div>
-                            <div class="flex_column">
-                                Do
-                                <div class="float_icon flex">
-                                    <input class="field inline price_max" inputmode="numeric">
-                                    <i>zł</i>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                 </ul>
             </div>
         </div>

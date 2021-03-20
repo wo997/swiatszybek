@@ -27,11 +27,6 @@ let product_list_pagination_comp;
 /** @type {XMLHttpRequest} */
 let search_product_list_xhr;
 
-/** @type {PiepNode} */
-let search_products_price_min;
-/** @type {PiepNode} */
-let search_products_price_max;
-
 const search_products_input_delay = 400;
 
 /** @type {string} */
@@ -48,7 +43,6 @@ domload(() => {
 
 	products_all.classList.add("ready");
 
-	initPrices();
 	initRangeFilters();
 	initProductFeatures();
 	initProductCategories();
@@ -414,24 +408,6 @@ function initPagination() {
 	});
 }
 
-function initPrices() {
-	search_products_price_min = $(".searching_wrapper .price_min");
-	search_products_price_max = $(".searching_wrapper .price_max");
-
-	search_products_price_min.addEventListener("input", () => {
-		delay("mainSearchProducts", search_products_input_delay);
-	});
-	search_products_price_min.addEventListener("change", () => {
-		delay("mainSearchProducts");
-	});
-	search_products_price_max.addEventListener("input", () => {
-		delay("mainSearchProducts", search_products_input_delay);
-	});
-	search_products_price_max.addEventListener("change", () => {
-		delay("mainSearchProducts");
-	});
-}
-
 window.addEventListener("popstate", () => {
 	productsPopState();
 });
@@ -488,19 +464,10 @@ function setCategoryFeaturesFromUrl() {
 		}
 	});
 
-	// paginatiobn
+	// pagination
 	product_list_pagination_comp._data.page_id = +def(url_params.get("str"), "1") - 1;
 	product_list_pagination_comp._data.row_count = +def(url_params.get("ile"), "25");
 	product_list_pagination_comp._render();
-
-	// price
-	/** @type {string} */
-	const price_str = def(url_params.get("cena"), "");
-	const price_parts = price_str.split("do");
-	const price_min = def(price_parts[0], "");
-	const price_max = def(price_parts[1], "");
-	search_products_price_min._set_value(price_min, { quiet: true });
-	search_products_price_max._set_value(price_max, { quiet: true });
 }
 
 function getSelectedOptionsData() {
@@ -567,13 +534,6 @@ function mainSearchProducts(force = false) {
 
 	if (options_data.length > 0) {
 		url_params.append("v", options_data.map((e) => e.option_ids.join("i")).join("-"));
-	}
-
-	const price_min = search_products_price_min._get_value();
-	const price_max = search_products_price_max._get_value();
-
-	if (price_min.trim() !== "" || price_max.trim() !== "") {
-		url_params.append("cena", def(price_min, "") + "do" + def(price_max, ""));
 	}
 
 	if (product_list_pagination_comp._data.page_id > 0) {
