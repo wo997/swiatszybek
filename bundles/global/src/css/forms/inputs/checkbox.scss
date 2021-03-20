@@ -24,7 +24,6 @@ p-checkbox {
 	user-select: none;
 	font-size: 0.8em;
 	transition: 0.2s box-shadow;
-	margin: -5px 0;
 }
 
 p-checkbox::before {
@@ -70,6 +69,9 @@ p-checkbox:not(.checked) .circle {
 
 p-checkbox {
 	display: block;
+}
+p-checkbox.inline {
+	margin: -5px 0;
 }
 .checkbox_area {
 	& {
