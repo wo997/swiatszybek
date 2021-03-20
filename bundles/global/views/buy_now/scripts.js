@@ -49,6 +49,7 @@ domload(() => {
 	const delivery_input = buy_now_form._child(".delivery");
 	const case_courier = buy_now_form._child(".case_courier");
 	const case_parcel_locker = buy_now_form._child(".case_parcel_locker");
+	const case_in_person = buy_now_form._child(".case_in_person");
 	const case_form_filled = buy_now_form._child(".case_form_filled");
 	const courier_address_different_input = buy_now_form._child(".courier_address_different");
 	const case_courier_address_different = buy_now_form._child(".case_courier_address_different");
@@ -78,6 +79,7 @@ domload(() => {
 		const delivery = delivery_input._get_value();
 		expand(case_courier, delivery === "courier");
 		expand(case_parcel_locker, delivery === "parcel_locker");
+		expand(case_in_person, delivery === "in_person");
 		expand(case_form_filled, true, { full_height_all_time: true });
 
 		const rect = delivery_input.getBoundingClientRect();
@@ -283,7 +285,7 @@ function initRebateCodes() {
 function onBuyNowScroll() {
 	const scroll_top = document.documentElement.scrollTop;
 	const margin_top = window.innerWidth < 1000 ? 0 : clamp(10, 100 - scroll_top, 100);
-	buy_products_wrapper.style.marginTop = `${margin_top}px`;
+	buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
 }
 
 // @ts-ignore

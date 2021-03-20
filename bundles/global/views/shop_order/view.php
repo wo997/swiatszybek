@@ -144,6 +144,8 @@ $requires_payment = $shop_order->getProp("status_id") === 1;
             </ul>
         </div>
     </div>
+
+    <div style="height: 70px"></div>
 </div>
 
 <?php include "bundles/global/templates/default.php"; ?>

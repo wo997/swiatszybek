@@ -128,18 +128,20 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
         </div>
 
+        <div class="expand_y animate_hidden hidden case_in_person">
+            <div class="label big">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
+        </div>
+
         <div class="expand_y animate_hidden hidden case_form_filled">
-            <div class="label big">Potwierdzenie</div>
+            <div class="label big">Opłać zamówienie (<span class="cart_total_price"></span>)</div>
+            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
 
             <div class="checkbox_area">
                 <p-checkbox class="square accept_regulations"></p-checkbox>
                 <span class="semi-bold">Akceptuję regulamin</span>
             </div>
 
-            <div class="label big">Opłać zamówienie (<span class="cart_total_price"></span>)</div>
-            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
-
-            <button class="btn medium fill confirm_order pay_btn">Potwierdzam i płacę</button>
+            <button class="btn medium fill confirm_order pay_btn space_top">Potwierdzam i płacę</button>
 
             <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
         </div>
