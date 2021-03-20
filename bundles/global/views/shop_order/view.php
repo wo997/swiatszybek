@@ -41,6 +41,7 @@ $parcel_locker = $shop_order->getProp("parcel_locker");
 /** @var Entity[] OrderedProduct */
 $ordered_products = $shop_order->getProp("ordered_products");
 
+$requires_payment = $shop_order->getProp("status_id") === 1;
 ?>
 
 <div class="order_all">
@@ -48,7 +49,32 @@ $ordered_products = $shop_order->getProp("ordered_products");
 
     <div class="order_container">
         <div class="order_details">
-            <div class="label big first">Dane kontaktowe</div>
+            <div class="label big first">Status zamówienia</div>
+            <div class="status_rect requires_payment">Oczekuje na opłatę</div>
+
+            <?php if ($requires_payment) : ?>
+                <!-- <div class="label medium">Wybierz metodę płatności</div>
+                <div class="radio_group payment_method">
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="przelewy24"></p-checkbox>
+                        <span>
+                            <img src="/src/img/przelewy24-vector-logo.svg" style="width:100px;vertical-align: middle;">
+                        </span>
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="random"></p-checkbox>
+                        <span>
+                            <img src="/src/img/target_icon.svg" style="width:50px;vertical-align: middle;">
+                        </span>
+                    </div>
+                </div> -->
+                <div class="label big">Opłać zamówienie (<?= $shop_order->getProp("total_price"); ?> zł)</div>
+                <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
+                <a class="btn fill medium pay_btn" href="/przelewy24/pay">Płacę</a>
+            <?php endif ?>
+
+
+            <div class="label big">Dane kontaktowe</div>
 
             <?php if ($main_address->getProp("party") === "company") : ?>
                 <div class="label">Firma</div>
@@ -72,19 +98,17 @@ $ordered_products = $shop_order->getProp("ordered_products");
             <div><?= $main_address->getProp("__address_line_2") ?></div>
 
             <?php if ($courier_address) : ?>
-                <div class="label big bold">Kurier</div>
-                <div class="label">Adres dostawy</div>
+                <div class="label big bold">Dostawa (kurier)</div>
                 <div><?= $courier_address->getProp("__address_line_1") ?></div>
                 <div><?= $courier_address->getProp("__address_line_2") ?></div>
-                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("__display_address")) ?>">
+                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) ?>">
                     Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
                 </a>
             <?php endif ?>
 
             <?php if ($parcel_locker) : ?>
-                <div class="label big">Paczkomat</div>
-                <div class="label">Adres dostawy</div>
-                <div><?= $parcel_locker->getProp("name") ?></div>
+                <div class="label big bold">Dostawa (paczkomat)</div>
+                <div> <?= $parcel_locker->getProp("name") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_2") ?></div>
                 <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode("Paczkomat " . $parcel_locker->getProp("name")) ?>">

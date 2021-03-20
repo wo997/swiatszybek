@@ -85,7 +85,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>
-            <div class="radio_group boxes columns_2 hide_checks delivery">
+            <div class="radio_group boxes columns_3 hide_checks delivery">
                 <div class="checkbox_area box">
                     <div>
                         <p-checkbox data-value="courier"></p-checkbox>
@@ -96,6 +96,12 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <div>
                         <p-checkbox data-value="parcel_locker"></p-checkbox>
                         <span>Paczkomat</span>
+                    </div>
+                </div>
+                <div class="checkbox_area box">
+                    <div>
+                        <p-checkbox data-value="in_person"></p-checkbox>
+                        <span>Odbiór osobisty</span>
                     </div>
                 </div>
             </div>
@@ -130,21 +136,19 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <span class="semi-bold">Akceptuję regulamin</span>
             </div>
 
-            <button class="btn primary medium fill space_top confirm_order">Potwierdzam zamówienie</button>
+            <div class="label big">Opłać zamówienie (<span class="cart_total_price"></span>)</div>
+            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
+
+            <button class="btn medium fill confirm_order pay_btn">Potwierdzam i płacę</button>
 
             <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
-            <div style="margin-top: 15px;">W następnym kroku dokonasz płatności (<span class="cart_total_price pln"></span>) za zamówienie jedną z poniższych metod:</div>
-            Przelew Bankowy<br>
-            bla<br>
-            bla<br>
-            bla
         </div>
     </div>
 </div>
 
 <div style="height: 70px"></div>
 
-<div id="InpostParcelLockerPicker" data-modal data-expand data-dismissable>
+<div id="InpostParcelLockerPicker" data-modal data-expand="large_mobile" data-dismissable>
     <div class="modal_body">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
         <h3 class="modal_header">

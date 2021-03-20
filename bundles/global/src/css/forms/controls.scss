@@ -107,7 +107,7 @@ textarea {
 	.no_touch &:hover {
 		background-color: var(--btn-hover-clr, var(--btn-background-clr, none));
 	}
-	.no_touch &:hover:not(:disabled):not(:active) {
+	.no_touch &:hover:not(:disabled):not(.disabled):not(:active) {
 		filter: brightness(var(--brighten-factor));
 	}
 	&:hover,
@@ -124,7 +124,7 @@ textarea {
 		position: absolute;
 		border-radius: inherit;
 	}
-	.no_touch &:hover:not(:disabled):not(:active)::after {
+	.no_touch &:hover:not(:disabled):not(.disabled):not(:active)::after {
 		box-shadow: 0 2px 3px 0 #0003;
 	}
 	&:active::after {

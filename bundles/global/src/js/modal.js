@@ -228,7 +228,14 @@ function showModal(name = null, params = {}) {
 		if (modal) {
 			const q = modal._child("*");
 			if (q) {
-				if (modal.getAttribute("data-expand") == "large") total = 0; //total--;
+				const expand = modal.dataset.expand;
+				q.classList.remove("large_mobile");
+				if (expand.includes("large")) {
+					total = 0;
+					if (expand.includes("large_mobile")) {
+						q.classList.add("large_mobile");
+					}
+				}
 				q.classList.toggle("pad0", total == 0);
 				q.classList.toggle("pad1", total == 1);
 				q.classList.toggle("pad2", total == 2);
