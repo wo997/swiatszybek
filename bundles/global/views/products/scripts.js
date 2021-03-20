@@ -281,9 +281,14 @@ function initProductFeatures() {
 				const checkbox_area = checkbox._parent(".checkbox_area");
 				const expand_y = checkbox_area._next(".expand_y");
 				if (expand_y) {
-					expand_y._children(".option_checkbox.checked").forEach((c) => {
-						c._set_value(0, { quiet: true });
-					});
+					setTimeout(() => {
+						expand_y._children(".option_checkbox.checked").forEach((c) => {
+							c._set_value(0, { quiet: true });
+						});
+						expand_y._children(".expand_y:not(.hidden)").forEach((e) => {
+							expand(e, false);
+						});
+					}, 250);
 				}
 			}
 
@@ -350,7 +355,6 @@ function updatePrettyCheckboxRanges() {
 				}
 			}
 		});
-		//console.log(r_min, r_max, min_checkbox, max_checkbox);
 		removeClasses(".angle_up", ["angle_up"], ul);
 		removeClasses(".angle_down", ["angle_down"], ul);
 
@@ -446,6 +450,18 @@ function setCategoryFeaturesFromUrl() {
 		}
 		matched_boxes.push(option_checkbox);
 		option_checkbox._set_value(1, { quiet: true });
+		const expandy_y = option_checkbox._parent()._next();
+		if (expandy_y) {
+			expand(expandy_y, true);
+		}
+		let parent_expand_y = def(expandy_y, option_checkbox);
+		while (true) {
+			parent_expand_y = parent_expand_y._parent(".expand_y");
+			if (!parent_expand_y) {
+				break;
+			}
+			expand(parent_expand_y, true);
+		}
 
 		let option_row = option_checkbox;
 		while (true) {
