@@ -13,6 +13,8 @@
  *  editable_callback?(data)
  *  batch_edit?: boolean
  *  map_name?: string
+ *  render_map?(val: any, data: any)
+ *  select_overlay?(val: any, data: any)
  *  quick_filter?: boolean
  *  flex?: boolean
  * }} DatatableColumnDef

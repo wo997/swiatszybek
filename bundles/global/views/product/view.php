@@ -487,7 +487,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <div style="position:relative;text-align:center;padding: 10px 0">
-                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 30px;width: 110px;">
+                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 30px;width: 100px;">
                 <div style="position:relative;margin-bottom:10px;">
                     Oczekuj na powiadomienie pod adresem <span class="email"></span>.
                     <div style="margin-top:7px">

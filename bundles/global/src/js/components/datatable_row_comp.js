@@ -73,7 +73,7 @@ function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sort
 							dt.classList.add("searching");
 							const column = dt._data.columns.find((col) => col.key === key);
 							if (column) {
-								console.log(column.editable_callback(row_data));
+								column.editable_callback(row_data);
 							} else {
 								console.error(`Column key "${key}" is missing`);
 							}
@@ -189,27 +189,44 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 		column_id++;
 		let cell_html = "";
 
-		const defa = "―";
 		const val = row.row_data[column.key];
 
 		if (column.editable) {
 			cell_html += getEditableCellHtml(dt, column);
+
+			if (column.select_overlay) {
+				const map = dt._data.maps.find((e) => e.name === column.map_name);
+				const opt = map.map.find((e) => e.val === row.row_data[column.key]);
+
+				const overlay = column.select_overlay(opt.label, row.row_data);
+
+				cell_html = html`<div class="overlay_wrapper">
+					${cell_html}
+					<div class="overlay">${overlay}</div>
+				</div>`;
+			}
 		} else if (column.map_name) {
 			const map = dt._data.maps.find((e) => e.name === column.map_name);
 
 			if (map) {
 				const opt = map.map.find((e) => e.val === row.row_data[column.key]);
 				if (opt) {
-					cell_html += opt.label;
+					if (column.render_map) {
+						cell_html += def(column.render_map(opt.label, row.row_data), "");
+					} else {
+						cell_html += opt.label;
+					}
 				}
 			} else {
 				console.error("Map is missing: ", column.map_name);
 			}
 		} else if (column.render) {
-			cell_html += def(column.render(row.row_data), defa);
+			cell_html += def(column.render(row.row_data), "");
 		} else {
-			cell_html += def(val, defa);
+			cell_html += def(val, "");
 		}
+
+		cell_html = def(cell_html, "―");
 
 		if (column.quick_filter && val) {
 			if (dt._data.filters.find((e) => e.key === column.key)) {

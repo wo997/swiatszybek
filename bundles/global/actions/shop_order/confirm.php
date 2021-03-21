@@ -9,7 +9,8 @@ try {
     }
     EntityManager::saveAll();
     DB::commitTransaction();
-    Request::redirect($shop_order->getProp("__url"));
+    // sometimes it should be p24, but you can easily do a double redirect, only once though, "zaplac" will help
+    Request::redirect($shop_order->getProp("__url") . "?zaplac");
 } catch (Exception $e) {
     var_dump($e);
     DB::rollbackTransation();

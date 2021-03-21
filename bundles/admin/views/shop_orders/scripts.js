@@ -12,7 +12,39 @@ domload(() => {
 			{ label: "Klient", key: "__display_name", width: "1", sortable: true, searchable: "string" },
 			{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
 			{ label: "Wartość", key: "total_price", width: "1", sortable: true, searchable: "string" },
-			{ label: "Status", key: "status_id", width: "1", searchable: "select", map_name: "order_status" },
+			{
+				label: "Status",
+				key: "status_id",
+				width: "200px",
+				searchable: "select",
+				map_name: "order_status",
+				select_overlay: (val, data) => {
+					const order_status = order_statuses.find((e) => e.order_status_id === data.status_id);
+					if (order_status) {
+						return html`<div class="status_rect" style="background:${order_status.bckg_clr};color:${order_status.font_clr}">${val}</div>`;
+					}
+				},
+				flex: true,
+				editable: "select",
+				editable_callback: (data) => {
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/shop_order/save",
+						params: {
+							shop_order: {
+								shop_order_id: data.shop_order_id,
+								status_id: data.status_id,
+							},
+						},
+						success: (res) => {
+							showNotification(
+								html`<div class="header">Zamówienie #${data.shop_order_id}</div>
+									<div class="center">Status: ${order_statuses.find((e) => e.order_status_id === data.status_id).name}</div>`
+							);
+							datatable_comp._backend_search();
+						},
+					});
+				},
+			},
 			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
 			{
 				label: "Akcja",
