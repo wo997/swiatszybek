@@ -464,7 +464,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         </div>
 
                         <div class="label" style="margin-top:10px;">Podaj swój adres e-mail</div>
-                        <input class="field email" data-validate="string|email" value="<?= htmlspecialchars($user_email) ?>" style="text-align: center;">
+                        <input class="field email" data-validate="email" value="<?= htmlspecialchars($user_email) ?>" style="text-align: center;">
                     </div>
                 </div>
 

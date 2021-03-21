@@ -219,7 +219,7 @@ function initRebateCodes() {
 
 					<div class="panel_padding">
 						<div class="label first">Wpisz swój kod</div>
-						<input type="text" class="field rebate_code" data-validate="string" />
+						<input type="text" class="field rebate_code" data-validate="" />
 						<div class="show_errors"></div>
 						<button class="btn primary space_top fill activate_btn">Aktywuj</button>
 					</div>
@@ -321,7 +321,7 @@ window.easyPackAsyncInit = () => {
 		const pick_inpost_parcel_locker_btn = buy_now_form._child(".pick_inpost_parcel_locker_btn");
 		pick_inpost_parcel_locker_btn._set_content(html`Wybierz inny <i class="fas fa-map-marker-alt"></i>`);
 		pick_inpost_parcel_locker_btn.classList.remove("primary");
-		pick_inpost_parcel_locker_btn.classList.add("subtle", "space_top");
+		pick_inpost_parcel_locker_btn.classList.add("subtle");
 	});
 };
 

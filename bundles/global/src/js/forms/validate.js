@@ -86,39 +86,26 @@ function clearInputErrors(input) {
  */
 function getInputValidationErrors(input) {
 	const validator = input.dataset.validate;
-	if (!validator) {
+	if (validator === undefined) {
 		return [];
 	}
 	const errors = [];
 	const value = input._get_value({ plain: true });
 
-	const [type, ...extras] = validator.split("|");
+	const extras = validator.split("|");
 
 	const optional = extras.includes("optional");
 	const empty = value.trim() === "";
 
-	if (!optional && empty) {
-		if (validator === "radio") {
-			errors.push("Wybierz 1 opcję");
-		} else {
-			errors.push("Uzupełnij to pole");
-		}
-	} else {
-		if (empty) {
-			switch (type) {
-				case "number": {
-					if (isNaN(value)) {
-						errors.push("Podaj liczbę");
-					}
-					break;
-				}
-				// case "string": {
-				// }
-				// case "radio": {
-				// }
+	if (empty) {
+		if (!optional) {
+			if (validator === "radio") {
+				errors.push("Wybierz 1 opcję");
+			} else {
+				errors.push("Uzupełnij to pole");
 			}
 		}
-
+	} else {
 		const add_extras = [];
 		for (const extra of extras) {
 			const [what, extra_val] = extra.split(":");
@@ -134,6 +121,11 @@ function getInputValidationErrors(input) {
 			if (what === "email") {
 				if (!validateEmail(value)) {
 					errors.push(`Błędny adres e-mail`);
+				}
+			}
+			if (what === "number") {
+				if (isNaN(value)) {
+					errors.push("Podaj liczbę");
 				}
 			}
 			if (what === "length") {

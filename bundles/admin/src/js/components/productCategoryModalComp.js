@@ -115,7 +115,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Nazwa kategorii</div>
-				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
+				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="" />
 
 				<div class="label">Kategoria nadrzędna</div>
 				<select

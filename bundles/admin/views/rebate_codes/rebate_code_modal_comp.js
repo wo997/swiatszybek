@@ -101,13 +101,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label">Kod</div>
-				<input
-					type="text"
-					class="field"
-					data-bind="{${data.code}}"
-					data-validate="string|length:{3,20}"
-					style="text-transform: uppercase;"
-				/>
+				<input type="text" class="field" data-bind="{${data.code}}" data-validate="length:{3,20}" style="text-transform: uppercase;" />
 
 				<div class="label">Wartość</div>
 				<div class="glue_children">
@@ -119,7 +113,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="label">Ilość</div>
-				<input type="text" class="field" data-bind="{${data.qty}}" data-validate="number|value:{0,}" />
+				<input type="text" class="field" data-bind="{${data.qty}}" data-validate="value:{0,}" />
 
 				<div class="label">Dostępny od</div>
 				<input type="text" class="field default_datepicker" data-bind="{${data.available_from}}" />

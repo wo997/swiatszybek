@@ -117,14 +117,14 @@ let filter_menus = [
 				<span class="field_desc">
 					<b>x <span class="single_operator">=</span></b>
 				</span>
-				<input type="text" class="field num" data-validate="number" data-number />
+				<input type="text" class="field num" data-validate="" data-number />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than" data-validate="number" data-number />
+				<input type="text" class="field more_than" data-validate="" data-number />
 				<span class="field_desc">
 					<b>≤ x ≤</b>
 				</span>
-				<input type="text" class="field less_than" data-validate="number" data-number />
+				<input type="text" class="field less_than" data-validate="" data-number />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {

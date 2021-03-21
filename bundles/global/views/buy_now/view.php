@@ -119,7 +119,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
 
             <div class="expand_y animate_hidden hidden case_courier_address_different">
-                <address-comp class="courier_address"></address-comp>
+                <address-comp class="courier_address optional_phone_email"></address-comp>
             </div>
         </div>
 

@@ -558,7 +558,7 @@ function productComp(comp, parent, data = undefined) {
 
 			<div style="max-width:600px">
 				<div class="label first">Nazwa produktu</div>
-				<input type="text" class="field" data-bind="{${data.name}}" data-validate="string" />
+				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Czy aktywny?</div>
 				<p-checkbox style="margin-top:5px" data-bind="{${data.active}}"></p-checkbox>

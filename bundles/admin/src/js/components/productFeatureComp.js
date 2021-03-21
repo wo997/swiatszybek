@@ -311,7 +311,7 @@ function productFeatureComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="label first">Nazwa cechy produktu</div>
-			<input type="text" class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="string" />
+			<input type="text" class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="" />
 
 			<div class="label">Typ wartości</div>
 			<select class="field" data-bind="{${data.data_type}}">
