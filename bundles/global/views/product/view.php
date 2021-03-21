@@ -309,7 +309,9 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <button class="btn subtle sub_qty">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <input class="field inline val_qty" value="1" data-number inputmode="numeric">
+                    <div class="spinner_wrapper inline">
+                        <input class="field inline val_qty" value="1" data-number inputmode="numeric">
+                    </div>
                     <button class="btn subtle add_qty">
                         <i class="fas fa-plus"></i>
                     </button>

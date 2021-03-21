@@ -208,6 +208,9 @@ datatable-comp {
 	flex: none !important;
 	padding-right: 0 !important;
 }
+.sortable_width .btn {
+	margin-right: 4px;
+}
 
 body.touch_device {
 	.node_list_grab_btn {
@@ -217,7 +220,11 @@ body.touch_device {
 		width: 110px !important;
 	}
 	datatable-comp {
-		&:not(.sortable),
+		&:not(.sortable) {
+			.sortable_width {
+				width: 44px !important;
+			}
+		}
 		&:not(.deletable) {
 			.sortable_width {
 				width: 77px !important;

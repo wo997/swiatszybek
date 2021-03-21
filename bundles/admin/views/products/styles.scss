@@ -1,16 +1,26 @@
 /* css[view] */
 
-datatable-comp.products .table_container {
-	min-width: 900px;
-}
+// datatable-comp.products .table_container {
+// 	min-width: 900px;
+// }
 
-datatable-comp.products .radio_group {
-	& {
-		--box-padding: 0 10px;
-		--box_height: 35px;
-		margin-right: 0;
+.products_view_header {
+	.toggle_view {
+		& {
+			--box-padding: 0 10px;
+			--box_height: 35px;
+			margin-right: -3px;
+		}
+		.box.checked {
+			background: #fff;
+		}
 	}
-	.box {
-		background: #fff;
+
+	& {
+		margin-bottom: 10px;
+	}
+
+	@media (min-width: 1100px) {
+		margin-bottom: -35px;
 	}
 }

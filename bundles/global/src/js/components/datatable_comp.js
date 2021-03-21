@@ -66,6 +66,7 @@
  *  required_empty_sortable?: boolean
  *  db_table?: string
  *  sort_on_backend?: boolean
+ *  getRequestParams?()
  * }} DatatableCompData
  *
  * @typedef {{
@@ -213,6 +214,10 @@ function datatableComp(comp, parent, data) {
 		datatable_params.row_count = data.pagination_data.row_count;
 		datatable_params.page_id = data.pagination_data.page_id;
 		datatable_params.quick_search = data.quick_search;
+
+		if (data.getRequestParams) {
+			deepAssign(datatable_params, data.getRequestParams());
+		}
 
 		comp.classList.add("searching");
 		comp._search_request = xhr({

@@ -70,6 +70,7 @@ const getFeatureIdFromKey = (key) => {
 function productComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
+			active: 0,
 			general_product_id: -1,
 			name: "",
 			sell_by: "qty",
