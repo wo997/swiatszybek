@@ -14,7 +14,7 @@
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
         <div class="crumb">
-            Kategorie
+            Kategorie produktów
         </div>
     </span>
     <div class="history_btns_wrapper"></div>

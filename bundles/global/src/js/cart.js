@@ -30,6 +30,7 @@ function initBuy() {
 		const val_qty = qty_controls._child(".val_qty");
 		const sub_qty = qty_controls._child(".sub_qty");
 		const add_qty = qty_controls._child(".add_qty");
+		const spinner_wrapper = qty_controls._child(".spinner_wrapper");
 
 		const setQty = (qty) => {
 			if (adding_product_from_cart) {
@@ -44,6 +45,7 @@ function initBuy() {
 				if (qty !== product.qty) {
 					adding_product_from_cart = true;
 
+					spinner_wrapper.classList.add("spinning");
 					xhr({
 						url: "/cart/add-product",
 						params: {
@@ -54,6 +56,8 @@ function initBuy() {
 							user_cart = res.user_cart;
 							loadedUserCart();
 							adding_product_from_cart = false;
+
+							removeClasses(".qty_controls .spinning", ["spinning"]);
 						},
 					});
 				}

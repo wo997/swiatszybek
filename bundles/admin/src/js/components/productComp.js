@@ -557,11 +557,23 @@ function productComp(comp, parent, data = undefined) {
 			</div>
 
 			<div style="max-width:600px">
-				<div class="label first">Nazwa produktu</div>
-				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
+				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
+					<div class="checkbox_area box error">
+						<div>
+							<p-checkbox data-value="0"></p-checkbox>
+							<span class="semi-bold">Nieaktywny <i class="fas fa-eye-slash"></i></span>
+						</div>
+					</div>
+					<div class="checkbox_area box success">
+						<div>
+							<p-checkbox data-value="1"></p-checkbox>
+							<span class="semi-bold">Aktywny <i class="fas fa-eye"></i></span>
+						</div>
+					</div>
+				</div>
 
-				<div class="label">Czy aktywny?</div>
-				<p-checkbox style="margin-top:5px" data-bind="{${data.active}}"></p-checkbox>
+				<div class="label">Nazwa produktu</div>
+				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Sprzedawaj na</div>
 				<select class="field" data-bind="{${data.sell_by}}">

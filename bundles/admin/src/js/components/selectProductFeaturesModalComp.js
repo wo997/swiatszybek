@@ -94,7 +94,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 				empty_html: html`Brak cech`,
 				label: "Cechy produktów",
 				after_label: html`<button class="add_feature_btn btn primary" data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście">
-					Dodaj <i class="fas fa-plus"></i>
+					Dodaj cechę <i class="fas fa-plus"></i>
 				</button> `,
 				sortable: true,
 				require_sort: { key: "pos", order: "asc" },

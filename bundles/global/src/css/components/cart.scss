@@ -7,12 +7,21 @@
 		width: 40px;
 		height: 40px;
 	}
-	input {
+	input.bind_qty {
 		width: 58px;
 		text-align: center;
 		font-weight: 600;
-		margin: 0 -1px;
 		padding: 0;
+		height: 100%;
+		border: none;
+		background: none;
+		border-radius: 0;
+	}
+	.spinner_wrapper {
+		background-color: var(--form_field_background);
+		border: 1px solid #ccc;
+		margin: 0 -1px;
+		z-index: 50;
 	}
 }
 

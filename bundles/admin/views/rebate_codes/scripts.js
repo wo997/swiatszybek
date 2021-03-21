@@ -28,7 +28,7 @@ domload(() => {
 		empty_html: html`Brak kodów rabatowych`,
 		label: "Kody rabatowe",
 		after_label: html`<button class="btn important edit_rebate_code" data-rebate_code_id="-1">
-			Nowy kod rabatowy <i class="fas fa-plus"></i>
+			Dodaj kod rabatowy <i class="fas fa-plus"></i>
 		</button> `,
 		selectable: true,
 		save_state_name: "rebate_codes",

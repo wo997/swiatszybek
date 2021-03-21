@@ -73,7 +73,7 @@ function addressComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<form onsubmit="return false">
-				<div class="radio_group boxes columns_2 hide_checks" data-bind="{${data.party}}">
+				<div class="radio_group boxes big_boxes columns_2 hide_checks" data-bind="{${data.party}}">
 					<div class="checkbox_area box">
 						<div>
 							<p-checkbox data-value="person"></p-checkbox>

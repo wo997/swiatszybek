@@ -1,5 +1,16 @@
 /* css[view] */
 
-datatable-comp .table_container {
+datatable-comp.products .table_container {
 	min-width: 900px;
+}
+
+datatable-comp.products .radio_group {
+	& {
+		--box-padding: 0 10px;
+		--box_height: 35px;
+		margin-right: 0;
+	}
+	.box {
+		background: #fff;
+	}
 }

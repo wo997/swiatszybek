@@ -2,7 +2,6 @@
 
 :root {
 	--box_margin: 6px;
-	--box_height: 80px;
 }
 
 .boxes {
@@ -11,11 +10,12 @@
 		flex-flow: row wrap;
 		margin-right: calc(var(--box_margin) * -1);
 		margin-bottom: calc(var(--box_margin) * -1);
-		--box-padding: 10px;
 		--box-width: auto;
+		--box-padding: 10px;
 	}
-	&.small {
+	&.big_boxes {
 		--box_height: 0;
+		--box_height: 80px;
 	}
 	.box {
 		& {
@@ -33,6 +33,13 @@
 			border-radius: 4px;
 			border: 1px solid #bbb;
 			width: var(--box-width);
+			--selection-color: var(--primary-clr);
+		}
+		&.error {
+			--selection-color: var(--error-clr);
+		}
+		&.success {
+			--selection-color: var(--success-clr);
 		}
 		&::before {
 			content: "";
@@ -65,8 +72,8 @@
 		}
 
 		&.checked {
-			border-color: var(--primary-clr) !important;
-			box-shadow: 0 0 0 1px var(--primary-clr), inset 0 0 0 1px var(--primary-clr) !important;
+			border-color: var(--selection-color) !important;
+			box-shadow: 0 0 0 1px var(--selection-color), inset 0 0 0 1px var(--selection-color) !important;
 		}
 	}
 
