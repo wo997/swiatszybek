@@ -769,3 +769,10 @@ function rgbStringToHex(rgbString) {
 		);
 	});
 }
+
+function quickTimeout(callback, time) {
+	if (!time) {
+		return callback(); // make sure it's synchronous
+	}
+	return setTimeout(callback, time);
+}
