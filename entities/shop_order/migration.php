@@ -3,6 +3,7 @@
 DB::createTable("shop_order", [
     ["name" => "shop_order_id", "type" => "INT", "index" => "primary"],
     ["name" => "reference", "type" => "VARCHAR(255)"],
+    ["name" => "__url", "type" => "VARCHAR(255)"],
     ["name" => "status_id", "type" => "INT", "index" => "index"],
     ["name" => "products_price", "type" => "DECIMAL(10,2)"],
     ["name" => "delivery_price", "type" => "DECIMAL(10,2)"],
@@ -14,4 +15,5 @@ DB::createTable("shop_order", [
     ["name" => "courier_address_id", "type" => "INT", "null" => true, "index" => "index"],
     ["name" => "parcel_locker_id", "type" => "INT", "null" => true, "index" => "index"],
     ["name" => "ordered_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
+    ["name" => "paid_at", "type" => "DATETIME", "null" => true],
 ]);

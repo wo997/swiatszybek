@@ -9,8 +9,7 @@ try {
     }
     EntityManager::saveAll();
     DB::commitTransaction();
-    $shop_order_link = getShopOrderLink($shop_order->getId(), $shop_order->getProp("reference"));
-    Request::redirect($shop_order_link);
+    Request::redirect($shop_order->getProp("__url"));
 } catch (Exception $e) {
     var_dump($e);
     DB::rollbackTransation();

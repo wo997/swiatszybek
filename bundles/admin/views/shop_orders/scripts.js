@@ -12,7 +12,7 @@ domload(() => {
 			{ label: "Klient", key: "__display_name", width: "1", sortable: true, searchable: "string" },
 			{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
 			{ label: "Wartość", key: "total_price", width: "1", sortable: true, searchable: "string" },
-			{ label: "Status", key: "status_id", width: "1", sortable: true, searchable: "string" },
+			{ label: "Status", key: "status_id", width: "1", searchable: "select", map_name: "order_status" },
 			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
 			{
 				label: "Akcja",
@@ -29,6 +29,21 @@ domload(() => {
 							<i class="fas fa-eye"></i>
 						</a>
 					`;
+				},
+			},
+		],
+		maps: [
+			{
+				name: "order_status",
+				getMap: () => {
+					const map = order_statuses.map((order) => {
+						const obj = {
+							val: order.order_status_id,
+							label: order.name,
+						};
+						return obj;
+					});
+					return map;
 				},
 			},
 		],

@@ -3,7 +3,8 @@
 EntityManager::register("shop_order", [
     "props" => [
         "reference" => ["type" => "string"],
-        "status_id" => ["type" => "number"],
+        "__url" => ["type" => "string"],
+        "status" => ["type" => "order_status"],
         "user_id" => ["type" => "number"],
         "main_address" => ["type" => "address"],
         "courier_address" => ["type" => "address"],
@@ -15,6 +16,7 @@ EntityManager::register("shop_order", [
         "rebate_codes" => ["type" => "string"],
         "ordered_products" => ["type" => "ordered_product[]"],
         "ordered_at" => ["type" => "string"],
+        "paid_at" => ["type" => "string"],
     ],
 ]);
 
@@ -33,6 +35,8 @@ EntityManager::oneToOne("shop_order", "main_address", "address");
 EntityManager::oneToOne("shop_order", "courier_address", "address");
 
 EntityManager::oneToOne("shop_order", "parcel_locker", "parcel_locker");
+
+EntityManager::oneToOne("shop_order", "status", "order_status");
 
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
@@ -66,7 +70,7 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
         // }
         // $shop_order->setProp("ordered_products", $ordered_products);
 
-        $shop_order->setProp("ordered_products", $cart_data["products"]); // ezy
+        $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME, cause in the future you will reuse the basket to calculate the order price
 
         $shop_order->setProp("status_id", 1);
 
@@ -75,4 +79,6 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
         $user_cart->empty();
         $user_cart->save();
     }
+
+    $shop_order->setProp("__url", getShopOrderLink($shop_order->getProp("shop_order_id"), $shop_order->getProp("reference")));
 });

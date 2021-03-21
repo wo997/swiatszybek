@@ -41,7 +41,11 @@ $parcel_locker = $shop_order->getProp("parcel_locker");
 /** @var Entity[] OrderedProduct */
 $ordered_products = $shop_order->getProp("ordered_products");
 
+/** @var Entity OrderStatus */
+$order_status = $shop_order->getProp("status");
+
 $requires_payment = $shop_order->getProp("status_id") === 1;
+
 ?>
 
 <div class="order_all">
@@ -50,7 +54,7 @@ $requires_payment = $shop_order->getProp("status_id") === 1;
     <div class="order_container">
         <div class="order_details">
             <div class="label big first">Status zamówienia</div>
-            <div class="status_rect requires_payment">Oczekuje na opłatę</div>
+            <div class="status_rect" style="color:<?= $order_status->getProp("font_clr") ?>;background:<?= $order_status->getProp("bckg_clr") ?>"><?= $order_status->getProp("name") ?></div>
 
             <?php if ($requires_payment) : ?>
                 <!-- <div class="label medium">Wybierz metodę płatności</div>
