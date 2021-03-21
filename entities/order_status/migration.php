@@ -13,7 +13,7 @@ $required_statuses = [
     [
         "order_status_id" => 1,
         "name" => "Oczekuje na płatność",
-        "bckg_clr" => "#ed5",
+        "bckg_clr" => "#ed6",
         "font_clr" => "#750"
     ],
     [

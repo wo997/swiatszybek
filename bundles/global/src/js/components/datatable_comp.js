@@ -4,6 +4,7 @@
  * @typedef {{
  *  label?: string
  *  key?: string
+ *  db_key?: string
  *  width?: string
  *  sortable?: boolean | undefined
  *  searchable?: string
@@ -25,6 +26,7 @@
  *
  * @typedef {{
  * key: string
+ * db_key: string
  * data: any
  * }} DatatableFilterData
  *
@@ -199,6 +201,12 @@ function datatableComp(comp, parent, data) {
 		if (data.sort) {
 			datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
 		}
+		data.filters.map((e) => {
+			return {
+				data: e.data,
+				key: e.key,
+			};
+		});
 		datatable_params.filters = data.filters;
 		datatable_params.row_count = data.pagination_data.row_count;
 		datatable_params.page_id = data.pagination_data.page_id;
@@ -333,7 +341,7 @@ function datatableComp(comp, parent, data) {
 								}
 							}
 						} else if (fd.type === "exact") {
-							if (val !== fd.val) {
+							if (val !== fd.value) {
 								return false;
 							}
 						} else if (fd.type === "boolean") {
@@ -710,10 +718,6 @@ function datatableComp(comp, parent, data) {
 		initialize: () => {
 			if (data.save_state_name) {
 				comp._load_state(data);
-
-				setTimeout(() => {
-					comp._backend_search();
-				}, 0);
 			}
 
 			const filter_menu = comp._nodes.filter_menu;
@@ -760,6 +764,7 @@ function datatableComp(comp, parent, data) {
 						comp._data.filters.push({
 							key,
 							data: { type: "exact", val: +x.dataset.val, display: dt_cell.innerText },
+							db_key: def(column.db_key, key),
 						});
 					}
 					comp._render();
@@ -898,7 +903,7 @@ function datatableComp(comp, parent, data) {
 								if (filter_data) {
 									comp._data.filters = comp._data.filters.filter((f) => f.key !== column.key);
 									if (filter_data.display) {
-										comp._data.filters.push({ key: column.key, data: filter_data });
+										comp._data.filters.push({ key: column.key, data: filter_data, db_key: def(column.db_key, column.key) });
 									}
 									data.pagination_data.page_id = 0;
 									comp._render();

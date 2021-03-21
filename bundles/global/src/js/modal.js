@@ -230,7 +230,7 @@ function showModal(name = null, params = {}) {
 			if (q) {
 				const expand = modal.dataset.expand;
 				q.classList.remove("large_mobile");
-				if (expand.includes("large")) {
+				if (expand && expand.includes("large")) {
 					total = 0;
 					if (expand.includes("large_mobile")) {
 						q.classList.add("large_mobile");

@@ -19,6 +19,7 @@ domload(() => {
 			{
 				label: "Aktywny",
 				key: "active",
+				db_key: "gp.active",
 				width: "1",
 				sortable: true,
 				searchable: "boolean",

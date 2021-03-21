@@ -13,7 +13,7 @@ let filter_menus = [
 		name: "string",
 		getHtml: (column, data) => html`
 			<span>Wpisz frazę</span>
-			<input type="text" class="field" style="width: 210px;" />
+			<input type="text" class="field" />
 			<div class="checkbox_area" style="margin-top:10px">
 				<p-checkbox class="square inline"></p-checkbox>
 				Dopasuj całość
@@ -39,31 +39,35 @@ let filter_menus = [
 			}
 			const map = data.maps.find((e) => e.name === column.map_name);
 			if (map) {
-				map.map
-					.filter((e) => options_ids.includes(e.val))
-					.forEach((e) => {
-						options += html`<option value="${e.val}">${e.label}</option>`;
-						if (typeof e.val === "number") {
-							number = "data-number";
-						}
-					});
+				let map_map = map.map;
+
+				if (!data.search_url) {
+					map_map = map_map.filter((e) => options_ids.includes(e.val));
+				}
+
+				map_map.forEach((e) => {
+					options += html`<option value="${e.val}">${e.label}</option>`;
+					if (typeof e.val === "number") {
+						number = "data-number";
+					}
+				});
 			}
 
 			return html`
 				<span>Wybierz opcję</span>
-				<select class="field" style="width: 210px;" ${number}>
+				<select class="field" ${number}>
 					<option value=""></option>
 					${options}
 				</select>
 			`;
 		},
-		open: (elem, data = { string: "" }) => {
-			elem._child("select")._set_value(data.val);
+		open: (elem, data = { string: "", value: "" }) => {
+			elem._child("select")._set_value(data.value);
 		},
 		apply: (elem) => {
 			const select = elem._child("select");
-			const val = select._get_value();
-			return { type: "exact", val, display: getSelectDisplayValue(select) };
+			const value = select._get_value();
+			return { type: "exact", value, display: getSelectDisplayValue(select) };
 		},
 	},
 	{

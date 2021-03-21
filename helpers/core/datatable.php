@@ -178,8 +178,7 @@ function paginateData($params = [])
     $filters = def($params, ["datatable_params", "filters"], []);
     if ($filters) {
         foreach ($filters as $filter) {
-            //$where .= getFilterCondition($filter["field"], $filter["type"], $filter["value"]);
-            $where .= getFilterCondition($filter["key"], $filter["data"]);
+            $where .= getFilterCondition($filter["db_key"], $filter["data"]);
         }
     }
 
@@ -274,6 +273,9 @@ function getFilterCondition($key, $data)
             return " AND $key";
         }
         return " AND NOT $key";
+    } else if ($type === "exact") {
+        $string = DB::escape($data["value"]); // can also be a number but leave it a string
+        return " AND $key = $string";
     }
 
     return "";
