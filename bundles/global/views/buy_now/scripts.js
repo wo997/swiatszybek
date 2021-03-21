@@ -195,7 +195,7 @@ function initEmptyCartModal() {
 				<div class="modal_body" style="width:450px;text-align: center;">
 					<h3 class="modal_header">Koszyk jest pusty</h3>
 					<div class="panel_padding">
-						<div class="semi-bold" style="padding:30px 0">Mamy nadzieję, że to nie koniec naszej przygody 😉</div>
+						<div class="semi_bold" style="padding:30px 0">Mamy nadzieję, że to nie koniec naszej przygody 😉</div>
 						<a class="btn primary space_top fill" href="/"><i class="fas fa-chevron-left"></i> Wróć do zakupów</a>
 					</div>
 				</div>

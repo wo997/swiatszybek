@@ -61,7 +61,7 @@ domload(() => {
 	datatable_comp._child(".datatable_label").insertAdjacentHTML(
 		"afterend",
 		html`
-			<div class="radio_group boxes hide_checks semi-bold">
+			<div class="radio_group boxes hide_checks semi_bold">
 				<div class="checkbox_area box">
 					<p-checkbox data-value="1"></p-checkbox>
 					<span>

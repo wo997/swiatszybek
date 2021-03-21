@@ -51,7 +51,7 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 						const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
 						if (option) {
 							return html`
-								<span class="semi-bold">${fea.name}:</span>
+								<span class="semi_bold">${fea.name}:</span>
 								<span style="margin-left: 5px">${option.value}</span>
 								<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
 									<i class="fas fa-times"></i>

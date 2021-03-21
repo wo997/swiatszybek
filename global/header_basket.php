@@ -14,7 +14,7 @@
                 <cart-products-comp class="all_products"></cart-products-comp>
             </div>
             <div class="cart_summary">
-                <div class="semi-bold medium">
+                <div class="semi_bold medium">
                     Suma:
                     <span class="cart_products_price pln"></span>
                 </div>

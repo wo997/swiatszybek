@@ -49,7 +49,7 @@ function product_featureComp(
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="variant_header">
-				<div class="title inline semi-bold" data-node="{${comp._nodes.feature_name}}"></div>
+				<div class="title inline semi_bold" data-node="{${comp._nodes.feature_name}}"></div>
 				<button
 					style="margin-left:5px"
 					data-node="{${comp._nodes.add_option_btn}}"

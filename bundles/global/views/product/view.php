@@ -299,7 +299,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
             <div class="expand_y hidden animate_hidden case_notify_available">
                 <div style="padding-top:7px">
                     <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                    <div class="semi-bold selected_product_queue_pretty" style="margin-top:7px"></div>
+                    <div class="semi_bold selected_product_queue_pretty" style="margin-top:7px"></div>
                 </div>
             </div>
 
@@ -460,7 +460,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <div style="position:relative;text-align:center">
                         <div style="padding:10px 0">
                             Otrzymasz powiadomienie gdy produkt pojawi się w sklepie:
-                            <div class="full_product_name semi-bold"><?= $full_product_name ?></div>
+                            <div class="full_product_name semi_bold"><?= $full_product_name ?></div>
                         </div>
 
                         <div class="label" style="margin-top:10px;">Podaj swój adres e-mail</div>

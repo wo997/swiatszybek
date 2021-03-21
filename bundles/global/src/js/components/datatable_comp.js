@@ -869,7 +869,7 @@ function datatableComp(comp, parent, data) {
 								html`<div
 									style="display: flex;margin-bottom: 10px;align-items: center;justify-content: space-between;padding-bottom: 5px;border-bottom: 1px solid #ccc;"
 								>
-									<span class="semi-bold">Filtruj ${column.label}</span>
+									<span class="semi_bold">Filtruj ${column.label}</span>
 									<button class="btn transparent small close" style="margin: -5px;"><i class="fas fa-times"></i></button>
 								</div>` +
 									filter_menu_data.getHtml(column, data) +

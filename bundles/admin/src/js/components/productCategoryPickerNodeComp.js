@@ -46,7 +46,7 @@ function productCategoryPickerNodeComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="checkbox_area">
 				<p-checkbox class="square inline" data-bind="{${data.selected}}"></p-checkbox>
-				<span class="semi-bold" html="{${data.product_category_name}}"></span>
+				<span class="semi_bold" html="{${data.product_category_name}}"></span>
 			</div>
 			<div class="expand_y {${data.categories.length === 0}?empty}" data-node="{${comp._nodes.expand}}">
 				<list-comp data-bind="{${data.categories}}">

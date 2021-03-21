@@ -52,7 +52,7 @@ function manageProductList_questionComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<span class="semi-bold" html="{${data.row_index + 1 + ". " + data.label}}"></span><br />
+			<span class="semi_bold" html="{${data.row_index + 1 + ". " + data.label}}"></span><br />
 			<div data-node="{${comp._nodes.options}}" class="radio_group" data-bind="{${data.value}}" data-number></div>
 		`,
 		initialize: () => {},

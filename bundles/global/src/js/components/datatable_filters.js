@@ -76,11 +76,11 @@ let filter_menus = [
 			<div style="display:flex;justify-content:space-around" class="radio_group" data-validate="radio">
 				<div class="inline checkbox_area">
 					<p-checkbox data-value="1"></p-checkbox>
-					<span class="semi-bold">Tak</span>
+					<span class="semi_bold">Tak</span>
 				</div>
 				<div class="inline checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
-					<span class="semi-bold">Nie</span>
+					<span class="semi_bold">Nie</span>
 				</div>
 			</div>
 		`,
