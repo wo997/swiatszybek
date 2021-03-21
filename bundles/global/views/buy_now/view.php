@@ -111,15 +111,31 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y animate_hidden hidden case_courier">
-            <div class="label big">Adres wysyłki</div>
+            <div>
+                <div class="label big">Adres wysyłki</div>
 
-            <div class="checkbox_area">
-                <span class="semi-bold block" style="margin-bottom:5px">Chcę użyć innego adresu do wysyłki</span>
-                <p-checkbox class="courier_address_different"></p-checkbox>
-            </div>
+                <div class="checkbox_area">
+                    <span class="semi-bold block" style="margin-bottom:5px">Chcę użyć innego adresu do wysyłki</span>
 
-            <div class="expand_y animate_hidden hidden case_courier_address_different">
-                <address-comp class="courier_address optional_phone_email"></address-comp>
+                    <div class="radio_group boxes hide_checks courier_address_different" data-number>
+                        <div class="checkbox_area box">
+                            <div>
+                                <p-checkbox data-value="0"></p-checkbox>
+                                <span class="semi-bold">Nie</span>
+                            </div>
+                        </div>
+                        <div class="checkbox_area box">
+                            <div>
+                                <p-checkbox data-value="1"></p-checkbox>
+                                <span class="semi-bold">Tak</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expand_y animate_hidden hidden case_courier_address_different">
+                    <address-comp class="courier_address optional_phone_email"></address-comp>
+                </div>
             </div>
         </div>
 
@@ -136,15 +152,22 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y animate_hidden hidden case_form_filled">
-            <div class="label big">Opłać zamówienie (<span class="cart_total_price"></span>)</div>
-            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
+            <div class="label big">Potwierdzenie zamówienia</div>
+
+            <div class="label">Dodatkowe informacje do sprzedawcy <span class="optional_label"></span></div>
+            <textarea class="field client_notes" style="min-height: 60px;max-height: 70px;"></textarea>
+
+            <div class="label">Skorzystaj z szybkich i bezpiecznych płatności</div>
+            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0 10px;">
 
             <div class="checkbox_area">
                 <p-checkbox class="square accept_regulations"></p-checkbox>
                 <span class="semi-bold">Akceptuję regulamin</span>
             </div>
 
-            <button class="btn medium fill confirm_order pay_btn space_top">Potwierdzam i płacę</button>
+            <button class="btn medium fill confirm_order pay_btn space_top">Płacę (<span class="cart_total_price"></span>)</button>
+
+            <div style="margin-top: 15px;">Nastąpi przekierowanie na stronę płatności Przelewy24.</div>
 
             <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
         </div>

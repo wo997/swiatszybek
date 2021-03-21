@@ -290,10 +290,10 @@ function traverseFeatures()
                                 Przedział
                             </div>
                         </div>
-                        <div class="tab_content" data-tab_id="1">
+                        <div class="tab_content expand_y" data-tab_id="1">
                             $quick_list_html
                         </div>
-                        <div class="tab_content hidden" data-tab_id="2">
+                        <div class="tab_content animate_hidden hidden expand_y" data-tab_id="2">
                             <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
                                 <div class="flex_column" style="margin-right:var(--form_spacing);">
                                     Od

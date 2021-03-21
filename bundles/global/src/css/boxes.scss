@@ -12,6 +12,7 @@
 		margin-right: calc(var(--box_margin) * -1);
 		margin-bottom: calc(var(--box_margin) * -1);
 		--box-padding: 10px;
+		--box-width: auto;
 	}
 	&.small {
 		--box_height: 0;
@@ -31,6 +32,7 @@
 			transition: all 0.2s;
 			border-radius: 4px;
 			border: 1px solid #bbb;
+			width: var(--box-width);
 		}
 		&::before {
 			content: "";

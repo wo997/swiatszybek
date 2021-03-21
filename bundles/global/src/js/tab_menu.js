@@ -21,7 +21,8 @@ function showTab(tab_menu, tab_id) {
 		option.classList.toggle("current", curr);
 	});
 	tab_menu._children(".tab_content").forEach((menu) => {
-		menu.classList.toggle("hidden", +menu.dataset.tab_id !== tab_id);
+		//menu.classList.toggle("hidden", +menu.dataset.tab_id !== tab_id);
+		expand(menu, +menu.dataset.tab_id === tab_id);
 	});
 	tab_menu._dispatch_change();
 }

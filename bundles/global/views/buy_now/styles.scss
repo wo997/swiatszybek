@@ -51,6 +51,18 @@
 	.account_buttons {
 		max-width: 350px;
 	}
+
+	.delivery {
+		.pln {
+			display: block;
+			text-align: center;
+		}
+	}
+
+	.courier_address_different {
+		--box-width: 90px;
+		--box_height: 40px;
+	}
 }
 
 .rebate_code_block {
@@ -173,11 +185,4 @@
 
 .buy_now_form .courier_address {
 	margin-top: 25px;
-}
-
-.delivery {
-	.pln {
-		display: block;
-		text-align: center;
-	}
 }
