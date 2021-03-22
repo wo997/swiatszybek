@@ -62,7 +62,7 @@ domload(() => {
 				option_checkbox._set_value(0, { quiet: true });
 			});
 
-			$$(".searching_wrapper .expand_y:not(.hidden)").forEach((expand_y) => {
+			$$(".searching_wrapper .option_row .expand_y:not(.hidden)").forEach((expand_y) => {
 				expand(expand_y, false);
 			});
 
