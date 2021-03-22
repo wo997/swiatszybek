@@ -93,7 +93,7 @@ function recreateDom() {
 			if (text) {
 				body += text;
 			} else {
-				body += "<br>";
+				body += `<span class="text_break"> <br></span>`;
 			}
 		}
 
@@ -200,8 +200,12 @@ domload(() => {
 	piep_editor.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
 		const correct_selection = !!$(sel.focusNode)._parent($(ev.target), { skip: 0 });
+		const text_break = $(sel.focusNode)._parent(".text_break", { skip: 0 });
 		if (!correct_selection) {
 			selectElementContentsByIndex($(ev.target), 0);
+		}
+		if (text_break) {
+			selectElementContentsByIndex(text_break, 0);
 		}
 		updatePiepCursorPosition();
 	});
@@ -334,7 +338,7 @@ domload(() => {
 		}
 
 		if (ev.key === "ArrowDown") {
-			selectElementContentsFromAnywhere("down");
+			selectElementContentsFromAnywhere(0, 1);
 			ev.preventDefault();
 
 			// if (focusOffset >= v_node.text.length) {
@@ -378,33 +382,33 @@ function setSelectionRange(range) {
 	updatePiepCursorPosition();
 }
 
-/**
- *
- * @param {PiepNode} node
- * @returns {CharacterData}
- */
-function getTextNode(node) {
-	let text_node = node;
-	while (text_node && text_node.nodeType === 1) {
-		const t = text_node.childNodes[0];
-		if (!t) {
-			break;
-		}
-		// @ts-ignore
-		text_node = t;
-	}
-	// @ts-ignore
-	return text_node;
-}
+// /**
+//  *
+//  * @param {PiepNode} node
+//  * @returns {CharacterData}
+//  */
+// function getTextNode(node) {
+// 	let text_node = node;
+// 	while (text_node && text_node.nodeType === 1) {
+// 		const t = text_node.childNodes[0];
+// 		if (!t) {
+// 			break;
+// 		}
+// 		// @ts-ignore
+// 		text_node = t;
+// 	}
+// 	// @ts-ignore
+// 	return text_node;
+// }
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	const range = document.createRange();
 
 	const focus_node = sel ? $(sel.focusNode) : undefined;
-	let focus_html_node = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+	let focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
-	if (focus_html_node) {
+	if (focus_textable) {
 		range.setStart(sel.focusNode, sel.focusOffset);
 		range.setEnd(sel.focusNode, sel.focusOffset);
 
@@ -423,30 +427,70 @@ function updatePiepCursorPosition() {
 	}
 
 	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
-	if (focus_html_node) {
-		focus_html_node.classList.add("piep_focus");
+	if (focus_textable) {
+		focus_textable.classList.add("piep_focus");
 	}
 }
 
 /**
  *
- * @param {"up" | "down" | "right" | "left"} direction
+ * @param {DOMRect} rect
  */
-function selectElementContentsFromAnywhere(direction) {
+function getRectCenter(rect) {
+	return {
+		x: rect.left + rect.width * 0.5,
+		y: rect.top + rect.height * 0.5,
+	};
+}
+
+/**
+ *
+ * @param {number} dx
+ * @param {number} dy
+ */
+function selectElementContentsFromAnywhere(dx, dy) {
 	const sel = window.getSelection();
 	const range = document.createRange();
+
+	const sel_rect = sel.getRangeAt(0).getBoundingClientRect();
+	//const sel_center = getRectCenter(sel_rect);
+	//sel_center.
 
 	const textables = piep_editor_content._children(".textable");
 	let closest_textable;
 	let textable_smallest_dist = 1000;
 	for (const textable of textables) {
+		const textable_rect = textable.getBoundingClientRect();
+		if (dy === 1) {
+			if (textable_rect.top + textable_rect.height < sel_rect.top + sel_rect.height) {
+				continue;
+			}
+		}
+		if (dy === -1) {
+			if (textable_rect.top > sel_rect.top) {
+				continue;
+			}
+		}
+		if (dx === 1) {
+			if (textable_rect.left + textable_rect.width < sel_rect.left + sel_rect.width) {
+				continue;
+			}
+		}
+		if (dx === -1) {
+			if (textable_rect.left > sel_rect.left) {
+				continue;
+			}
+		}
+
+		console.log(textable);
+
 		const textable_dist = 100;
 		if (textable_dist < textable_smallest_dist) {
 			textable_smallest_dist = textable_dist;
 			closest_textable = textable;
 		}
 	}
-	console.log(sel.getRangeAt(0).getBoundingClientRect());
+	//console.log(closest_textable);
 	// closest_textable
 
 	// const text_node = node.childNodes[0];
