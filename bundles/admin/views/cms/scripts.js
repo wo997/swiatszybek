@@ -202,10 +202,10 @@ domload(() => {
 		const correct_selection = !!$(sel.focusNode)._parent($(ev.target), { skip: 0 });
 		const text_break = $(sel.focusNode)._parent(".text_break", { skip: 0 });
 		if (!correct_selection) {
-			selectElementContentsByIndex($(ev.target), 0);
+			setSelectionByIndex($(ev.target), 0);
 		}
 		if (text_break) {
-			selectElementContentsByIndex(text_break, 0);
+			setSelectionByIndex(text_break, 0);
 		}
 		updatePiepCursorPosition();
 	});
@@ -240,7 +240,7 @@ domload(() => {
 					const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 
 					if (node_ref) {
-						selectElementContentsByIndex(node_ref, focusOffset + 1);
+						setSelectionByIndex(node_ref, focusOffset + 1);
 					}
 				}
 			}
@@ -264,7 +264,7 @@ domload(() => {
 
 						const prev_node_ref = piep_editor_content._child(`[data-ped="${prev_id}"]`);
 						if (prev_node_ref) {
-							selectElementContentsByIndex(prev_node_ref, prev_v_node_text_before.length);
+							setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
 						}
 					}
 				}
@@ -274,7 +274,7 @@ domload(() => {
 
 				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 				if (node_ref) {
-					selectElementContentsByIndex(node_ref, focusOffset - 1);
+					setSelectionByIndex(node_ref, focusOffset - 1);
 				}
 			}
 		}
@@ -297,7 +297,7 @@ domload(() => {
 
 						const node_ref = piep_editor_content._child(`[data-ped="${node_id}"]`);
 						if (node_ref) {
-							selectElementContentsByIndex(node_ref, v_node_text_before.length);
+							setSelectionByIndex(node_ref, v_node_text_before.length);
 						}
 					}
 				}
@@ -307,7 +307,7 @@ domload(() => {
 
 				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 				if (node_ref) {
-					selectElementContentsByIndex(node_ref, focusOffset);
+					setSelectionByIndex(node_ref, focusOffset);
 				}
 			}
 		}
@@ -318,10 +318,10 @@ domload(() => {
 			if (focusOffset <= 0) {
 				const prev_textable = getTextable(focus_node, -1);
 				if (prev_textable) {
-					selectElementContentsByIndex(prev_textable, prev_textable.textContent.length);
+					setSelectionByIndex(prev_textable, prev_textable.textContent.length);
 				}
 			} else {
-				selectElementContentsByIndex(focus_node, focusOffset - 1);
+				setSelectionByIndex(focus_node, focusOffset - 1);
 			}
 		}
 		if (ev.key === "ArrowRight") {
@@ -330,25 +330,21 @@ domload(() => {
 			if (focusOffset >= v_node.text.length) {
 				const next_textable = getTextable(focus_node, 1);
 				if (next_textable) {
-					selectElementContentsByIndex(next_textable, 0);
+					setSelectionByIndex(next_textable, 0);
 				}
 			} else {
-				selectElementContentsByIndex(focus_node, focusOffset + 1);
+				setSelectionByIndex(focus_node, focusOffset + 1);
 			}
+		}
+
+		if (ev.key === "ArrowUp") {
+			selectElementContentsFromAnywhere(0, -1);
+			ev.preventDefault();
 		}
 
 		if (ev.key === "ArrowDown") {
 			selectElementContentsFromAnywhere(0, 1);
 			ev.preventDefault();
-
-			// if (focusOffset >= v_node.text.length) {
-			// 	const next_textable = getTextable(focus_node, 1);
-			// 	if (next_textable) {
-			// 		selectElementContentsByIndex(next_textable, 0);
-			// 	}
-			// } else {
-			// 	selectElementContentsByIndex(focus_node, focusOffset + 1);
-			// }
 		}
 
 		if (ev.key === "Enter" && virtual_node_data) {
@@ -366,7 +362,7 @@ domload(() => {
 
 				const insert_node_ref = piep_editor_content._child(`[data-ped="${insert_node_id}"]`);
 				if (insert_node_ref) {
-					selectElementContentsByIndex(insert_node_ref, 0);
+					setSelectionByIndex(insert_node_ref, 0);
 				}
 			}
 		}
@@ -382,24 +378,24 @@ function setSelectionRange(range) {
 	updatePiepCursorPosition();
 }
 
-// /**
-//  *
-//  * @param {PiepNode} node
-//  * @returns {CharacterData}
-//  */
-// function getTextNode(node) {
-// 	let text_node = node;
-// 	while (text_node && text_node.nodeType === 1) {
-// 		const t = text_node.childNodes[0];
-// 		if (!t) {
-// 			break;
-// 		}
-// 		// @ts-ignore
-// 		text_node = t;
-// 	}
-// 	// @ts-ignore
-// 	return text_node;
-// }
+/**
+ *
+ * @param {PiepNode} node
+ * @returns {CharacterData}
+ */
+function getTextNode(node) {
+	let text_node = node;
+	while (text_node && text_node.nodeType === 1) {
+		const t = text_node.childNodes[0];
+		if (!t) {
+			break;
+		}
+		// @ts-ignore
+		text_node = t;
+	}
+	// @ts-ignore
+	return text_node;
+}
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
@@ -443,6 +439,25 @@ function getRectCenter(rect) {
 	};
 }
 
+// /**
+//  *
+//  * @param {PiepNode} node
+//  */
+// function getFirstTextable(node, end = false) {
+// 	while (true) {
+// 		const children = node._direct_children();
+// 		const next = end ? children[children.length - 1] : children[0];
+// 		if (!next) {
+// 			return undefined;
+// 		}
+// 		node = next;
+// 		if (node.classList.contains("textable")) {
+// 			return node;
+// 		}
+// 	}
+// 	return undefined;
+// }
+
 /**
  *
  * @param {number} dx
@@ -458,37 +473,48 @@ function selectElementContentsFromAnywhere(dx, dy) {
 
 	const textables = piep_editor_content._children(".textable");
 	let closest_textable;
-	let textable_smallest_dist = 1000;
+	let textable_smallest_dist = 100000000;
 	for (const textable of textables) {
 		const textable_rect = textable.getBoundingClientRect();
+
+		const start_range = getRangeByIndex(textable, 0);
+		const start_range_rect = start_range.getBoundingClientRect();
+
+		const end_range = getRangeByIndex(textable, textable.textContent.length);
+		const end_range_rect = end_range.getBoundingClientRect();
+
 		if (dy === 1) {
-			if (textable_rect.top + textable_rect.height < sel_rect.top + sel_rect.height) {
+			if (end_range_rect.top <= sel_rect.top) {
 				continue;
 			}
 		}
 		if (dy === -1) {
-			if (textable_rect.top > sel_rect.top) {
+			if (start_range_rect.top >= sel_rect.top) {
 				continue;
 			}
 		}
 		if (dx === 1) {
-			if (textable_rect.left + textable_rect.width < sel_rect.left + sel_rect.width) {
+			if (end_range_rect.left <= sel_rect.left) {
 				continue;
 			}
 		}
 		if (dx === -1) {
-			if (textable_rect.left > sel_rect.left) {
+			if (start_range_rect.left >= sel_rect.left) {
 				continue;
 			}
 		}
 
-		console.log(textable);
+		const textable_center = getRectCenter(textable_rect);
 
-		const textable_dist = 100;
+		const textable_dist = dx * textable_center.x + dy * textable_center.y;
 		if (textable_dist < textable_smallest_dist) {
 			textable_smallest_dist = textable_dist;
 			closest_textable = textable;
 		}
+	}
+
+	if (closest_textable) {
+		setSelectionByIndex(closest_textable, 0);
 	}
 	//console.log(closest_textable);
 	// closest_textable
@@ -525,9 +551,8 @@ function selectElementContentsFromAnywhere(dx, dy) {
  * @param {number} pos
  * @returns
  */
-function selectElementContentsByIndex(node, pos) {
-	const text_node = node.childNodes[0];
-	const sel = window.getSelection();
+function getRangeByIndex(node, pos) {
+	const text_node = getTextNode(node);
 	const range = document.createRange();
 	if (!text_node) {
 		range.setStart(node, 0);
@@ -536,6 +561,18 @@ function selectElementContentsByIndex(node, pos) {
 		range.setStart(text_node, pos);
 		range.setEnd(text_node, pos);
 	}
+	return range;
+}
+
+/**
+ *
+ * @param {PiepNode} node
+ * @param {number} pos
+ * @returns
+ */
+function setSelectionByIndex(node, pos) {
+	const sel = window.getSelection();
+	const range = getRangeByIndex(node, pos);
 	sel.removeAllRanges();
 	sel.addRange(range);
 	updatePiepCursorPosition();
