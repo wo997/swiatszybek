@@ -8,10 +8,26 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/shop_order/search",
 		columns: [
-			{ label: "Nr", key: "shop_order_id", width: "1", sortable: true, searchable: "string" },
-			{ label: "Klient", key: "__display_name", width: "1", sortable: true, searchable: "string" },
-			{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
-			{ label: "Wartość", key: "total_price", width: "1", sortable: true, searchable: "string" },
+			{ label: "Nr", key: "shop_order_id", width: "100px", sortable: true, searchable: "string" },
+			{ label: "Klient", key: "display_address_name", width: "1", sortable: true, searchable: "string" },
+			{
+				label: "Produkty",
+				key: "ordered_products",
+				width: "2",
+				render: (data) => {
+					if (data.ordered_products) {
+						try {
+							const op = JSON.parse(data.ordered_products);
+							if (op.length === 1 && op[0].qty === null) {
+								return "";
+							}
+							return op.map((e) => html`<span class="semi_bold">${e.qty ? e.qty + " × " : ""}</span> ${e.name}`).join("<br>");
+						} catch {}
+					}
+				},
+			},
+			//{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
+			{ label: "Wartość", key: "total_price", width: "140px", sortable: true, searchable: "string" },
 			{
 				label: "Status",
 				key: "status_id",
