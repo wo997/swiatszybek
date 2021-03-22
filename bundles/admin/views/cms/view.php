@@ -31,4 +31,4 @@
     <div contenteditable="true"></div>
 </div> -->
 
-<?php include "bundles/admin/templates/default.php"; ?>\
+<?php include "bundles/admin/templates/default.php"; ?>

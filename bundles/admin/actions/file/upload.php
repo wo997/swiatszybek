@@ -1,7 +1,5 @@
 <?php //route[{ADMIN}/file/upload]
 
-$type = def($_POST, "type", "files");
-
 for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
     $tmp_file_path = $_FILES['files']['tmp_name'][$i];
     $original_file_name = $_FILES['files']['name'][$i];
@@ -9,7 +7,7 @@ for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
 
     $file_data = Files::saveUploadedFile($tmp_file_path, $original_file_name, $name);
 
-    if ($type == "copy") {
+    if (isset($_POST["copy_name"])) {
         $copy_path = UPLOADS_PLAIN_PATH . $name . "." . Files::getFileExtension($file_data["file_path"]);
         copy($tmp_file_path, $copy_path);
         Files::processImage($copy_path);

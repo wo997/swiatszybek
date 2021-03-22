@@ -1,22 +1,19 @@
 /* js[view] */
 
-// function uploadImageWithCopy(e, name) {
-// 	e.preventDefault();
-// 	var input = e.target._child("input[type=file]");
-// 	var formData = new FormData();
-// 	for (let file of input.files) {
-// 		formData.append("files[]", file);
-// 	}
-// 	formData.append("type", "copy");
-// 	formData.append("name", name);
+document.addEventListener("click", (ev) => {
+	const target = $(ev.target);
 
-// 	xhr({
-// 		url: STATIC_URLS["ADMIN"] + "/uploads_action",
-// 		formData: formData,
-// 		success(res) {
-// 			$$(`.${name}`).forEach((e) => {
-// 				switchImage(e, res.path);
-// 			});
-// 		},
-// 	});
-// }
+	const upload_img_btn = target._parent(".upload_img_btn", { skip: 0 });
+	if (upload_img_btn) {
+		getSelectFileModal()._nodes.file_manager._show_upload_modal(
+			{
+				copy_name: upload_img_btn.dataset.upload_name,
+				label: upload_img_btn.dataset.upload_label,
+				callback: () => {
+					window.location.reload();
+				},
+			},
+			{ source: upload_img_btn }
+		);
+	}
+});

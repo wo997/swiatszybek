@@ -4,7 +4,7 @@ if (isset($preview_params) && isset($preview_params["content"])) {
     $page_data["content"] = $preview_params["content"];
 }
 
-$page_content = getCMSPageHTML($page_data["content"]);
+//$page_content = getCMSPageHTML($page_data["content"]);
 
 $page_width = "1500px";
 
@@ -63,7 +63,8 @@ include "global/includes_for_cms_page.php";
         }
         ?>
 
-        <?= $page_content ?>
+        <?= "" //$page_content 
+        ?>
     </div>
 </div>
 

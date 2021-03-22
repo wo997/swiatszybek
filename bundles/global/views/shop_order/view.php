@@ -44,7 +44,7 @@ $ordered_products = $shop_order->getProp("ordered_products");
 /** @var Entity OrderStatus */
 $order_status = $shop_order->getProp("status");
 
-$requires_payment = $shop_order->getProp("status_id") === 1;
+$requires_payment = $shop_order->getProp("status")->getId() === 1;
 
 ?>
 
@@ -137,11 +137,13 @@ $requires_payment = $shop_order->getProp("status_id") === 1;
                     echo "<div class=\"product_row\">";
                     echo "<img src=\"$img_url\">";
                     echo "<a class=\"product_name\" href=\"$url\"> $name </a>";
+                    echo "<p class=\"product_qty_price\">";
                     if ($qty > 1) {
-                        echo "<p class=\"product_qty_price\"> <span class=\"base_price\">$gross_price zł</span> × $qty = $total_price zł</p>";
+                        echo "<span class=\"base_price\">$gross_price zł</span> × $qty = $total_price zł";
                     } else {
-                        echo "<p class=\"product_qty_price\">$gross_price zł</p>";
+                        echo "$gross_price zł";
                     }
+                    echo "</p>";
                     echo "</div>";
                 }
                 ?>

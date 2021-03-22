@@ -1,17 +1,19 @@
 /* css[view] */
 
 .favicon {
-  width: max(38.25px, min(4.5vw, 54px));
-  height: max(38.25px, min(4.5vw, 54px));
-  display: block;
-  margin: 10px 0;
-  object-fit: contain;
+	width: 54px;
+	height: 54px;
+	display: block;
+	object-fit: contain;
 }
 
 .share_img {
-  width: 200px;
-  height: 200px;
-  display: block;
-  margin: 10px 0;
-  object-fit: contain;
+	width: 200px;
+	height: 200px;
+	display: block;
+	object-fit: contain;
+}
+
+.upload_img_btn {
+	margin-top: 5px;
 }

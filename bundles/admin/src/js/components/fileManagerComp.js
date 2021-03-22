@@ -7,7 +7,14 @@
  * search_data: any[]
  * pagination_data: PaginationCompData
  * quick_search?: string
+ * upload_modal_options?: UploadFileModalOptions
  * }} FileManagerCompData
+ *
+ * @typedef {{
+ * copy_name?: string
+ * label?: string
+ * callback?()
+ * }} UploadFileModalOptions
  *
  * @typedef {{
  * _data: FileManagerCompData
@@ -21,7 +28,7 @@
  * }
  * _search()
  * _search_request: XMLHttpRequest | undefined
- * _show_upload_modal(options?: ShowModalParams)
+ * _show_upload_modal(options?: UploadFileModalOptions, modal_options?: ShowModalParams)
  * } & BaseComp} FileManagerComp
  */
 
@@ -160,7 +167,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 				<div id="uploadFile" data-dismissable>
 					<div class="modal_body">
 						<div class="custom_toolbar">
-							<span class="title medium">Prześlij pliki</span>
+							<span class="title medium upload_file_label"></span>
 							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
 						<div class="scroll_panel scroll_shadow panel_padding">
@@ -237,9 +244,14 @@ function fileManagerComp(comp, parent, data = undefined) {
 				}
 				input._set_value("", { quiet: true });
 
-				// formData.append("name", $("#uploadFiles .name").value);
-				// formData.append("search", $("#search").value);
 				formData.append("search", "");
+				if (comp._data.upload_modal_options.copy_name) {
+					formData.append("copy_name", "1");
+					formData.append("name", comp._data.upload_modal_options.copy_name);
+				} else {
+					// it would be nice to bring it back
+					// formData.append("name", );
+				}
 
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/file/upload",
@@ -250,15 +262,22 @@ function fileManagerComp(comp, parent, data = undefined) {
 						comp._search();
 						showNotification("Plik został przesłany", { one_line: true, type: "success" });
 						hideParentModal(form);
+
+						if (comp._data.upload_modal_options.callback) {
+							comp._data.upload_modal_options.callback();
+						}
 					},
 				});
 
 				showLoader(form);
 			});
 
-			comp._show_upload_modal = (params = {}) => {
-				params.source = def(params.source, comp._nodes.upload_btn);
-				showModal("uploadFile", params);
+			comp._show_upload_modal = (options = {}, modal_options = {}) => {
+				modal_options.source = def(modal_options.source, comp._nodes.upload_btn);
+				comp._data.upload_modal_options = options;
+				comp._render();
+				$("#uploadFile .upload_file_label")._set_content(def(options.label, "Prześlij pliki"));
+				showModal("uploadFile", modal_options);
 			};
 
 			comp._nodes.files_grid.addEventListener("click", (ev) => {
