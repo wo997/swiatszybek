@@ -46,6 +46,7 @@ class Entity
             DB::execute("INSERT INTO $name () VALUES ()");
             //DB::execute("INSERT INTO $name ($columns) VALUES ($values)");
             $this->setId(DB::insertedId());
+            $this->setCurrSimpleProps();
             $this->curr_meta = [];
             $this->is_new = true;
 
@@ -114,6 +115,16 @@ class Entity
     public function getGlobalId()
     {
         return $this->global_id;
+    }
+
+    /**
+     *
+     * @param  boolean $delete
+     * @return void
+     */
+    public function getCurrProp($name)
+    {
+        return def($this->curr_props, $name, null);
     }
 
     /**
@@ -283,10 +294,21 @@ class Entity
      * setProp
      *
      * @param  string $prop_name !entity_prop_name
+     * @return void
+     */
+    public function warmupProp($prop_name)
+    {
+        $this->setProp($prop_name, $this->getProp($prop_name));
+    }
+
+    /**
+     * setProp
+     *
+     * @param  string $prop_name !entity_prop_name
      * @param  mixed $val
      * @return void
      */
-    public function setProp($prop_name, $val = false)
+    public function setProp($prop_name, $val)
     {
         if ($prop_name === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
@@ -299,10 +321,6 @@ class Entity
             if ($v !== null) {
                 $val = $v;
             }
-        }
-
-        if ($val === false) {
-            $val = $this->getProp($prop_name);
         }
 
         if (strpos($prop_name, "_meta_", 0) === 0) {
@@ -402,7 +420,7 @@ class Entity
                 if ($parent_id > 0) { // only the existing ones for sure, otherwise empty garbage is created
                     $parent = EntityManager::getEntityById($parent_name, $parent_id);
                     if ($parent) {
-                        $parent->setProp($parent_data["prop"]);
+                        $parent->warmupProp($parent_data["prop"]);
                         $this->addParent($parent);
                     }
                 }

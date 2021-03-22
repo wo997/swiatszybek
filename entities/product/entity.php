@@ -48,3 +48,10 @@ EventListener::register("before_save_product_entity", function ($params) {
     }
     $product->setProp("__options_json", $options ? json_encode($options) : "{}");
 });
+
+EventListener::register("set_product_entity_stock", function ($params) {
+    $val = $params["val"];
+    if ($val < 0) {
+        return 0;
+    }
+});

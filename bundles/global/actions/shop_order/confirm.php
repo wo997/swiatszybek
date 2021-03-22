@@ -2,11 +2,7 @@
 
 try {
     DB::beginTransaction();
-    $shop_order = EntityManager::getEntity("shop_order", json_decode($_POST["shop_order"], true));
-    if (!$shop_order->is_new) {
-        // someone trying to do nasty things
-        Request::jsonResponse(["success" => false]);
-    }
+    $shop_order = confirmOrder(json_decode($_POST["shop_order"], true));
     EntityManager::saveAll();
     DB::commitTransaction();
     // sometimes it should be p24, but you can easily do a double redirect, only once though, "zaplac" will help
