@@ -27,7 +27,16 @@ domload(() => {
 				},
 			},
 			//{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
-			{ label: "Wartość", key: "total_price", width: "140px", sortable: true, searchable: "number" },
+			{
+				label: "Wartość",
+				key: "total_price",
+				width: "140px",
+				sortable: true,
+				searchable: "number",
+				render: (data) => {
+					return html`${data.total_price} zł`;
+				},
+			},
 			{
 				label: "Status",
 				key: "status_id",
