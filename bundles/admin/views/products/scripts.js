@@ -81,7 +81,7 @@ domload(() => {
 							html`<img data-src="${data.img_url}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;" />`,
 						flex: true,
 					},
-					{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
+					{ label: "Produkt", key: "product_name", db_key: "p.__name", width: "1", sortable: true, searchable: "string" },
 					{
 						label: "W magazynie",
 						key: "stock",
