@@ -65,3 +65,10 @@ product-comp {
 		display: inline-block;
 	}
 }
+
+product_feature-option-comp.comp {
+	.node_save_btn,
+	.node_cancel_btn {
+		margin-left: 4px;
+	}
+}

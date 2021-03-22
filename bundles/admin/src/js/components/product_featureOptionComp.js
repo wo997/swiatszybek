@@ -23,6 +23,8 @@
  *  physical_value_wrapper: PiepNode
  *  physical_value_input: PiepNode
  *  physical_value_unit: PiepNode
+ *  save_btn: PiepNode
+ *  cancel_btn: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureOptionComp
  */
@@ -40,6 +42,8 @@ function product_featureOptionComp(
 		product_feature_id: -1,
 	}
 ) {
+	let intrusive_unit = true;
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -65,8 +69,14 @@ function product_featureOptionComp(
 						data.double_value
 					);
 
-					unit_picker._set_value(value_data.unit_factor, { quiet: true });
-					comp._nodes.physical_value_input._set_value(value_data.value, { quiet: true });
+					if (intrusive_unit) {
+						unit_picker._set_value(value_data.unit_factor, { quiet: true });
+						comp._nodes.physical_value_input._set_value(value_data.value, { quiet: true });
+
+						setTimeout(() => {
+							intrusive_unit = false;
+						});
+					}
 
 					comp._nodes.physical_value_wrapper.classList.remove("hidden");
 					comp._nodes.double_value.classList.add("hidden");
@@ -96,6 +106,8 @@ function product_featureOptionComp(
 					<input class="field small inline" inputmode="numeric" data-number data-node="{${comp._nodes.physical_value_input}}" />
 					<select class="field inline blank unit_picker" data-node="{${comp._nodes.physical_value_unit}}"></select>
 				</div>
+				<button class="btn primary small hidden" data-node="{${comp._nodes.save_btn}}">Zapisz</button>
+				<button class="btn subtle small hidden" data-node="{${comp._nodes.cancel_btn}}">Anuluj</button>
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
@@ -109,6 +121,32 @@ function product_featureOptionComp(
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = list._parent_comp._parent_comp._parent_comp;
+
+			let option_data_to_save;
+			let refresh_options_on_save = false;
+			comp._nodes.save_btn.addEventListener("click", () => {
+				comp._nodes.save_btn.classList.add("hidden");
+				comp._nodes.cancel_btn.classList.add("hidden");
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+					params: {
+						product_feature_option: option_data_to_save,
+					},
+					success: (res) => {
+						if (refresh_options_on_save) {
+							intrusive_unit = true;
+							refreshProductFeatures();
+						}
+					},
+				});
+			});
+
+			comp._nodes.cancel_btn.addEventListener("click", () => {
+				comp._nodes.save_btn.classList.add("hidden");
+				comp._nodes.cancel_btn.classList.add("hidden");
+				intrusive_unit = true;
+				refreshProductFeatures();
+			});
 
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore
@@ -160,7 +198,7 @@ function product_featureOptionComp(
 				product_comp._render();
 			});
 
-			const save_db_action = (quiet = false) => {
+			const considerSavingToDb = (refresh = true) => {
 				setTimeout(() => {
 					const data = comp._data;
 
@@ -191,36 +229,29 @@ function product_featureOptionComp(
 					}
 
 					if (need_request) {
-						xhr({
-							url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
-							params: {
-								product_feature_option,
-							},
-							success: (res) => {
-								if (!quiet) {
-									refreshProductFeatures();
-								}
-							},
-						});
+						option_data_to_save = product_feature_option;
+						refresh_options_on_save = refresh;
+						comp._nodes.save_btn.classList.remove("hidden");
+						comp._nodes.cancel_btn.classList.remove("hidden");
 					}
 				});
 			};
 
 			comp._children(".save_to_db").forEach((input) => {
 				input.addEventListener("blur", () => {
-					save_db_action(false);
+					considerSavingToDb();
 				});
 			});
 
 			comp._children(".bind_datetime_value").forEach((input) => {
 				input.addEventListener("changeDate", () => {
-					save_db_action(false);
+					considerSavingToDb();
 				});
 			});
 
 			const recalculate_unit = () => {
 				comp._nodes.double_value._set_value(comp._nodes.physical_value_unit._get_value() * comp._nodes.physical_value_input._get_value());
-				save_db_action(false);
+				considerSavingToDb();
 			};
 
 			comp._nodes.physical_value_unit.addEventListener("change", () => {
@@ -232,7 +263,7 @@ function product_featureOptionComp(
 			});
 
 			product_comp.addEventListener("history_change", () => {
-				save_db_action(true);
+				considerSavingToDb(false);
 			});
 		},
 	});
