@@ -93,7 +93,7 @@ function recreateDom() {
 			if (text) {
 				body += text;
 			} else {
-				body += `<span class="text_break"> <br></span>`;
+				body += `<br>`;
 			}
 		}
 
@@ -199,13 +199,12 @@ domload(() => {
 
 	piep_editor.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
-		const correct_selection = !!$(sel.focusNode)._parent($(ev.target), { skip: 0 });
-		const text_break = $(sel.focusNode)._parent(".text_break", { skip: 0 });
+		const focus_node = $(sel.focusNode);
+		const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
 		if (!correct_selection) {
 			setSelectionByIndex($(ev.target), 0);
-		}
-		if (text_break) {
-			setSelectionByIndex(text_break, 0);
+		} else if (focus_node.innerText === "\n") {
+			setSelectionByIndex(correct_selection, 0);
 		}
 		updatePiepCursorPosition();
 	});
@@ -397,27 +396,47 @@ function getTextNode(node) {
 	return text_node;
 }
 
+function getFocusTextable() {
+	const sel = window.getSelection();
+	const focus_node = sel ? $(sel.focusNode) : undefined;
+	return focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+}
+
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	const range = document.createRange();
-
-	const focus_node = sel ? $(sel.focusNode) : undefined;
-	let focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+	const focus_textable = getFocusTextable();
 
 	if (focus_textable) {
-		range.setStart(sel.focusNode, sel.focusOffset);
-		range.setEnd(sel.focusNode, sel.focusOffset);
-
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
-		const selection_cursor_rect = range.getBoundingClientRect();
 
-		const width = selection_cursor_rect.width;
-		const cursor_width = Math.max(width, 2);
-		const height = selection_cursor_rect.height;
-		const cursor_height = Math.max(height, 20);
+		let cursor_top, cursor_left, cursor_width, cursor_height;
 
-		piep_editor_cursor.style.left = selection_cursor_rect.left + (width - cursor_width) * 0.5 - piep_editor_rect.left + "px";
-		piep_editor_cursor.style.top = selection_cursor_rect.top + (height - cursor_height) * 0.5 - piep_editor_rect.top + "px";
+		if (focus_textable.innerText === "\n") {
+			const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
+			const sel_width = node_cursor_rect.width;
+			const sel_height = node_cursor_rect.height;
+			cursor_width = Math.max(sel_width, 2);
+			cursor_height = Math.max(sel_height, 20);
+
+			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
+			cursor_top = node_cursor_rect.top + sel_height * 0.5;
+		} else {
+			range.setStart(sel.focusNode, sel.focusOffset);
+			range.setEnd(sel.focusNode, sel.focusOffset);
+
+			const selection_cursor_rect = range.getBoundingClientRect();
+			const sel_width = selection_cursor_rect.width;
+			const sel_height = selection_cursor_rect.height;
+			cursor_width = Math.max(sel_width, 2);
+			cursor_height = Math.max(sel_height, 20);
+
+			cursor_left = selection_cursor_rect.left + sel_width * 0.5;
+			cursor_top = selection_cursor_rect.top + sel_height * 0.5;
+		}
+
+		piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
+		piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
 		piep_editor_cursor.style.width = cursor_width + "px";
 		piep_editor_cursor.style.height = cursor_height + "px";
 	}
@@ -465,11 +484,16 @@ function getRectCenter(rect) {
  */
 function selectElementContentsFromAnywhere(dx, dy) {
 	const sel = window.getSelection();
-	const range = document.createRange();
+	/** @type {DOMRect} */
+	let sel_rect;
 
-	const sel_rect = sel.getRangeAt(0).getBoundingClientRect();
-	//const sel_center = getRectCenter(sel_rect);
-	//sel_center.
+	const focus_textable = getFocusTextable();
+	if (focus_textable && focus_textable.innerText === "\n") {
+		sel_rect = focus_textable._child("br").getBoundingClientRect();
+	} else {
+		sel_rect = sel.getRangeAt(0).getBoundingClientRect();
+	}
+	const sel_center = getRectCenter(sel_rect);
 
 	const textables = piep_editor_content._children(".textable");
 	let closest_textable;
@@ -477,29 +501,39 @@ function selectElementContentsFromAnywhere(dx, dy) {
 	for (const textable of textables) {
 		const textable_rect = textable.getBoundingClientRect();
 
-		const start_range = getRangeByIndex(textable, 0);
-		const start_range_rect = start_range.getBoundingClientRect();
+		/** @type {DOMRect} */
+		let start_range_rect;
+		/** @type {DOMRect} */
+		let end_range_rect;
 
-		const end_range = getRangeByIndex(textable, textable.textContent.length);
-		const end_range_rect = end_range.getBoundingClientRect();
+		if (textable.innerText === "\n") {
+			start_range_rect = textable._child("br").getBoundingClientRect();
+			end_range_rect = start_range_rect;
+		} else {
+			const start_range = getRangeByIndex(textable, 0);
+			start_range_rect = start_range.getBoundingClientRect();
+
+			const end_range = getRangeByIndex(textable, textable.textContent.length);
+			end_range_rect = end_range.getBoundingClientRect();
+		}
 
 		if (dy === 1) {
-			if (end_range_rect.top <= sel_rect.top) {
+			if (end_range_rect.top < sel_rect.top + 1) {
 				continue;
 			}
 		}
 		if (dy === -1) {
-			if (start_range_rect.top >= sel_rect.top) {
+			if (start_range_rect.top > sel_rect.top - 1) {
 				continue;
 			}
 		}
 		if (dx === 1) {
-			if (end_range_rect.left <= sel_rect.left) {
+			if (end_range_rect.left < sel_rect.left + 1) {
 				continue;
 			}
 		}
 		if (dx === -1) {
-			if (start_range_rect.left >= sel_rect.left) {
+			if (start_range_rect.left > sel_rect.left - 1) {
 				continue;
 			}
 		}
@@ -514,35 +548,46 @@ function selectElementContentsFromAnywhere(dx, dy) {
 	}
 
 	if (closest_textable) {
-		setSelectionByIndex(closest_textable, 0);
+		const range = document.createRange();
+
+		let closest_pos = 0;
+		let pos_smallest_dist = 100000000;
+		const text_node = getTextNode(closest_textable);
+		for (let pos = 0; pos <= text_node.textContent.length; pos++) {
+			range.setStart(text_node, pos);
+			range.setEnd(text_node, pos);
+
+			const position_center = getRectCenter(range.getBoundingClientRect());
+			let pos_dist = 0;
+			const ddx = position_center.x - sel_center.x;
+			const ddy = position_center.y - sel_center.y;
+			if (dx === 0) {
+				pos_dist += 0.1 * Math.abs(ddx);
+			} else {
+				const dddx = dx * ddx;
+				if (dddx < 1) {
+					continue;
+				}
+				pos_dist += dddx;
+			}
+			if (dy === 0) {
+				pos_dist += 0.1 * Math.abs(ddy);
+			} else {
+				const dddy = dy * ddy;
+				if (dddy < 1) {
+					continue;
+				}
+				pos_dist += dddy;
+			}
+
+			if (pos_dist < pos_smallest_dist) {
+				pos_smallest_dist = pos_dist;
+				closest_pos = pos;
+			}
+		}
+
+		setSelectionByIndex(closest_textable, closest_pos);
 	}
-	//console.log(closest_textable);
-	// closest_textable
-
-	// const text_node = node.childNodes[0];
-
-	// if (!text_node) {
-	// 	range.setStart(node, 0);
-	// 	range.setEnd(node, 0);
-	// } else {
-	// 	const was_cursor_x = window.getSelection().getRangeAt(0).getBoundingClientRect().left;
-	// 	let last_cursor_x;
-	// 	for (let i = 0; i <= text_node.textContent.length; i++) {
-	// 		range.setStart(text_node, i);
-	// 		range.setEnd(text_node, i);
-	// 		const cursor_x = range.getBoundingClientRect().left;
-	// 		if (last_cursor_x === undefined) {
-	// 			last_cursor_x = cursor_x;
-	// 		}
-	// 		if (-last_cursor_x * 0.5 + cursor_x * 1.5 > was_cursor_x) {
-	// 			break;
-	// 		}
-	// 		last_cursor_x = cursor_x;
-	// 	}
-	// }
-	// sel.removeAllRanges();
-	// sel.addRange(range);
-	// updatePiepCursorPosition();
 }
 
 /**
