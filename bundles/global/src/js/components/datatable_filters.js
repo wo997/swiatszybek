@@ -63,6 +63,9 @@ let filter_menus = [
 		},
 		open: (elem, data = { string: "", value: "" }) => {
 			elem._child("select")._set_value(data.value);
+			elem._child("select").addEventListener("change", () => {
+				elem._child(".apply").click();
+			});
 		},
 		apply: (elem) => {
 			const select = elem._child("select");
@@ -112,21 +115,21 @@ let filter_menus = [
 				<span>Typ wyszukiwania</span>
 			</span>
 			<select class="type field">
-				<option value="=">Równy</option>
-				<option value=">=">Większy, bądź równy</option>
-				<option value="<=">Mniejszy, bądź równy</option>
+				<option value="=">Równa</option>
+				<option value=">=">Większa, bądź równa</option>
+				<option value="<=">Mniejsza, bądź równa</option>
 				<option value="<>">Przedział</option>
 			</select>
 			<span class="label case_single input_wrapper glue_children">
 				<span class="field_desc">
-					<b>x <span class="single_operator">=</span></b>
+					<b>liczba <span class="single_operator">=</span></b>
 				</span>
 				<input type="text" class="field num" data-validate="" data-number />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
 				<input type="text" class="field more_than" data-validate="" data-number />
 				<span class="field_desc">
-					<b>≤ x ≤</b>
+					<b>≤ liczba ≤</b>
 				</span>
 				<input type="text" class="field less_than" data-validate="" data-number />
 			</span>
@@ -186,83 +189,79 @@ let filter_menus = [
 	{
 		name: "date",
 		getHtml: (column, data) => html`
-			TODO same as numbers
-			<span class="label first">Typ wyszukiwania</span>
-			<select class="field date_type" onchange="dateTypeChanged(this)">
-				<option value="=">Dokładna data</option>
-				<option value=">">Data od</option>
-				<option value="<">Data do</option>
+			<span class="label first">
+				<span>Typ wyszukiwania</span>
+			</span>
+			<select class="type field">
+				<option value="=">Równa</option>
+				<option value=">=">Większa, bądź równa</option>
+				<option value="<=">Mniejsza, bądź równa</option>
 				<option value="<>">Przedział</option>
 			</select>
-			<div class="singledate_wrapper">
-				<span class="label">Data</span>
-				<input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style="width: 254px;" />
-			</div>
-
-			<div class="margin_bottom date_range_picker" style="width: 254px;display:flex;">
-				<div style="margin-right:5px">
-					<span class="label">Od</span>
-					<input type="text" class="field start" data-orientation="left bottom" />
-				</div>
-				<div>
-					<span class="label">Do</span>
-					<input type="text" class="field end" data-orientation="right bottom" />
-				</div>
-			</div>
+			<span class="label case_single input_wrapper glue_children">
+				<span class="field_desc">
+					<b>data <span class="single_operator">=</span></b>
+				</span>
+				<input type="text" class="field num default_datepicker inline" data-orientation="right" data-validate="" />
+			</span>
+			<span class="label case_range input_wrapper glue_children">
+				<input type="text" class="field more_than default_datepicker inline" data-validate="" />
+				<span class="field_desc">
+					<b>≤ data ≤</b>
+				</span>
+				<input type="text" class="field less_than default_datepicker" data-orientation="right" data-validate="" />
+			</span>
 		`,
-		open: (elem, val) => {
-			elem._child(".phrase")._set_value(val);
+		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
+			const type = elem._child(".type");
+			const num = elem._child(".num");
+			const more_than = elem._child(".more_than");
+			const less_than = elem._child(".less_than");
+
+			type.addEventListener("change", () => {
+				const type_v = type._get_value();
+				const is_range = type_v === "<>";
+				elem._child(".case_single").style.display = is_range ? "none" : "";
+				elem._child(".case_range").style.display = is_range ? "" : "none";
+				elem._child(".single_operator")._set_content({ "<=": "≤", ">=": "≥", "=": "=" }[type_v]);
+			});
+
+			num._set_value(def(data.num, ""));
+			more_than._set_value(def(data.more_than, ""));
+			less_than._set_value(def(data.less_than, ""));
+
+			type._set_value(def(data.operator, "="));
 		},
 		apply: (elem) => {
-			return elem._child(".phrase")._get_value();
+			const type = elem._child(".type");
+			const num = elem._child(".num");
+			const more_than = elem._child(".more_than");
+			const less_than = elem._child(".less_than");
+			const type_v = type._get_value();
+			const num_v = num._get_value();
+			const more_than_v = more_than._get_value();
+			const less_than_v = less_than._get_value();
+
+			if (type_v === "<>") {
+				const validate = validateInputs([less_than, more_than]);
+				if (validate.length > 0) {
+					return false;
+				}
+
+				return {
+					type: "number",
+					more_than: more_than_v,
+					less_than: less_than_v,
+					operator: type_v,
+					display: `${more_than_v} <= X <= ${less_than_v}`,
+				};
+			} else {
+				const validate = validateInputs([num]);
+				if (validate.length > 0) {
+					return false;
+				}
+				return { type: "number", num: num_v, operator: type_v, display: `X ${type_v} ${num_v}` };
+			}
 		},
 	},
 ];
-
-// 	if (filters == "text") {
-// 		menu_header = `Wpisz frazę`;
-// 		menu_body += html`<input type="text" class="field margin_bottom">
-//       <label class='checkbox-wrapper block margin_bottom' text-align:center;color:#555'>
-//         <input type='checkbox' name='exact'><div class='checkbox'></div> Dopasuj całą frazę
-//       </label>
-//     `;
-// 	} else if (filters == "date") {
-// 		if (!IS_TOUCH_DEVICE) {
-// 			menu_header = `Wybierz datę`;
-// 		}
-// 		menu_body += html`
-//       <span class="label first">Typ wyszukiwania</span>
-//       <select class="field date_type" onchange="dateTypeChanged(this)">
-//         <option value='='>Dokładna data</option>
-//         <option value='>'>Data od</option>
-//         <option value='<'>Data do</option>
-//         <option value='<>'>Przedział</option>
-//       </select>
-//       <div class="singledate_wrapper">
-//         <span class="label">Data</span>
-//         <input type="text" class="field default_datepicker margin_bottom" data-orientation="auto bottom" style='width: 254px;'>
-//       </div>
-
-//       <div class="margin_bottom date_range_picker hidden" style='width: 254px;display:flex;'>
-//         <div style="margin-right:5px">
-//           <span class="label">Od</span>
-//           <input type="text" class="field start" data-orientation="left bottom">
-//         </div>
-//         <div>
-//           <span class="label">Do</span>
-//           <input type="text" class="field end" data-orientation="right bottom">
-//         </div>
-//       </div>
-//     `;
-// 	} else if (filters == "select") {
-// 		menu_header = `Zaznacz pola`;
-// 		for (i = 0; i < col_def.select_values.length; i++) {
-// 			var val = col_def.select_values[i];
-// 			var label = col_def.select_labels ? col_def.select_labels[i] : val;
-// 			var select_single = col_def.select_single ? "true" : "false";
-
-// 			menu_body += html`<label class='checkbox-wrapper block'>
-//                 <input type='checkbox' value='${val}' onchange='filterCheckboxChanged(this,${select_single})'><div class='checkbox'></div> ${label}
-//             </label>`;
-// 		}
-// 	}

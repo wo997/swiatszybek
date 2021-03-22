@@ -18,7 +18,7 @@ function getDatepickerDefaultOptions(e) {
 	if (scroll_parent != window) {
 		options.container = scroll_parent;
 	}
-	var orientation = e.getAttribute("data-orientation");
+	var orientation = e.dataset.orientation;
 	if (orientation) {
 		options.orientation = orientation;
 	}

@@ -145,7 +145,8 @@ datatable-comp {
 		&:not(.visible) {
 			display: none;
 		}
-		&[data-filter="number"] {
+		&[data-filter="number"],
+		&[data-filter="date"] {
 			.input_wrapper {
 				& {
 					width: 250px;

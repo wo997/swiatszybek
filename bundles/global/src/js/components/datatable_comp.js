@@ -936,7 +936,7 @@ function datatableComp(comp, parent, data) {
 
 			const tacz = (ev) => {
 				const target = $(ev.target);
-				if (target && !target._parent(".node_filter_menu, .dt_filter", { skip: 0 })) {
+				if (target && !target._parent(".node_filter_menu, .dt_filter, .datepicker-dropdown", { skip: 0 })) {
 					hideFilterMenu();
 				}
 			};
