@@ -229,7 +229,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </div>
                 </div>
             </div>
-            <div data-slide_width="100px" data-show_next_mobile style="--slide_padding:5px" data-nav_out_from="1000px"></div>
+            <div data-slide_width="100px" data-show_next_mobile style="--slide_padding: 3px;--slide_width: 100.5px;margin: 3px -3px;" data-nav_out_from="1000px"></div>
         </div>
         <div class="product_offer">
             <h1 class="h1"><?= $general_product_data["name"] ?></h1>

@@ -5,8 +5,9 @@ function starsLoaded() {
 		stars.classList.add("rdy");
 
 		let stars_html = "";
-		const rating = numberFromStr(stars.innerText);
+		const rating = numberFromStr(stars.innerHTML);
 		for (let i = 1; i <= 5; i++) {
+			// <i class="fas fa-star-half-alt"></i>
 			if (i <= rating) {
 				stars_html += html`<i class="fas fa-star"></i>`;
 			} else {

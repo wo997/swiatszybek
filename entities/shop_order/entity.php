@@ -51,6 +51,9 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
 
     /** @var Entity Address */
     $main_address = $shop_order->getProp("main_address");
+    if (!$main_address) {
+        return;
+    }
 
     $status_id = $params["val"];
 
@@ -132,5 +135,5 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
     $email_body .= "</div>";
     //}
 
-    sendEmail($main_address->getProp("email"), $email_body, $email_title);
+    //sendEmail($main_address->getProp("email"), $email_body, $email_title);
 });
