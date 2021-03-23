@@ -104,17 +104,17 @@ class User
                 "success" => false
             ];
 
-        $existing_user_id = DB::fetchVal("SELECT user_id FROM user WHERE type = 'regular' AND email = ?", [$data["email"]]);
-        if ($existing_user_id !== $this->getId()) {
-            $this->id = $existing_user_id;
-            $this->setData();
-        }
-
-        if ($this->entity->getProp("authenticated")) {
+        $authenticated = DB::fetchVal("SELECT authenticated FROM user WHERE type = 'regular' AND email = ?", [$data["email"]]);
+        if ($authenticated === 1) {
             $res["errors"][] = "Konto zostało już aktywowane!";
             $res["is_info"] = true;
             return $res;
         }
+        // if ($authenticated === 0) {
+        //     $res["errors"][] = "Konto zostało już aktywowane!";
+        //     $res["is_info"] = true;
+        //     return $res;
+        // }
 
         // if the user seems to be new
         if ($this->entity->getProp("type") !== "regular") {

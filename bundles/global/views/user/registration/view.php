@@ -14,7 +14,7 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
 
 <?php startSection("body_content"); ?>
 
-<div id="registerForm" style="margin: auto auto 0;padding:20px 10px 80px;width:100%;max-width:500px">
+<form id="registerForm" style="margin: auto auto 0;padding:20px 10px 80px;width:100%;max-width:500px" onsubmit="return false;">
     <h1 class="h1 center">Rejestracja</h1>
     <span class="label">E-mail</span>
     <input class="field email pretty_errors" autocomplete="email" data-validate="custom:validateUserEmailExists">
@@ -28,7 +28,13 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
             <i class="fas fa-eye"></i>
         </button>
     </div>
-    <input type="password" class="field password pretty_errors" data-validate="password" autocomplete="new-password">
+    <input type="password" class="field password pretty_errors pretty_errors_inline" data-validate="password" autocomplete="new-password">
+    <div class="user_tip password_requirements" style="margin-top:10px;">
+        <p class="eigth_characters"> 8 znaków długości</p>
+        <p class="one_small_letter"> 1 małą litera (a-z)</p>
+        <p class="one_big_letter"> 1 wielką litera (A-Z)</p>
+        <p class="one_digit"> 1 cyfra (0-9)</p>
+    </div>
 
     <div class="label">Powtórz hasło</div>
     <input type="password" class="field password_rewrite pretty_errors" data-validate="match:#registerForm .password" autocomplete="new-password">
@@ -37,6 +43,6 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
         Dalej
         <i class="fa fa-chevron-right"></i>
     </button>
-</div>
+</form>
 
 <?php include "bundles/global/templates/default.php"; ?>

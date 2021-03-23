@@ -43,6 +43,7 @@ function inputChangeValidation(input) {
  * @param {PiepNode[]} inputs
  */
 function validateInputs(inputs) {
+	focus_first_error = true;
 	const inputs_errors = getManyValidationErrors(inputs);
 	inputs_errors.forEach((input_errors) => {
 		showInputErrors(input_errors.input, input_errors.errors);
@@ -50,6 +51,8 @@ function validateInputs(inputs) {
 
 	return inputs_errors;
 }
+
+let focus_first_error = false;
 
 /**
  *
@@ -75,18 +78,25 @@ function showInputErrors(input, errors) {
 		const input_errors = pretty_errors._child(".input_errors");
 		pretty_errors.classList.toggle("correct", errors.length === 0);
 		pretty_errors.classList.toggle("wrong", errors.length > 0);
-		if (errors.length > 0) {
-			input_errors._set_content(errors.join("<br>"));
+		if (!input.classList.contains("pretty_errors_inline")) {
+			if (errors.length > 0) {
+				input_errors._set_content(errors.join("<br>"));
+			}
+			expand(input_errors, errors.length > 0);
 		}
-		expand(input_errors, errors.length > 0);
 	} else {
 		input.dataset.tooltip = errors.join("<br>");
 	}
 
 	if (wrong) {
+		const focus = focus_first_error;
+		focus_first_error = false;
+
 		scrollIntoView(input, {
 			callback: () => {
-				input.focus();
+				if (focus) {
+					input.focus();
+				}
 			},
 		});
 	}
@@ -206,11 +216,15 @@ function getInputValidationErrors(input) {
 			}
 			if (what === "password") {
 				const must_contain = [];
-				if (!value.match(/\d/)) {
-					must_contain.push("min. 1 cyfrę (0-9)");
+
+				if (!value.match(/[a-z]/)) {
+					must_contain.push("min. 1 małą literę (a-z)");
 				}
 				if (!value.match(/[A-Z]/)) {
 					must_contain.push("min. 1 wielką literę (A-Z)");
+				}
+				if (!value.match(/\d/)) {
+					must_contain.push("min. 1 cyfrę (0-9)");
 				}
 				if (must_contain.length > 0) {
 					errors.push(`Hasło musi zawierać ${must_contain.join(", ")}`);

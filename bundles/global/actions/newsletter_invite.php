@@ -9,7 +9,7 @@ foreach ($posts as $p) {
 
 $email = $_POST["email"];
 
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) die;
+if (!validateEmail($email)) die;
 
 $stmt = $con->prepare("SELECT person_id, token, accepted FROM newsletter WHERE email = ?");
 $stmt->bind_param("s", $email);

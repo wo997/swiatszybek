@@ -32,31 +32,31 @@ function logout() {
 	}
 }
 
-// TODO: replace with XHR
-function onSignIn(googleUser) {
-	var form = $("#google-form");
-	if (IS_LOGGED || !form) return;
+// // TODO: replace with XHR
+// function onSignIn(googleUser) {
+// 	var form = $("#google-form");
+// 	if (IS_LOGGED || !form) return;
 
-	var id_token = googleUser.getAuthResponse().id_token;
-	if (!id_token) return;
+// 	var id_token = googleUser.getAuthResponse().id_token;
+// 	if (!id_token) return;
 
-	form.id_token.value = id_token;
-	form.submit();
-}
+// 	form.id_token.value = id_token;
+// 	form.submit();
+// }
 
 function validateLoginUserEmail(input) {
 	const loginForm = $(`#loginForm`);
 
 	xhr({
-		url: "/validate_email",
+		url: "/user/validate_email",
 		params: {
 			email: loginForm._child(".node_email")._get_value(),
 		},
 		success: (res) => {
-			var errors = [];
-			if (res == "unauthenticated") {
+			const errors = [];
+			if (res.status == "unauthenticated") {
 				errors.push("Konto nie zostało aktywowane");
-			} else if (res != "exists") {
+			} else if (res.status == "exists") {
 				errors.push("Takie konto nie istnieje");
 			}
 			showInputErrors(input, errors);

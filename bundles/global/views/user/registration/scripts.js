@@ -10,13 +10,13 @@ function validateUserEmailExists() {
 	const email = registerForm._child(".email");
 
 	xhr({
-		url: "/validate_email",
+		url: "/user/validate_email",
 		params: {
 			email: email._get_value(),
 		},
 		success: (res) => {
 			let errors = [];
-			if (res == "exists") {
+			if (res.status == "exists") {
 				let message = html`<span style="color: black"></span>`;
 				message += html`To konto jest aktywne`;
 				if (!IS_LOGGED) {
@@ -24,18 +24,16 @@ function validateUserEmailExists() {
 				}
 				message += html`</span>`;
 				errors.push(message);
-			} else if (res == "unauthenticated") {
+			} else if (res.status == "unauthenticated") {
 				errors.push(
 					html`<span style="color: black">
 						Konto istnieje
-						<b style="color:var(--success-clr);" class="link" onclick="register(false)"> WYŚLIJ LINK AKTYWACYJNY</b>
+						<b style="color:var(--success-clr);" class="link" onclick="registerUser(${res.user_id})"> WYŚLIJ LINK AKTYWACYJNY</b>
 					</span>`
 				);
-			} else if (res == "invalid") {
+			} else if (res.status == "invalid") {
 				errors.push("Wpisz poprawny adres email");
 			}
-
-			$("#registerForm .submit_btn").toggleAttribute("disabled", errors.length > 0);
 
 			showInputErrors(email, errors);
 		},
@@ -46,7 +44,7 @@ function registerUser(user_id = undefined) {
 	const registerForm = $(`#registerForm`);
 
 	if (user_id === undefined) {
-		const errors = validateInputs(registerForm._children(".password, .password_rewrite"));
+		const errors = validateInputs(registerForm._children(".password_rewrite, .password, .email"));
 		if (errors.length > 0) {
 			return;
 		}
@@ -60,10 +58,12 @@ function registerUser(user_id = undefined) {
 			  }
 			: { user_id };
 
+	showLoader();
 	xhr({
 		url: user_id === undefined ? "/user/register" : "/user/resend_activation_token",
 		params,
 		success: (res) => {
+			hideLoader();
 			if (res.success) {
 				let body = html`Link do aktywacji konta został wysłany<br />na ${res.email}`;
 				let footer = html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `;
@@ -120,4 +120,26 @@ domload(() => {
 	$("#registerForm .submit_btn").addEventListener("click", () => {
 		registerUser();
 	});
+
+	$$(".password_requirements p").forEach((p) => {
+		p.insertAdjacentHTML(
+			"afterbegin",
+			html`
+				<i class="fas fa-check"></i>
+				<i class="fas fa-times"></i>
+			`
+		);
+	});
+
+	const password = registerForm._child(`.password`);
+	const psswchng = () => {
+		const value = password._get_value();
+
+		$(".password_requirements .eigth_characters").classList.toggle("correct", value.length >= 8);
+		$(".password_requirements .one_small_letter").classList.toggle("correct", value.match(/[a-z]/));
+		$(".password_requirements .one_big_letter").classList.toggle("correct", value.match(/[A-Z]/));
+		$(".password_requirements .one_digit").classList.toggle("correct", value.match(/\d/));
+	};
+	password.addEventListener("input", psswchng);
+	password.addEventListener("change", psswchng);
 });

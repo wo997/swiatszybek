@@ -12,7 +12,6 @@ if ($activate["success"]) {
 
     $body = join("<br>", $activate["errors"]);
 
-
     if ($user_id) {
         $email = DB::fetchVal("SELECT email FROM user WHERE user_id = ?", [$user_id]);
         if ($email) {
