@@ -17,12 +17,10 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
 <div id="registerForm" style="margin: auto auto 0;padding:20px 10px 80px;width:100%;max-width:500px">
     <h1 class="h1 center">Rejestracja</h1>
     <span class="label">E-mail</span>
-    <input class="field email" autocomplete="email">
-    <div class="field_errors"></div>
+    <input class="field email pretty_errors" autocomplete="email" data-validate="custom:validateUserEmailExists">
 
     <!-- <span class="label">Login <span class="optional_label"></span></span>
-    <input class="field login" autocomplete="nickname" data-validate="optional|length:{5,}">
-    <div class="field_errors"></div> -->
+    <input class="field login" autocomplete="nickname" data-validate="optional|length:{5,}">-->
 
     <div class="label">
         <span>Hasło</span>
@@ -30,12 +28,10 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
             <i class="fas fa-eye"></i>
         </button>
     </div>
-    <input type="password" class="field password" data-validate="password" autocomplete="new-password">
-    <div class="field_errors"></div>
+    <input type="password" class="field password pretty_errors" data-validate="password" autocomplete="new-password">
 
     <div class="label">Powtórz hasło</div>
-    <input type="password" class="field password_rewrite" data-validate="match:#registerForm .password" autocomplete="new-password">
-    <div class="field_errors"></div>
+    <input type="password" class="field password_rewrite pretty_errors" data-validate="match:#registerForm .password" autocomplete="new-password">
 
     <button class="btn primary medium fill space_top submit_btn">
         Dalej

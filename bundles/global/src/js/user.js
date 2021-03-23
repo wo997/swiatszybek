@@ -49,7 +49,9 @@ function validateLoginUserEmail(input) {
 
 	xhr({
 		url: "/validate_email",
-		params: getFormData(loginForm),
+		params: {
+			email: loginForm._child(".node_email")._get_value(),
+		},
 		success: (res) => {
 			var errors = [];
 			if (res == "unauthenticated") {
@@ -57,7 +59,7 @@ function validateLoginUserEmail(input) {
 			} else if (res != "exists") {
 				errors.push("Takie konto nie istnieje");
 			}
-			showFieldErrors(input, errors);
+			showInputErrors(input, errors);
 		},
 	});
 }

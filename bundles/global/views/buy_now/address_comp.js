@@ -90,10 +90,10 @@ function addressComp(comp, parent, data = undefined) {
 
 				<div class="expand_y" data-node="{${comp._nodes.case_person}}">
 					<div class="label">Imię</div>
-					<input type="text" class="field" autocomplete="given-name" data-bind="{${data.first_name}}" data-validate="" />
+					<input type="text" class="field pretty_errors" autocomplete="given-name" data-bind="{${data.first_name}}" data-validate="" />
 
 					<div class="label">Nazwisko</div>
-					<input type="text" class="field" autocomplete="family-name" data-bind="{${data.last_name}}" data-validate="" />
+					<input type="text" class="field pretty_errors" autocomplete="family-name" data-bind="{${data.last_name}}" data-validate="" />
 				</div>
 
 				<div class="expand_y" data-node="{${comp._nodes.case_company}}">

@@ -81,7 +81,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y case_choosen_account <?= !User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
-            <div class="label big first your_address_label">Twój adres</div>
+            <div class="label big first your_address_label">Dane kontaktowe</div>
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>

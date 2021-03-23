@@ -54,7 +54,13 @@ function loginFormModalComp(comp, parent, data = undefined) {
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
 					<div class="label first">E-mail</div>
-					<input data-node="{${comp._nodes.email}}" class="field" type="text" autocomplete="username" name="email" data-validate="email" />
+					<input
+						data-node="{${comp._nodes.email}}"
+						class="field pretty_errors"
+						type="text"
+						autocomplete="username"
+						data-validate="custom:validateLoginUserEmail"
+					/>
 
 					<div class="label">
 						<span>Hasło</span>
@@ -70,10 +76,9 @@ function loginFormModalComp(comp, parent, data = undefined) {
 					</div>
 					<input
 						data-node="{${comp._nodes.password}}"
-						class="field"
+						class="field pretty_errors"
 						type="{${data.password_visible ? "text" : "password"}}"
 						autocomplete="current-password"
-						name="password"
 					/>
 
 					<div style="margin-top:10px;text-align:center">

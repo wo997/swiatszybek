@@ -104,14 +104,6 @@ domload(() => {
 		email._set_value(register_email);
 	}
 
-	email.addEventListener("input", () => {
-		delay("validateUserEmailExists", 500);
-	});
-
-	email.addEventListener("change", () => {
-		delay("validateUserEmailExists");
-	});
-
 	let password_visible = false;
 	const toggle_password = registerForm._child(`.toggle_password`);
 	toggle_password.addEventListener("click", () => {

@@ -58,25 +58,27 @@ function validateInputs(inputs) {
  */
 function showInputErrors(input, errors) {
 	const wrong = errors.length > 0;
-	if (!input.classList.contains("input_registered") && wrong) {
-		input.classList.add("input_registered");
-		input.addEventListener("change", () => {
-			inputChangeValidation(input);
-		});
-		input.addEventListener("input", () => {
-			inputChangeValidation(input);
-		});
+	if (!input.classList.contains("input_rgstrd") && wrong) {
+		input.classList.add("input_rgstrd");
+		if (!input.classList.contains("has_custom_validator")) {
+			input.addEventListener("change", () => {
+				inputChangeValidation(input);
+			});
+			input.addEventListener("input", () => {
+				inputChangeValidation(input);
+			});
+		}
 	}
 	input.classList.toggle("invalid", wrong);
-	const field_errors = input._next();
-	if (field_errors.classList.contains("field_errors")) {
-		if (!field_errors.classList.contains("expand_y")) {
-			field_errors.classList.add("expand_y", "hidden", "animate_hidden");
-		}
+	if (input.classList.contains("pretty_errors")) {
+		const pretty_errors = input._next();
+		const input_errors = pretty_errors._child(".input_errors");
+		pretty_errors.classList.toggle("correct", errors.length === 0);
+		pretty_errors.classList.toggle("wrong", errors.length > 0);
 		if (errors.length > 0) {
-			field_errors._set_content(errors.join("<br>"));
+			input_errors._set_content(errors.join("<br>"));
 		}
-		expand(field_errors, errors.length > 0);
+		expand(input_errors, errors.length > 0);
 	} else {
 		input.dataset.tooltip = errors.join("<br>");
 	}
@@ -214,9 +216,11 @@ function getInputValidationErrors(input) {
 					errors.push(`Hasło musi zawierać ${must_contain.join(", ")}`);
 				}
 			}
-			// if (what === "custom") {
-			// 	window[extra_val](input);
-			// }
+			if (what === "custom") {
+				if (extra_val) {
+					window[extra_val](input);
+				}
+			}
 		}
 	}
 

@@ -71,6 +71,48 @@ label {
 	margin-left: 6px;
 }
 
-.field_errors {
+.has_correctness {
+	padding-right: 35px;
+}
+
+.pretty_errors {
+	&:not(.correct) .input_correctness .fa-check,
+	&:not(.wrong) .input_correctness .fa-times {
+		opacity: 0;
+	}
+}
+
+.input_errors {
+	color: var(--error-clr);
+	font-weight: 600;
+}
+
+.pretty_errors .input_errors_wrapper {
+	transition: padding 0.2s;
+}
+
+.pretty_errors.wrong .input_errors_wrapper {
 	padding-top: 5px;
+}
+
+.input_correctness {
+	& {
+		position: relative;
+		height: 0;
+		--top_offset: -19px;
+		transform: translateY(var(--top_offset));
+		pointer-events: none;
+	}
+	.fas {
+		position: absolute;
+		right: 20px;
+		transform: translate(50%, -50%);
+		transition: all 0.2s;
+	}
+	.fa-check {
+		color: var(--success-clr);
+	}
+	.fa-times {
+		color: var(--error-clr);
+	}
 }
