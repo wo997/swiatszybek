@@ -203,10 +203,10 @@
 
 // $mailTitle = "Potwierdzenie zamówienia #$zamowienie_id - " . $app["company_data"]['email_sender'] . "";
 
-// @sendEmail($_POST["email"], $message, $mailTitle);
+// sendEmail($_POST["email"], $message, $mailTitle);
 
 // foreach (getOrderEmailList() as $email) {
-//     @sendEmail($email, $message, $mailTitle);
+//     sendEmail($email, $message, $mailTitle);
 // }
 
 // /*if ($_POST["forma_zaplaty"] == '24') {

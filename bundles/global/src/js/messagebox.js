@@ -1,8 +1,8 @@
 /* js[global] */
 
-function showMessageModal(message, options) {
-	$("#messagebox_modal > .modal_body > *")._set_content(message);
-	showModal("messagebox_modal", options);
+function showMessageModal(message, options = {}) {
+	$("#messageboxModal > .modal_body > *")._set_content(message);
+	showModal("messageboxModal", options);
 }
 
 /**
@@ -36,7 +36,7 @@ function getMessageHTML(params = {}) {
 		params.header = "Udało się!";
 	}
 
-	message_html += html`<div class="messagebox_header" style="background:${header_color}">${header_icon} ${params.header}</div> `;
+	message_html += html`<div class="messagebox_header" style="background:${header_color}">${params.header} ${header_icon}</div> `;
 
 	if (params.body !== undefined) {
 		message_html += html`<div class="messagebox_body">${params.body}</div>`;
@@ -138,7 +138,7 @@ function toggleMessageBox(elem, show = null, options = {}) {
 
 domload(() => {
 	registerModalContent(html`
-		<div id="messagebox_modal" class="messagebox_modal" data-dismissable>
+		<div id="messageboxModal" class="messageboxModal" data-dismissable>
 			<div class="modal_body">
 				<div></div>
 			</div>

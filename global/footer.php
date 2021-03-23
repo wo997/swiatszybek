@@ -1,12 +1,13 @@
-<footer>
+<footer style="padding:10px;text-align:center;background:#111;color:#fff">
     <?php
-    if (isset($preview_params) && isset($preview_params["page_footer"])) {
-        $page_footer = $preview_params["page_footer"];
-    } else {
-        $page_footer = getSetting("theme", "general", ["page_footer"], "");
-    }
-    echo getCMSPageHTML($page_footer);
+    // if (isset($preview_params) && isset($preview_params["page_footer"])) {
+    //     $page_footer = $preview_params["page_footer"];
+    // } else {
+    //     $page_footer = getSetting("theme", "general", ["page_footer"], "");
+    // }
+    // echo getCMSPageHTML($page_footer);
     ?>
+    Stopka
 </footer>
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>

@@ -70,9 +70,9 @@ if ($new_status_id == 2) {
 }
 
 if (isset($mailTitle)) {
-    /*@sendEmail($zamowienie_data["email"], $message, $mailTitle);
+    /*sendEmail($zamowienie_data["email"], $message, $mailTitle);
   foreach (getOrderEmailList() as $email) {
-    @sendEmail($email, $message, $mailTitle);
+    sendEmail($email, $message, $mailTitle);
   }*/
 }
 

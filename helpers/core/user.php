@@ -129,11 +129,19 @@ class User
 
             $password_hash = Security::getPasswordHash($data["password"]);
 
-            $this->id = DB::insert("user", array_merge(filterArrayKeys($data, ["email", "first_name", "last_name", "phone"]),  [
+            $this->id = DB::insert("user", [
+                "email" => trim($data["email"]),
                 "password_hash" => $password_hash,
                 "created_at" => date("Y-m-d.H:i:s"),
                 "type" => "regular",
-            ]));
+                "privelege_id" => 1
+            ]);
+
+            // $this->id = DB::insert("user", array_merge(filterArrayKeys($data, ["email", "first_name", "last_name", "phone"]),  [
+            //     "password_hash" => $password_hash,
+            //     "created_at" => date("Y-m-d.H:i:s"),
+            //     "type" => "regular",
+            // ]));
             $this->setData();
         }
 
@@ -196,7 +204,7 @@ class User
         $mailTitle = "Resetowanie hasła konta " . $email . " - LSIT";
         $message .= getEmailFooter();
 
-        @sendEmail($email, $message, $mailTitle);
+        sendEmail($email, $message, $mailTitle);
 
         $res["success"] = true;
         return $res;
@@ -344,13 +352,13 @@ class User
 
         $message = "
             <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
-            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/activate_account/$user_id]/$authentication_token'>Aktywuj</a>
+            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/konto/aktywuj/$user_id/$authentication_token'>Aktywuj</a>
         ";
 
         $mailTitle = "Aktywacja konta " . $user_data["email"] . " - LSIT";
         $message .= getEmailFooter();
 
-        @sendEmail($user_data["email"], $message, $mailTitle);
+        sendEmail($user_data["email"], $message, $mailTitle);
 
         $res["success"] = true;
         return $res;

@@ -1,7 +1,7 @@
-<?php //route[/activate_account]
+<?php //route[/konto/aktywuj]
 
-$user_id = Request::urlParam(1);
-$authentication_token = Request::urlParam(2);
+$user_id = Request::urlParam(2);
+$authentication_token = Request::urlParam(3);
 
 $activate = User::activateAccount($user_id, $authentication_token);
 
@@ -16,9 +16,9 @@ if ($activate["success"]) {
     if ($user_id) {
         $email = DB::fetchVal("SELECT email FROM user WHERE user_id = ?", [$user_id]);
         if ($email) {
-            $res["footer"] = "<button class='btn subtle medium' onclick='hideParentModal(this)' style='width:80px'>Ok</button>";
-            $res["footer"] .= "<a class='btn success medium' target='_blank' rel='noopener noreferrer' onclick='register(false)'>Wyślij ponownie <i class='fas fa-redo-alt'></i></a>";
-            $_SESSION["register_email"] = $email;
+            $res["footer"] = "<button class='btn subtle' onclick='hideParentModal(this)'>Zamknij  <i class='fas fa-times'></i></button>";
+            $res["footer"] .= "<a class='btn primary' target='_blank' rel='noopener noreferrer' onclick='registerUser($user_id)'>Wyślij ponownie <i class='fas fa-redo-alt'></i></a>";
+            Request::setSingleUsageSessionVar("register_email", $email);
         }
     }
 

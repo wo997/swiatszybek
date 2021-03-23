@@ -11,6 +11,7 @@ domload(() => {
 			{ label: "Imię", key: "first_name", width: "1", searchable: "string" },
 			{ label: "Nazwisko", key: "last_name", width: "1", searchable: "string" },
 			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
+			{ label: "Rola", key: "privelege_id", width: "1", searchable: "string" },
 		],
 		primary_key: "user_id",
 		empty_html: html`Brak użytkowników`,

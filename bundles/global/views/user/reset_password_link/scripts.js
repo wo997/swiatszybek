@@ -9,13 +9,11 @@ function resetPassword() {
 		success: (res) => {
 			if (res.success) {
 				let body = html`Link do zresetowania hasła został wysłany<br />na ${params.email}`;
-				let footer = html`
-					<button class="btn subtle medium" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				`;
+				let footer = html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `;
 
 				if (res.data && res.data.email_client_url) {
 					footer += html`
-						<a class="btn success medium" target="_blank" rel="noopener noreferrer" href="${res.data.email_client_url}">
+						<a class="btn primary" target="_blank" rel="noopener noreferrer" href="${res.data.email_client_url}">
 							Przejdź do poczty <i class="fas fa-envelope-open"></i>
 						</a>
 					`;

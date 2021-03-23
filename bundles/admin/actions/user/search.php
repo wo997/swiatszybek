@@ -1,10 +1,11 @@
 <?php //route[{ADMIN}/user/search]  
 
 Request::jsonResponse(paginateData([
-    "select" => "user_id, first_name, last_name, email", //, published",
+    "select" => "user_id, first_name, last_name, email, privelege_id",
     "from" => "user",
     "order" => "user_id ASC",
     "quick_search_fields" => ["first_name", "last_name", "email"],
+    "where" => "privelege_id <> 0",
     "datatable_params" => $_POST["datatable_params"]
 ]));
 

@@ -26,7 +26,14 @@ function getManyValidationErrors(inputs) {
 	return inputs_errors;
 }
 
+/**
+ *
+ * @param {PiepNode} input
+ */
 function inputChangeValidation(input) {
+	if (input.dataset.validate === undefined) {
+		return;
+	}
 	const errors = getInputValidationErrors(input);
 	showInputErrors(input, errors);
 }
@@ -61,7 +68,19 @@ function showInputErrors(input, errors) {
 		});
 	}
 	input.classList.toggle("invalid", wrong);
-	input.dataset.tooltip = errors.join("<br>");
+	const field_errors = input._next();
+	if (field_errors.classList.contains("field_errors")) {
+		if (!field_errors.classList.contains("expand_y")) {
+			field_errors.classList.add("expand_y", "hidden", "animate_hidden");
+		}
+		if (errors.length > 0) {
+			field_errors._set_content(errors.join("<br>"));
+		}
+		expand(field_errors, errors.length > 0);
+	} else {
+		input.dataset.tooltip = errors.join("<br>");
+	}
+
 	if (wrong) {
 		scrollIntoView(input, {
 			callback: () => {
@@ -111,6 +130,9 @@ function getInputValidationErrors(input) {
 			const [what, extra_val] = extra.split(":");
 			if (what === "nip") {
 				add_extras.push("length:10");
+			}
+			if (what === "password") {
+				add_extras.push("length:{8,}");
 			}
 		}
 
@@ -165,6 +187,36 @@ function getInputValidationErrors(input) {
 					}
 				}
 			}
+			if (what === "match") {
+				const match_input = $(extra_val);
+				if (match_input === input) {
+					console.error("Circular reference");
+					errors.push("Błąd krytyczny");
+				} else {
+					// show only if other is fine
+					if (validateInputs([match_input]).length === 0) {
+						const req_val = match_input._get_value();
+						if (value !== req_val) {
+							errors.push("Wartości się nie zgadzają");
+						}
+					}
+				}
+			}
+			if (what === "password") {
+				const must_contain = [];
+				if (!value.match(/\d/)) {
+					must_contain.push("min. 1 cyfrę (0-9)");
+				}
+				if (!value.match(/[A-Z]/)) {
+					must_contain.push("min. 1 wielką literę (A-Z)");
+				}
+				if (must_contain.length > 0) {
+					errors.push(`Hasło musi zawierać ${must_contain.join(", ")}`);
+				}
+			}
+			// if (what === "custom") {
+			// 	window[extra_val](input);
+			// }
 		}
 	}
 

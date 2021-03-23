@@ -4,6 +4,7 @@
 setInterval(() => {
 	xhr({
 		url: "/ping.php",
+		success: () => {},
 	});
 }, 60000);
 
@@ -12,21 +13,22 @@ function logout() {
 		return;
 	}
 	if (USER_TYPE == "f") {
-		xhr({ url: "/logout" });
+		xhr({ url: "/logout", success: () => {} });
 	} else if (USER_TYPE == "g") {
 		try {
+			// @ts-ignore
 			var auth2 = gapi.auth2.getAuthInstance();
 			auth2.signOut().then(function () {
-				xhr({ url: "/logout" });
+				xhr({ url: "/logout", success: () => {} });
 			});
 			auth2.disconnect();
 		} catch (error) {
 			console.log(error);
 
-			xhr({ url: "/logout" });
+			xhr({ url: "/logout", success: () => {} });
 		}
 	} else {
-		xhr({ url: "/logout" });
+		xhr({ url: "/logout", success: () => {} });
 	}
 }
 
