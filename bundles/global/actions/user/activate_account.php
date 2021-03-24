@@ -16,7 +16,7 @@ if ($activate["success"]) {
         $email = DB::fetchVal("SELECT email FROM user WHERE user_id = ?", [$user_id]);
         if ($email) {
             $res["footer"] = "<button class='btn subtle' onclick='hideParentModal(this)'>Zamknij  <i class='fas fa-times'></i></button>";
-            $res["footer"] .= "<a class='btn primary' target='_blank' rel='noopener noreferrer' onclick='registerUser($user_id)'>Wyślij ponownie <i class='fas fa-redo-alt'></i></a>";
+            $res["footer"] .= "<a class='btn primary' target='_blank' rel='noopener noreferrer' onclick='registerUser({user_id:$user_id})'>Wyślij ponownie <i class='fas fa-redo-alt'></i></a>";
             Request::setSingleUsageSessionVar("register_email", $email);
         }
     }

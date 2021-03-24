@@ -197,8 +197,8 @@ class User
         $authentication_token = Security::createAuthenticationToken("reset_user_" . $user_data["user_id"]);
 
         $message = "
-            <h3>Kliknij w link poniżej, żeby potwierdzić chęć zresetowania hasła</h3>
-            <a style=\"font-size: 17px;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "\">Resetuj hasło</a>
+            <h3>Kliknij w przycisk poniżej, żeby potwierdzić chęć zresetowania hasła</h3>
+            <a style=\"font-size: 1.3em;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "\">Resetuj hasło</a>
         ";
 
         $mailTitle = "Resetowanie hasła konta " . $email . " - LSIT";
@@ -351,8 +351,9 @@ class User
         $authentication_token = Security::createAuthenticationToken("activate_user_$user_id");
 
         $message = "
-            <h3>Kliknij w link poniżej, żeby aktywować swoje konto</h3>
-            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/konto/aktywuj/$user_id/$authentication_token'>Aktywuj</a>
+            <h3>Kliknij w przycisk poniżej, żeby aktywować swoje konto</h3>
+            <a style=\"font-size: 1.3em;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/konto/aktywuj/$user_id/$authentication_token\">Aktywuj konto</a>
+
         ";
 
         $mailTitle = "Aktywacja konta " . $user_data["email"] . " - LSIT";

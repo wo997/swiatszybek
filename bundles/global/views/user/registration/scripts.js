@@ -28,7 +28,7 @@ function validateUserEmailExists() {
 				errors.push(
 					html`<span style="color: black">
 						Konto istnieje
-						<b style="color:var(--success-clr);" class="link" onclick="registerUser(${res.user_id})"> WYŚLIJ LINK AKTYWACYJNY</b>
+						<b style="color:var(--success-clr);" class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
 					</span>`
 				);
 			} else if (res.status == "invalid") {
@@ -36,62 +36,6 @@ function validateUserEmailExists() {
 			}
 
 			showInputErrors(email, errors);
-		},
-	});
-}
-
-function registerUser(user_id = undefined) {
-	const registerForm = $(`#registerForm`);
-
-	if (user_id === undefined) {
-		const errors = validateInputs(registerForm._children(".password_rewrite, .password, .email"));
-		if (errors.length > 0) {
-			return;
-		}
-	}
-
-	const params =
-		user_id === undefined
-			? {
-					email: registerForm._child(".email")._get_value(),
-					password: registerForm._child(".password")._get_value(),
-			  }
-			: { user_id };
-
-	showLoader();
-	xhr({
-		url: user_id === undefined ? "/user/register" : "/user/resend_activation_token",
-		params,
-		success: (res) => {
-			hideLoader();
-			if (res.success) {
-				let body = html`Link do aktywacji konta został wysłany<br />na ${res.email}`;
-				let footer = html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `;
-
-				if (res.email_client_url) {
-					footer += html`
-						<a class="btn primary" target="_blank" rel="noopener noreferrer" href="${res.email_client_url}">
-							Przejdź do poczty <i class="fas fa-envelope-open"></i>
-						</a>
-					`;
-				} else {
-					body += html`
-						<br />
-						<span style="color: #444;font-weight: 600;">
-							Nieznany adres pocztowy
-							<i
-								class="fas fa-info-circle"
-								style="opacity:0.85"
-								data-tooltip="Czy aby na pewno adres email jest prawidłowy?<br>Sprawdź swoją skrzynkę pocztową."
-							></i>
-						</span>
-					`;
-				}
-
-				showMessageModal(getMessageHTML({ type: "success", body, footer }));
-			} else {
-				showMessageModal(getMessageHTML({ type: "error", body: "Wystąpił błąd rejestracji" }));
-			}
 		},
 	});
 }
@@ -118,7 +62,18 @@ domload(() => {
 	});
 
 	$("#registerForm .submit_btn").addEventListener("click", () => {
-		registerUser();
+		const registerForm = $(`#registerForm`);
+
+		const errors = validateInputs(registerForm._children(".password_rewrite, .password, .email"));
+		if (errors.length > 0) {
+			return;
+		}
+
+		const params = {
+			email: registerForm._child(".email")._get_value(),
+			password: registerForm._child(".password")._get_value(),
+		};
+		registerUser(params);
 	});
 
 	$$(".password_requirements p").forEach((p) => {

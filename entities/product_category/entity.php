@@ -42,5 +42,5 @@ EventListener::register("before_save_product_category_entity", function ($params
 
     $product_category->setProp("__category_path_json", json_encode($category_path));
 
-    $product_category->setProp("__product_count", DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category WHERE product_category_id = " . $product_category->getId()));
+    $product_category->setProp("__product_count", DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category INNER JOIN general_product gp USING (general_product_id) WHERE gp.active AND product_category_id = " . $product_category->getId()));
 });

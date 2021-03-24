@@ -39,5 +39,5 @@ function getEmailHeader($lang)
 
 function getEmailFooter()
 {
-    return "\n<br><br><i style='font-size:1.1em'>Pozdrawiamy,</i><div style=\"margin-top:5px\"><a href='" . SITE_URL . "'><img src='" . LOGO_PATH_PUBLIC_SM . "' style='width:150px'></a></div>";
+    return "\n<br><br><i style='font-size:1.1em;font-weight: 600;'>Pozdrawiamy,</i><div style=\"margin-top:5px\"><a href='" . SITE_URL . "'><img src='" . LOGO_PATH_PUBLIC_SM . "' style='width:150px'></a></div>";
 }

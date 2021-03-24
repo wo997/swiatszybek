@@ -55,7 +55,10 @@ function validateLoginUserEmail(input) {
 		success: (res) => {
 			const errors = [];
 			if (res.status == "unauthenticated") {
-				errors.push("Konto nie zostało aktywowane");
+				errors.push(html`<span style="color: black">
+					Konto nieaktywne<br />
+					<b style="color:var(--success-clr);" class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
+				</span>`);
 			} else if (res.status != "exists") {
 				errors.push("Takie konto nie istnieje");
 			}
@@ -93,3 +96,42 @@ domload(() => {
 	const login_form_modal_comp = $("#loginForm login-form-modal-comp");
 	loginFormModalComp(login_form_modal_comp, undefined);
 });
+
+function registerUser(params) {
+	showLoader();
+	xhr({
+		url: params.user_id === undefined ? "/user/register" : "/user/resend_activation_token",
+		params,
+		success: (res) => {
+			hideLoader();
+			if (res.success) {
+				let body = html`Link do aktywacji konta został wysłany<br />na ${res.email}`;
+				let footer = html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `;
+
+				if (res.email_client_url) {
+					footer += html`
+						<a class="btn primary" target="_blank" rel="noopener noreferrer" href="${res.email_client_url}">
+							Przejdź do poczty <i class="fas fa-envelope-open"></i>
+						</a>
+					`;
+				} else {
+					body += html`
+						<br />
+						<span style="color: #444;font-weight: 600;">
+							Nieznany adres pocztowy
+							<i
+								class="fas fa-info-circle"
+								style="opacity:0.85"
+								data-tooltip="Czy aby na pewno adres email jest prawidłowy?<br>Sprawdź swoją skrzynkę pocztową."
+							></i>
+						</span>
+					`;
+				}
+
+				showMessageModal(getMessageHTML({ type: "success", body, footer }));
+			} else {
+				showMessageModal(getMessageHTML({ type: "error", body: "Wystąpił błąd rejestracji" }));
+			}
+		},
+	});
+}
