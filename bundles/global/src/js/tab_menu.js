@@ -4,6 +4,7 @@ document.addEventListener("click", (ev) => {
 	const target = $(ev.target);
 	const option = target._parent(".tab_option", { skip: 0 });
 	const menu = target._parent(".tab_menu", { skip: 0 });
+
 	if (!option || !menu) return;
 
 	const tab_id = +option.dataset.tab_id;

@@ -476,7 +476,8 @@ function initProductCommentsCallback() {
 		});
 	});
 
-	$$(".variants_container .radio_group").forEach((e) => {
+	// it's weird - it says that we want to have the 0 option selected by default, so the user doesn't have to actually think
+	$$(".comments_filters .variants_container .radio_group, #addComment .variants_container .radio_group").forEach((e) => {
 		e._set_value("0", { quiet: true });
 		e.addEventListener("change", () => {
 			if (e._get_value() === "") {
@@ -582,7 +583,7 @@ function initProductCommentsCallback() {
 								comment_input._set_value("");
 								rating_picker.dataset.rating = "";
 								generateRating(rating_picker);
-								addComment._children(".variants_container .radio_group ").map((c) => c._set_value(0, { quiet: true }));
+								addComment._children(".variants_container .radio_group").map((c) => c._set_value(0, { quiet: true }));
 							},
 						});
 					},

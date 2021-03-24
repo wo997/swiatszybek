@@ -105,9 +105,6 @@ if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) 
     die;
 }
 
-// theme
-include "theme/variables.php";
-
 // TODO: move to the FB module instead
 //include_once 'helpers/facebook_register.php';
 

@@ -9,13 +9,7 @@
 		& {
 			--box-padding: 0 10px;
 			--box_height: 35px;
-			margin-right: -4px;
-		}
-		.box.checked {
-			background: #fff;
-		}
-		.box:not(.checked) {
-			color: #666;
+			margin-right: 0;
 		}
 	}
 

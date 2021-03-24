@@ -265,7 +265,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         <?php
                         foreach ($general_product_variant["variant_options"] as $variant_option) {
                         ?>
-                            <div class="box checkbox_area variant_option">
+                            <div class="checkbox_area variant_option">
                                 <div>
                                     <div class="price_diff_before"></div>
                                     <div>
@@ -378,6 +378,8 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 </div>
             </div>
 
+            <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
+            ?>
             <list-comp class="comments striped" data-primary="comment_id">
                 <comment-comp></comment-comp>
             </list-comp>

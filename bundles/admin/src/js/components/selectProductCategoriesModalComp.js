@@ -61,9 +61,11 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		// @ts-ignore
 		const product_comp = $("product-comp");
 
-		comp._data.selection = product_comp._data.category_ids;
-		comp._refresh_dataset();
-		comp._render();
+		if (product_comp) {
+			comp._data.selection = product_comp._data.category_ids;
+			comp._refresh_dataset();
+			comp._render();
+		}
 
 		setTimeout(() => {
 			showModal("selectProductCategories", {
@@ -107,8 +109,11 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					/** @type {ProductComp} */
 					// @ts-ignore
 					const product_comp = $("product-comp");
-					product_comp._data.category_ids = comp._data.selection;
-					product_comp._render();
+
+					if (product_comp) {
+						product_comp._data.category_ids = comp._data.selection;
+						product_comp._render();
+					}
 				}
 			},
 		});
@@ -147,9 +152,11 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 				/** @type {ProductComp} */
 				// @ts-ignore
 				const product_comp = $("product-comp");
-				comp._data.selection = product_comp._data.category_ids;
-				comp._refresh_dataset();
-				comp._render({ force_render: true });
+				if (product_comp) {
+					comp._data.selection = product_comp._data.category_ids;
+					comp._refresh_dataset();
+					comp._render({ force_render: true });
+				}
 			});
 		},
 	});

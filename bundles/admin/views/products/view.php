@@ -8,7 +8,7 @@
 <?php startSection("body_content"); ?>
 
 <div class="products_view_header">
-    <div class="radio_group boxes hide_checks semi_bold toggle_view inline_flex">
+    <div class="radio_group boxes pretty_blue hide_checks semi_bold toggle_view inline_flex glue_children">
         <div class="checkbox_area box">
             <p-checkbox data-value="general_products"></p-checkbox>
             <span>
@@ -24,6 +24,11 @@
             </span>
         </div>
     </div>
+
+    <button class="btn subtle" style="margin:0 5px">
+        <i class="fas fa-filter"></i>
+        Filtry
+    </button>
 
     <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="btn primary"> Dodaj produkt <i class="fas fa-plus"></i> </a>
 </div>

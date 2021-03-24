@@ -685,7 +685,7 @@ function mainSearchProducts(force = false) {
 
 			scrollIntoView(products_category_name, {
 				direction: "up",
-				//offset: 0,
+				offset: header_height + 100,
 				callback: () => {
 					products_all.style.height = "";
 				},

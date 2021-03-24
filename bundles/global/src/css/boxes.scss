@@ -17,7 +17,7 @@
 		--box_height: 0;
 		--box_height: 80px;
 	}
-	.box {
+	> * {
 		& {
 			position: relative;
 			padding: var(--box-padding);
@@ -86,30 +86,55 @@
 		--box-padding: 5px;
 	}
 
-	&.columns_1 .box {
+	&.columns_1 > * {
 		width: calc(100% - var(--box_margin));
 	}
-	&.columns_2 .box {
+	&.columns_2 > * {
 		width: calc(50% - var(--box_margin));
 	}
-	&.columns_3 .box {
+	&.columns_3 > * {
 		width: calc(33.33333% - var(--box_margin));
 	}
-	&.columns_4 .box {
+	&.columns_4 > * {
 		width: calc(25% - var(--box_margin));
 	}
-	&.columns_5 .box {
+	&.columns_5 > * {
 		width: calc(20% - var(--box_margin));
 	}
-	&.columns_6 .box {
+	&.columns_6 > * {
 		width: calc(16.66666% - var(--box_margin));
 	}
 
-	&.hide_checks {
-		.box {
-		}
+	&.hide_checks,
+	.pretty_blue {
 		p-checkbox {
 			display: none !important;
+		}
+	}
+	&.pretty_blue {
+		& {
+			--box_margin: -1px;
+		}
+		& > * {
+			box-shadow: none !important;
+		}
+		& > *.checked {
+			background: var(--pretty_blue_background) !important;
+			color: var(--pretty_blue);
+			font-weight: 600;
+			border-color: var(--pretty_blue);
+			z-index: 10;
+		}
+		& > *:not(.checked) {
+			& {
+				background: #fff;
+				color: #777;
+			}
+			&:hover {
+				background: #eee;
+				box-shadow: 0 2px 3px 0 #0003 !important;
+				transition: 0s;
+			}
 		}
 	}
 }
