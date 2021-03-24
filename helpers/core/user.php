@@ -185,7 +185,7 @@ class User
 
         $user_data = DB::fetchRow("SELECT user_id, authenticated FROM user WHERE type = 'regular' AND email = ?", [$email]);
         if (!$user_data) {
-            $res["errors"][] = "";
+            $res["errors"][] = "Konto nie istnieje";
             return $res;
         }
 
@@ -198,7 +198,7 @@ class User
 
         $message = "
             <h3>Kliknij w link poniżej, żeby potwierdzić chęć zresetowania hasła</h3>
-            <br><a style='font-size:18px;font-weight:bold;' href='" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "'>Resetuj</a>
+            <a style=\"font-size: 17px;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "\">Resetuj hasło</a>
         ";
 
         $mailTitle = "Resetowanie hasła konta " . $email . " - LSIT";

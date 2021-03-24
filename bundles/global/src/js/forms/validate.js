@@ -205,12 +205,15 @@ function getInputValidationErrors(input) {
 					console.error("Circular reference");
 					errors.push("Błąd krytyczny");
 				} else {
-					// show only if other is fine
-					if (validateInputs([match_input]).length === 0) {
-						const req_val = match_input._get_value();
-						if (value !== req_val) {
-							errors.push("Wartości się nie zgadzają");
-						}
+					const req_val = match_input._get_value();
+					if (value !== req_val) {
+						errors.push("Wartości się nie zgadzają");
+					}
+					if (!input.classList.contains("valid_match_rgstrd")) {
+						input.classList.add("valid_match_rgstrd");
+						match_input.addEventListener("change", () => {
+							inputChangeValidation(input);
+						});
 					}
 				}
 			}
@@ -218,13 +221,13 @@ function getInputValidationErrors(input) {
 				const must_contain = [];
 
 				if (!value.match(/[a-z]/)) {
-					must_contain.push("min. 1 małą literę (a-z)");
+					must_contain.push("min. 1 mała literę (a-z)");
 				}
 				if (!value.match(/[A-Z]/)) {
-					must_contain.push("min. 1 wielką literę (A-Z)");
+					must_contain.push("min. 1 wielka literę (A-Z)");
 				}
 				if (!value.match(/\d/)) {
-					must_contain.push("min. 1 cyfrę (0-9)");
+					must_contain.push("min. 1 cyfra (0-9)");
 				}
 				if (must_contain.length > 0) {
 					errors.push(`Hasło musi zawierać ${must_contain.join(", ")}`);

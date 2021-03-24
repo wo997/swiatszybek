@@ -36,8 +36,8 @@ $register_email = Request::getSingleUsageSessionVar("register_email");
     <input type="password" class="field password pretty_errors pretty_errors_inline" data-validate="password" autocomplete="new-password">
     <div class="user_tip password_requirements" style="margin-top:10px;">
         <p class="eigth_characters"> 8 znaków długości</p>
-        <p class="one_small_letter"> 1 małą litera (a-z)</p>
-        <p class="one_big_letter"> 1 wielką litera (A-Z)</p>
+        <p class="one_small_letter"> 1 mała litera (a-z)</p>
+        <p class="one_big_letter"> 1 wielka litera (A-Z)</p>
         <p class="one_digit"> 1 cyfra (0-9)</p>
     </div>
 

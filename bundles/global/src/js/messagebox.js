@@ -27,7 +27,7 @@ function getMessageHTML(params = {}) {
 			params.header = "Ciekawe";
 		}
 	} else if (params.type === "error") {
-		header_icon = html`<i class="fas fa-times-circle"></i>`;
+		header_icon = html`<i class="fas fa-exclamation-circle"></i>`;
 		header_color = "var(--error-clr)";
 		params.header = "Coś poszło nie tak";
 	} else {
