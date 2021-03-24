@@ -1,34 +1,43 @@
 /* js[view] */
 
-function resetPassword() {
-	const form = $("#resetPasswordForm");
+//@include(bundles/global/src/js/traits/password.js)
 
-	if (!validateForm(form)) {
-		return;
-	}
+domload(() => {
+	const resetPasswordForm = $("#resetPasswordForm");
+	resetPasswordForm._child(".password_label")._set_content("Nowe hasło");
+	resetPasswordForm._child(".submit_btn").addEventListener("click", () => {
+		const errors = validateInputs(resetPasswordForm._children(".password_rewrite, .password"));
+		if (errors.length > 0) {
+			return;
+		}
 
-	const params = getFormData(form);
+		showLoader();
+		xhr({
+			url: "/reset_password",
+			params: {
+				password: resetPasswordForm._child(".password")._get_value(),
+				user_id: resetPasswordForm._child(".user_id")._get_value(),
+				authentication_token: resetPasswordForm._child(".authentication_token")._get_value(),
+			},
+			success: (res) => {
+				hideLoader();
+				if (res.success) {
+					let body = html`Hasło zostało zresetowane`;
+					let footer = html`
+						<a class="btn subtle" href="/">Zamknij <i class="fas fa-times"></i></a>
+						<button class="btn primary" onclick="showModal('loginForm',{source:this});">Zaloguj się <i class="fas fa-user"></i></button>
+					`;
 
-	xhr({
-		url: "/reset_password",
-		params,
-		success: (res) => {
-			if (res.success) {
-				let body = html`Hasło zostało zresetowane`;
-				let footer = html`
-					<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-					<button class="btn primary" onclick="showModal('loginForm',{source:this});">Zaloguj się <i class="fas fa-user"></i></button>
-				`;
-
-				showMessageModal(getMessageHTML({ type: "success", body, footer }));
-			} else {
-				showMessageModal(
-					getMessageHTML({
-						type: res.is_info ? "info" : "error",
-						body: def(res.errors, ["Wystąpił błąd zmiany hasła"]).join("<br>"),
-					})
-				);
-			}
-		},
+					showMessageModal(getMessageHTML({ type: "success", body, footer }));
+				} else {
+					showMessageModal(
+						getMessageHTML({
+							type: res.is_info ? "info" : "error",
+							body: def(res.errors, ["Wystąpił błąd zmiany hasła"]).join("<br>"),
+						})
+					);
+				}
+			},
+		});
 	});
-}
+});

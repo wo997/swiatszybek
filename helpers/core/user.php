@@ -165,10 +165,8 @@ class User
             return $reset;
         }
 
-        /** @var User */
-        $current_user = self::getCurrent();
-        $current_user->entity->setProp("password_hash", Security::getPasswordHash($data["password"]));
-        $current_user->entity->save();
+        DB::update("user", ["password_hash" => Security::getPasswordHash($data["password"])], "user_id = " . intval($data["user_id"]));
+        self::getCurrent()->setData();
 
         $res["success"] = true;
         return $res;

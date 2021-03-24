@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[!global] */
 
 function domload(callback) {
 	document.addEventListener("DOMContentLoaded", callback);

@@ -1,27 +1,3 @@
 /* css[view] */
 
-.password_requirements {
-	p {
-		& {
-			padding-left: 22px;
-			position: relative;
-		}
-		.fas {
-			position: absolute;
-			transform: translate(-50%, -50%);
-			transition: all 0.2s;
-			left: 8px;
-			top: 50%;
-		}
-		.fa-check {
-			color: var(--success-clr);
-		}
-		.fa-times {
-			color: var(--error-clr);
-		}
-		&:not(.correct) .fa-check,
-		&.correct .fa-times {
-			opacity: 0;
-		}
-	}
-}
+@import "/bundles/global/src/css/traits/password.scss";

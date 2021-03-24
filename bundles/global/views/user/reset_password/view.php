@@ -12,6 +12,11 @@ if (User::getCurrent()->isLoggedIn()) {
     Request::reload();
 }
 
+$user_email = DB::fetchVal("SELECT email FROM user WHERE user_id = ?", [$user_id]);
+if (!$user_email) {
+    Request::redirect("/");
+}
+
 ?>
 
 
@@ -21,18 +26,17 @@ if (User::getCurrent()->isLoggedIn()) {
 
 <?php startSection("body_content"); ?>
 
-<form onsubmit="return false" id="resetPasswordForm" data-form method="post" class="paddingable" style="margin:auto;padding-bottom:50px;max-width:350px">
+<form id="resetPasswordForm" style="margin: auto auto 0;padding: 20px 10px 80px;width: 100%;max-width: 414px;" onsubmit="return false">
     <h1 class="h1" style="text-align:center">Zresetuj hasło</h1>
 
-    <div class="label">Hasło (min. 8 znaków)</div>
-    <input type="password" name="password" class="field" data-validate="password" autocomplete="new-password">
+    <div class="label">Email</div>
+    <div><?= $user_email  ?></div>
 
-    <div class="label">Powtórz hasło</div>
-    <input type="password" name="password_rewrite" class="field" data-validate="|match:#resetPasswordForm [name='password']" autocomplete="new-password">
+    <?php include "bundles/global/traits/password.php"; ?>
 
-    <input type="hidden" name="user_id" value="<?= $user_id ?>">
-    <input type="hidden" name="authentication_token" value="<?= $authentication_token ?>">
-    <button class="btn primary medium" style="margin:10px 0; width: 100%" onclick="resetPassword()">
+    <input type="hidden" class="user_id" value="<?= $user_id ?>">
+    <input type="hidden" class="authentication_token" value="<?= $authentication_token ?>">
+    <button class="btn primary submit_btn" style="margin:10px 0; width: 100%">
         Akceptuj zmianę hasła
         <i class="fa fa-chevron-right"></i>
     </button>

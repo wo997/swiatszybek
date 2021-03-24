@@ -80,6 +80,17 @@ if ($modifyCSS) {
             }
         }
 
+        //@import "/bundles/global/src/css/traits/password.scss";
+        if (preg_match_all('/(?<=\@import ").*?(?=";)/', $css_full, $matches)) {
+            foreach ($matches[0] as $file_to_include) {
+                if (file_exists(".$file_to_include")) {
+                    $css_full = str_replace("@import \"$file_to_include\";", file_get_contents(".$file_to_include"), $css_full);
+                } else {
+                    $css_full = str_replace("@import \"$file_to_include\";", "", $css_full);
+                }
+            }
+        }
+
         $css_full = $scss->compile($css_full);
         $css_full = (new Minify\CSS($css_full))->minify();
 
@@ -119,11 +130,11 @@ if ($modifyJS) {
             $js_content = implode(PHP_EOL, $js_content_arr);
 
             //@include(admin/tools/newCms/template.html)
-            if (preg_match_all("/(?<=\@include\()[^\)]*(?=\))/", $js_content, $matches)) {
+            if (preg_match_all("/(?<=\@include\().*?(?=\))/", $js_content, $matches)) {
                 foreach ($matches[0] as $file_to_include) {
                     $js_dependencies[] = $file_to_include;
                     if (file_exists($file_to_include)) {
-                        $js_content = str_replace("@include($file_to_include)", file_get_contents($file_to_include), $js_content);
+                        $js_content = str_replace(["// @include($file_to_include)", "//@include($file_to_include)", "@include($file_to_include)"], file_get_contents($file_to_include), $js_content);
                     }
                 }
             }

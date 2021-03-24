@@ -106,7 +106,7 @@ function registerUser(params) {
 			hideLoader();
 			if (res.success) {
 				let body = html`Link do aktywacji konta został wysłany<br />na ${res.email}`;
-				let footer = html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `;
+				let footer = html` <a class="btn subtle" href="/">Zamknij <i class="fas fa-times"></i></a> `;
 
 				if (res.email_client_url) {
 					footer += html`

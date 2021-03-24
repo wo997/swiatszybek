@@ -1,4 +1,9 @@
 <?php //route[/resetowanie-hasla]
+
+if (Request::getSingleUsageSessionVar("just_logged_in")) {
+    Request::redirect("/");
+}
+
 ?>
 
 
