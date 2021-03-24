@@ -16,10 +16,8 @@ function resetPassword() {
 			if (res.success) {
 				let body = html`Hasło zostało zresetowane`;
 				let footer = html`
-					<button class="btn subtle medium" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-					<button class="btn success medium" onclick='showModal("loginForm",{source:this});'>
-						Zaloguj się <i class="fas fa-user"></i>
-					</button>
+					<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+					<button class="btn primary" onclick="showModal('loginForm',{source:this});">Zaloguj się <i class="fas fa-user"></i></button>
 				`;
 
 				showMessageModal(getMessageHTML({ type: "success", body, footer }));

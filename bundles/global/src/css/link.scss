@@ -1,19 +1,19 @@
 /* css[global] */
 
 .link {
-	color: #16f;
-	font-weight: bold;
+	color: #33d;
+	font-weight: 600;
 	cursor: pointer;
 }
 .link:hover {
-	color: #58c;
+	filter: brightness(1.05);
 	text-decoration: underline;
 }
-.linkable {
-	border-bottom: 1px solid #35f;
-	color: #35f;
-}
-.linkable:hover {
-	border-bottom: 1px solid #13b;
-	color: #13b;
-}
+// .linkable {
+// 	border-bottom: 1px solid #35f;
+// 	color: #35f;
+// }
+// .linkable:hover {
+// 	border-bottom: 1px solid #13b;
+// 	color: #13b;
+// }

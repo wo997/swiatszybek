@@ -56,7 +56,7 @@ function validateLoginUserEmail(input) {
 			const errors = [];
 			if (res.status == "unauthenticated") {
 				errors.push("Konto nie zostało aktywowane");
-			} else if (res.status == "exists") {
+			} else if (res.status != "exists") {
 				errors.push("Takie konto nie istnieje");
 			}
 			showInputErrors(input, errors);

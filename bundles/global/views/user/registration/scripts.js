@@ -17,12 +17,12 @@ function validateUserEmailExists() {
 		success: (res) => {
 			let errors = [];
 			if (res.status == "exists") {
-				let message = html`<span style="color: black"></span>`;
-				message += html`To konto jest aktywne`;
+				let message = "";
+				let log_html = "";
 				if (!IS_LOGGED) {
-					message += html` <b style="color:var(--success-clr);" class="link" onclick="accountExists(this)">ZALOGUJ SIĘ</b>`;
+					log_html += html` <b style="color:var(--success-clr);" class="link" onclick="accountExists(this)">ZALOGUJ SIĘ</b>`;
 				}
-				message += html`</span>`;
+				message += html`<span style="color: black">To konto jest aktywne</span> ${log_html}`;
 				errors.push(message);
 			} else if (res.status == "unauthenticated") {
 				errors.push(
