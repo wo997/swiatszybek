@@ -259,6 +259,7 @@ domload(() => {
 			<option value="1em">mała</option>
 			<option value="1.5em">duża</option>
 		</select>
+		<input class="field jscolor" data-style="color" />
 	`);
 
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
@@ -266,7 +267,12 @@ domload(() => {
 			const textable = getFocusTextable();
 			if (textable) {
 				const v_node = findNodeInVDom(+textable.dataset.ped).node;
-				v_node.styles[input.dataset.style] = input._get_value();
+				let val = input._get_value();
+				let prop = input.dataset.style;
+				if (prop === "color") {
+					val = "#" + val;
+				}
+				v_node.styles[prop] = val;
 				recreateDom();
 			}
 		});
