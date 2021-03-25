@@ -68,6 +68,5 @@ foreach ($_link_hooks_paths as $name => $paths_strings) {
     Files::save(BUILDS_PATH . "hooks/" . "$name.php", $out);
 }
 
-
 // that's nasty, will work as u build it
 //@include BUILDS_PATH . "include_hooks.php";

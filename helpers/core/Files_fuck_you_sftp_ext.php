@@ -188,7 +188,10 @@ class Files
     public static function getFileExtension($file_path)
     {
         $path_info = pathinfo($file_path);
-        return $path_info["extension"];
+        if (!$path_info) {
+            return null;
+        }
+        return def($path_info, "extension", null);
     }
 
 
@@ -507,34 +510,6 @@ class Files
         mkdir($dir);
     }
 }
-
-
-
-/**
- * @typedef assetSchema {
- * files_groups?: array
- * dependencies?: array
- * }
- */
-
-/**
- * @return assetSchema
- */
-function getJsSchema()
-{
-    global $js_schema;
-    return $js_schema;
-}
-
-/**
- * @return assetSchema
- */
-function getCssSchema()
-{
-    global $css_schema;
-    return $css_schema;
-}
-
 
 /**
  * @typedef scanDirectoriesOptions {

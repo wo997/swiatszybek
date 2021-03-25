@@ -5,11 +5,11 @@ if (!def($page_data, "seo_image", "")) {
 }
 
 if (defined("ROUTE")) {
-    $js_schema = getJsSchema();
+    $js_schema = Assets::getJsSchema();
     $groups = def($js_schema, "files_groups", []);
     $has_js = isset($groups["views" . ROUTE]);
 
-    $css_schema = getCssSchema();
+    $css_schema = Assets::getCssSchema();
     $groups = def($css_schema, "files_groups", []);
     $has_css = isset($groups["views" . ROUTE]);
 } else {
@@ -18,16 +18,12 @@ if (defined("ROUTE")) {
 }
 ?>
 
-<link href="/builds/global.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-<script src="/builds/global.js?v=<?= JS_RELEASE ?>"></script>
+<link href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+<script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
 
 <script>
     // TODO: should go to cookie maybe window.devicePixelRatio, probably no
-
-    const RELEASE = <?= RELEASE ?>; // general asset version
-    const JS_RELEASE = <?= JS_RELEASE ?>;
-    const CSS_RELEASE = <?= CSS_RELEASE ?>;
-    const MODULES_RELEASE = <?= MODULES_RELEASE ?>;
+    const ASSETS_RELEASE = <?= ASSETS_RELEASE ?>;
 
     const IS_LOGGED = <?= User::getCurrent()->isLoggedIn() ? "true" : "false" ?>;
     const USER_ID = <?= User::getCurrent()->getId() ?>;
@@ -108,26 +104,26 @@ if (defined("ROUTE")) {
         const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
     </script>
 
-    <link href="/builds/admin.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin.js?v=<?= JS_RELEASE ?>"></script>
+    <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
 
-    <script src="/builds/app_modules.js?v=<?= MODULES_RELEASE ?>" defer></script>
-    <script src="/builds/app_module_blocks.js?v=<?= MODULES_RELEASE ?>" defer></script>
+    <script src="/builds/app_modules.js?v=<?= ASSETS_RELEASE ?>" defer></script>
+    <script src="/builds/app_module_blocks.js?v=<?= ASSETS_RELEASE ?>" defer></script>
 
-    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= RELEASE ?>"></script>
-    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= RELEASE ?>">
-    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= RELEASE ?>"></script>
+    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= ASSETS_RELEASE ?>">
+    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
 
-    <script src="/src/jscolor.js?v=<?= RELEASE ?>"></script>
+    <script src="/src/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
 
-    <script src="/src/highlight.min.js?v=<?= RELEASE ?>"></script>
-    <script src="/src/quill-2.0.js?v=<?= RELEASE ?>"></script>
+    <script src="/src/highlight.min.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <script src="/src/quill-2.0.js?v=<?= ASSETS_RELEASE ?>"></script>
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
 
-    <link href="/builds/admin_everywhere.css?v=<?= CSS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin_everywhere.js?v=<?= JS_RELEASE ?>"></script>
+    <link href="/builds/admin_everywhere.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin_everywhere.js?v=<?= ASSETS_RELEASE ?>"></script>
 
 <?php endif ?>
 
@@ -162,8 +158,8 @@ if (defined("ROUTE")) {
 </style>
 
 <?php if ($has_js) { ?>
-    <script src="/<?= BUILDS_PATH . "views/" . ROUTE . ".js" ?>?v=<?= JS_RELEASE ?>"></script>
+    <script src="/<?= BUILDS_PATH . "views/" . ROUTE . ".js" ?>?v=<?= ASSETS_RELEASE ?>"></script>
 <?php } ?>
 <?php if ($has_css) { ?>
-    <link href="/<?= BUILDS_PATH . "views/" . ROUTE . ".css" ?>?v=<?= CSS_RELEASE ?>" rel="stylesheet">
+    <link href="/<?= BUILDS_PATH . "views/" . ROUTE . ".css" ?>?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 <?php } ?>

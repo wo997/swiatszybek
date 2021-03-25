@@ -35,43 +35,7 @@ function secret($var, $default = "")
 
 include "scripts/db_connect.php";
 
-// TODO: almost everything should belong to the core, only modules will be included by a //helper[scope] hook
-// others
-/*include_once "helpers/order.php";
-include_once "helpers/activity_log.php";
-include_once "helpers/rating.php";
-
-*/
-
-$path = BUILDS_PATH . "include_helpers.php";
-
 include "scripts/use_builds.php";
-
-
-if (file_exists($path)) {
-    include $path;
-} else {
-    include "deployment/automatic_build.php";
-}
-
-
-// TODO: nice to remember about this function and probably many more like this one
-//var_Dump(get_defined_constants()["ADMIN_URL"]);
-
-
-// TODO: ABANDON and replace with settigs
-// global variables
-$path = BUILDS_PATH . "config.php";
-if (file_exists($path)) {
-    include $path;
-} else {
-    include "deployment/automatic_build.php";
-}
-function config($var, $default = "")
-{
-    global $config;
-    return def($config, $var, $default);
-}
 
 $settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true);
 if (!$settings) {
