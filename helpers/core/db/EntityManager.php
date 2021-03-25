@@ -126,6 +126,8 @@ class EntityManager
         foreach (self::$objects as $object) {
             $object->save();
         }
+
+        // down below run just sql queries or send emails
         foreach (self::$objects as $object) {
             $saver = "after_save_" . $object->getName() . "_entity";
             EventListener::dispatch($saver, ["obj" => $object]);
