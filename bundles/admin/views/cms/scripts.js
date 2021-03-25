@@ -17,7 +17,7 @@ let piep_editor_content;
  * }} vDomNode
  */
 
-const virtual_dom = {
+const v_dom = {
 	tag: "div",
 	id: 0,
 	children: [
@@ -61,7 +61,7 @@ function getNewId() {
 		}
 	};
 
-	traversePiepHtml(virtual_dom.children);
+	traversePiepHtml(v_dom.children);
 	return max + 1;
 }
 
@@ -102,7 +102,7 @@ function recreateDom() {
 		return piep_html;
 	};
 
-	let piep_html = traverseVDom(virtual_dom);
+	let piep_html = traverseVDom(v_dom);
 
 	piep_editor_content._set_content(piep_html);
 }
@@ -116,7 +116,7 @@ function recreateDom() {
  * index: number,
  * }}
  */
-function findNodeInVirtualDom(id) {
+function findNodeInVDom(id) {
 	if (!id) {
 		return undefined;
 	}
@@ -150,7 +150,7 @@ function findNodeInVirtualDom(id) {
 		return undefined;
 	};
 
-	return traverseVDom(virtual_dom);
+	return traverseVDom(v_dom);
 }
 
 /**
@@ -181,6 +181,34 @@ function getTextable(node, direction) {
 	return undefined;
 }
 
+/**
+ *
+ * @param {string} insert_text
+ * @returns
+ */
+function insertPiepText(insert_text) {
+	const sel = window.getSelection();
+	const focusOffset = sel.focusOffset;
+	const focus_node = $(".piep_focus");
+	const id = focus_node ? +focus_node.dataset.ped : 0;
+	const v_node_data = findNodeInVDom(id);
+	if (!v_node_data) {
+		return;
+	}
+
+	const v_node = v_node_data ? v_node_data.node : undefined;
+
+	const text = v_node.text;
+	v_node.text = text.substr(0, focusOffset) + insert_text + text.substr(focusOffset);
+	recreateDom();
+
+	const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
+
+	if (node_ref) {
+		setSelectionByIndex(node_ref, focusOffset + insert_text.length);
+	}
+}
+
 domload(() => {
 	piep_editor = $(".piep_editor");
 	piep_editor_content = piep_editor._child(".piep_editor_content");
@@ -193,7 +221,8 @@ domload(() => {
 		// "text/html" is cool but dont use it yet
 		const text = e.clipboardData.getData("text/plain");
 		// this text can contain html cool
-		console.log(text);
+		//console.log(text);
+		insertPiepText(text);
 		// TODO: do do
 	});
 
@@ -214,51 +243,37 @@ domload(() => {
 	});
 
 	document.addEventListener("keydown", (ev) => {
-		//const target = $(ev.target);
-
 		const sel = window.getSelection();
-		const range = document.createRange();
 		const focusOffset = sel.focusOffset;
-		//const focus_node = $(sel.focusNode);
 		const focus_node = $(".piep_focus");
-		//const focus_html_node = focus_node ? focus_node._parent("*", { skip: 0 }) : undefined;
-		//const id = focus_html_node ? +focus_html_node.dataset.ped : 0;
 		const id = focus_node ? +focus_node.dataset.ped : 0;
-		const virtual_node_data = findNodeInVirtualDom(id);
-		const v_node = virtual_node_data ? virtual_node_data.node : undefined;
+		const v_node_data = findNodeInVDom(id);
+		const v_node = v_node_data ? v_node_data.node : undefined;
 
 		if (ev.key.length === 1 && sel) {
 			if (!ev.ctrlKey) {
 				ev.preventDefault();
 
-				const text = v_node.text;
-				if (typeof text === "string") {
-					v_node.text = text.substr(0, focusOffset) + ev.key + text.substr(focusOffset);
-					recreateDom();
-
-					const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
-
-					if (node_ref) {
-						setSelectionByIndex(node_ref, focusOffset + 1);
-					}
+				if (focus_node.classList.contains("textable")) {
+					insertPiepText(ev.key);
 				}
 			}
 		}
 
-		if (ev.key === "Backspace" && virtual_node_data) {
+		if (ev.key === "Backspace" && v_node_data) {
 			ev.preventDefault();
 
 			const text = v_node.text;
 			if (focusOffset <= 0) {
-				const prev_index = virtual_node_data.index - 1;
+				const prev_index = v_node_data.index - 1;
 				if (prev_index >= 0) {
-					const prev_v_node = virtual_node_data.children[prev_index];
+					const prev_v_node = v_node_data.children[prev_index];
 
 					if (prev_v_node.text !== undefined) {
 						const prev_id = prev_v_node.id;
 						const prev_v_node_text_before = prev_v_node.text;
 						prev_v_node.text = prev_v_node_text_before + v_node.text;
-						virtual_node_data.children.splice(virtual_node_data.index, 1);
+						v_node_data.children.splice(v_node_data.index, 1);
 						recreateDom();
 
 						const prev_node_ref = piep_editor_content._child(`[data-ped="${prev_id}"]`);
@@ -278,20 +293,20 @@ domload(() => {
 			}
 		}
 
-		if (ev.key === "Delete" && virtual_node_data) {
+		if (ev.key === "Delete" && v_node_data) {
 			ev.preventDefault();
 
 			const text = v_node.text;
 			if (focusOffset >= v_node.text.length) {
-				const next_index = virtual_node_data.index + 1;
-				if (next_index < virtual_node_data.children.length) {
-					const next_v_node = virtual_node_data.children[next_index];
+				const next_index = v_node_data.index + 1;
+				if (next_index < v_node_data.children.length) {
+					const next_v_node = v_node_data.children[next_index];
 
 					if (next_v_node.text !== undefined) {
 						const node_id = v_node.id;
 						const v_node_text_before = v_node.text;
 						v_node.text = v_node_text_before + next_v_node.text;
-						virtual_node_data.children.splice(next_index, 1);
+						v_node_data.children.splice(next_index, 1);
 						recreateDom();
 
 						const node_ref = piep_editor_content._child(`[data-ped="${node_id}"]`);
@@ -346,7 +361,7 @@ domload(() => {
 			ev.preventDefault();
 		}
 
-		if (ev.key === "Enter" && virtual_node_data) {
+		if (ev.key === "Enter" && v_node_data) {
 			ev.preventDefault();
 
 			const text = v_node.text;
@@ -356,7 +371,7 @@ domload(() => {
 				const insert_node_id = getNewId();
 				insert_v_node.id = insert_node_id;
 				v_node.text = text.substr(0, focusOffset);
-				virtual_node_data.children.splice(virtual_node_data.index + 1, 0, insert_v_node);
+				v_node_data.children.splice(v_node_data.index + 1, 0, insert_v_node);
 				recreateDom();
 
 				const insert_node_ref = piep_editor_content._child(`[data-ped="${insert_node_id}"]`);
