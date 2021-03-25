@@ -6,6 +6,10 @@ let piep_editor;
 let piep_editor_cursor;
 /** @type {PiepNode} */
 let piep_editor_content;
+/** @type {PiepNode} */
+let piep_editor_float_menu;
+/** @type {PiepNode} */
+let piep_editor_styles;
 
 /**
  * @typedef {{
@@ -66,13 +70,16 @@ function getNewId() {
 }
 
 function recreateDom() {
+	// order doesn't really matter
+	let piep_styles_html = "";
+
 	/**
 	 *
 	 * @param {vDomNode} node
 	 * @returns
 	 */
 	const traverseVDom = (node) => {
-		let piep_html = "";
+		let piep_content_html = "";
 
 		const children = node.children;
 		const text = node.text;
@@ -81,7 +88,8 @@ function recreateDom() {
 		const textable = text !== undefined;
 
 		let attributes = `data-ped="${node.id}"`;
-		let classes = [`ped_${node.id}`];
+		const base_class = `ped_${node.id}`;
+		let classes = [base_class];
 
 		let body = "";
 		if (children) {
@@ -97,14 +105,28 @@ function recreateDom() {
 			}
 		}
 
-		piep_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
+		piep_content_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
 
-		return piep_html;
+		if (!node.styles) {
+			node.styles = {};
+		}
+		const styles = Object.entries(node.styles);
+		if (styles.length > 0) {
+			let node_styles = "";
+			styles.forEach(([prop, val]) => {
+				node_styles += `${kebabCase(prop)}: ${val};`;
+			});
+			piep_styles_html += `.${base_class} { ${node_styles} }`;
+		}
+
+		return piep_content_html;
 	};
 
-	let piep_html = traverseVDom(v_dom);
+	let piep_content_html = traverseVDom(v_dom);
 
-	piep_editor_content._set_content(piep_html);
+	piep_editor_content._set_content(piep_content_html);
+
+	piep_editor_styles._set_content(piep_styles_html);
 }
 
 /**
@@ -226,6 +248,30 @@ domload(() => {
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
 	piep_editor_cursor = piep_editor._child(".piep_editor_cursor");
 
+	piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
+	piep_editor_styles = piep_editor._child(".piep_editor_styles");
+
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu"></div>`);
+	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
+
+	piep_editor_float_menu._set_content(html`
+		<select class="field small" data-style="fontSize">
+			<option value="1em">mała</option>
+			<option value="1.5em">duża</option>
+		</select>
+	`);
+
+	piep_editor_float_menu._children("[data-style]").forEach((input) => {
+		input.addEventListener("change", () => {
+			const textable = getFocusTextable();
+			if (textable) {
+				const v_node = findNodeInVDom(+textable.dataset.ped).node;
+				v_node.styles[input.dataset.style] = input._get_value();
+				recreateDom();
+			}
+		});
+	});
+
 	piep_editor.addEventListener("paste", (e) => {
 		e.preventDefault();
 		// "text/html" is cool but dont use it yet
@@ -233,17 +279,18 @@ domload(() => {
 		// this text can contain html cool
 		//console.log(text);
 		insertPiepText(text);
-		// TODO: do do
 	});
 
 	piep_editor.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
 		const focus_node = $(sel.focusNode);
-		const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
-		if (!correct_selection) {
-			setSelectionByIndex($(ev.target), 0);
-		} else if (focus_node.innerText === "\n") {
-			setSelectionByIndex(correct_selection, 0);
+		if (focus_node) {
+			const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
+			if (!correct_selection) {
+				setSelectionByIndex($(ev.target), 0);
+			} else if (focus_node.innerText === "\n") {
+				setSelectionByIndex(correct_selection, 0);
+			}
 		}
 		updatePiepCursorPosition();
 	});
@@ -422,15 +469,15 @@ function getTextNode(node) {
 }
 
 function getFocusTextable() {
-	const sel = window.getSelection();
-	const focus_node = sel ? $(sel.focusNode) : undefined;
+	const focus_node = $(".piep_focus");
 	return focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 }
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	const range = document.createRange();
-	const focus_textable = getFocusTextable();
+	const focus_node = sel ? $(sel.focusNode) : undefined;
+	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
 	if (focus_textable) {
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
@@ -466,8 +513,9 @@ function updatePiepCursorPosition() {
 		piep_editor_cursor.style.height = cursor_height + "px";
 	}
 
-	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 	if (focus_textable) {
+		// keep the last focus active so u can edit stuff
+		removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 		focus_textable.classList.add("piep_focus");
 	}
 }

@@ -22,17 +22,20 @@ function regexCount(str, reg_str) {
 }
 
 function snakeCase(str) {
-	return str.replace(/-([a-z])/gi, function (s, gr1) {
-		return gr1.toUpperCase();
-	});
+	return str.replace(/-([a-z])/gi, (s, gr1) => gr1.toUpperCase());
 }
+
+const kebabCase = (str) => {
+	return str
+		.split("")
+		.map((letter, idx) => (letter.toUpperCase() === letter ? `${idx !== 0 ? "-" : ""}${letter.toLowerCase()}` : letter))
+		.join("");
+};
+
 function camelCase(str) {
 	let arr = str.split("-");
 	let capital = arr.map((item, i) => (i ? item.charAt(0).toUpperCase() + item.slice(1).toLowerCase() : item.toLowerCase()));
-	// ^-- change here.
-	let capitalString = capital.join("");
-
-	console.log(capitalString);
+	return capital.join("");
 }
 
 function escapeHTML(unsafeText) {

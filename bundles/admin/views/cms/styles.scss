@@ -36,6 +36,14 @@
 		box-shadow: 0 0 0 1px var(--focus-clr);
 		//box-shadow: 0 0 0 1px var(--focus-clr), 0 0 18px 0 #fff;
 	}
+
+	.piep_editor_float_menu {
+		position: absolute;
+		background: #fff;
+		border: 1px solid #ccc;
+		box-shadow: 0 2px 5px 0 #0003;
+		padding: 10px;
+	}
 }
 
 @keyframes cursor_blink {
