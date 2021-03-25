@@ -13,7 +13,6 @@ include_once "helpers/core/settings.php";
 include_once "helpers/core/db/DB.php";
 include_once "helpers/core/db/EntityManager.php";
 include_once "helpers/core/db/Entity.php";
-include_once "helpers/core/db/entity_old.php";
 
 include_once "helpers/core/email.php";
 include_once "helpers/core/Request.php";
@@ -33,3 +32,5 @@ include_once "helpers/core/links.php";
 
 include_once "helpers/core/layout/cms.php";
 include_once "helpers/core/layout/templates.php";
+
+include_once "helpers/core/packaging/packaging.php";
