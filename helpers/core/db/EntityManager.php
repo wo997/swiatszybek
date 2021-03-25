@@ -122,11 +122,13 @@ class EntityManager
 
     public static function saveAll()
     {
+        array_push(self::$objects, ...self::$warmup_objects);
         foreach (self::$objects as $object) {
             $object->save();
         }
-        foreach (self::$warmup_objects as $object) {
-            $object->save();
+        foreach (self::$objects as $object) {
+            $saver = "after_save_" . $object->getName() . "_entity";
+            EventListener::dispatch($saver, ["obj" => $object]);
         }
     }
 
