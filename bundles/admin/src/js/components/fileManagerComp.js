@@ -7,7 +7,6 @@
  * search_data: any[]
  * pagination_data: PaginationCompData
  * quick_search?: string
- * upload_modal_options?: UploadFileModalOptions
  * }} FileManagerCompData
  *
  * @typedef {{
@@ -29,6 +28,7 @@
  * _search()
  * _search_request: XMLHttpRequest | undefined
  * _show_upload_modal(options?: UploadFileModalOptions, modal_options?: ShowModalParams)
+ * _upload_modal_options?: UploadFileModalOptions
  * } & BaseComp} FileManagerComp
  */
 
@@ -245,9 +245,9 @@ function fileManagerComp(comp, parent, data = undefined) {
 				input._set_value("", { quiet: true });
 
 				formData.append("search", "");
-				if (comp._data.upload_modal_options.copy_name) {
+				if (comp._upload_modal_options.copy_name) {
 					formData.append("copy_name", "1");
-					formData.append("name", comp._data.upload_modal_options.copy_name);
+					formData.append("name", comp._upload_modal_options.copy_name);
 				} else {
 					// it would be nice to bring it back
 					// formData.append("name", );
@@ -263,8 +263,8 @@ function fileManagerComp(comp, parent, data = undefined) {
 						showNotification("Plik został przesłany", { one_line: true, type: "success" });
 						hideParentModal(form);
 
-						if (comp._data.upload_modal_options.callback) {
-							comp._data.upload_modal_options.callback();
+						if (comp._upload_modal_options.callback) {
+							comp._upload_modal_options.callback();
 						}
 					},
 				});
@@ -274,7 +274,7 @@ function fileManagerComp(comp, parent, data = undefined) {
 
 			comp._show_upload_modal = (options = {}, modal_options = {}) => {
 				modal_options.source = def(modal_options.source, comp._nodes.upload_btn);
-				comp._data.upload_modal_options = options;
+				comp._upload_modal_options = options;
 				comp._render();
 				$("#uploadFile .upload_file_label")._set_content(def(options.label, "Prześlij pliki"));
 				showModal("uploadFile", modal_options);

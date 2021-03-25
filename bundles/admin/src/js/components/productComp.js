@@ -671,11 +671,19 @@ function productComp(comp, parent, data = undefined) {
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {
 				const select_product_categories_modal_comp = getSelectProductCategoriesModal();
-				select_product_categories_modal_comp._show({ source: comp._nodes.add_category_btn });
+				select_product_categories_modal_comp._show(
+					{
+						category_ids: comp._data.category_ids,
+						close_callback: (category_ids) => {
+							comp._data.category_ids = category_ids;
+							comp._render();
+						},
+					},
+					{ source: comp._nodes.add_category_btn }
+				);
 			});
 			comp._nodes.print_categories.addEventListener("click", () => {
-				const select_product_categories_modal_comp = getSelectProductCategoriesModal();
-				select_product_categories_modal_comp._show({ source: comp._nodes.print_categories });
+				comp._nodes.add_category_btn.click();
 			});
 
 			comp._nodes.open_btn.addEventListener("click", () => {

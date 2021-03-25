@@ -661,6 +661,7 @@ function mainSearchProducts(force = false) {
 			product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
 				const product_img = img_wrapper._child(".product_img");
 				const images = JSON.parse(img_wrapper.dataset.images);
+				// backend does it yay
 				// images.forEach((img, index) => {
 				// 	let weight = -index;
 				// 	for (const option_id of pp_selected_option_groups.flat(2)) {

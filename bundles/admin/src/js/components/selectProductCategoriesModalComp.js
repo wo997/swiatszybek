@@ -7,13 +7,19 @@
  * }} SelectProductCategoriesModalCompData
  *
  * @typedef {{
+ * category_ids: number[]
+ * close_callback(category_ids: number[])
+ * }} SelectProductCategoriesOptions
+ *
+ * @typedef {{
  * _data: SelectProductCategoriesModalCompData
  * _set_data(data?: SelectProductCategoriesModalCompData, options?: SetCompDataOptions)
  * _nodes: {
- *      close_btn: PiepNode
  *      edit_btn: PiepNode
+ *      save_btn: PiepNode
  * }
- * _show(options?: ShowModalParams)
+ * _show(options: SelectProductCategoriesOptions, modal_options?: ShowModalParams)
+ * _select_product_categories_options: SelectProductCategoriesOptions
  * _refresh_dataset()
  * } & BaseComp} SelectProductCategoriesModalComp
  */
@@ -56,20 +62,16 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 		traverse(comp._data.categories, product_categories_tree);
 	};
 
-	comp._show = (options = {}) => {
-		/** @type {ProductComp} */
-		// @ts-ignore
-		const product_comp = $("product-comp");
+	comp._show = (options, modal_options = {}) => {
+		comp._select_product_categories_options = options;
 
-		if (product_comp) {
-			comp._data.selection = product_comp._data.category_ids;
-			comp._refresh_dataset();
-			comp._render();
-		}
+		comp._data.selection = options.category_ids;
+		comp._refresh_dataset();
+		comp._render();
 
 		setTimeout(() => {
 			showModal("selectProductCategories", {
-				source: options.source,
+				source: modal_options.source,
 			});
 		});
 	};
@@ -104,17 +106,6 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					// let's hope it executes once
 					comp._render();
 				}
-
-				if (comp.classList.contains("ready")) {
-					/** @type {ProductComp} */
-					// @ts-ignore
-					const product_comp = $("product-comp");
-
-					if (product_comp) {
-						product_comp._data.category_ids = comp._data.selection;
-						product_comp._render();
-					}
-				}
 			},
 		});
 	};
@@ -122,10 +113,9 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Wybierz kategorie dla: <span class="product_name"></span></span>
-				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
-					Zamknij <i class="fas fa-times"></i>
-				</button>
+				<span class="title medium">Wybierz kategorie</span>
+				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
@@ -146,16 +136,11 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 				comp._refresh_dataset();
 				comp._render();
 			});
-		},
-		ready: () => {
-			setTimeout(() => {
-				/** @type {ProductComp} */
-				// @ts-ignore
-				const product_comp = $("product-comp");
-				if (product_comp) {
-					comp._data.selection = product_comp._data.category_ids;
-					comp._refresh_dataset();
-					comp._render({ force_render: true });
+
+			comp._nodes.save_btn.addEventListener("click", () => {
+				hideParentModal(comp);
+				if (comp._select_product_categories_options.close_callback) {
+					comp._select_product_categories_options.close_callback(comp._data.selection);
 				}
 			});
 		},

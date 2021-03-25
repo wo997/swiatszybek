@@ -189,6 +189,7 @@ function getTextable(node, direction) {
 function insertPiepText(insert_text) {
 	const sel = window.getSelection();
 	const focusOffset = sel.focusOffset;
+	const anchorOffset = sel.anchorOffset;
 	const focus_node = $(".piep_focus");
 	const id = focus_node ? +focus_node.dataset.ped : 0;
 	const v_node_data = findNodeInVDom(id);
@@ -199,13 +200,22 @@ function insertPiepText(insert_text) {
 	const v_node = v_node_data ? v_node_data.node : undefined;
 
 	const text = v_node.text;
-	v_node.text = text.substr(0, focusOffset) + insert_text + text.substr(focusOffset);
+
+	let beginOffset = focusOffset;
+	let endOffset = focusOffset;
+	if (anchorOffset === focusOffset) {
+		v_node.text = text.substr(0, focusOffset) + insert_text + text.substr(focusOffset);
+	} else {
+		beginOffset = Math.min(anchorOffset, focusOffset);
+		endOffset = Math.max(focusOffset, anchorOffset);
+		v_node.text = text.substr(0, beginOffset) + insert_text + text.substr(endOffset);
+	}
 	recreateDom();
 
 	const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 
 	if (node_ref) {
-		setSelectionByIndex(node_ref, focusOffset + insert_text.length);
+		setSelectionByIndex(node_ref, beginOffset + insert_text.length);
 	}
 }
 

@@ -1,6 +1,8 @@
 /* js[view] */
 
 domload(() => {
+	/** @type {number[]} */
+	let current_categories = JSON.parse(def(localStorage.getItem("search_products_categories"), "[]"));
 	let current_view = def(localStorage.getItem("search_products_view"), "general_products");
 
 	/** @type {DatatableComp} */
@@ -60,6 +62,9 @@ domload(() => {
 				empty_html: html`Brak produktów`,
 				selectable: true,
 				save_state_name: "general_products",
+				getRequestParams: () => ({
+					category_ids: current_categories,
+				}),
 			});
 		},
 		current_view == "general_products" ? 0 : 400
@@ -99,7 +104,7 @@ domload(() => {
 									},
 								},
 								success: (res) => {
-									showNotification(`${data.name}: ${data.stock}szt.`, { type: "success", one_line: true });
+									showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
 									products._backend_search();
 								},
 							});
@@ -120,6 +125,9 @@ domload(() => {
 				empty_html: html`Brak produktów`,
 				selectable: true,
 				save_state_name: "products",
+				getRequestParams: () => ({
+					category_ids: current_categories,
+				}),
 			});
 		},
 		current_view == "products" ? 0 : 400
@@ -133,4 +141,59 @@ domload(() => {
 		products.classList.toggle("hidden", current_view !== "products");
 	});
 	toggle_view._set_value(current_view);
+
+	const unselect_categories_btn = $(".products_view_header_under .unselect_categories_btn");
+	unselect_categories_btn.addEventListener("click", () => {
+		setCategories([]);
+	});
+	const what_categories_label = $(".products_view_header_under .what_categories_label");
+
+	/**
+	 *
+	 * @param {number[]} category_ids
+	 */
+	const setCategories = (category_ids) => {
+		const chng = current_categories !== category_ids;
+		if (chng) {
+			current_categories = category_ids;
+			localStorage.setItem("search_products_categories", JSON.stringify(current_categories));
+			quickTimeout(
+				() => {
+					general_products._backend_search();
+				},
+				current_view == "general_products" ? 0 : 400
+			);
+			quickTimeout(
+				() => {
+					products._backend_search();
+				},
+				current_view == "products" ? 0 : 400
+			);
+		}
+
+		const all = current_categories.length === 0;
+		unselect_categories_btn.classList.toggle("hidden", all);
+		what_categories_label._set_content(
+			all
+				? "Wszystkie produkty"
+				: product_categories
+						.filter((c) => current_categories.includes(c.product_category_id))
+						.map((c) => c.name)
+						.join(", ")
+		);
+	};
+	setCategories(current_categories);
+
+	const show_filters = $(".products_view_header_under .show_filters");
+	show_filters.addEventListener("click", () => {
+		getSelectProductCategoriesModal()._show(
+			{
+				category_ids: current_categories,
+				close_callback: (category_ids) => {
+					setCategories(category_ids);
+				},
+			},
+			{ source: show_filters }
+		);
+	});
 });
