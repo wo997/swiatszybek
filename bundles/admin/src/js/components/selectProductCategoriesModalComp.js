@@ -50,6 +50,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 					categories: [],
 					product_category_name: wcat.name,
 					selected: comp._data.selection.includes(wcat.product_category_id),
+					__product_count: wcat.__product_count,
 				});
 			});
 

@@ -6,6 +6,8 @@
  * parent_product_category_id: number
  * name: string
  * pos: number
+ * __category_path_json: any
+ * __product_count: number
  * }} ProductCategoryData
  */
 
@@ -15,6 +17,7 @@
  * name: string
  * pos: number
  * sub_categories: ProductCategoryBranch[]
+ * __product_count: number
  * }} ProductCategoryBranch
  */
 
@@ -41,6 +44,7 @@ function loadedProductCategories() {
 					product_category_id: cat.product_category_id,
 					pos: cat.pos,
 					sub_categories: [],
+					__product_count: cat.__product_count,
 				};
 				list.push(sub_cat);
 				connectWithParent(sub_cat);

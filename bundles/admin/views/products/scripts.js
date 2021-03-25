@@ -9,6 +9,28 @@ domload(() => {
 	// @ts-ignore
 	const general_products = $("datatable-comp.general_products");
 
+	const getCategoriesParam = () => {
+		let ignore_cat_ids = [];
+		current_categories.forEach((category_id) => {
+			try {
+				const cat_ids = JSON.parse(product_categories.find((c) => c.product_category_id === category_id).__category_path_json).map(
+					(c) => c.id
+				);
+				let first = true;
+				for (const cat_id of cat_ids.reverse()) {
+					if (first) {
+						first = false;
+						continue;
+					}
+					ignore_cat_ids.push(cat_id);
+				}
+			} catch {}
+		});
+
+		// just lowest level
+		return current_categories.filter((cid) => !ignore_cat_ids.includes(cid));
+	};
+
 	quickTimeout(
 		() => {
 			datatableComp(general_products, undefined, {
@@ -63,7 +85,7 @@ domload(() => {
 				selectable: true,
 				save_state_name: "general_products",
 				getRequestParams: () => ({
-					category_ids: current_categories,
+					category_ids: getCategoriesParam(),
 				}),
 			});
 		},
@@ -126,7 +148,7 @@ domload(() => {
 				selectable: true,
 				save_state_name: "products",
 				getRequestParams: () => ({
-					category_ids: current_categories,
+					category_ids: getCategoriesParam(),
 				}),
 			});
 		},
