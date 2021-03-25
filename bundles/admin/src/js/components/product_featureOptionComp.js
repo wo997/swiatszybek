@@ -52,37 +52,41 @@ function product_featureOptionComp(
 					e.classList.toggle("hidden", e.dataset.data_type != data.data_type);
 				});
 
-				const physical_measure_data = physical_measures[data.physical_measure];
-				if (physical_measure_data && physical_measure_data.units && physical_measure_data.units.length > 0) {
-					const options = physical_measure_data.units
-						.map((unit) => {
-							return html`<option value="${unit.factor}">${unit.name}</option>`;
-						})
-						.join("");
+				if (data.data_type === "double_value") {
+					const physical_measure_data = physical_measures[data.physical_measure];
+					if (physical_measure_data && physical_measure_data.units && physical_measure_data.units.length > 0) {
+						const options = physical_measure_data.units
+							.map((unit) => {
+								return html`<option value="${unit.factor}">${unit.name}</option>`;
+							})
+							.join("");
 
-					const unit_picker = comp._nodes.physical_value_unit;
-					unit_picker._set_content(options);
+						const unit_picker = comp._nodes.physical_value_unit;
+						unit_picker._set_content(options);
 
-					const value_data = getSafeUnitValue(
-						// @ts-ignore
-						[...unit_picker.options].map((e) => +e.value),
-						data.double_value
-					);
+						const value_data = getSafeUnitValue(
+							// @ts-ignore
+							[...unit_picker.options].map((e) => +e.value),
+							data.double_value
+						);
 
-					if (intrusive_unit) {
-						unit_picker._set_value(value_data.unit_factor, { quiet: true });
-						comp._nodes.physical_value_input._set_value(value_data.value, { quiet: true });
+						if (intrusive_unit) {
+							unit_picker._set_value(value_data.unit_factor, { quiet: true });
+							comp._nodes.physical_value_input._set_value(value_data.value, { quiet: true });
 
-						setTimeout(() => {
-							intrusive_unit = false;
-						});
+							setTimeout(() => {
+								intrusive_unit = false;
+							});
+						}
+
+						comp._nodes.physical_value_wrapper.classList.remove("hidden");
+						comp._nodes.double_value.classList.add("hidden");
+					} else {
+						comp._nodes.physical_value_wrapper.classList.add("hidden");
+						comp._nodes.double_value.classList.toggle("hidden", def(data.data_type, "").endsWith("_list"));
 					}
-
-					comp._nodes.physical_value_wrapper.classList.remove("hidden");
-					comp._nodes.double_value.classList.add("hidden");
 				} else {
 					comp._nodes.physical_value_wrapper.classList.add("hidden");
-					comp._nodes.double_value.classList.toggle("hidden", def(data.data_type, "").endsWith("_list"));
 				}
 			},
 		});
@@ -201,6 +205,9 @@ function product_featureOptionComp(
 			const considerSavingToDb = (refresh = true) => {
 				setTimeout(() => {
 					const data = comp._data;
+					if (!data) {
+						return;
+					}
 
 					/** @type {Product_FeatureOptionCompData} */
 					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };

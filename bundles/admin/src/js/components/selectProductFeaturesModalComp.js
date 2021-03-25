@@ -82,7 +82,7 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					},
 					{
 						label: "",
-						width: "90px",
+						width: "100px",
 						flex: true,
 						render: (data) => {
 							return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
