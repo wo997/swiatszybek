@@ -124,6 +124,7 @@ class DB
      * increment?: boolean use with primary key
      * null?: boolean
      * default?: string
+     * default_string?: string
      * previous_name?: string use if you want to replace an old column in DB
      * }
      */
