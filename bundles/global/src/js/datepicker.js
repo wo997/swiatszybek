@@ -45,11 +45,12 @@ function createDatePicker(node) {
 	node.addEventListener("changeDate", () => {
 		node._dispatch_change();
 	});
-
+	// @ts-ignore
 	return new Datepicker(node, getDatepickerDefaultOptions(node));
 }
 
 function createDateRangePicker(node) {
+	// @ts-ignore
 	var dateRangePicker = new DateRangePicker(node, getDatepickerDefaultOptions(node));
 
 	for (let i = 0; i < 2; i++) {

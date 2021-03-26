@@ -70,7 +70,7 @@ domload(() => {
 					});
 				},
 			},
-			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
+			{ label: "Złożono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
 			{
 				label: "Akcja",
 				key: "stock",

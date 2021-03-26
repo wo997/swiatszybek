@@ -8,7 +8,7 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["USER"] + "/shop_order/search",
 		columns: [
-			{ label: "Nr", key: "shop_order_id", width: "100px", sortable: true, searchable: "string" },
+			{ label: "Nr", key: "shop_order_id", width: "100px" },
 			{
 				label: "Produkty",
 				key: "ordered_products",
@@ -29,8 +29,6 @@ domload(() => {
 				label: "Wartość",
 				key: "total_price",
 				width: "140px",
-				sortable: true,
-				searchable: "number",
 				render: (data) => {
 					return html`${data.total_price} zł`;
 				},
@@ -39,7 +37,6 @@ domload(() => {
 				label: "Status",
 				key: "status_id",
 				width: "200px",
-				searchable: "select",
 				map_name: "order_status",
 				render_map: (val, data) => {
 					const order_status = order_statuses.find((e) => e.order_status_id === data.status_id);
@@ -49,7 +46,14 @@ domload(() => {
 				},
 				flex: true,
 			},
-			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
+			{
+				label: "Złożono",
+				key: "ordered_at",
+				width: "108px",
+				render: (data) => {
+					return data.ordered_at.substr(0, 10);
+				},
+			},
 			{
 				label: "Akcja",
 				key: "stock",
