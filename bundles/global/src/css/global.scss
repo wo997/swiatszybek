@@ -66,29 +66,6 @@ p {
 .inline_flex {
 	display: inline-flex !important;
 }
-// .checkbox-wrapper.block {
-// 	display: block;
-// }
-// .btn.block {
-// 	display: block;
-// }
-
-/* showhover start */
-.showhover {
-	position: relative;
-}
-.showhover:not(:hover) .menucontent {
-	display: none !important;
-}
-.showhover .menucontent {
-	position: absolute;
-	right: 0;
-	top: 100%;
-	z-index: 50;
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-}
 
 .h1 {
 	margin: 1em 0;
@@ -102,87 +79,12 @@ hr {
 	border: none;
 	margin: 0;
 }
-.heading {
-	width: 100%;
-	text-align: center;
-	margin: 60px 0;
-	font-size: 32px;
-	color: #fb0;
-}
 
 select.inline,
 .btn.inline {
 	width: auto;
 }
 
-.dropdown-expand {
-	box-shadow: 0px 3px 14px -3px rgba(0, 0, 0, 0.2);
-}
-
-.headerplain {
-	display: inline-block;
-	margin: 0;
-	font-size: inherit;
-	font-weight: inherit;
-}
-.drop-arrow:after {
-	border-style: solid;
-	border-width: 0.1em 0.1em 0 0;
-	content: "";
-	display: inline-block;
-	height: 0.4em;
-	position: relative;
-	top: 0.2em;
-	transform: rotate(135deg);
-	vertical-align: top;
-	width: 0.4em;
-	margin-left: 5px;
-	transition: 0.3s;
-	color: #555;
-}
-
-.hideTablet {
-	display: inline-block;
-}
-// h1 {
-// 	text-align: center;
-// }
-/*@media (hover: hover) {*/
-@media only screen and (min-width: 1200px) {
-	.drop-arrow {
-		display: none;
-	}
-}
-
-/*@media (hover: none) {*/
-@media only screen and (max-width: 1199px) {
-	.drop-arrow {
-		position: absolute;
-		top: 0;
-		right: 0;
-		width: 53px;
-		height: 100%;
-		background: #f5f5f5;
-		border: none;
-		border-left: 1px solid #eee;
-	}
-	.expandable:after {
-		display: none;
-	}
-}
-
-@media only screen and (max-width: 1000px) {
-	.items::after {
-		content: "";
-		flex: auto;
-	}
-	.someWidth {
-		width: 100% !important;
-	}
-	.hideTablet {
-		display: none;
-	}
-}
 a {
 	text-decoration: none;
 	color: inherit;
@@ -230,10 +132,6 @@ footer {
 
 .center {
 	text-align: center;
-}
-
-.align-middle {
-	vertical-align: middle;
 }
 
 .flex_children_width {

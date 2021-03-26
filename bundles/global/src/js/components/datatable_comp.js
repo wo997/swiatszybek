@@ -17,6 +17,8 @@
  *  select_overlay?(val: any, data: any)
  *  quick_filter?: boolean
  *  flex?: boolean
+ *  mobile_label_before?: string
+ *  mobile_label_above?: string
  * }} DatatableColumnDef
  *
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
@@ -549,6 +551,16 @@ function datatableComp(comp, parent, data) {
 							cell_style = `flex:${def(column.width, "1")} 1 0;`;
 						}
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) { ${cell_style} }`;
+
+						if (column.mobile_label_before) {
+							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
+								column_index + 1
+							}) .cell_wrapper::before { content: "${column.mobile_label_before} ";font-weight:600; } }`;
+						} else if (column.mobile_label_above) {
+							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
+								column_index + 1
+							}) .cell_wrapper::before { display:block;content:"${column.mobile_label_above} ";font-weight:600; } }`;
+						}
 					}
 
 					if (data.sortable || data.deletable) {
@@ -720,7 +732,7 @@ function datatableComp(comp, parent, data) {
 
 			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
 
-			<style data-node="style"></style>
+			<style data-node="{${comp._nodes.style}}"></style>
 		`,
 		initialize: () => {
 			if (data.save_state_name) {
