@@ -29,7 +29,10 @@ class Security
         }
     }
 
-
+    public static function verifyPassword($password, $password_hash)
+    {
+        return password_verify($password, $password_hash);
+    }
 
     public static function getPasswordHash($val)
     {

@@ -85,7 +85,6 @@ class Assets
                     }
                 } else if (strpos($path, ".js") !== false) {
                     if ($js_group = getAnnotation("js", $first_line)) {
-                        var_dump($js_group);
                         self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
                     }
                 }

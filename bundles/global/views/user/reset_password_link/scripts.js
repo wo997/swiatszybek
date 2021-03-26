@@ -27,7 +27,7 @@ domload(() => {
 
 		showLoader();
 		xhr({
-			url: "/reset_password_link",
+			url: "/user/reset_password_link",
 			params,
 			success: (res) => {
 				hideLoader();

@@ -1,4 +1,4 @@
-<?php //route[/reset_password]
+<?php //route[/user/reset_password]
 
-$response = User::reset($_POST);
+$response = User::resetPassword($_POST);
 Request::jsonResponse($response);

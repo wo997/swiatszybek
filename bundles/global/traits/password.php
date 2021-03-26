@@ -1,6 +1,6 @@
 <div class="password_form">
     <div class="label">
-        <span class="password_label">Hasło</span>
+        Nowe hasło
         <button class="btn small transparent toggle_password" style="margin-left:0" data-tooltip="Pokaż hasło" data-tooltip_position="right">
             <i class="fas fa-eye"></i>
         </button>
@@ -13,6 +13,11 @@
         <p class="one_digit"> 1 cyfra (0-9)</p>
     </div>
 
-    <div class="label">Powtórz hasło</div>
+    <div class="label">
+        Powtórz hasło
+        <button class="btn small transparent toggle_password" style="margin-left:0" data-tooltip="Pokaż hasło" data-tooltip_position="right">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
     <input type="password" class="field password_rewrite pretty_errors" data-validate="match:.password_form .password" autocomplete="new-password">
 </div>

@@ -4,7 +4,6 @@
 
 domload(() => {
 	const resetPasswordForm = $("#resetPasswordForm");
-	resetPasswordForm._child(".password_label")._set_content("Nowe hasło");
 	resetPasswordForm._child(".submit_btn").addEventListener("click", () => {
 		const errors = validateInputs(resetPasswordForm._children(".password_rewrite, .password"));
 		if (errors.length > 0) {
@@ -13,7 +12,7 @@ domload(() => {
 
 		showLoader();
 		xhr({
-			url: "/reset_password",
+			url: "/user/reset_password",
 			params: {
 				password: resetPasswordForm._child(".password")._get_value(),
 				user_id: resetPasswordForm._child(".user_id")._get_value(),

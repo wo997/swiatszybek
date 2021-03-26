@@ -21,17 +21,20 @@ domload(() => {
 	password_form_input.addEventListener("change", psswchng);
 
 	let password_visible = false;
-	const password_form_input_toggle = $(`.password_form .toggle_password`);
-	password_form_input_toggle.addEventListener("click", () => {
-		password_visible = !password_visible;
-		password_form_input_toggle.dataset.tooltip = password_visible ? "Ukryj hasło" : "Pokaż hasło";
-		const i = password_form_input_toggle._child("i");
-		i.classList.toggle("fa-eye", !password_visible);
-		i.classList.toggle("fa-eye-slash", password_visible);
-		$(".password_form")
-			._children(`.password, .password_rewrite`)
-			.forEach((e) => {
-				e.setAttribute("type", password_visible ? "text" : "password");
+	const toggle_password = $$(`.toggle_password`);
+	toggle_password.forEach((toggle_for_ev) => {
+		toggle_for_ev.addEventListener("click", () => {
+			password_visible = !password_visible;
+			toggle_password.forEach((toggle) => {
+				toggle.dataset.tooltip = password_visible ? "Ukryj hasło" : "Pokaż hasło";
+				const i = toggle._child("i");
+				i.classList.toggle("fa-eye", !password_visible);
+				i.classList.toggle("fa-eye-slash", password_visible);
+				toggle
+					._parent(".label")
+					._next()
+					.setAttribute("type", password_visible ? "text" : "password");
 			});
+		});
 	});
 });

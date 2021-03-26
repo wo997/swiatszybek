@@ -150,7 +150,7 @@ class User
         );
     }
 
-    public static function reset($data)
+    public static function resetPassword($data)
     {
         $res =
             /** @var ValidationResponse */
@@ -167,6 +167,30 @@ class User
 
         DB::update("user", ["password_hash" => Security::getPasswordHash($data["password"])], "user_id = " . intval($data["user_id"]));
         self::getCurrent()->setData();
+
+        $res["success"] = true;
+        return $res;
+    }
+
+    public function changePassword($current_password, $password)
+    {
+        $res =
+            /** @var ValidationResponse */
+            [
+                "errors" => [],
+                "success" => false
+            ];
+
+        /** @var Entity User */
+        $user = $this->entity;
+
+        if (!Security::verifyPassword($current_password, $user->getProp("password_hash"))) {
+            $res["errors"][] = "Obecne hasło jest niepoprawne";
+            return $res;
+        }
+
+        DB::update("user", ["password_hash" => Security::getPasswordHash($password)], "user_id = " . $this->getId());
+        $this->setData();
 
         $res["success"] = true;
         return $res;
@@ -223,7 +247,7 @@ class User
             return $res;
         }
 
-        if (!password_verify($password, $user_data["password_hash"])) {
+        if (!Security::verifyPassword($password, $user_data["password_hash"])) {
             $res["errors"][] = "Niepoprawne hasło";
             return $res;
         }
