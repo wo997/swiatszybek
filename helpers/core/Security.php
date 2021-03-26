@@ -18,6 +18,19 @@ class Security
         }
     }
 
+    public static function loginRequired()
+    {
+        if (!User::getCurrent()->isLoggedIn()) {
+            if (!IS_XHR) {
+                $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
+                Request::setSingleUsageSessionVar("login", true);
+            }
+            Request::redirect("/");
+        }
+    }
+
+
+
     public static function getPasswordHash($val)
     {
         return password_hash($val, PASSWORD_BCRYPT, ['cost' => 12]);

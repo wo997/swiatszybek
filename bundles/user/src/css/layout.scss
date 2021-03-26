@@ -1,0 +1,36 @@
+/* css[user] */
+
+.user_nav {
+	& {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	& > a {
+		& {
+			padding: 10px;
+			font-weight: 600;
+			font-size: 1.1em;
+			border-radius: 4px;
+		}
+	}
+	@media (max-width: 899px) {
+		& {
+			flex-direction: column;
+			padding: 10px 0;
+		}
+		& > a {
+			width: 100%;
+		}
+	}
+	@media (min-width: 900px) {
+		& {
+			padding: 30px 15px;
+		}
+	}
+	@media (min-width: 1100px) {
+		& > a {
+			margin: 10px;
+		}
+	}
+}

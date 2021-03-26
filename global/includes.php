@@ -88,26 +88,27 @@ if (defined("ROUTE")) {
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>
 
+<?php if (Request::$is_user_url) : ?>
+    <link href="/builds/user.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/user.js?v=<?= ASSETS_RELEASE ?>"></script>
+<?php endif ?>
+
 <?php if (Request::$is_admin_url) : ?>
+    <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
+<?php endif ?>
+
+<?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
     <script>
         const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
         const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
     </script>
-
-    <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
-
-    <script src="/builds/app_modules.js?v=<?= ASSETS_RELEASE ?>" defer></script>
-    <script src="/builds/app_module_blocks.js?v=<?= ASSETS_RELEASE ?>" defer></script>
 
     <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= ASSETS_RELEASE ?>"></script>
     <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= ASSETS_RELEASE ?>">
     <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
 
     <script src="/src/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
-
-    <script src="/src/highlight.min.js?v=<?= ASSETS_RELEASE ?>"></script>
-    <script src="/src/quill-2.0.js?v=<?= ASSETS_RELEASE ?>"></script>
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>

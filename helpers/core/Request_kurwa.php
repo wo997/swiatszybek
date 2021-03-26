@@ -28,6 +28,7 @@ class Request
     private static $url_params;
     private static $single_usage_session = null;
     public static $is_admin_url = null;
+    public static $is_user_url = null;
     public static $is_deployment_url = null;
     public static $static_urls = ["ADMIN" => "/admin", "USER" => "/uzytkownik"];
     public static $full_url;
@@ -44,6 +45,7 @@ class Request
             unset($_GET["url"]);
 
             self::$is_admin_url = strpos(self::$url, self::$static_urls["ADMIN"]) === 0;
+            self::$is_user_url = strpos(self::$url, self::$static_urls["USER"]) === 0;
             self::$is_deployment_url = strpos(self::$url, "/deployment") === 0;
 
             self::$single_usage_session = def($_SESSION, "single_usage_session", []);

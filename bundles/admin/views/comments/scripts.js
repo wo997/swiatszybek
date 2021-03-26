@@ -43,7 +43,7 @@ domload(() => {
 		empty_html: html`Brak komentarzy`,
 		label: "Komentarze",
 		selectable: true,
-		save_state_name: "comments",
+		save_state_name: "admin_comments",
 	});
 
 	datatable_comp.addEventListener("change", () => {

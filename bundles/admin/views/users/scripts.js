@@ -17,6 +17,6 @@ domload(() => {
 		empty_html: html`Brak użytkowników`,
 		label: "Użytkownicy",
 		selectable: true,
-		save_state_name: "users",
+		save_state_name: "admin_users",
 	});
 });

@@ -40,24 +40,31 @@ class Assets
         return self::$css_schema;
     }
 
-    private static function appendGroup(&$file_groups, $group, $path, $parent_dir)
+    private static function appendGroup(&$file_groups, $groups, $path, $parent_dir)
     {
-        $important = strpos($group, "!") !== false;
-        $group = str_replace("!", "", $group);
+        foreach (explode("|", $groups) as $group) {
+            $important = strpos($group, "!") !== false;
+            $group = str_replace("!", "", $group);
 
-        if ($group === "view") {
-            $view_path = $parent_dir . "view.php";
-            if (file_exists($view_path)) {
-                $first_line = def(file($view_path), 0, "");
-                if ($url = getAnnotationRoute($first_line)) {
-                    $group = "views" . $url;
+            if ($group === "view") {
+                $view_path = $parent_dir . "view.php";
+                if (file_exists($view_path)) {
+                    $first_line = def(file($view_path), 0, "");
+                    if ($url = getAnnotationRoute($first_line)) {
+                        $group = "views" . $url;
+                    }
                 }
             }
-        }
-        if ($important) {
-            array_unshift($file_groups[$group], $path);
-        } else {
-            $file_groups[$group][] = $path;
+
+            if (!isset($file_groups[$group])) {
+                $file_groups[$group] = [];
+            }
+
+            if ($important) {
+                array_unshift($file_groups[$group], $path);
+            } else {
+                $file_groups[$group][] = $path;
+            }
         }
     }
 
@@ -78,6 +85,7 @@ class Assets
                     }
                 } else if (strpos($path, ".js") !== false) {
                     if ($js_group = getAnnotation("js", $first_line)) {
+                        var_dump($js_group);
                         self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
                     }
                 }

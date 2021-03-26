@@ -83,7 +83,7 @@ domload(() => {
 				primary_key: "general_product_id",
 				empty_html: html`Brak produktów`,
 				selectable: true,
-				save_state_name: "general_products",
+				save_state_name: "admin_general_products",
 				getRequestParams: () => ({
 					category_ids: getCategoriesParam(),
 				}),
@@ -146,7 +146,7 @@ domload(() => {
 				primary_key: "product_id",
 				empty_html: html`Brak produktów`,
 				selectable: true,
-				save_state_name: "products",
+				save_state_name: "admin_products",
 				getRequestParams: () => ({
 					category_ids: getCategoriesParam(),
 				}),

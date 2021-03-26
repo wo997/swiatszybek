@@ -31,7 +31,7 @@ domload(() => {
 			Dodaj kod rabatowy <i class="fas fa-plus"></i>
 		</button> `,
 		selectable: true,
-		save_state_name: "rebate_codes",
+		save_state_name: "admin_rebate_codes",
 	});
 
 	datatable_comp.addEventListener("click", (ev) => {

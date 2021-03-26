@@ -6,7 +6,7 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
 ?>
 
 <div class="headerbtn gray_hover">
-    <a href="/moje-konto" class="user_btn">
+    <a href="<?= Request::$static_urls["USER"] ?>/zamowienia" class="user_btn">
         <img class="user_icon" src="/src/img/user_icon.svg">
     </a>
     <div class="headerbtn_menu user_menu">

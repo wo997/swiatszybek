@@ -6,10 +6,9 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.shop_orders");
 
 	datatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "/shop_order/search",
+		search_url: STATIC_URLS["USER"] + "/shop_order/search",
 		columns: [
 			{ label: "Nr", key: "shop_order_id", width: "100px", sortable: true, searchable: "string" },
-			{ label: "Klient", key: "display_address_name", width: "1", sortable: true, searchable: "string" },
 			{
 				label: "Produkty",
 				key: "ordered_products",
@@ -26,7 +25,6 @@ domload(() => {
 					}
 				},
 			},
-			//{ label: "Nr referencyjny", key: "reference", width: "1", sortable: true, searchable: "string" },
 			{
 				label: "Wartość",
 				key: "total_price",
@@ -43,32 +41,13 @@ domload(() => {
 				width: "200px",
 				searchable: "select",
 				map_name: "order_status",
-				select_overlay: (val, data) => {
+				render_map: (val, data) => {
 					const order_status = order_statuses.find((e) => e.order_status_id === data.status_id);
 					if (order_status) {
 						return html`<div class="status_rect" style="background:${order_status.bckg_clr};color:${order_status.font_clr}">${val}</div>`;
 					}
 				},
 				flex: true,
-				editable: "select",
-				editable_callback: (data) => {
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "/shop_order/save",
-						params: {
-							shop_order: {
-								shop_order_id: data.shop_order_id,
-								status_id: data.status_id,
-							},
-						},
-						success: (res) => {
-							showNotification(
-								html`<div class="header">Zamówienie #${data.shop_order_id}</div>
-									<div class="center">Status: ${order_statuses.find((e) => e.order_status_id === data.status_id).name}</div>`
-							);
-							datatable_comp._backend_search();
-						},
-					});
-				},
 			},
 			{ label: "Utworzono", key: "ordered_at", width: "108px", sortable: true, searchable: "date" },
 			{
@@ -78,12 +57,8 @@ domload(() => {
 				render: (data) => {
 					//<a class="btn subtle small" href=""> Szczegóły (brak) <i class="fas fa-cog"></i> </a>
 					return html`
-						<a
-							class="btn subtle small"
-							data-preview_url="/zamowienie/${data.shop_order_id}/${data.reference}"
-							data-tooltip="Link dla klienta"
-						>
-							<i class="fas fa-eye"></i>
+						<a class="btn subtle small" href="/zamowienie/${data.shop_order_id}/${data.reference}">
+							Szczegóły <i class="fas fa-chevron-right"></i>
 						</a>
 					`;
 				},
@@ -106,9 +81,8 @@ domload(() => {
 		],
 		primary_key: "shop_order_id",
 		empty_html: html`Brak zamówień`,
-		label: "Zamówienia",
-		selectable: true,
-		save_state_name: "admin_shop_orders",
+		label: "Moje zamówienia",
+		save_state_name: "user_shop_orders",
 	});
 
 	datatable_comp.addEventListener("click", (ev) => {
@@ -119,14 +93,3 @@ domload(() => {
 		}
 	});
 });
-
-// company: ""
-// delivery_id: -1
-// email: "wojtekwo997@gmail.com"
-// first_name: "Wojciech"
-// last_name: "Piepka"
-// party: "person"
-// phone: "605107454"
-// reference: "5E05JUN077CAFRH"
-// shop_order_id: 18
-// total_price: "62.00"

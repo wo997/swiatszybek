@@ -110,6 +110,14 @@ function renderNotification($notification_count)
 }
 
 if (Request::$is_admin_url) {
+    Security::adminRequired();
+}
+
+if (Request::$is_user_url) {
+    Security::loginRequired();
+}
+
+if (Request::$is_admin_url) {
     // set notification_count for each page at each level
     foreach ($admin_navigations_tree as $key => $admin_navigations_branch) {
         $children_notification_count = 0;
@@ -192,10 +200,6 @@ if ($pageName) {
             "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
             [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong
         );
-    }
-
-    if (Request::$is_admin_url) {
-        Security::adminRequired();
     }
 
     include $pageName;
