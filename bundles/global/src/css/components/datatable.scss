@@ -282,5 +282,10 @@ body.touch_device {
 		.table_container {
 			width: 100%;
 		}
+		.table_body .dt_cell {
+			& > .cell_wrapper {
+				white-space: normal;
+			}
+		}
 	}
 }
