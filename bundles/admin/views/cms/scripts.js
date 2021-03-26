@@ -10,6 +10,8 @@ let piep_editor_content;
 let piep_editor_float_menu;
 /** @type {PiepNode} */
 let piep_editor_styles;
+/** @type {Selection} */
+let piep_editor_last_selection;
 
 /**
  * @typedef {{
@@ -210,8 +212,8 @@ function getTextable(node, direction) {
  */
 function insertPiepText(insert_text) {
 	const sel = window.getSelection();
-	const focusOffset = sel.focusOffset;
-	const anchorOffset = sel.anchorOffset;
+	const focus_offset = sel.focusOffset;
+	const anchor_offset = sel.anchorOffset;
 	const focus_node = $(".piep_focus");
 	const id = focus_node ? +focus_node.dataset.ped : 0;
 	const v_node_data = findNodeInVDom(id);
@@ -223,21 +225,21 @@ function insertPiepText(insert_text) {
 
 	const text = v_node.text;
 
-	let beginOffset = focusOffset;
-	let endOffset = focusOffset;
-	if (anchorOffset === focusOffset) {
-		v_node.text = text.substr(0, focusOffset) + insert_text + text.substr(focusOffset);
+	let begin_offset = focus_offset;
+	let end_offset = focus_offset;
+	if (anchor_offset === focus_offset) {
+		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
 	} else {
-		beginOffset = Math.min(anchorOffset, focusOffset);
-		endOffset = Math.max(focusOffset, anchorOffset);
-		v_node.text = text.substr(0, beginOffset) + insert_text + text.substr(endOffset);
+		begin_offset = Math.min(anchor_offset, focus_offset);
+		end_offset = Math.max(focus_offset, anchor_offset);
+		v_node.text = text.substr(0, begin_offset) + insert_text + text.substr(end_offset);
 	}
 	recreateDom();
 
 	const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 
 	if (node_ref) {
-		setSelectionByIndex(node_ref, beginOffset + insert_text.length);
+		setSelectionByIndex(node_ref, begin_offset + insert_text.length);
 	}
 }
 
@@ -267,6 +269,8 @@ domload(() => {
 			const textable = getFocusTextable();
 			if (textable) {
 				const v_node = findNodeInVDom(+textable.dataset.ped).node;
+				const focus_offset = piep_editor_last_selection.focusOffset;
+				console.log(focus_offset);
 				let val = input._get_value();
 				let prop = input.dataset.style;
 				if (prop === "color") {
@@ -274,6 +278,11 @@ domload(() => {
 				}
 				v_node.styles[prop] = val;
 				recreateDom();
+
+				const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
+				if (node_ref) {
+					setSelectionByIndex(node_ref, focus_offset);
+				}
 			}
 		});
 	});
@@ -287,9 +296,11 @@ domload(() => {
 		insertPiepText(text);
 	});
 
-	piep_editor.addEventListener("click", (ev) => {
+	piep_editor_content.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
+		piep_editor_last_selection = cloneObject(sel);
 		const focus_node = $(sel.focusNode);
+		console.log("NO NIE", focus_node, piep_editor_last_selection.focusOffset);
 		if (focus_node) {
 			const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
 			if (!correct_selection) {
@@ -307,7 +318,7 @@ domload(() => {
 
 	document.addEventListener("keydown", (ev) => {
 		const sel = window.getSelection();
-		const focusOffset = sel.focusOffset;
+		const focus_offset = sel.focusOffset;
 		const focus_node = $(".piep_focus");
 		const id = focus_node ? +focus_node.dataset.ped : 0;
 		const v_node_data = findNodeInVDom(id);
@@ -327,7 +338,7 @@ domload(() => {
 			ev.preventDefault();
 
 			const text = v_node.text;
-			if (focusOffset <= 0) {
+			if (focus_offset <= 0) {
 				const prev_index = v_node_data.index - 1;
 				if (prev_index >= 0) {
 					const prev_v_node = v_node_data.children[prev_index];
@@ -346,12 +357,12 @@ domload(() => {
 					}
 				}
 			} else {
-				v_node.text = text.substr(0, focusOffset - 1) + text.substr(focusOffset);
+				v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
 				recreateDom();
 
 				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 				if (node_ref) {
-					setSelectionByIndex(node_ref, focusOffset - 1);
+					setSelectionByIndex(node_ref, focus_offset - 1);
 				}
 			}
 		}
@@ -360,7 +371,7 @@ domload(() => {
 			ev.preventDefault();
 
 			const text = v_node.text;
-			if (focusOffset >= v_node.text.length) {
+			if (focus_offset >= v_node.text.length) {
 				const next_index = v_node_data.index + 1;
 				if (next_index < v_node_data.children.length) {
 					const next_v_node = v_node_data.children[next_index];
@@ -379,12 +390,12 @@ domload(() => {
 					}
 				}
 			} else {
-				v_node.text = text.substr(0, focusOffset) + text.substr(focusOffset + 1);
+				v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
 				recreateDom();
 
 				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
 				if (node_ref) {
-					setSelectionByIndex(node_ref, focusOffset);
+					setSelectionByIndex(node_ref, focus_offset);
 				}
 			}
 		}
@@ -392,25 +403,25 @@ domload(() => {
 		if (ev.key === "ArrowLeft") {
 			ev.preventDefault();
 
-			if (focusOffset <= 0) {
+			if (focus_offset <= 0) {
 				const prev_textable = getTextable(focus_node, -1);
 				if (prev_textable) {
 					setSelectionByIndex(prev_textable, prev_textable.textContent.length);
 				}
 			} else {
-				setSelectionByIndex(focus_node, focusOffset - 1);
+				setSelectionByIndex(focus_node, focus_offset - 1);
 			}
 		}
 		if (ev.key === "ArrowRight") {
 			ev.preventDefault();
 
-			if (focusOffset >= v_node.text.length) {
+			if (focus_offset >= v_node.text.length) {
 				const next_textable = getTextable(focus_node, 1);
 				if (next_textable) {
 					setSelectionByIndex(next_textable, 0);
 				}
 			} else {
-				setSelectionByIndex(focus_node, focusOffset + 1);
+				setSelectionByIndex(focus_node, focus_offset + 1);
 			}
 		}
 
@@ -430,10 +441,10 @@ domload(() => {
 			const text = v_node.text;
 			if (typeof text === "string") {
 				const insert_v_node = cloneObject(v_node);
-				insert_v_node.text = text.substr(focusOffset);
+				insert_v_node.text = text.substr(focus_offset);
 				const insert_node_id = getNewId();
 				insert_v_node.id = insert_node_id;
-				v_node.text = text.substr(0, focusOffset);
+				v_node.text = text.substr(0, focus_offset);
 				v_node_data.children.splice(v_node_data.index + 1, 0, insert_v_node);
 				recreateDom();
 

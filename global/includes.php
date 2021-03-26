@@ -99,11 +99,6 @@ if (defined("ROUTE")) {
 </script>
 
 <?php if (Request::$is_admin_url) : ?>
-
-    <script>
-        const link_module_block_form_path = <?= json_encode($link_module_block_form_path) ?>;
-    </script>
-
     <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
     <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
 

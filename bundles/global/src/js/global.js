@@ -714,7 +714,7 @@ function deepAssign(target, src) {
  * @param {*} src
  */
 function cloneObject(obj, src = undefined) {
-	if (!obj || obj instanceof HTMLElement) {
+	if (!obj || obj instanceof HTMLElement || obj instanceof CharacterData || obj === window) {
 		return obj;
 	}
 
