@@ -25,10 +25,10 @@ datatable-comp {
 	.table_header,
 	.dt_row {
 		display: flex;
+		min-height: 50px;
 	}
 	.dt_cell {
 		padding: 6px 8px;
-		min-height: 50px;
 		flex-wrap: wrap;
 		min-width: 0;
 		display: flex;
@@ -55,8 +55,10 @@ datatable-comp {
 		& {
 			background: #fff;
 		}
-		&:not(.grabbed):hover {
-			background: #f3f3f3;
+		@media (hover: hover) {
+			&:not(.grabbed):hover {
+				background: #f3f3f3;
+			}
 		}
 	}
 	.dt_header_controls {
@@ -265,5 +267,20 @@ body.touch_device {
 		right: 0;
 		bottom: 0;
 		pointer-events: none;
+	}
+}
+
+// responsive
+
+@media only screen and (max-width: 1000px) {
+	datatable-comp {
+		datatable-row-comp > .dt_row,
+		.table_header {
+			display: block;
+			padding: 7px 0;
+		}
+		.table_container {
+			width: 100%;
+		}
 	}
 }
