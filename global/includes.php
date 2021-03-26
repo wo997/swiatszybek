@@ -30,11 +30,6 @@ if (defined("ROUTE")) {
     const IS_ADMIN = <?= User::getCurrent()->priveleges["backend_access"] ? "true" : "false" ?>;
     const USER_TYPE = "<?= User::getCurrent()->entity->getProp("type") ?>";
 
-    <?php $sizes = ["lg" => null, "sm" => 800]; ?>
-
-    const status_list = <?= json_encode($status_list) ?>;
-    const screenSizes = <?= json_encode($sizes) ?>
-
     const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
 
     const UPLOADS_PATH = "<?= UPLOADS_PATH ?>";
@@ -47,15 +42,10 @@ if (defined("ROUTE")) {
     loadedUserCart(true);
 
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-        const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
-
         <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
             //const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
         <?php endif ?>
     <?php endif ?>
-    const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
-
-    const zamowienia_status_groups = <?= json_encode($zamowienia_status_groups) ?>
 
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
@@ -99,6 +89,11 @@ if (defined("ROUTE")) {
 </script>
 
 <?php if (Request::$is_admin_url) : ?>
+    <script>
+        const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
+        const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
+    </script>
+
     <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
     <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
 

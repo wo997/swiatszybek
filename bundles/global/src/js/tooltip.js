@@ -19,7 +19,7 @@ domload(() => {
 			tooltip.last_target = null;
 		},
 		resizeCallback: () => {
-			$$(".check-tooltip").forEach((e) => {
+			$$(".check_tooltip").forEach((e) => {
 				e.classList.toggle("require-tooltip", e.offsetWidth < e.scrollWidth || e.scrollHeight > e.clientHeight);
 			});
 		},

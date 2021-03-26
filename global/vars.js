@@ -4,9 +4,6 @@ let IS_LOGGED;
 let IS_ADMIN;
 let USER_TYPE;
 
-let status_list;
-let screenSizes;
-
 let WEBP_SUPPORT;
 
 let UPLOADS_PATH;

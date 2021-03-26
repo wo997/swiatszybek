@@ -17,7 +17,7 @@ include_once "helpers/core/db/Entity.php";
 include_once "helpers/core/Assets.php";
 
 include_once "helpers/core/email.php";
-include_once "helpers/core/Request.php";
+include_once "helpers/core/Request_kurwa.php";
 
 include_once "helpers/core/User.php";
 include_once "helpers/core/Cart.php";

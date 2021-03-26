@@ -24,10 +24,7 @@ class Cart
         $this->rebate_codes = [];
 
         $this->user = $user;
-        $user_id = $this->user->getId();
-        if ($user_id) {
-            $this->loadCart($user_id);
-        }
+        $this->load();
     }
 
     public function getProducts()
@@ -302,8 +299,10 @@ class Cart
         }
     }
 
-    public function loadCart($user_id)
+    public function load()
     {
+        $user_id = $this->user->getId();
+
         if ($user_id) {
             $cart_json = DB::fetchVal("SELECT cart_json FROM user WHERE user_id = $user_id");
         }

@@ -186,7 +186,7 @@ function getGlobalProductsSearch($url, $options = [])
             }
             unset($image);
             usort($images, fn ($a, $b) => $b["weight"] <=> $a["weight"]);
-            $images_json = json_encode($images, true);
+            $images_json = json_encode(array_column($images, "img_url"), true);
             $img_url = $images[0]["img_url"];
         } else {
             $images_json = "[]";
@@ -198,7 +198,7 @@ function getGlobalProductsSearch($url, $options = [])
                 <div class=\"product_img_wrapper\" data-images=\"$images_json_safe\">
                     <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
                 </div>
-                <h3 class=\"product_name\"><span class='check-tooltip'>$name</span></h3>
+                <h3 class=\"product_name check_tooltip\">$name</h3>
             </a>
             <div class=\"product_row\">
                 <span class=\"product_price pln\">$display_price</span>

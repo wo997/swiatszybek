@@ -15,11 +15,9 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
         <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
             <a class="menu_item gray_hover semi_bold" style="margin-bottom:7px" href="<?= Request::$static_urls["ADMIN"] ?>/zamowienia"> <i class="fas fa-user-cog"></i> Panel administratora</a>
         <?php endif ?>
-        <a class="menu_item gray_hover" href="/moje-konto"> <i class="fas fa-box"></i> Moje zamówienia</a>
-        <a class="menu_item gray_hover" href="/moje-konto/dane-uzytkownika"> <i class="fas fa-address-book"></i> Dane użytkownika</a>
-        <?php if (User::getCurrent() == 'regular') : ?>
-            <a class="menu_item gray_hover" href="/moje-konto/resetowanie-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
-        <?php endif ?>
-        <a class="menu_item gray_hover" style="margin-top:7px" onclick="return logout()"> <i class="fa fa-sign-out-alt" style="vertical-align: middle;"></i> Wyloguj się </a>
+        <a class="menu_item gray_hover" href="<?= Request::$static_urls["USER"] ?>/zamowienia"> <i class="fas fa-box"></i> Moje zamówienia</a>
+        <a class="menu_item gray_hover" href="<?= Request::$static_urls["USER"] ?>/dane-adresy"> <i class="fas fa-address-book"></i> Dane / Adresy</a>
+        <a class="menu_item gray_hover" href="<?= Request::$static_urls["USER"] ?>/zmiana-hasla"> <i class="fas fa-unlock-alt"></i> Zmiana hasła </a>
+        <a class="menu_item gray_hover" style="margin-top:7px" onclick="return logout()"> <i class="fa fa-sign-out-alt"></i> Wyloguj się </a>
     </div>
 </div>

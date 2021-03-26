@@ -270,7 +270,6 @@ domload(() => {
 			if (textable) {
 				const v_node = findNodeInVDom(+textable.dataset.ped).node;
 				const focus_offset = piep_editor_last_selection.focusOffset;
-				console.log(focus_offset);
 				let val = input._get_value();
 				let prop = input.dataset.style;
 				if (prop === "color") {
@@ -300,7 +299,6 @@ domload(() => {
 		const sel = window.getSelection();
 		piep_editor_last_selection = cloneObject(sel);
 		const focus_node = $(sel.focusNode);
-		console.log("NO NIE", focus_node, piep_editor_last_selection.focusOffset);
 		if (focus_node) {
 			const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
 			if (!correct_selection) {

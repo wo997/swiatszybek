@@ -661,24 +661,13 @@ function mainSearchProducts(force = false) {
 			product_list._children(".product_img_wrapper").forEach((img_wrapper) => {
 				const product_img = img_wrapper._child(".product_img");
 				const images = JSON.parse(img_wrapper.dataset.images);
-				// backend does it yay
-				// images.forEach((img, index) => {
-				// 	let weight = -index;
-				// 	for (const option_id of pp_selected_option_groups.flat(2)) {
-				// 		if (img.option_ids.includes(option_id)) {
-				// 			weight += 100;
-				// 		}
-				// 	}
-				// 	img.weight = weight;
-				// });
-				// images.sort((a, b) => Math.sign(b.weight - a.weight));
 
 				img_wrapper.dataset.images = JSON.stringify(images);
 				if (images[0]) {
-					setResponsiveImageUrl(product_img, images[0].img_url);
+					setResponsiveImageUrl(product_img, images[0]);
 				}
 				if (images[1]) {
-					preloadWo997Image(images[1].img_url, product_img);
+					preloadWo997Image(images[1], product_img);
 				}
 			});
 

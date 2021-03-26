@@ -1,7 +1,5 @@
 <?php
 
-use function Matrix\trace;
-
 define("MESSAGE_HEADER_SUCCESS", "
     <div class='messagebox_header' style='background: var(--success-clr);color: white;'>
         <i class='fas fa-check-circle' style='font-size:30px'></i>
@@ -31,7 +29,7 @@ class Request
     private static $single_usage_session = null;
     public static $is_admin_url = null;
     public static $is_deployment_url = null;
-    public static $static_urls = ["ADMIN" => "/admin"];
+    public static $static_urls = ["ADMIN" => "/admin", "USER" => "/uzytkownik"];
     public static $full_url;
 
     public static function init()

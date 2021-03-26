@@ -68,13 +68,13 @@ domload(() => {
 
 						overlay.style.opacity = "1";
 						// @ts-ignore
-						overlay.src = images[image_id].img_url;
+						overlay.src = images[image_id];
 						setTimeout(() => {
 							// @ts-ignore
-							base_img.src = images[image_id].img_url;
+							base_img.src = images[image_id];
 							overlay.style.opacity = "0";
 
-							preloadWo997Image(images[(image_id + 1) % images.length].img_url, base_img);
+							preloadWo997Image(images[(image_id + 1) % images.length], base_img);
 						}, duration);
 						setTimeout(animateImages, 1500);
 					};
@@ -95,9 +95,9 @@ domload(() => {
 
 			if (overlay && images.length > 1) {
 				overlay.style.opacity = "1";
-				overlay.setAttribute("src", images[0].img_url);
+				overlay.setAttribute("src", images[0]);
 				setTimeout(() => {
-					base_img.setAttribute("src", images[0].img_url);
+					base_img.setAttribute("src", images[0]);
 
 					overlay.style.opacity = "0";
 
