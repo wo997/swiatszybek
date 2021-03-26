@@ -110,7 +110,7 @@ foreach ($general_product_variants as $general_product_variant) {
         <div>
             <div class=\"checkbox_area inline\">
                 <p-checkbox data-value=\"0\"></p-checkbox>
-                Wszystkie
+                <span>Wszystkie</span>
             </div>
         </div>
     ";
@@ -122,7 +122,7 @@ foreach ($general_product_variants as $general_product_variant) {
             <div>
                 <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
                     <p-checkbox data-value=\"$product_feature_option_id\"></p-checkbox>
-                    $value <span class=\"count\">($count)</span>
+                    <span>$value</span> <span class=\"count\">($count)</span>
                 </div>
             </div>
         ";
@@ -229,7 +229,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     </div>
                 </div>
             </div>
-            <div data-slide_width="100px" data-show_next_mobile style="--slide_padding: 3px;--slide_width: 100.5px;margin: 3px -3px;" data-nav_out_from="1000px"></div>
+            <div data-slide_width="100px" data-show_next_mobile data-nav_out_from="1000px"></div>
         </div>
         <div class="product_offer">
             <h1 class="h1"><?= $general_product_data["name"] ?></h1>

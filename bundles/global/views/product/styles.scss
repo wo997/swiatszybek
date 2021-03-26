@@ -89,6 +89,10 @@
 	padding: 0 10px;
 }
 
+.product_imgs .slider_below {
+	--slide_padding: 3px;
+}
+
 @media only screen and (min-width: 850px) {
 	.product_wrapper {
 		display: flex;
@@ -110,6 +114,9 @@
 	}
 	.sticky_product {
 		display: none;
+	}
+	.product_imgs .slider_below {
+		margin: 3px -3px;
 	}
 }
 
@@ -166,6 +173,9 @@
 		&:not(.visible) {
 			transform: translateY(-110%);
 		}
+	}
+	.product_imgs .slider_below {
+		margin: 3px 0;
 	}
 }
 

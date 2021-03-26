@@ -76,18 +76,18 @@ PHP;
 
     if ($php_changed) {
         ob_start();
-        //triggerEvent("build");
+        include "scripts/build.php";
         ob_clean();
     }
 
     if ($settings_changed) {
-        //triggerEvent("settings_change");
+        buildSettings();
     }
 
     if ($any_changed) {
-        //Assets::build();
+        Assets::build();
 
         // drop it and update defines, well - defines, they are tricky, getters are getter or idk
-        //Request::reload(true);
+        Request::reload(true);
     }
 }
