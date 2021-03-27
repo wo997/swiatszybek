@@ -43,6 +43,7 @@
  *      preview_btn: PiepNode
  *      open_btn: PiepNode
  *      add_image_btn: PiepNode
+ *      delete_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
  *  _remove_missing_products()
@@ -652,6 +653,10 @@ function productComp(comp, parent, data = undefined) {
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 
 			<div style="height:100px"></div>
+
+			<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+				<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
+			</div>
 		`,
 		ready: () => {
 			comp._nodes.add_feature_btn.addEventListener("click", () => {
@@ -694,13 +699,25 @@ function productComp(comp, parent, data = undefined) {
 				previewUrl(`/produkt/${comp._data.general_product_id}`);
 			});
 
+			comp._nodes.delete_btn.addEventListener("click", () => {
+				if (!confirm("Czy aby na pewno chcesz usunąć ten produkt?")) {
+					return;
+				}
+
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/general_product/delete/" + comp._data.general_product_id,
+					success: (res) => {
+						window.location.href = STATIC_URLS["ADMIN"] + "/produkty";
+					},
+				});
+			});
+
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
 
 				if (errors.length === 0) {
 					const db_products = cloneObject(data.products_dt.dataset);
-					undefined;
 					db_products.forEach((product) => {
 						product.feature_options = [];
 						data.product_feature_ids.forEach((fid) => {
