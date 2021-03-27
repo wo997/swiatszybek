@@ -77,6 +77,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 					pos,
 					product_category_id: cat.product_category_id,
 					sub_categories,
+					__product_count: 0,
 				});
 			}
 

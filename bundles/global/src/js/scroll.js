@@ -121,6 +121,9 @@ function smoothScrolling(diff, params = {}) {
  * @param {{duration?: number, offset?: number, margin?: number, callback?: CallableFunction, direction?: "both" | "up" | "down"}} params
  */
 function scrollIntoView(elem, params = {}) {
+	if (!elem) {
+		return;
+	}
 	elem = $(elem);
 
 	//const duration = def(params.duration, 40);

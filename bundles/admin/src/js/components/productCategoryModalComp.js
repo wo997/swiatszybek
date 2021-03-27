@@ -47,8 +47,11 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 		if (!options.cat) {
 			options.cat = { product_category_id: -1, name: "", parent_product_category_id: -1 };
 		}
+
 		comp._data.name = options.cat.name;
 		comp._data.product_category_id = options.cat.product_category_id;
+		comp._data.parent_product_category_id = options.cat.parent_product_category_id;
+
 		comp._render();
 
 		showModal("productCategory", {
