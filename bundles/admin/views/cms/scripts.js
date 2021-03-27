@@ -17,44 +17,52 @@ let piep_editor_last_selection;
  * @typedef {{
  * id: number
  * tag: string
- * text?: string
- * styles?: any
- * children?: vDomNode[]
+ * text: string
+ * styles: any
+ * children: vDomNode[]
  * }} vDomNode
  */
 
+/** @type {vDomNode} */
 const v_dom = {
 	tag: "div",
 	id: 0,
+	text: undefined,
+	styles: {},
 	children: [
-		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" } },
+		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" }, children: [] },
 		{
 			id: 2,
 			tag: "p",
 			text:
 				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 			styles: { marginTop: "20px" },
+			children: [],
 		},
 		{
 			id: 3,
 			tag: "div",
+			text: undefined,
+			styles: {},
 			children: [
-				{ id: 4, tag: "p", text: "dziecko 1" },
-				{ id: 8, tag: "p", text: "" },
+				{ id: 4, tag: "p", text: "dziecko 1", children: [], styles: {} },
+				{ id: 8, tag: "p", text: "", children: [], styles: {} },
 				{
 					id: 5,
 					tag: "p",
+					text: undefined,
 					children: [
-						{ id: 6, tag: "span", text: "dziecko 2.1" },
-						{ id: 7, tag: "span", text: "dziecko 2.2" },
+						{ id: 6, tag: "span", text: "dziecko 2.1", children: [], styles: {} },
+						{ id: 7, tag: "span", text: "dziecko 2.2", children: [], styles: {} },
 					],
+					styles: {},
 				},
 			],
 		},
 	],
 };
 
-function getNewId() {
+function getPiepEditorId() {
 	let max = 0;
 	const traversePiepHtml = (nodes) => {
 		for (const node of nodes) {
@@ -94,16 +102,16 @@ function recreateDom() {
 		let classes = [base_class];
 
 		let body = "";
-		if (children) {
-			for (const child of children) {
-				body += traverseVDom(child);
-			}
-		} else if (textable) {
+		if (textable) {
 			classes.push("textable");
 			if (text) {
 				body += text;
 			} else {
 				body += `<br>`;
+			}
+		} else {
+			for (const child of children) {
+				body += traverseVDom(child);
 			}
 		}
 
@@ -231,7 +239,7 @@ function insertPiepText(insert_text) {
 		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
 	} else {
 		begin_offset = Math.min(anchor_offset, focus_offset);
-		end_offset = Math.max(focus_offset, anchor_offset);
+		end_offset = Math.max(anchor_offset, focus_offset);
 		v_node.text = text.substr(0, begin_offset) + insert_text + text.substr(end_offset);
 	}
 	recreateDom();
@@ -277,17 +285,49 @@ domload(() => {
 					return;
 				}
 
-				let val = input._get_value();
-				let prop = input.dataset.style;
-				if (prop === "color") {
-					val = "#" + val;
-				}
-				v_node.styles[prop] = val;
-				recreateDom();
+				const begin_offset = Math.min(anchor_offset, focus_offset);
+				const end_offset = Math.max(anchor_offset, focus_offset);
 
-				const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
-				if (node_ref) {
-					setSelectionByIndex(node_ref, focus_offset);
+				// the selection is something but not everything in the v_node
+				if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
+					if (begin_offset > 0) {
+						const bef_id = getPiepEditorId();
+						v_node.children.push({ id: bef_id, tag: "span", styles: {}, text: v_node.text.substring(0, begin_offset), children: [] });
+					}
+					const mid_id = getPiepEditorId();
+					v_node.children.push({
+						id: mid_id,
+						tag: "span",
+						styles: {},
+						text: v_node.text.substring(begin_offset, end_offset),
+						children: [],
+					});
+					if (end_offset < v_node.text.length) {
+						const aft_id = getPiepEditorId();
+						v_node.children.push({ id: aft_id, tag: "span", styles: {}, text: v_node.text.substring(end_offset), children: [] });
+					}
+					v_node.text = undefined;
+
+					recreateDom();
+
+					const node_ref = piep_editor_content._child(`[data-ped="${mid_id}"]`);
+					if (node_ref) {
+						setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
+					}
+				} else {
+					let val = input._get_value();
+					let prop = input.dataset.style;
+					if (prop === "color") {
+						val = "#" + val;
+					}
+					v_node.styles[prop] = val;
+
+					recreateDom();
+
+					const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
+					if (node_ref) {
+						setSelectionByIndex(node_ref, focus_offset);
+					}
 				}
 			}
 		});
@@ -447,7 +487,7 @@ domload(() => {
 			if (typeof text === "string") {
 				const insert_v_node = cloneObject(v_node);
 				insert_v_node.text = text.substr(focus_offset);
-				const insert_node_id = getNewId();
+				const insert_node_id = getPiepEditorId();
 				insert_v_node.id = insert_node_id;
 				v_node.text = text.substr(0, focus_offset);
 				v_node_data.children.splice(v_node_data.index + 1, 0, insert_v_node);
@@ -691,7 +731,7 @@ function selectElementContentsFromAnywhere(dx, dy) {
  * @param {number} pos
  * @returns
  */
-function getRangeByIndex(node, pos) {
+function getRangeByIndex(node, pos, end = undefined) {
 	const text_node = getTextNode(node);
 	const range = document.createRange();
 	if (!text_node) {
@@ -699,7 +739,7 @@ function getRangeByIndex(node, pos) {
 		range.setEnd(node, 0);
 	} else {
 		range.setStart(text_node, pos);
-		range.setEnd(text_node, pos);
+		range.setEnd(text_node, def(end, pos));
 	}
 	return range;
 }
@@ -710,9 +750,9 @@ function getRangeByIndex(node, pos) {
  * @param {number} pos
  * @returns
  */
-function setSelectionByIndex(node, pos) {
+function setSelectionByIndex(node, pos, end = undefined) {
 	const sel = window.getSelection();
-	const range = getRangeByIndex(node, pos);
+	const range = getRangeByIndex(node, pos, end);
 	sel.removeAllRanges();
 	sel.addRange(range);
 	updatePiepCursorPosition();
