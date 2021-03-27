@@ -142,7 +142,7 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 <?php startSection("head_content"); ?>
 
-<title><?= $full_product_name ?></title>
+<title><?= $full_product_name ?> - LSIT.pl</title>
 
 <link rel="canonical" href="<?= SITE_URL . getProductLink($general_product_id, $general_product_data["name"]) ?>" />
 
