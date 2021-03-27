@@ -12,6 +12,8 @@ let piep_editor_float_menu;
 let piep_editor_styles;
 /** @type {Selection} */
 let piep_editor_last_selection;
+/** @type {boolean} */
+let piep_editor_can_type;
 
 /**
  * @typedef {{
@@ -30,7 +32,7 @@ const v_dom = {
 	text: undefined,
 	styles: {},
 	children: [
-		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "blue" }, children: [] },
+		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" }, children: [] },
 		{
 			id: 2,
 			tag: "p",
@@ -266,14 +268,14 @@ domload(() => {
 
 	piep_editor_float_menu._set_content(html`
 		<select class="field small" data-style="fontSize">
-			<option value="">-</option>
+			<option value=""></option>
 			<option value="1em">mała</option>
 			<option value="1.5em">średnia</option>
 			<option value="2em">duża</option>
 		</select>
 
 		<select class="field small" data-style="fontWeight">
-			<option value="">-</option>
+			<option value=""></option>
 			<option value="400">normal</option>
 			<option value="600">semi-bold</option>
 			<option value="700">bold</option>
@@ -366,6 +368,10 @@ domload(() => {
 		insertPiepText(text);
 	});
 
+	document.addEventListener("click", (ev) => {
+		piep_editor_can_type = !!$(ev.target)._parent(piep_editor_content);
+	});
+
 	piep_editor_content.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
 		const focus_node = $(sel.focusNode);
@@ -398,6 +404,10 @@ domload(() => {
 	});
 
 	document.addEventListener("keydown", (ev) => {
+		if (!piep_editor_can_type) {
+			return;
+		}
+
 		const sel = window.getSelection();
 		const focus_offset = sel.focusOffset;
 		const focus_node = $(".piep_focus");

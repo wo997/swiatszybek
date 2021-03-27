@@ -1088,7 +1088,15 @@ if (!window.jscolor) {
 							} else if (this.fromString(this.valueElement.value)) {
 								// managed to import color successfully from the value -> OK, don't do anything
 							} else {
-								this.exportColor();
+								/*****************************************************/
+								/*                  BY WO997                         */
+								/*****************************************************/
+								if (this.valueElement.value === "") {
+									this.styleElement.style.backgroundColor = "";
+									this.valueElement.value = "";
+								} else {
+									this.exportColor();
+								}
 							}
 						} else {
 							// not an input element -> doesn't have any value

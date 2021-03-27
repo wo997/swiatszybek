@@ -227,8 +227,12 @@ function setValue(input, value = null, options = {}) {
 		var hex = value.replace("#", "");
 		// @ts-ignore
 		input.value = hex;
-		// @ts-ignore
-		input.jscolor.importColor();
+		if (hex) {
+			// @ts-ignore
+			input.jscolor.importColor();
+		} else {
+			input.style.backgroundColor = "";
+		}
 	} else {
 		var type = input.getAttribute("data-type");
 		if (type == "html") {
