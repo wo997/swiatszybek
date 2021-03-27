@@ -2,7 +2,7 @@
 
 /**
  * 
- * @typedef CartProduct {
+                                                                                                     * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -16,6 +16,7 @@ class Cart
     private $rebate_codes; // all
     private $rebate_codes_limit = 2; // that will be a subject to change
     private $delivery_id = -1; // you know what to do with it baby
+    private $max_single_product_count = 10; // should be a var
     public ?User $user;
 
     public function __construct($user)
@@ -143,7 +144,7 @@ class Cart
     public function setProductQty($product_id, $qty)
     {
         $product_id = intval($product_id);
-        $qty = intval($qty);
+        $qty = min(intval($qty), $this->max_single_product_count);
 
         /** @var CartProduct */
         $match_product_index = -1;

@@ -100,12 +100,11 @@ domload(() => {
 			showNotification(`Wybierz wariant produktu powyżej`, { type: "error", one_line: true });
 			return;
 		}
-		let qty = $(".main_qty_controls .val_qty")._get_value();
+		const more_qty = $(".main_qty_controls .val_qty")._get_value();
 		const product_id = single_product.product_id;
 		const cart_product = user_cart.products.find((e) => e.product_id === product_id);
-		if (cart_product) {
-			qty += cart_product.qty;
-		}
+		const was_qty = cart_product ? cart_product.qty : 0;
+		const request_qty = was_qty + more_qty;
 
 		adding_product_from_cart = true;
 
@@ -122,15 +121,27 @@ domload(() => {
 			url: "/cart/add-product",
 			params: {
 				product_id: product_id,
-				qty,
+				qty: request_qty,
 			},
 			success: (res) => {
 				user_cart = res.user_cart;
+
 				loadedUserCart();
 				adding_product_from_cart = false;
 				spinner_wrapper.classList.remove("spinning");
 
 				scrollIntoView(cart_products_comp, { offset });
+
+				const product_in_cart = user_cart.products.find((e) => e.product_id === product_id);
+				if (!product_in_cart || product_in_cart.qty !== request_qty) {
+					if (was_qty === product_in_cart.qty) {
+						showNotification(`Brak ${single_product.__name}`, { one_line: true, type: "error" });
+					} else {
+						showNotification(`Dodano sztuk: ${product_in_cart.qty - was_qty}`, { one_line: true, type: "error" });
+					}
+				} else {
+					showNotification(`Dodano ${single_product.__name} do koszyka`, { one_line: true, type: "success" });
+				}
 			},
 		});
 	});

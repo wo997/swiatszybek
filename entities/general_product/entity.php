@@ -8,6 +8,8 @@ EntityManager::register("general_product", [
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
         "__search" => ["type" => "string"],
+        // "seo_title" => ["type" => "string"], // THINK ABOUT IT FIRST
+        // "seo_description" => ["type" => "string"],
     ],
 ]);
 
