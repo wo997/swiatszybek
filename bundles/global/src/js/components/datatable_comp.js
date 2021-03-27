@@ -540,7 +540,7 @@ function datatableComp(comp, parent, data) {
 							cell_html += dt_header_controls;
 						}
 
-						cell_html = html`<div class="dt_cell" data-column="${column_index}">${cell_html}</div>`;
+						cell_html = html`<div class="dt_cell" data-column_id="${column_index}">${cell_html}</div>`;
 
 						cells_html.push(cell_html);
 
@@ -764,13 +764,15 @@ function datatableComp(comp, parent, data) {
 				if (!target) {
 					return;
 				}
+
 				const dt_sort = target._parent(".dt_sort", { skip: 0 });
 				const dt_filter = target._parent(".dt_filter", { skip: 0 });
 				const dt_batch_edit = target._parent(".dt_batch_edit", { skip: 0 });
 
 				const dt_cell = target._parent(".dt_cell");
 				const data = comp._data;
-				const column = dt_cell ? data.columns[+dt_cell.dataset.column] : undefined;
+
+				const column = dt_cell ? data.columns[+dt_cell.dataset.column_id] : undefined;
 
 				const dt_quick_filter = target._parent(".dt_quick_filter", { skip: 0 });
 				const dt_rm_quick_filter = target._parent(".dt_rm_quick_filter", { skip: 0 });
@@ -782,7 +784,7 @@ function datatableComp(comp, parent, data) {
 					if (dt_quick_filter) {
 						comp._data.filters.push({
 							key,
-							data: { type: "exact", val: +x.dataset.val, display: dt_cell.innerText },
+							data: { type: "exact", value: +x.dataset.val, display: dt_cell.innerText },
 							db_key: def(column.db_key, key),
 						});
 					}

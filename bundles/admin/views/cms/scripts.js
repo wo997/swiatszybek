@@ -269,7 +269,14 @@ domload(() => {
 			const textable = getFocusTextable();
 			if (textable) {
 				const v_node = findNodeInVDom(+textable.dataset.ped).node;
+				const anchor_offset = piep_editor_last_selection.anchorOffset;
 				const focus_offset = piep_editor_last_selection.focusOffset;
+
+				if (piep_editor_last_selection.focusNode !== piep_editor_last_selection.anchorNode) {
+					alert("Currently only single line editing is available");
+					return;
+				}
+
 				let val = input._get_value();
 				let prop = input.dataset.style;
 				if (prop === "color") {
