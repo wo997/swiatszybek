@@ -288,6 +288,16 @@ domload(() => {
 				const begin_offset = Math.min(anchor_offset, focus_offset);
 				const end_offset = Math.max(anchor_offset, focus_offset);
 
+				let val = input._get_value();
+				let prop = input.dataset.style;
+				if (prop === "color") {
+					val = "#" + val;
+				}
+
+				const setPropOfVNode = (edit_v_node) => {
+					edit_v_node.styles[prop] = val;
+				};
+
 				// the selection is something but not everything in the v_node
 				if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 					if (begin_offset > 0) {
@@ -295,19 +305,21 @@ domload(() => {
 						v_node.children.push({ id: bef_id, tag: "span", styles: {}, text: v_node.text.substring(0, begin_offset), children: [] });
 					}
 					const mid_id = getPiepEditorId();
-					v_node.children.push({
+					const mid_child = {
 						id: mid_id,
 						tag: "span",
 						styles: {},
 						text: v_node.text.substring(begin_offset, end_offset),
 						children: [],
-					});
+					};
+					v_node.children.push(mid_child);
 					if (end_offset < v_node.text.length) {
 						const aft_id = getPiepEditorId();
 						v_node.children.push({ id: aft_id, tag: "span", styles: {}, text: v_node.text.substring(end_offset), children: [] });
 					}
 					v_node.text = undefined;
 
+					setPropOfVNode(mid_child);
 					recreateDom();
 
 					const node_ref = piep_editor_content._child(`[data-ped="${mid_id}"]`);
@@ -315,18 +327,12 @@ domload(() => {
 						setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
 					}
 				} else {
-					let val = input._get_value();
-					let prop = input.dataset.style;
-					if (prop === "color") {
-						val = "#" + val;
-					}
-					v_node.styles[prop] = val;
-
+					setPropOfVNode(v_node);
 					recreateDom();
 
 					const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
 					if (node_ref) {
-						setSelectionByIndex(node_ref, focus_offset);
+						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
 				}
 			}
