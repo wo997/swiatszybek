@@ -81,9 +81,9 @@ $admin_navigations_tree = [
             ["url" => "/szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
         ]
     ],
-    ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
+    //["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
     //["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
-    ["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
+    //["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
 ];
 
 function getNotificationCountForPage($page, $children_notification_count = 0)

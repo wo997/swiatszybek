@@ -577,7 +577,7 @@ function productComp(comp, parent, data = undefined) {
 				<div class="label">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
 
-				<div class="label">Sprzedawaj na</div>
+				<div class="label">Sprzedawaj na (do wdrożenia)</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
 					<option value="weight">Wagę</option>

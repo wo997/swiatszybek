@@ -11,7 +11,7 @@ class Security
     {
         if (!User::getCurrent()->priveleges["backend_access"]) {
             if (!IS_XHR) {
-                $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
+                $_SESSION["redirect_on_login"] = Request::$url;
                 Request::setSingleUsageSessionVar("login", true);
             }
             Request::redirect("/");
@@ -22,7 +22,7 @@ class Security
     {
         if (!User::getCurrent()->isLoggedIn()) {
             if (!IS_XHR) {
-                $_SESSION["redirect_on_login"] = $_SERVER["REQUEST_URI"];
+                $_SESSION["redirect_on_login"] = Request::$url;
                 Request::setSingleUsageSessionVar("login", true);
             }
             Request::redirect("/");

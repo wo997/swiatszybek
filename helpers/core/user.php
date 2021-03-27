@@ -258,6 +258,10 @@ class User
         if (isset($_SESSION["redirect_on_login"])) {
             $res["data"]["redirect_url"] = $_SESSION["redirect_on_login"];
             unset($_SESSION["redirect_on_login"]);
+        } else {
+            if (self::getCurrent()->priveleges["backend_access"]) {
+                $res["data"]["redirect_url"] = Request::$static_urls["ADMIN"] . "/zamowienia";
+            }
         }
 
         $res["success"] = true;
