@@ -622,8 +622,9 @@ function mainSearchProducts(force = false) {
 
 	setProductsFilterCountFromUrl();
 
+	// !!! currently the name is just the one of the category
 	// workaround here
-	document.title = full_name;
+	//document.title = full_name;
 
 	results_info_count_spinner_wrapper.classList.add("spinning");
 	product_list.style.opacity = "0.7";

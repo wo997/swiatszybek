@@ -22,7 +22,7 @@ if ($option_ids_str) {
 
 $full_product_name = $general_product_data["name"];
 foreach ($option_names as $option_name) {
-    $full_product_name .= " " . $option_name;
+    $full_product_name .= " | " . $option_name;
 }
 
 $product_link = getProductLink($general_product_id, $general_product_data["name"], $option_ids, $option_names);

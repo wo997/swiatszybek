@@ -246,7 +246,7 @@ function variantChanged() {
 				}
 			});
 		}
-		let full_name = general_product_name + " " + options_names.map((e) => " " + e).join("");
+		let full_name = general_product_name + " " + options_names.map((e) => " | " + e).join("");
 		url += "/" + escapeUrl(full_name);
 
 		const url_params = new URLSearchParams();

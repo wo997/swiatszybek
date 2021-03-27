@@ -14,7 +14,9 @@ if ($product_category_id !== -1) {
     $product_category_data = $default_category_data;
 }
 
-$all_category_ids = array_column(json_decode($product_category_data["__category_path_json"], true), "id");
+$category_path = json_decode($product_category_data["__category_path_json"], true);
+$all_category_ids = array_column($category_path, "id");
+$all_category_names = array_column($category_path, "name");
 
 function traverseCategories($parent_id = -1, $level = 0)
 {
@@ -329,7 +331,7 @@ HTML;
 $products_search_data = getGlobalProductsSearch(Request::$full_url);
 
 $products_search_data_0 = getGlobalProductsSearch(
-    getProductCategoryLink(json_decode($product_category_data["__category_path_json"], true)),
+    getProductCategoryLink($category_path),
     ["return_all_ids" => true]
 );
 
@@ -362,7 +364,9 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
 <?php startSection("head_content"); ?>
 
-<link rel="canonical" href="<?= SITE_URL . getProductCategoryLink(json_decode($product_category_data["__category_path_json"], true)) ?>" />
+<link rel="canonical" href="<?= SITE_URL . getProductCategoryLink($category_path) ?>" />
+
+<title><?= join(" | ", $all_category_names) ?></title>
 
 <script>
     const product_category_id = <?= $product_category_id ?>;
@@ -400,10 +404,9 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
         <h1 class="h1 category_name">
             <?php
             $cats_so_far = [];
-            $cats = json_decode($product_category_data["__category_path_json"], true);
-            $len = count($cats);
+            $len = count($category_path);
             for ($i = 0; $i < $len; $i++) {
-                $cat = $cats[$i];
+                $cat = $category_path[$i];
                 $cats_so_far[] = $cat;
                 if ($i === $len - 1) {
                     echo "<span>" . $cat["name"] . "</span>";
