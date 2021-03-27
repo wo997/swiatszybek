@@ -332,6 +332,7 @@ domload(() => {
 
 					const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
 					if (node_ref) {
+						console.log(node_ref, begin_offset, end_offset);
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
 				}
@@ -350,7 +351,6 @@ domload(() => {
 
 	piep_editor_content.addEventListener("click", (ev) => {
 		const sel = window.getSelection();
-		piep_editor_last_selection = cloneObject(sel);
 		const focus_node = $(sel.focusNode);
 		if (focus_node) {
 			const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
@@ -543,6 +543,7 @@ function getFocusTextable() {
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
+	piep_editor_last_selection = cloneObject(sel);
 	const range = document.createRange();
 	const focus_node = sel ? $(sel.focusNode) : undefined;
 	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
