@@ -107,16 +107,16 @@ function productSubCategoryComp(comp, parent, data = undefined) {
 
 							const cat_target = sub_category_comp ? sub_category_comp : categories_comp;
 							cat_target._data.categories.push(push_data);
-							cat_target._render();
+							cat_target._render({ freeze: true });
 
+							parent.classList.add("freeze");
 							parent._remove_row(data.row_index);
+							parent.classList.remove("remove");
 
-							setTimeout(() => {
-								categories_comp._children(`[data-product_category_id="${cat.product_category_id}"]`).forEach((just_created_comp) => {
-									if (just_created_comp !== comp) {
-										scrollIntoView(just_created_comp);
-									}
-								});
+							categories_comp._children(`[data-product_category_id="${cat.product_category_id}"]`).forEach((just_created_comp) => {
+								if (just_created_comp !== comp) {
+									scrollIntoView(just_created_comp);
+								}
 							});
 						}
 					},

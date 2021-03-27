@@ -116,7 +116,7 @@ function selectProductCategoriesModalComp(comp, parent, data = undefined) {
 			<div class="custom_toolbar">
 				<span class="title medium">Wybierz kategorie</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zastosuj <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>

@@ -84,25 +84,23 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 			...options,
 			render: () => {
 				let options = html`<option value="-1">BRAK (KATEGORIA GŁÓWNA)</option>`;
-				for (const category of product_categories) {
-					let full_name = category.name;
 
-					let parent_category = category;
-					while (true) {
-						const pid = parent_category.parent_product_category_id;
-						if (pid === -1) {
-							break;
+				/**
+				 *
+				 * @param {ProductCategoryBranch[]} category_branch
+				 * @param {number} level
+				 */
+				const traverse = (category_branch, level = 0, slug = "") => {
+					category_branch.forEach((category) => {
+						const cat_display = slug + (slug ? " ― " : "") + category.name;
+						options += html`<option value="${category.product_category_id}">${cat_display}</option>`;
+						// HARDCODED 2 LEVELS
+						if (level < 1) {
+							traverse(category.sub_categories, level + 1, cat_display);
 						}
-						parent_category = parent_category[pid];
-						if (!parent_category) {
-							break;
-						}
-
-						full_name = html`${parent_category.name} › ${full_name}`;
-					}
-
-					options += html`<option value="${category.product_category_id}">${full_name}</option>`;
-				}
+					});
+				};
+				traverse(product_categories_tree);
 				comp._nodes.parent_product_category._set_content(options);
 				comp._nodes.parent_product_category._set_value(data.parent_product_category_id, { quiet: true });
 			},
