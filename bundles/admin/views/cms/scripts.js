@@ -266,10 +266,24 @@ domload(() => {
 
 	piep_editor_float_menu._set_content(html`
 		<select class="field small" data-style="fontSize">
+			<option value="">-</option>
 			<option value="1em">mała</option>
-			<option value="1.5em">duża</option>
+			<option value="1.5em">średnia</option>
+			<option value="2em">duża</option>
 		</select>
+
+		<select class="field small" data-style="fontWeight">
+			<option value="">-</option>
+			<option value="400">normal</option>
+			<option value="600">semi-bold</option>
+			<option value="700">bold</option>
+		</select>
+
+		kolor czc
 		<input class="field jscolor" data-style="color" />
+
+		kolor tla
+		<input class="field jscolor" data-style="backgroundColor" />
 	`);
 
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
@@ -290,12 +304,16 @@ domload(() => {
 
 				let val = input._get_value();
 				let prop = input.dataset.style;
-				if (prop === "color") {
+				if (prop.toLocaleLowerCase().endsWith("color")) {
 					val = "#" + val;
 				}
 
 				const setPropOfVNode = (edit_v_node) => {
-					edit_v_node.styles[prop] = val;
+					if (val === "") {
+						delete edit_v_node.styles[prop];
+					} else {
+						edit_v_node.styles[prop] = val;
+					}
 				};
 
 				// the selection is something but not everything in the v_node
@@ -332,7 +350,6 @@ domload(() => {
 
 					const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
 					if (node_ref) {
-						console.log(node_ref, begin_offset, end_offset);
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
 				}
@@ -361,9 +378,22 @@ domload(() => {
 			}
 		}
 		updatePiepCursorPosition();
+
+		const textable = getFocusTextable();
+		if (textable) {
+			const v_node = findNodeInVDom(+textable.dataset.ped).node;
+			piep_editor_float_menu._children("[data-style]").forEach((input) => {
+				const prop = input.dataset.style;
+				let val = def(v_node.styles[prop], "");
+				if (prop.toLocaleLowerCase().endsWith("color")) {
+					val = val.replace("#", "");
+				}
+				input._set_value(val, { quiet: true });
+			});
+		}
 	});
 
-	piep_editor.addEventListener("mousemove", (ev) => {
+	piep_editor_content.addEventListener("mousemove", (ev) => {
 		updatePiepCursorPosition();
 	});
 
