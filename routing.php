@@ -72,7 +72,7 @@ $admin_navigations_tree = [
             // ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
             // ["url" => "/strona"],
             ["url" => "/nowe-strony", "title" => '<i class="fas fa-heart"></i> Nowe Strony'],
-            ["url" => "/nowy-cms"],
+            //["url" => "/nowy-cms"],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
             //["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
@@ -82,7 +82,7 @@ $admin_navigations_tree = [
         ]
     ],
     ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
-    ["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
+    //["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
     ["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
 ];
 

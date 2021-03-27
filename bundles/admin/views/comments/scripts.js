@@ -20,7 +20,7 @@ domload(() => {
 				},
 			},
 			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
-			{ label: "Kiedy", key: "created_at", width: "108px", sortable: true, searchable: "date" },
+			{ label: "Kiedy", key: "created_at", width: "135px", sortable: true, searchable: "date" },
 			{
 				label: "Akcja",
 				key: "",

@@ -49,7 +49,6 @@ domload(() => {
 						key: "active",
 						db_key: "gp.active",
 						width: "1",
-						sortable: true,
 						searchable: "boolean",
 						editable: "checkbox",
 						editable_callback: (data) => {

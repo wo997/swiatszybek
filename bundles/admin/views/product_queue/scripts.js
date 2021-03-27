@@ -36,7 +36,6 @@ domload(() => {
 		primary_key: "product_queue_id",
 		empty_html: html`Brak oczekujących na produkty`,
 		label: "Oczekujący na produkty",
-		selectable: true,
 		save_state_name: "admin_product_queue",
 	});
 });

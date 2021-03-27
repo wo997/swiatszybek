@@ -14,6 +14,7 @@ let same_ext_image_allowed_types;
 
 let STATIC_URLS;
 
+let user_roles;
 let feature_data_types;
 let physical_measures;
 

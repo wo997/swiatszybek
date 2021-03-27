@@ -96,6 +96,10 @@ if (defined("ROUTE")) {
 <?php if (Request::$is_admin_url) : ?>
     <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
     <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
+
+    <script>
+        const user_roles = <?= json_encode(User::$user_roles) ?>;
+    </script>
 <?php endif ?>
 
 <?php if (Request::$is_admin_url || Request::$is_user_url) : ?>

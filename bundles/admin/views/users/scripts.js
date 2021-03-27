@@ -11,12 +11,52 @@ domload(() => {
 			{ label: "Imię", key: "first_name", width: "1", searchable: "string" },
 			{ label: "Nazwisko", key: "last_name", width: "1", searchable: "string" },
 			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
-			{ label: "Rola", key: "privelege_id", width: "1", searchable: "string" },
+			{ label: "Nr telefonu", key: "phone", width: "1", searchable: "string" },
+			{
+				label: "Rola",
+				key: "role_id",
+				width: "1",
+				searchable: "select",
+				map_name: "priveleges",
+				editable: "select",
+				editable_callback: (data) => {
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/user/save",
+						params: {
+							user: {
+								user_id: data.user_id,
+								role_id: data.role_id,
+							},
+						},
+						success: (res) => {
+							showNotification(
+								html`<div class="header">Użytkownik ${data.email}</div>
+									<div class="center">Rola: ${user_roles.find((e) => e.role_id === data.role_id).name}</div>`
+							);
+							datatable_comp._backend_search();
+						},
+					});
+				},
+			},
+		],
+		maps: [
+			{
+				name: "priveleges",
+				getMap: () => {
+					const map = user_roles.map((priveleges) => {
+						const obj = {
+							val: priveleges.role_id,
+							label: priveleges.name,
+						};
+						return obj;
+					});
+					return map;
+				},
+			},
 		],
 		primary_key: "user_id",
 		empty_html: html`Brak użytkowników`,
 		label: "Użytkownicy",
-		selectable: true,
 		save_state_name: "admin_users",
 	});
 });

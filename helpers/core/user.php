@@ -22,13 +22,12 @@ class User
         "o2.pl" => "https://poczta.o2.pl/",
     ];
 
-    public static $privelege_list = [
-        ["privelege_id" => 0, "name" => "Gość", "backend_access" => false],
-        ["privelege_id" => 1, "name" => "Klient", "backend_access" => false],
-        ["privelege_id" => 2, "name" => "Admin", "backend_access" => true],
-        ["privelege_id" => 3, "name" => "Sprzedawca", "backend_access" => true],
+    public static $user_roles = [
+        ["role_id" => 0, "name" => "Gość", "backend_access" => false],
+        ["role_id" => 1, "name" => "Klient", "backend_access" => false],
+        ["role_id" => 2, "name" => "Admin", "backend_access" => true],
+        ["role_id" => 3, "name" => "Sprzedawca", "backend_access" => true],
     ];
-
 
     public function __construct($user_id)
     {
@@ -66,9 +65,9 @@ class User
             return;
         }
 
-        $priveleges = self::$privelege_list[0];
-        foreach (self::$privelege_list as $p) {
-            if ($p["privelege_id"] === $this->entity->getProp("privelege_id")) {
+        $priveleges = self::$user_roles[0];
+        foreach (self::$user_roles as $p) {
+            if ($p["role_id"] === $this->entity->getProp("role_id")) {
                 $priveleges = $p;
             }
         }
@@ -134,7 +133,7 @@ class User
                 "password_hash" => $password_hash,
                 "created_at" => date("Y-m-d.H:i:s"),
                 "type" => "regular",
-                "privelege_id" => 1
+                "role_id" => 1
             ]);
 
             // $this->id = DB::insert("user", array_merge(filterArrayKeys($data, ["email", "first_name", "last_name", "phone"]),  [
@@ -288,7 +287,7 @@ class User
 
     public function isLoggedIn()
     {
-        return $this->entity->getProp("privelege_id") !== 0;
+        return $this->entity->getProp("role_id") !== 0;
     }
 
     /**

@@ -14,7 +14,7 @@ DB::createTable("user", [
     ["name" => "visited_at", "type" => "DATETIME"],
     ["name" => "created_at", "type" => "DATETIME"],
     ["name" => "cart_json", "type" => "TEXT"],
-    ["name" => "privelege_id", "type" => "TINYINT"],
+    ["name" => "role_id", "previous_name" => "priveleges_id", "type" => "TINYINT"],
     //["name" => "last_active_at", "type" => "DATETIME"],
     ["name" => "nickname", "type" => "VARCHAR(255)"],
     ["name" => "__search", "type" => "VARCHAR(255)"],
