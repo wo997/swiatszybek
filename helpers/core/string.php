@@ -38,7 +38,7 @@ function endsWith($haystack, $needle)
 }
 
 /**
- * removes everything except  (a-z) (A-Z) (0-9) "_" " " "," "."
+ * removes everything except  (a-z) (A-Z) (0-9) "_" " " "," "." "-"
  *
  * @param  string $x
  * @return string
@@ -47,5 +47,5 @@ function clean($x)
 {
     // TODO: try this for xml escaping maybe?
     //$str = htmlentities($str,ENT_QUOTES,'UTF-8');
-    return preg_replace("/[^\w ,.]/", "", $x);
+    return preg_replace("/[^\w ,.-]/", "", $x);
 }

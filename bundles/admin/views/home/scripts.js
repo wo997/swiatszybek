@@ -2,26 +2,64 @@
 
 domload(() => {
 	// @ts-ignore
-	var ctx = $("#myChart").getContext("2d");
+	const ctx = $("#myChart").getContext("2d");
 	// @ts-ignore
-	var chart = new Chart(ctx, {
-		// The type of chart we want to create
+	const chart = new Chart(ctx, {
 		type: "line",
-
-		// The data for our dataset
 		data: {
 			labels: ["January", "February", "March", "April", "May", "June", "July"],
 			datasets: [
 				{
-					label: "My First dataset",
-					backgroundColor: "rgb(255, 99, 132)",
+					data: [20, 50, 100, 75, 25, 0],
+					label: "Kwota łączna",
+					backgroundColor: "rgba(255, 99, 132, 0.1)",
 					borderColor: "rgb(255, 99, 132)",
-					data: [0, 10, 5, 2, 20, 30, 45],
+					yAxisID: "total_price",
+				},
+				{
+					data: [0.1, 0.5, 1.0, 2.0, 1.5, 0],
+					label: "Ilość",
+					backgroundColor: "rgb(0, 255, 132, 0.1)",
+					borderColor: "rgb(0, 255, 132)",
+					yAxisID: "count",
 				},
 			],
 		},
 
-		// Configuration options go here
-		options: {},
+		options: {
+			scales: {
+				yAxes: [
+					{
+						id: "total_price",
+						type: "linear",
+						position: "left",
+					},
+					{
+						id: "count",
+						type: "linear",
+						position: "right",
+					},
+				],
+			},
+			tooltips: {
+				mode: "index",
+				intersect: false,
+			},
+			hover: {
+				mode: "nearest",
+				intersect: true,
+			},
+		},
+	});
+
+	xhr({
+		url: STATIC_URLS["ADMIN"] + "/stats/search",
+		params: {
+			from_date: "2021-03-01",
+			to_date: "2021-04-01",
+		},
+		success: (res) => {
+			console.log(res);
+		},
 	});
 });

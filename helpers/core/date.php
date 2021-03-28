@@ -38,3 +38,8 @@ function changeDate($date_string, $offset)
 {
     return date("Y-m-d", strtotime("$date_string $offset"));
 }
+
+function changeDatetime($date_string, $offset)
+{
+    return date("Y-m-d H:i:s", strtotime("$date_string $offset"));
+}
