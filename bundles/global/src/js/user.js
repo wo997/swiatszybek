@@ -13,22 +13,22 @@ function logout() {
 		return;
 	}
 	if (USER_TYPE == "f") {
-		xhr({ url: "/logout", success: () => {} });
+		xhr({ url: STATIC_URLS["USER"] + "/logout", success: () => {} });
 	} else if (USER_TYPE == "g") {
 		try {
 			// @ts-ignore
 			var auth2 = gapi.auth2.getAuthInstance();
 			auth2.signOut().then(function () {
-				xhr({ url: "/logout", success: () => {} });
+				xhr({ url: STATIC_URLS["USER"] + "/logout", success: () => {} });
 			});
 			auth2.disconnect();
 		} catch (error) {
 			console.log(error);
 
-			xhr({ url: "/logout", success: () => {} });
+			xhr({ url: STATIC_URLS["USER"] + "/logout", success: () => {} });
 		}
 	} else {
-		xhr({ url: "/logout", success: () => {} });
+		xhr({ url: STATIC_URLS["USER"] + "/logout", success: () => {} });
 	}
 }
 

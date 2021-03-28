@@ -29,7 +29,7 @@ function getAdminNavitationTree()
 $admin_navigations_tree = [
     ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
     ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj kod rabatowy'],
-    ["url" => "/zamowienia", "title" => '<i class="fas fa-th-large"></i> Pulpit'],
+    ["url" => "/pulpit", "title" => '<i class="fas fa-th-large"></i> Pulpit'],
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [
@@ -42,7 +42,6 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
             ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            //["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
         ],
@@ -90,13 +89,13 @@ function getNotificationCountForPage($page, $children_notification_count = 0)
 {
     $notification_count = $children_notification_count;
     if (isset($page['url'])) {
-        // if ($page['url'] == "zamowienia") {
-        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM zamowienia WHERE status_id IN (0,1)");
-        // } else if ($page['url'] == "komentarze") {
-        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM comments WHERE accepted = 0");
-        // } else if ($page['url'] == "oczekujacy") {
-        //     $notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
-        // }
+        if ($page['url'] == "/zamowienia") {
+            $notification_count += DB::fetchVal("SELECT COUNT(1) FROM shop_order WHERE status_id IN (2)");
+        } //else if ($page['url'] == "/komentarze") {
+        //$notification_count += DB::fetchVal("SELECT COUNT(1) FROM comments WHERE accepted = 0");
+        //} else if ($page['url'] == "/oczekujacy") {
+        //$notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
+        //}
     }
     return $notification_count;
 }

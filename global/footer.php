@@ -34,3 +34,13 @@ if (isset($JS_files)) {
 
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+<?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
+    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= ASSETS_RELEASE ?>">
+    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script src="/src/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
+<?php endif ?>

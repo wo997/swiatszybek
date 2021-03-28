@@ -1,4 +1,4 @@
-<?php //route[/logout]
+<?php //route[{USER}/logout]
 
 User::getCurrent()->logout();
 

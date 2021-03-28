@@ -107,12 +107,6 @@ if (defined("ROUTE")) {
         const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
         const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
     </script>
-
-    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= ASSETS_RELEASE ?>"></script>
-    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= ASSETS_RELEASE ?>">
-    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
-
-    <script src="/src/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>

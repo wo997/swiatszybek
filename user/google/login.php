@@ -1,41 +1,41 @@
 <?php //route[/google/login]
 
-// Get $id_token via HTTPS POST.
+// // Get $id_token via HTTPS POST.
 
-if (!isset($_POST['id_token']) || strlen($_POST['id_token']) < 10) {
-    header("Location: /");
-    die;
-}
-
-// if (strpos($_SERVER["HTTP_REFERER"], "/kup-teraz") !== false) {
-//   $_SESSION["redirect"] = "/kup-teraz";
+// if (!isset($_POST['id_token']) || strlen($_POST['id_token']) < 10) {
+//     header("Location: /");
+//     die;
 // }
 
-$id_token = $_POST['id_token'];
+// // if (strpos($_SERVER["HTTP_REFERER"], "/kup-teraz") !== false) {
+// //   $_SESSION["redirect"] = "/kup-teraz";
+// // }
 
-$client = new Google_Client(['client_id' => secret('google_client_id')]);  // Specify the CLIENT_ID of the app that accesses the backend
-$payload = $client->verifyIdToken($id_token);
+// $id_token = $_POST['id_token'];
 
-if (!$payload) {
-    header("Location: /");
-    die;
-}
+// $client = new Google_Client(['client_id' => secret('google_client_id')]);  // Specify the CLIENT_ID of the app that accesses the backend
+// $payload = $client->verifyIdToken($id_token);
 
-$user_type = 'google';
-$authentication_token = $payload['sub'];
-$google_email = $payload['email'];
+// if (!$payload) {
+//     header("Location: /");
+//     die;
+// }
 
-$user_data = DB::fetchRow("SELECT user_id, email, imie FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
+// $user_type = 'google';
+// $authentication_token = $payload['sub'];
+// $google_email = $payload['email'];
 
-if ($user_data) {
-    $user_id = $user_data["user_id"];
-} else // new user
-{
-    DB::execute("INSERT INTO users (user_type,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,NOW())", [
-        $user_type, $google_email, "1", $authentication_token, "Polska"
-    ]);
+// $user_data = DB::fetchRow("SELECT user_id, email, imie FROM users WHERE user_type = '$user_type' AND authentication_token = ?", [$authentication_token]);
 
-    $user_id = DB::insertedId();
-}
+// if ($user_data) {
+//     $user_id = $user_data["user_id"];
+// } else // new user
+// {
+//     DB::execute("INSERT INTO users (user_type,email,authenticated,authentication_token,kraj,stworzono) VALUES (?,?,?,?,?,NOW())", [
+//         $user_type, $google_email, "1", $authentication_token, "Polska"
+//     ]);
 
-loginUser($user_id, $google_email, $user_type, ['name' => $payload['name']]);
+//     $user_id = DB::insertedId();
+// }
+
+// loginUser($user_id, $google_email, $user_type, ['name' => $payload['name']]);
