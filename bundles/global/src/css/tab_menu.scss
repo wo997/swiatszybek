@@ -1,8 +1,9 @@
 /* css[global] */
 
 :root {
-	--pretty_blue_background: #e0e0ff;
-	--pretty_blue: #259;
+	--pretty_blue_background: #d0e0ff;
+	--pretty_blue: #149;
+	--pretty_blue_border: #59c;
 }
 
 .tab_option {
@@ -27,7 +28,7 @@
 		background: var(--pretty_blue_background);
 		color: var(--pretty_blue);
 		font-weight: 600;
-		border-color: var(--pretty_blue);
+		border-color: var(--pretty_blue_border);
 		z-index: 10;
 	}
 	&:not(.current):hover {

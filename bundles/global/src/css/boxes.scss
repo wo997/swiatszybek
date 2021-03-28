@@ -122,7 +122,7 @@
 			background: var(--pretty_blue_background) !important;
 			color: var(--pretty_blue);
 			font-weight: 600;
-			border-color: var(--pretty_blue);
+			--selection-color: var(--pretty_blue_border);
 			z-index: 10;
 		}
 		& > *:not(.checked) {

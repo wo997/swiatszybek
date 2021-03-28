@@ -134,6 +134,12 @@ domload(() => {
 						intersect: true,
 					},
 					aspectRatio: 2.5,
+					legend: {
+						labels: {
+							boxWidth: 7,
+							usePointStyle: true,
+						},
+					},
 				},
 			});
 		} else {
