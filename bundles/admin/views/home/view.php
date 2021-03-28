@@ -13,7 +13,7 @@
 
 <div style="max-width: 1000px;margin: auto">
     <div class="label big">Statysyki sprzedaży</div>
-    <div class="radio_group boxes pretty_blue hide_checks semi_bold inline_flex glue_children">
+    <div class="radio_group boxes pretty_blue hide_checks semi_bold inline_flex glue_children choose_period">
         <div class="checkbox_area">
             <p-checkbox data-value="today"></p-checkbox>
             <span>Dzisiaj</span>
@@ -27,29 +27,30 @@
             <span>Ten tydzień</span>
         </div>
         <div class="checkbox_area">
-            <p-checkbox data-value="last_week"></p-checkbox>
-            <span>Poprzedni tydzień</span>
+            <p-checkbox data-value="last_7_days"></p-checkbox>
+            <span>Ostatnie 7 dni</span>
         </div>
         <div class="checkbox_area">
-            <p-checkbox data-value="this_month"></p-checkbox>
-            <span>Ten miesiąc</span>
-        </div>
-        <div class="checkbox_area">
-            <p-checkbox data-value="last_month"></p-checkbox>
-            <span>Poprzedni miesiąc</span>
+            <p-checkbox data-value="last_30_days"></p-checkbox>
+            <span>Ostatnie 30 dni</span>
         </div>
         <div class="checkbox_area">
             <p-checkbox data-value="any_period"></p-checkbox>
-            <span>Dowolny przedział</span>
+            <span>Dowolny okres</span>
         </div>
     </div>
 
-    <div class="label case_range input_wrapper glue_children default_daterangepicker">
-        <input type="text" class="field more_than inline" data-validate="" />
-        <span class="field_desc">
-            <b>≤ data ≤</b>
-        </span>
-        <input type="text" class="field less_than inline" data-orientation="right" data-validate="" />
+    <div class="case_any_period expand_y hidden animate_hidden">
+        <div>
+            <div class="label">Wybierz okres</div>
+            <div class="input_wrapper glue_children default_daterangepicker">
+                <input type="text" class="field from inline" data-validate="" />
+                <span class="field_desc">
+                    <b>do</b>
+                </span>
+                <input type="text" class="field to inline" data-orientation="right" data-validate="" />
+            </div>
+        </div>
     </div>
 
     <canvas id="myChart" class="space_top"></canvas>

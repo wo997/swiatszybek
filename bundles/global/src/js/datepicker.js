@@ -58,7 +58,8 @@ function createDateRangePicker(node) {
 	var dateRangePicker = new DateRangePicker(node, getDatepickerDefaultOptions(node));
 
 	for (let i = 0; i < 2; i++) {
-		dateRangePicker.datepickers[i].setOptions(getDatepickerDefaultOptions($(dateRangePicker.inputs[i])));
+		const node = $(dateRangePicker.inputs[i]);
+		dateRangePicker.datepickers[i].setOptions(getDatepickerDefaultOptions(node));
 	}
 
 	return dateRangePicker;

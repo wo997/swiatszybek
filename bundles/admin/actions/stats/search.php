@@ -8,7 +8,8 @@ $to_date_time = strtotime($to_date);
 
 $time_span = $to_date_time - $from_date_time;
 
-$pretty_time_spans = ["1 year", "6 months", "3 months", "2 months", "1 month", "14 days", "7 days", "3 days", "2 days", "1 day", "12 hours", "6 hours", "3 hours", "2 hours", "1 hour"];
+//$pretty_time_spans = ["1 year", "6 months", "3 months", "2 months", "1 month", "14 days", "7 days", "3 days", "2 days", "1 day", "12 hours", "6 hours", "3 hours", "2 hours", "1 hour"];
+$pretty_time_spans = ["1 year", "6 months", "3 months", "2 months", "1 month", "14 days", "7 days", "3 days", "2 days", "1 day"];
 $min_tick_count = 10;
 foreach ($pretty_time_spans as $pretty_time_span) {
     $tick_str = $pretty_time_span;
@@ -16,6 +17,10 @@ foreach ($pretty_time_spans as $pretty_time_span) {
     if ($time_span / $tick >= $min_tick_count) {
         break;
     }
+}
+
+if ($time_span <= 3600 * 26) {
+    $tick_str = "1 hour";
 }
 
 $chart_data = [
@@ -36,7 +41,9 @@ do {
     } else if (strpos($tick_str, "day") !== false) {
         $date_label = substr($date_label, 0, 5);
     } else if (strpos($tick_str, "hour") !== false) {
-        $date_label = substr($date_label, 11, 5);
+        $date_label = substr($date_label, 11, 2);
+        //$date_label = substr($date_label, 11, 5);
+        //$date_label = substr($date_label, 0, 5) . " " . substr($date_label, 11, 5);
     } else {
         $date_label = $start_period;
     }
@@ -50,6 +57,6 @@ do {
     $chart_data["count"][] = def($shop_orders_data, "count", 0);
 
     $start_period = $end_period;
-} while (strtotime($start_period) < $to_date_time);
+} while (strtotime($start_period) <= $to_date_time);
 
 Request::jsonResponse($chart_data);

@@ -121,15 +121,12 @@ let filter_menus = [
 				<option value="<>">Przedział</option>
 			</select>
 			<span class="label case_single input_wrapper glue_children">
-				<span class="field_desc">
-					<b>liczba <span class="single_operator">=</span></b>
-				</span>
 				<input type="text" class="field num" data-validate="" data-number />
 			</span>
 			<span class="label case_range input_wrapper glue_children">
 				<input type="text" class="field more_than" data-validate="" data-number />
 				<span class="field_desc">
-					<b>≤ liczba ≤</b>
+					<b>do</b>
 				</span>
 				<input type="text" class="field less_than" data-validate="" data-number />
 			</span>
@@ -145,7 +142,6 @@ let filter_menus = [
 				const is_range = type_v === "<>";
 				elem._child(".case_single").style.display = is_range ? "none" : "";
 				elem._child(".case_range").style.display = is_range ? "" : "none";
-				elem._child(".single_operator")._set_content({ "<=": "≤", ">=": "≥", "=": "=" }[type_v]);
 			});
 
 			num._set_value(def(data.num, ""));
@@ -199,15 +195,12 @@ let filter_menus = [
 				<option value="<>">Przedział</option>
 			</select>
 			<span class="label case_single input_wrapper glue_children">
-				<span class="field_desc">
-					<b>data <span class="single_operator">=</span></b>
-				</span>
 				<input type="text" class="field num default_datepicker inline" data-orientation="right" data-validate="" />
 			</span>
 			<span class="label case_range input_wrapper glue_children default_daterangepicker">
 				<input type="text" class="field more_than inline" data-validate="" />
 				<span class="field_desc">
-					<b>≤ data ≤</b>
+					<b>do</b>
 				</span>
 				<input type="text" class="field less_than inline" data-orientation="right" data-validate="" />
 			</span>
@@ -223,7 +216,6 @@ let filter_menus = [
 				const is_range = type_v === "<>";
 				elem._child(".case_single").style.display = is_range ? "none" : "";
 				elem._child(".case_range").style.display = is_range ? "" : "none";
-				elem._child(".single_operator")._set_content({ "<=": "≤", ">=": "≥", "=": "=" }[type_v]);
 			});
 
 			num._set_value(def(data.num, ""));

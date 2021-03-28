@@ -1,6 +1,89 @@
 /* js[view] */
 
 domload(() => {
+	const choose_period = $(".choose_period");
+	const case_any_period = $(".case_any_period");
+	const daterangepicker = case_any_period._child(".default_daterangepicker");
+	const from_datepicker = daterangepicker._child(".from");
+	const to_datepicker = daterangepicker._child(".to");
+
+	const search_stats = () => {
+		const period = choose_period._get_value();
+
+		const today = new Date();
+		const today_day = today.getDay();
+		// today case
+		let from_date = new Date();
+		let to_date = new Date();
+		if (period === "this_week") {
+			const diff = today.getDate() - today_day + (today_day == 0 ? -6 : 1);
+			const monday = new Date();
+			monday.setDate(diff);
+			monday.setHours(0, 0, 0, 0);
+			from_date = monday;
+		} else if (period === "yesterday") {
+			from_date.setDate(from_date.getDate() - 1);
+			to_date.setDate(to_date.getDate() - 1);
+		} else if (period === "last_7_days") {
+			from_date.setDate(from_date.getDate() - 6);
+		} else if (period === "last_30_days") {
+			from_date.setDate(from_date.getDate() - 29);
+		} else if (period === "any_period") {
+			from_date = new Date(from_datepicker._get_value() + "T00:00:00");
+			to_date = new Date(to_datepicker._get_value() + "T00:00:00");
+		}
+
+		from_date.setHours(0, 0, 0, 0);
+		to_date.setHours(0, 0, 0, 0);
+		to_date.setDate(to_date.getDate() + 1);
+
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/stats/search",
+			params: {
+				from_date: dateToString(from_date),
+				to_date: dateToString(to_date),
+			},
+			success: (res) => {
+				setChartData({
+					labels: res.labels,
+					datasets: [
+						{
+							data: res.count,
+							label: "Ilość zamówień",
+							backgroundColor: "#07e1",
+							borderColor: "#47d",
+							yAxisID: "count",
+						},
+						{
+							data: res.total_price,
+							label: "Łączna kwota",
+							backgroundColor: "#0e41",
+							borderColor: "#3d4",
+							yAxisID: "total_price",
+						},
+					],
+				});
+			},
+		});
+	};
+	choose_period.addEventListener("change", () => {
+		const period = choose_period._get_value();
+		expand(case_any_period, period === "any_period");
+
+		search_stats();
+	});
+
+	from_datepicker.addEventListener("change", () => {
+		search_stats();
+	});
+	to_datepicker.addEventListener("change", () => {
+		search_stats();
+	});
+
+	const today_str = dateToString(new Date());
+	from_datepicker._set_value(today_str);
+	from_datepicker._set_value(today_str);
+
 	// @ts-ignore
 	const ctx = $("#myChart").getContext("2d");
 	let chart;
@@ -48,37 +131,15 @@ domload(() => {
 				},
 			});
 		} else {
+			// that's actually dumb but ok
+			// chart.data.datasets[0].data = data.datasets[0].data;
+			// chart.data.datasets[1].data = data.datasets[1].data;
+			// chart.data.labels = data.labels;
+
 			chart.data = data;
 			chart.update();
 		}
 	};
 
-	xhr({
-		url: STATIC_URLS["ADMIN"] + "/stats/search",
-		params: {
-			from_date: "2021-03-16",
-			to_date: "2021-04-01",
-		},
-		success: (res) => {
-			setChartData({
-				labels: res.labels,
-				datasets: [
-					{
-						data: res.count,
-						label: "Ilość zamówień",
-						backgroundColor: "rgb(0, 255, 132, 0.1)",
-						borderColor: "rgb(0, 255, 132)",
-						yAxisID: "count",
-					},
-					{
-						data: res.total_price,
-						label: "Łączna kwota",
-						backgroundColor: "rgba(255, 99, 132, 0.1)",
-						borderColor: "rgb(255, 99, 132)",
-						yAxisID: "total_price",
-					},
-				],
-			});
-		},
-	});
+	choose_period._set_value("this_week");
 });
