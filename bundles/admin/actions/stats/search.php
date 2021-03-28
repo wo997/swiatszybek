@@ -36,15 +36,26 @@ if ($time_diff >= 3600 * 24 * 365 * 8) {
     $tick = "1 hour";
 }
 
+$chart_data = [
+    "labels" => [],
+    "total_price" => [],
+    "count" => []
+];
+
 $start_period = $from_date;
 do {
     $end_period = changeDatetime($start_period, $tick);
 
-    var_dump([$start_period, $end_period]);
+    $chart_data["labels"][] = niceDate($start_period);
 
-    // paid_at is actually more important
+    // paid_at is actually what u wanna use later
     //var_dump(DB::fetchRow("SELECT SUM(total_price) total_price, COUNT(1) as count FROM shop_order WHERE '$start_period' <= paid_at AND paid_at < '$end_period'"));
-    var_dump(DB::fetchRow("SELECT SUM(total_price) total_price, COUNT(1) as count FROM shop_order WHERE '$start_period' <= ordered_at AND ordered_at < '$end_period'"));
+    $shop_orders_data = DB::fetchRow("SELECT SUM(total_price) total_price, COUNT(1) as count FROM shop_order WHERE '$start_period' <= ordered_at AND ordered_at < '$end_period'");
+
+    $chart_data["total_price"][] = def($shop_orders_data, "total_price", 0);
+    $chart_data["count"][] = def($shop_orders_data, "count", 0);
 
     $start_period = $end_period;
 } while (strtotime($start_period) < $to_date_time);
+
+Request::jsonResponse($chart_data);
