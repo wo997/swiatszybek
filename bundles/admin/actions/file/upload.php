@@ -12,7 +12,7 @@ for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
         copy($tmp_file_path, $copy_path);
         Files::processImage($copy_path);
 
-        $image_version = getSetting("theme", "copied_images", [$name, "version"]);
+        $image_version = getSetting(["theme", "copied_images", $name, "version"]);
         if (!$image_version) {
             $image_version = 1;
         } else {

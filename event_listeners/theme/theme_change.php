@@ -3,7 +3,7 @@
 $colors_css = "/* css[global] */";
 
 $colors_css .= ":root {";
-foreach (getSetting("theme", "general", ["colors"]) as $color_name => $color_value) {
+foreach (getSetting(["theme", "general", "colors"]) as $color_name => $color_value) {
     $colors_css .= "--$color_name: $color_value;";
 }
 $colors_css .= "}";

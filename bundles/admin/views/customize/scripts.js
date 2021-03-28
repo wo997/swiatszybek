@@ -5,7 +5,7 @@
     domload(() => {
         setFormData(
             <?= json_encode([
-                "colors" => getSetting("theme", "general", ["colors"])
+                "colors" => getSetting(["theme", "general", "colors"])
             ]); ?>, `#themeForm`);
     });
 

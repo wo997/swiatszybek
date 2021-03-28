@@ -1,54 +1,45 @@
 <?php
 
-/**
- * Use this function to fetch all data quickly from preloaded JSON
- * $path: array
- */
-function setting($path, $default = "")
-{
-    return def(SETTINGS, $path, $default);
-}
+// function getSetting$dir, $file, $json_path, $default = null)
+// {
+//     $res = getSettings($dir, $file, [$json_path]);
+//     if ($res) {
+//         return $res[0];
+//     }
+//     return $default;
+// }
 
-function getSetting($dir, $file, $json_path, $default = null)
-{
-    $res = getSettings($dir, $file, [$json_path]);
-    if ($res) {
-        return $res[0];
-    }
-    return $default;
-}
+// function getSettings($dir, $file, $json_paths)
+// {
+//     $file_path = SETTINGS_PATH . $dir . "/" . $file . ".json";
 
-function getSettings($dir, $file, $json_paths)
-{
-    $file_path = SETTINGS_PATH . $dir . "/" . $file . ".json";
+//     if (!file_exists($file_path)) {
+//         return [];
+//     }
 
-    if (!file_exists($file_path)) {
-        return [];
-    }
-
-    try {
-        $settings = json_decode(file_get_contents($file_path), true);
-        $out = [];
-        foreach ($json_paths as $json_path) {
-            $settings_sub = &$settings;
-            $found = true;
-            foreach ($json_path as $json_path_part) {
-                if (isset($settings_sub[$json_path_part])) {
-                    $settings_sub = &$settings_sub[$json_path_part];
-                } else {
-                    $found = false;
-                    break;
-                }
-            }
-            if ($found) {
-                $out[] = $settings_sub;
-            }
-        }
-        return $out;
-    } catch (Exception $e) {
-        return null;
-    }
-}
+//     try {
+//         $settings = json_decode(file_get_contents($file_path), true);
+//         $out = [];
+//         foreach ($json_paths as $json_path) {
+//             $settings_sub = &$settings;
+//             $found = true;
+//             foreach ($json_path as $json_path_part) {
+//                 if (isset($settings_sub[$json_path_part])) {
+//                     $settings_sub = &$settings_sub[$json_path_part];
+//                 } else {
+//                     $found = false;
+//                     break;
+//                 }
+//             }
+//             if ($found) {
+//                 $out[] = $settings_sub;
+//             }
+//         }
+//         return $out;
+//     } catch (Exception $e) {
+//         return null;
+//     }
+// }
 
 /**
  * @typedef JsonPathAndValue {
@@ -63,11 +54,12 @@ function getSettings($dir, $file, $json_paths)
  * @param  mixed $dir
  * @param  mixed $file
  * @param  JsonPathAndValue $json_path_and_value
+ * @param  mixed $merge
  * @return void
  */
-function saveSetting($dir, $file, $json_path_and_value)
+function saveSetting($dir, $file, $json_path_and_value, $merge = true)
 {
-    saveSettings($dir, $file, [$json_path_and_value]);
+    saveSettings($dir, $file, [$json_path_and_value], $merge);
 }
 
 /**
@@ -76,9 +68,10 @@ function saveSetting($dir, $file, $json_path_and_value)
  * @param  mixed $dir
  * @param  mixed $file
  * @param  JsonPathAndValue[] $json_paths_and_values
+ * @param  mixed $merge
  * @return void
  */
-function saveSettings($dir, $file, $json_paths_and_values)
+function saveSettings($dir, $file, $json_paths_and_values, $merge = true)
 {
     $file_path = SETTINGS_PATH . $dir . "/" . $file . ".json";
 
@@ -89,31 +82,33 @@ function saveSettings($dir, $file, $json_paths_and_values)
         $settings = [];
     }
 
-    while (true) {
-        $is_flat = true;
+    if ($merge) {
+        while (true) {
+            $is_flat = true;
 
-        foreach ($json_paths_and_values as $key => $json_path_and_value) {
-            $path = $json_path_and_value["path"];
-            $value = $json_path_and_value["value"];
+            foreach ($json_paths_and_values as $key => $json_path_and_value) {
+                $path = $json_path_and_value["path"];
+                $value = $json_path_and_value["value"];
 
-            if (is_array($value)) {
-                $is_flat = false;
+                if (is_array($value)) {
+                    $is_flat = false;
 
-                foreach ($value as $s_key => $s_value) {
-                    $another_path = $path;
-                    $another_path[] = $s_key;
-                    $json_paths_and_values[] = [
-                        "path" => $another_path,
-                        "value" =>  $s_value,
-                    ];
+                    foreach ($value as $s_key => $s_value) {
+                        $another_path = $path;
+                        $another_path[] = $s_key;
+                        $json_paths_and_values[] = [
+                            "path" => $another_path,
+                            "value" =>  $s_value,
+                        ];
+                    }
+
+                    unset($json_paths_and_values[$key]);
                 }
-
-                unset($json_paths_and_values[$key]);
             }
-        }
 
-        if ($is_flat) {
-            break;
+            if ($is_flat) {
+                break;
+            }
         }
     }
 

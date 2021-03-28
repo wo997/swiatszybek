@@ -3,7 +3,7 @@
     domload(() => {
         setFormData(
             <?= json_encode(
-                getSetting("general", "advanced", [])
+                getSetting(["general", "advanced"])
             ); ?>, `#zaawansowaneForm`);
     });
 

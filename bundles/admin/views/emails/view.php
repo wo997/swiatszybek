@@ -5,7 +5,7 @@
 
 <script>
     const company_data = <?= json_encode($app["company_data"]) ?>;
-    const maile = <?= json_encode(getSetting("general", "emails", [])); ?>
+    const maile = <?= json_encode(getSetting(["general", "emails"])); ?>
 </script>
 
 <title>Maile</title>

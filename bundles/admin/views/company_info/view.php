@@ -5,7 +5,7 @@
 <?php startSection("head_content"); ?>
 
 <script>
-    const company_info = <?= json_encode(getSetting("general", "company", [])); ?>
+    const company_info = <?= json_encode(getSetting(["general", "company"])); ?>
 </script>
 
 <title>Dane firmy</title>
@@ -29,10 +29,10 @@
     <div>
         <div class="medium">Ogólne</div>
 
-        <div class="label">Email</div>
+        <div class="label">Email główny</div>
         <input type="text" class="field" data-name="main_email" data-validate="email">
 
-        <div class="label">Nazwa nadawcy maila</div>
+        <div class="label">Nazwa sklepu</div>
         <input type="text" class="field" data-name="email_sender">
 
         <div class="label">Nr telefonu</div>
@@ -57,13 +57,16 @@
         <input type="text" class="field" data-name="city">
 
         <div class="label">Nazwa ulicy</div>
-        <input type="text" class="field" data-name="street_name">
+        <input type="text" class="field" data-name="street">
 
         <div class="label">Nr ulicy</div>
-        <input type="text" class="field" data-name="street_number">
+        <input type="text" class="field" data-name="building_number">
 
-        <div class="label">Adres fanpage</div>
-        <input type="text" class="field" data-name="fb_fanpage_url" data-validate="url|optional">
+        <div class="label">Nr mieszkania</div>
+        <input type="text" class="field" data-name="flat_number">
+
+        <!-- <div class="label">Adres fanpage</div>
+        <input type="text" class="field" data-name="fb_fanpage_url" data-validate="url|optional"> -->
     </div>
 </div>
 

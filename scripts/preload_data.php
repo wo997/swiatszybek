@@ -1,3 +1,3 @@
 <?php
 
-$app["company_data"] = getSetting("general", "company", [], "");
+$app["company_data"] = getSetting(["general", "company"], "");

@@ -3,7 +3,7 @@
     // if (isset($preview_params) && isset($preview_params["page_footer"])) {
     //     $page_footer = $preview_params["page_footer"];
     // } else {
-    //     $page_footer = getSetting("theme", "general", ["page_footer"], "");
+    //     $page_footer = getSetting"theme", "general", ["page_footer"], "");
     // }
     // echo getCMSPageHTML($page_footer);
     ?>

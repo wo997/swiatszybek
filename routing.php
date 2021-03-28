@@ -4,7 +4,7 @@ define("time", microtime(true));
 
 require_once 'kernel.php';
 
-if (setting(["general", "advanced", "ssl"])) {
+if (getSetting(["general", "advanced", "ssl"])) {
     if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
         $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         header('HTTP/1.1 301 Moved Permanently');
@@ -80,7 +80,7 @@ $admin_navigations_tree = [
             ["url" => "/szablon", "title" => '<i class="fas fa-paint-brush"></i> Szablon'],
         ]
     ],
-    //["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
+    ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
     //["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
     //["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
 ];

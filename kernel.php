@@ -12,6 +12,8 @@ include "scripts/start_session.php";
 
 include_once 'vendor/autoload.php';
 
+include "scripts/settings.php";
+
 // temp
 include "scripts/errors.php";
 
@@ -36,12 +38,6 @@ function secret($var, $default = "")
 include "scripts/db_connect.php";
 
 include "scripts/use_builds.php";
-
-$settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true);
-if (!$settings) {
-    $settings = [];
-}
-define("SETTINGS", $settings);
 
 include "scripts/server_settings.php";
 if (DEV_MODE) {

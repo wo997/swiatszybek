@@ -24,7 +24,7 @@ addZamowienieLog($zamowienie_data["zamowienie_id"], "Status", $oldStatusString, 
 
 // send mail
 
-$company_data = getSetting("general", "company", [], "");
+$company_data = getSetting(["general", "company"], "");
 
 // $company_data = $app["company_data"];
 

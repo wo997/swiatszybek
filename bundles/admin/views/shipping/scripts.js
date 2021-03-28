@@ -3,7 +3,7 @@
 /*domload(() => {
         setFormData(
             <?php echo json_encode(
-                getSetting("general", "company", [])
+                getSetting"general", "company", [])
             ); ?>, `#daneFirmyForm`);
     });*/
 

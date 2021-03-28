@@ -16,7 +16,7 @@ if (!IS_XHR) {
 }
 
 // ssl redirect
-if (getSetting("general", "advanced", ["ssl"]) == 1 && def($_SERVER, "HTTPS", "on") == 'off') {
+if (getSetting(["general", "advanced", "ssl"]) == 1 && def($_SERVER, "HTTPS", "on") == 'off') {
     Request::redirect(strReplaceFirst("http://", "https://", SITE_URL, 1));
 }
 // TODO: www detection should probably go in here
