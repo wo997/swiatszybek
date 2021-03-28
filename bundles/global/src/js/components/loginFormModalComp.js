@@ -117,7 +117,7 @@ function loginFormModalComp(comp, parent, data = undefined) {
 				showLoader(comp);
 
 				xhr({
-					url: STATIC_URLS["USER"] + "/login",
+					url: "/user/login",
 					params: {
 						email: comp._nodes.email._get_value(),
 						password: comp._nodes.password._get_value(),
