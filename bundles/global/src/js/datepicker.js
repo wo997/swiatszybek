@@ -30,9 +30,13 @@ function getDatepickerDefaultOptions(e) {
  * @param {PiepNode} parent
  */
 function registerDatepickers(parent) {
-	parent._children(".default_datepicker:not(.registered)").forEach((e) => {
-		e.classList.add("registered");
+	parent._children(".default_datepicker:not(.dtp_rgstrd)").forEach((e) => {
+		e.classList.add("dtp_rgstrd");
 		createDatePicker(e);
+	});
+	parent._children(".default_daterangepicker:not(.dtrp_rgstrd)").forEach((e) => {
+		e.classList.add("dtrp_rgstrd");
+		createDateRangePicker(e);
 	});
 }
 

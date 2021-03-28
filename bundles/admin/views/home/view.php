@@ -43,7 +43,16 @@
             <span>Dowolny przedział</span>
         </div>
     </div>
-    <canvas id="myChart"></canvas>
+
+    <div class="label case_range input_wrapper glue_children default_daterangepicker">
+        <input type="text" class="field more_than inline" data-validate="" />
+        <span class="field_desc">
+            <b>≤ data ≤</b>
+        </span>
+        <input type="text" class="field less_than inline" data-orientation="right" data-validate="" />
+    </div>
+
+    <canvas id="myChart" class="space_top"></canvas>
 </div>
 
 

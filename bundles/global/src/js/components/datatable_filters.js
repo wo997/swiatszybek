@@ -204,12 +204,12 @@ let filter_menus = [
 				</span>
 				<input type="text" class="field num default_datepicker inline" data-orientation="right" data-validate="" />
 			</span>
-			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than default_datepicker inline" data-validate="" />
+			<span class="label case_range input_wrapper glue_children default_daterangepicker">
+				<input type="text" class="field more_than inline" data-validate="" />
 				<span class="field_desc">
 					<b>≤ data ≤</b>
 				</span>
-				<input type="text" class="field less_than default_datepicker" data-orientation="right" data-validate="" />
+				<input type="text" class="field less_than inline" data-orientation="right" data-validate="" />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {
