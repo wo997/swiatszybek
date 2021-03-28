@@ -1,4 +1,4 @@
-/* js[admin_everywhere] */
+/* js[admin_front] */
 
 domload(() => {
 	var rm = $(".right_side_menu");

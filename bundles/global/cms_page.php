@@ -11,9 +11,6 @@ $page_width = "1500px";
 ?>
 
 <?php startSection("head_content"); ?>
-<?php
-include "global/includes_for_cms_page.php";
-?>
 
 <style>
     <?php

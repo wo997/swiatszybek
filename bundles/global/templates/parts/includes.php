@@ -110,10 +110,8 @@ if (defined("ROUTE")) {
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-
-    <link href="/builds/admin_everywhere.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin_everywhere.js?v=<?= ASSETS_RELEASE ?>"></script>
-
+    <link href="/builds/admin_front.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <script src="/builds/admin_front.js?v=<?= ASSETS_RELEASE ?>"></script>
 <?php endif ?>
 
 <meta charset="utf-8">

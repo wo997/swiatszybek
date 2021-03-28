@@ -1,8 +1,8 @@
-/* css[admin_everywhere] */
+/* css[admin_front] */
 
 .missing-module-block-label {
-  padding: 10px;
-  color: var(--error-clr);
-  font-size: 1.2em;
-  text-align: center;
+	padding: 10px;
+	color: var(--error-clr);
+	font-size: 1.2em;
+	text-align: center;
 }

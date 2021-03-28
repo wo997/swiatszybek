@@ -79,15 +79,15 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
 
     $email_body .= "<div style=\"font-size:15px\">";
 
-    $email_body .= "<div style=\"font-size:1.2em\">Witaj " . $main_address->getProp("__display_name") . "!</div>";
+    $email_body .= "<div style=\"font-size:1.2em;font-weight: 600;\">Witaj " . $main_address->getProp("__display_name") . "!</div>";
     $email_body .= "<br>";
 
-    $email_body .= "<div style=\"font-size:1.2em\">Oto szczegóły Twojego zamówienia:</div>";
+    $email_body .= "<div>Cieszymy się, że zrobiłaś/eś zakupy w naszym sklepie!<br>Oto szczegóły Twojego zamówienia:</div>";
 
-    $email_body .= "<h2 style=\"font-size:1.2em\">Dane kontaktowe</h2>";
+    $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Dane kontaktowe</h2>";
 
     if ($main_address->getProp("party") === "company") {
-        $email_body .= "<h2 style=\"font-size:1.2em\">Firma</h2>";
+        $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Firma</h2>";
 
         $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Firma</div>";
         $email_body .= "<div>" . $main_address->getProp("__display_name") . "</div>";
@@ -131,11 +131,11 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
     $ordered_products_html .= "</table>";
 
 
-    $email_body .= "<h2 style=\"font-size:1.2em\">Produkty</h2>";
+    $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Produkty</h2>";
     $email_body .= $ordered_products_html;
 
     $email_body .= "</div>";
     //}
 
-    //sendEmail($main_address->getProp("email"), $email_body, $email_title);
+    sendEmail($main_address->getProp("email"), $email_body, $email_title);
 });

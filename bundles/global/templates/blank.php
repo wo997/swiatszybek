@@ -8,7 +8,8 @@ endSection();
 <html lang="pl">
 
 <head>
-    <?php include "global/includes.php"; ?>
+    <?php include "bundles/global/templates/parts/includes.php";
+    ?>
     <?= def($sections, "head_content", ""); ?>
 </head>
 
@@ -16,7 +17,7 @@ endSection();
     <div class="main_wrapper">
         <div class="main_container">
             <?= def($sections, "body", ""); ?>
-            <?php include "global/footer.php"; ?>
+            <?php include "bundles/global/templates/parts/footer.php"; ?>
         </div>
     </div>
 </body>

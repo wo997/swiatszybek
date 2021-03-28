@@ -41,9 +41,9 @@ function traverseMenu($parent_id = -1, $level = 0)
         </button>
         <?php
         if (User::getCurrent()->isLoggedIn()) {
-            include "global/header_logged_in.php";
+            include "bundles/global/templates/parts/header/header_logged_in.php";
         } else {
-            include "global/header_quest.php";
+            include "bundles/global/templates/parts/header/header_quest.php";
         }
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
@@ -51,8 +51,8 @@ function traverseMenu($parent_id = -1, $level = 0)
                 <img class="heart_icon" src="/src/img/heart_icon.svg">
             </div>
         <?php endif ?>
-        <?php include "global/last_viewed_products.php"; ?>
-        <?php include "global/header_basket.php"; ?>
+        <?php include "bundles/global/templates/parts/header/last_viewed_products.php"; ?>
+        <?php include "bundles/global/templates/parts/header/header_basket.php"; ?>
 
         <div class='mobile_menu_btn headerbtn gray_hover gray_hover' onclick='showModal("mainMenu", {source:this})'>
             <img class="menu_icon" src="/src/img/menu_icon.svg">

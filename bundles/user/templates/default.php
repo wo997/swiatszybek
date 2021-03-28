@@ -6,7 +6,7 @@ endSection();
 
 <?php startSection("body"); ?>
 
-<?php include "global/header.php"; ?>
+<?php include "bundles/global/templates/parts/header/header.php"; ?>
 
 <div class="user_nav">
     <a class="gray_hover" href="<?= Request::$static_urls["USER"] ?>/zamowienia"> <i class="fas fa-box"></i> Moje zamówienia</a>
@@ -19,4 +19,4 @@ endSection();
     <?= def($sections, "body_content", ""); ?>
 </div>
 
-<?php include "global/blank_page_template.php"; ?>
+<?php include "bundles/global/templates/blank.php"; ?>

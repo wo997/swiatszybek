@@ -59,4 +59,4 @@ endSection();
 </div>
 
 
-<?php include "global/blank_page_template.php"; ?>
+<?php include "bundles/global/templates/blank.php"; ?>

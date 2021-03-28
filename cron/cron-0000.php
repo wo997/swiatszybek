@@ -1,6 +1,6 @@
 <?php
 
-// TODO: register cron jobs by annotations
+// TODO: use events
 
 if (!isset($CRON)) die;
 

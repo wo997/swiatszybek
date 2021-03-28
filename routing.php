@@ -213,13 +213,13 @@ if ($pageName) {
     }
 
     if ($page_data) {
-        include "user/cms_page.php";
+        include "bundles/global/cms_page.php";
         die;
     }
 }
 if (Request::$url == "/") {
     $page_data["content"] = "Pusta strona";
-    include "user/cms_page.php";
+    include "bundles/global/cms_page.php";
     die;
 }
 

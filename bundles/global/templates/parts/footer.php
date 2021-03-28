@@ -40,7 +40,7 @@ if (isset($JS_files)) {
     <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= ASSETS_RELEASE ?>">
     <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
 
-    <script src="/src/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <script src="/bundles/admin/src/js/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>

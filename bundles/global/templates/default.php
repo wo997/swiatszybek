@@ -6,8 +6,9 @@ endSection();
 
 <?php startSection("body"); ?>
 
-<?php include "global/header.php"; ?>
+<?php include "bundles/global/templates/parts/header/header.php";
+?>
 
 <?= def($sections, "body_content", ""); ?>
 
-<?php include "global/blank_page_template.php"; ?>
+<?php include "bundles/global/templates/blank.php"; ?>
