@@ -13,14 +13,14 @@
 
 <div class="products_view_header">
     <div class="radio_group boxes pretty_blue hide_checks semi_bold toggle_view inline_flex glue_children">
-        <div class="checkbox_area box">
+        <div class="checkbox_area">
             <p-checkbox data-value="general_products"></p-checkbox>
             <span>
                 <i class="fas fa-cubes"></i>
                 Przeglądaj produkty
             </span>
         </div>
-        <div class="checkbox_area box">
+        <div class="checkbox_area">
             <p-checkbox data-value="products"></p-checkbox>
             <span>
                 <i class="fas fa-sort-numeric-up"></i>
