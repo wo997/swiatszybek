@@ -15,7 +15,7 @@ domload(() => {
 		nv.insertAdjacentHTML(
 			"beforebegin",
 			html`
-				<div class="btn subtle fill medium" onclick="expandMenu(this._next(),this)">
+				<div class="btn subtle fill medium" onclick="expandMenu(this._next(),this)" style="flex-grow:0">
 					<b>Menu</b>
 					<div class="expand_arrow"><i class="fas fa-chevron-right"></i></div>
 				</div>
