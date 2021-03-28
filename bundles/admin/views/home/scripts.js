@@ -7,7 +7,12 @@ domload(() => {
 	const from_datepicker = daterangepicker._child(".from");
 	const to_datepicker = daterangepicker._child(".to");
 
+	let searching_stats = false;
 	const search_stats = () => {
+		if (searching_stats) {
+			return;
+		}
+		searching_stats = true;
 		const period = choose_period._get_value();
 
 		const today = new Date();
@@ -44,6 +49,7 @@ domload(() => {
 				to_date: dateToString(to_date),
 			},
 			success: (res) => {
+				searching_stats = false;
 				setChartData({
 					labels: res.labels,
 					datasets: [
@@ -73,16 +79,16 @@ domload(() => {
 		search_stats();
 	});
 
+	const today_str = dateToString(new Date());
+	from_datepicker._set_value(today_str);
+	from_datepicker._set_value(today_str);
+
 	from_datepicker.addEventListener("change", () => {
 		search_stats();
 	});
 	to_datepicker.addEventListener("change", () => {
 		search_stats();
 	});
-
-	const today_str = dateToString(new Date());
-	from_datepicker._set_value(today_str);
-	from_datepicker._set_value(today_str);
 
 	// @ts-ignore
 	const ctx = $("#myChart").getContext("2d");
