@@ -45,6 +45,8 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
 });
 
 EventListener::register("set_shop_order_entity_status_id", function ($params) {
+    //var_dump(getSetting("theme", "general", ["colors"])); // primary etc, u can take it from here
+
     /** @var Entity ShopOrder */
     $shop_order = $params["obj"];
     $shop_order_id = $shop_order->getId();
