@@ -25,6 +25,16 @@ function dateDifference($time)
     }
 }
 
+function reverseDate($date_str)
+{
+    return substr($date_str, 8, 2) . "-" . substr($date_str, 5, 2) . "-" . substr($date_str, 0, 4);
+}
+
+function reverseDateTime($date_str)
+{
+    return substr($date_str, 8, 2) . "-" . substr($date_str, 5, 2) . "-" . substr($date_str, 0, 4) . " " . substr($date_str, 11, 8);
+}
+
 function niceDate($time = null)
 {
     if (!$time) $time = date("Y-m-d");
@@ -39,7 +49,7 @@ function changeDate($date_string, $offset)
     return date("Y-m-d", strtotime("$date_string $offset"));
 }
 
-function changeDatetime($date_string, $offset)
+function changeDateTime($date_string, $offset)
 {
     return date("Y-m-d H:i:s", strtotime("$date_string $offset"));
 }

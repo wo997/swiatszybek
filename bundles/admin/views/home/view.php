@@ -11,7 +11,9 @@
 
 <?php startSection("body_content"); ?>
 
-<canvas id="myChart"></canvas>
+<div style="max-width: 1000px">
+    <canvas id="myChart"></canvas>
+</div>
 
 
 <?php include "bundles/admin/templates/default.php"; ?>

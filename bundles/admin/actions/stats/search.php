@@ -6,34 +6,16 @@ $to_date = clean($_POST["to_date"]);
 $from_date_time = strtotime($from_date);
 $to_date_time = strtotime($to_date);
 
-$time_diff = $to_date_time - $from_date_time;
+$time_span = $to_date_time - $from_date_time;
 
-if ($time_diff >= 3600 * 24 * 365 * 8) {
-    $tick = "1 year";
-} else if ($time_diff >= 3600 * 24 * 365 * 4) {
-    $tick = "6 months";
-} else if ($time_diff >= 3600 * 24 * 365 * 2) {
-    $tick = "3 months";
-} else if ($time_diff >= 3600 * 24 * 365) {
-    $tick = "2 month";
-} else if ($time_diff >= 3600 * 24 * 240) {
-    $tick = "1 month";
-} else if ($time_diff >= 3600 * 24 * 120) {
-    $tick = "14 days";
-} else if ($time_diff >= 3600 * 24 * 60) {
-    $tick = "7 days";
-} else if ($time_diff >= 3600 * 24 * 30) {
-    $tick = "3 day";
-} else if ($time_diff >= 3600 * 24 * 14) {
-    $tick = "1 day";
-} else if ($time_diff >= 3600 * 24 * 7) {
-    $tick = "6 hours";
-} else if ($time_diff >= 3600 * 24 * 3) {
-    $tick = "3 hours";
-} else if ($time_diff >= 3600 * 24 * 2) {
-    $tick = "2 hours";
-} else {
-    $tick = "1 hour";
+$pretty_time_spans = ["1 year", "6 months", "3 months", "2 months", "1 month", "14 days", "7 days", "3 days", "2 days", "1 day", "12 hours", "6 hours", "3 hours", "2 hours", "1 hour"];
+$min_tick_count = 10;
+foreach ($pretty_time_spans as $pretty_time_span) {
+    $tick_str = $pretty_time_span;
+    $tick = strtotime($tick_str, 0);
+    if ($time_span / $tick >= $min_tick_count) {
+        break;
+    }
 }
 
 $chart_data = [
@@ -44,9 +26,21 @@ $chart_data = [
 
 $start_period = $from_date;
 do {
-    $end_period = changeDatetime($start_period, $tick);
+    $end_period = changeDateTime($start_period, $tick_str);
 
-    $chart_data["labels"][] = niceDate($start_period);
+    $date_label = reverseDateTime($start_period);
+    if (strpos($tick_str, "year") !== false) {
+        $date_label = substr($date_label, 5, 7);
+    } else if (strpos($tick_str, "month") !== false) {
+        $date_label = substr($date_label, 3, 7);
+    } else if (strpos($tick_str, "day") !== false) {
+        $date_label = substr($date_label, 0, 5);
+    } else if (strpos($tick_str, "hour") !== false) {
+        $date_label = substr($date_label, 11, 5);
+    } else {
+        $date_label = $start_period;
+    }
+    $chart_data["labels"][] = $date_label;
 
     // paid_at is actually what u wanna use later
     //var_dump(DB::fetchRow("SELECT SUM(total_price) total_price, COUNT(1) as count FROM shop_order WHERE '$start_period' <= paid_at AND paid_at < '$end_period'"));
