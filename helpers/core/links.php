@@ -20,22 +20,3 @@ function escapeUrl($string)
             )
         )));
 }
-
-
-function getMenuLink($menu_item)
-{
-    $title = "";
-    $url = "";
-
-    if ($menu_item["url"]) {
-        $title = $menu_item["url"];
-        $url = $menu_item["url"];
-    } else if ($menu_item["cms_url"]) {
-        $title = $menu_item["cms_title"];
-        $url = "/" . $menu_item["cms_url"];
-    } else if ($menu_item["product_id"]) {
-        $title = $menu_item["product_title"];
-        $url = getProductLink($menu_item["product_id"], $menu_item["product_link"]);
-    }
-    return ["title" => $title, "url" => $url];
-}

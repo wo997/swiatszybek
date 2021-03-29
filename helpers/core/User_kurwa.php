@@ -6,6 +6,7 @@ class User
 {
     private static ?User $current_user = null;
     public $cart;
+    public $last_viewed_products;
     /** @var Entity User */
     public $entity;
     public $priveleges;
@@ -39,6 +40,7 @@ class User
         }
 
         $this->cart = new Cart($this);
+        $this->last_viewed_products = new LastViewedProducts($this);
     }
 
     public static function getEmailclientUrl($email)
@@ -272,6 +274,8 @@ class User
     {
         unset($_SESSION["user_id"]);
         unset($_SESSION["redirect_on_login"]);
+        unset($_SESSION["current_user_cart_json"]);
+        unset($_SESSION["current_user_last_viewed_products_json"]);
         setcookie("remember_me_token", "", 0);
     }
 

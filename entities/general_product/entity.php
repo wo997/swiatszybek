@@ -8,6 +8,7 @@ EntityManager::register("general_product", [
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
         "__search" => ["type" => "string"],
+        "__url" => ["type" => "string"],
         // "seo_title" => ["type" => "string"], // THINK ABOUT IT FIRST
         // "seo_description" => ["type" => "string"],
     ],
@@ -186,6 +187,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $avg_rating = $rating_count > 0 ? round(10 * $rating_sum / $rating_count) * 0.1 : 0;
     $general_product->setProp("__rating_count", $rating_count);
     $general_product->setProp("__avg_rating", $avg_rating);
+
+    $general_product_url = getProductLink($general_product->getId(), $general_product->getProp("name"));
+    $general_product->setProp("__url", $general_product_url);
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {

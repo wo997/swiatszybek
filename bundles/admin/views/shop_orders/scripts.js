@@ -57,7 +57,7 @@ domload(() => {
 						params: {
 							shop_order: {
 								shop_order_id: data.shop_order_id,
-								status_id: data.status_id,
+								status: data.status_id,
 							},
 						},
 						success: (res) => {

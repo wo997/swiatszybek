@@ -8,4 +8,5 @@ DB::createTable("general_product", [
     ["name" => "__images_json", "type" => "TEXT"],
     ["name" => "__options_json", "type" => "TEXT"],
     ["name" => "__search", "type" => "TEXT"],
+    ["name" => "__url", "type" => "VARCHAR(255)"],
 ]);

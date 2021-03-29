@@ -1,5 +1,7 @@
 <?php //event[sitemap_change]
 
+// TODO: REWORK
+
 $site_url = SITE_URL;
 
 $productsXML = "";

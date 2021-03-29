@@ -82,8 +82,7 @@ if (defined("ROUTE")) {
         });
     <?php endif ?>
 
-    const last_viewed_products_ids = <?= json_encode(getLastViewedProductsIds()) ?>;
-    const last_viewed_products = <?= json_encode(getLastViewedProducts()) ?>;
+    const last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
 
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>

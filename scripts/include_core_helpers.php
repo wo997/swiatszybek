@@ -19,16 +19,14 @@ include_once "helpers/core/Assets.php";
 include_once "helpers/core/email.php";
 include_once "helpers/core/Request_kurwa.php";
 
-include_once "helpers/core/User.php";
-include_once "helpers/core/Cart.php";
 include_once "helpers/core/Security.php";
+include_once "helpers/core/User_kurwa.php";
+include_once "helpers/core/Cart.php";
+include_once "helpers/core/LastViewedProducts.php";
 
 include_once "helpers/core/EventListener.php";
 include_once "helpers/core/datatable.php";
 include_once "helpers/core/deployment.php";
-
-include_once "helpers/core/product/product.php";
-include_once "helpers/core/product/last_viewed_products.php";
 
 include_once "helpers/core/links.php";
 

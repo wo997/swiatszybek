@@ -67,7 +67,7 @@ unset($product);
 
 $stockSchema = true ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
-//addLastViewedProducts([$general_product_id]);
+User::getCurrent()->last_viewed_products->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
 

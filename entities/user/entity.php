@@ -15,6 +15,7 @@ EntityManager::register("user", [
         "visited_at" => ["type" => "string"],
         "created_at" => ["type" => "string"],
         "cart_json" => ["type" => "string"],
+        "last_viewed_products_json" => ["type" => "string"],
         "role_id" => ["type" => "number"],
         "nickname" => ["type" => "string"],
         "__search" => ["type" => "string"],

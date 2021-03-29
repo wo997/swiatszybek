@@ -74,9 +74,6 @@ EventListener::register("set_shop_order_entity_status", function ($params) {
 
 // send email to the customer on status change
 EventListener::register("after_save_shop_order_entity", function ($params) {
-    debug_print_backtrace();
-
-
     /** @var Entity ShopOrder */
     $shop_order = $params["obj"];
 
@@ -87,7 +84,6 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     $status = $shop_order->getProp("status");
     $status_id = $status ? $status->getId() : 0;
 
-    var_dump("eee", $shop_order->getId(), $status_id, $curr_status_id);
     if ($status_id === $curr_status_id) {
         return;
     }
