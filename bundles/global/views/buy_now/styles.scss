@@ -125,12 +125,15 @@
 		margin-top: var(--margin_top);
 	}
 
+	.buy_now_container {
+		min-height: 1000px;
+	}
+
 	.buy_now_form {
 		margin-left: 50%;
 		width: 500px;
 		transform: translateX(-100%);
 		margin-top: 100px;
-		min-height: calc(100vh - var(--header_height));
 	}
 
 	.buy_now_container {

@@ -3,7 +3,7 @@
 domload(() => {
 	/** @type {LastViewedProductsComp} */
 	// @ts-ignore
-	const last_viewed_products_comp = $("header last-viewed-products-comp");
+	const last_viewed_products_comp = $("last-viewed-products-comp"); // a single node that jumps between a header and modal, tricky
 	if (!last_viewed_products_comp) {
 		return;
 	}
@@ -17,13 +17,15 @@ domload(() => {
 			return true;
 		});
 		last_viewed_products_comp._render();
-		const empty = user_cart.products.length === 0;
-		$$(".case_last_viewed_products_not_empty").forEach((ne) => {
-			expand(ne, !empty);
-		});
-		$$(".case_last_viewed_products_empty").forEach((e) => {
-			expand(e, empty);
-		});
+		const empty = last_viewed_products_comp._data.products.length === 0;
+		expand($(".case_last_viewed_products_not_empty"), !empty);
+		expand($(".case_last_viewed_products_empty"), empty);
+		// $$(".case_last_viewed_products_not_empty").forEach((ne) => {
+		// 	expand(ne, !empty);
+		// });
+		// $$(".case_last_viewed_products_empty").forEach((e) => {
+		// 	expand(e, empty);
+		// });
 	};
 
 	window.addEventListener("last_viewed_products_changed", loadLastViewdProducts);

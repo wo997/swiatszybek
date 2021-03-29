@@ -35,6 +35,21 @@ domload(() => {
 	const courier_address = $("address-comp.courier_address");
 	addressComp(courier_address, undefined);
 
+	const buy_now_container = $(".buy_now_container");
+	const onBuyNowScroll = () => {
+		const scroll_top = document.documentElement.scrollTop;
+		let margin_top = 0;
+		if (window.innerWidth >= 1000) {
+			margin_top = clamp(10, 100 - scroll_top, 100);
+			const bottom = buy_now_container.getBoundingClientRect().bottom - window.innerHeight;
+			if (bottom < 0) {
+				margin_top = bottom;
+			}
+		}
+
+		buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
+	};
+
 	document.addEventListener("scroll", onBuyNowScroll);
 	window.addEventListener("resize", onBuyNowScroll);
 	onBuyNowScroll();
@@ -281,12 +296,6 @@ function initRebateCodes() {
 			}
 		}
 	});
-}
-
-function onBuyNowScroll() {
-	const scroll_top = document.documentElement.scrollTop;
-	const margin_top = window.innerWidth < 1000 ? 0 : clamp(10, 100 - scroll_top, 100);
-	buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
 }
 
 // @ts-ignore
