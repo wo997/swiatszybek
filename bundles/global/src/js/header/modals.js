@@ -28,7 +28,7 @@ function requestHeaderModals() {
 
 	// last viewed products
 	registerModalContent(html`
-		<div id="lastViewedProducts" data-expand="previous" data-dismissable>
+		<div id="lastViewedProducts" data-dismissable>
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header">
