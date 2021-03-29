@@ -84,25 +84,25 @@ function requestHeaderModals() {
 		</div>
 	`);
 
-	const lvps = $("#lastViewedProducts .scroll_panel > div");
-	lvps.insertAdjacentHTML("beforeend", $(".last_viewed_products").outerHTML);
+	// const lvps = $("#lastViewedProducts .scroll_panel > div");
+	// lvps.insertAdjacentHTML("beforeend", $(".last_viewed_products_wrapper").innerHTML);
 
 	// wishlist
-	registerModalContent(html`
-      <div id="wishList" data-expand="previous" data-dismissable>
-        <div class="modal_body">
-            <button class="close_modal_btn"><i class="fas fa-times"></i></button>
-            <h3 class="modal_header">
-              <img class="heart_icon" src="/src/img/heart_icon.svg"></img>
-              Schowek  
-            </h3>
-            <div class="scroll_panel scroll_shadow panel_padding">
-              <div></div>
-            </div>
-            <div style='display:flex;padding:0 5px 5px' class='cart_menu_mobile_summary footer'></div>
-        </div>
-    </div>
-  `);
+	// 	registerModalContent(html`
+	//       <div id="wishList" data-expand="previous" data-dismissable>
+	//         <div class="modal_body">
+	//             <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+	//             <h3 class="modal_header">
+	//               <img class="heart_icon" src="/src/img/heart_icon.svg"></img>
+	//               Schowek
+	//             </h3>
+	//             <div class="scroll_panel scroll_shadow panel_padding">
+	//               <div></div>
+	//             </div>
+	//             <div style='display:flex;padding:0 5px 5px' class='cart_menu_mobile_summary footer'></div>
+	//         </div>
+	//     </div>
+	//   `);
 
 	const msb = $(".mobile_search_btn");
 

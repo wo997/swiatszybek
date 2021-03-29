@@ -1,0 +1,21 @@
+/* css[global] */
+
+last-viewed-products-comp.comp {
+	.product_img {
+		max-width: 130px;
+		margin: auto;
+	}
+	.product_name {
+		& {
+			font-weight: 600;
+			display: block;
+			text-align: center;
+			margin-top: 5px;
+		}
+	}
+	a {
+		.no_touch &:hover {
+			text-decoration: underline;
+		}
+	}
+}

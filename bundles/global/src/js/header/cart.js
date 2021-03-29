@@ -1,7 +1,7 @@
 /* js[global] */
 
 domload(() => {
-	/** @type {CartProductComp} */
+	/** @type {CartProductsComp} */
 	// @ts-ignore
 	const cart_products_comp = $("header cart-products-comp.all_products");
 	if (!cart_products_comp) {
@@ -13,8 +13,12 @@ domload(() => {
 		cart_products_comp._data.products = user_cart.products;
 		cart_products_comp._render();
 		const empty = user_cart.products.length === 0;
-		expand($(".case_cart_not_empty"), !empty);
-		expand($(".case_cart_empty"), empty);
+		$$(".case_cart_not_empty").forEach((ne) => {
+			expand(ne, !empty);
+		});
+		$$(".case_cart_empty").forEach((e) => {
+			expand(e, empty);
+		});
 
 		$$(".cart_product_count").forEach((e) => {
 			e._set_content(user_cart.products.length);

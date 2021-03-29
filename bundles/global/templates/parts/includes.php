@@ -39,7 +39,10 @@ if (defined("ROUTE")) {
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
     user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
-    loadedUserCart(true);
+    loadedUserCart();
+
+    last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
+    loadedLastViewedProducts();
 
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
         <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
@@ -81,8 +84,6 @@ if (defined("ROUTE")) {
             showModal("loginForm");
         });
     <?php endif ?>
-
-    const last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
 
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>

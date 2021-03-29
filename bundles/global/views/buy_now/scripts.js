@@ -151,7 +151,7 @@ domload(() => {
 });
 
 function initBuyNowCart() {
-	/** @type {CartProductComp} */
+	/** @type {CartProductsComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.buy_products");
 	cartProductsComp(cart_products_comp, undefined);

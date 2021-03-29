@@ -47,9 +47,9 @@ function traverseMenu($parent_id = -1, $level = 0)
         }
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <div class="headerbtn gray_hover gray_hover wishlist_menu_btn">
+            <!-- <div class="headerbtn gray_hover gray_hover wishlist_menu_btn">
                 <img class="heart_icon" src="/src/img/heart_icon.svg">
-            </div>
+            </div> -->
         <?php endif ?>
         <?php include "bundles/global/templates/parts/header/last_viewed_products.php"; ?>
         <?php include "bundles/global/templates/parts/header/header_basket.php"; ?>

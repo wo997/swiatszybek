@@ -50,7 +50,7 @@ header.main {
 		transition: 0.2s opacity;
 		background: #fff;
 		border-radius: 4px;
-		box-shadow: 0 3px 3px 0 #0004;
+		box-shadow: 0 2px 9px 0 #0003;
 		border: 1px solid #ccc;
 		cursor: default;
 	}
@@ -140,12 +140,16 @@ header.main {
 			&:not(.empty) {
 				min-width: 430px;
 			}
-			.list_row:first-child {
-				border-top-width: 0;
-			}
-			.list_row:last-child {
-				border-bottom-width: 0;
-			}
+		}
+		.scroll_panel {
+			max-height: min(70vh, 500px);
+			padding: 0 10px;
+		}
+	}
+
+	.last_viewed_products_menu {
+		& {
+			min-width: 250px;
 		}
 		.scroll_panel {
 			max-height: min(70vh, 500px);

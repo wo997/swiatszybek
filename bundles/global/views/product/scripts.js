@@ -76,7 +76,7 @@ domload(() => {
 
 	vdo._set_value("1");
 
-	/** @type {CartProductComp} */
+	/** @type {CartProductsComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.has_products");
 	cartProductsComp(cart_products_comp, undefined, { no_redirect: true, products: [] });

@@ -4,20 +4,20 @@
  * @typedef {{
  * products: CartProducts_ProductCompData[]
  * no_redirect?: boolean
- * }} CartProductCompData
+ * }} CartProductsCompData
  *
  * @typedef {{
- * _data: CartProductCompData
- * _set_data(data?: CartProductCompData, options?: SetCompDataOptions)
+ * _data: CartProductsCompData
+ * _set_data(data?: CartProductsCompData, options?: SetCompDataOptions)
  * _nodes: {
  * }
- * } & BaseComp} CartProductComp
+ * } & BaseComp} CartProductsComp
  */
 
 /**
- * @param {CartProductComp} comp
+ * @param {CartProductsComp} comp
  * @param {*} parent
- * @param {CartProductCompData} data
+ * @param {CartProductsCompData} data
  */
 function cartProductsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
@@ -41,7 +41,7 @@ function cartProductsComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<list-comp data-bind="{${data.products}}" data-primary="product_id" class="striped space">
+			<list-comp data-bind="{${data.products}}" data-primary="product_id" class="striped space open">
 				<cart-products_product-comp></cart-products_product-comp>
 			</list-comp>
 		`,

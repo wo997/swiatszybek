@@ -29,11 +29,9 @@
  */
 let user_cart = { products: [], total_price: 0, products_price: 0, delivery_price: 0, rebate_codes: [] };
 
-function loadedUserCart(quiet = false) {
-	if (quiet === false) {
-		window.dispatchEvent(new CustomEvent("user_cart_changed"));
-		setTimeout(() => {
-			resizeCartCallback();
-		});
-	}
+function loadedUserCart() {
+	window.dispatchEvent(new CustomEvent("user_cart_changed"));
+	setTimeout(() => {
+		resizeCartCallback();
+	});
 }
