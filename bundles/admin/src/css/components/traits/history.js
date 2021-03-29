@@ -53,7 +53,7 @@ window.addEventListener("modal_show", () => {
 	history_comp_focus = undefined;
 });
 
-window.addEventListener("modal-hide", () => {
+window.addEventListener("modal_hide", () => {
 	history_comp_focus = undefined;
 });
 

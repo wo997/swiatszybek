@@ -36,14 +36,6 @@ function headerResizeCallback() {
 	document.documentElement.style.setProperty("--main_search_wrapper_width", `${r.width}px`);
 	main_search_wrapper.classList.toggle("wanna_expand", r.width < 400);
 	main_search_wrapper.classList.toggle("expand_both", r.left < window.innerWidth * 0.5);
-
-	const last_viewed_products_menu = $(".last_viewed_products_menu");
-	const move_this_last_viewed_part = $(".move_this_last_viewed_part");
-	if ($(".last_viewed_products_menu_btn").offsetLeft) {
-		last_viewed_products_menu.append(move_this_last_viewed_part);
-	} else {
-		$("#lastViewedProducts .put_it_here").append(move_this_last_viewed_part);
-	}
 }
 
 domload(() => {

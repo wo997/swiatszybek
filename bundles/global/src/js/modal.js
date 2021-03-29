@@ -119,6 +119,14 @@ function showModal(name = null, params = {}) {
 				modal.classList.remove("hidden");
 				modal_wrapper_node.classList.remove("hidden");
 
+				window.dispatchEvent(
+					new CustomEvent("modal_show", {
+						detail: {
+							node: modal,
+						},
+					})
+				);
+
 				const duration = 300;
 
 				const basic_callback = () => {
@@ -208,14 +216,6 @@ function showModal(name = null, params = {}) {
 						},
 					});
 				}
-
-				window.dispatchEvent(
-					new CustomEvent("modal_show", {
-						detail: {
-							node: modal,
-						},
-					})
-				);
 			}
 		});
 
@@ -296,6 +296,14 @@ function hideModal(name, isCancel = false) {
 			setTimeout(() => {
 				modal.classList.add("hidden");
 				modal.style.animation = "";
+
+				window.dispatchEvent(
+					new CustomEvent("modal_hidden", {
+						detail: {
+							node: modal,
+						},
+					})
+				);
 			}, 200);
 
 			// cleanup validators
@@ -310,7 +318,7 @@ function hideModal(name, isCancel = false) {
 		}
 
 		window.dispatchEvent(
-			new CustomEvent("modal-hide", {
+			new CustomEvent("modal_hide", {
 				detail: {
 					node: modal,
 				},

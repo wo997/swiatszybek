@@ -99,7 +99,7 @@
 //     });
 // }
 
-// window.addEventListener("modal-hide", (event) => {
+// window.addEventListener("modal_hide", (event) => {
 //     if (event.detail.node.id != "messageboxModal") {
 //         return;
 //     }

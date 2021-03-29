@@ -1,11 +1,7 @@
 /* js[global] */
 
-//let requested_header_modals = false;
 function requestHeaderModals() {
-	//if (requested_header_modals) return;
-	//requested_header_modals = true;
-
-	//user
+	// user
 	if (IS_LOGGED) {
 		registerModalContent(html`
 			<div id="userMenu" data-expand data-dismissable>
@@ -44,6 +40,24 @@ function requestHeaderModals() {
 		</div>
 	`);
 
+	const last_viewed_products_menu = $(".last_viewed_products_menu");
+	const move_this_last_viewed_part = $(".move_this_last_viewed_part");
+	window.addEventListener("modal_show", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id != "lastViewedProducts") {
+			return;
+		}
+		$("#lastViewedProducts .put_it_here").append(move_this_last_viewed_part);
+	});
+	window.addEventListener("modal_hidden", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id != "lastViewedProducts") {
+			return;
+		}
+		last_viewed_products_menu.append(move_this_last_viewed_part);
+	});
+
+	// search
 	const msb = $(".mobile_search_btn");
 
 	msb.addEventListener("click", () => {
@@ -69,7 +83,7 @@ function requestHeaderModals() {
 	const sw = $("header .main_search_wrapper");
 	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
 
-	//menu
+	// menu
 	registerModalContent(html`
 		<div id="mainMenu" data-expand data-dismissable>
 			<div class="modal_body" style="max-width: 500px;">
