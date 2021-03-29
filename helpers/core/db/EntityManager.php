@@ -66,6 +66,11 @@ class EntityManager
         return self::$warmup_objects[] = $entity;
     }
 
+    /**
+     * getEntityData
+     *
+     * @param  string $name !entity_name
+     */
     public static function getEntityData($name)
     {
         return def(self::$entities, $name, null);
@@ -74,7 +79,7 @@ class EntityManager
     /**
      * getObjectGlobalId
      *
-     * @param  string $name
+     * @param  string $name !entity_name
      * @param  mixed $id
      * @return void
      */
@@ -189,6 +194,7 @@ class EntityManager
                         $other_entity_id_column => intval($child_props)
                     ];
                 }
+
                 $child = self::getEntity($child_entity_name, $child_props);
             }
         }
@@ -199,7 +205,7 @@ class EntityManager
 
         $prop_id_column = self::getEntityIdColumn($obj_prop_name);
         $child_id = $child ? $child->getId() : null;
-        $obj->setProp($prop_id_column, $child_id);
+        $obj->dangerouslySetProp($prop_id_column, $child_id);
 
         return $child;
     }

@@ -1,6 +1,6 @@
 <?php
 
-function debug($var)
+function debug(...$var)
 {
     debug_print_backtrace();
     echo "<br><br>\n\n";

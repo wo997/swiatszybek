@@ -44,26 +44,20 @@ EventListener::register("before_save_shop_order_entity", function ($params) {
     $shop_order->setProp("__url", getShopOrderLink($shop_order->getProp("shop_order_id"), $shop_order->getProp("reference")));
 });
 
-EventListener::register("set_shop_order_entity_status_id", function ($params) {
-    //var_dump(getSetting(["theme", "general", "colors"])); // primary etc, u can take it from here
-
+// change stock on status change
+EventListener::register("set_shop_order_entity_status", function ($params) {
     /** @var Entity ShopOrder */
     $shop_order = $params["obj"];
-    $shop_order_id = $shop_order->getId();
 
-    /** @var Entity Address */
-    $main_address = $shop_order->getProp("main_address");
-    if (!$main_address) {
-        return;
-    }
+    /** @var Entity OrderStatus */
+    $status = $params["val"];
+    $status_id = $status ? $status->getId() : 0;
 
-    $status_id = $params["val"];
+    /** @var Entity OrderStatus */
+    $curr_status = $shop_order->getCurrProp("status");
+    $curr_status_id = $curr_status ? $curr_status->getId() : 0;
 
-    $curr_status_id = $shop_order->getCurrProp("status_id");
-
-    $status_changes = $status_id !== $curr_status_id;
-
-    if (!$status_changes) {
+    if ($status_id === $curr_status_id) {
         return;
     }
 
@@ -76,9 +70,40 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
     if (!$curr_in_stock && $in_stock) {
         changeStockFromOrder($shop_order->getId(), 1);
     }
+});
+
+// send email to the customer on status change
+EventListener::register("after_save_shop_order_entity", function ($params) {
+    debug_print_backtrace();
+
+
+    /** @var Entity ShopOrder */
+    $shop_order = $params["obj"];
+
+    $curr_status = $shop_order->getCurrProp("status");
+    $curr_status_id = $curr_status ? $curr_status->getId() : 0;
+
+    /** @var Entity OrderStatus */
+    $status = $shop_order->getProp("status");
+    $status_id = $status ? $status->getId() : 0;
+
+    var_dump("eee", $shop_order->getId(), $status_id, $curr_status_id);
+    if ($status_id === $curr_status_id) {
+        return;
+    }
+
+    $shop_order_id = $shop_order->getId();
+
+    /** @var Entity Address */
+    $main_address = $shop_order->getProp("main_address");
+    if (!$main_address) {
+        return;
+    }
 
     $email_title = "";
     $email_body = "";
+
+    //var_dump(getSetting(["theme", "general", "colors", "primary"])); // primary etc, u can take it from here
 
     //if ($curr_status_id === 0 && $status_id === 1) {
     if ($status_id === 1) {
@@ -142,7 +167,7 @@ EventListener::register("set_shop_order_entity_status_id", function ($params) {
         $email_body .= $ordered_products_html;
 
         $email_body .= "</div>";
-    }
 
-    sendEmail($main_address->getProp("email"), $email_body, $email_title);
+        sendEmail($main_address->getProp("email"), $email_body, $email_title);
+    }
 });

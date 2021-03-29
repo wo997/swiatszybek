@@ -131,7 +131,7 @@ function loginFormModalComp(comp, parent, data = undefined) {
 							}
 						} else {
 							showNotification("Błąd logowania", { one_line: true, type: "error" });
-							showInputErrors(comp._nodes.password, ["Niepoprawnie hasło"]);
+							showInputErrors(comp._nodes.password, ["Niepoprawne hasło"]);
 							hideLoader(comp);
 						}
 					},

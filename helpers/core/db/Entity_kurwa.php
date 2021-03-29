@@ -118,16 +118,6 @@ class Entity
     }
 
     /**
-     *
-     * @param  boolean $delete
-     * @return void
-     */
-    public function getCurrProp($name)
-    {
-        return def($this->curr_props, $name, null);
-    }
-
-    /**
      * setWillDelete
      *
      * @param  boolean $delete
@@ -273,8 +263,9 @@ class Entity
             }
         }
 
-        $saver = "after_save_" . $this->name . "_entity";
-        EventListener::dispatch($saver, ["obj" => $this]);
+        // NEVER DO THE SAME ERROR AGAIN, entity manager handles it now!!!
+        // $saver = "after_save_" . $this->name . "_entity";
+        // EventListener::dispatch($saver, ["obj" => $this]);
     }
 
     function warmupEntity($other_entity_name, $relation_table)
@@ -302,6 +293,18 @@ class Entity
     }
 
     /**
+     * dangerouslySetProp - used to prevent circular execution for one to one relations
+     *
+     * @param  string $prop_name !entity_prop_name
+     * @param  mixed $val
+     * @return void
+     */
+    public function dangerouslySetProp($prop_name, $val)
+    {
+        $this->props[$prop_name] = $val;
+    }
+
+    /**
      * setProp
      *
      * @param  string $prop_name !entity_prop_name
@@ -315,11 +318,12 @@ class Entity
             return;
         }
 
-        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
-        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
-        foreach ($vals as $v) {
-            if ($v !== null) {
-                $val = $v;
+        if (endsWith($prop_name, "_id")) {
+            foreach (array_keys(EntityManager::getEntityData($this->getName())["props"]) as $def_prop_nm) {
+                if ($def_prop_nm . "_id" === $prop_name) {
+                    $prop_name = $def_prop_nm;
+                    break;
+                }
             }
         }
 
@@ -356,6 +360,16 @@ class Entity
             $val = EntityManager::setOneToOneEntity($this, $prop_name, $prop_type, $val, $relation_data);
         }
 
+        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
+        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
+        foreach ($vals as $v) {
+            if ($v !== null) {
+                $val = $v;
+            }
+        }
+
+        //var_dump($prop_name);
+
         $this->props[$prop_name] = $val;
     }
 
@@ -386,22 +400,35 @@ class Entity
                 $other_entity_name = substr($prop_type, 0, -2);
                 $child_entity_data = EntityManager::getEntityData($other_entity_name);
                 if (isset($child_entity_data["parents"][$this->name])) {
-                    $this->props[$prop_name] = EntityManager::getOneToManyEntities($this, $other_entity_name);
-                    $this->curr_props[$prop_name] = $this->props[$prop_name];
+                    $set = EntityManager::getOneToManyEntities($this, $other_entity_name);
                 } else {
                     $link = def($child_entity_data, ["linked_with", $this->name]);
                     if ($link) {
-                        $this->props[$prop_name] = EntityManager::getManyToManyEntities($this, $other_entity_name, $link);
-                        $this->curr_props[$prop_name] = $this->props[$prop_name];
+                        $set = EntityManager::getManyToManyEntities($this, $other_entity_name, $link);
                     }
                 }
             } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
-                $this->props[$prop_name] = EntityManager::getOneToOneEntity($this, $prop_name, $prop_type);
-                $this->curr_props[$prop_name] = $this->props[$prop_name];
+                $set = EntityManager::getOneToOneEntity($this, $prop_name, $prop_type);
+            }
+
+            if (isset($set)) {
+                $this->props[$prop_name] = $set;
+                $this->curr_props[$prop_name] = $set;
             }
         }
 
         return def($this->props, $prop_name, null);
+    }
+
+    /**
+     * getInitialProp
+     *
+     * @param  string $prop_name !entity_prop_name
+     * @param  mixed $options
+     */
+    public function getCurrProp($prop_name)
+    {
+        return def($this->curr_props, $prop_name, null);
     }
 
     /**
