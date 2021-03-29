@@ -105,35 +105,26 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     if ($status_id === 1) {
         $email_title .= "Przyjęliśmy zamówienie #$shop_order_id - LSIT";
 
-        $email_body .= "<div style=\"font-size:15px\">";
-
-        $email_body .= "<div style=\"font-size:1.2em;font-weight: 600;\">Witaj " . $main_address->getProp("__display_name") . "!</div>";
-        $email_body .= "<br>";
-
         $email_body .= "<div>Cieszymy się, że zrobiłaś/eś zakupy w naszym sklepie!<br>Oto szczegóły Twojego zamówienia:</div>";
 
-        $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Dane kontaktowe</h2>";
-
         if ($main_address->getProp("party") === "company") {
-            $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Firma</h2>";
-
-            $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Firma</div>";
+            $email_body .= "<div style=\"{label}\">Firma</div>";
             $email_body .= "<div>" . $main_address->getProp("__display_name") . "</div>";
 
-            $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">NIP</div>";
+            $email_body .= "<div style=\"{label}\">NIP</div>";
             $email_body .= "<div>" . $main_address->getProp("nip") . "</div>";
         } else {
-            $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Imię i nazwisko</div>";
+            $email_body .= "<div style=\"{label}\">Imię i nazwisko</div>";
             $email_body .= "<div>" . $main_address->getProp("__display_name") . "</div>";
         }
 
-        $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Email</div>";
+        $email_body .= "<div style=\"{label}\">Email</div>";
         $email_body .= "<div>" . $main_address->getProp("email") . "</div>";
 
-        $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Nr telefonu</div>";
+        $email_body .= "<div style=\"{label}\">Nr telefonu</div>";
         $email_body .= "<div>" . $main_address->getProp("phone") . "</div>";
 
-        $email_body .= "<div style=\"margin-top: 15px;font-weight: 600;\">Adres</div>";
+        $email_body .= "<div style=\"{label}\">Adres</div>";
         $email_body .= "<div>" . $main_address->getProp("__address_line_1") . "</div>";
         $email_body .= "<div>" . $main_address->getProp("__address_line_2") . "</div>";
 
@@ -158,12 +149,9 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         }
         $ordered_products_html .= "</table>";
 
-
-        $email_body .= "<h2 style=\"font-size:1.2em;margin: 0.85em 0;\">Produkty</h2>";
+        $email_body .= "<div style=\"{label}\">Produkty</div>";
         $email_body .= $ordered_products_html;
 
-        $email_body .= "</div>";
-
-        sendEmail($main_address->getProp("email"), $email_body, $email_title);
+        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
 });

@@ -25,19 +25,31 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
     @mail($recipient, $title, $message, $headers, "-f " . $from);
 }
 
-function getEmailHeader($lang)
+function setDefaultEmail($recipient, $message, $title, $who_label)
 {
-    $person = "";
-    if ($lang["firma"]) {
-        $person = def($lang, "firma", "");
-    } else {
-        $person = def($lang, "imie", "") . " " . def($lang, "nazwisko", "");
+    if (preg_match('/\{.*?\}/', $message, $matches)) {
+        foreach ($matches as $match) {
+            if ($match === "{label}") {
+                $message = str_replace($match, "margin-top: 15px;font-weight: 600;", $message);
+            }
+        }
     }
 
-    return "<p style='font-size: 16px;max-width:700px'>$person,<br><br>";
+    $message = prepareEmail(getEmailHeader($who_label) . $message . getEmailFooter());
+    sendEmail($recipient, $message, $title);
+}
+
+function getEmailHeader($who_label)
+{
+    return "<div style=\"font-size: 1.2em;margin: 0 0 10px;\">Witaj $who_label!</div>";
 }
 
 function getEmailFooter()
 {
-    return "\n<br><br><i style='font-size:1.1em;font-weight: 600;'>Pozdrawiamy,</i><div style=\"margin-top:5px\"><a href='" . SITE_URL . "'><img src='" . LOGO_PATH_PUBLIC_SM . "' style='width:150px'></a></div>";
+    return "\n<br><br><i style='font-size:1.1em;font-weight: 600;'>Pozdrawiamy,</i><div style=\"margin-top:10px\"><a href='" . SITE_URL . "'><img src='" . LOGO_PATH_PUBLIC_SM . "' style='width:150px'></a></div>";
+}
+
+function prepareEmail($content)
+{
+    return "<div style=\"font-size:15px\">$content</div>";
 }
