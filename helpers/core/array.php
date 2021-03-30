@@ -106,3 +106,8 @@ function arrayFind($array, $callback, $default = null)
     }
     return $default;
 }
+
+function countUnique(&$array)
+{
+    return count(array_unique($array));
+}

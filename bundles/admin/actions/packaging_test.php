@@ -31,16 +31,29 @@ $t = microtime(true);
 //     ]
 // )]);
 
+// works pretty well up to 4 items, reliable but not perfect ofc
 var_dump([putBoxIntoPackage3D(
     [60, 50, 50],
     [
         [10, 20, 60],
         [20, 20, 50],
         [15, 19, 39],
-        [13, 40, 50],
-        [30, 40, 50],
+        [13, 40, 60],
+        //[30, 40, 50],
         //[10, 30, 40],
     ]
 )]);
 
 var_dump([(microtime(true) - $t) * 1000 . " ms"]);
+
+
+$x = [
+    ["v" => 500, "i" => [144, 144, 145]],
+    ["v" => 234, "i" => [6, 6, 9]],
+    ["v" => 211, "i" => [10]],
+    ["v" => 210, "i" => [5]],
+];
+
+// echo "<br><br>";
+// setRangesFromLongDatasetWithIndices($x, 2);
+// var_dump($x);
