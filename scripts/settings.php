@@ -1,8 +1,11 @@
 <?php
 
 /**
- * Use this function to fetch all data quickly from preloaded JSON
- * $path: array
+ * getSetting
+ *
+ * @param  array $path
+ * @param  mixed $default
+ * @return void
  */
 function getSetting($path, $default = "")
 {

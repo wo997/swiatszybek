@@ -107,7 +107,7 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     //var_dump(getSetting(["theme", "general", "colors", "primary"])); // primary etc, u can take it from here
 
     if ($status_id === 1) {
-        $email_title .= "Przyjęliśmy zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Potwierdzenie zamówienia #$shop_order_id";
 
         $email_body .= "<div>Cieszymy się, że zrobiłaś/eś zakupy w naszym sklepie!<br>Poniżej szczegóły " . $get_shop_order_link("zamówienia #" . $shop_order->getId()) . ":</div>\n";
 
@@ -158,47 +158,48 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
 
         $email_body .= "<br><div>Jeśli nie opłaciłaś/eś jeszcze zamówienia możesz to zrobić korzystajać z " . $get_shop_order_link("tego linku") . ".</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
     if ($status_id === 2) {
-        $email_title .= "Opłacono zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Opłacono zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Chcialiśmy poinformować Cię, że odnotowaliśmy wpłatę za zamówienie " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
+        $email_body .= "<div>Odnotowaliśmy wpłatę za zamówienie " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
         $email_body .= "<div>Wkrótce przygotujemy zamówienie do wysyłki.</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
     if ($status_id === 3) {
-        $email_title .= "Wysłano zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Wysłano zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Chcialiśmy poinformować Cię, że przekazaliśmy " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . " do wysyłki.</div>\n";
+        $email_body .= "<div>Chcieliśmy poinformować Cię, że przekazaliśmy " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . " do wysyłki.</div>\n";
         $email_body .= "<div>Możesz śledzić status przesyłki korzystając z <a href=\"" . SITE_URL . "\" style=\"{link}\">tego linku</a>.</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
     if ($status_id === 4) {
-        $email_title .= "Odebrano zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Odebrano zamówienie #$shop_order_id";
 
         $email_body .= "<div>Właśnie odebrałaś/eś " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . " z naszego sklepu.</div>\n";
-        $email_body .= "<div>Dziękujemy i zapraszamy do <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejnych zakupów</a> w przyszłości.</div>\n";
+        $email_body .= "<div>Dziękujemy i zapraszamy na <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejne zakupy</a>.</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
     if ($status_id === 5) {
-        $email_title .= "Anulowano zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Anulowano zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Chcialiśmy poinformować Cię, że anulowaliśmy " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
-        $email_body .= "<div>Zapraszamy do <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejnych zakupów</a>.</div>\n";
+        $email_body .= "<div>Anulowaliśmy " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
+        $email_body .= "<div>Zapraszamy na <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejne zakupy</a>.</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
     if ($status_id === 6) {
-        $email_title .= "Zwrócono zamówienie #$shop_order_id - LSIT";
+        $email_title .= "Zwrócono zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Chcialiśmy poinformować Cię, że otrzymaliśmy zwrot " . $get_shop_order_link("zamówienia #" . $shop_order->getId()) . "</div>\n";
-        $email_body .= "<div>Wkrótce pieniądze powinny pojawić się na Twoim koncie.</div>\n";
-        $email_body .= "<div>Zapraszamy do <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejnych zakupów</a>.</div>\n";
+        $email_body .= "<div>Otrzymaliśmy zwrot produktów z " . $get_shop_order_link("zamówienia #" . $shop_order->getId()) . ":</div>\n";
+        // TODO: print products u want to return
+        $email_body .= "<div>Pieniądze zostaną zwrócone w ten sam sposób w jaki dokonano płatności.</div>\n";
+        $email_body .= "<div>Zapraszamy na <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejne zakupy</a>.</div>\n";
 
-        setDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+        sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }
 });

@@ -25,15 +25,19 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
     @mail($recipient, $title, $message, $headers, "-f " . $from);
 }
 
-function setDefaultEmail($recipient, $message, $title, $who_label)
+function sendDefaultEmail($recipient, $message, $title, $who_label)
 {
+    $shop_name = getSetting(["general", "company", "shop_name"], "");
+    if ($shop_name) {
+        $title .= " - $shop_name";
+    }
     $message = prepareEmail(getEmailHeader($who_label) . $message . getEmailFooter());
     sendEmail($recipient, $message, $title);
 }
 
 function getEmailHeader($who_label)
 {
-    return "<div style=\"font-size: 1.2em;margin: 0 0 10px;\">Witaj $who_label!</div>";
+    return "<div style=\"font-size: 1.2em;margin: 0 0 10px;\">Witaj, $who_label!</div>";
 }
 
 function getEmailFooter()

@@ -22,6 +22,7 @@ domload(() => {
 			url: STATIC_URLS["ADMIN"] + "/settings/save_company_info",
 			params,
 			success: () => {
+				showNotification("Zapisano zmiany", { one_line: true, type: "success" });
 				//window.location.reload();
 			},
 		});

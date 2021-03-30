@@ -17,6 +17,9 @@
 		--box_height: 0;
 		--box_height: 80px;
 	}
+	&.small_boxes {
+		--box-padding: 6px 10px;
+	}
 	> * {
 		& {
 			position: relative;

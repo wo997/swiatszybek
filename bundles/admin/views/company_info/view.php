@@ -33,7 +33,7 @@
         <input type="text" class="field" data-name="main_email" data-validate="email">
 
         <div class="label">Nazwa sklepu</div>
-        <input type="text" class="field" data-name="email_sender">
+        <input type="text" class="field" data-name="shop_name">
 
         <div class="label">Nr telefonu</div>
         <input type="text" class="field" data-name="main_phone">

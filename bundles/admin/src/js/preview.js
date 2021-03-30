@@ -13,13 +13,24 @@ function previewUrl(url, params) {
 				<div class="modal_body">
 					<div class="custom_toolbar">
 						<span class="title">
-							Podgląd strony
-							<button class="btn primary" data-size="">Komputer <i class="fas fa-desktop"></i></button>
-							<button class="btn primary" data-size="410x850">Telefon <i class="fas fa-mobile-alt"></i></button>
-							<button class="btn primary" data-size="340x568">
-								iPhone SE <i class="fas fa-mobile-alt"></i>
-								<i class="fas fa-info-circle" data-tooltip="Najmniejsza rozdzielczość z urządzeń mobilnych"></i>
-							</button>
+							<span class="medium"> Podgląd strony </span>
+							<div
+								class="radio_group boxes pretty_blue hide_checks semi_bold inline_flex glue_children small_boxes select_resolution"
+								style="margin-left:3px"
+							>
+								<div class="checkbox_area" data-tooltip="Komputer">
+									<p-checkbox data-value=""></p-checkbox>
+									<span> <i class="fas fa-desktop"></i> </span>
+								</div>
+								<div class="checkbox_area" data-tooltip="Tablet">
+									<p-checkbox data-value="1024x768"></p-checkbox>
+									<span> <i class="fas fa-mobile-alt"></i> </span>
+								</div>
+								<div class="checkbox_area" data-tooltip="Telefon">
+									<p-checkbox data-value="414x896"></p-checkbox>
+									<span> <i class="fas fa-mobile-alt"></i> </span>
+								</div>
+							</div>
 						</span>
 						<button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
 					</div>
@@ -32,6 +43,15 @@ function previewUrl(url, params) {
 				</form>
 			</div>
 		`);
+
+		const select_resolution = $("#previewUrl .select_resolution");
+		const iframe = $("#previewUrl iframe");
+
+		select_resolution.addEventListener("change", () => {
+			const [w, h] = select_resolution._get_value().split("x");
+			iframe.style.maxWidth = w ? w + "px" : "";
+			iframe.style.maxHeight = h ? h + "px" : "";
+		});
 	}
 
 	$(`#previewUrl .preview_form`).setAttribute("action", url);

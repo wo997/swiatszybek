@@ -12,7 +12,7 @@
 <?php startSection("body_content"); ?>
 
 <div class="products_view_header">
-    <div class="radio_group boxes pretty_blue hide_checks semi_bold toggle_view inline_flex glue_children">
+    <div class="radio_group boxes pretty_blue hide_checks semi_bold toggle_view inline_flex glue_children small_boxes">
         <div class="checkbox_area">
             <p-checkbox data-value="general_products"></p-checkbox>
             <span>
