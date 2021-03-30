@@ -20,6 +20,7 @@ let choose_parcel_locker = undefined;
  */
 
 domload(() => {
+	let ready = false;
 	buy_products_wrapper = $(".buy_products_wrapper");
 	rebate_codes_list = $(".rebate_codes_list");
 
@@ -92,18 +93,44 @@ domload(() => {
 	}
 
 	delivery_input.addEventListener("change", () => {
-		const delivery = delivery_input._get_value();
-		expand(case_courier, delivery === "courier");
-		expand(case_parcel_locker, delivery === "parcel_locker");
-		expand(case_in_person, delivery === "in_person");
+		const delivery_text = delivery_input._get_value();
+		expand(case_courier, delivery_text === "courier");
+		expand(case_parcel_locker, delivery_text === "parcel_locker");
+		expand(case_in_person, delivery_text === "in_person");
 		expand(case_form_filled, true, { full_height_all_time: true });
 
-		const rect = delivery_input.getBoundingClientRect();
-		const diff = rect.top - 60 - header_height;
-		if (diff > 0) {
-			smoothScroll(diff);
+		if (ready) {
+			const rect = delivery_input.getBoundingClientRect();
+			const diff = rect.top - 60 - header_height;
+			if (diff > 0) {
+				smoothScroll(diff);
+			}
+
+			const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
+			cart_delivery_price_wrapper.classList.add("spinning");
+			const delivery = delivery_types.find((d) => d.text === delivery_text);
+			if (delivery) {
+				const delivery_type_id = delivery.delivery_type_id;
+				xhr({
+					url: "/cart/set-delivery-type",
+					params: {
+						delivery_type_id,
+					},
+					success: (res) => {
+						user_cart = res.user_cart;
+						loadedUserCart();
+						adding_product_from_cart = false;
+
+						removeClasses(".spinning", ["spinning"]);
+					},
+				});
+			}
 		}
 	});
+	const set_delivery = delivery_types.find((d) => d.delivery_type_id === user_cart.delivery_type_id);
+	if (set_delivery) {
+		delivery_input._set_value(set_delivery.text);
+	}
 
 	courier_address_different_input.addEventListener("change", () => {
 		const courier_address_different = courier_address_different_input._get_value();
@@ -117,14 +144,23 @@ domload(() => {
 			valid = false;
 		}
 
-		const data = { main_address: main_address._data, delivery: delivery_input._get_value() };
-		if (data.delivery === "courier") {
+		const data = { main_address: main_address._data };
+
+		const delivery_text = delivery_input._get_value();
+		const delivery = delivery_types.find((d) => d.text === delivery_text);
+		if (!delivery) {
+			showNotification(`Wybierz formę dostawy`, { type: "error", one_line: true });
+			return;
+		}
+		data.delivery_type = delivery.delivery_type_id;
+
+		if (delivery_text === "courier") {
 			if (!courier_address._validate()) {
 				valid = false;
 			}
 			data.courier_address = courier_address._data;
 		}
-		if (data.delivery === "parcel_locker") {
+		if (delivery_text === "parcel_locker") {
 			if (!choose_parcel_locker) {
 				if (valid) {
 					showNotification(`Wybierz paczkomat`, { type: "error", one_line: true });
@@ -163,6 +199,8 @@ domload(() => {
 			showInpostParcelLockerPickerModal(pick_inpost_parcel_locker_btn);
 		});
 	}
+
+	ready = true;
 });
 
 function initBuyNowCart() {
@@ -170,6 +208,7 @@ function initBuyNowCart() {
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.buy_products");
 	cartProductsComp(cart_products_comp, undefined);
+	cart_products_comp._child("list-comp").classList.remove("open");
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products;

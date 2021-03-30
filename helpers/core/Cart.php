@@ -2,7 +2,7 @@
 
 /**
  * 
-                                                                                                     * @typedef CartProduct {
+ * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -11,11 +11,14 @@
 
 class Cart
 {
+    // save these
     private $products;
     /** @var Entity[] RebateCode */
-    private $rebate_codes; // all
+    private $rebate_codes;
+    private $delivery_type_id;
+
+    // other vars
     private $rebate_codes_limit = 2; // that will be a subject to change
-    private $delivery_id = -1; // you know what to do with it baby
     private $max_single_product_count = 10; // should be a var
     public ?User $user;
 
@@ -33,9 +36,22 @@ class Cart
         return $this->products;
     }
 
-    public function getDeliveryId()
+    public function setDeliveryTypeId($delivery_type_id)
     {
-        return $this->delivery_id;
+        $this->delivery_type_id = $delivery_type_id;
+    }
+
+    public function getDeliveryTypeId()
+    {
+        return intval($this->delivery_type_id);
+    }
+
+    public function getDeliveryPrice()
+    {
+        if ($this->delivery_type_id <= 0) {
+            return 0;
+        }
+        return $this->delivery_type_id * 10;
     }
 
     public function getAllData()
@@ -72,7 +88,7 @@ class Cart
             }
         }
 
-        $delivery_price = 12;
+        $delivery_price = $this->getDeliveryPrice();
 
         $total_price = $products_price;
 
@@ -104,7 +120,8 @@ class Cart
             "products_price" => roundPrice($products_price),
             "delivery_price" => roundPrice($delivery_price),
             "total_price" => roundPrice($total_price),
-            "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x->getSimpleProps(), ["code", "value"]), $this->rebate_codes)
+            "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x->getSimpleProps(), ["code", "value"]), $this->rebate_codes),
+            "delivery_type_id" => $this->getDeliveryTypeId(),
         ];
     }
 
@@ -286,8 +303,9 @@ class Cart
     public function save()
     {
         $cart_data = [];
-        $cart_data["products"] = $this->products;
+        $cart_data["products"] = $this->getProducts();
         $cart_data["rebate_codes"] = $this->getActiveRebateCodes();
+        $cart_data["delivery_type_id"] = $this->getDeliveryTypeId();
 
         $cart_json = json_encode($cart_data);
 
@@ -317,6 +335,7 @@ class Cart
         $cart_data = json_decode($cart_json, true);
 
         $this->products = def($cart_data, "products", []);
+        $this->delivery_type_id = def($cart_data, "delivery_type_id", -1);
 
         $any_failed = false;
         foreach (def($cart_data, "rebate_codes", []) as $code) {

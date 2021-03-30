@@ -12,6 +12,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 <script>
     <?= useUECountriesOptionsInJS() ?>
+    <?= preloadDeliveryTypes() ?>
 </script>
 
 <script async src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
@@ -42,7 +43,10 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
                 <div>
                     Dostawa:
-                    <span class="cart_delivery_price pln">10 zł</span>
+                    <span class="spinner_wrapper cart_delivery_price_wrapper">
+                        <span class="cart_delivery_price pln">10 zł</span>
+                        <span class="spinner overlay"></span>
+                    </span>
                 </div>
                 <div class="rebate_codes_list"></div>
                 <div class="big">

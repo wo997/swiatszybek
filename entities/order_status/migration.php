@@ -7,7 +7,7 @@ DB::createTable("order_status", [
     ["name" => "bckg_clr", "type" => "VARCHAR(255)"],
 ]);
 
-DB::delete("order_status", "1");
+// DB::delete("order_status", "1");
 $curr_order_status_ids = DB::fetchCol("SELECT order_status_id FROM order_status");
 
 $required_statuses = [

@@ -7,6 +7,7 @@
 
 <script>
     <?= preloadOrderStatuses() ?>
+    <?= preloadDeliveryTypes() ?>
 </script>
 
 <?php startSection("body_content"); ?>

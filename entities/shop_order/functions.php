@@ -80,11 +80,10 @@ function confirmOrder($shop_order_data)
 
     $shop_order->setProp("products_price", $cart_data["products_price"]);
     $shop_order->setProp("delivery_price", $cart_data["delivery_price"]);
-    $shop_order->setProp("delivery_id", $cart_data["delivery_price"]);
     $shop_order->setProp("total_price", $cart_data["total_price"]);
     $shop_order->setProp("rebate_codes", $cart_data["rebate_codes"]);
 
-    $shop_order->setProp("delivery_id", $user_cart->getDeliveryId());
+    $shop_order->setProp("delivery_type", $user_cart->getDeliveryTypeId());
 
     $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME, cause in the future you will reuse the basket to calculate the order price
 

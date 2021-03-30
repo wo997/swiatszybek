@@ -6,7 +6,8 @@
 <title>Pulpit</title>
 
 <script>
-    <?= preloadOrderStatuses() ?>
+    <?= "" //preloadOrderStatuses() 
+    ?>
 </script>
 
 <?php startSection("body_content"); ?>

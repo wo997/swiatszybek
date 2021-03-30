@@ -18,6 +18,7 @@
  * @typedef {{
  * products: UserCartProductData[]
  * products_price: number
+ * delivery_type_id: number
  * delivery_price: number
  * total_price: number
  * rebate_codes: {code:string, value:string}[]
@@ -27,7 +28,7 @@
 /**
  * @type {UserCartData}
  */
-let user_cart = { products: [], total_price: 0, products_price: 0, delivery_price: 0, rebate_codes: [] };
+let user_cart = { products: [], total_price: 0, products_price: 0, delivery_type_id: -1, delivery_price: 0, rebate_codes: [] };
 
 function loadedUserCart() {
 	window.dispatchEvent(new CustomEvent("user_cart_changed"));

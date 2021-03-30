@@ -1,4 +1,4 @@
-/* js[!admin|!user] */
+/* js[!global] */
 
 /**
  * @typedef {{

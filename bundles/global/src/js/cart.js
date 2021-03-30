@@ -57,7 +57,7 @@ function initBuy() {
 							loadedUserCart();
 							adding_product_from_cart = false;
 
-							removeClasses(".qty_controls .spinning", ["spinning"]);
+							removeClasses(".spinning", ["spinning"]);
 						},
 					});
 				}
