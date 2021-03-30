@@ -14,7 +14,7 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
     if ($headers === null) {
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $headers .= 'From: ' . $company_data['email_sender'] . ' <' . $company_data['main_email'] . "> \r\n" .
+        $headers .= 'From: ' . $company_data['shop_name'] . ' <' . $company_data['main_email'] . "> \r\n" .
             'Reply-To: ' . $company_data['main_email'] . "\r\n" .
             'X-Mailer: PHP/' . phpversion();
     }

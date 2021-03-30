@@ -174,7 +174,7 @@ $user_email = $user_data ? $user_data["email"] : "";
             "description": "<?= $general_product_data["seo_description"] ?>",
             "brand": {
                 "@type": "Thing",
-                "name": "<?= $app["company_data"]['email_sender'] ?>"
+                "name": "<?= $app["company_data"]['shop_name'] ?>"
             },
             "aggregateRating": {
                 "@type": "AggregateRating",
@@ -191,7 +191,7 @@ $user_email = $user_data ? $user_data["email"] : "";
                 "availability": "<?= $stockSchema ?>",
                 "seller": {
                     "@type": "Organization",
-                    "name": "<?= $app["company_data"]['email_sender'] ?>"
+                    "name": "<?= $app["company_data"]['shop_name'] ?>"
                 }
             }
         }

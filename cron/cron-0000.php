@@ -54,7 +54,7 @@ function dailyReport()
         ";
     }
 
-    $mailTitle = "Raport dnia " . $app["company_data"]['email_sender'] . " " . $day;
+    $mailTitle = "Raport dnia " . $app["company_data"]['shop_name'] . " " . $day;
 
     foreach (getDailyReportEmailList() as $email) {
         sendEmail($email, $message, $mailTitle);
