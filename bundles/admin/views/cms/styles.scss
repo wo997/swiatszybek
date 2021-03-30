@@ -4,14 +4,65 @@
 // 	background: #0001;
 // }
 
+.piep_editor_inspector {
+	& {
+		position: absolute;
+		right: 0;
+		width: 350px;
+		background: #fff;
+		padding: 10px;
+		border: 1px solid #ccc;
+		box-shadow: 0 2px 5px #0002;
+		border-radius: 4px;
+		height: 500px;
+		top: 0;
+	}
+	.tree {
+		& {
+			max-height: 350px;
+			border: 1px solid #ccc;
+		}
+		.v_node {
+			& {
+				padding: 5px 9px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				flex-shrink: 0;
+			}
+			&:not(.selected) {
+				& {
+					cursor: pointer;
+				}
+				&:hover {
+					background: #eee;
+				}
+			}
+			&.selected {
+				background: var(--pretty_blue_background);
+				color: var(--pretty_blue);
+			}
+			&:not(:first-child) {
+				border-top: 1px solid #eee;
+			}
+			.name {
+				font-weight: 600;
+			}
+			.info {
+				color: #666;
+			}
+		}
+	}
+}
+
 .piep_editor {
 	& {
 		position: relative;
-		white-space: pre-wrap;
 	}
 
 	.piep_editor_content {
 		background: #fff;
+		white-space: pre-wrap;
 	}
 
 	// .piep_editor_content * {

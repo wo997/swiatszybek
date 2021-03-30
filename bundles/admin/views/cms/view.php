@@ -9,6 +9,11 @@
 
 <div class="piep_editor">
     <div class="piep_editor_content"></div>
+
+    <div class="piep_editor_inspector">
+        <div class="medium">Inspektor</div>
+        <div class="tree scroll_panel scroll_shadow">Drzewko</div>
+    </div>
 </div>
 
 

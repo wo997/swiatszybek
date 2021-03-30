@@ -14,6 +14,8 @@ let piep_editor_styles;
 let piep_editor_last_selection;
 /** @type {boolean} */
 let piep_editor_can_type;
+/** @type {PiepNode} */
+let piep_editor_inspector_tree;
 
 /**
  * @typedef {{
@@ -82,8 +84,11 @@ function getPiepEditorId() {
 }
 
 function recreateDom() {
+	// order is just fine
+	let tree_html = "";
+
 	// order doesn't really matter
-	let piep_styles_html = "";
+	let styles_html = "";
 
 	/**
 	 *
@@ -117,6 +122,11 @@ function recreateDom() {
 			}
 		}
 
+		tree_html += html`<div class="v_node" data-ped="${node.id}">
+			<span class="name">${tag}</span>
+			<span class="info">${text ? " - " + text : ""}</span>
+		</div>`;
+
 		piep_content_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
 
 		if (!node.styles) {
@@ -128,17 +138,19 @@ function recreateDom() {
 			styles.forEach(([prop, val]) => {
 				node_styles += `${kebabCase(prop)}: ${val};`;
 			});
-			piep_styles_html += `.${base_class} { ${node_styles} }`;
+			styles_html += `.${base_class} { ${node_styles} }`;
 		}
 
 		return piep_content_html;
 	};
 
-	let piep_content_html = traverseVDom(v_dom);
+	let content_html = traverseVDom(v_dom);
 
-	piep_editor_content._set_content(piep_content_html);
+	piep_editor_content._set_content(content_html);
 
-	piep_editor_styles._set_content(piep_styles_html);
+	piep_editor_styles._set_content(styles_html);
+
+	piep_editor_inspector_tree._set_content(tree_html, { maintain_height: true });
 }
 
 /**
@@ -263,10 +275,13 @@ domload(() => {
 	piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
 	piep_editor_styles = piep_editor._child(".piep_editor_styles");
 
+	piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
+
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu"></div>`);
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
+		<div class="label">Rozmiar czc</div>
 		<select class="field small" data-style="fontSize">
 			<option value=""></option>
 			<option value="1em">mała</option>
@@ -274,6 +289,7 @@ domload(() => {
 			<option value="2em">duża</option>
 		</select>
 
+		<div class="label">Grubość czc</div>
 		<select class="field small" data-style="fontWeight">
 			<option value=""></option>
 			<option value="400">normal</option>
@@ -281,10 +297,10 @@ domload(() => {
 			<option value="700">bold</option>
 		</select>
 
-		kolor czc
+		<div class="label">kolor czc</div>
 		<input class="field jscolor" data-style="color" />
 
-		kolor tla
+		<div class="label">kolor tla</div>
 		<input class="field jscolor" data-style="backgroundColor" />
 	`);
 
