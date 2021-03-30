@@ -77,7 +77,8 @@ function setRangesFromLongDatasetWithIndices(&$values, $max_ranges = 10)
         if (is_string($value["i"])) {
             $value["i"] = json_decode($value["i"], true);
         }
-        $value["c"] = countUnique($value["i"]);
+        $value["i"] = array_unique($value["i"]);
+        $value["c"] = count($value["i"]);
     }
     unset($value);
 
@@ -118,7 +119,8 @@ function setRangesFromLongDatasetWithIndices(&$values, $max_ranges = 10)
 
     // once again make sure that "c" is set 
     foreach ($values as &$value) {
-        $value["c"] = countUnique($value["i"]);
+        $value["i"] = array_unique($value["i"]);
+        $value["c"] = count($value["i"]);
     }
     unset($value);
 }

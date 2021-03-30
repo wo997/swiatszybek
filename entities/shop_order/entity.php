@@ -163,7 +163,7 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     if ($status_id === 2) {
         $email_title .= "Opłacono zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Odnotowaliśmy wpłatę za zamówienie " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
+        $email_body .= "<div>Odnotowaliśmy wpłatę za " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . "</div>\n";
         $email_body .= "<div>Wkrótce przygotujemy zamówienie do wysyłki.</div>\n";
 
         sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
