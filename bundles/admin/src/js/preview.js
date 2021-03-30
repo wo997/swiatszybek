@@ -52,6 +52,7 @@ function previewUrl(url, params) {
 			iframe.style.maxWidth = w ? w + "px" : "";
 			iframe.style.maxHeight = h ? h + "px" : "";
 		});
+		select_resolution._set_value("");
 	}
 
 	$(`#previewUrl .preview_form`).setAttribute("action", url);
