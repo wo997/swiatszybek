@@ -414,7 +414,9 @@ domload(() => {
 					recreateDom();
 
 					const node_ref = getPiepEditorNode(v_node.id);
-					if (node_ref) {
+					if (v_node.text === undefined) {
+						setPiepEditorFocusNode(v_node.id);
+					} else if (node_ref) {
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
 				}
@@ -669,7 +671,10 @@ function getPiepFocusNode() {
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
-	piep_editor_last_selection = cloneObject(sel);
+	if (!sel.focusNode || $(sel.focusNode)._parent(piep_editor_content)) {
+		piep_editor_last_selection = cloneObject(sel);
+	}
+
 	const range = document.createRange();
 	const focus_node = sel ? $(sel.focusNode) : undefined;
 
