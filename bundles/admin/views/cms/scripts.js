@@ -436,7 +436,8 @@ domload(() => {
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		setPiepEditorContentActive(!!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 })));
+		const active = !!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 }));
+		setPiepEditorContentActive(active);
 
 		updatePiepCursorPosition();
 	});
@@ -671,12 +672,16 @@ function getPiepFocusNode() {
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
-	if (!sel.focusNode || $(sel.focusNode)._parent(piep_editor_content)) {
+	if (piep_editor_content_active) {
 		piep_editor_last_selection = cloneObject(sel);
 	}
+	const csel = piep_editor_last_selection;
+	// if (!sel.focusNode || $(sel.focusNode)._parent(piep_editor_content) && piep_editor_content_active) {
+	// 	piep_editor_last_selection = cloneObject(sel);
+	// }
 
 	const range = document.createRange();
-	const focus_node = sel ? $(sel.focusNode) : undefined;
+	const focus_node = csel ? $(csel.focusNode) : undefined;
 
 	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
@@ -695,8 +700,8 @@ function updatePiepCursorPosition() {
 			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
 			cursor_top = node_cursor_rect.top + sel_height * 0.5;
 		} else {
-			range.setStart(sel.focusNode, sel.focusOffset);
-			range.setEnd(sel.focusNode, sel.focusOffset);
+			range.setStart(csel.focusNode, csel.focusOffset);
+			range.setEnd(csel.focusNode, csel.focusOffset);
 
 			const selection_cursor_rect = range.getBoundingClientRect();
 			const sel_width = selection_cursor_rect.width;
