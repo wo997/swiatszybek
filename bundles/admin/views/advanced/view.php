@@ -9,7 +9,11 @@
 <?php startSection("header"); ?>
 
 <div class="custom_toolbar">
-    <span class="title">Zaawansowane</span>
+    <span class="title breadcrumbs">
+        <div class="crumb">
+            Zaawansowane
+        </div>
+    </span>
     <button class="btn primary" onclick="saveZawansowane()">Zapisz <i class="fa fa-save"></i></button>
 </div>
 

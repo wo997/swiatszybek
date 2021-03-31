@@ -184,6 +184,10 @@ p-checkbox.focus {
 	text-decoration: underline red !important;
 }
 
+.radio_group.space_items > .checkbox_area:not(:first-child) {
+	margin-top: 7px;
+}
+
 p-checkbox.black_light {
 	&.checked {
 		.circle {
