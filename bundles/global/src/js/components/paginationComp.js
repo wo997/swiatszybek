@@ -64,6 +64,8 @@ function paginationComp(comp, parent, data = {}) {
 				comp._nodes.select._set_content(options ? options : html`<option value="0">1</option>`);
 				comp._nodes.select_overlay._set_content(options ? print_page(data.page_id) : "1");
 				comp._nodes.select.style.width = print_page(data.page_count - 1).length * 7 + 18 + "px";
+
+				comp.classList.toggle("hidden", data.total_rows === 0);
 			},
 		});
 	};

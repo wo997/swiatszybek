@@ -171,7 +171,7 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     if ($status_id === 3) {
         $email_title .= "Wysłano zamówienie #$shop_order_id";
 
-        $email_body .= "<div>Chcieliśmy poinformować Cię, że przekazaliśmy " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . " do wysyłki.</div>\n";
+        $email_body .= "<div>Chcieliśmy poinformować Cię, że " . $get_shop_order_link("zamówienie #" . $shop_order->getId()) . " zostało spakowane oraz przekazane kurierowi.</div>\n";
         $email_body .= "<div>Możesz śledzić status przesyłki korzystając z <a href=\"" . SITE_URL . "\" style=\"{link}\">tego linku</a>.</div>\n";
 
         sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
