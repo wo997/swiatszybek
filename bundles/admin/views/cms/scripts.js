@@ -407,7 +407,6 @@ domload(() => {
 					setPropOfVNode(v_node);
 					recreateDom();
 
-					setPiepEditorFocusNode(piep_focus_node_vid);
 					const node_ref = getPiepEditorNode(v_node.id);
 					if (node_ref) {
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
@@ -429,7 +428,8 @@ domload(() => {
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		piep_editor_content_active = !!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 }));
+		setPiepEditorContentActive(!!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 })));
+
 		updatePiepCursorPosition();
 	});
 
@@ -602,6 +602,17 @@ domload(() => {
 	recreateDom();
 });
 
+/**
+ *
+ * @param {boolean} peca
+ */
+function setPiepEditorContentActive(peca) {
+	piep_editor_content_active = peca;
+	if (!piep_editor_content_active) {
+		piep_editor_cursor.classList.add("hidden");
+	}
+}
+
 function setSelectionRange(range) {
 	const sel = window.getSelection();
 	sel.removeAllRanges();
@@ -646,7 +657,8 @@ function updatePiepCursorPosition() {
 	const range = document.createRange();
 	const focus_node = sel ? $(sel.focusNode) : undefined;
 
-	if (piep_editor_content_active) {
+	if (true) {
+		// piep_editor_content_active
 		const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
 		if (focus_textable) {
@@ -692,7 +704,7 @@ function updatePiepCursorPosition() {
 }
 
 function setPiepEditorFocusNode(vid) {
-	if (piep_focus_node_vid === vid) {
+	if (piep_focus_node_vid === vid && piep_editor_content._child(".piep_focus")) {
 		return;
 	}
 
