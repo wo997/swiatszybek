@@ -391,6 +391,7 @@ function findNode(node, selector, move, options = {}) {
  * @param {findNodeOptions} options
  */
 function findParent(node, selector, options) {
+	options.skip = def(options.skip, 0);
 	return findNode(node, selector, (node) => node.parentNode, options);
 }
 

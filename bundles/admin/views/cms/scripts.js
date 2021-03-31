@@ -20,6 +20,8 @@ let piep_editor_last_selection;
 let piep_editor_content_active;
 /** @type {boolean} */
 let piep_editor_cursor_active;
+/** @type {boolean} */
+let piep_editor_float_menu_active;
 /** @type {PiepNode} */
 let piep_editor_inspector_tree;
 /** @type {number} */
@@ -309,7 +311,7 @@ domload(() => {
 		piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
 		document.addEventListener("mousemove", (ev) => {
 			const target = $(ev.target);
-			const v_node_label = target._parent(".v_node_label", { skip: 0 });
+			const v_node_label = target._parent(".v_node_label");
 
 			removeClasses(".piep_consider_focus", ["piep_consider_focus"], piep_editor_content);
 			if (v_node_label) {
@@ -319,7 +321,7 @@ domload(() => {
 		});
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
-			const v_node_label = target._parent(".v_node_label", { skip: 0 });
+			const v_node_label = target._parent(".v_node_label");
 
 			if (v_node_label) {
 				const vid = +v_node_label.dataset.vid;
@@ -389,7 +391,7 @@ domload(() => {
 			<i class="fas fa-trash"></i>
 		</button>
 
-		<button class="btn subtle small" data-tooltip="Ukryj menu">
+		<button class="btn subtle small hide_menu_btn" data-tooltip="Ukryj menu">
 			<i class="fas fa-times"></i>
 		</button>
 	`);
@@ -479,13 +481,16 @@ domload(() => {
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		const content_active = !!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 }));
+		const content_active = !!(target._parent(piep_editor_content) || target._parent(".v_node_label"));
 		setPiepEditorContentActive(content_active);
 
-		if (target._parent(piep_editor, { skip: 0 })) {
-			if (!content_active && !target._parent(piep_editor_float_menu, { skip: 0 })) {
-				piep_editor_float_menu.classList.add("hidden");
+		if (target._parent(piep_editor)) {
+			piep_editor_float_menu_active = !!(content_active || target._parent(piep_editor_float_menu));
+			if (target._parent(".hide_menu_btn")) {
+				piep_editor_float_menu_active = false;
 			}
+
+			piep_editor_float_menu.classList.toggle("hidden", !piep_editor_float_menu_active);
 		}
 
 		updatePiepCursorPosition();
@@ -497,7 +502,7 @@ domload(() => {
 		// const sel = window.getSelection();
 		// const sel_focus_node = $(sel.focusNode);
 		// if (sel_focus_node) {
-		// 	const correct_selection = sel_focus_node._parent($(ev.target), { skip: 0 });
+		// 	const correct_selection = sel_focus_node._parent($(ev.target));
 		// 	if (!correct_selection) {
 		// 		console.log(21312312, ev.target, sel_focus_node);
 		// 		setSelectionByIndex($(ev.target), 0);
@@ -716,12 +721,12 @@ function getPiepEditorFocusNode() {
 
 // function getFocusTextable() {
 // 	const focus_node = piep_editor_content._child(".piep_focus");
-// 	return focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+// 	return focus_node ? focus_node._parent(`.textable`) : undefined;
 // }
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
-	if (piep_editor_content_active) {
+	if (piep_editor_content_active || piep_editor_float_menu_active) {
 		piep_editor_last_selection = cloneObject(sel);
 	}
 	const csel = piep_editor_last_selection;
@@ -729,7 +734,7 @@ function updatePiepCursorPosition() {
 	const range = document.createRange();
 	const focus_node = csel ? $(csel.focusNode) : undefined;
 
-	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+	const focus_textable = focus_node ? focus_node._parent(`.textable`) : undefined;
 
 	if (focus_textable) {
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
@@ -775,6 +780,7 @@ function updatePiepCursorPosition() {
 }
 
 function setPiepEditorFocusNode(vid) {
+	// NEVERMIND! -- was kinda for optimisation but we can easily skip it
 	if (piep_focus_node_vid === vid && piep_editor_content._child(".piep_focus")) {
 		return;
 	}
@@ -784,7 +790,6 @@ function setPiepEditorFocusNode(vid) {
 	piep_focus_node_vid = vid;
 	const focus_node = getPiepEditorNode(vid);
 	if (!focus_node) {
-		piep_editor_float_menu.classList.add("hidden");
 		piep_editor_float_focus.classList.add("hidden");
 		return;
 	}
@@ -801,7 +806,6 @@ function setPiepEditorFocusNode(vid) {
 		input._set_value(val, { quiet: true });
 	});
 
-	piep_editor_float_menu.classList.remove("hidden");
 	piep_editor_float_focus.classList.remove("hidden");
 	const focus_node_rect = focus_node.getBoundingClientRect();
 	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();

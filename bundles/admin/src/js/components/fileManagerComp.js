@@ -284,12 +284,12 @@ function fileManagerComp(comp, parent, data = undefined) {
 				const data = comp._data;
 
 				const target = $(ev.target);
-				const file_wrapper = target._parent(".file_wrapper", { skip: 0 });
+				const file_wrapper = target._parent(".file_wrapper");
 
 				if (file_wrapper) {
-					const select_btn = target._parent(".select_btn", { skip: 0 });
-					const preview_btn = target._parent(".preview_btn", { skip: 0 });
-					const trash_btn = target._parent(".trash_btn", { skip: 0 });
+					const select_btn = target._parent(".select_btn");
+					const preview_btn = target._parent(".preview_btn");
+					const trash_btn = target._parent(".trash_btn");
 
 					if (select_btn) {
 						const img_src = file_wrapper._child(".wo997_img").dataset.src;

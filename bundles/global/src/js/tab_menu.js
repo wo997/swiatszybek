@@ -2,8 +2,8 @@
 
 document.addEventListener("click", (ev) => {
 	const target = $(ev.target);
-	const option = target._parent(".tab_option", { skip: 0 });
-	const menu = target._parent(".tab_menu", { skip: 0 });
+	const option = target._parent(".tab_option");
+	const menu = target._parent(".tab_menu");
 
 	if (!option || !menu) return;
 

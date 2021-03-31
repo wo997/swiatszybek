@@ -3,7 +3,7 @@
 document.addEventListener("click", (ev) => {
 	const target = $(ev.target);
 
-	const upload_img_btn = target._parent(".upload_img_btn", { skip: 0 });
+	const upload_img_btn = target._parent(".upload_img_btn");
 	if (upload_img_btn) {
 		getSelectFileModal()._nodes.file_manager._show_upload_modal(
 			{

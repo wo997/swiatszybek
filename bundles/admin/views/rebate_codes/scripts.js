@@ -35,7 +35,7 @@ domload(() => {
 
 	datatable_comp.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const edit_rebate_code = target._parent(".edit_rebate_code", { skip: 0 });
+		const edit_rebate_code = target._parent(".edit_rebate_code");
 		if (edit_rebate_code) {
 			getRebateCodeModal()._show(+edit_rebate_code.dataset.rebate_code_id, { source: edit_rebate_code });
 		}

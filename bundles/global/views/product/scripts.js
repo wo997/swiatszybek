@@ -526,7 +526,7 @@ function initProductCommentsCallback() {
 
 		window.addEventListener("click", (ev) => {
 			const target = $(ev.target);
-			const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+			const rating_picker_star = target._parent(".rating_picker > i");
 			if (rating_picker_star) {
 				const rating_picker = target._parent(".rating_picker");
 				rating_picker.dataset.rating = rating_picker_star.dataset.rating;
@@ -536,7 +536,7 @@ function initProductCommentsCallback() {
 
 		window.addEventListener("mousemove", (ev) => {
 			const target = $(ev.target);
-			const rating_picker_star = target._parent(".rating_picker > i", { skip: 0 });
+			const rating_picker_star = target._parent(".rating_picker > i");
 			const has_focus = $(".rating_picker.has_focus");
 			const rating_picker = target._parent(".rating_picker");
 			if (has_focus && has_focus !== rating_picker) {

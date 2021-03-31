@@ -153,9 +153,9 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 			comp._nodes.datatable.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 
-				const select_btn = target._parent(".select_btn", { skip: 0 });
+				const select_btn = target._parent(".select_btn");
 				if (select_btn) {
-					const list_row = select_btn._parent(".list_row", { skip: 0 });
+					const list_row = select_btn._parent(".list_row");
 					if (list_row) {
 						const product_feature_option_id = +list_row.dataset.primary;
 						const product_feature_option = product_feature_options.find(
@@ -183,9 +183,9 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 
-				const remove_btn = target._parent(".remove_btn", { skip: 0 });
+				const remove_btn = target._parent(".remove_btn");
 				if (remove_btn) {
-					const list_row = remove_btn._parent(".list_row", { skip: 0 });
+					const list_row = remove_btn._parent(".list_row");
 					if (list_row) {
 						const ind = product_comp._data.product_feature_option_ids.indexOf(+list_row.dataset.primary);
 						if (ind !== -1) {
@@ -200,7 +200,7 @@ function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 
-				const add_feature_option_btn = target._parent(".add_feature_option_btn", { skip: 0 });
+				const add_feature_option_btn = target._parent(".add_feature_option_btn");
 				if (add_feature_option_btn) {
 					const product_feature_modal_comp = getProductFeatureModal();
 					product_feature_modal_comp._show(comp._data.product_feature_id, { source: add_feature_option_btn });

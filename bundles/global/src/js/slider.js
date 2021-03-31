@@ -374,7 +374,7 @@ function initSlider(elem) {
 				if (!target) {
 					return;
 				}
-				const slide = target._parent(".wo997_slide", { skip: 0 });
+				const slide = target._parent(".wo997_slide");
 				if (!slide) {
 					return;
 				}

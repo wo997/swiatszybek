@@ -134,7 +134,7 @@ domload(() => {
 
 	datatable_comp.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const preview_url = target._parent(`[data-preview_url]`, { skip: 0 });
+		const preview_url = target._parent(`[data-preview_url]`);
 		if (preview_url) {
 			previewUrl(preview_url.dataset.preview_url);
 		}

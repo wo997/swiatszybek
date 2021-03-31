@@ -25,7 +25,7 @@ domload(() => {
 	});
 	main_search_wrapper.addEventListener("mousemove", (ev) => {
 		const target = $(ev.target);
-		const product_block = target._parent(".main_search_wrapper .product_block", { skip: 0 });
+		const product_block = target._parent(".main_search_wrapper .product_block");
 		if (product_block) {
 			main_search_wrapper._children(".selected").forEach((e) => {
 				e.classList.remove("selected");
@@ -96,7 +96,7 @@ domload(() => {
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const product_block = target._parent("header .search_results .product_block", { skip: 0 });
+		const product_block = target._parent("header .search_results .product_block");
 		if (product_block) {
 			const a = product_block._child("a");
 			if (a) {

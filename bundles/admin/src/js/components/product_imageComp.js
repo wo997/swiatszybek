@@ -105,7 +105,7 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 					return;
 				}
 
-				const remove_option = target._parent(".remove_option", { skip: 0 });
+				const remove_option = target._parent(".remove_option");
 				if (remove_option) {
 					const ind = comp._data.product_feature_options.indexOf(+remove_option.dataset.option_id);
 					if (ind !== -1) {

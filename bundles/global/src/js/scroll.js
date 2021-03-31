@@ -178,13 +178,13 @@ document.addEventListener(
 		}
 
 		const target = $(ev.target);
-		const node = target._parent(scrollables_selector, { skip: 0 });
+		const node = target._parent(scrollables_selector);
 		if (node) {
 			// @ts-ignore
 			if ((ev.deltaY < 0 && node.scrollTop < 1) || (ev.deltaY > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
 				ev.preventDefault();
 			}
-		} else if (target._parent(non_scrollables_selector, { skip: 0 })) {
+		} else if (target._parent(non_scrollables_selector)) {
 			ev.preventDefault();
 		}
 	},
@@ -204,7 +204,7 @@ document.addEventListener(
 		}
 
 		const target = $(ev.target);
-		const node = target._parent(scrollables_selector, { skip: 0 });
+		const node = target._parent(scrollables_selector);
 		if (node) {
 			for (let i = 0; i < documentTouches.length; i++) {
 				if (ev.targetTouches[i] && documentTouches[i]) {
@@ -214,7 +214,7 @@ document.addEventListener(
 					}
 				}
 			}
-		} else if (target._parent(non_scrollables_selector, { skip: 0 })) {
+		} else if (target._parent(non_scrollables_selector)) {
 			ev.preventDefault();
 		}
 		documentTouches = ev.targetTouches;

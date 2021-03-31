@@ -31,7 +31,7 @@ domload(() => {
 		const t = tooltip.target;
 
 		const target = $(event.target);
-		const e = target._parent("[data-tooltip]", { skip: 0 });
+		const e = target._parent("[data-tooltip]");
 		if (e) {
 			// && !e.hasAttribute("disabled")) {
 			var tooltipText = e.dataset.tooltip;

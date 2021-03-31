@@ -319,7 +319,7 @@ function initRebateCodes() {
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const remove_rebate_code = target._parent(".remove_rebate_code", { skip: 0 });
+		const remove_rebate_code = target._parent(".remove_rebate_code");
 		if (remove_rebate_code) {
 			const rebate_code = remove_rebate_code.dataset.code;
 

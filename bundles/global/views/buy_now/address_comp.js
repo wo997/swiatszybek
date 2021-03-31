@@ -53,7 +53,7 @@ function addressComp(comp, parent, data = undefined) {
 	}
 
 	comp._validate = () => {
-		const errors = validateInputs(comp._children(`[data-validate]`).filter((e) => !e._parent(".hidden", { skip: 0 })));
+		const errors = validateInputs(comp._children(`[data-validate]`).filter((e) => !e._parent(".hidden")));
 		if (errors.length > 0) {
 			return false;
 		}

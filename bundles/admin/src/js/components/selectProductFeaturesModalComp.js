@@ -165,14 +165,14 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 
 				const target = $(ev.target);
 
-				const add_feature_btn = target._parent(".add_feature_btn", { skip: 0 });
+				const add_feature_btn = target._parent(".add_feature_btn");
 				if (add_feature_btn) {
 					product_feature_modal_comp._show(-1, { source: add_feature_btn });
 				}
 
-				const edit_btn = target._parent(".edit_btn", { skip: 0 });
+				const edit_btn = target._parent(".edit_btn");
 				if (edit_btn) {
-					const list_row = edit_btn._parent(".list_row", { skip: 0 });
+					const list_row = edit_btn._parent(".list_row");
 					if (list_row) {
 						product_feature_modal_comp._show(+list_row.dataset.primary, { source: edit_btn });
 					}
@@ -183,9 +183,9 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					select_product_features_options_modal_comp._show(product_feature_id, { source: btn });
 				};
 
-				const select_btn = target._parent(".select_btn", { skip: 0 });
+				const select_btn = target._parent(".select_btn");
 				if (select_btn) {
-					const list_row = select_btn._parent(".list_row", { skip: 0 });
+					const list_row = select_btn._parent(".list_row");
 					if (list_row) {
 						const product_feature_id = +list_row.dataset.primary;
 
@@ -207,9 +207,9 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 
-				const options_btn = target._parent(".options_btn", { skip: 0 });
+				const options_btn = target._parent(".options_btn");
 				if (options_btn) {
-					const list_row = options_btn._parent(".list_row", { skip: 0 });
+					const list_row = options_btn._parent(".list_row");
 					if (list_row) {
 						const product_feature_id = +list_row.dataset.primary;
 						showOptionsFrom(product_feature_id, options_btn);
@@ -219,9 +219,9 @@ function selectProductFeaturesModalComp(comp, parent, data = undefined) {
 					comp._nodes.close_btn.classList.add("important");
 				}
 
-				const remove_btn = target._parent(".remove_btn", { skip: 0 });
+				const remove_btn = target._parent(".remove_btn");
 				if (remove_btn) {
-					const list_row = remove_btn._parent(".list_row", { skip: 0 });
+					const list_row = remove_btn._parent(".list_row");
 					if (list_row) {
 						const ind = product_comp._data.product_feature_ids.indexOf(+list_row.dataset.primary);
 						if (ind !== -1) {

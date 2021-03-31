@@ -56,7 +56,7 @@ domload(() => {
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
-		const clear_filters_btn = target._parent(".clear_filters_btn", { skip: 0 });
+		const clear_filters_btn = target._parent(".clear_filters_btn");
 		if (clear_filters_btn) {
 			$$(".searching_wrapper .option_checkbox, .searching_wrapper .option_range_checkbox").forEach((option_checkbox) => {
 				option_checkbox._set_value(0, { quiet: true });
@@ -243,7 +243,7 @@ function initProductCategories() {
 	$(".product_categories").addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		const expand_btn = target._parent(".expand_btn", { skip: 0 });
+		const expand_btn = target._parent(".expand_btn");
 		if (expand_btn) {
 			const open = expand_btn.classList.toggle("open");
 			expand(expand_btn._parent()._next(), open);

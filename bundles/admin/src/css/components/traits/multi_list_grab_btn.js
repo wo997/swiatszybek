@@ -316,7 +316,7 @@ document.addEventListener("mouseup", () => {
 			const grab_target = btn.dataset.invisible ? btn._parent(multi_row_selector) : btn;
 
 			grab_target.addEventListener("mousedown", (ev) => {
-				if (grab_target !== btn && $(ev.target)._parent(".btn", { skip: 0 })) {
+				if (grab_target !== btn && $(ev.target)._parent(".btn")) {
 					return;
 				}
 				const list_row = comp._parent(".list_row");

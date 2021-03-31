@@ -91,9 +91,9 @@ function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 			comp._nodes.datatable.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 
-				const select_btn = target._parent(".select_btn", { skip: 0 });
+				const select_btn = target._parent(".select_btn");
 				if (select_btn) {
-					const list_row = select_btn._parent(".list_row", { skip: 0 });
+					const list_row = select_btn._parent(".list_row");
 					if (list_row) {
 						comp._options.callback(+list_row.dataset.primary);
 						hideParentModal(comp);

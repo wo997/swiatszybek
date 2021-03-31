@@ -97,7 +97,7 @@ function finishNodeAnimation(node, is_early = false) {
  */
 
 function animate(node, keyframes, duration, options = {}) {
-	if (node._parent(".freeze", { skip: 0 })) {
+	if (node._parent(".freeze")) {
 		duration = 0;
 	}
 

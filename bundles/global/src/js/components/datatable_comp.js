@@ -132,7 +132,7 @@ function datatableComp(comp, parent, data) {
 
 		comp.addEventListener("click", (ev) => {
 			const target = $(ev.target);
-			const select_row = target._parent(".select_row", { skip: 0 });
+			const select_row = target._parent(".select_row");
 			if (select_row) {
 				const primary_id = +select_row._parent(`.list_row`).dataset.primary;
 
@@ -147,7 +147,7 @@ function datatableComp(comp, parent, data) {
 					}
 				}
 			}
-			const select_all_rows = target._parent(".select_all_rows", { skip: 0 });
+			const select_all_rows = target._parent(".select_all_rows");
 			if (select_all_rows) {
 				const selection = [];
 
@@ -765,17 +765,17 @@ function datatableComp(comp, parent, data) {
 					return;
 				}
 
-				const dt_sort = target._parent(".dt_sort", { skip: 0 });
-				const dt_filter = target._parent(".dt_filter", { skip: 0 });
-				const dt_batch_edit = target._parent(".dt_batch_edit", { skip: 0 });
+				const dt_sort = target._parent(".dt_sort");
+				const dt_filter = target._parent(".dt_filter");
+				const dt_batch_edit = target._parent(".dt_batch_edit");
 
 				const dt_cell = target._parent(".dt_cell");
 				const data = comp._data;
 
 				const column = dt_cell ? data.columns[+dt_cell.dataset.column_id] : undefined;
 
-				const dt_quick_filter = target._parent(".dt_quick_filter", { skip: 0 });
-				const dt_rm_quick_filter = target._parent(".dt_rm_quick_filter", { skip: 0 });
+				const dt_quick_filter = target._parent(".dt_quick_filter");
+				const dt_rm_quick_filter = target._parent(".dt_rm_quick_filter");
 
 				if (dt_quick_filter || dt_rm_quick_filter) {
 					const x = def(dt_quick_filter, dt_rm_quick_filter);
@@ -950,7 +950,7 @@ function datatableComp(comp, parent, data) {
 
 			const tacz = (ev) => {
 				const target = $(ev.target);
-				if (target && !target._parent(".node_filter_menu, .dt_filter, .datepicker-dropdown", { skip: 0 })) {
+				if (target && !target._parent(".node_filter_menu, .dt_filter, .datepicker-dropdown")) {
 					hideFilterMenu();
 				}
 			};
