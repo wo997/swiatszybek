@@ -134,7 +134,7 @@ function productCategoriesComp(comp, parent, data = undefined) {
 						let level = 0;
 						while (lr) {
 							level++;
-							lr = lr._parent(".list_row");
+							lr = lr._parent(".list_row", { skip: 1 });
 						}
 						const max_expand = 1;
 

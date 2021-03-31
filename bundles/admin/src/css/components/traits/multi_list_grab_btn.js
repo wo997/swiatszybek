@@ -98,7 +98,7 @@ let multi_list_grab = {
 					}
 				}
 				// @ts-ignore
-				list = list._parent("list-comp");
+				list = list._parent("list-comp", { skip: 1 });
 			}
 		}
 		multi_list_grab.best_position = best_position;
@@ -345,7 +345,7 @@ document.addEventListener("mouseup", () => {
 				multi_list_grab.grabbed_at_y_scroll = multi_list_grab.scroll_parent.scrollTop;
 				let list = list_row._parent();
 				while (true) {
-					const p = list._parent("list-comp");
+					const p = list._parent("list-comp", { skip: 1 });
 					if (!p) {
 						break;
 					}
@@ -398,7 +398,7 @@ document.addEventListener("mouseup", () => {
 					let deep = -1;
 					while (list_row.contains(e)) {
 						deep++;
-						e = e._parent(".list_row");
+						e = e._parent(".list_row", { skip: 1 });
 					}
 					if (deep > max_deep) {
 						max_deep = deep;
@@ -415,7 +415,7 @@ document.addEventListener("mouseup", () => {
 						let level = 0;
 						while (lr) {
 							level++;
-							lr = lr._parent(".list_row");
+							lr = lr._parent(".list_row", { skip: 1 });
 						}
 						if (level > max_levels - max_deep) {
 							return;

@@ -17,7 +17,7 @@ domload(() => {
 				key: "role_id",
 				width: "1",
 				searchable: "select",
-				map_name: "priveleges",
+				map_name: "roles",
 				editable: "select",
 				editable_callback: (data) => {
 					xhr({
@@ -41,15 +41,17 @@ domload(() => {
 		],
 		maps: [
 			{
-				name: "priveleges",
+				name: "roles",
 				getMap: () => {
-					const map = user_roles.map((priveleges) => {
-						const obj = {
-							val: priveleges.role_id,
-							label: priveleges.name,
-						};
-						return obj;
-					});
+					const map = user_roles
+						.filter((role) => role.role_id > 0)
+						.map((role) => {
+							const obj = {
+								val: role.role_id,
+								label: role.name,
+							};
+							return obj;
+						});
 					return map;
 				},
 			},
