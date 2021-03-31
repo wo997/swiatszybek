@@ -14,6 +14,8 @@ let piep_editor_styles;
 let piep_editor_last_selection;
 /** @type {boolean} */
 let piep_editor_content_active;
+/** @type {boolean} */
+let piep_editor_cursor_active;
 /** @type {PiepNode} */
 let piep_editor_inspector_tree;
 /** @type {number} */
@@ -302,16 +304,20 @@ domload(() => {
 
 			if (v_node_label) {
 				const vid = +v_node_label.dataset.vid;
-				const v_node = findNodeInVDom(vid);
+				//const v_node = findNodeInVDom(vid);
 
-				const focus_node = getPiepEditorNode(vid);
-				if (v_node.text === undefined) {
-					//setSelectionByIndex(focus_node, 0);
-					piep_editor_cursor.classList.add("hidden");
-					setPiepEditorFocusNode(vid);
-				} else {
-					setSelectionByIndex(focus_node, 0, v_node.text.length);
-				}
+				setSelectionRange(undefined);
+				setPiepEditorCursorActive(false);
+				setPiepEditorFocusNode(vid);
+
+				// const focus_node = getPiepEditorNode(vid);
+				// if (v_node.text === undefined) {
+				// 	setSelectionByIndex(focus_node, 0);
+				// 	piep_editor_cursor.classList.add("hidden");
+				// 	setPiepEditorFocusNode(vid);
+				// } else {
+				// 	setSelectionByIndex(focus_node, 0, v_node.text.length);
+				// }
 			}
 		});
 	};
@@ -461,7 +467,8 @@ domload(() => {
 		const v_node_data = getVDomNodeData(vid);
 		const v_node = v_node_data ? v_node_data.node : undefined;
 
-		if (!piep_editor_content_active || v_node.text === undefined) {
+		//v_node.text === undefined
+		if (!piep_editor_cursor_active) {
 			return;
 		}
 
@@ -609,8 +616,17 @@ domload(() => {
 function setPiepEditorContentActive(peca) {
 	piep_editor_content_active = peca;
 	if (!piep_editor_content_active) {
-		piep_editor_cursor.classList.add("hidden");
+		setPiepEditorCursorActive(false);
 	}
+}
+
+/**
+ *
+ * @param {boolean} peca
+ */
+function setPiepEditorCursorActive(peca) {
+	piep_editor_cursor_active = peca;
+	piep_editor_cursor.classList.toggle("hidden", !piep_editor_cursor_active);
 }
 
 function setSelectionRange(range) {
@@ -657,49 +673,48 @@ function updatePiepCursorPosition() {
 	const range = document.createRange();
 	const focus_node = sel ? $(sel.focusNode) : undefined;
 
-	if (true) {
-		// piep_editor_content_active
-		const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
-		if (focus_textable) {
-			const piep_editor_rect = piep_editor.getBoundingClientRect();
+	if (focus_textable) {
+		const piep_editor_rect = piep_editor.getBoundingClientRect();
 
-			let cursor_top, cursor_left, cursor_width, cursor_height;
+		let cursor_top, cursor_left, cursor_width, cursor_height;
 
-			if (focus_textable.innerText === "\n") {
-				const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
-				const sel_width = node_cursor_rect.width;
-				const sel_height = node_cursor_rect.height;
-				cursor_width = Math.max(sel_width, 2);
-				cursor_height = Math.max(sel_height, 20);
+		if (focus_textable.innerText === "\n") {
+			const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
+			const sel_width = node_cursor_rect.width;
+			const sel_height = node_cursor_rect.height;
+			cursor_width = Math.max(sel_width, 2);
+			cursor_height = Math.max(sel_height, 20);
 
-				cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
-				cursor_top = node_cursor_rect.top + sel_height * 0.5;
-			} else {
-				range.setStart(sel.focusNode, sel.focusOffset);
-				range.setEnd(sel.focusNode, sel.focusOffset);
+			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
+			cursor_top = node_cursor_rect.top + sel_height * 0.5;
+		} else {
+			range.setStart(sel.focusNode, sel.focusOffset);
+			range.setEnd(sel.focusNode, sel.focusOffset);
 
-				const selection_cursor_rect = range.getBoundingClientRect();
-				const sel_width = selection_cursor_rect.width;
-				const sel_height = selection_cursor_rect.height;
-				cursor_width = Math.max(sel_width, 2);
-				cursor_height = Math.max(sel_height, 20);
+			const selection_cursor_rect = range.getBoundingClientRect();
+			const sel_width = selection_cursor_rect.width;
+			const sel_height = selection_cursor_rect.height;
+			cursor_width = Math.max(sel_width, 2);
+			cursor_height = Math.max(sel_height, 20);
 
-				cursor_left = selection_cursor_rect.left + sel_width * 0.5;
-				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
-			}
-
-			piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
-			piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
-			piep_editor_cursor.style.width = cursor_width + "px";
-			piep_editor_cursor.style.height = cursor_height + "px";
-
-			piep_editor_cursor.classList.remove("hidden");
+			cursor_left = selection_cursor_rect.left + sel_width * 0.5;
+			cursor_top = selection_cursor_rect.top + sel_height * 0.5;
 		}
 
-		if (focus_textable) {
-			setPiepEditorFocusNode(focus_textable.dataset.vid);
+		piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
+		piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
+		piep_editor_cursor.style.width = cursor_width + "px";
+		piep_editor_cursor.style.height = cursor_height + "px";
+
+		if (piep_editor_content_active) {
+			setPiepEditorCursorActive(true);
 		}
+	}
+
+	if (focus_textable) {
+		setPiepEditorFocusNode(focus_textable.dataset.vid);
 	}
 }
 
@@ -721,7 +736,6 @@ function setPiepEditorFocusNode(vid) {
 	const v_node = findNodeInVDom(+focus_node.dataset.vid);
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		const prop = input.dataset.style;
-		console.log(input, prop);
 		let val = def(v_node.styles[prop], "");
 		if (prop.toLocaleLowerCase().endsWith("color")) {
 			val = val.replace("#", "");
@@ -867,7 +881,6 @@ function selectElementContentsFromAnywhere(dx, dy) {
 function getRangeByIndex(node, pos, end = undefined) {
 	const text_node = getTextNode(node);
 	const range = document.createRange();
-	//console.log(node, pos, end);
 	if (!text_node) {
 		range.setStart(node, 0);
 		range.setEnd(node, 0);
