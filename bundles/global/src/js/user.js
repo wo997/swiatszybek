@@ -83,11 +83,11 @@ window.addEventListener("modal_show", (event) => {
 domload(() => {
 	registerModalContent(
 		html`
-			<div id="loginForm" data-dismissable data-expand>
+			<form id="loginForm" data-dismissable data-expand onsubmit="return false">
 				<div class="modal_body">
 					<login-form-modal-comp class="flex_stretch"></login-form-modal-comp>
 				</div>
-			</div>
+			</form>
 		`
 	);
 

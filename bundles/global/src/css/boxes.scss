@@ -36,13 +36,13 @@
 			border-radius: 4px;
 			border: 1px solid #bbb;
 			width: var(--box-width);
-			--selection-color: var(--primary-clr);
+			--selection_clr: var(--primary-clr);
 		}
 		&.error {
-			--selection-color: var(--error-clr);
+			--selection_clr: var(--error-clr);
 		}
 		&.success {
-			--selection-color: var(--success-clr);
+			--selection_clr: var(--success-clr);
 		}
 		&::before {
 			content: "";
@@ -75,8 +75,8 @@
 		}
 
 		&.checked {
-			border-color: var(--selection-color) !important;
-			box-shadow: 0 0 0 1px var(--selection-color), inset 0 0 0 1px var(--selection-color) !important;
+			border-color: var(--selection_clr) !important;
+			box-shadow: 0 0 0 1px var(--selection_clr), inset 0 0 0 1px var(--selection_clr) !important;
 		}
 	}
 
@@ -125,7 +125,7 @@
 			background: var(--pretty_blue_background) !important;
 			color: var(--pretty_blue);
 			font-weight: 600;
-			--selection-color: var(--pretty_blue_border);
+			--selection_clr: var(--pretty_blue_border);
 			z-index: 10;
 		}
 		& > *:not(.checked) {
