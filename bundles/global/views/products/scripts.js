@@ -257,7 +257,7 @@ function initProductCategories() {
 		let open_cat = current;
 		while (true) {
 			open_cat._child("a").classList.add("current");
-			open_cat = open_cat._parent("li");
+			open_cat = open_cat._parent("li", { skip: 1 });
 			if (!open_cat) {
 				break;
 			}
@@ -456,7 +456,7 @@ function setCategoryFeaturesFromUrl() {
 		}
 		let parent_expand_y = def(expandy_y, option_checkbox);
 		while (true) {
-			parent_expand_y = parent_expand_y._parent(".expand_y");
+			parent_expand_y = parent_expand_y._parent(".expand_y", { skip: 1 });
 			if (!parent_expand_y) {
 				break;
 			}
@@ -465,7 +465,7 @@ function setCategoryFeaturesFromUrl() {
 
 		let option_row = option_checkbox;
 		while (true) {
-			option_row = option_row._parent(".option_row");
+			option_row = option_row._parent(".option_row", { skip: 1 });
 			if (!option_row) {
 				return;
 			}
