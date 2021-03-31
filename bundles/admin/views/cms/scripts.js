@@ -13,9 +13,11 @@ let piep_editor_styles;
 /** @type {Selection} */
 let piep_editor_last_selection;
 /** @type {boolean} */
-let piep_editor_can_type;
+let piep_editor_content_active;
 /** @type {PiepNode} */
 let piep_editor_inspector_tree;
+/** @type {number} */
+let piep_focus_node_vid;
 
 /**
  * @typedef {{
@@ -84,9 +86,6 @@ function getPiepEditorId() {
 }
 
 function recreateDom() {
-	// order is just fine
-	let tree_html = "";
-
 	// order doesn't really matter
 	let styles_html = "";
 
@@ -95,8 +94,9 @@ function recreateDom() {
 	 * @param {vDomNode} node
 	 * @returns
 	 */
-	const traverseVDom = (node) => {
-		let piep_content_html = "";
+	const traverseVDom = (node, level = 0) => {
+		let content_html = "";
+		let inspector_tree_html = "";
 
 		const children = node.children;
 		const text = node.text;
@@ -104,9 +104,16 @@ function recreateDom() {
 		const tag = node.tag;
 		const textable = text !== undefined;
 
-		let attributes = `data-ped="${node.id}"`;
-		const base_class = `ped_${node.id}`;
+		let attributes = `data-vid="${node.id}"`;
+		const base_class = `vid_${node.id}`;
 		let classes = [base_class];
+
+		if (level > 0) {
+			inspector_tree_html += html`<div class="v_node_label tvid_${node.id}" style="--level:${level}" data-vid="${node.id}">
+				<span class="name">${tag}</span>
+				<span class="info">${textable ? " - " + text : `(${children.length})`}</span>
+			</div>`;
+		}
 
 		let body = "";
 		if (textable) {
@@ -118,16 +125,13 @@ function recreateDom() {
 			}
 		} else {
 			for (const child of children) {
-				body += traverseVDom(child);
+				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(child, level + 1);
+				body += sub_content_html;
+				inspector_tree_html += sub_inspector_tree_html;
 			}
 		}
 
-		tree_html += html`<div class="v_node" data-ped="${node.id}">
-			<span class="name">${tag}</span>
-			<span class="info">${text ? " - " + text : ""}</span>
-		</div>`;
-
-		piep_content_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
+		content_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
 
 		if (!node.styles) {
 			node.styles = {};
@@ -141,29 +145,37 @@ function recreateDom() {
 			styles_html += `.${base_class} { ${node_styles} }`;
 		}
 
-		return piep_content_html;
+		return { content_html, inspector_tree_html };
 	};
 
-	let content_html = traverseVDom(v_dom);
+	const { content_html, inspector_tree_html } = traverseVDom(v_dom);
 
 	piep_editor_content._set_content(content_html);
 
 	piep_editor_styles._set_content(styles_html);
 
-	piep_editor_inspector_tree._set_content(tree_html, { maintain_height: true });
+	piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+}
+
+function findNodeInVDom(vid) {
+	const node_data = getVDomNodeData(vid);
+	if (!node_data) {
+		return undefined;
+	}
+	return node_data.node;
 }
 
 /**
  *
- * @param {number} id
+ * @param {number} vid
  * @returns {{
  * node: vDomNode,
  * children: vDomNode[],
  * index: number,
  * }}
  */
-function findNodeInVDom(id) {
-	if (!id) {
+function getVDomNodeData(vid) {
+	if (!vid) {
 		return undefined;
 	}
 
@@ -179,7 +191,7 @@ function findNodeInVDom(id) {
 			let index = -1;
 			for (const child of children) {
 				index++;
-				if (child.id === id) {
+				if (child.id === vid) {
 					return {
 						node: child,
 						children,
@@ -236,14 +248,12 @@ function insertPiepText(insert_text) {
 	const sel = window.getSelection();
 	const focus_offset = sel.focusOffset;
 	const anchor_offset = sel.anchorOffset;
-	const focus_node = $(".piep_focus");
-	const id = focus_node ? +focus_node.dataset.ped : 0;
-	const v_node_data = findNodeInVDom(id);
-	if (!v_node_data) {
+	const focus_node = getPiepFocusNode();
+	const vid = focus_node ? +focus_node.dataset.vid : 0;
+	const v_node = findNodeInVDom(vid);
+	if (!v_node) {
 		return;
 	}
-
-	const v_node = v_node_data ? v_node_data.node : undefined;
 
 	const text = v_node.text;
 
@@ -258,8 +268,7 @@ function insertPiepText(insert_text) {
 	}
 	recreateDom();
 
-	const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
-
+	const node_ref = getPiepEditorNode(vid);
 	if (node_ref) {
 		setSelectionByIndex(node_ref, begin_offset + insert_text.length);
 	}
@@ -275,7 +284,39 @@ domload(() => {
 	piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
 	piep_editor_styles = piep_editor._child(".piep_editor_styles");
 
-	piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
+	const initInspector = () => {
+		piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
+		document.addEventListener("mousemove", (ev) => {
+			const target = $(ev.target);
+			const v_node_label = target._parent(".v_node_label", { skip: 0 });
+
+			removeClasses(".piep_consider_focus", ["piep_consider_focus"], piep_editor_content);
+			if (v_node_label) {
+				const vid = +v_node_label.dataset.vid;
+				getPiepEditorNode(vid).classList.add("piep_consider_focus");
+			}
+		});
+		document.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+			const v_node_label = target._parent(".v_node_label", { skip: 0 });
+
+			if (v_node_label) {
+				const vid = +v_node_label.dataset.vid;
+				const v_node = findNodeInVDom(vid);
+
+				const focus_node = getPiepEditorNode(vid);
+				if (v_node.text === undefined) {
+					//setSelectionByIndex(focus_node, 0);
+					piep_editor_cursor.classList.add("hidden");
+					setPiepEditorFocusNode(vid);
+				} else {
+					setSelectionByIndex(focus_node, 0, v_node.text.length);
+				}
+			}
+		});
+	};
+
+	initInspector();
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu"></div>`);
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
@@ -284,9 +325,9 @@ domload(() => {
 		<div class="label">Rozmiar czc</div>
 		<select class="field small" data-style="fontSize">
 			<option value=""></option>
-			<option value="1em">mała</option>
-			<option value="1.5em">średnia</option>
-			<option value="2em">duża</option>
+			<option value="1rem">mała</option>
+			<option value="1.5rem">średnia</option>
+			<option value="2rem">duża</option>
 		</select>
 
 		<div class="label">Grubość czc</div>
@@ -306,9 +347,9 @@ domload(() => {
 
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		input.addEventListener("change", () => {
-			const textable = getFocusTextable();
-			if (textable) {
-				const v_node = findNodeInVDom(+textable.dataset.ped).node;
+			const focus_node = piep_editor_content._child(".piep_focus");
+			if (focus_node) {
+				const v_node = findNodeInVDom(+focus_node.dataset.vid);
 				const anchor_offset = piep_editor_last_selection.anchorOffset;
 				const focus_offset = piep_editor_last_selection.focusOffset;
 
@@ -340,9 +381,9 @@ domload(() => {
 						const bef_id = getPiepEditorId();
 						v_node.children.push({ id: bef_id, tag: "span", styles: {}, text: v_node.text.substring(0, begin_offset), children: [] });
 					}
-					const mid_id = getPiepEditorId();
+					const mid_vid = getPiepEditorId();
 					const mid_child = {
-						id: mid_id,
+						id: mid_vid,
 						tag: "span",
 						styles: {},
 						text: v_node.text.substring(begin_offset, end_offset),
@@ -358,7 +399,7 @@ domload(() => {
 					setPropOfVNode(mid_child);
 					recreateDom();
 
-					const node_ref = piep_editor_content._child(`[data-ped="${mid_id}"]`);
+					const node_ref = getPiepEditorNode(mid_vid);
 					if (node_ref) {
 						setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
 					}
@@ -366,7 +407,8 @@ domload(() => {
 					setPropOfVNode(v_node);
 					recreateDom();
 
-					const node_ref = piep_editor_content._child(`[data-ped="${v_node.id}"]`);
+					setPiepEditorFocusNode(piep_focus_node_vid);
+					const node_ref = getPiepEditorNode(v_node.id);
 					if (node_ref) {
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
@@ -385,34 +427,26 @@ domload(() => {
 	});
 
 	document.addEventListener("click", (ev) => {
-		piep_editor_can_type = !!$(ev.target)._parent(piep_editor_content);
+		const target = $(ev.target);
+
+		piep_editor_content_active = !!(target._parent(piep_editor_content, { skip: 0 }) || target._parent(".v_node_label", { skip: 0 }));
+		updatePiepCursorPosition();
 	});
 
 	piep_editor_content.addEventListener("click", (ev) => {
-		const sel = window.getSelection();
-		const focus_node = $(sel.focusNode);
-		if (focus_node) {
-			const correct_selection = focus_node._parent($(ev.target), { skip: 0 });
-			if (!correct_selection) {
-				setSelectionByIndex($(ev.target), 0);
-			} else if (focus_node.innerText === "\n") {
-				setSelectionByIndex(correct_selection, 0);
-			}
-		}
-		updatePiepCursorPosition();
-
-		const textable = getFocusTextable();
-		if (textable) {
-			const v_node = findNodeInVDom(+textable.dataset.ped).node;
-			piep_editor_float_menu._children("[data-style]").forEach((input) => {
-				const prop = input.dataset.style;
-				let val = def(v_node.styles[prop], "");
-				if (prop.toLocaleLowerCase().endsWith("color")) {
-					val = val.replace("#", "");
-				}
-				input._set_value(val, { quiet: true });
-			});
-		}
+		//piep_editor_content_active = true; // still necessary, not anymore lol
+		//updatePiepCursorPosition();
+		// const sel = window.getSelection();
+		// const sel_focus_node = $(sel.focusNode);
+		// if (sel_focus_node) {
+		// 	const correct_selection = sel_focus_node._parent($(ev.target), { skip: 0 });
+		// 	if (!correct_selection) {
+		// 		console.log(21312312, ev.target, sel_focus_node);
+		// 		setSelectionByIndex($(ev.target), 0);
+		// 	} else if (sel_focus_node.innerText === "\n") {
+		// 		setSelectionByIndex(correct_selection, 0);
+		// 	}
+		// }
 	});
 
 	piep_editor_content.addEventListener("mousemove", (ev) => {
@@ -420,16 +454,16 @@ domload(() => {
 	});
 
 	document.addEventListener("keydown", (ev) => {
-		if (!piep_editor_can_type) {
+		const sel = window.getSelection();
+		const focus_node = getPiepFocusNode();
+		const focus_offset = sel.focusOffset;
+		const vid = focus_node ? +focus_node.dataset.vid : -1;
+		const v_node_data = getVDomNodeData(vid);
+		const v_node = v_node_data ? v_node_data.node : undefined;
+
+		if (!piep_editor_content_active || v_node.text === undefined) {
 			return;
 		}
-
-		const sel = window.getSelection();
-		const focus_offset = sel.focusOffset;
-		const focus_node = $(".piep_focus");
-		const id = focus_node ? +focus_node.dataset.ped : 0;
-		const v_node_data = findNodeInVDom(id);
-		const v_node = v_node_data ? v_node_data.node : undefined;
 
 		if (ev.key.length === 1 && sel) {
 			if (!ev.ctrlKey) {
@@ -451,13 +485,13 @@ domload(() => {
 					const prev_v_node = v_node_data.children[prev_index];
 
 					if (prev_v_node.text !== undefined) {
-						const prev_id = prev_v_node.id;
+						const prev_vid = prev_v_node.id;
 						const prev_v_node_text_before = prev_v_node.text;
 						prev_v_node.text = prev_v_node_text_before + v_node.text;
 						v_node_data.children.splice(v_node_data.index, 1);
 						recreateDom();
 
-						const prev_node_ref = piep_editor_content._child(`[data-ped="${prev_id}"]`);
+						const prev_node_ref = getPiepEditorNode(prev_vid);
 						if (prev_node_ref) {
 							setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
 						}
@@ -467,7 +501,7 @@ domload(() => {
 				v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
 				recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
+				const node_ref = getPiepEditorNode(vid);
 				if (node_ref) {
 					setSelectionByIndex(node_ref, focus_offset - 1);
 				}
@@ -484,13 +518,13 @@ domload(() => {
 					const next_v_node = v_node_data.children[next_index];
 
 					if (next_v_node.text !== undefined) {
-						const node_id = v_node.id;
+						const node_vid = v_node.id;
 						const v_node_text_before = v_node.text;
 						v_node.text = v_node_text_before + next_v_node.text;
 						v_node_data.children.splice(next_index, 1);
 						recreateDom();
 
-						const node_ref = piep_editor_content._child(`[data-ped="${node_id}"]`);
+						const node_ref = getPiepEditorNode(node_vid);
 						if (node_ref) {
 							setSelectionByIndex(node_ref, v_node_text_before.length);
 						}
@@ -500,7 +534,7 @@ domload(() => {
 				v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
 				recreateDom();
 
-				const node_ref = piep_editor_content._child(`[data-ped="${id}"]`);
+				const node_ref = getPiepEditorNode(vid);
 				if (node_ref) {
 					setSelectionByIndex(node_ref, focus_offset);
 				}
@@ -526,6 +560,8 @@ domload(() => {
 				const next_textable = getTextable(focus_node, 1);
 				if (next_textable) {
 					setSelectionByIndex(next_textable, 0);
+				} else {
+					setSelectionByIndex(focus_node, focus_offset);
 				}
 			} else {
 				setSelectionByIndex(focus_node, focus_offset + 1);
@@ -549,13 +585,13 @@ domload(() => {
 			if (typeof text === "string") {
 				const insert_v_node = cloneObject(v_node);
 				insert_v_node.text = text.substr(focus_offset);
-				const insert_node_id = getPiepEditorId();
-				insert_v_node.id = insert_node_id;
+				const insert_node_vid = getPiepEditorId();
+				insert_v_node.id = insert_node_vid;
 				v_node.text = text.substr(0, focus_offset);
 				v_node_data.children.splice(v_node_data.index + 1, 0, insert_v_node);
 				recreateDom();
 
-				const insert_node_ref = piep_editor_content._child(`[data-ped="${insert_node_id}"]`);
+				const insert_node_ref = getPiepEditorNode(insert_node_vid);
 				if (insert_node_ref) {
 					setSelectionByIndex(insert_node_ref, 0);
 				}
@@ -569,7 +605,9 @@ domload(() => {
 function setSelectionRange(range) {
 	const sel = window.getSelection();
 	sel.removeAllRanges();
-	sel.addRange(range);
+	if (range) {
+		sel.addRange(range);
+	}
 	updatePiepCursorPosition();
 }
 
@@ -592,57 +630,96 @@ function getTextNode(node) {
 	return text_node;
 }
 
-function getFocusTextable() {
-	const focus_node = $(".piep_focus");
-	return focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+function getPiepFocusNode() {
+	const focus_node = piep_editor_content._child(".piep_focus");
+	return focus_node;
 }
+
+// function getFocusTextable() {
+// 	const focus_node = piep_editor_content._child(".piep_focus");
+// 	return focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
+// }
 
 function updatePiepCursorPosition() {
 	const sel = window.getSelection();
 	piep_editor_last_selection = cloneObject(sel);
 	const range = document.createRange();
 	const focus_node = sel ? $(sel.focusNode) : undefined;
-	const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
-	if (focus_textable) {
-		const piep_editor_rect = piep_editor.getBoundingClientRect();
+	if (piep_editor_content_active) {
+		const focus_textable = focus_node ? focus_node._parent(`.textable`, { skip: 0 }) : undefined;
 
-		let cursor_top, cursor_left, cursor_width, cursor_height;
+		if (focus_textable) {
+			const piep_editor_rect = piep_editor.getBoundingClientRect();
 
-		if (focus_textable.innerText === "\n") {
-			const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
-			const sel_width = node_cursor_rect.width;
-			const sel_height = node_cursor_rect.height;
-			cursor_width = Math.max(sel_width, 2);
-			cursor_height = Math.max(sel_height, 20);
+			let cursor_top, cursor_left, cursor_width, cursor_height;
 
-			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
-			cursor_top = node_cursor_rect.top + sel_height * 0.5;
-		} else {
-			range.setStart(sel.focusNode, sel.focusOffset);
-			range.setEnd(sel.focusNode, sel.focusOffset);
+			if (focus_textable.innerText === "\n") {
+				const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
+				const sel_width = node_cursor_rect.width;
+				const sel_height = node_cursor_rect.height;
+				cursor_width = Math.max(sel_width, 2);
+				cursor_height = Math.max(sel_height, 20);
 
-			const selection_cursor_rect = range.getBoundingClientRect();
-			const sel_width = selection_cursor_rect.width;
-			const sel_height = selection_cursor_rect.height;
-			cursor_width = Math.max(sel_width, 2);
-			cursor_height = Math.max(sel_height, 20);
+				cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
+				cursor_top = node_cursor_rect.top + sel_height * 0.5;
+			} else {
+				range.setStart(sel.focusNode, sel.focusOffset);
+				range.setEnd(sel.focusNode, sel.focusOffset);
 
-			cursor_left = selection_cursor_rect.left + sel_width * 0.5;
-			cursor_top = selection_cursor_rect.top + sel_height * 0.5;
+				const selection_cursor_rect = range.getBoundingClientRect();
+				const sel_width = selection_cursor_rect.width;
+				const sel_height = selection_cursor_rect.height;
+				cursor_width = Math.max(sel_width, 2);
+				cursor_height = Math.max(sel_height, 20);
+
+				cursor_left = selection_cursor_rect.left + sel_width * 0.5;
+				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
+			}
+
+			piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
+			piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
+			piep_editor_cursor.style.width = cursor_width + "px";
+			piep_editor_cursor.style.height = cursor_height + "px";
+
+			piep_editor_cursor.classList.remove("hidden");
 		}
 
-		piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
-		piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
-		piep_editor_cursor.style.width = cursor_width + "px";
-		piep_editor_cursor.style.height = cursor_height + "px";
+		if (focus_textable) {
+			setPiepEditorFocusNode(focus_textable.dataset.vid);
+		}
+	}
+}
+
+function setPiepEditorFocusNode(vid) {
+	if (piep_focus_node_vid === vid) {
+		return;
 	}
 
-	if (focus_textable) {
-		// keep the last focus active so u can edit stuff
-		removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
-		focus_textable.classList.add("piep_focus");
+	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
+	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
+	piep_focus_node_vid = vid;
+	const focus_node = getPiepEditorNode(vid);
+	if (!focus_node) {
+		return;
 	}
+	focus_node.classList.add("piep_focus");
+	piep_editor_inspector_tree._child(`.tvid_${vid}`).classList.add("selected");
+
+	const v_node = findNodeInVDom(+focus_node.dataset.vid);
+	piep_editor_float_menu._children("[data-style]").forEach((input) => {
+		const prop = input.dataset.style;
+		console.log(input, prop);
+		let val = def(v_node.styles[prop], "");
+		if (prop.toLocaleLowerCase().endsWith("color")) {
+			val = val.replace("#", "");
+		}
+		input._set_value(val, { quiet: true });
+	});
+}
+
+function getPiepEditorNode(vid) {
+	return piep_editor_content._child(`.vid_${vid}`);
 }
 
 /**
@@ -656,25 +733,6 @@ function getRectCenter(rect) {
 	};
 }
 
-// /**
-//  *
-//  * @param {PiepNode} node
-//  */
-// function getFirstTextable(node, end = false) {
-// 	while (true) {
-// 		const children = node._direct_children();
-// 		const next = end ? children[children.length - 1] : children[0];
-// 		if (!next) {
-// 			return undefined;
-// 		}
-// 		node = next;
-// 		if (node.classList.contains("textable")) {
-// 			return node;
-// 		}
-// 	}
-// 	return undefined;
-// }
-
 /**
  *
  * @param {number} dx
@@ -685,9 +743,9 @@ function selectElementContentsFromAnywhere(dx, dy) {
 	/** @type {DOMRect} */
 	let sel_rect;
 
-	const focus_textable = getFocusTextable();
-	if (focus_textable && focus_textable.innerText === "\n") {
-		sel_rect = focus_textable._child("br").getBoundingClientRect();
+	const focus_node = getPiepFocusNode();
+	if (focus_node && focus_node.innerText === "\n") {
+		sel_rect = focus_node._child("br").getBoundingClientRect();
 	} else {
 		sel_rect = sel.getRangeAt(0).getBoundingClientRect();
 	}
@@ -797,6 +855,7 @@ function selectElementContentsFromAnywhere(dx, dy) {
 function getRangeByIndex(node, pos, end = undefined) {
 	const text_node = getTextNode(node);
 	const range = document.createRange();
+	//console.log(node, pos, end);
 	if (!text_node) {
 		range.setStart(node, 0);
 		range.setEnd(node, 0);

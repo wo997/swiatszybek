@@ -22,13 +22,14 @@
 			max-height: 350px;
 			border: 1px solid #ccc;
 		}
-		.v_node {
+		.v_node_label {
 			& {
-				padding: 5px 9px;
+				padding: 5px;
 				overflow: hidden;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 				flex-shrink: 0;
+				padding-left: calc(13px * var(--level) - 4px);
 			}
 			&:not(.selected) {
 				& {
@@ -55,24 +56,26 @@
 	}
 }
 
+.navbar_admin,
+.footer {
+	display: none;
+}
+
 .piep_editor {
 	& {
 		position: relative;
 	}
 
 	.piep_editor_content {
-		background: #fff;
-		white-space: pre-wrap;
-	}
-
-	// .piep_editor_content * {
-	// 	border: 1px solid #ddd;
-	// 	margin: 2px;
-	// }
-
-	::selection {
-		color: green;
-		background: yellow;
+		& {
+			background: #fff;
+			white-space: pre-wrap;
+			max-width: 600px;
+		}
+		// ::selection {
+		// 	color: green;
+		// 	background: yellow;
+		// }
 	}
 
 	.piep_editor_cursor {
@@ -83,7 +86,8 @@
 		//box-shadow: 0 0 0 1px #7775;
 	}
 
-	.piep_focus {
+	.piep_focus,
+	.piep_consider_focus {
 		box-shadow: 0 0 0 1px var(--focus-clr);
 		//box-shadow: 0 0 0 1px var(--focus-clr), 0 0 18px 0 #fff;
 	}
