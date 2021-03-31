@@ -38,6 +38,14 @@ domload(() => {
 				},
 			},
 			{
+				label: "Dostawa",
+				key: "delivery_type_id",
+				map_name: "delivery_type",
+				width: "140px",
+				searchable: "select",
+			},
+
+			{
 				label: "Status",
 				key: "status_id",
 				width: "200px",
@@ -97,6 +105,19 @@ domload(() => {
 						const obj = {
 							val: order.order_status_id,
 							label: order.name,
+						};
+						return obj;
+					});
+					return map;
+				},
+			},
+			{
+				name: "delivery_type",
+				getMap: () => {
+					const map = delivery_types.map((d) => {
+						const obj = {
+							val: d.delivery_type_id,
+							label: d.name,
 						};
 						return obj;
 					});
