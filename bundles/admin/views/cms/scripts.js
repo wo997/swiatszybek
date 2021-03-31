@@ -9,6 +9,8 @@ let piep_editor_content;
 /** @type {PiepNode} */
 let piep_editor_float_menu;
 /** @type {PiepNode} */
+let piep_editor_advanced_menu;
+/** @type {PiepNode} */
 let piep_editor_styles;
 /** @type {Selection} */
 let piep_editor_last_selection;
@@ -265,7 +267,7 @@ function insertPiepText(insert_text) {
 	const sel = window.getSelection();
 	const focus_offset = sel.focusOffset;
 	const anchor_offset = sel.anchorOffset;
-	const focus_node = getPiepFocusNode();
+	const focus_node = getPiepEditorFocusNode();
 	const vid = focus_node ? +focus_node.dataset.vid : 0;
 	const v_node = findNodeInVDom(vid);
 	if (!v_node) {
@@ -339,31 +341,52 @@ domload(() => {
 
 	initInspector();
 
-	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu"></div>`);
-	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_advanced_menu"></div>`);
+	piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
 
-	piep_editor_float_menu._set_content(html`
-		<div class="label">Rozmiar czc</div>
+	piep_editor_advanced_menu._set_content(html`
+		<div class="label">Margines</div>
 		<select class="field small" data-style="fontSize">
 			<option value=""></option>
 			<option value="1rem">mała</option>
 			<option value="1.5rem">średnia</option>
 			<option value="2rem">duża</option>
 		</select>
+	`);
 
-		<div class="label">Grubość czc</div>
-		<select class="field small" data-style="fontWeight">
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
+	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
+
+	piep_editor_float_menu._set_content(html`
+		<select class="field small inline" data-style="fontSize">
+			<option value=""></option>
+			<option value="1rem">mała</option>
+			<option value="1.5rem">średnia</option>
+			<option value="2rem">duża</option>
+		</select>
+
+		<select class="field small inline" data-style="fontWeight">
 			<option value=""></option>
 			<option value="400">normal</option>
 			<option value="600">semi-bold</option>
 			<option value="700">bold</option>
 		</select>
 
-		<div class="label">kolor czc</div>
-		<input class="field jscolor" data-style="color" />
+		<input class="field jscolor inline small" data-style="color" />
 
-		<div class="label">kolor tla</div>
-		<input class="field jscolor" data-style="backgroundColor" />
+		<input class="field jscolor inline small" data-style="backgroundColor" />
+
+		<button class="btn subtle small" data-tooltip="Przemieść blok">
+			<i class="fas fa-arrows-alt"></i>
+		</button>
+
+		<button class="btn subtle small" data-tooltip="Usuń blok">
+			<i class="fas fa-trash"></i>
+		</button>
+
+		<button class="btn subtle small" data-tooltip="Ukryj menu">
+			<i class="fas fa-times"></i>
+		</button>
 	`);
 
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
@@ -479,7 +502,7 @@ domload(() => {
 
 	document.addEventListener("keydown", (ev) => {
 		const sel = window.getSelection();
-		const focus_node = getPiepFocusNode();
+		const focus_node = getPiepEditorFocusNode();
 		const focus_offset = sel.focusOffset;
 		const vid = focus_node ? +focus_node.dataset.vid : -1;
 		const v_node_data = getVDomNodeData(vid);
@@ -675,7 +698,7 @@ function getTextNode(node) {
 	return text_node;
 }
 
-function getPiepFocusNode() {
+function getPiepEditorFocusNode() {
 	const focus_node = piep_editor_content._child(".piep_focus");
 	return focus_node;
 }
@@ -753,6 +776,7 @@ function setPiepEditorFocusNode(vid) {
 	piep_focus_node_vid = vid;
 	const focus_node = getPiepEditorNode(vid);
 	if (!focus_node) {
+		piep_editor_float_menu.classList.add("hidden");
 		return;
 	}
 	focus_node.classList.add("piep_focus");
@@ -767,6 +791,16 @@ function setPiepEditorFocusNode(vid) {
 		}
 		input._set_value(val, { quiet: true });
 	});
+
+	piep_editor_float_menu.classList.remove("hidden");
+	const focus_node_rect = focus_node.getBoundingClientRect();
+	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
+
+	let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
+	let top = focus_node_rect.top - piep_editor_float_menu_rect.height;
+
+	piep_editor_float_menu.style.left = left + "px";
+	piep_editor_float_menu.style.top = top + "px";
 }
 
 function getPiepEditorNode(vid) {
@@ -794,7 +828,7 @@ function selectElementContentsFromAnywhere(dx, dy) {
 	/** @type {DOMRect} */
 	let sel_rect;
 
-	const focus_node = getPiepFocusNode();
+	const focus_node = getPiepEditorFocusNode();
 	if (focus_node && focus_node.innerText === "\n") {
 		sel_rect = focus_node._child("br").getBoundingClientRect();
 	} else {
