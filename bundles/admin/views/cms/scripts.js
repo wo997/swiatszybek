@@ -111,8 +111,23 @@ function recreateDom() {
 		let classes = [base_class];
 
 		if (level > 0) {
+			const map_tag_display_name = {
+				a: "Link",
+				h1: "Nagłówek",
+				h2: "Nagłówek",
+				h3: "Nagłówek",
+				h4: "Nagłówek",
+				h5: "Nagłówek",
+				h6: "Nagłówek",
+				div: "Kontener",
+				p: "Paragraf",
+				span: "Tekst",
+			};
+
+			const display_name = def(map_tag_display_name[tag], "");
+
 			inspector_tree_html += html`<div class="v_node_label tvid_${node.id}" style="--level:${level}" data-vid="${node.id}">
-				<span class="name">${tag}</span>
+				<span class="name">${display_name}</span>
 				<span class="info">${textable ? " - " + text : `(${children.length})`}</span>
 			</div>`;
 		}
