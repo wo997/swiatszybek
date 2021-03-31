@@ -383,11 +383,11 @@ domload(() => {
 
 		<input class="field jscolor inline small" data-style="backgroundColor" />
 
-		<button class="btn subtle small" data-tooltip="Przemieść blok">
+		<button class="btn subtle small move_block_btn" data-tooltip="Przemieść blok">
 			<i class="fas fa-arrows-alt"></i>
 		</button>
 
-		<button class="btn subtle small" data-tooltip="Usuń blok">
+		<button class="btn subtle small remove_block_btn" data-tooltip="Usuń blok">
 			<i class="fas fa-trash"></i>
 		</button>
 
@@ -483,17 +483,28 @@ domload(() => {
 
 		const content_active = !!(target._parent(piep_editor_content) || target._parent(".v_node_label"));
 		setPiepEditorContentActive(content_active);
+		// order matters
+		updatePiepCursorPosition();
+
+		if (target._parent(".move_block_btn")) {
+			// TODO: do do do
+		}
+
+		if (target._parent(".remove_block_btn")) {
+			const v_node_data = getVDomNodeData(piep_focus_node_vid);
+			v_node_data.children.splice(v_node_data.index, 1);
+			recreateDom();
+			setPiepEditorFocusNode(undefined);
+		}
 
 		if (target._parent(piep_editor)) {
 			piep_editor_float_menu_active = !!(content_active || target._parent(piep_editor_float_menu));
-			if (target._parent(".hide_menu_btn")) {
+			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid) {
 				piep_editor_float_menu_active = false;
 			}
 
 			piep_editor_float_menu.classList.toggle("hidden", !piep_editor_float_menu_active);
 		}
-
-		updatePiepCursorPosition();
 	});
 
 	piep_editor_content.addEventListener("click", (ev) => {
@@ -775,10 +786,15 @@ function updatePiepCursorPosition() {
 	}
 
 	if (focus_textable) {
-		setPiepEditorFocusNode(focus_textable.dataset.vid);
+		setPiepEditorFocusNode(+focus_textable.dataset.vid);
 	}
 }
 
+/**
+ *
+ * @param {number} vid
+ * @returns
+ */
 function setPiepEditorFocusNode(vid) {
 	// NEVERMIND! -- was kinda for optimisation but we can easily skip it
 	if (piep_focus_node_vid === vid && piep_editor_content._child(".piep_focus")) {
@@ -807,12 +823,19 @@ function setPiepEditorFocusNode(vid) {
 	});
 
 	piep_editor_float_focus.classList.remove("hidden");
+	piep_editor_float_menu.classList.remove("hidden");
+
 	const focus_node_rect = focus_node.getBoundingClientRect();
 	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
 
 	let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
-	let top = focus_node_rect.top - piep_editor_float_menu_rect.height;
+	let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
+
+	const safe_off = 5;
+	left = clamp(safe_off, left, piep_editor_rect.width - safe_off);
+	// DUDE, the top should actually change by sum of heights
+	top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
 
 	piep_editor_float_menu.style.left = left - piep_editor_rect.left + "px";
 	piep_editor_float_menu.style.top = top - piep_editor_rect.top + "px";

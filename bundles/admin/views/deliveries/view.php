@@ -47,6 +47,9 @@
     <div class="expand_y hidden animate_hidden case_free_from">
         <div class="label">Cena minimalna</div>
         <input class="field free_from inline" data-number inputmode="numeric">
+
+        <div class="label">Waka maksymalna</div>
+        <input class="field max_weight inline" data-number inputmode="numeric">
     </div>
 
 </div>

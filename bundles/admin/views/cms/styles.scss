@@ -66,6 +66,8 @@
 	right: 360px;
 	width: 550px;
 	top: 0;
+	margin-right: -10000px;
+	margin-bottom: -10000px;
 }
 
 .piep_editor_float_focus {
@@ -73,6 +75,9 @@
 	border: 2px solid var(--primary-clr);
 	box-shadow: 0 0 1px 0 #fff4, inset 0 0 1px 0 #fff4;
 	pointer-events: none;
+	margin-right: -10000px;
+	margin-bottom: -10000px;
+	border-radius: 4px;
 }
 
 .piep_editor_advanced_menu {

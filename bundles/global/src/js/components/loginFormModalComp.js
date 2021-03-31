@@ -93,9 +93,11 @@ function loginFormModalComp(comp, parent, data = undefined) {
 					</button>
 
 					<div style="text-align: center; padding: 10px 0">
-						<a href="/rejestracja" class="btn subtle"> Rejestracja <i class="fa fa-user-plus"></i> </a>
-						<div style="height: 10px;"></div>
-						<a href="/resetowanie-hasla" class="btn subtle"> Zresetuj hasło <i class="fa fa-lock-open"></i> </a>
+						<div style="display:inline-flex;flex-direction:column;align-items:stretch">
+							<a href="/rejestracja" class="btn subtle"> Rejestracja <i class="fa fa-user-plus"></i> </a>
+							<div style="height: 10px;"></div>
+							<a href="/resetowanie-hasla" class="btn subtle"> Zresetuj hasło <i class="fa fa-lock-open"></i> </a>
+						</div>
 					</div>
 
 					<div style="text-align: center;">lub</div>
