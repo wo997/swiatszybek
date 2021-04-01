@@ -7,6 +7,10 @@
 
 <?php startSection("body_content"); ?>
 
+<div style="padding-left:500px">
+    <color-picker class="inline"></color-picker>
+</div>
+
 <div class="piep_editor">
     <div class="piep_editor_content"></div>
 

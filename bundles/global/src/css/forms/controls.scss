@@ -19,7 +19,8 @@ button,
 input,
 select,
 textarea,
-p-dropdown {
+p-dropdown,
+color-picker {
 	-webkit-appearance: none;
 	border: 1px solid #ccc;
 	outline: none;
@@ -178,16 +179,18 @@ textarea {
 		display: block;
 		width: 100%;
 	}
-	&:hover,
-	&:focus {
-		border-color: #aaa;
-		z-index: 3;
-	}
-	&:hover {
-		box-shadow: var(--field-hover-shadow);
-	}
-	&:hover:not(:focus) {
-		background-color: #fff;
+	&:not(.nohover) {
+		&:hover,
+		&:focus {
+			border-color: #aaa;
+			z-index: 3;
+		}
+		&:hover {
+			box-shadow: var(--field-hover-shadow);
+		}
+		&:hover:not(:focus) {
+			background-color: #fff;
+		}
 	}
 	&:focus {
 		border-color: var(--focus-clr);

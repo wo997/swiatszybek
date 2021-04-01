@@ -1,0 +1,274 @@
+/* css[global] */
+
+color-picker {
+	& {
+		position: relative;
+		padding-right: 40px !important;
+		text-align: center;
+		cursor: pointer;
+	}
+	&.inline {
+		width: 95px;
+	}
+	.icon {
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 30px;
+		background: #eee;
+		color: #333;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-left: 1px solid #ccc;
+		border-top-right-radius: inherit;
+		border-bottom-right-radius: inherit;
+	}
+	&::before {
+		content: "Brak";
+		// color: transparent;
+	}
+}
+
+.picker_wrapper {
+	& {
+		font-size: 8px !important;
+	}
+	.close_btn,
+	.erase_btn {
+		order: 1;
+	}
+}
+
+/* was minified in js, really dumb, had to make a few changes */
+.layout_default.picker_wrapper input,
+.layout_default.picker_wrapper button {
+	font-size: 0.85rem;
+}
+.picker_wrapper.no_alpha .picker_alpha {
+	display: none;
+}
+.picker_wrapper.no_editor .picker_editor {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+}
+.layout_default.picker_wrapper {
+	display: -webkit-box;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	flex-flow: row wrap;
+	-webkit-box-pack: justify;
+	justify-content: space-between;
+	-webkit-box-align: stretch;
+	align-items: stretch;
+	font-size: 10px;
+	width: 25em;
+	padding: 0.5em;
+}
+.layout_default.picker_wrapper > * {
+	margin: 3px;
+}
+.layout_default.picker_wrapper::before {
+	content: "";
+	display: block;
+	width: 100%;
+	height: 0;
+	-webkit-box-ordinal-group: 2;
+	order: 1;
+}
+.layout_default .picker_slider,
+.layout_default .picker_selector {
+	padding: 1em;
+}
+.layout_default .picker_hue {
+	width: 100%;
+}
+.layout_default .picker_sl {
+	-webkit-box-flex: 1;
+	flex: 1 1 auto;
+}
+.layout_default .picker_sl::before {
+	content: "";
+	display: block;
+	padding-bottom: 100%;
+}
+.layout_default .picker_editor {
+	-webkit-box-ordinal-group: 2;
+	order: 1;
+	width: 5.25rem;
+}
+.layout_default .picker_sample {
+	-webkit-box-ordinal-group: 2;
+	order: 1;
+	-webkit-box-flex: 1;
+	flex: 1 1 auto;
+	border-radius: 4px;
+	margin: 4px;
+}
+.picker_wrapper {
+	box-sizing: border-box;
+	background: #f2f2f2;
+	box-shadow: 0 0 0 1px silver;
+	cursor: default;
+	font-family: sans-serif;
+	color: #444;
+	pointer-events: auto;
+}
+.picker_wrapper:focus {
+	outline: none;
+}
+.picker_selector {
+	position: absolute;
+	z-index: 1;
+	display: block;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border: 2px solid white;
+	border-radius: 100%;
+	box-shadow: 0 0 3px 1px #67b9ff;
+	background: currentColor;
+	cursor: pointer;
+}
+.picker_slider .picker_selector {
+	border-radius: 2px;
+}
+.picker_hue {
+	position: relative;
+	background-image: -webkit-gradient(
+		linear,
+		left top,
+		right top,
+		from(red),
+		color-stop(yellow),
+		color-stop(lime),
+		color-stop(cyan),
+		color-stop(blue),
+		color-stop(magenta),
+		to(red)
+	);
+	background-image: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+	box-shadow: 0 0 0 1px silver;
+}
+.picker_sl {
+	position: relative;
+	box-shadow: 0 0 0 1px silver;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(white), color-stop(50%, rgba(255, 255, 255, 0))),
+		-webkit-gradient(linear, left bottom, left top, from(black), color-stop(50%, rgba(0, 0, 0, 0))),
+		-webkit-gradient(linear, left top, right top, from(gray), to(rgba(128, 128, 128, 0)));
+	background-image: linear-gradient(180deg, white, rgba(255, 255, 255, 0) 50%), linear-gradient(0deg, black, rgba(0, 0, 0, 0) 50%),
+		linear-gradient(90deg, gray, rgba(128, 128, 128, 0));
+}
+.picker_alpha,
+.picker_sample {
+	position: relative;
+	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2'%3E%3Cpath d='M1,0H0V1H2V2H1' fill='lightgrey'/%3E%3C/svg%3E")
+		left top/contain white;
+	box-shadow: 0 0 0 1px silver;
+}
+.picker_alpha .picker_selector,
+.picker_sample .picker_selector {
+	background: none;
+}
+.picker_editor input {
+	font-family: monospace;
+}
+.picker_sample::before {
+	content: "";
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: currentColor;
+	border-radius: inherit;
+}
+.picker_arrow {
+	position: absolute;
+	z-index: -1;
+}
+.picker_wrapper.popup {
+	position: absolute;
+	z-index: 2;
+	margin: 1.5em;
+}
+.picker_wrapper.popup,
+.picker_wrapper.popup .picker_arrow::before,
+.picker_wrapper.popup .picker_arrow::after {
+	background: #fff;
+	box-shadow: 0 2px 5px 0px #0004;
+	border-radius: 4px;
+}
+.picker_wrapper.popup,
+.picker_wrapper.popup .picker_arrow::before {
+	border: 1px solid #ccc;
+}
+.picker_wrapper.popup .picker_arrow {
+	width: 3em;
+	height: 3em;
+	margin: 0;
+}
+.picker_wrapper.popup .picker_arrow::before,
+.picker_wrapper.popup .picker_arrow::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -99;
+}
+.picker_wrapper.popup .picker_arrow::before {
+	width: 100%;
+	height: 100%;
+	-webkit-transform: skew(45deg);
+	transform: skew(45deg);
+	-webkit-transform-origin: 0 100%;
+	transform-origin: 0 100%;
+	border-radius: 4px;
+	left: 4px;
+	top: -1px;
+}
+.picker_wrapper.popup .picker_arrow::after {
+	width: 150%;
+	height: 150%;
+	box-shadow: none;
+}
+.popup.popup_top {
+	bottom: 100%;
+	left: 0;
+}
+.popup.popup_top .picker_arrow {
+	bottom: 0;
+	left: 0;
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+}
+.popup.popup_bottom {
+	top: 100%;
+	left: 0;
+}
+.popup.popup_bottom .picker_arrow {
+	top: 0;
+	left: 0;
+	-webkit-transform: rotate(90deg) scale(1, -1);
+	transform: rotate(90deg) scale(1, -1);
+}
+.popup.popup_left {
+	top: 0;
+	right: 100%;
+}
+.popup.popup_left .picker_arrow {
+	top: 0;
+	right: 0;
+	-webkit-transform: scale(-1, 1);
+	transform: scale(-1, 1);
+}
+.popup.popup_right {
+	top: 0;
+	left: 100%;
+}
+.popup.popup_right .picker_arrow {
+	top: 0;
+	left: 0;
+}

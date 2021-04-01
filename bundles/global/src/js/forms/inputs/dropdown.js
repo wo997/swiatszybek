@@ -2,14 +2,14 @@
 
 window.addEventListener("register-form-components", (ev) => {
 	// @ts-ignore
-	registerCheckboxes(ev.detail.parent);
+	registerDropdowns(ev.detail.parent);
 });
 
 /**
  *
  * @param {PiepNode} parent
  */
-function registerCheckboxes(parent) {
+function registerDropdowns(parent) {
 	parent._children("p-dropdown:not(.drpdwn_rgstrd)").forEach((input) => {
 		input.classList.add("drpdwn_rgstrd");
 

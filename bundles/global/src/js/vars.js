@@ -20,6 +20,8 @@ let physical_measures;
 
 let countries_options_html;
 
+let Picker;
+
 const html = (...v) => {
 	return "";
 };

@@ -41,6 +41,7 @@ if (isset($JS_files)) {
     <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= ASSETS_RELEASE ?>"></script>
 
     <script src="/bundles/admin/src/js/jscolor.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <script src="/bundles/admin/src/js/vanilla-picker.min.js?v=<?= ASSETS_RELEASE ?>"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>

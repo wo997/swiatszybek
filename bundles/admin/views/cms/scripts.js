@@ -348,6 +348,32 @@ domload(() => {
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_advanced_menu"></div>`);
 	piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
 
+	const popupBasic = new Picker({
+		parent: piep_editor_advanced_menu,
+		alpha: false,
+		onOpen: (a, b, c, d) => {
+			const picker_wrapper = piep_editor_advanced_menu._child(".picker_wrapper");
+			const picker_done = picker_wrapper._child(".picker_done");
+			if (picker_done) {
+				picker_done.outerHTML = html`
+					<button class="btn subtle erase_btn small"><i class="fas fa-eraser"></i></button>
+					<button class="btn subtle close_btn small"><i class="fas fa-check"></i></button>
+				`;
+				const picker_cancel = picker_wrapper._child(".picker_cancel");
+				if (picker_cancel) {
+					picker_cancel.remove();
+				}
+				const input = picker_wrapper._child(".picker_editor input");
+				if (input) {
+					input.classList.add("field", "small");
+				}
+			}
+		},
+		onChange: (a) => {
+			console.log(a);
+		},
+	});
+
 	piep_editor_advanced_menu._set_content(html`
 		<div class="label">Margines</div>
 		<select class="field small" data-style="fontSize">
