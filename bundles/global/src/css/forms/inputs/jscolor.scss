@@ -9,3 +9,18 @@
 	width: 75px;
 	text-align: center;
 }
+
+.jscolor_wrapper {
+	& {
+		position: relative;
+	}
+	.jscolor {
+		width: 100% !important;
+		position: absolute;
+	}
+	.overlay {
+		background: #fff;
+		position: relative;
+		z-index: 10;
+	}
+}

@@ -18,7 +18,7 @@ p-dropdown {
 			// border-color: var(--pretty_blue_border);
 			border-color: var(--pretty_blue_background);
 		}
-		&:not(.selected) {
+		&:not(.dropped):not(.selected) {
 			border-color: transparent;
 			background-color: transparent;
 		}
