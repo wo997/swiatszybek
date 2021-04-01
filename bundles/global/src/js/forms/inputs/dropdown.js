@@ -23,12 +23,33 @@ function registerCheckboxes(parent) {
 		const selected_option = input._child(".selected_option");
 		const options_wrapper = input._child(".options_wrapper");
 
-		selected_option._set_content(options_wrapper._direct_children()[0].innerHTML);
+		const first_option = options_wrapper._direct_children()[0];
 
-		input.addEventListener("click", (ev) => {
+		/**
+		 *
+		 * @param {PiepNode} option
+		 */
+		const selectOption = (option) => {
+			input.dataset.value = option.dataset.value;
+			input.classList.toggle("selected", option.dataset.value !== "");
+			input._dispatch_change();
+			if (input.classList.contains("static_label")) {
+				option = first_option;
+			}
+			selected_option._set_content(option.innerHTML);
+		};
+		selectOption(first_option);
+
+		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
+			if (!target._parent(input)) {
+				input.classList.remove("dropped");
+				return;
+			}
 
-			if (target._parent("c-option")) {
+			const option = target._parent("p-option");
+			if (option) {
+				selectOption(option);
 			}
 			input.classList.toggle("dropped");
 		});

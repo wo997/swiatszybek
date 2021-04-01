@@ -20,6 +20,7 @@ p-dropdown {
 		}
 		&:not(.selected) {
 			border-color: transparent;
+			background-color: transparent;
 		}
 	}
 	& .options_wrapper {
@@ -55,11 +56,10 @@ p-dropdown {
 	}
 	& .selected_option,
 	& p-option {
-		&::after {
+		&:empty::after {
 			// prevent colapsing
 			content: ".";
 			visibility: hidden;
-			width: 0;
 		}
 	}
 	p-option {
@@ -68,6 +68,28 @@ p-dropdown {
 		}
 		&:hover {
 			background: #eee;
+		}
+		&[data-value=""] {
+			& {
+				color: transparent;
+				position: relative;
+			}
+			&::after {
+				color: #000;
+				content: "-";
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				visibility: visible;
+			}
+			* {
+				visibility: hidden;
+			}
 		}
 	}
 }

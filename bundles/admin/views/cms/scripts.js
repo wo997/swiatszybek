@@ -365,30 +365,28 @@ domload(() => {
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
-		<select class="field small inline blank" data-style="fontSize">
+		<select class="field small inline blank" data-style="">
 			<option value=""></option>
 			<option value="1rem">mała</option>
 			<option value="1.5rem">średnia</option>
 			<option value="2rem">duża</option>
 		</select>
 
-		<p-dropdown class="field small inline blank" data-style="fontWeight">
-			<p-option data-value=""></p-option>
+		<p-dropdown class="field small inline pretty_blue center static_label" data-style="fontSize">
+			<p-option data-value="">
+				<span style="font-size:1em;font-weight:600"> A<span style="font-size:0.7em">A</span> </span>
+			</p-option>
+			<p-option data-value="1rem"><span style="font-size:1em">A</span></p-option>
+			<p-option data-value="1.2rem"><span style="font-size:1.2em">A</span></p-option>
+			<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
+		</p-dropdown>
+
+		<p-dropdown class="field small inline pretty_blue" data-style="fontWeight">
+			<p-option data-value=""><span class="bold">B</span></p-option>
 			<p-option data-value="400">B</p-option>
-			<p-option data-value="600" class="semi_bold">B</p-option>
-			<p-option data-value="700" class="bold">B</p-option>
+			<p-option data-value="600"><span class="semi_bold">B</span></p-option>
+			<p-option data-value="700"><span class="bold">B</span></p-option>
 		</p-dropdown>
-
-		<p-dropdown class="field small inline pretty_blue selected" data-style="fontWeight">
-			<p-option data-value="700" class="bold">B</p-option>
-		</p-dropdown>
-
-		<select class="field small inline blank" data-style="fontWeight">
-			<option value=""></option>
-			<option value="400">normal</option>
-			<option value="600">semi-bold</option>
-			<option value="700">bold</option>
-		</select>
 
 		<input class="field jscolor inline small" data-style="color" />
 
