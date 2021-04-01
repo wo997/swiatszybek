@@ -267,11 +267,11 @@ function getEditableCellHtml(dt, column) {
 	if (column.editable === "checkbox") {
 		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
 	} else if (column.editable === "number") {
-		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" data-number inputmode="numeric" />`;
+		cell_html += html`<input class="field small" data-bind="${column.key}" data-number inputmode="numeric" />`;
 	} else if (column.editable === "string") {
-		cell_html += html`<input type="text" class="field small" data-bind="${column.key}" />`;
+		cell_html += html`<input class="field small" data-bind="${column.key}" />`;
 	} else if (column.editable === "color") {
-		cell_html += html`<input type="text" class="field small jscolor" data-bind="${column.key}" />`;
+		cell_html += html`<color-picker class="small" data-bind="${column.key}"></color-picker>`;
 	} else if (column.editable === "select") {
 		let options = "";
 		let number = "";

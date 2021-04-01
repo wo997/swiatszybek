@@ -915,7 +915,7 @@ function datatableComp(comp, parent, data) {
 							filter_menu_data.open(filter_menu, curr_filter ? curr_filter.data : undefined);
 
 							filter_menu._animate(
-								`0%{transform-origin:50% 0;transform:scale(0.5);opacity:0}
+								`0%{transform-origin:50% 0;transform:scale(0.8);opacity:0}
                                 100%{transform-origin:50% 0;transform:scale(1);opacity:1}`,
 								200
 							);

@@ -209,6 +209,8 @@ function setValue(input, value = null, options = {}) {
 	if (input.classList.contains("radio_group")) {
 		input.dataset.value = value;
 		onRadioGroupValueSet(input);
+	} else if (input.tagName == "COLOR-PICKER") {
+		setColorPickerValue(input, value);
 	} else if (input.tagName == "P-CHECKBOX") {
 		setCheckboxValue(input, !!value);
 	} else if (input.tagName == "P-DROPDOWN") {
@@ -292,6 +294,8 @@ function getValue(input, options = {}) {
 		v = def(input.dataset.value, "");
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
+	} else if (input.tagName == "COLOR-PICKER") {
+		v = getColorPickerValue(input);
 	} else if (input.tagName == "P-DROPDOWN") {
 		v = input.dataset.value;
 		// @ts-ignore

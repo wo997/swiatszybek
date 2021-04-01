@@ -179,18 +179,16 @@ textarea {
 		display: block;
 		width: 100%;
 	}
-	&:not(.nohover) {
-		&:hover,
-		&:focus {
-			border-color: #aaa;
-			z-index: 3;
-		}
-		&:hover {
-			box-shadow: var(--field-hover-shadow);
-		}
-		&:hover:not(:focus) {
-			background-color: #fff;
-		}
+	&:hover,
+	&:focus {
+		border-color: #aaa;
+		z-index: 3;
+	}
+	&:hover {
+		box-shadow: var(--field-hover-shadow);
+	}
+	&:hover:not(:focus) {
+		background-color: #fff;
 	}
 	&:focus {
 		border-color: var(--focus-clr);

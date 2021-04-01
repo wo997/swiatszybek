@@ -114,7 +114,9 @@ function $(selector, parent = undefined) {
 	};
 
 	// jscolor is an input already, .datepicker too
-	const valid_input = node.matches ? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown") : false;
+	const valid_input = node.matches
+		? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker")
+		: false;
 
 	if (valid_input) {
 		if (!node._set_value) {

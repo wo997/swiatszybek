@@ -112,7 +112,7 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
                 $color = def($extra, "color", "");
                 if ($color) {
                     //$show_before = "<div class=\"just_color\" style=\"--color:$color\"></div>";
-                    $checkbox_style = "--checkbox_color:#$color";
+                    $checkbox_style = "--checkbox_color:$color";
                 }
             }
         }
