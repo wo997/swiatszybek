@@ -18,16 +18,12 @@ select {
 button,
 input,
 select,
-textarea {
+textarea,
+p-dropdown {
 	-webkit-appearance: none;
 	border: 1px solid #ccc;
 	outline: none;
 	margin: 0;
-}
-button,
-input,
-select,
-textarea {
 	border-radius: 4px;
 }
 
@@ -155,10 +151,13 @@ textarea {
 .btn,
 .field {
 	& {
-		padding: 0.42em 0.8em;
+		--field_padding_hor: 0.8em;
+		--field_padding_ver: 0.42em;
+		padding: var(--field_padding_ver) var(--field_padding_hor);
 	}
 	&.small {
-		padding: 0.2em 0.5em;
+		--field_padding_hor: 0.5em;
+		--field_padding_ver: 0.2em;
 	}
 }
 .label > .btn {
@@ -212,7 +211,8 @@ select.field:not(.blank) {
 	padding-right: 30px;
 }
 
-select {
+select,
+p-dropdown {
 	cursor: pointer;
 }
 

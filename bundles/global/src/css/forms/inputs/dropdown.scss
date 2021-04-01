@@ -1,0 +1,73 @@
+/* css[global] */
+
+p-dropdown {
+	& {
+		display: flex;
+		flex-direction: column;
+		vertical-align: bottom;
+		position: relative;
+	}
+	&.inline {
+		display: inline-flex !important;
+	}
+	&.pretty_blue {
+		&:not(.dropped).selected {
+			background: var(--pretty_blue_background);
+			color: var(--pretty_blue);
+			// font-weight: 600;
+			// border-color: var(--pretty_blue_border);
+			border-color: var(--pretty_blue_background);
+		}
+		&:not(.selected) {
+			border-color: transparent;
+		}
+	}
+	& .options_wrapper {
+		display: flex;
+		flex-direction: column;
+	}
+	&.dropped {
+		& {
+			background: #fff;
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+			border-color: #aaa;
+		}
+		& .options_wrapper {
+			background: #fff;
+			box-shadow: 0 2px 2px 0 #0004;
+			border: 1px solid #aaa;
+			border-top-color: #ddd;
+			border-bottom-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+			left: -1px;
+			top: 100%;
+			right: -1px;
+			position: absolute;
+		}
+	}
+
+	&:not(.dropped) .options_wrapper {
+		pointer-events: none;
+		visibility: hidden;
+		margin: 0 calc(-1 * var(--field_padding_hor));
+		height: 0;
+	}
+	& .selected_option,
+	& p-option {
+		&::after {
+			// prevent colapsing
+			content: ".";
+			visibility: hidden;
+			width: 0;
+		}
+	}
+	p-option {
+		& {
+			padding: var(--field_padding_ver) var(--field_padding_hor);
+		}
+		&:hover {
+			background: #eee;
+		}
+	}
+}

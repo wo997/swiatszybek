@@ -365,14 +365,25 @@ domload(() => {
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
-		<select class="field small inline" data-style="fontSize">
+		<select class="field small inline blank" data-style="fontSize">
 			<option value=""></option>
 			<option value="1rem">mała</option>
 			<option value="1.5rem">średnia</option>
 			<option value="2rem">duża</option>
 		</select>
 
-		<select class="field small inline" data-style="fontWeight">
+		<p-dropdown class="field small inline blank" data-style="fontWeight">
+			<p-option data-value=""></p-option>
+			<p-option data-value="400">B</p-option>
+			<p-option data-value="600" class="semi_bold">B</p-option>
+			<p-option data-value="700" class="bold">B</p-option>
+		</p-dropdown>
+
+		<p-dropdown class="field small inline pretty_blue selected" data-style="fontWeight">
+			<p-option data-value="700" class="bold">B</p-option>
+		</p-dropdown>
+
+		<select class="field small inline blank" data-style="fontWeight">
 			<option value=""></option>
 			<option value="400">normal</option>
 			<option value="600">semi-bold</option>
@@ -383,15 +394,15 @@ domload(() => {
 
 		<input class="field jscolor inline small" data-style="backgroundColor" />
 
-		<button class="btn subtle small move_block_btn" data-tooltip="Przemieść blok">
+		<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">
 			<i class="fas fa-arrows-alt"></i>
 		</button>
 
-		<button class="btn subtle small remove_block_btn" data-tooltip="Usuń blok">
+		<button class="btn transparent small remove_block_btn" data-tooltip="Usuń blok">
 			<i class="fas fa-trash"></i>
 		</button>
 
-		<button class="btn subtle small hide_menu_btn" data-tooltip="Ukryj menu">
+		<button class="btn transparent small hide_menu_btn" data-tooltip="Ukryj menu">
 			<i class="fas fa-times"></i>
 		</button>
 	`);

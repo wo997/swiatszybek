@@ -30,14 +30,11 @@
 				text-overflow: ellipsis;
 				flex-shrink: 0;
 				padding-left: calc(13px * var(--level) - 4px);
+				user-select: none;
+				cursor: pointer;
 			}
-			&:not(.selected) {
-				& {
-					cursor: pointer;
-				}
-				&:hover {
-					background: #eee;
-				}
+			&:not(.selected):hover {
+				background: #eee;
 			}
 			&.selected {
 				background: var(--pretty_blue_background);
@@ -62,7 +59,7 @@
 	border: 1px solid #ccc;
 	box-shadow: 0 2px 5px 0 #0003;
 	border-radius: 4px;
-	padding: 10px;
+	padding: 4px;
 	right: 360px;
 	width: 550px;
 	top: 0;

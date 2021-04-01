@@ -211,6 +211,8 @@ function setValue(input, value = null, options = {}) {
 		onRadioGroupValueSet(input);
 	} else if (input.tagName == "P-CHECKBOX") {
 		setCheckboxValue(input, !!value);
+	} else if (input.tagName == "P-DROPDOWN") {
+		setDropdownValue(input, value);
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
@@ -290,6 +292,8 @@ function getValue(input, options = {}) {
 		v = def(input.dataset.value, "");
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
+	} else if (input.tagName == "P-DROPDOWN") {
+		v = input.dataset.value;
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (v && v.substr(6, 4).match(/\d{4}/)) {
