@@ -59,12 +59,12 @@
 	border: 1px solid #ccc;
 	box-shadow: 0 2px 5px 0 #0003;
 	border-radius: 4px;
-	padding: 4px;
-	right: 360px;
-	width: 550px;
-	top: 0;
+	padding: 0 4px;
 	margin-right: -10000px;
 	margin-bottom: -10000px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .piep_editor_float_focus {

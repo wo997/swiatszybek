@@ -408,15 +408,11 @@ domload(() => {
 		</p-dropdown>
 
 		<i class="fas fa-fill"></i>
+		<i class="fas fa-paint-brush"></i>
 
-		<div class="jscolor_wrapper inline">
-			<input class="field jscolor inline small" data-style="color" />
-			<button class="overlay btn transparent small">
-				<i class="fas fa-paint-brush"></i>
-			</button>
-		</div>
+		<color-picker data-style="color" class="inline"></color-picker>
 
-		<input class="field jscolor inline small" data-style="backgroundColor" />
+		<color-picker data-style="backgroundColor" class="inline"></color-picker>
 
 		<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">
 			<i class="fas fa-arrows-alt btn transparent small"></i>
@@ -449,9 +445,6 @@ domload(() => {
 
 				let val = input._get_value();
 				let prop = input.dataset.style;
-				if (prop.toLocaleLowerCase().endsWith("color")) {
-					val = "#" + val;
-				}
 
 				const setPropOfVNode = (edit_v_node) => {
 					if (val === "") {
@@ -851,9 +844,6 @@ function setPiepEditorFocusNode(vid) {
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		const prop = input.dataset.style;
 		let val = def(v_node.styles[prop], "");
-		if (prop.toLocaleLowerCase().endsWith("color")) {
-			val = val.replace("#", "");
-		}
 		input._set_value(val, { quiet: true });
 	});
 

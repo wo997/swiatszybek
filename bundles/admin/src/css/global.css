@@ -22,8 +22,12 @@
 	color: var(--subtle-font-clr);
 } */
 
-body {
+/* body {
 	font-size: 14px;
+} */
+
+:root {
+	--base_font_size: 14px;
 }
 
 .status_rect {
