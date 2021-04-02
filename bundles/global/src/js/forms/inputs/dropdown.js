@@ -54,17 +54,18 @@ function registerDropdowns(parent) {
 			input.classList.toggle("dropped");
 		});
 
-		const fix = () => {
-			if (input.classList.contains("dropped")) {
-				return;
-			}
-			// 2 comes from margin
-			input.style.minWidth = options_wrapper.getBoundingClientRect().width + 2 + "px";
-		};
-		document.addEventListener("click", () => {
-			setTimeout(fix);
-		});
-		fix();
+		// I prefer fixed width
+		// const fix = () => {
+		// 	if (input.classList.contains("dropped")) {
+		// 		return;
+		// 	}
+		// 	// 2 comes from margin
+		// 	input.style.minWidth = options_wrapper.getBoundingClientRect().width + 2 + "px";
+		// };
+		// document.addEventListener("click", () => {
+		// 	setTimeout(fix);
+		// });
+		// fix();
 	});
 }
 

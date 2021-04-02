@@ -59,12 +59,16 @@
 	border: 1px solid #ccc;
 	box-shadow: 0 2px 5px 0 #0003;
 	border-radius: 4px;
-	padding: 0 4px;
+	// padding: 0 4px;
+	padding: 2px;
 	margin-right: -10000px;
 	margin-bottom: -10000px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+.piep_editor_float_menu > *:not(:last-child) {
+	margin-right: 2px;
 }
 
 .piep_editor_float_focus {
@@ -139,4 +143,11 @@
 		//box-shadow: 0 0 1px 1px #fff;
 		//box-shadow: 0 0 1px 1px #0005;
 	}
+}
+
+.color_circle {
+	border-radius: 8px;
+	width: 16px;
+	height: 16px;
+	box-shadow: inset 0 0 0 1px #0004;
 }

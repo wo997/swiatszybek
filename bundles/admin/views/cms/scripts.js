@@ -391,7 +391,7 @@ domload(() => {
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
-		<p-dropdown class="field small inline pretty_blue center static_label" data-style="fontSize">
+		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="fontSize">
 			<p-option data-value="">
 				<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
 			</p-option>
@@ -400,22 +400,45 @@ domload(() => {
 			<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue" data-style="fontWeight">
+		<p-dropdown class="field small inline pretty_blue center horizontal" data-style="fontWeight">
 			<p-option data-value=""><span class="bold">B</span></p-option>
 			<p-option data-value="400">B</p-option>
 			<p-option data-value="600"><span class="semi_bold">B</span></p-option>
 			<p-option data-value="700"><span class="bold">B</span></p-option>
 		</p-dropdown>
 
-		<i class="fas fa-fill"></i>
-		<i class="fas fa-paint-brush"></i>
+		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="color">
+			<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
+			<p-option data-value="var(--primary-clr)">
+				<div class="color_circle" style="background:var(--primary-clr);"></div>
+			</p-option>
+			<p-option data-value="#000">
+				<div class="color_circle" style="background:#000;"></div>
+			</p-option>
+			<p-option data-value="#fff">
+				<div class="color_circle" style="background:#fff;"></div>
+			</p-option>
+			<p-option> <i class="fas fa-cog"></i> </p-option>
+			<p-option> <i class="fas fa-eye-dropper"></i> </p-option>
+		</p-dropdown>
 
-		<color-picker data-style="color" class="inline"></color-picker>
-
-		<color-picker data-style="backgroundColor" class="inline"></color-picker>
+		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="backgroundColor">
+			<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
+			<p-option data-value="var(--primary-clr)">
+				<div class="color_circle" style="background:var(--primary-clr);"></div>
+			</p-option>
+			<p-option data-value="#000">
+				<div class="color_circle" style="background:#000;"></div>
+			</p-option>
+			<p-option data-value="#fff">
+				<div class="color_circle" style="background:#fff;"></div>
+			</p-option>
+			<p-option> <i class="fas fa-cog"></i> </p-option>
+			<p-option> <i class="fas fa-eye-dropper"></i> </p-option>
+		</p-dropdown>
 
 		<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">
-			<i class="fas fa-arrows-alt btn transparent small"></i>
+			<i class="fas fa-arrows-alt"></i>
 		</button>
 
 		<button class="btn transparent small remove_block_btn" data-tooltip="Usuń blok">
@@ -426,6 +449,12 @@ domload(() => {
 			<i class="fas fa-times"></i>
 		</button>
 	`);
+
+	{
+		/* <color-picker data-style="color" class="small inline"></color-picker>
+
+<color-picker data-style="backgroundColor" class="small inline"></color-picker> */
+	}
 
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		input.addEventListener("change", () => {
