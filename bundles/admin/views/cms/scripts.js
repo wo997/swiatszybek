@@ -392,8 +392,8 @@ domload(() => {
 			<p-option data-value="#fff">
 				<div class="color_circle" style="background:#fff;"></div>
 			</p-option>
-			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			<p-option data-tooltip="Inny kolor"> <i class="fas fa-eye-dropper"></i><color-picker></color-picker> </p-option>
+			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
 		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="backgroundColor" data-tooltip="Kolor tła">
@@ -407,8 +407,8 @@ domload(() => {
 			<p-option data-value="#fff">
 				<div class="color_circle" style="background:#fff;"></div>
 			</p-option>
-			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			<p-option data-tooltip="Inny kolor"> <i class="fas fa-eye-dropper"></i><color-picker></color-picker> </p-option>
+			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
 		<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">

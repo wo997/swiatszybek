@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}/general_product/search]  
 
-$from = "general_product gp INNER JOIN product p USING (general_product_id)";
+$from = "general_product gp LEFT JOIN product p USING (general_product_id)";
 $where = "1";
 
 $category_ids = def(json_decode($_POST["datatable_params"], true), "category_ids", []);

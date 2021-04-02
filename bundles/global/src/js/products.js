@@ -40,7 +40,7 @@ domload(() => {
 		const target = $(ev.target);
 		const product_img_wrapper = target._parent(".product_img_wrapper");
 		const was_focused_product_img_wrapper = curr_focused_product_img_wrapper;
-		if (product_img_wrapper) {
+		if (product_img_wrapper && product_img_wrapper.offsetWidth > 100) {
 			if (curr_focused_product_img_wrapper !== product_img_wrapper && !product_img_wrapper._child(".overlay")) {
 				curr_focused_product_img_wrapper = product_img_wrapper;
 

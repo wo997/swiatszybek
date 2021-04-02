@@ -165,15 +165,21 @@ function traverseFeatures()
             if ($product_feature["data_type"] === "double_value") {
                 $is_cena = $product_feature["product_feature_id"] === "cena";
                 if ($is_cena) {
-                    $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(general_product_id) as i FROM product p
+                    $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
+                    // $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(general_product_id) as i FROM product p
+                    //     WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
                     // $double_values = DB::fetchArr("SELECT p.gross_price as v, COUNT(DISTINCT general_product_id) as c FROM product p
                     //     WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
                 } else {
-                    $double_values = DB::fetchArr("SELECT double_value as v, JSON_ARRAYAGG(general_product_id) as i FROM product_feature_option
+                    $double_values = DB::fetchArr("SELECT double_value as v, JSON_ARRAYAGG(product_id) as i FROM product_feature_option
                         INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                         INNER JOIN product p USING(product_id)
                         WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
+                    // $double_values = DB::fetchArr("SELECT double_value as v, JSON_ARRAYAGG(general_product_id) as i FROM product_feature_option
+                    //     INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
+                    //     INNER JOIN product p USING(product_id)
+                    //     WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
                     // $double_values = DB::fetchArr("SELECT double_value as v, COUNT(DISTINCT general_product_id) as c FROM product_feature_option
                     //     INNER JOIN product_to_feature_option ptfo USING(product_feature_option_id)
                     //     INNER JOIN product p USING(product_id)
