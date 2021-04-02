@@ -30,7 +30,7 @@
  *
  * @typedef {{
  * key: string
- * db_key: string
+ * db_key?: string
  * data: any
  * }} DatatableFilterData
  *
