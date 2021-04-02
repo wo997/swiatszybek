@@ -29,7 +29,7 @@
 //             <div style='font-weight:bold; font-size: 28px; margin: 15px 0 30px;'>Napisz do nas</div>
 //         </div>
 //         <div class='uzupelnij' style='color:red;display:none;margin: 0 8px;'>Uzupełnij wszystkie pola</div>
-//         <div class='mobileRow'>
+//         <div class='desktop_row'>
 //             <label>
 //                 <span class='label'>Imię i nazwisko</span>
 //                 <input class='field' type='text' name='name' placeholder=' '>

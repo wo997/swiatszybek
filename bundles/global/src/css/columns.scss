@@ -1,0 +1,24 @@
+/* css[global] */
+
+.desktop_row {
+	display: flex;
+}
+
+.desktop_row > * {
+	flex: 1 1 0;
+}
+
+@media only screen and (max-width: 999px) {
+	.desktop_row {
+		flex-direction: column;
+	}
+}
+
+@media only screen and (min-width: 1000px) {
+	.desktop_row {
+		margin-left: calc(-1 * var(--form_spacing));
+	}
+	.desktop_row > * {
+		padding-left: var(--form_spacing);
+	}
+}

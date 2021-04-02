@@ -50,9 +50,9 @@ p-dropdown {
 
 	&:not(.dropped) .options_wrapper {
 		pointer-events: none;
-		visibility: hidden;
 		margin: 0 calc(-1 * var(--field_padding_hor));
 		height: 0;
+		opacity: 0;
 	}
 	& .selected_option,
 	& p-option {

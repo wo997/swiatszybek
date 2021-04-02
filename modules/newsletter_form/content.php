@@ -23,7 +23,7 @@
 //         <div style='text-align:center; margin-top: 20px'>
 //             <h3 style='font-weight:normal;font-size: 28px; margin: 15px 0 0;'>Zapisz się do <b style='color:var(--primary-clr)'>Newslettera</b></h3>
 //         </div>
-//         <div class='mobileRow form-spacing'>
+//         <div class='desktop_row form-spacing'>
 //             <div style='width:100%'>
 //                 <article style='padding: 22px 10px;'>
 //                 Czy chcesz dostawać na bieżąco informacje na temat <b>promocji</b> i nowych modeli słuchawek?<div style='height:5px'></div>Zapisz się do <b>newslettera</b> już teraz!

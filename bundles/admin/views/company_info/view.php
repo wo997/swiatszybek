@@ -25,7 +25,7 @@
 
 <?php startSection("body_content"); ?>
 
-<div id="daneFirmyForm">
+<div id="companyInfoForm" class="desktop_row space_columns">
     <div>
         <div class="medium">Ogólne</div>
 

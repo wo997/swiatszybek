@@ -21,7 +21,7 @@
 
 <?php startSection("body_content"); ?>
 
-<div id="daneFirmyForm" class="desktopRow spaceColumns" data-form>
+<div id="deliveriesForm" class="desktop_row space_columns">
     <div class="label first">Sposób wyliczania ceny wysyłki</div>
 
     <div class="radio_group space_items">

@@ -91,20 +91,10 @@ a {
 	color: inherit;
 }
 
-@media only screen and (max-width: 750px) {
-	.mobileRow {
-		flex-direction: column;
-	}
-	.mobileRow > div {
-		width: 100% !important;
-	}
-}
 .pln {
 	word-spacing: -0.1em;
 }
-.mobileRow {
-	display: flex;
-}
+
 footer {
 	margin-top: auto;
 }

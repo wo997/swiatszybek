@@ -1,7 +1,7 @@
 /* js[view] */
 
 domload(() => {
-	const daneFirmyForm = $(`#daneFirmyForm`);
+	const daneFirmyForm = $(`#companyInfoForm`);
 	daneFirmyForm._children("[data-name]").forEach((field) => {
 		field.setAttribute("autocomplete", Math.random().toPrecision(10));
 	});
