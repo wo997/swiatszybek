@@ -323,7 +323,7 @@ function productFeatureComp(comp, parent, data) {
 			</select>
 
 			<div class="expand_y" data-node="{${comp._nodes.physical_measures_wrapper}}">
-				<div class="label">Miara fizyczna</div>
+				<div class="label">Miara fizyczna (jednostki) - JEŚLI CZEGOŚ BRAK TO POPROŚ WOJTUHA</div>
 				<select class="field" data-bind="{${data.physical_measure}}">
 					${Object.entries(physical_measures)
 						.map(([name, measure_data]) => {
