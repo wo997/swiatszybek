@@ -10,7 +10,7 @@
  */
 let tooltip;
 domload(() => {
-	document.body.insertAdjacentHTML("beforeend", `<div class="wo997tooltip" style="display:none"></div>`);
+	document.body.insertAdjacentHTML("beforeend", html`<div class="wo997tooltip" style="display:none"></div>`);
 	tooltip = {
 		target: $(".wo997tooltip"),
 		dismiss: () => {
@@ -33,10 +33,9 @@ domload(() => {
 		const target = $(event.target);
 		const e = target._parent("[data-tooltip]");
 		if (e) {
-			// && !e.hasAttribute("disabled")) {
-			var tooltipText = e.dataset.tooltip;
+			let tooltipText = e.dataset.tooltip;
 
-			if (!tooltipText) {
+			if (!tooltipText || e.matches("p-dropdown.dropped")) {
 				return;
 			}
 
