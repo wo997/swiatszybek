@@ -71,7 +71,14 @@ function registerDropdowns(parent) {
 					return;
 				}
 			}
-			input.classList.toggle("dropped");
+			const dropped = input.classList.toggle("dropped");
+
+			if (dropped) {
+				const children = options_wrapper._direct_children().length;
+				// make is a square assuming the items are small enough
+				const columns = Math.floor(Math.sqrt(children));
+				options_wrapper.style.gridTemplateColumns = `repeat(${columns}, auto)`;
+			}
 		});
 
 		// I prefer fixed width

@@ -31,12 +31,13 @@ p-dropdown {
 		display: flex;
 		position: absolute;
 		align-items: stretch;
+		border-radius: 4px;
 	}
-	&:not(.horizontal) .options_wrapper {
+	&:not(.grid) .options_wrapper {
 		flex-direction: column;
 	}
-	&.horizontal .options_wrapper {
-		border-radius: 4px;
+	&.grid .options_wrapper {
+		display: grid;
 	}
 	&.dropped {
 		& {
@@ -47,18 +48,19 @@ p-dropdown {
 		}
 		& .options_wrapper {
 			background: #fff;
-			box-shadow: 0 2px 2px 0 #0004;
+			box-shadow: 0 2px 4px 0 #0004;
 			border: 1px solid #aaa;
-			left: -1px;
+			left: 50%;
 			top: 100%;
+			transform: translate(-50%, 0);
 			min-width: 100%;
 		}
-		&:not(.horizontal) .options_wrapper {
+		&:not(.grid) .options_wrapper {
 			border-top-left-radius: 0;
 			border-top-right-radius: 0;
 			border-top-color: #ddd;
 		}
-		&.horizontal .options_wrapper {
+		&.grid .options_wrapper {
 		}
 	}
 
@@ -74,12 +76,13 @@ p-dropdown {
 			// prevent colapsing
 			content: ".";
 			visibility: hidden;
+			border-radius: 4px;
 		}
 	}
-	&.horizontal p-option {
+	&.grid p-option {
 		padding: var(--field_padding_ver);
 	}
-	&:not(.horizontal) p-option {
+	&:not(.grid) p-option {
 		padding: var(--field_padding_ver) var(--field_padding_hor);
 	}
 

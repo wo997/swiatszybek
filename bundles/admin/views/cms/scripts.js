@@ -365,7 +365,7 @@ domload(() => {
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
-		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="fontSize">
+		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="fontSize">
 			<p-option data-value="">
 				<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
 			</p-option>
@@ -374,14 +374,14 @@ domload(() => {
 			<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center horizontal" data-style="fontWeight">
+		<p-dropdown class="field small inline pretty_blue center grid" data-style="fontWeight">
 			<p-option data-value=""><span class="bold">B</span></p-option>
 			<p-option data-value="400">B</p-option>
 			<p-option data-value="600"><span class="semi_bold">B</span></p-option>
 			<p-option data-value="700"><span class="bold">B</span></p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="color">
+		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="color">
 			<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
 			<p-option data-value="var(--primary-clr)">
 				<div class="color_circle" style="background:var(--primary-clr);"></div>
@@ -396,7 +396,7 @@ domload(() => {
 			<p-option> <i class="fas fa-eye-dropper"></i><color-picker></color-picker> </p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center static_label horizontal" data-style="backgroundColor">
+		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="backgroundColor">
 			<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
 			<p-option data-value="var(--primary-clr)">
 				<div class="color_circle" style="background:var(--primary-clr);"></div>
