@@ -27,7 +27,6 @@ header .logo-wrapper img {
 	flex-shrink: 0;
 	width: 220px;
 	border-right: 1px solid #ccc;
-	box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.39);
 	background: #eee;
 	color: #444;
 	position: relative;
@@ -91,6 +90,9 @@ h1 {
 	}
 	.content > .custom_toolbar {
 		padding-left: 10px;
+	}
+	.navbar_admin {
+		box-shadow: 0 0 12px -4px rgba(0, 0, 0, 0.39);
 	}
 }
 
@@ -167,16 +169,6 @@ h1 {
 	box-shadow: 0 2px 4px #0001;
 	border-radius: 4px;
 }
-
-/*.actual-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}*/
-
-/*.content > .scroll_panel {
-  background: #fafafa;
-}*/
 
 .navbar_admin > .scroll_panel {
 	height: 100%;
