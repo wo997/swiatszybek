@@ -3,25 +3,31 @@
 domload(() => {
 	document.body.id = "admin";
 
-	if (window.innerWidth < 800) {
-		// hell no
-		var nv = $(".navbar_admin");
-		if (!nv) {
-			return;
+	const navbar_admin = $(".navbar_admin");
+	const is_mobile = () => {
+		return window.innerWidth < 1000;
+	};
+	let first_mob = true;
+	const resize = () => {
+		const mobile = is_mobile();
+		navbar_admin.classList.toggle("expand_y", mobile);
+
+		if (!mobile) {
+			navbar_admin.classList.remove("hidden", "animate_hidden");
+		} else {
+			if (first_mob) {
+				first_mob = false;
+				navbar_admin.classList.add("hidden", "animate_hidden");
+			}
 		}
-		nv.classList.add("expand_y");
-		nv.classList.add("hidden");
-		nv.classList.add("animate_hidden");
-		nv.insertAdjacentHTML(
-			"beforebegin",
-			html`
-				<div class="btn subtle fill medium" onclick="expandMenu(this._next(),this)" style="flex-grow:0">
-					<b>Menu</b>
-					<div class="expand_arrow"><i class="fas fa-chevron-right"></i></div>
-				</div>
-			`
-		);
-	}
+	};
+	window.addEventListener("resize", resize);
+	resize();
+
+	$(".menu_btn").addEventListener("click", () => {
+		const open = $("header.mobile").classList.toggle("open");
+		expand(navbar_admin, open);
+	});
 });
 
 domload(() => {

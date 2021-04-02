@@ -128,7 +128,7 @@ function expand(elem, show = null, options = {}) {
 	);
 
 	const clb = () => {
-		elem.style[dim] = show ? "" : "0px";
+		//elem.style[dim] = show ? "" : "0px";
 
 		if (!show) {
 			elem.classList.add("animate_hidden");
