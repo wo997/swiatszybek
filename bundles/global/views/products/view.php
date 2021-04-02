@@ -108,13 +108,11 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
         $show_before = "";
         if ($feature_extra === "color") {
             $extra = json_decode($option["extra_json"], true);
-            if ($extra) {
+            $color = "#ffffff";
+            if ($extra && $color) {
                 $color = def($extra, "color", "");
-                if ($color) {
-                    //$show_before = "<div class=\"just_color\" style=\"--color:$color\"></div>";
-                    $checkbox_style = "--checkbox_color:$color";
-                }
             }
+            $checkbox_style = "--checkbox_color:$color";
         }
 
         //$checkbox_style = "";

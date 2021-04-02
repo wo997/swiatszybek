@@ -36,7 +36,7 @@ domload(() => {
 	};
 
 	setInterval(() => {
-		if (!wanna_dispatch_change) {
+		if (!wanna_dispatch_change || !picker_target) {
 			return;
 		}
 		picker_target._dispatch_change();
@@ -93,7 +93,7 @@ domload(() => {
 			}
 			picker_wrapper._child(".erase_btn").addEventListener("click", () => {
 				setColorPickerValue(picker_target, "");
-				wanna_dispatch_change = true;
+				picker_target._dispatch_change();
 				hide();
 			});
 			picker_wrapper._child(".close_btn").addEventListener("click", () => {

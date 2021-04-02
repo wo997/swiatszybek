@@ -162,7 +162,7 @@ function productFeatureComp(comp, parent, data) {
 
 			product_feature.options = comp._data.datatable.dataset.map((option, index) => {
 				const extra = {};
-				if (option.extra_color) {
+				if (option.extra_color !== undefined) {
 					extra.color = option.extra_color;
 				}
 				return {
