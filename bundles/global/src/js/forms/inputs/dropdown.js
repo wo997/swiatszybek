@@ -53,6 +53,12 @@ function registerDropdowns(parent) {
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
+
+			if (target._parent(".picker_wrapper")) {
+				// you might want to add a single class to both datepicker and colorpickers so they don't close any other windows
+				return;
+			}
+
 			if (!target._parent(input)) {
 				input.classList.remove("dropped");
 				return;
