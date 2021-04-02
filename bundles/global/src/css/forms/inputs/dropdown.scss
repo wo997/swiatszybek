@@ -15,14 +15,17 @@ p-dropdown {
 		&:not(.dropped).selected {
 			background: var(--pretty_blue_background);
 			color: var(--pretty_blue);
-			// font-weight: 600;
-			// border-color: var(--pretty_blue_border);
 			border-color: var(--pretty_blue_background);
 		}
 		&:not(.dropped):not(.selected) {
 			border-color: transparent;
 			background-color: transparent;
 		}
+	}
+	p-option.selected {
+		background: var(--pretty_blue_background);
+		color: var(--pretty_blue);
+		border-color: var(--pretty_blue_background);
 	}
 	& .options_wrapper {
 		display: flex;

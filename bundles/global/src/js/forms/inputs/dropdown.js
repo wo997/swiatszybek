@@ -30,13 +30,24 @@ function registerDropdowns(parent) {
 		 * @param {PiepNode} option
 		 */
 		const selectOption = (option) => {
-			input.dataset.value = option.dataset.value;
-			input.classList.toggle("selected", option.dataset.value !== "");
+			const value = option.dataset.value;
+
+			if (value === undefined) {
+				return false;
+			}
+
+			removeClasses(".selected", ["selected"], input);
+			option.classList.add("selected");
+
+			input.dataset.value = value;
+			input.classList.toggle("selected", value !== "");
 			input._dispatch_change();
 			if (input.classList.contains("static_label")) {
 				option = first_option;
 			}
 			selected_option._set_content(option.innerHTML);
+
+			return true;
 		};
 		selectOption(first_option);
 
@@ -49,7 +60,10 @@ function registerDropdowns(parent) {
 
 			const option = target._parent("p-option");
 			if (option) {
-				selectOption(option);
+				const success = selectOption(option);
+				if (!success) {
+					return;
+				}
 			}
 			input.classList.toggle("dropped");
 		});
