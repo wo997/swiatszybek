@@ -9,6 +9,7 @@ EntityManager::register("general_product", [
         "__options_json" => ["type" => "string"],
         "__search" => ["type" => "string"],
         "__url" => ["type" => "string"],
+        "__options_html" => ["type" => "string"],
         // "seo_title" => ["type" => "string"], // THINK ABOUT IT FIRST
         // "seo_description" => ["type" => "string"],
     ],
@@ -45,25 +46,53 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $sorted_feature_ids = array_column($features, "id");
     $sorted_feature_ids_str = join(",", $sorted_feature_ids);
 
-    $main_img_url = "";
+    $options_html = "";
+    $options_html_curr_extra = null;
 
     /** @var Entity[] ProductFeatureOption */
     $general_product_feature_options = $general_product->getProp("feature_options");
+    usort($general_product_feature_options, fn ($a, $b) => $a->getProp("pos") <=> $b->getProp("pos"));
+
     $all_options = [];
     $all_option_ids = [];
     foreach ($general_product_feature_options as $option) {
         $option_id = $option->getId();
-        $feature_id = $option->getProp("product_feature_id");
+        $product_feature = $option->getParent("product_feature");
+        $feature_id = $product_feature->getId();
         if (!isset($all_options[$feature_id])) {
             $all_options[$feature_id] = [];
+            if ($options_html) {
+                $options_html .= "</ul>";
+            }
+
+            $options_html .= "<ul><li>" . htmlspecialchars($product_feature->getProp("name")) . "</li>";
+            $options_html_curr_extra = $product_feature->getProp("extra");
         }
         if (!in_array($option_id, $all_options[$feature_id])) {
             $all_options[$feature_id][] = $option_id;
+            $options_html .= "<li>";
+
+            if ($options_html_curr_extra === "color") {
+                $extra = json_decode($option->getProp("extra_json"), true);
+                $color = "#ffffff";
+                if ($extra) {
+                    $color = def($extra, "color", "");
+                    $options_html .= "<span class=\"color_circle\" style=\"background:$color\"></span>";
+                }
+            }
+
+            $options_html .= htmlspecialchars($option->getProp("value")) . "</li>";
         }
         if (!in_array($option_id, $all_option_ids)) {
             $all_option_ids[] = $option_id;
         }
     }
+
+    $options_html .= "</ul>";
+
+
+    $general_product->setProp("__options_html", $options_html);
+
     $alone_options = [];
     $alone_option_ids = [];
     foreach ($all_options as $feature_id => $option_ids) {
@@ -72,7 +101,12 @@ EventListener::register("before_save_general_product_entity", function ($params)
             $alone_option_ids[] = $option_ids[0];
         }
     }
-    //$alone_option_ids_csv = join(",", $alone_option_ids);
+
+    $main_img_url = "";
+    $first_img = def($images_data, 0, null);
+    if ($first_img) {
+        $main_img_url = $first_img["img_url"];
+    }
 
     foreach ($products as $product) {
         //$product_id = $product->getId();
@@ -103,9 +137,6 @@ EventListener::register("before_save_general_product_entity", function ($params)
                 if (in_array($feature_option_id, $image_data["option_ids"])) {
                     $matches++;
                 }
-            }
-            if (!$main_img_url) {
-                $main_img_url = $image_data["img_url"];
             }
             if ($matches > $most_matches) {
                 $most_matches = $matches;

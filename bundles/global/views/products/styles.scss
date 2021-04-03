@@ -1,5 +1,16 @@
 /* css[view] */
 
+.color_circle {
+	border-radius: 8px;
+	width: 16px;
+	height: 16px;
+	box-shadow: inset 0 0 0 1px #0004;
+	display: inline-block;
+	margin-right: 4px;
+	vertical-align: middle;
+	transform: translateY(-1px);
+}
+
 .category_name {
 	& {
 		margin: 40px 0 20px;

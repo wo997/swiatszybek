@@ -88,7 +88,7 @@ function getGlobalProductsSearch($url, $options = [])
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
-            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json,
+            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__options_html,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
             JSON_ARRAYAGG(p.__options_json) products_options_jsons_json,
             __avg_rating, __rating_count
@@ -122,6 +122,7 @@ function getGlobalProductsSearch($url, $options = [])
         $sum_stock = $product["sum_stock"];
         $avg_rating = $product["__avg_rating"];
         $rating_count = $product["__rating_count"];
+        $options_html =  $product["__options_html"];
 
         $display_price = $min_gross_price . " zł";
         if ($min_gross_price !== $max_gross_price) {
@@ -203,7 +204,14 @@ function getGlobalProductsSearch($url, $options = [])
             <div class=\"product_row\">
                 <span class=\"product_price pln\">$display_price</span>
                 <span class=\"product_rating rating\"><span class=\"stars\">$avg_rating</span> ($rating_count)</span>
+                <div style=\"width:100%\"></div>
                 <span class=\"product_stock $stock_class\"></span>
+                <i class=\"fas show_features fa-list-ul\"></i>
+                <div class=\"features_wrapper\">
+                    <div class=\"product_features smooth_scrollbar\">
+                        $options_html
+                    </div>
+                </div>
             </div>
         </div>";
     }

@@ -167,7 +167,7 @@ function scrollIntoView(elem, params = {}) {
 // prevent scroll below
 const non_scrollables_selector = "#modal_wrapper, .float_menu, .headerbtn_menu";
 const scrollables_selector =
-	"#modal_wrapper .scroll_panel:not(.horizontal), .headerbtn_menu .scroll_panel:not(.horizontal), .separate_scroll";
+	"#modal_wrapper .scroll_panel:not(.horizontal), .headerbtn_menu .scroll_panel:not(.horizontal), .separate_scroll, .separate_scroll_has_scroll";
 
 // desktop
 document.addEventListener(
@@ -180,6 +180,11 @@ document.addEventListener(
 		const target = $(ev.target);
 		const node = target._parent(scrollables_selector);
 		if (node) {
+			if (node.classList.contains("separate_scroll_has_scroll")) {
+				if (node.scrollHeight < node.offsetHeight + 1) {
+					return;
+				}
+			}
 			// @ts-ignore
 			if ((ev.deltaY < 0 && node.scrollTop < 1) || (ev.deltaY > 0 && node.scrollTop > node.scrollHeight - node.offsetHeight - 1)) {
 				ev.preventDefault();

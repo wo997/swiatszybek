@@ -109,7 +109,7 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
         if ($feature_extra === "color") {
             $extra = json_decode($option["extra_json"], true);
             $color = "#ffffff";
-            if ($extra && $color) {
+            if ($extra) {
                 $color = def($extra, "color", "");
             }
             $checkbox_style = "--checkbox_color:$color";
@@ -441,6 +441,8 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
         <div class="product_list"><?= $products_search_data["html"] ?></div>
 
         <pagination-comp class="product_list_pagination"></pagination-comp>
+
+        <div style="height:200px"></div>
     </div>
 </div>
 
