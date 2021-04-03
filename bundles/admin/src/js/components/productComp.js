@@ -551,7 +551,7 @@ function productComp(comp, parent, data = undefined) {
 			<div class="injectable_header">
 				<p-trait data-trait="history"></p-trait>
 
-				<button class="btn primary" data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
+				<button class="btn primary" disabled data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otwórz produkt w nowej karcie">
 					Pokaż <i class="fas fa-external-link-square-alt"></i>
 				</button>

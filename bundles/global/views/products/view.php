@@ -327,6 +327,7 @@ function traverseFeatures()
 HTML;
             } else {
                 //echo "need to add filter html";
+                continue;
             }
         }
 

@@ -7,6 +7,8 @@
  * data_type?: string
  * value?: string
  * double_value?: number
+ * double_base_value?: number
+ * unit_value?: number
  * datetime_value?: string
  * text_value?: string
  * save_db_timeout?: number
@@ -23,8 +25,6 @@
  *  physical_value_wrapper: PiepNode
  *  physical_value_input: PiepNode
  *  physical_value_unit: PiepNode
- *  save_btn: PiepNode
- *  cancel_btn: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureOptionComp
  */
@@ -42,9 +42,17 @@ function product_featureOptionComp(
 		product_feature_id: -1,
 	}
 ) {
-	let intrusive_unit = true;
+	let last_saved_product_feature_option;
 
 	comp._set_data = (data, options = {}) => {
+		if (data) {
+			if (data.data_type === "double_value") {
+				if (data.double_base_value === undefined) {
+					data.double_base_value = round(data.double_value / data.unit_value, 6);
+				}
+			}
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -63,21 +71,7 @@ function product_featureOptionComp(
 
 						const unit_picker = comp._nodes.physical_value_unit;
 						unit_picker._set_content(options);
-
-						const value_data = getSafeUnitValue(
-							// @ts-ignore
-							[...unit_picker.options].map((e) => +e.value),
-							data.double_value
-						);
-
-						if (intrusive_unit) {
-							unit_picker._set_value(value_data.unit_factor, { quiet: true });
-							comp._nodes.physical_value_input._set_value(value_data.value, { quiet: true });
-
-							setTimeout(() => {
-								intrusive_unit = false;
-							});
-						}
+						unit_picker._set_value(data.unit_value, { quiet: true });
 
 						comp._nodes.physical_value_wrapper.classList.remove("hidden");
 						comp._nodes.double_value.classList.add("hidden");
@@ -107,11 +101,21 @@ function product_featureOptionComp(
 					data-node="{${comp._nodes.double_value}}"
 				/>
 				<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
-					<input class="field small inline" inputmode="numeric" data-number data-node="{${comp._nodes.physical_value_input}}" />
-					<select class="field inline blank unit_picker" data-node="{${comp._nodes.physical_value_unit}}"></select>
+					<input
+						class="field small inline"
+						inputmode="numeric"
+						data-number
+						data-node="{${comp._nodes.physical_value_input}}"
+						data-bind="{${data.double_base_value}}"
+						data-input_delay="500"
+					/>
+					<select
+						class="field inline blank unit_picker"
+						data-node="{${comp._nodes.physical_value_unit}}"
+						data-bind="{${data.unit_value}}"
+						data-number
+					></select>
 				</div>
-				<button class="btn primary small hidden" data-node="{${comp._nodes.save_btn}}">Zapisz</button>
-				<button class="btn subtle small hidden" data-node="{${comp._nodes.cancel_btn}}">Anuluj</button>
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
@@ -125,32 +129,6 @@ function product_featureOptionComp(
 			/** @type {ProductComp} */
 			// @ts-ignore
 			const product_comp = list._parent_comp._parent_comp._parent_comp;
-
-			let option_data_to_save;
-			let refresh_options_on_save = false;
-			comp._nodes.save_btn.addEventListener("click", () => {
-				comp._nodes.save_btn.classList.add("hidden");
-				comp._nodes.cancel_btn.classList.add("hidden");
-				xhr({
-					url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
-					params: {
-						product_feature_option: option_data_to_save,
-					},
-					success: (res) => {
-						if (refresh_options_on_save) {
-							intrusive_unit = true;
-							refreshProductFeatures();
-						}
-					},
-				});
-			});
-
-			comp._nodes.cancel_btn.addEventListener("click", () => {
-				comp._nodes.save_btn.classList.add("hidden");
-				comp._nodes.cancel_btn.classList.add("hidden");
-				intrusive_unit = true;
-				refreshProductFeatures();
-			});
 
 			list.addEventListener("remove_row", (ev) => {
 				// @ts-ignore
@@ -229,17 +207,33 @@ function product_featureOptionComp(
 						product_feature_option.datetime_value = data.datetime_value;
 					}
 					if (data.data_type === "double_value") {
-						if (curr_option.double_value !== data.double_value) {
+						data.double_value = data.double_base_value * data.unit_value;
+						if (curr_option.double_value !== data.double_value || curr_option.unit_value !== data.unit_value) {
 							need_request = true;
 						}
 						product_feature_option.double_value = data.double_value;
+						product_feature_option.unit_value = data.unit_value;
 					}
 
 					if (need_request) {
-						option_data_to_save = product_feature_option;
-						refresh_options_on_save = refresh;
-						comp._nodes.save_btn.classList.remove("hidden");
-						comp._nodes.cancel_btn.classList.remove("hidden");
+						comp._render();
+
+						if (isEquivalent(last_saved_product_feature_option, product_feature_option)) {
+							return;
+						}
+						last_saved_product_feature_option = product_feature_option;
+
+						xhr({
+							url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
+							params: {
+								product_feature_option,
+							},
+							success: (res) => {
+								if (refresh) {
+									refreshProductFeatures();
+								}
+							},
+						});
 					}
 				});
 			};
@@ -256,17 +250,12 @@ function product_featureOptionComp(
 				});
 			});
 
-			const recalculate_unit = () => {
-				comp._nodes.double_value._set_value(comp._nodes.physical_value_unit._get_value() * comp._nodes.physical_value_input._get_value());
-				considerSavingToDb();
-			};
-
 			comp._nodes.physical_value_unit.addEventListener("change", () => {
-				recalculate_unit();
+				considerSavingToDb();
 			});
 
 			comp._nodes.physical_value_input.addEventListener("change", () => {
-				recalculate_unit();
+				considerSavingToDb();
 			});
 
 			product_comp.addEventListener("history_change", () => {

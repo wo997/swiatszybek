@@ -6,6 +6,7 @@ EntityManager::register("product_feature_option", [
         "parent_product_feature_option_id" => ["type" => "number"],
         "value" => ["type" => "string"],
         "double_value" => ["type" => "number"],
+        "unit_value" => ["type" => "number"],
         "datetime_value" => ["type" => "string"],
         "text_value" => ["type" => "string"],
         "extra_json" => ["type" => "string"],
@@ -80,8 +81,11 @@ EventListener::register("before_save_product_feature_option_entity", function ($
             $product_feature_option->setProp("text_value", $text_value);
 
             $double_value = null;
+            $unit_value = null;
             if ($feature_data_type === "double_value") {
                 $double_value = $product_feature_option->getProp("double_value");
+                $unit_value = $product_feature_option->getProp("unit_value");
+
                 if ($double_value !== false) {
                     $display_something = $double_value;
 
@@ -90,8 +94,12 @@ EventListener::register("before_save_product_feature_option_entity", function ($
                 } else {
                     $double_value = 0;
                 }
+                if (!$unit_value) {
+                    $unit_value = 1;
+                }
             }
             $product_feature_option->setProp("double_value", $double_value);
+            $product_feature_option->setProp("unit_value", $unit_value);
 
             $datetime_value = null;
             if ($feature_data_type === "datetime_value") {

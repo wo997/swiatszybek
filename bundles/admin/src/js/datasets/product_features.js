@@ -30,6 +30,7 @@ let product_features = [];
  * all_ids?: number[]
  * text_value?: string
  * double_value?: number
+ * unit_value?: number
  * datetime_value?: string
  * extra_json?: string
  * extra_color?: string
