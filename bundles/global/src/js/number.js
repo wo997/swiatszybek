@@ -1,9 +1,20 @@
 /* js[global] */
 
+/**
+ *
+ * @param {string} str
+ * @returns
+ */
 function numberFromStr(str) {
 	if (!str) return 0;
 	if (typeof str === "number") return str;
-	return parseFloat(str.replace(/,/g, ".").replace(/[^\d\.\-\+e]/g, ""));
+
+	str = str.replace(/,/g, ".");
+	const match_number = str.match(/[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?/);
+	if (match_number) {
+		return parseFloat(match_number[0]);
+	}
+	return 0;
 }
 
 function round(num, decimalPlaces = 0) {

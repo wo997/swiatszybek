@@ -69,7 +69,8 @@ function initBuy() {
 			const ref = def(qty_controls.dataset.product, "");
 
 			if (ref.startsWith("user_cart")) {
-				const product = user_cart.products.find((e) => e.product_id === numberFromStr(ref));
+				const product_id = numberFromStr(ref);
+				const product = user_cart.products.find((e) => e.product_id === product_id);
 				return product;
 			} else if (ref === "single_product") {
 				return single_product;
