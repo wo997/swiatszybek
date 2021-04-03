@@ -49,5 +49,5 @@ EventListener::register("after_save_product_category_entity", function ($params)
 
     $pc_id_query = "product_category_id = " . $product_category->getId();
     //DB::update("product_category", ["__product_count" => DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category INNER JOIN general_product gp USING (general_product_id) WHERE gp.active AND $pc_id_query")], $pc_id_query);
-    DB::update("product_category", ["__product_count" => DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category INNER JOIN general_product gp USING (general_product_id) INNER JOIN product USING (general_product_id) WHERE gp.active AND $pc_id_query")], $pc_id_query);
+    DB::update("product_category", ["__product_count" => DB::fetchVal("SELECT COUNT(1) FROM general_product_to_category INNER JOIN general_product gp USING (general_product_id) INNER JOIN product p USING (general_product_id) WHERE gp.active AND p.active AND $pc_id_query")], $pc_id_query);
 });

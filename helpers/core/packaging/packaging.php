@@ -45,6 +45,11 @@ function putBoxIntoPackage($package_dims, $products_dims, $contents = [])
                         ]
                     );
                 }
+                // order matters
+                foreach ($contents as $two_points_1) {
+                    // check whether some of these points are not important - when anything else is on the upper right deeper side
+                    // splice here
+                }
             }
 
             foreach ($starts as $start) {

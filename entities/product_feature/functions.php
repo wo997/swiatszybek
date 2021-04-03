@@ -113,18 +113,18 @@ function getPhysicalMeasures()
         ],
         "pressure" => [
             "description" => "Ciśnienie / Siła działająca na powierzchnię",
-            "base_unit" => "N / m ^ 2",
+            "base_unit" => "N/m²",
             "units" => [
                 [
-                    "name" => "N / m ^ 2",
+                    "name" => "N/m²",
                     "factor" => 1
                 ],
                 [
-                    "name" => "N / cm ^ 2",
+                    "name" => "N/cm²",
                     "factor" => 10000
                 ],
                 [
-                    "name" => "N / mm ^ 2",
+                    "name" => "N/mm²",
                     "factor" => 10000 * 100
                 ],
             ]

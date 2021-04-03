@@ -121,7 +121,7 @@ function productComp(comp, parent, data = undefined) {
 		dataset: [],
 		label: "Pełna lista produktów",
 		selectable: true,
-		pagination_data: { row_count: 50 },
+		pagination_data: { row_count: 15 },
 		print_row_as_string: (row_data) => {
 			return Object.entries(row_data)
 				.filter(([key, option_id]) => getFeatureIdFromKey(key))

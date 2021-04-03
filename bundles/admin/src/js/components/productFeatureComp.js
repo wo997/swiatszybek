@@ -174,7 +174,7 @@ function productFeatureComp(comp, parent, data) {
 				};
 			});
 		} else {
-			product_feature.options = [];
+			// product_feature.options = []; // don't do it, it actually deletes every option from the DB
 		}
 
 		xhr({
