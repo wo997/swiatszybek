@@ -214,7 +214,7 @@ function setValue(input, value = null, options = {}) {
 	} else if (input.tagName == "P-CHECKBOX") {
 		setCheckboxValue(input, !!value);
 	} else if (input.tagName == "P-DROPDOWN") {
-		setDropdownValue(input, value);
+		setDropdownValue(input, value, options);
 		// @ts-ignore
 	} else if (input.datepicker) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {

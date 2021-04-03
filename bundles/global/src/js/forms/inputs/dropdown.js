@@ -20,36 +20,10 @@ function registerDropdowns(parent) {
 			`
 		);
 
-		const selected_option = input._child(".selected_option");
 		const options_wrapper = input._child(".options_wrapper");
-
 		const first_option = options_wrapper._direct_children()[0];
 
-		/**
-		 *
-		 * @param {PiepNode} option
-		 */
-		const selectOption = (option) => {
-			const value = option.dataset.value;
-
-			if (value === undefined) {
-				return false;
-			}
-
-			removeClasses(".selected", ["selected"], input);
-			option.classList.add("selected");
-
-			input.dataset.value = value;
-			input.classList.toggle("selected", value !== "");
-			input._dispatch_change();
-			if (input.classList.contains("static_label")) {
-				option = first_option;
-			}
-			selected_option._set_content(option.innerHTML);
-
-			return true;
-		};
-		selectOption(first_option);
+		selectDropdownOption(input, first_option);
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
@@ -66,8 +40,11 @@ function registerDropdowns(parent) {
 
 			const option = target._parent("p-option");
 			if (option) {
-				const success = selectOption(option);
-				if (!success) {
+				const success = selectDropdownOption(input, option);
+
+				if (success) {
+					input._dispatch_change();
+				} else {
 					return;
 				}
 			}
@@ -100,5 +77,47 @@ function registerDropdowns(parent) {
  *
  * @param {PiepNode} input
  * @param {*} value
+ * @param {SetDataOptions} options
  */
-function setDropdownValue(input, value) {}
+function setDropdownValue(input, value, options = {}) {
+	const options_wrapper = input._child(".options_wrapper");
+	options_wrapper._direct_children().forEach((option) => {
+		if (option.dataset.value != value) {
+			return;
+		}
+		if (option.dataset.value === "" && option.dataset.value !== value) {
+			return;
+		}
+
+		selectDropdownOption(input, option);
+	});
+}
+
+/**
+ * @param {PiepNode} input
+ * @param {PiepNode} option
+ * @param {SetDataOptions} options
+ */
+function selectDropdownOption(input, option) {
+	const selected_option = input._child(".selected_option");
+	const options_wrapper = input._child(".options_wrapper");
+	const first_option = options_wrapper._direct_children()[0];
+
+	const value = option.dataset.value;
+
+	if (value === undefined) {
+		return false;
+	}
+
+	removeClasses(".selected", ["selected"], input);
+	option.classList.add("selected");
+
+	input.dataset.value = value;
+	input.classList.toggle("selected", value !== "");
+	if (input.classList.contains("static_label")) {
+		option = first_option;
+	}
+	selected_option._set_content(option.innerHTML);
+
+	return true;
+}
