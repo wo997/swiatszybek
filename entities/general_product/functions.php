@@ -39,15 +39,12 @@ function getGlobalProductsSearch($url, $options = [])
         }
     }
 
-    foreach (explode("-", def($get_vars, "r", "")) as $range_full_str) {
-        $range_full_str_parts = explode("_", $range_full_str);
-        $product_feature_id = def($range_full_str_parts, 0, "");
-
-        if ($product_feature_id === "") {
+    foreach ($get_vars as $key => $range_str) {
+        if (!preg_match('/^(r\d*|cena)$/', $key)) {
             continue;
         }
 
-        $range_str = def($range_full_str_parts, 1, "");
+        $product_feature_id = numberFromStr($key);
 
         $query_counter++;
 
@@ -62,7 +59,15 @@ function getGlobalProductsSearch($url, $options = [])
                 $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id AND pfo_$query_counter.product_feature_id = $product_feature_id";
             }
             if ($min !== "") {
-                $min = floatval(preg_replace("/^0/", "0.", $min)) - 0.000001;
+                preg_match('/[a-zA-Z]/', $min, $matches, PREG_OFFSET_CAPTURE);
+                if ($matches) {
+                    $unit_id = substr($min, $matches[0][1]);
+                    $unit_data = getPhysicalMeasureUnit($unit_id);
+                    $double_base =  substr($min, 0, $matches[0][1]);
+                    $min = $double_base * $unit_data["factor"];
+                }
+
+                $min -= 0.000001;
                 if ($is_cena) {
                     $where .= " AND gross_price >= $min";
                 } else {
@@ -70,7 +75,15 @@ function getGlobalProductsSearch($url, $options = [])
                 }
             }
             if ($max !== "") {
-                $max = floatval(preg_replace("/^0/", "0.", $max)) + 0.000001;
+                preg_match('/[a-zA-Z]/', $max, $matches, PREG_OFFSET_CAPTURE);
+                if ($matches) {
+                    $unit_id = substr($max, $matches[0][1]);
+                    $unit_data = getPhysicalMeasureUnit($unit_id);
+                    $double_base =  substr($max, 0, $matches[0][1]);
+                    $max = $double_base * $unit_data["factor"];
+                }
+
+                $max += 0.000001;
                 if ($is_cena) {
                     $where .= " AND gross_price <= $max";
                 } else {

@@ -7,8 +7,8 @@
  * data_type?: string
  * value?: string
  * double_value?: number
- * double_base_value?: number
- * unit_value?: number
+ * double_base?: string
+ * unit_id?: string
  * datetime_value?: string
  * text_value?: string
  * save_db_timeout?: number
@@ -45,14 +45,6 @@ function product_featureOptionComp(
 	let last_saved_product_feature_option;
 
 	comp._set_data = (data, options = {}) => {
-		if (data) {
-			if (data.data_type === "double_value") {
-				if (data.double_base_value === undefined) {
-					data.double_base_value = round(data.double_value / data.unit_value, 6);
-				}
-			}
-		}
-
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -65,13 +57,13 @@ function product_featureOptionComp(
 					if (physical_measure_data && physical_measure_data.units && physical_measure_data.units.length > 0) {
 						const options = physical_measure_data.units
 							.map((unit) => {
-								return html`<option value="${unit.factor}">${unit.name}</option>`;
+								return html`<option value="${unit.id}">${unit.name}</option>`;
 							})
 							.join("");
 
 						const unit_picker = comp._nodes.physical_value_unit;
 						unit_picker._set_content(options);
-						unit_picker._set_value(data.unit_value, { quiet: true });
+						unit_picker._set_value(data.unit_id, { quiet: true });
 
 						comp._nodes.physical_value_wrapper.classList.remove("hidden");
 						comp._nodes.double_value.classList.add("hidden");
@@ -104,16 +96,14 @@ function product_featureOptionComp(
 					<input
 						class="field small inline"
 						inputmode="numeric"
-						data-number
 						data-node="{${comp._nodes.physical_value_input}}"
-						data-bind="{${data.double_base_value}}"
+						data-bind="{${data.double_base}}"
 						data-input_delay="500"
 					/>
 					<select
 						class="field inline blank unit_picker"
 						data-node="{${comp._nodes.physical_value_unit}}"
-						data-bind="{${data.unit_value}}"
-						data-number
+						data-bind="{${data.unit_id}}"
 					></select>
 				</div>
 				<div style="margin-left:auto">
@@ -207,12 +197,18 @@ function product_featureOptionComp(
 						product_feature_option.datetime_value = data.datetime_value;
 					}
 					if (data.data_type === "double_value") {
-						data.double_value = data.double_base_value * data.unit_value;
-						if (curr_option.double_value !== data.double_value || curr_option.unit_value !== data.unit_value) {
+						if (
+							curr_option.double_base !== data.double_base ||
+							curr_option.unit_id !== data.unit_id ||
+							curr_option.double_value !== data.double_value
+						) {
 							need_request = true;
 						}
+
+						// send everything and let backend decide what to do
 						product_feature_option.double_value = data.double_value;
-						product_feature_option.unit_value = data.unit_value;
+						product_feature_option.double_base = data.double_base;
+						product_feature_option.unit_id = data.unit_id;
 					}
 
 					if (need_request) {

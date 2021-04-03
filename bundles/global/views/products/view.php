@@ -233,12 +233,12 @@ function traverseFeatures()
                     $max = def($double_value, "max", 0);
                     $count = $double_value["c"];
                     $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
-                    $search_value = getSafeNumber($value);
+                    $search_value = $value;
                     $add_unit($unit_map, $pretty_val);
                     if ($max) {
                         $max_pretty_val = prettyPrintPhysicalMeasure($max, $physical_measure);
                         $pretty_val .= " - " . $max_pretty_val;
-                        $search_value .= "do" . getSafeNumber($max);
+                        $search_value .= "do" . $max;
                         $add_unit($unit_map, $max_pretty_val);
                     }
 
@@ -269,6 +269,7 @@ function traverseFeatures()
                     for ($i = 0; $i < $unit_count; $i++) {
                         $unit = $units[$i];
                         $factor = $unit["factor"];
+                        $unit_id = $unit["id"];
                         $name = $unit["name"];
 
                         $selected = $name === $most_unit ? "selected" : "";
@@ -282,7 +283,7 @@ function traverseFeatures()
                             continue;
                         }
 
-                        $options .= "<option value=\"$factor\" $selected>$name</option>";
+                        $options .= "<option value=\"$unit_id\" $selected>$name</option>";
                     }
 
                     $from_select = "<select class=\"field inline blank unit_picker from\">$options</select>";

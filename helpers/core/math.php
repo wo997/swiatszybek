@@ -125,10 +125,9 @@ function setRangesFromLongDatasetWithIndices(&$values, $max_ranges = 10)
     unset($value);
 }
 
-
-function getSafeNumber($number)
+function numberFromStr($str)
 {
-    $accuracy = 100000;
-    // 0.09 becomes 009, you can easily tell that the dot comes after first 0
-    return preg_replace('/^0./', "0", round($accuracy * $number) / $accuracy);
+    if (!$str) return 0;
+    if (is_float($str)) return $str;
+    return floatval(preg_replace('/[^\d\.\-\+e]/', "", preg_replace('/,/', ".", $str)));
 }

@@ -39,15 +39,19 @@ function getPhysicalMeasures()
             "base_unit" => "kg",
             "units" => [
                 [
+                    "id" => "mg",
                     "name" => "mg",
                     "factor" => 0.001 * 0.001
                 ], [
+                    "id" => "g",
                     "name" => "g",
                     "factor" => 0.001
                 ], [
+                    "id" => "kg",
                     "name" => "kg",
                     "factor" => 1
                 ], [
+                    "id" => "t",
                     "name" => "t",
                     "factor" => 1000
                 ],
@@ -58,15 +62,19 @@ function getPhysicalMeasures()
             "base_unit" => "m",
             "units" => [
                 [
+                    "id" => "mm",
                     "name" => "mm",
                     "factor" => 0.001
                 ], [
+                    "id" => "cm",
                     "name" => "cm",
                     "factor" => 0.01
                 ], [
+                    "id" => "m",
                     "name" => "m",
                     "factor" => 1
                 ], [
+                    "id" => "km",
                     "name" => "km",
                     "factor" => 1000
                 ],
@@ -77,21 +85,27 @@ function getPhysicalMeasures()
             "base_unit" => "MB",
             "units" => [
                 [
+                    "id" => "b",
                     "name" => "b",
                     "factor" => 1 / 1024 / 1014 / 8
                 ], [
+                    "id" => "B",
                     "name" => "B",
                     "factor" => 1 / 1024 / 1014
                 ], [
+                    "id" => "KB",
                     "name" => "KB",
                     "factor" => 1 / 1024
                 ], [
+                    "id" => "MB",
                     "name" => "MB",
                     "factor" => 1
                 ], [
+                    "id" => "GB",
                     "name" => "GB",
                     "factor" => 1024
                 ], [
+                    "id" => "TB",
                     "name" => "TB",
                     "factor" => 1024 * 1024
                 ],
@@ -102,10 +116,12 @@ function getPhysicalMeasures()
             "base_unit" => "zł",
             "units" => [
                 [
+                    "id" => "gr",
                     "name" => "gr",
                     "factor" => 0.01
                 ],
                 [
+                    "id" => "pln",
                     "name" => "zł",
                     "factor" => 1
                 ],
@@ -116,20 +132,47 @@ function getPhysicalMeasures()
             "base_unit" => "N/m²",
             "units" => [
                 [
+                    "id" => "N.m2",
                     "name" => "N/m²",
                     "factor" => 1
                 ],
                 [
+                    "id" => "N.cm2",
                     "name" => "N/cm²",
                     "factor" => 10000
                 ],
                 [
+                    "id" => "N.mm2",
                     "name" => "N/mm²",
                     "factor" => 10000 * 100
                 ],
             ]
         ],
     ];
+}
+
+$physical_measure_unit_map = [];
+function getPhysicalMeasureUnitMap()
+{
+    global $physical_measure_unit_map;
+
+    if (!$physical_measure_unit_map) {
+        foreach (getPhysicalMeasures() as $physical_measure) {
+            foreach ($physical_measure["units"] as $unit) {
+                $physical_measure_unit_map[$unit["id"]] = [
+                    "name" => $unit["name"],
+                    "factor" => $unit["factor"],
+                ];
+            }
+        }
+    }
+
+    return $physical_measure_unit_map;
+}
+
+function getPhysicalMeasureUnit($unit_id)
+{
+    return def(getPhysicalMeasureUnitMap(), $unit_id, ["name" => "", "factor" => 1]);
 }
 
 

@@ -6,7 +6,8 @@ EntityManager::register("product_feature_option", [
         "parent_product_feature_option_id" => ["type" => "number"],
         "value" => ["type" => "string"],
         "double_value" => ["type" => "number"],
-        "unit_value" => ["type" => "number"],
+        "double_base" => ["type" => "string"],
+        "unit_id" => ["type" => "string"],
         "datetime_value" => ["type" => "string"],
         "text_value" => ["type" => "string"],
         "extra_json" => ["type" => "string"],
@@ -81,25 +82,24 @@ EventListener::register("before_save_product_feature_option_entity", function ($
             $product_feature_option->setProp("text_value", $text_value);
 
             $double_value = null;
-            $unit_value = null;
+            $double_base = null;
+            $unit_id = null;
             if ($feature_data_type === "double_value") {
-                $double_value = $product_feature_option->getProp("double_value");
-                $unit_value = $product_feature_option->getProp("unit_value");
-
-                if ($double_value !== false) {
+                $physical_measure = $product_feature->getProp("physical_measure");
+                if (!$physical_measure || $physical_measure === "none") {
+                    $double_value = $product_feature_option->getProp("double_value");
                     $display_something = $double_value;
-
-                    $physical_measure = $product_feature->getProp("physical_measure");
-                    $display_something = prettyPrintPhysicalMeasure($double_value, $physical_measure);
                 } else {
-                    $double_value = 0;
-                }
-                if (!$unit_value) {
-                    $unit_value = 1;
+                    $double_base = $product_feature_option->getProp("double_base");
+                    $unit_id = $product_feature_option->getProp("unit_id");
+                    $unit_data = getPhysicalMeasureUnit($unit_id);
+                    $double_value = $double_base * $unit_data["factor"];
+                    $display_something = $double_base . " " . $unit_data["name"];;
                 }
             }
+            $product_feature_option->setProp("double_base", $double_base);
             $product_feature_option->setProp("double_value", $double_value);
-            $product_feature_option->setProp("unit_value", $unit_value);
+            $product_feature_option->setProp("unit_id", $unit_id);
 
             $datetime_value = null;
             if ($feature_data_type === "datetime_value") {

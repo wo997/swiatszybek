@@ -145,35 +145,17 @@ function setSearchPhraseFromUrl() {
 	search_phrase._set_value(search_phrase_val, { quiet: true });
 }
 
-/**
- *
- * @param {string} number
- * @returns
- */
-const restore_number = (number) => {
-	number = (number + "").replace(/^0/, "0.");
-	return numberFromStr(number);
-};
-
-const safe_number = (number) => {
-	const accuracy = 100000;
-
-	// 0.09 becomes 009, you can easily tell that the dot comes after first 0
-	return (Math.round(accuracy * number) / accuracy + "").replace(/^0./, "0");
-};
-
 function setRangesFromUrl() {
 	const url_params = new URLSearchParams(current_url_search);
 
-	/** @type {string} */
-	const r = def(url_params.get("r"), "");
-
-	r.split("-").forEach((range_data) => {
-		let [product_feature_id, fromto] = range_data.split("_");
-		if (!fromto) {
-			return;
+	for (const key of url_params.keys()) {
+		if (!key.match(/^(r\d*|cena)$/)) {
+			continue;
 		}
-		let [from, to] = fromto.split("do");
+
+		const product_feature_id = numberFromStr(key);
+
+		let [from, to] = url_params.get(key).split("do");
 		const range_filter = $(`.range_filter[data-product_feature_id="${product_feature_id}"]`);
 
 		if (!range_filter) {
@@ -185,15 +167,21 @@ function setRangesFromUrl() {
 		const input_to = range_filter._child("input.to");
 		const unit_to = range_filter._child("select.to");
 
+		/**
+		 *
+		 * @param {PiepNode} input
+		 * @param {*} unit
+		 * @param {string} val
+		 */
 		const setField = (input, unit, val) => {
 			if (unit && unit.options) {
-				const value_data = getSafeUnitValue(
-					// @ts-ignore
-					[...unit.options].map((e) => +e.value),
-					restore_number(val)
-				);
-				input._set_value(val === "" ? "" : value_data.value, { quiet: true });
-				unit._set_value(value_data.unit_factor, { quiet: true });
+				const match_letter = val.match(/[a-zA-Z]/);
+				const letter_index = match_letter ? match_letter.index : val.length;
+				const number_str = val.substring(0, letter_index);
+				const unit_str = val.substring(letter_index);
+
+				input._set_value(val === "" ? "" : number_str, { quiet: true });
+				unit._set_value(unit_str, { quiet: true });
 			} else {
 				input._set_value(val, { quiet: true });
 			}
@@ -230,7 +218,7 @@ function setRangesFromUrl() {
 		} else {
 			showTab(double_value_quick_list._parent(".tab_menu"), 2);
 		}
-	});
+	}
 }
 
 function initProductCategories() {
@@ -338,7 +326,7 @@ function updatePrettyCheckboxRanges() {
 		ul._children(".option_range_checkbox.checked").forEach((chck) => {
 			let [from, to] = chck.dataset.value.split("do");
 			if (from !== undefined) {
-				const fromv = restore_number(from);
+				const fromv = numberFromStr(from);
 				if (fromv < r_min) {
 					r_min = fromv;
 					min_checkbox = chck;
@@ -348,7 +336,7 @@ function updatePrettyCheckboxRanges() {
 				if (to === undefined) {
 					to = from;
 				}
-				const tov = restore_number(to);
+				const tov = numberFromStr(to);
 				if (tov > r_max) {
 					r_max = tov;
 					max_checkbox = chck;
@@ -559,7 +547,7 @@ function mainSearchProducts(force = false) {
 		url_params.append("ile", product_list_pagination_comp._data.row_count + "");
 	}
 
-	let url_from_ranges = [];
+	let url_from_ranges = {};
 	$$(".product_features .tab_content:not(.hidden) .range_filter").forEach((range_filter) => {
 		const input_from = range_filter._child("input.from");
 		const unit_from = range_filter._child("select.from");
@@ -574,20 +562,20 @@ function mainSearchProducts(force = false) {
 		if (from_selected) {
 			from = numberFromStr(from);
 			if (unit_from) {
-				from *= +unit_from._get_value();
+				from += unit_from._get_value();
 			}
 		}
 
 		if (to_selected) {
 			to = numberFromStr(to);
 			if (unit_to) {
-				to *= +unit_to._get_value();
+				to += unit_to._get_value();
 			}
 		}
 
 		if (from_selected || to_selected) {
-			const values = (from_selected ? safe_number(from) : "") + "do" + (to_selected ? safe_number(to) : "");
-			url_from_ranges.push(`${product_feature_id}_${values}`);
+			const values = (from_selected ? from : "") + "do" + (to_selected ? to : "");
+			url_from_ranges[product_feature_id] = values;
 		}
 	});
 
@@ -596,12 +584,15 @@ function mainSearchProducts(force = false) {
 		if (url_from_ranges.find((e) => e.startsWith(`${product_feature_id}_`))) {
 			return;
 		}
-		const values = safe_number(minmax[0]) + "do" + safe_number(minmax[1]);
+		const values = minmax[0] + "do" + minmax[1];
 		url_from_ranges.push(`${product_feature_id}_${values}`);
+		url_from_ranges[product_feature_id] = values;
 	});
 
-	if (url_from_ranges.length > 0) {
-		url_params.append("r", url_from_ranges.join("-"));
+	if (Object.keys(url_from_ranges).length > 0) {
+		Object.entries(url_from_ranges).forEach(([product_feature_id, values]) => {
+			url_params.append(`r${product_feature_id}`, values);
+		});
 	}
 
 	const url_search = url_params.toString();
