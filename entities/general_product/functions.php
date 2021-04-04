@@ -153,10 +153,12 @@ function getGlobalProductsSearch($url, $options = [])
 
         json_decode($product["__options_json"], true);
 
-        $products_options_jsons_json = json_decode($product["products_options_jsons_json"]);
+        $products_options_jsons = json_decode($product["products_options_jsons_json"]);
+        // pretty tricky, but it works
+        $product_count = count($products_options_jsons);
 
         $matched_options = [];
-        foreach ($products_options_jsons_json as $product_options_json) {
+        foreach ($products_options_jsons as $product_options_json) {
             $product_options = json_decode($product_options_json, true);
             if ($product_options) {
                 foreach ($product_options as $feature_id => $option_ids) {
@@ -221,9 +223,12 @@ function getGlobalProductsSearch($url, $options = [])
                 <span class=\"product_rating rating\"><span class=\"stars\">$avg_rating</span> ($rating_count)</span>
                 <div style=\"width:100%\"></div>
                 <span class=\"product_stock $stock_class\"></span>
-                <i class=\"fas show_features fa-list-ul\"></i>
-                <div class=\"features_wrapper\">
-                    <div class=\"product_features smooth_scrollbar\">
+                <div class=\"product_variants\">
+                    <div class=\"header\"> 
+                        <span>$product_count</span>
+                        <i class=\"fas fa-list-ul\"></i>
+                    </div>
+                    <div class=\"list smooth_scrollbar\">
                         $options_html
                     </div>
                 </div>
@@ -232,5 +237,19 @@ function getGlobalProductsSearch($url, $options = [])
     }
 
     $products_data["html"] = $html;
+
+
+    /** @var PaginationParams */
+    $pagination_params = [
+        "select" => "COUNT(product_id)",
+        "from" => $from,
+        "where" => $where,
+        "datatable_params" => json_encode($datatable_params),
+        "search_type" => "extended",
+        "quick_search_fields" => ["gp.__search"],
+    ];
+    // print actual (not general) product count
+    $products_data["total_rows"] = paginateData($pagination_params)["total_rows"];
+
     return $products_data;
 }
