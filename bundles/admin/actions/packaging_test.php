@@ -32,15 +32,18 @@ $t = microtime(true);
 // )]);
 
 // works pretty well up to 4 items, reliable but not perfect ofc
+// for 5 it's prety much always below 100
+// for 4 is's below 5ms??? decent for sure
 var_dump([putBoxIntoPackage3D(
-    [60, 50, 50],
+    [60, 40, 30],
     [
         [10, 20, 60],
-        [20, 20, 50],
+        [20, 20, 30],
         [15, 19, 39],
-        [13, 40, 60],
-        //[30, 40, 50],
-        //[10, 30, 40],
+        [20, 40, 30],
+        //[22, 50, 40],
+        //[10, 25, 40],
+        //[10, 55, 40],
     ]
 )]);
 

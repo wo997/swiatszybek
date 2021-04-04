@@ -580,18 +580,19 @@ function mainSearchProducts(force = false) {
 	});
 
 	const feature_list_ranges = updatePrettyCheckboxRanges();
+
 	Object.entries(feature_list_ranges).forEach(([product_feature_id, minmax]) => {
-		if (url_from_ranges.find((e) => e.startsWith(`${product_feature_id}_`))) {
+		if (url_from_ranges[product_feature_id]) {
 			return;
 		}
 		const values = minmax[0] + "do" + minmax[1];
-		url_from_ranges.push(`${product_feature_id}_${values}`);
 		url_from_ranges[product_feature_id] = values;
 	});
 
 	if (Object.keys(url_from_ranges).length > 0) {
 		Object.entries(url_from_ranges).forEach(([product_feature_id, values]) => {
-			url_params.append(`r${product_feature_id}`, values);
+			const name = product_feature_id === "cena" ? "cena" : `r${product_feature_id}`;
+			url_params.append(name, values);
 		});
 	}
 

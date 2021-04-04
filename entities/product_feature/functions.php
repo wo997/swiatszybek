@@ -115,11 +115,11 @@ function getPhysicalMeasures()
             "description" => "Cena",
             "base_unit" => "zł",
             "units" => [
-                [
-                    "id" => "gr",
-                    "name" => "gr",
-                    "factor" => 0.01
-                ],
+                // [
+                //     "id" => "gr",
+                //     "name" => "gr",
+                //     "factor" => 0.01
+                // ],
                 [
                     "id" => "pln",
                     "name" => "zł",

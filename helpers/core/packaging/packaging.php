@@ -19,38 +19,40 @@ function putBoxIntoPackage($package_dims, $products_dims, $contents = [])
         // at first level u got symmetry so there is no need to go beyond a half
         $top = $top / 2;
     }
+
+    // recalculate contents for start points
+    if (!$contents) {
+        $starts = [
+            [0, 0]
+        ];
+    } else {
+        $starts = [];
+        foreach ($contents as $two_points_1) {
+            array_push(
+                $starts,
+                [
+                    $two_points_1[0][0],
+                    $two_points_1[1][1],
+                ],
+                [
+                    $two_points_1[1][0],
+                    $two_points_1[0][1],
+                ]
+            );
+        }
+        // // order matters
+        // foreach ($contents as $two_points_1) {
+        //     // check whether some of these points are not important - when anything else is on the upper right deeper side
+        //     // splice here
+        // }
+    }
+
     // take every product in every order - by recursion
     for ($product_index = 0; $product_index < $top; $product_index++) {
         $products_dims_copy = $products_dims;
         $product_to_put_dims = array_splice($products_dims_copy, $product_index, 1)[0];
         foreach ($orientations as $orientation) {
             $final_product_to_put_dims = [$product_to_put_dims[$orientation[0]], $product_to_put_dims[$orientation[1]]];
-
-            if (!$contents) {
-                $starts = [
-                    [0, 0]
-                ];
-            } else {
-                $starts = [];
-                foreach ($contents as $two_points_1) {
-                    array_push(
-                        $starts,
-                        [
-                            $two_points_1[0][0],
-                            $two_points_1[1][1],
-                        ],
-                        [
-                            $two_points_1[1][0],
-                            $two_points_1[0][1],
-                        ]
-                    );
-                }
-                // order matters
-                foreach ($contents as $two_points_1) {
-                    // check whether some of these points are not important - when anything else is on the upper right deeper side
-                    // splice here
-                }
-            }
 
             foreach ($starts as $start) {
                 $end = [
@@ -110,39 +112,43 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
         // at first level u got symmetry so there is no need to go beyond a half
         $top = $top / 2;
     }
+
+    // recalculate contents for start points
+    if (!$contents) {
+        $starts = [
+            [0, 0, 0]
+        ];
+    } else {
+        $starts = [];
+        // contents contains only meaningful items, thus no points need to be excluded at this point
+        foreach ($contents as $two_points_1) {
+            array_push(
+                $starts,
+                [
+                    $two_points_1[1][0],
+                    $two_points_1[0][1],
+                    $two_points_1[0][2],
+                ],
+                [
+                    $two_points_1[0][0],
+                    $two_points_1[1][1],
+                    $two_points_1[0][2],
+                ],
+                [
+                    $two_points_1[0][0],
+                    $two_points_1[0][1],
+                    $two_points_1[1][2],
+                ],
+            );
+        }
+    }
+
     // take every product in every order - by recursion
     for ($product_index = 0; $product_index < $top; $product_index++) {
         $products_dims_copy = $products_dims;
         $product_to_put_dims = array_splice($products_dims_copy, $product_index, 1)[0];
 
-        if (!$contents) {
-            $starts = [
-                [0, 0, 0]
-            ];
-        } else {
-            $starts = [];
-            foreach ($contents as $two_points_1) {
-                array_push(
-                    $starts,
-                    [
-                        $two_points_1[1][0],
-                        $two_points_1[0][1],
-                        $two_points_1[0][2],
-                    ],
-                    [
-                        $two_points_1[0][0],
-                        $two_points_1[1][1],
-                        $two_points_1[0][2],
-                    ],
-                    [
-                        $two_points_1[0][0],
-                        $two_points_1[0][1],
-                        $two_points_1[1][2],
-                    ],
-                );
-            }
-        }
-
+        // implemented only for 3d, that's ok
         $outside_for_all_orientations_and_positions = true;
 
         $two_points_to_puts = [];
@@ -189,7 +195,6 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
 
             foreach ($contents as $two_points_2) {
                 if ($two_points_2[1][0] >= $end[0] || $two_points_2[1][1] >= $end[1] || $two_points_2[1][2] >= $end[2]) {
-                    //var_dump("XXX", $two_points_2);
                     $contents_copy[] = $two_points_2;
                 }
             }
