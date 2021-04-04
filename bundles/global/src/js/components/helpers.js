@@ -1,5 +1,16 @@
 /* js[global] */
 
+let OPTIMIZE_COMPONENTS = false;
+
+function startComponentsOptimization() {
+	OPTIMIZE_COMPONENTS = true;
+}
+function finishComponentsOptimization() {
+	OPTIMIZE_COMPONENTS = true;
+	registerForms();
+	lazyLoadImages();
+}
+
 /**
  *
  * @param {PiepNode} node

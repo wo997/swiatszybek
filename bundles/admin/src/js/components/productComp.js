@@ -121,7 +121,7 @@ function productComp(comp, parent, data = undefined) {
 		dataset: [],
 		label: "Pełna lista produktów",
 		selectable: true,
-		pagination_data: { row_count: 15 },
+		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
 		print_row_as_string: (row_data) => {
 			return Object.entries(row_data)
 				.filter(([key, option_id]) => getFeatureIdFromKey(key))
@@ -454,20 +454,22 @@ function productComp(comp, parent, data = undefined) {
 				if (selection_changed || cd.products_dt) {
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
-					let column_index = -1;
-					data.products_dt.columns.forEach((column) => {
-						column_index++;
-						const feature_id = getFeatureIdFromKey(column.key);
-						if (feature_id) {
-							const multi_feature_ids = data.features.filter((fea) => fea.options.length > 1).map((fea) => fea.product_feature_id);
-							const found_index = multi_feature_ids.indexOf(feature_id);
-							const req_column_index = found_index + 1;
-							if (found_index !== -1 && req_column_index !== column_index) {
-								const temp = columns.splice(column_index, 1);
-								columns.splice(req_column_index, 0, ...temp);
-							}
+					/** @type {DatatableColumnDef[]} */
+					const set_columns = [columns.find((c) => c.key === "select")];
+
+					const multi_feature_ids = data.features.filter((fea) => fea.options.length > 1).map((fea) => fea.product_feature_id);
+
+					multi_feature_ids.forEach((feature_id) => {
+						const feature_key = getFeatureKeyFromId(feature_id);
+						const column = columns.find((c) => c.key === feature_key);
+						if (column) {
+							set_columns.push(column);
 						}
 					});
+
+					set_columns.push(...data.products_dt.columns.filter((column) => column.key !== "select" && !getFeatureIdFromKey(column.key)));
+
+					data.products_dt.columns = set_columns;
 				}
 
 				if (selection_changed || cd.products_dt) {
@@ -482,7 +484,6 @@ function productComp(comp, parent, data = undefined) {
 					cross_features.forEach((feature_set) => {
 						const product_features = {};
 						feature_set.forEach((product_feature_option_id) => {
-							// UGH, we need ids before we even have them hmm: TODO:!!!!!!!!!!!!!!!!!!!!!!!!!!
 							const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
 							if (option) {
 								product_features[option.product_feature_id] = product_feature_option_id;

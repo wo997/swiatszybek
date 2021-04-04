@@ -90,7 +90,7 @@ function createComp(node, parent_comp, data, options) {
 		return;
 	}
 
-	//node._propagating_data = false;
+	node._propagating_data = false;
 
 	comp._prev_data = {};
 	comp._changed_data = {};
@@ -351,12 +351,16 @@ function createComp(node, parent_comp, data, options) {
  * } & SetCompDataOptions} SetAnyCompDataOptions
  */
 
+let u = 0;
+
 /**
  * @param {BaseComp} comp
  * @param {*} data
  * @param {SetAnyCompDataOptions} options
  */
 function setCompData(comp, data = undefined, options = {}) {
+	u++;
+	//console.log(comp);
 	/** @type {AnyComp} */
 	// @ts-ignore
 	const node = comp;
@@ -405,10 +409,10 @@ function setCompData(comp, data = undefined, options = {}) {
 		return;
 	}
 
-	// kinda weird but it creates f.e. checkbox base component
-	//delay("registerForms", 0);
-	registerForms();
-	lazyLoadImages();
+	if (!OPTIMIZE_COMPONENTS) {
+		registerForms(comp);
+		lazyLoadImages();
+	}
 
 	if (isObject(node._data)) {
 		node._changed_data = {};
@@ -475,9 +479,9 @@ function setCompData(comp, data = undefined, options = {}) {
 
 	node._prev_data = cloneObject(node._data);
 
-	//node._propagating_data = true;
+	node._propagating_data = true;
 	propagateCompData(node);
-	//node._propagating_data = false;
+	node._propagating_data = false;
 
 	/*if (!options.second) {
 		setCompData(comp, undefined, {
@@ -500,8 +504,17 @@ function propagateCompData(comp) {
 		node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 			const bind_var = sub_node.dataset.bind;
 
-			if (sub_node._set_value && (!node._changed_data || node._changed_data[bind_var])) {
-				sub_node._set_value(node._data[bind_var], { quiet: true });
+			if (!node._changed_data || node._changed_data[bind_var]) {
+				const cb = () => {
+					if (sub_node._set_value) {
+						sub_node._set_value(node._data[bind_var], { quiet: true });
+					}
+				};
+				if (OPTIMIZE_COMPONENTS) {
+					setTimeout(cb);
+				} else {
+					cb();
+				}
 			}
 		});
 	}
@@ -515,9 +528,9 @@ function propagateCompData(comp) {
 			// @ts-ignore
 			const receiver = subscribe ? subscribe.receiver : undefined;
 
-			// if (receiver._propagating_data) {
-			// 	continue;
-			// }
+			if (receiver._propagating_data && OPTIMIZE_COMPONENTS) {
+				continue;
+			}
 
 			if (receiver && receiver._in_body()) {
 				subscribe.fetch(node, receiver);

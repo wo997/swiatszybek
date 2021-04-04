@@ -104,9 +104,12 @@ function onScrollImages(options = {}) {
 			return;
 		}
 		if (isNodeOnScreen(img, lazyLoadOffset) && img.dataset.src) {
-			// @ts-ignore
-			img.src = getResponsiveImageRealUrl(img);
-			img.classList.add("wo997_img_waiting");
+			const src = getResponsiveImageRealUrl(img);
+			if (src) {
+				// @ts-ignore
+				img.src = src;
+				img.classList.add("wo997_img_waiting");
+			}
 		} else {
 			setImageSize(img);
 		}

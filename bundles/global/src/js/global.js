@@ -216,12 +216,18 @@ function setValue(input, value = null, options = {}) {
 	} else if (input.tagName == "P-DROPDOWN") {
 		setDropdownValue(input, value, options);
 		// @ts-ignore
-	} else if (input.datepicker) {
+	} else if (input.classList.contains("datepicker-input") || input.classList.contains("default_datepicker")) {
 		if (value && value.substr(0, 4).match(/\d{4}/)) {
 			value = value.substring(0, 10);
 			value = reverseDateString(value, "-");
 			// @ts-ignore
-			input.datepicker.setDate(value);
+			if (input.datepicker) {
+				// @ts-ignore
+				input.datepicker.setDate(value);
+			} else {
+				// @ts-ignore
+				input.value = value;
+			}
 		}
 	} else if (input.classList.contains("table-selection-value")) {
 		var datatable = input._parent(".datatable-wrapper");
@@ -299,7 +305,7 @@ function getValue(input, options = {}) {
 	} else if (input.tagName == "P-DROPDOWN") {
 		v = input.dataset.value;
 		// @ts-ignore
-	} else if (input.datepicker) {
+	} else if (input.classList.contains("datepicker-input")) {
 		if (v && v.substr(6, 4).match(/\d{4}/)) {
 			v = reverseDateString(v, "-");
 		}

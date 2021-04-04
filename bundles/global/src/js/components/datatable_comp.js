@@ -122,7 +122,7 @@ function datatableComp(comp, parent, data) {
 
 		data.columns.unshift({
 			label: html`<p-checkbox class="square select_all_rows shrink"></p-checkbox>`,
-			key: "",
+			key: "select",
 			width: "38px",
 			render: (row) => {
 				return html`<p-checkbox class="square select_row shrink"></p-checkbox>`;

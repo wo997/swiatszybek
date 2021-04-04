@@ -92,6 +92,7 @@ function listComp(comp, parent, data = []) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
+				const timer = Math.floor(Math.random() * 1000) + "";
 				const diff = diffArrays(comp._prev_data, data, (e) => e.row_id);
 
 				if (diff.length === 0) {
@@ -130,6 +131,8 @@ function listComp(comp, parent, data = []) {
 				/** @type {PiepNode[]} */
 				const animatable_rows = [];
 
+				// console.log(comp);
+				// console.time(timer);
 				diff_with_target_index.forEach((diff_info) => {
 					const remove = diff_info.to === -1;
 					const add = diff_info.from === -1;
@@ -193,6 +196,7 @@ function listComp(comp, parent, data = []) {
 						child.rect_before = child.getBoundingClientRect();
 					}
 				});
+				//console.timeEnd(timer);
 
 				// adding and removing, if we have too many of these we won't animate the list, simple
 				const row_c_after = diff_with_target_index.length - removed;
@@ -254,9 +258,6 @@ function listComp(comp, parent, data = []) {
 					}
 				});
 
-				// IMPORTANT - using that technique we can animate 2 lists when their items are swapped and one is a descendant of another YAY!
-				// ok, for some reason it DID NOT WORK - flashing
-				//setTimeout(() => {
 				animatable_rows.forEach((child) => {
 					// @ts-ignore
 					child.rect_after = child.getBoundingClientRect();
@@ -419,7 +420,6 @@ function listComp(comp, parent, data = []) {
 				} else {
 					finish();
 				}
-				//});
 			},
 		});
 	};
