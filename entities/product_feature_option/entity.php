@@ -87,10 +87,10 @@ EventListener::register("before_save_product_feature_option_entity", function ($
             if ($feature_data_type === "double_value") {
                 $physical_measure = $product_feature->getProp("physical_measure");
                 if (!$physical_measure || $physical_measure === "none") {
-                    $double_value = $product_feature_option->getProp("double_value");
+                    $double_value = floatval($product_feature_option->getProp("double_value"));
                     $display_something = $double_value;
                 } else {
-                    $double_base = $product_feature_option->getProp("double_base");
+                    $double_base = floatval($product_feature_option->getProp("double_base"));
                     $unit_id = $product_feature_option->getProp("unit_id");
                     $unit_data = getPhysicalMeasureUnit($unit_id);
                     $double_value = $double_base * $unit_data["factor"];

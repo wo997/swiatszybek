@@ -17,6 +17,7 @@ header.main {
 		justify-content: space-around;
 		--header-btn-radius: 4px;
 		transition: 0.2s transform;
+		flex-flow: row wrap;
 	}
 
 	&.invisible {
@@ -32,6 +33,12 @@ header.main {
 	@media only screen and (max-width: 400px) {
 		& {
 			--header_padding_horizontal: 10px;
+		}
+	}
+
+	@media (max-width: 799px) {
+		.case_desktop {
+			display: none !important;
 		}
 	}
 

@@ -98,6 +98,8 @@ function productCategoriesComp(comp, parent, data = undefined) {
 					type: "success",
 				});
 				setTimeout(refreshProductCategories, 200);
+
+				buildResponsiveHeader();
 			},
 		});
 	};

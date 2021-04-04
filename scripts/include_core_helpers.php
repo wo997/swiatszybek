@@ -30,6 +30,7 @@ include_once "helpers/core/deployment.php";
 
 include_once "helpers/core/links.php";
 
+include_once "helpers/core/Theme.php";
 include_once "helpers/core/layout/cms.php";
 include_once "helpers/core/layout/templates.php";
 

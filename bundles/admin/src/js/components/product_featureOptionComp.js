@@ -64,6 +64,12 @@ function product_featureOptionComp(
 						const unit_picker = comp._nodes.physical_value_unit;
 						unit_picker._set_content(options);
 						unit_picker._set_value(data.unit_id, { quiet: true });
+						if (!data.unit_id) {
+							setTimeout(() => {
+								comp._data.unit_id = unit_picker._get_value();
+								comp._render();
+							});
+						}
 
 						comp._nodes.physical_value_wrapper.classList.remove("hidden");
 						comp._nodes.double_value.classList.add("hidden");
