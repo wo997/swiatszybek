@@ -96,26 +96,26 @@ function productComp(comp, parent, data = undefined) {
 				editable: "checkbox",
 				batch_edit: true,
 			},
-			{
-				key: "net_price",
-				label: "Cena Netto",
-				width: "1",
-				sortable: true,
-				searchable: "number",
-				editable: "number",
-				batch_edit: true,
-			},
-			{
-				key: "vat_id",
-				label: "Vat",
-				width: "1",
-				sortable: true,
-				editable: "select",
-				map_name: "vat",
-				batch_edit: true,
-			},
-			{ key: "gross_price", label: "Cena Brutto", width: "1", sortable: true, editable: "number", batch_edit: true },
-			{ key: "stock", label: "Stan magazynowy", width: "1", sortable: true, editable: "number", batch_edit: true },
+			// {
+			// 	key: "net_price",
+			// 	label: "Cena Netto",
+			// 	width: "1",
+			// 	sortable: true,
+			// 	searchable: "number",
+			// 	editable: "number",
+			// 	batch_edit: true,
+			// },
+			// {
+			// 	key: "vat_id",
+			// 	label: "Vat",
+			// 	width: "1",
+			// 	sortable: true,
+			// 	editable: "select",
+			// 	map_name: "vat",
+			// 	batch_edit: true,
+			// },
+			// { key: "gross_price", label: "Cena Brutto", width: "1", sortable: true, editable: "number", batch_edit: true },
+			// { key: "stock", label: "Stan magazynowy", width: "1", sortable: true, editable: "number", batch_edit: true },
 		],
 		empty_html: "Brak produktów",
 		dataset: [],
@@ -467,7 +467,9 @@ function productComp(comp, parent, data = undefined) {
 						}
 					});
 
-					set_columns.push(...data.products_dt.columns.filter((column) => column.key !== "select" && !getFeatureIdFromKey(column.key)));
+					const keys_we_have = set_columns.map((c) => c.key);
+
+					set_columns.push(...data.products_dt.columns.filter((column) => !keys_we_have.includes(column.key)));
 
 					data.products_dt.columns = set_columns;
 				}

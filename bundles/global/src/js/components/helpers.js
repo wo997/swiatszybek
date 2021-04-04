@@ -6,7 +6,7 @@ function startComponentsOptimization() {
 	OPTIMIZE_COMPONENTS = true;
 }
 function finishComponentsOptimization() {
-	OPTIMIZE_COMPONENTS = true;
+	OPTIMIZE_COMPONENTS = false;
 	registerForms();
 	lazyLoadImages();
 }
