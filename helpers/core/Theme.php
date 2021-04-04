@@ -8,20 +8,19 @@ class Theme
             die("error");
         }
 
-        $inner_responsive_width_min = intval($post["inner_responsive_width"]);
+        // mobile not less than 600
+        $inner_responsive_width_min = max(intval($post["inner_responsive_width"]), 600);
         $outer_responsive_width_min = intval($post["outer_responsive_width"]);
         $inner_responsive_width_max = $inner_responsive_width_min - 1;
         $outer_responsive_width_max = $outer_responsive_width_min - 1;
 
-        $inner_responsive_width_min .= "px";
-        $outer_responsive_width_min .= "px";
-        $inner_responsive_width_max .= "px";
-        $outer_responsive_width_max .= "px";
+        // hide some layout elements at 799 for sure and maybe even further
+        $case_desktop_width_max = max(799, $inner_responsive_width_max);
 
         $header_build_css = <<<CSS
 /* css[global] */
 
-@media (max-width: $outer_responsive_width_max) and (hover: hover) {
+@media (max-width: {$outer_responsive_width_max}px) and (hover: hover) {
 	header.main .main_menu {
 		order: 2;
 		margin: calc(-1 * var(--header_padding_vertical)) calc(-1 * var(--header_padding_horizontal));
@@ -31,13 +30,13 @@ class Theme
 		border-top: 1px solid #ccc;
 	}
 }
-@media (min-width: $outer_responsive_width_min) {
+@media (min-width: {$outer_responsive_width_min}px) {
 	header.main .main_menu a {
 		border-radius: var(--header-btn-radius);
 	}
 }
 
-@media (max-width: $inner_responsive_width_max), (hover: none) {
+@media (max-width: {$inner_responsive_width_max}px), (hover: none) {
 	header.main {
 		& {
 			justify-content: space-between;
@@ -53,7 +52,7 @@ class Theme
 	}
 }
 
-@media (hover: hover) and (min-width: $inner_responsive_width_min) {
+@media (hover: hover) and (min-width: {$inner_responsive_width_min}px) {
 	header.main {
 		.mobile_menu_btn,
 		.mobile_search_btn {
@@ -61,6 +60,13 @@ class Theme
 		}
 	}
 }
+
+@media (max-width: {$case_desktop_width_max}px) {
+    .case_desktop {
+        display: none !important;
+    }
+}
+
 CSS;
 
         Files::save(PREBUILDS_PATH . "header_build.scss", $header_build_css);
