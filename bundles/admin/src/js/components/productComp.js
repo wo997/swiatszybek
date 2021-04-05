@@ -521,6 +521,14 @@ function productComp(comp, parent, data = undefined) {
 					comp._nodes.print_categories._set_content(cats_html ? cats_html : "BRAK");
 				}
 
+				if (cd.products_dt) {
+					comp._nodes.all_products._nodes.list._direct_children().forEach((r) => {
+						const product = data.products_dt.dataset.find((e) => e._row_id === +r.dataset.primary);
+						const active = product ? product.active : 0;
+						r.classList.toggle("inactive", !active);
+					});
+				}
+
 				if (cd.product_list_view) {
 					if (data.product_list_view === "active") {
 						comp._nodes.all_products._add_column({
@@ -579,6 +587,46 @@ function productComp(comp, parent, data = undefined) {
 						});
 					} else {
 						comp._nodes.all_products._remove_column("stock");
+					}
+
+					if (data.product_list_view === "weight_dimensions") {
+						comp._nodes.all_products._add_column({
+							key: "weight",
+							label: "Waga (g)",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "length",
+							label: "Długość (cm)",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "width",
+							label: "Szerokość (cm)",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "height",
+							label: "Wysokość (cm)",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+					} else {
+						comp._nodes.all_products._remove_column("weight");
+						comp._nodes.all_products._remove_column("length");
+						comp._nodes.all_products._remove_column("width");
+						comp._nodes.all_products._remove_column("height");
 					}
 
 					comp._nodes.all_products._render();
@@ -709,6 +757,10 @@ function productComp(comp, parent, data = undefined) {
 				<div class="checkbox_area">
 					<p-checkbox data-value="discount"></p-checkbox>
 					<span> <i class="fas fa-percentage"></i> Zniżki </span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="weight_dimensions"></p-checkbox>
+					<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
 				</div>
 			</div>
 
