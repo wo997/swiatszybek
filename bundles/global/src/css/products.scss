@@ -161,17 +161,9 @@
 		& .fa-list-ul {
 		}
 	}
-}
-.product_block .show_features {
-	opacity: 0.4;
-	align-self: center;
-	font-size: 0.9em;
-	padding: 5px;
-	margin-top: 1px;
-	cursor: pointer;
-}
-@media (hover: none) {
-	.product_block .show_features {
-		display: none;
+	@media (hover: none) {
+		& {
+			pointer-events: none;
+		}
 	}
 }
