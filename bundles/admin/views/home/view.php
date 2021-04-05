@@ -14,7 +14,7 @@
 
 <div style="max-width: 1000px;margin: auto">
     <div class="label big">Statystyki sprzedaży</div>
-    <div class="radio_group boxes pretty_blue hide_checks semi_bold inline_flex glue_children choose_period">
+    <div class="pretty_radio semi_bold choose_period">
         <div class="checkbox_area">
             <p-checkbox data-value="today"></p-checkbox>
             <span>Dzisiaj</span>

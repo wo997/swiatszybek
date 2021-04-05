@@ -90,6 +90,8 @@
  * _save_state()
  * _load_state(data_obj)
  * _warmup_maps(render?: boolean)
+ * _remove_column(key: string)
+ * _add_column(column: DatatableColumnDef, index?: number)
  * } & BaseComp} DatatableComp
  */
 
@@ -188,6 +190,25 @@ function datatableComp(comp, parent, data) {
 		data_obj.rows = data_obj.dataset.map((d) => {
 			return { row_data: d };
 		});
+	};
+
+	comp._remove_column = (key) => {
+		const index = comp._data.columns.findIndex((c) => c.key === key);
+		if (index !== -1) {
+			comp._data.columns.splice(index, 1);
+		}
+	};
+
+	comp._add_column = (column, index = undefined) => {
+		if (comp._data.columns.find((c) => c.key === column.key)) {
+			return;
+		}
+
+		if (index === undefined) {
+			comp._data.columns.push(column);
+		} else {
+			comp._data.columns.splice(index, 0, column);
+		}
 	};
 
 	comp._backend_search = () => {

@@ -58,6 +58,12 @@ product-comp {
 			margin-top: 5px;
 		}
 	}
+
+	.node_all_products {
+		@media (min-width: 1000px) {
+			margin-top: -35px;
+		}
+	}
 }
 
 .injectable_header {

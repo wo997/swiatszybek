@@ -25,6 +25,7 @@
  *  category_ids: number[]
  *  main_img_url: string
  *  images: product_imgCompData[]
+ *  product_list_view: string
  * }} ProductCompData
  *
  * @typedef {{
@@ -82,44 +83,18 @@ function productComp(comp, parent, data = undefined) {
 			category_ids: [],
 			main_img_url: "",
 			images: [],
+			product_list_view: "active",
 		};
 	}
 
 	/** @type {DatatableCompData} */
 	const table = {
 		columns: [
-			{
-				key: "active",
-				label: "Aktywny",
-				width: "76px",
-				searchable: "boolean",
-				editable: "checkbox",
-				batch_edit: true,
-			},
-			// {
-			// 	key: "net_price",
-			// 	label: "Cena Netto",
-			// 	width: "1",
-			// 	sortable: true,
-			// 	searchable: "number",
-			// 	editable: "number",
-			// 	batch_edit: true,
-			// },
-			// {
-			// 	key: "vat_id",
-			// 	label: "Vat",
-			// 	width: "1",
-			// 	sortable: true,
-			// 	editable: "select",
-			// 	map_name: "vat",
-			// 	batch_edit: true,
-			// },
-			// { key: "gross_price", label: "Cena Brutto", width: "1", sortable: true, editable: "number", batch_edit: true },
-			// { key: "stock", label: "Stan magazynowy", width: "1", sortable: true, editable: "number", batch_edit: true },
+			/* dynamic */
 		],
 		empty_html: "Brak produktów",
 		dataset: [],
-		label: "Pełna lista produktów",
+		label: "",
 		selectable: true,
 		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
 		print_row_as_string: (row_data) => {
@@ -545,6 +520,69 @@ function productComp(comp, parent, data = undefined) {
 
 					comp._nodes.print_categories._set_content(cats_html ? cats_html : "BRAK");
 				}
+
+				if (cd.product_list_view) {
+					if (data.product_list_view === "active") {
+						comp._nodes.all_products._add_column({
+							key: "active",
+							label: "Aktywny",
+							width: "140px",
+							searchable: "boolean",
+							editable: "checkbox",
+							batch_edit: true,
+						});
+					} else {
+						comp._nodes.all_products._remove_column("active");
+					}
+
+					if (data.product_list_view === "price") {
+						comp._nodes.all_products._add_column({
+							key: "net_price",
+							label: "Cena Netto",
+							width: "1",
+							sortable: true,
+							searchable: "number",
+							editable: "number",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "vat_id",
+							label: "Vat",
+							width: "1",
+							sortable: true,
+							editable: "select",
+							map_name: "vat",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "gross_price",
+							label: "Cena Brutto",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+					} else {
+						comp._nodes.all_products._remove_column("net_price");
+						comp._nodes.all_products._remove_column("vat_id");
+						comp._nodes.all_products._remove_column("gross_price");
+					}
+
+					if (data.product_list_view === "stock") {
+						comp._nodes.all_products._add_column({
+							key: "stock",
+							label: "Stan magazynowy",
+							width: "1",
+							sortable: true,
+							editable: "number",
+							batch_edit: true,
+						});
+					} else {
+						comp._nodes.all_products._remove_column("stock");
+					}
+
+					comp._nodes.all_products._render();
+				}
 			},
 		});
 	};
@@ -651,6 +689,27 @@ function productComp(comp, parent, data = undefined) {
 					Poruszanie się po polach: <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
 					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
 				</p>
+			</div>
+
+			<div class="label medium bold">Pełna lista produktów</div>
+
+			<div class="pretty_radio semi_bold" data-bind="{${data.product_list_view}}">
+				<div class="checkbox_area">
+					<p-checkbox data-value="active"></p-checkbox>
+					<span> <i class="fas fa-check"></i> Aktywne </span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="price"></p-checkbox>
+					<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="stock"></p-checkbox>
+					<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="discount"></p-checkbox>
+					<span> <i class="fas fa-percentage"></i> Zniżki </span>
+				</div>
 			</div>
 
 			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>

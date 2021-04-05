@@ -43,11 +43,6 @@ function $(selector, parent = undefined) {
 	let node = selector;
 	if (!node) return undefined;
 
-	if (node._child) {
-		// already initialized
-		return node;
-	}
-
 	if (parent === undefined) {
 		parent = document;
 	}
@@ -55,6 +50,30 @@ function $(selector, parent = undefined) {
 	node = typeof node == "string" ? parent.querySelector(node) : node;
 	if (!node) {
 		return undefined;
+	}
+
+	// jscolor is an input already, .datepicker too
+	const valid_input = node.matches
+		? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker")
+		: false;
+
+	if (valid_input) {
+		if (!node._set_value) {
+			node._set_value = (value, options = {}) => {
+				setValue(node, value, options);
+			};
+		}
+		if (!node._get_value) {
+			node._get_value = (options = {}) => {
+				return getValue(node, options);
+			};
+		}
+	}
+
+	// MAKE SURE THE ORDER IS RIGHT
+	if (node._child) {
+		// already initialized
+		return node;
 	}
 
 	node._parent = (selector = undefined, options = {}) => {
@@ -112,24 +131,6 @@ function $(selector, parent = undefined) {
 	node._is_empty = () => {
 		return !node.hasChildNodes();
 	};
-
-	// jscolor is an input already, .datepicker too
-	const valid_input = node.matches
-		? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker")
-		: false;
-
-	if (valid_input) {
-		if (!node._set_value) {
-			node._set_value = (value, options = {}) => {
-				setValue(node, value, options);
-			};
-		}
-		if (!node._get_value) {
-			node._get_value = (options = {}) => {
-				return getValue(node, options);
-			};
-		}
-	}
 
 	node._dispatch_change = () => {
 		return dispatchChange(node);

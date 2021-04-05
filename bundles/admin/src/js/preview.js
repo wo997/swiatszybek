@@ -14,10 +14,7 @@ function previewUrl(url, params) {
 					<div class="custom_toolbar">
 						<span class="title">
 							<span class="medium"> Podgląd strony </span>
-							<div
-								class="radio_group boxes pretty_blue hide_checks semi_bold inline_flex glue_children small_boxes select_resolution"
-								style="margin-left:3px"
-							>
+							<div class="pretty_radio semi_bold small_boxes select_resolution" style="margin-left:3px">
 								<div class="checkbox_area" data-tooltip="Komputer">
 									<p-checkbox data-value=""></p-checkbox>
 									<span> <i class="fas fa-desktop"></i> </span>
