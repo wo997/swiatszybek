@@ -86,35 +86,33 @@ function product_featureOptionComp(
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="option_header">
-				<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-				<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
-				<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
+			<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
+			<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
+			<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
+			<input
+				class="field small inline save_to_db"
+				inputmode="numeric"
+				data-number
+				data-data_type="double_value"
+				data-bind="{${data.double_value}}"
+				data-node="{${comp._nodes.double_value}}"
+			/>
+			<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
 				<input
-					class="field small inline save_to_db"
+					class="field small inline"
 					inputmode="numeric"
-					data-number
-					data-data_type="double_value"
-					data-bind="{${data.double_value}}"
-					data-node="{${comp._nodes.double_value}}"
+					data-node="{${comp._nodes.physical_value_input}}"
+					data-bind="{${data.double_base}}"
+					data-input_delay="500"
 				/>
-				<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
-					<input
-						class="field small inline"
-						inputmode="numeric"
-						data-node="{${comp._nodes.physical_value_input}}"
-						data-bind="{${data.double_base}}"
-						data-input_delay="500"
-					/>
-					<select
-						class="field inline blank unit_picker"
-						data-node="{${comp._nodes.physical_value_unit}}"
-						data-bind="{${data.unit_id}}"
-					></select>
-				</div>
-				<div style="margin-left:auto">
-					<p-batch-trait data-trait="list_controls"></p-batch-trait>
-				</div>
+				<select
+					class="field inline blank unit_picker"
+					data-node="{${comp._nodes.physical_value_unit}}"
+					data-bind="{${data.unit_id}}"
+				></select>
+			</div>
+			<div style="margin-left:auto">
+				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 		`,
 		initialize: () => {

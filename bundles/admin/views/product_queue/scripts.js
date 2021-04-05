@@ -8,7 +8,15 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/product_queue/search",
 		columns: [
-			{ label: "Produkt", key: "product_name", width: "1", searchable: "string" },
+			{
+				label: "Produkt",
+				key: "product_name",
+				width: "1",
+				searchable: "string",
+				render: (data) => {
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${data.product_name} </a>`;
+				},
+			},
 			{
 				label: "E-maile",
 				key: "emails",
@@ -23,13 +31,7 @@ domload(() => {
 				key: "",
 				width: "100px",
 				render: (data) => {
-					return html`<a
-						class="btn subtle small"
-						href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"
-						data-tooltip="Edytuj produkt"
-					>
-						<i class="fas fa-cog"></i>
-					</a>`;
+					return html``;
 				},
 			},
 		],

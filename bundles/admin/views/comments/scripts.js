@@ -8,7 +8,17 @@ domload(() => {
 	datatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/comment/search",
 		columns: [
-			{ label: "Produkt", key: "general_product_name", width: "1", searchable: "string" },
+			{
+				label: "Produkt",
+				key: "general_product_name",
+				width: "1",
+				searchable: "string",
+				render: (data) => {
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
+						${data.general_product_name}
+					</a>`;
+				},
+			},
 			{ label: "Komentarz", key: "comment", width: "2", searchable: "string" },
 			{
 				label: "Ocena",
@@ -26,16 +36,7 @@ domload(() => {
 				key: "",
 				width: "100px",
 				render: (data) => {
-					return html`
-						<a class="btn subtle small" data-tooltip="Ukryj komentarz"> <i class="fas fa-eye-slash"></i> </a>
-						<a
-							class="btn subtle small"
-							href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"
-							data-tooltip="Edytuj produkt"
-						>
-							<i class="fas fa-cog"></i>
-						</a>
-					`;
+					return html` <button class="btn subtle small" disabled data-tooltip="Ukryj komentarz"><i class="fas fa-eye-slash"></i></button> `;
 				},
 			},
 		],

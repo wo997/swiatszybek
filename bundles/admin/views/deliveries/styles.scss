@@ -1,1 +1,25 @@
 /* css[view] */
+
+deliveries-config-comp.main {
+	list-comp {
+		max-width: 500px;
+	}
+
+	.clickable_label {
+		& {
+			cursor: pointer;
+		}
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.fa-chevron-right {
+		& {
+			transition: all 0.2s;
+		}
+		&.open {
+			transform: rotate(90deg);
+		}
+	}
+}
