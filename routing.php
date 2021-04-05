@@ -4,6 +4,7 @@ define("time", microtime(true));
 
 require_once 'kernel.php';
 
+// redirect once? so when disabled still can work, test on shitty env
 if (getSetting(["general", "advanced", "ssl"])) {
     if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
         $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];

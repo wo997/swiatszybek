@@ -1,30 +1,32 @@
 /* js[view] */
 
-    domload(() => {
-        setFormData(
-            <?= json_encode(
-                getSetting(["general", "advanced"])
-            ); ?>, `#zaawansowaneForm`);
-    });
+domload(() => {
+	const advancedSettingsForm = $(`#advancedSettingsForm`);
+	advancedSettingsForm._children("[data-name]").forEach((field) => {
+		field.setAttribute("autocomplete", Math.random().toPrecision(10));
+	});
 
-    function saveZawansowane() {
-        var form = $(`#zaawansowaneForm`);
+	Object.entries(advanced_settings).forEach(([key, val]) => {
+		const field = advancedSettingsForm._child(`[data-name="${key}"]`);
+		if (field) {
+			field._set_value(val);
+		}
+	});
 
-        if (!validateForm(form)) {
-            return;
-        }
+	$(".save_advanced_settings_btn").addEventListener("click", () => {
+		const params = {
+			advanced_settings: Object.fromEntries(
+				advancedSettingsForm._children("[data-name]").map((field) => [field.dataset.name, field._get_value()])
+			),
+		};
 
-        var params = {
-            advanced: getFormData(form),
-        };
-
-        xhr({
-            url: STATIC_URLS["ADMIN"] + "/save_zaawansowane",
-            params: params,
-            success: () => {
-                setFormInitialState(form);
-            }
-        });
-    }
-
-
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/settings/save_advanced_settings",
+			params,
+			success: () => {
+				showNotification("Zapisano zmiany", { one_line: true, type: "success" });
+				//window.location.reload();
+			},
+		});
+	});
+});

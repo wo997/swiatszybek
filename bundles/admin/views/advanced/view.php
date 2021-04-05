@@ -6,28 +6,32 @@
 
 <title>Zaawansowane</title>
 
+<script>
+    const advanced_settings = <?= json_encode(getSetting(["general", "advanced"])); ?>
+</script>
+
 <?php startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
         <div class="crumb">
-            Zaawansowane
+            Ustawienia zaawansowane
         </div>
     </span>
-    <button class="btn primary" onclick="saveZawansowane()">Zapisz <i class="fa fa-save"></i></button>
+    <button class="btn primary save_advanced_settings_btn">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
 <?php startSection("body_content"); ?>
 
-<div id="zaawansowaneForm">
+<div id="advancedSettingsForm">
     <span class="label">Certyfikat SSL</span>
-    <p-checkbox name="ssl"></p-checkbox>
+    <p-checkbox data-name="ssl"></p-checkbox>
     <span class="label">Tryb developmentu</span>
-    <p-checkbox name="dev_mode"></p-checkbox>
+    <p-checkbox data-name="dev_mode"></p-checkbox>
     <span class="label">Tryb debugowania</span>
-    <p-checkbox name="debug_mode"></p-checkbox>
-    <span class="label">Domena witryny</span>
-    <input type="text" class="field" name="domain">
+    <p-checkbox data-name="debug_mode"></p-checkbox>
+    <span class="label">Domena sklepu</span>
+    <input type="text" class="field" data-name="domain">
 
 </div>
 
