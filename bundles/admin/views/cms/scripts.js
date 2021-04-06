@@ -728,13 +728,18 @@ function piepEditorGrabBlock() {
 	// paddings / margins?
 	const computed_style = window.getComputedStyle(piep_editor_grabbed_block);
 
-	// 1.618 is hard to match because of the text overflow, not even cool fr, I prefer 2
-	let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
-	piep_editor_grabbed_block.style.width = pretty_width.toPrecision(5) + "px";
-	// by repeating the process you can make sure that the dimensions are "right"
-	pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
-	pretty_width = Math.min(800, pretty_width);
-	piep_editor_grabbed_block.style.width = pretty_width.toPrecision(5) + "px";
+	// be as wide as necessary
+	piep_editor_grabbed_block.style.marginRight = "-100000px";
+	let ok_width;
+	if (piep_editor_grabbed_block.offsetWidth > 500) {
+		// wrap
+		let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
+		ok_width = Math.min(800, pretty_width);
+	} else {
+		ok_width = piep_editor_grabbed_block.offsetWidth;
+	}
+	piep_editor_grabbed_block.style.marginRight = "";
+	piep_editor_grabbed_block.style.width = ok_width.toPrecision(5) + "px";
 
 	piep_editor_grabbed_block_rect = piep_editor_grabbed_block.getBoundingClientRect();
 
