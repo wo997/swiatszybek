@@ -774,16 +774,34 @@ function piepEditorGrabBlock() {
 
 		const blc_rect = blc.getBoundingClientRect();
 
-		const insert_blc = document.createElement("DIV");
+		const insert_blc = $(document.createElement("DIV"));
 		insert_blc.classList.add("insert_blc");
 		insert_blc.style.left = (blc_rect.left - piep_editor_rect.left).toPrecision(5) + "px";
 		insert_blc.style.top = (blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top).toPrecision(5) + "px";
 		piep_editor.append(insert_blc);
+		insert_blc._set_content(html`1`);
 
-		// blc.insertAdjacentHTML("beforebegin", html`<span class="insert_blc insert_blc_before"></span>`);
-		// blc.insertAdjacentHTML("afterend", html`<span class="insert_blc insert_blc_after"></span>`);
-		// blc.insertAdjacentHTML("afterbegin", html`<span class="insert_blc insert_blc_inside"></span>`);
+		const grabbed_v_node_data = getVDomNodeData(+piep_editor_grabbed_block.dataset.vid);
+		insert_blc.addEventListener("click", () => {
+			const near_v_node_data = getVDomNodeData(+blc.dataset.vid);
+			near_v_node_data.children.splice(near_v_node_data.index, 0, grabbed_v_node_data.node);
+			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+
+			piepEditorReleaseBlock();
+		});
 	});
+}
+
+function piepEditorReleaseBlock() {
+	piep_editor_grabbed_block = undefined;
+	piep_editor_grabbed_block_computed_style = undefined;
+	piep_editor_grabbed_block_rect = undefined;
+
+	piep_editor._children(".insert_blc").forEach((insert_blc) => {
+		insert_blc.remove();
+	});
+
+	recreateDom();
 }
 
 /**
