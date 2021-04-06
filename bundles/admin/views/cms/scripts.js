@@ -772,22 +772,52 @@ function piepEditorGrabBlock() {
 			return;
 		}
 
+		const grabbed_v_node_data = getVDomNodeData(+piep_editor_grabbed_block.dataset.vid);
+		const near_v_node_data = getVDomNodeData(+blc.dataset.vid);
+
 		const blc_rect = blc.getBoundingClientRect();
 
-		const insert_blc = $(document.createElement("DIV"));
-		insert_blc.classList.add("insert_blc");
-		insert_blc.style.left = (blc_rect.left - piep_editor_rect.left).toPrecision(5) + "px";
-		insert_blc.style.top = (blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top).toPrecision(5) + "px";
-		piep_editor.append(insert_blc);
-		insert_blc._set_content(html`1`);
-
-		const grabbed_v_node_data = getVDomNodeData(+piep_editor_grabbed_block.dataset.vid);
-		insert_blc.addEventListener("click", () => {
-			const near_v_node_data = getVDomNodeData(+blc.dataset.vid);
-			near_v_node_data.children.splice(near_v_node_data.index, 0, grabbed_v_node_data.node);
+		/**
+		 *
+		 * @param {-1 | 1} dir
+		 */
+		const insertOnSides = (dir) => {
+			let from = near_v_node_data.index;
+			if (dir === 1) {
+				from++;
+			}
+			const same_parent = near_v_node_data.children === grabbed_v_node_data.children;
 			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+			if (same_parent && from > grabbed_v_node_data.index) {
+				from--;
+			}
+			near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
 
 			piepEditorReleaseBlock();
+		};
+
+		const getInsertBlc = () => {
+			const insert_blc = $(document.createElement("DIV"));
+			insert_blc.classList.add("insert_blc");
+			piep_editor.append(insert_blc);
+			return insert_blc;
+		};
+
+		const insert_left_blc = getInsertBlc();
+		insert_left_blc._set_absolute_pos(blc_rect.left - piep_editor_rect.left, blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top);
+		insert_left_blc._set_content(html`1`);
+		insert_left_blc.addEventListener("click", () => {
+			insertOnSides(-1);
+		});
+
+		const insert_right_blc = getInsertBlc();
+		insert_right_blc._set_absolute_pos(
+			blc_rect.left + blc_rect.width - piep_editor_rect.left,
+			blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
+		);
+		insert_right_blc._set_content(html`1`);
+		insert_right_blc.addEventListener("click", () => {
+			insertOnSides(1);
 		});
 	});
 }

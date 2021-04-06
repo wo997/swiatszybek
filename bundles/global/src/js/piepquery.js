@@ -29,6 +29,7 @@
  * _in_body()
  * _animate(keyframes: string, duration: number, options?: AnimationOptions): void
  * _dispatch_change(): void
+ * _set_absolute_pos(left:number,top:number)
  * } & HTMLBaseElement} PiepNode
  */
 
@@ -156,6 +157,11 @@ function $(selector, parent = undefined) {
 
 	node._in_body = () => {
 		return inBody(node);
+	};
+
+	node._set_absolute_pos = (left, top) => {
+		node.style.left = left.toPrecision(5) + "px";
+		node.style.top = top.toPrecision(5) + "px";
 	};
 
 	return node;
