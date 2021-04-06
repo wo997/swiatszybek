@@ -685,7 +685,7 @@ function productComp(comp, parent, data = undefined) {
 					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe space">
+				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe space separate light_gray_rows">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 

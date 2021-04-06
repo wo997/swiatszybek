@@ -86,6 +86,20 @@ list-comp {
 			--list_row_padding: 10px 0;
 		}
 	}
+	/* usually .use separate.light_gray_rows */
+	&.separate {
+		--list_row_margin: 0 0 10px;
+		--list_row_margin_bottom_last: 0;
+	}
+	&.light_gray_rows {
+		&:not(:empty) {
+			--list_border: 1px solid transparent;
+		}
+		& > .list_row {
+			background: #f6f6f6;
+			border-radius: var(--border_radius);
+		}
+	}
 }
 
 .list_row {

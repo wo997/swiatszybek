@@ -11,24 +11,8 @@ product-comp {
 		margin-bottom: 10px;
 	}
 
-	.bind_features {
-		& {
-			--list_row_margin: 0 0 10px;
-			--list_row_margin_bottom_last: 0;
-		}
-		&:not(:empty) {
-			--list_border: 1px solid transparent;
-		}
-		& > .list_row {
-			background: #f6f6f6;
-			border-radius: var(--border_radius);
-		}
-	}
 	.bind_options {
-		&,
-		& {
-			margin-top: 5px;
-		}
+		margin-top: 5px;
 	}
 
 	& product_img-comp.comp {

@@ -55,17 +55,17 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 					Dodaj kuriera <i class="fas fa-plus"></i>
 				</button>
 			</div>
-			<list-comp data-bind="{${data.couriers}}" class="wireframe space" data-primary="courier_id">
+			<list-comp data-bind="{${data.couriers}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 
 			<div class="label medium">Paczkomaty (<span html="{${data.parcel_lockers.length}}"></span>)</div>
-			<list-comp data-bind="{${data.parcel_lockers}}" class="wireframe space" data-primary="courier_id">
+			<list-comp data-bind="{${data.parcel_lockers}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 
 			<div class="label medium">Punkty odbioru sklepu (<span html="{${data.in_persons.length}}"></span>)</div>
-			<list-comp data-bind="{${data.in_persons}}" class="wireframe space" data-primary="courier_id">
+			<list-comp data-bind="{${data.in_persons}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 

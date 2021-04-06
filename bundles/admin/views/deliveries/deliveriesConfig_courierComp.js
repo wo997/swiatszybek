@@ -49,7 +49,7 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 	 * @param {DeliveriesConfig_CourierCompData} data
 	 */
 	const setDefaults = (data) => {
-		if (!data.dimensions_dt) {
+		if (data && !data.dimensions_dt) {
 			data.dimensions_dt = {
 				columns: [
 					{ key: "name", label: "Gabaryt", editable: "string" },
@@ -99,21 +99,22 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 			</div>
 			<div style="flex-grow:1">
 				<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.expand}}">
-					<hr style="margin:10px 0" />
-					<div class="label first">Nazwa kuriera</div>
-					<input class="field small" data-bind="{${data.name}}" />
+					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
+						<div class="label first">Nazwa kuriera</div>
+						<input class="field small" data-bind="{${data.name}}" />
 
-					<div class="label">Czas doręczenia (dni robocze)</div>
-					<input class="field small" data-bind="{${data.delivery_time_days}}" />
+						<div class="label">Czas doręczenia (dni robocze)</div>
+						<input class="field small" data-bind="{${data.delivery_time_days}}" />
 
-					<div class="label">Link do śledzenia paczki (prefix)</div>
-					<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
+						<div class="label">Link do śledzenia paczki (prefix)</div>
+						<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
 
-					<datatable-comp
-						class="space_top small_dataset"
-						data-bind="{${data.dimensions_dt}}"
-						data-node="{${comp._nodes.dimenions_dt}}"
-					></datatable-comp>
+						<datatable-comp
+							class="space_top small_dataset"
+							data-bind="{${data.dimensions_dt}}"
+							data-node="{${comp._nodes.dimenions_dt}}"
+						></datatable-comp>
+					</div>
 				</div>
 			</div>
 		`,
