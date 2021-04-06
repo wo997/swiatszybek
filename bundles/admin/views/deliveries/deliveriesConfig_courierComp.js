@@ -29,7 +29,7 @@
  * _nodes: {
  *  expand_btn: PiepNode
  *  expand: PiepNode
- *  add_dimension_btn: PiepNode
+ *  dimenions_dt: PiepNode
  * }
  * } & BaseComp} DeliveriesConfig_CourierComp
  */
@@ -60,8 +60,11 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 				],
 				empty_html: "Brak gabarytów",
 				dataset: data.initial_dimensions,
-				label: "",
+				label: "Gabaryty",
+				after_label: html`<button class="btn primary small add_dimension_btn">Dodaj gabaryt <i class="fas fa-plus"></i></button>`,
 				pagination_data: { row_count: 15 },
+				deletable: true,
+				sortable: true,
 			};
 		}
 	};
@@ -76,6 +79,8 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 			render: () => {
 				expand(comp._nodes.expand, comp._data.expanded);
 				comp._child(".fa-chevron-right").classList.toggle("open", data.expanded);
+
+				comp._child(".add_dimension_btn").toggleAttribute("disabled", data.dimensions_dt.dataset.length > 5);
 			},
 		});
 	};
@@ -103,18 +108,7 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 					<div class="label">Link do śledzenia paczki (prefix)</div>
 					<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
 
-					<div>
-						<span class="label medium inline"> Gabaryty (<span html="{${data.dimensions_dt.dataset.length}}"></span>) </span>
-						<button
-							class="btn primary small"
-							data-node="{${comp._nodes.add_dimension_btn}}"
-							disabled="{${data.dimensions_dt.dataset.length > 5}}"
-						>
-							Dodaj kuriera <i class="fas fa-plus"></i>
-						</button>
-					</div>
-
-					<datatable-comp data-bind="{${data.dimensions_dt}}"></datatable-comp>
+					<datatable-comp class="space_top" data-bind="{${data.dimensions_dt}}" data-node="{${comp._nodes.dimenions_dt}}"></datatable-comp>
 				</div>
 			</div>
 		`,
@@ -132,9 +126,13 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 				toggle_expand();
 			});
 
-			comp._nodes.add_dimension_btn.addEventListener("click", () => {
-				comp._data.dimensions_dt.dataset.push({ dimension_id: -1, weight: 0, length: 0, width: 0, height: 0, name: "" });
-				comp._render();
+			comp._nodes.dimenions_dt.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+
+				if (target._parent(".add_dimension_btn")) {
+					comp._data.dimensions_dt.dataset.push({ dimension_id: -1, weight: 0, length: 0, width: 0, height: 0, name: "" });
+					comp._render();
+				}
 			});
 		},
 	});
