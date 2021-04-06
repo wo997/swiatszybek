@@ -33,6 +33,8 @@ let piep_editor_grabbed_block_rect;
 /** @type {CSSStyleDeclaration} */
 let piep_editor_grabbed_block_computed_style;
 
+const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
 /**
  * @typedef {{
  * id: number
@@ -40,6 +42,8 @@ let piep_editor_grabbed_block_computed_style;
  * text: string
  * styles: any
  * children: vDomNode[]
+ * attrs: object
+ * classes: string[]
  * }} vDomNode
  */
 
@@ -49,15 +53,38 @@ const v_dom = {
 	id: 0,
 	text: undefined,
 	styles: {},
+	attrs: {},
+	classes: [],
 	children: [
-		{ id: 1, tag: "h1", text: "Dobry frejmwork", styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" }, children: [] },
+		{
+			id: 1,
+			tag: "h1",
+			text: "Dobry frejmwork",
+			styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" },
+			children: undefined,
+			attrs: {},
+			classes: [],
+		},
 		{
 			id: 2,
 			tag: "p",
 			text:
 				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
 			styles: { marginTop: "20px" },
-			children: [],
+			children: undefined,
+			attrs: {},
+			classes: [],
+		},
+		{
+			id: 10,
+			tag: "img",
+			text: "undefined",
+			styles: { width: "100%" },
+			children: undefined,
+			attrs: {
+				"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
+			},
+			classes: ["wo997_img"],
 		},
 		{
 			id: 3,
@@ -65,19 +92,23 @@ const v_dom = {
 			text: undefined,
 			styles: {},
 			children: [
-				{ id: 4, tag: "p", text: "dziecko 1", children: [], styles: {} },
-				{ id: 8, tag: "p", text: "", children: [], styles: {} },
+				{ id: 4, tag: "p", text: "dziecko 1", children: undefined, styles: {}, attrs: {}, classes: [] },
+				{ id: 8, tag: "p", text: "", children: undefined, styles: {}, attrs: {}, classes: [] },
 				{
 					id: 5,
 					tag: "p",
 					text: undefined,
 					children: [
-						{ id: 6, tag: "span", text: "dziecko 2.1", children: [], styles: {} },
-						{ id: 7, tag: "span", text: "dziecko 2.2", children: [], styles: {} },
+						{ id: 6, tag: "span", text: "dziecko 2.1", children: undefined, styles: {}, attrs: {}, classes: [] },
+						{ id: 7, tag: "span", text: "dziecko 2.2", children: undefined, styles: {}, attrs: {}, classes: [] },
 					],
 					styles: {},
+					attrs: {},
+					classes: [],
 				},
 			],
+			attrs: {},
+			classes: [],
 		},
 		{
 			id: 9,
@@ -87,7 +118,9 @@ const v_dom = {
 				backgroundColor: "red",
 				padding: "20px",
 			},
-			children: [],
+			children: undefined,
+			attrs: {},
+			classes: [],
 		},
 	],
 };
@@ -128,9 +161,10 @@ function recreateDom() {
 		const tag = node.tag;
 		const textable = text !== undefined;
 
-		let attributes = `data-vid="${node.id}"`;
+		let attrs = { "data-vid": node.id };
+		Object.assign(attrs, node.attrs);
 		const base_class = `vid_${node.id}`;
-		let classes = ["blc", base_class];
+		let classes = ["blc", base_class, ...node.classes];
 
 		if (level > 0) {
 			const map_tag_display_name = {
@@ -148,9 +182,17 @@ function recreateDom() {
 
 			const display_name = def(map_tag_display_name[tag], "");
 
+			let info = "";
+
+			if (text) {
+				info = text;
+			} else if (children) {
+				info = children.length + "";
+			}
+
 			inspector_tree_html += html`<div class="v_node_label tvid_${node.id}" style="--level:${level}" data-vid="${node.id}">
 				<span class="name">${display_name}</span>
-				<span class="info">${textable ? " - " + text : `(${children.length})`}</span>
+				<span class="info">${info ? `- ${info}` : ""}</span>
 			</div>`;
 		}
 
@@ -162,7 +204,7 @@ function recreateDom() {
 			} else {
 				body += `<br>`;
 			}
-		} else {
+		} else if (children !== undefined) {
 			for (const child of children) {
 				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(child, level + 1);
 				body += sub_content_html;
@@ -170,7 +212,19 @@ function recreateDom() {
 			}
 		}
 
-		content_html += html`<${tag} class="${classes.join(" ")}" ${attributes}>${body}</${tag}>`;
+		const classes_csv = classes.join(" ");
+
+		const attrs_csv = Object.entries(attrs)
+			.map(([key, val]) => {
+				return `${key}="${escapeAttribute(val)}"`;
+			})
+			.join(" ");
+
+		if (single_tags.includes(tag)) {
+			content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
+		} else {
+			content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
+		}
 
 		if (!node.styles) {
 			node.styles = {};
@@ -194,6 +248,9 @@ function recreateDom() {
 	piep_editor_styles._set_content(styles_html);
 
 	piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+
+	lazyLoadImages();
+	registerForms();
 }
 
 function findNodeInVDom(vid) {
@@ -471,7 +528,15 @@ domload(() => {
 				if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 					if (begin_offset > 0) {
 						const bef_id = getPiepEditorId();
-						v_node.children.push({ id: bef_id, tag: "span", styles: {}, text: v_node.text.substring(0, begin_offset), children: [] });
+						v_node.children.push({
+							id: bef_id,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(0, begin_offset),
+							children: undefined,
+							attrs: {},
+							classes: [],
+						});
 					}
 					const mid_vid = getPiepEditorId();
 					const mid_child = {
@@ -479,12 +544,22 @@ domload(() => {
 						tag: "span",
 						styles: {},
 						text: v_node.text.substring(begin_offset, end_offset),
-						children: [],
+						children: undefined,
+						attrs: {},
+						classes: [],
 					};
 					v_node.children.push(mid_child);
 					if (end_offset < v_node.text.length) {
 						const aft_id = getPiepEditorId();
-						v_node.children.push({ id: aft_id, tag: "span", styles: {}, text: v_node.text.substring(end_offset), children: [] });
+						v_node.children.push({
+							id: aft_id,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(end_offset),
+							children: undefined,
+							attrs: {},
+							classes: [],
+						});
 					}
 					v_node.text = undefined;
 
