@@ -3,6 +3,8 @@
 /**
  * @typedef {{
  * couriers: DeliveriesConfig_CourierCompData[]
+ * parcel_lockers: DeliveriesConfig_CourierCompData[]
+ * in_persons: DeliveriesConfig_CourierCompData[]
  * }} DeliveriesConfigCompData
  *
  * @typedef {{
@@ -22,7 +24,11 @@
 function deliveriesConfigComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			couriers: [{ courier_id: -1, name: "xxx", tracking_url_prefix: "https", delivery_time_days: 2, expanded: false }],
+			couriers: [
+				{ courier_id: -1, name: "xxx", tracking_url_prefix: "https", delivery_time_days: 2, expanded: false, initial_dimensions: [] },
+			],
+			parcel_lockers: [],
+			in_persons: [],
 		};
 	}
 
@@ -49,20 +55,17 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 					Dodaj kuriera <i class="fas fa-plus"></i>
 				</button>
 			</div>
-
 			<list-comp data-bind="{${data.couriers}}" class="wireframe space" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 
-			<div class="label medium">Paczkomaty (<span html="{${data.couriers.length}}"></span>)</div>
-
-			<list-comp data-bind="{${data.couriers}}" class="wireframe space" data-primary="courier_id">
+			<div class="label medium">Paczkomaty (<span html="{${data.parcel_lockers.length}}"></span>)</div>
+			<list-comp data-bind="{${data.parcel_lockers}}" class="wireframe space" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 
-			<div class="label medium">Punkty odbioru sklepu (<span html="{${data.couriers.length}}"></span>)</div>
-
-			<list-comp data-bind="{${data.couriers}}" class="wireframe space" data-primary="courier_id">
+			<div class="label medium">Punkty odbioru sklepu (<span html="{${data.in_persons.length}}"></span>)</div>
+			<list-comp data-bind="{${data.in_persons}}" class="wireframe space" data-primary="courier_id">
 				<deliveries-config_courier-comp></deliveries-config_courier-comp>
 			</list-comp>
 
@@ -104,7 +107,14 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 		initialize: () => {
 			comp._nodes.add_courier_btn.addEventListener("click", () => {
 				const data = comp._data;
-				data.couriers.push({ courier_id: -1, name: "", tracking_url_prefix: "", delivery_time_days: 0, expanded: false });
+				data.couriers.push({
+					courier_id: -1,
+					name: "",
+					tracking_url_prefix: "",
+					delivery_time_days: 0,
+					expanded: false,
+					initial_dimensions: [],
+				});
 				comp._render();
 			});
 		},

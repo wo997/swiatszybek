@@ -101,15 +101,23 @@
  * @param {DatatableCompData} data
  */
 function datatableComp(comp, parent, data) {
-	data.filters = def(data.filters, []);
-	data.sort = def(data.require_sort, def(data.sort, false));
+	if (!data) {
+		data = { columns: [] };
+	}
 
-	data.dataset = def(data.dataset, []);
-	data.quick_search = def(data.quick_search, "");
-	data.pagination_data = def(data.pagination_data, {});
+	const setDefaults = (data) => {
+		data.filters = def(data.filters, []);
+		data.sort = def(data.require_sort, def(data.sort, false));
 
-	data.rows = [];
-	data.maps = def(data.maps, []);
+		data.dataset = def(data.dataset, []);
+		data.quick_search = def(data.quick_search, "");
+		data.pagination_data = def(data.pagination_data, {});
+		data.maps = def(data.maps, []);
+
+		data.rows = def(data.rows, []);
+	};
+
+	setDefaults(data);
 
 	if (!data.primary_key && !data.search_url) {
 		data.primary_key = "_row_id";
@@ -298,6 +306,8 @@ function datatableComp(comp, parent, data) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		setDefaults(data);
+
 		if (!data.search_url) {
 			const dataset_changed =
 				!isEquivalent(data.dataset, def(comp._prev_data.dataset, [])) || !isEquivalent(data.maps, def(comp._prev_data.maps, []));
