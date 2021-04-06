@@ -26,6 +26,10 @@ let piep_editor_float_menu_active;
 let piep_editor_inspector_tree;
 /** @type {number} */
 let piep_focus_node_vid;
+/** @type {PiepNode} */
+let piep_editor_grabbed_block;
+/** @type {DOMRect} */
+let piep_editor_grabbed_block_rect;
 
 /**
  * @typedef {{
@@ -73,6 +77,16 @@ const v_dom = {
 				},
 			],
 		},
+		{
+			id: 9,
+			tag: "div",
+			text: undefined,
+			styles: {
+				backgroundColor: "red",
+				padding: "20px",
+			},
+			children: [],
+		},
 	],
 };
 
@@ -114,7 +128,7 @@ function recreateDom() {
 
 		let attributes = `data-vid="${node.id}"`;
 		const base_class = `vid_${node.id}`;
-		let classes = [base_class];
+		let classes = ["blc", base_class];
 
 		if (level > 0) {
 			const map_tag_display_name = {
@@ -424,12 +438,6 @@ domload(() => {
 		</button>
 	`);
 
-	{
-		/* <color-picker data-style="color" class="small inline"></color-picker>
-
-<color-picker data-style="backgroundColor" class="small inline"></color-picker> */
-	}
-
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		input.addEventListener("change", () => {
 			const focus_node = piep_editor_content._child(".piep_focus");
@@ -518,7 +526,7 @@ domload(() => {
 		updatePiepCursorPosition();
 
 		if (target._parent(".move_block_btn")) {
-			// TODO: do do do
+			piepEditorGrabBlock();
 		}
 
 		if (target._parent(".remove_block_btn")) {
@@ -530,28 +538,12 @@ domload(() => {
 
 		if (target._parent(piep_editor)) {
 			piep_editor_float_menu_active = !!(content_active || target._parent(piep_editor_float_menu) || target._parent(".picker_wrapper"));
-			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid) {
+			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid || piep_editor_grabbed_block) {
 				piep_editor_float_menu_active = false;
 			}
 
 			piep_editor_float_menu.classList.toggle("hidden", !piep_editor_float_menu_active);
 		}
-	});
-
-	piep_editor_content.addEventListener("click", (ev) => {
-		//piep_editor_content_active = true; // still necessary, not anymore lol
-		//updatePiepCursorPosition();
-		// const sel = window.getSelection();
-		// const sel_focus_node = $(sel.focusNode);
-		// if (sel_focus_node) {
-		// 	const correct_selection = sel_focus_node._parent($(ev.target));
-		// 	if (!correct_selection) {
-		// 		console.log(21312312, ev.target, sel_focus_node);
-		// 		setSelectionByIndex($(ev.target), 0);
-		// 	} else if (sel_focus_node.innerText === "\n") {
-		// 		setSelectionByIndex(correct_selection, 0);
-		// 	}
-		// }
 	});
 
 	piep_editor_content.addEventListener("mousemove", (ev) => {
@@ -706,7 +698,63 @@ domload(() => {
 	});
 
 	recreateDom();
+
+	piepEditorMainLoop();
 });
+
+function piepEditorMainLoop() {
+	if (piep_editor_grabbed_block) {
+		const piep_editor_rect = piep_editor.getBoundingClientRect();
+		piep_editor_grabbed_block.classList.add("grabbed_block");
+		piep_editor_grabbed_block.style.left = mouse.pos.x - piep_editor_grabbed_block_rect.width * 0.5 - piep_editor_rect.left + "px";
+		piep_editor_grabbed_block.style.top = mouse.pos.y - piep_editor_grabbed_block_rect.height * 0.5 - piep_editor_rect.top + "px";
+
+		// let them be in any shape, they will change it based on the context anyway
+		// piep_editor_grabbed_block.style.width = piep_editor_grabbed_block_rect.width + "px";
+		// piep_editor_grabbed_block.style.height = piep_editor_grabbed_block_rect.height + "px";
+	}
+
+	requestAnimationFrame(piepEditorMainLoop);
+}
+
+function piepEditorGrabBlock() {
+	piep_editor_float_focus.classList.add("hidden");
+	piep_editor_float_menu.classList.add("hidden");
+	piep_editor_cursor.classList.add("hidden");
+
+	piep_editor_grabbed_block = getPiepEditorFocusNode();
+	piep_editor_grabbed_block.classList.add("grabbed_block");
+
+	// paddings / margins?
+	const computed_style = window.getComputedStyle(piep_editor_grabbed_block);
+
+	// 1.618 is hard to match because of the text overflow, not even cool fr, I prefer 2
+	let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
+	piep_editor_grabbed_block.style.width = pretty_width.toPrecision(5) + "px";
+	// by repeating the process you can make sure that the dimensions are "right"
+	pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
+	pretty_width = Math.min(800, pretty_width);
+	piep_editor_grabbed_block.style.width = pretty_width.toPrecision(5) + "px";
+
+	piep_editor_grabbed_block_rect = piep_editor_grabbed_block.getBoundingClientRect();
+
+	// prepare all possible places to drop the block yay
+	piep_editor_content._children(".blc").forEach((blc) => {
+		if (blc._parent() === piep_editor_content) {
+			// think about top later
+			return;
+		}
+
+		if (blc._parent(piep_editor_grabbed_block)) {
+			// just no baby
+			return;
+		}
+
+		blc.insertAdjacentHTML("beforebegin", html`<span class="insert_blc insert_blc_before"></span>`);
+		blc.insertAdjacentHTML("afterend", html`<span class="insert_blc insert_blc_after"></span>`);
+		blc.insertAdjacentHTML("afterbegin", html`<span class="insert_blc insert_blc_inside"></span>`);
+	});
+}
 
 /**
  *

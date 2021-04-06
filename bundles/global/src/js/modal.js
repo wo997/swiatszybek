@@ -54,6 +54,7 @@ function registerModalContent(html, callback = undefined) {
 	}
 	modal.setAttribute("data-modal", "true");
 	registerModal(modal);
+	registerForms(modal);
 	if (callback) {
 		callback(modal);
 	}

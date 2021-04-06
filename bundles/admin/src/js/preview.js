@@ -14,7 +14,7 @@ function previewUrl(url, params) {
 					<div class="custom_toolbar">
 						<span class="title">
 							<span class="medium"> Podgląd strony </span>
-							<div class="pretty_radio semi_bold small_boxes select_resolution" style="margin-left:3px">
+							<div class="pretty_radio semi_bold select_resolution" style="margin-left:3px">
 								<div class="checkbox_area" data-tooltip="Komputer">
 									<p-checkbox data-value=""></p-checkbox>
 									<span> <i class="fas fa-desktop"></i> </span>
@@ -49,6 +49,7 @@ function previewUrl(url, params) {
 			iframe.style.maxWidth = w ? w + "px" : "";
 			iframe.style.maxHeight = h ? h + "px" : "";
 		});
+
 		select_resolution._set_value("");
 	}
 
