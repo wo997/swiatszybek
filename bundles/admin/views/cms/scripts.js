@@ -30,6 +30,8 @@ let piep_focus_node_vid;
 let piep_editor_grabbed_block;
 /** @type {DOMRect} */
 let piep_editor_grabbed_block_rect;
+/** @type {CSSStyleDeclaration} */
+let piep_editor_grabbed_block_computed_style;
 
 /**
  * @typedef {{
@@ -706,8 +708,20 @@ function piepEditorMainLoop() {
 	if (piep_editor_grabbed_block) {
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
 		piep_editor_grabbed_block.classList.add("grabbed_block");
-		piep_editor_grabbed_block.style.left = mouse.pos.x - piep_editor_grabbed_block_rect.width * 0.5 - piep_editor_rect.left + "px";
-		piep_editor_grabbed_block.style.top = mouse.pos.y - piep_editor_grabbed_block_rect.height * 0.5 - piep_editor_rect.top + "px";
+
+		let left =
+			mouse.pos.x -
+			piep_editor_grabbed_block_rect.width * 0.5 -
+			numberFromStr(piep_editor_grabbed_block_computed_style.marginLeft) -
+			piep_editor_rect.left;
+		let top =
+			mouse.pos.y -
+			piep_editor_grabbed_block_rect.height * 0.5 -
+			numberFromStr(piep_editor_grabbed_block_computed_style.marginTop) -
+			piep_editor_rect.top;
+
+		piep_editor_grabbed_block.style.left = left + "px";
+		piep_editor_grabbed_block.style.top = top + "px";
 
 		// let them be in any shape, they will change it based on the context anyway
 		// piep_editor_grabbed_block.style.width = piep_editor_grabbed_block_rect.width + "px";
@@ -725,9 +739,6 @@ function piepEditorGrabBlock() {
 	piep_editor_grabbed_block = getPiepEditorFocusNode();
 	piep_editor_grabbed_block.classList.add("grabbed_block");
 
-	// paddings / margins?
-	const computed_style = window.getComputedStyle(piep_editor_grabbed_block);
-
 	// be as wide as necessary
 	piep_editor_grabbed_block.style.marginRight = "-100000px";
 	let ok_width;
@@ -741,6 +752,10 @@ function piepEditorGrabBlock() {
 	piep_editor_grabbed_block.style.marginRight = "";
 	piep_editor_grabbed_block.style.width = ok_width.toPrecision(5) + "px";
 
+	// ok we grabbed it!
+
+	// paddings / margins?
+	piep_editor_grabbed_block_computed_style = window.getComputedStyle(piep_editor_grabbed_block);
 	piep_editor_grabbed_block_rect = piep_editor_grabbed_block.getBoundingClientRect();
 
 	// prepare all possible places to drop the block yay
