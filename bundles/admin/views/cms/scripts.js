@@ -781,6 +781,25 @@ function piepEditorGrabBlock() {
 		 *
 		 * @param {-1 | 1} dir
 		 */
+		const insertAboveOrBelow = (dir) => {
+			let from = near_v_node_data.index;
+			if (dir === 1) {
+				from++;
+			}
+			const same_parent = near_v_node_data.children === grabbed_v_node_data.children;
+			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+			if (same_parent && from > grabbed_v_node_data.index) {
+				from--;
+			}
+			near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
+
+			piepEditorReleaseBlock();
+		};
+
+		/**
+		 *
+		 * @param {-1 | 1} dir
+		 */
 		const insertOnSides = (dir) => {
 			let from = near_v_node_data.index;
 			if (dir === 1) {
@@ -805,7 +824,6 @@ function piepEditorGrabBlock() {
 
 		const insert_left_blc = getInsertBlc();
 		insert_left_blc._set_absolute_pos(blc_rect.left - piep_editor_rect.left, blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top);
-		insert_left_blc._set_content(html`1`);
 		insert_left_blc.addEventListener("click", () => {
 			insertOnSides(-1);
 		});
@@ -815,9 +833,23 @@ function piepEditorGrabBlock() {
 			blc_rect.left + blc_rect.width - piep_editor_rect.left,
 			blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
 		);
-		insert_right_blc._set_content(html`1`);
 		insert_right_blc.addEventListener("click", () => {
 			insertOnSides(1);
+		});
+
+		const insert_up_blc = getInsertBlc();
+		insert_up_blc._set_absolute_pos(blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left, blc_rect.top - piep_editor_rect.top);
+		insert_up_blc.addEventListener("click", () => {
+			insertAboveOrBelow(-1);
+		});
+
+		const insert_down_blc = getInsertBlc();
+		insert_down_blc._set_absolute_pos(
+			blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left,
+			blc_rect.top + blc_rect.height - piep_editor_rect.top
+		);
+		insert_down_blc.addEventListener("click", () => {
+			insertAboveOrBelow(1);
 		});
 	});
 }
