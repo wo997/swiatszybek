@@ -205,6 +205,17 @@ datatable-comp {
 	&.deletable:not(.sortable) .node_list_delete_btn {
 		margin-left: 0 !important;
 	}
+
+	.float_icon_search {
+		display: inline-block;
+	}
+
+	&.small_dataset {
+		.float_icon_search,
+		.bind_pagination_data {
+			display: none;
+		}
+	}
 }
 
 .sortable_width {

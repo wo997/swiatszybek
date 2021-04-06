@@ -1,5 +1,9 @@
 /* js[global] */
 
+// if you want a table to be frontend sortable:
+// sortable: true,
+// require_sort: { key: "pos", order: "asc" },
+
 /**
  * @typedef {{
  *  label?: string
@@ -730,7 +734,7 @@ function datatableComp(comp, parent, data) {
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
 					<i class="fas fa-times"></i>
 				</div>
-				<div class="float_icon" style="display: inline-block;">
+				<div class="float_icon float_icon_search">
 					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" data-input_delay="300" />
 					<i class="fas fa-search"></i>
 				</div>
@@ -1107,7 +1111,6 @@ function datatableComp(comp, parent, data) {
 					data.dataset
 						.filter((e) => filtered_row_ids.includes(e._row_id))
 						.forEach((e) => {
-							let tar;
 							if (e.pos === from_pos) {
 								e.pos = to_pos;
 							} else if (to_pos > from_pos) {

@@ -83,6 +83,7 @@ document.addEventListener("mouseup", () => {
 	/** @type {ListComp} */
 	// @ts-ignore
 	const parent = comp._parent_comp;
+
 	if (parent._move_row) {
 		if (comp._data.row_index === list_grab.place_index) {
 			list_grab.all_rows.forEach((x) => {

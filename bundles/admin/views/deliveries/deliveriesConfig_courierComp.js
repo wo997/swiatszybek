@@ -65,6 +65,7 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 				pagination_data: { row_count: 15 },
 				deletable: true,
 				sortable: true,
+				require_sort: { key: "pos", order: "asc" },
 			};
 		}
 	};
@@ -108,7 +109,11 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 					<div class="label">Link do śledzenia paczki (prefix)</div>
 					<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
 
-					<datatable-comp class="space_top" data-bind="{${data.dimensions_dt}}" data-node="{${comp._nodes.dimenions_dt}}"></datatable-comp>
+					<datatable-comp
+						class="space_top small_dataset"
+						data-bind="{${data.dimensions_dt}}"
+						data-node="{${comp._nodes.dimenions_dt}}"
+					></datatable-comp>
 				</div>
 			</div>
 		`,
