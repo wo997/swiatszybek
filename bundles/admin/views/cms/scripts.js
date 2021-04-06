@@ -758,6 +758,8 @@ function piepEditorGrabBlock() {
 	piep_editor_grabbed_block_computed_style = window.getComputedStyle(piep_editor_grabbed_block);
 	piep_editor_grabbed_block_rect = piep_editor_grabbed_block.getBoundingClientRect();
 
+	const piep_editor_rect = piep_editor.getBoundingClientRect();
+
 	// prepare all possible places to drop the block yay
 	piep_editor_content._children(".blc").forEach((blc) => {
 		if (blc._parent() === piep_editor_content) {
@@ -770,9 +772,17 @@ function piepEditorGrabBlock() {
 			return;
 		}
 
-		blc.insertAdjacentHTML("beforebegin", html`<span class="insert_blc insert_blc_before"></span>`);
-		blc.insertAdjacentHTML("afterend", html`<span class="insert_blc insert_blc_after"></span>`);
-		blc.insertAdjacentHTML("afterbegin", html`<span class="insert_blc insert_blc_inside"></span>`);
+		const blc_rect = blc.getBoundingClientRect();
+
+		const insert_blc = document.createElement("DIV");
+		insert_blc.classList.add("insert_blc");
+		insert_blc.style.left = (blc_rect.left - piep_editor_rect.left).toPrecision(5) + "px";
+		insert_blc.style.top = (blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top).toPrecision(5) + "px";
+		piep_editor.append(insert_blc);
+
+		// blc.insertAdjacentHTML("beforebegin", html`<span class="insert_blc insert_blc_before"></span>`);
+		// blc.insertAdjacentHTML("afterend", html`<span class="insert_blc insert_blc_after"></span>`);
+		// blc.insertAdjacentHTML("afterbegin", html`<span class="insert_blc insert_blc_inside"></span>`);
 	});
 }
 

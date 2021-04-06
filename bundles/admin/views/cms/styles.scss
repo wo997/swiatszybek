@@ -133,10 +133,9 @@
 	}
 
 	.insert_blc {
-		display: inline-block;
 		width: 0;
 		height: 0;
-		position: relative;
+		position: absolute;
 	}
 
 	.insert_blc::before {
@@ -152,14 +151,6 @@
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
-	}
-
-	.insert_blc_inside {
-		// just don't, we need to decide what positions to set for other items first
-		// position: absolute;
-		// left: 50%;
-		// top: 50%;
-		// transform: translate(-50%, -50%);
 	}
 }
 
