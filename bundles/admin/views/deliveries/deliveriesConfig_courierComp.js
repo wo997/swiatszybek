@@ -53,10 +53,10 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 			data.dimensions_dt = {
 				columns: [
 					{ key: "name", label: "Gabaryt", editable: "string" },
-					{ key: "weight", label: "Waga", editable: "number" },
-					{ key: "length", label: "Długość", editable: "number" },
-					{ key: "width", label: "Szerokość", editable: "number" },
-					{ key: "height", label: "Wysokość", editable: "number" },
+					{ key: "weight", label: "Waga (kg)", editable: "number" },
+					{ key: "length", label: "Długość (cm)", editable: "number" },
+					{ key: "width", label: "Szerokość (cm)", editable: "number" },
+					{ key: "height", label: "Wysokość (cm)", editable: "number" },
 				],
 				empty_html: "Brak gabarytów",
 				dataset: data.initial_dimensions,

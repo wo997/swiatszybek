@@ -690,8 +690,13 @@ domload(() => {
 
 		const click_blc = target._parent(".blc");
 		if (click_blc) {
-			setPiepEditorFocusNode(+click_blc.dataset.vid);
-			removeSelection();
+			const click_blc_vid = +click_blc.dataset.vid;
+			const click_v_node = findNodeInVDomById(v_dom, click_blc_vid);
+			if (click_v_node && click_v_node.text === undefined) {
+				setPiepEditorFocusNode(click_blc_vid);
+				removeSelection();
+			}
+			// otherwise it's just a text, so native selection tells where to point at
 		}
 
 		// order matters
@@ -1131,6 +1136,7 @@ function piepEditorReleaseBlock() {
 	piep_editor_grabbed_block_wrapper.classList.remove("visible");
 	piep_editor.classList.remove("grabbed_block");
 	piep_editor.classList.remove("has_insert_pos");
+	piep_editor_float_focus.classList.add("hidden");
 
 	piep_editor._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
@@ -1351,6 +1357,10 @@ function piepEditorShowFloatMenuToNode(vid) {
 	piep_editor_float_menu.classList.remove("hidden");
 
 	const focus_node = getPiepEditorNode(vid);
+	if (focus_node === undefined) {
+		piep_editor_float_menu.classList.add("hidden");
+		return;
+	}
 	const focus_node_rect = focus_node.getBoundingClientRect();
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
 	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
