@@ -270,30 +270,20 @@ function hideModalTopMost() {
 /**
  *
  * @param {PiepNode} obj
- * @param {boolean} isCancel
  */
-function hideParentModal(obj = null, isCancel = false) {
+function hideParentModal(obj = null) {
 	if (obj) {
 		const modal = obj._parent("[data-modal]");
-		hideModal(modal ? modal.id : null, isCancel);
+		hideModal(modal ? modal.id : null);
 	}
 	hideModal(null);
 }
 
-function hideModal(name, isCancel = false) {
-	if (isCancel) {
-		if (!checkFormCloseWarning(`#${name}`)) {
-			return false;
-		}
-	}
-
-	let visible_modal_count = 0;
-
+function hideModal(name) {
 	if (name) {
 		let modal = $(`#${name}`);
 		if (modal) {
 			modal.style.animation = "hide 0.4s";
-			visible_modal_count--;
 			setTimeout(() => {
 				modal.classList.add("hidden");
 				modal.style.animation = "";
@@ -327,9 +317,7 @@ function hideModal(name, isCancel = false) {
 		);
 	}
 
-	modal_wrapper_node._children(".modal_container > *").forEach((modal) => {
-		if (!modal.classList.contains("hidden")) visible_modal_count++;
-	});
+	const visible_modal_count = modal_wrapper_node._children(`.modal_container > *:not(.hidden):not(#${name})`).length;
 
 	if (visible_modal_count > 0) {
 		modal_wrapper_node.classList.remove("hidden");

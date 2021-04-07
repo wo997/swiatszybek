@@ -14,6 +14,7 @@ window.addEventListener(
 		if (event.origin !== window.location.origin || event.data !== "iframe_domload") {
 			return;
 		}
+		console.log("lala");
 
 		const preview_url = $("#previewUrl");
 		preview_url.style.visibility = "hidden";
@@ -92,7 +93,7 @@ window.addEventListener(
 
 		hideModal("previewUrl");
 		setTimeout(() => {
-			preview_url.classList.remove("hidden");
+			preview_url.style.visibility = "";
 		}, 1000);
 	},
 
