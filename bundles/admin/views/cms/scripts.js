@@ -78,7 +78,7 @@ const v_dom = {
 		{
 			id: 10,
 			tag: "img",
-			text: "undefined",
+			text: undefined,
 			styles: { width: "100%" },
 			children: undefined,
 			attrs: {
@@ -178,6 +178,7 @@ function recreateDom() {
 				div: "Kontener",
 				p: "Paragraf",
 				span: "Tekst",
+				img: "Zdjęcie",
 			};
 
 			const display_name = def(map_tag_display_name[tag], "");
@@ -186,13 +187,17 @@ function recreateDom() {
 
 			if (text) {
 				info = text;
-			} else if (children) {
+			} else if (children !== undefined) {
 				info = children.length + "";
+			}
+
+			if (info) {
+				info = html`<span class="info"> - ${info}</span>`;
 			}
 
 			inspector_tree_html += html`<div class="v_node_label tvid_${node.id}" style="--level:${level}" data-vid="${node.id}">
 				<span class="name">${display_name}</span>
-				<span class="info">${info ? `- ${info}` : ""}</span>
+				${info}
 			</div>`;
 		}
 
@@ -249,7 +254,7 @@ function recreateDom() {
 
 	piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
 
-	lazyLoadImages();
+	lazyLoadImages({ duration: 0 });
 	registerForms();
 }
 
@@ -596,6 +601,10 @@ domload(() => {
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
+
+		if (piep_editor_grabbed_block) {
+			piepEditorReleaseBlock();
+		}
 
 		const content_active = !!(target._parent(piep_editor_content) || target._parent(".v_node_label"));
 		setPiepEditorContentActive(content_active);
