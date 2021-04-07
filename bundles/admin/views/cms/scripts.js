@@ -221,7 +221,12 @@ function recreateDom(target_v_dom = undefined) {
 			}
 		} else if (children !== undefined) {
 			for (const child of children) {
+				// traverse for styles but not contents ;)
 				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(child, level + 1);
+
+				if (child.id === piep_editor_grabbed_block_vid) {
+					continue;
+				}
 				body += sub_content_html;
 				inspector_tree_html += sub_inspector_tree_html;
 			}
@@ -259,10 +264,6 @@ function recreateDom(target_v_dom = undefined) {
 	const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
 
 	piep_editor_content._set_content(content_html);
-
-	if (piep_editor_grabbed_block_vid !== undefined) {
-		styles_html += `.piep_editor_content ${getPiepEditorNodeSelector(piep_editor_grabbed_block_vid)} {display:none!important}`;
-	}
 
 	piep_editor_styles._set_content(styles_html);
 
@@ -853,6 +854,8 @@ function piepEditorGrabBlock() {
 
 	// be as wide as necessary
 	piep_editor_grabbed_block_wrapper.style.left = "0";
+	piep_editor_grabbed_block_wrapper.style.width = "";
+
 	let ok_width;
 	if (piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
 		// wrap
@@ -871,10 +874,8 @@ function piepEditorGrabBlock() {
 
 	v_dom_overlay = cloneObject(v_dom);
 	const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
-	// remove once u release, but in general keep the ref hidden
-	// refresh ref just cause it's ezy
-	// const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
-	// grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+
+	// idk why it's here
 	recreateDom(v_dom_overlay);
 
 	// prepare all possible places to drop the block yay
@@ -1027,8 +1028,6 @@ function piepEditorGrabBlock() {
 }
 
 function piepEditorReleaseBlock() {
-	piep_editor_grabbed_block_vid = undefined;
-	piep_editor_grabbed_block_wrapper_rect = undefined;
 	piep_editor_grabbed_block_wrapper.classList.remove("visible");
 	piep_editor.classList.remove("grabbed_block");
 
@@ -1038,6 +1037,14 @@ function piepEditorReleaseBlock() {
 
 	// use whatever the user have seen already, smooth
 	v_dom = v_dom_overlay;
+
+	// remove grabbed block that was just hidden so far
+	// MAYBE ONLY IN CASE IT'S A DIFFERENT POSITION?
+	const grabbed_v_node_data = getVDomNodeData(v_dom, piep_editor_grabbed_block_vid);
+	grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+
+	piep_editor_grabbed_block_vid = undefined;
+	piep_editor_grabbed_block_wrapper_rect = undefined;
 
 	recreateDom();
 }
