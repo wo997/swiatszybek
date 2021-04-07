@@ -38,8 +38,8 @@ let piep_editor_grabbed_block_vid;
 let piep_editor_grabbed_block_wrapper;
 /** @type {DOMRect} */
 let piep_editor_grabbed_block_wrapper_rect;
-/** @type {vDomNode} */
-let v_dom_overlay;
+/** @type {vDomNode[]} */
+let v_dom_overlay = [];
 /** @type {insertBlc} */
 let piep_editor_current_insert_blc;
 /** @type {boolean} */
@@ -60,83 +60,83 @@ const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input",
  * }} vDomNode
  */
 
-/** @type {vDomNode} */
-let v_dom = {
+/** @type {vDomNode[]} */
+let v_dom = /*{
 	tag: "div",
 	id: 0,
 	text: undefined,
 	styles: { display: "flex", flexDirection: "column" },
 	attrs: {},
 	classes: [],
-	children: [
-		{
-			id: 1,
-			tag: "h1",
-			text: "Dobry frejmwork",
-			styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" },
-			children: undefined,
-			attrs: {},
-			classes: [],
+	children:*/ [
+	{
+		id: 1,
+		tag: "h1",
+		text: "Dobry frejmwork",
+		styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 2,
+		tag: "p",
+		text:
+			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		styles: { marginTop: "20px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 10,
+		tag: "img",
+		text: undefined,
+		styles: { width: "100%" },
+		children: undefined,
+		attrs: {
+			"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
 		},
-		{
-			id: 2,
-			tag: "p",
-			text:
-				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			styles: { marginTop: "20px" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 10,
-			tag: "img",
-			text: undefined,
-			styles: { width: "100%" },
-			children: undefined,
-			attrs: {
-				"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
+		classes: ["wo997_img"],
+	},
+	{
+		id: 3,
+		tag: "div",
+		text: undefined,
+		styles: {},
+		children: [
+			{ id: 4, tag: "p", text: "dziecko 1", children: undefined, styles: {}, attrs: {}, classes: [] },
+			{ id: 8, tag: "p", text: "", children: undefined, styles: {}, attrs: {}, classes: [] },
+			{
+				id: 5,
+				tag: "p",
+				text: undefined,
+				children: [
+					{ id: 6, tag: "span", text: "dziecko 2.1", children: undefined, styles: {}, attrs: {}, classes: [] },
+					{ id: 7, tag: "span", text: "dziecko 2.2", children: undefined, styles: {}, attrs: {}, classes: [] },
+				],
+				styles: {},
+				attrs: {},
+				classes: [],
 			},
-			classes: ["wo997_img"],
+		],
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 9,
+		tag: "div",
+		text: undefined,
+		styles: {
+			backgroundColor: "red",
+			padding: "20px",
 		},
-		{
-			id: 3,
-			tag: "div",
-			text: undefined,
-			styles: {},
-			children: [
-				{ id: 4, tag: "p", text: "dziecko 1", children: undefined, styles: {}, attrs: {}, classes: [] },
-				{ id: 8, tag: "p", text: "", children: undefined, styles: {}, attrs: {}, classes: [] },
-				{
-					id: 5,
-					tag: "p",
-					text: undefined,
-					children: [
-						{ id: 6, tag: "span", text: "dziecko 2.1", children: undefined, styles: {}, attrs: {}, classes: [] },
-						{ id: 7, tag: "span", text: "dziecko 2.2", children: undefined, styles: {}, attrs: {}, classes: [] },
-					],
-					styles: {},
-					attrs: {},
-					classes: [],
-				},
-			],
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 9,
-			tag: "div",
-			text: undefined,
-			styles: {
-				backgroundColor: "red",
-				padding: "20px",
-			},
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-	],
-};
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+];
+//};
 
 function getPiepEditorId() {
 	let max = 0;
@@ -151,12 +151,12 @@ function getPiepEditorId() {
 		}
 	};
 
-	traversePiepHtml(v_dom.children);
+	traversePiepHtml(v_dom);
 	return max + 1;
 }
 
 /**
- * @param {vDomNode} target_v_dom
+ * @param {vDomNode[]} target_v_dom
  */
 function recreateDom(target_v_dom = undefined) {
 	if (target_v_dom === undefined) {
@@ -168,107 +168,107 @@ function recreateDom(target_v_dom = undefined) {
 
 	/**
 	 *
-	 * @param {vDomNode} v_node
+	 * @param {vDomNode[]} v_nodes
 	 * @returns
 	 */
-	const traverseVDom = (v_node, level = 0) => {
+	const traverseVDom = (v_nodes, level = 0) => {
 		let content_html = "";
 		let inspector_tree_html = "";
 
-		const children = v_node.children;
-		const text = v_node.text;
+		for (const v_node of v_nodes) {
+			let body = "";
 
-		const tag = v_node.tag;
-		const textable = text !== undefined;
+			const children = v_node.children;
+			const text = v_node.text;
 
-		let attrs = { "data-vid": v_node.id };
-		Object.assign(attrs, v_node.attrs);
+			const tag = v_node.tag;
+			const textable = text !== undefined;
 
-		const base_class = getPiepEditorNodeSelector(v_node.id).replace(".", "");
-		let classes = ["blc", base_class, ...v_node.classes];
+			let attrs = { "data-vid": v_node.id };
+			Object.assign(attrs, v_node.attrs);
 
-		//if (level > 0) {
-		const map_tag_display_name = {
-			a: "Link",
-			h1: "Nagłówek",
-			h2: "Nagłówek",
-			h3: "Nagłówek",
-			h4: "Nagłówek",
-			h5: "Nagłówek",
-			h6: "Nagłówek",
-			div: "Kontener",
-			p: "Paragraf",
-			span: "Tekst",
-			img: "Zdjęcie",
-		};
+			const base_class = getPiepEditorNodeSelector(v_node.id).replace(".", "");
+			let classes = ["blc", base_class, ...v_node.classes];
 
-		const display_name = def(map_tag_display_name[tag], "");
+			const map_tag_display_name = {
+				a: "Link",
+				h1: "Nagłówek",
+				h2: "Nagłówek",
+				h3: "Nagłówek",
+				h4: "Nagłówek",
+				h5: "Nagłówek",
+				h6: "Nagłówek",
+				div: "Kontener",
+				p: "Paragraf",
+				span: "Tekst",
+				img: "Zdjęcie",
+			};
 
-		let info = "";
+			const display_name = def(map_tag_display_name[tag], "");
 
-		if (text) {
-			info = text;
-		} else if (children !== undefined) {
-			info = children.length + "";
-		}
+			let info = "";
 
-		if (info) {
-			info = html`<span class="info"> - ${info}</span>`;
-		}
-
-		inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
-			<span class="name">${display_name}</span>
-			${info}
-		</div>`;
-		//}
-
-		let body = "";
-		if (textable) {
-			classes.push("textable");
 			if (text) {
-				body += text;
-			} else {
-				body += `<br>`;
+				info = text;
+			} else if (children !== undefined) {
+				info = children.length + "";
 			}
-		} else if (children !== undefined) {
-			for (const child of children) {
-				// traverse for styles but not contents ;)
-				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(child, level + 1);
 
-				if (child.id === piep_editor_grabbed_block_vid) {
-					if (!piep_editor_current_insert_blc || !child.insert) {
-						continue;
-					}
+			if (info) {
+				info = html`<span class="info"> - ${info}</span>`;
+			}
+
+			inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
+				<span class="name">${display_name}</span>
+				${info}
+			</div>`;
+
+			if (textable) {
+				classes.push("textable");
+				if (text) {
+					body += text;
+				} else {
+					body += `<br>`;
 				}
+			} else if (children !== undefined) {
+				// traverse for styles but not contents ;)
+				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(children, level + 1);
+
 				body += sub_content_html;
 				inspector_tree_html += sub_inspector_tree_html;
 			}
-		}
 
-		const classes_csv = classes.join(" ");
+			let add_to_body = true;
+			if (v_node.id === piep_editor_grabbed_block_vid) {
+				if (!piep_editor_current_insert_blc || !v_node.insert) {
+					add_to_body = false;
+				}
+			}
 
-		const attrs_csv = Object.entries(attrs)
-			.map(([key, val]) => {
-				return `${key}="${escapeAttribute(val)}"`;
-			})
-			.join(" ");
+			if (add_to_body) {
+				const classes_csv = classes.join(" ");
 
-		if (single_tags.includes(tag)) {
-			content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
-		} else {
-			content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
-		}
+				const attrs_csv = Object.entries(attrs)
+					.map(([key, val]) => {
+						return `${key}="${escapeAttribute(val)}"`;
+					})
+					.join(" ");
 
-		if (!v_node.styles) {
-			v_node.styles = {};
-		}
-		const styles = Object.entries(v_node.styles);
-		if (styles.length > 0) {
-			let node_styles = "";
-			styles.forEach(([prop, val]) => {
-				node_styles += `${kebabCase(prop)}: ${val};`;
-			});
-			styles_html += `.${base_class} { ${node_styles} }`;
+				if (single_tags.includes(tag)) {
+					content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
+				} else {
+					content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
+				}
+			}
+
+			const styles = Object.entries(v_node.styles);
+			if (styles.length > 0) {
+				let node_styles = "";
+				styles.forEach(([prop, val]) => {
+					node_styles += `${kebabCase(prop)}: ${val};`;
+				});
+				styles_html += `.${base_class} { ${node_styles} }`;
+			}
 		}
 
 		return { content_html, inspector_tree_html };
@@ -288,63 +288,69 @@ function recreateDom(target_v_dom = undefined) {
 
 /**
  *
- * @param {vDomNode} v_dom
+ * @param {vDomNode[]} v_dom
  * @param {number} vid
  * @returns
  */
-function findNodeInVDom(v_dom, vid) {
-	const node_data = getVDomNodeData(v_dom, vid);
-	if (!node_data) {
-		return undefined;
-	}
-	return node_data.node;
-}
-
-/**
- *
- * @param {vDomNode} v_dom
- * @param {number} vid
- * @returns {{
- * node: vDomNode,
- * children: vDomNode[],
- * index: number,
- * }}
- */
-function getVDomNodeData(v_dom, vid) {
-	if (vid === 0) {
-		return {
-			node: v_dom,
-			children: v_dom.children,
-			index: 0,
-		};
-	}
-
+function findNodeInVDomById(v_dom, vid) {
 	if (!vid) {
 		return undefined;
 	}
 
+	const node_data = getVDomNodeDataById(v_dom, vid);
+	if (!node_data) {
+		return undefined;
+	}
+	return node_data.v_node;
+}
+
+/**
+ *
+ * @param {vDomNode[]} v_dom
+ * @param {number} vid
+ * @returns
+ */
+function getVDomNodeDataById(v_dom, vid) {
+	if (!vid) {
+		return undefined;
+	}
+
+	return getVDomNodeData(v_dom, (v_node) => v_node.id === vid);
+}
+
+/**
+ *
+ * @param {vDomNode[]} v_dom
+ * @param {{(v_node: vDomNode): boolean}} test
+ * @returns {{
+ * v_node: vDomNode,
+ * v_nodes: vDomNode[],
+ * index: number,
+ * }}
+ */
+function getVDomNodeData(v_dom, test) {
 	/**
 	 *
-	 * @param {vDomNode} node
+	 * @param {vDomNode[]} v_nodes
 	 * @returns
 	 */
-	const traverseVDom = (node) => {
-		const children = node.children;
+	const traverseVDom = (v_nodes) => {
+		let index = -1;
+		for (const v_node of v_nodes) {
+			index++;
 
-		if (children) {
-			let index = -1;
-			for (const child of children) {
-				index++;
-				if (child.id === vid) {
-					return {
-						node: child,
-						children,
-						index,
-					};
-				}
-				const deep = traverseVDom(child);
-				if (deep) {
-					return deep;
+			if (test(v_node)) {
+				return {
+					v_node,
+					v_nodes,
+					index,
+				};
+			}
+
+			if (v_node.children) {
+				const res = traverseVDom(v_node.children);
+				if (res) {
+					return res;
 				}
 			}
 		}
@@ -394,7 +400,7 @@ function insertPiepText(insert_text) {
 	const anchor_offset = sel.anchorOffset;
 	const focus_node = getPiepEditorFocusNode();
 	const vid = focus_node ? +focus_node.dataset.vid : 0;
-	const v_node = findNodeInVDom(v_dom, vid);
+	const v_node = findNodeInVDomById(v_dom, vid);
 	if (!v_node) {
 		return;
 	}
@@ -552,7 +558,7 @@ domload(() => {
 		input.addEventListener("change", () => {
 			const focus_node = piep_editor_content._child(".piep_focus");
 			if (focus_node) {
-				const v_node = findNodeInVDom(v_dom, +focus_node.dataset.vid);
+				const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
 				const anchor_offset = piep_editor_last_selection.anchorOffset;
 				const focus_offset = piep_editor_last_selection.focusOffset;
 
@@ -669,8 +675,8 @@ domload(() => {
 		}
 
 		if (target._parent(".remove_block_btn")) {
-			const v_node_data = getVDomNodeData(v_dom, piep_focus_node_vid);
-			v_node_data.children.splice(v_node_data.index, 1);
+			const v_node_data = getVDomNodeDataById(v_dom, piep_focus_node_vid);
+			v_node_data.v_nodes.splice(v_node_data.index, 1);
 			recreateDom();
 			setPiepEditorFocusNode(undefined);
 		}
@@ -694,8 +700,8 @@ domload(() => {
 		const focus_node = getPiepEditorFocusNode();
 		const focus_offset = sel.focusOffset;
 		const vid = focus_node ? +focus_node.dataset.vid : -1;
-		const v_node_data = getVDomNodeData(v_dom, vid);
-		const v_node = v_node_data ? v_node_data.node : undefined;
+		const v_node_data = getVDomNodeDataById(v_dom, vid);
+		const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 		//v_node.text === undefined
 		if (!piep_editor_cursor_active) {
@@ -719,13 +725,13 @@ domload(() => {
 			if (focus_offset <= 0) {
 				const prev_index = v_node_data.index - 1;
 				if (prev_index >= 0) {
-					const prev_v_node = v_node_data.children[prev_index];
+					const prev_v_node = v_node_data.v_nodes[prev_index];
 
 					if (prev_v_node.text !== undefined) {
 						const prev_vid = prev_v_node.id;
 						const prev_v_node_text_before = prev_v_node.text;
 						prev_v_node.text = prev_v_node_text_before + v_node.text;
-						v_node_data.children.splice(v_node_data.index, 1);
+						v_node_data.v_nodes.splice(v_node_data.index, 1);
 						recreateDom();
 
 						const prev_node_ref = getPiepEditorNode(prev_vid);
@@ -751,14 +757,14 @@ domload(() => {
 			const text = v_node.text;
 			if (focus_offset >= v_node.text.length) {
 				const next_index = v_node_data.index + 1;
-				if (next_index < v_node_data.children.length) {
-					const next_v_node = v_node_data.children[next_index];
+				if (next_index < v_node_data.v_nodes.length) {
+					const next_v_node = v_node_data.v_nodes[next_index];
 
 					if (next_v_node.text !== undefined) {
 						const node_vid = v_node.id;
 						const v_node_text_before = v_node.text;
 						v_node.text = v_node_text_before + next_v_node.text;
-						v_node_data.children.splice(next_index, 1);
+						v_node_data.v_nodes.splice(next_index, 1);
 						recreateDom();
 
 						const node_ref = getPiepEditorNode(node_vid);
@@ -825,7 +831,7 @@ domload(() => {
 				const insert_node_vid = getPiepEditorId();
 				insert_v_node.id = insert_node_vid;
 				v_node.text = text.substr(0, focus_offset);
-				v_node_data.children.splice(v_node_data.index + 1, 0, insert_v_node);
+				v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
 				recreateDom();
 
 				const insert_node_ref = getPiepEditorNode(insert_node_vid);
@@ -858,17 +864,18 @@ function piepEditorMainLoop() {
 		if (piep_editor_current_insert_blc !== insert_blc) {
 			piep_editor_current_insert_blc = insert_blc;
 
-			cloneVDom(v_dom, v_dom_overlay);
+			v_dom_overlay.splice(0, v_dom_overlay.length);
+			deepAssign(v_dom_overlay, v_dom);
 			if (piep_editor_current_insert_blc) {
 				piep_editor_current_insert_blc._insert_action();
 			}
 
 			recreateDom(v_dom_overlay);
 		}
-	}
 
-	piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
-	piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
+		piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
+		piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
+	}
 
 	requestAnimationFrame(piepEditorMainLoop);
 }
@@ -878,6 +885,7 @@ function piepEditorGrabBlock() {
 	piep_editor_float_menu.classList.add("hidden");
 	piep_editor_cursor.classList.add("hidden");
 	piep_editor.classList.add("grabbed_block");
+	piep_editor.classList.remove("has_insert_pos");
 
 	piep_editor_grabbed_block_vid = piep_focus_node_vid;
 
@@ -904,20 +912,12 @@ function piepEditorGrabBlock() {
 
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
 
-	if (!v_dom_overlay) {
-		// @ts-ignore
-		v_dom_overlay = {};
-	}
-	cloneVDom(v_dom, v_dom_overlay);
+	v_dom_overlay.splice(0, v_dom_overlay.length);
+	deepAssign(v_dom_overlay, v_dom);
 	recreateDom(v_dom_overlay);
 
 	// prepare all possible places to drop the block yay
 	piep_editor_content._children(".blc").forEach((blc) => {
-		if (blc._parent() === piep_editor_content) {
-			// think about top later
-			return;
-		}
-
 		if (blc._parent(getPiepEditorNodeSelector(piep_editor_grabbed_block_vid))) {
 			// just no baby
 			return;
@@ -931,8 +931,8 @@ function piepEditorGrabBlock() {
 		 * @param {-1 | 1} dir
 		 */
 		const insertAboveOrBelow = (dir) => {
-			const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
-			const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+			const grabbed_v_node_data = getVDomNodeDataById(v_dom_overlay, piep_editor_grabbed_block_vid);
+			const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
 
 			let ind = near_v_node_data.index;
 			if (dir === 1) {
@@ -940,10 +940,10 @@ function piepEditorGrabBlock() {
 			}
 
 			/** @type {vDomNode} */
-			const grabbed_node_copy = cloneObject(grabbed_v_node_data.node);
+			const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
 			grabbed_node_copy.insert = true;
 
-			near_v_node_data.children.splice(ind, 0, grabbed_node_copy);
+			near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
 		};
 
 		/**
@@ -951,25 +951,25 @@ function piepEditorGrabBlock() {
 		 * @param {-1 | 1} dir
 		 */
 		const insertOnSides = (dir) => {
-			const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
-			const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+			const grabbed_v_node_data = getVDomNodeDataById(v_dom_overlay, piep_editor_grabbed_block_vid);
+			const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
 
 			let ind = near_v_node_data.index;
 
 			/** @type {vDomNode} */
-			const grabbed_node_copy = cloneObject(grabbed_v_node_data.node);
+			const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
 			grabbed_node_copy.insert = true;
 
 			// actually here we should have block / inline-block checking, blocks can be wrapped,
 			// text not so, unless what we place nearby is also a block?
-			if (near_v_node_data.node.text === undefined) {
+			if (near_v_node_data.v_node.text === undefined) {
 				// block layout
 
 				/** @type {vDomNode} */
 				const insert_container = {
 					tag: "div",
 					attrs: {},
-					children: [near_v_node_data.node],
+					children: [near_v_node_data.v_node],
 					classes: [],
 					id: getPiepEditorId(),
 					styles: { display: "flex" },
@@ -982,7 +982,7 @@ function piepEditorGrabBlock() {
 					insert_container.children.unshift(grabbed_node_copy);
 				}
 
-				near_v_node_data.children.splice(ind, 1, insert_container);
+				near_v_node_data.v_nodes.splice(ind, 1, insert_container);
 			} else {
 				// inline layout
 
@@ -990,7 +990,7 @@ function piepEditorGrabBlock() {
 					ind++;
 				}
 
-				near_v_node_data.children.splice(ind, 0, grabbed_node_copy);
+				near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
 			}
 		};
 
@@ -1062,47 +1062,33 @@ function piepEditorGrabBlock() {
 		setInsertBlcContents(insert_up_blc);
 		setInsertBlcContents(insert_down_blc);
 
-		const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+		const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
 
 		// TODO: rethink that baby
-		if (near_v_node_data.node.text !== undefined) {
+		if (near_v_node_data.v_node.text !== undefined) {
 			insert_up_blc.remove();
 			insert_down_blc.remove();
 		}
 	});
 }
 
-/**
- *
- * @param {vDomNode} src
- * @param {vDomNode} target
- * @returns
- */
-function cloneVDom(src, target) {
-	if (target) {
-		target.attrs = {};
-		target.classes = [];
-		target.children = [];
-		target.styles = {};
-	}
-	deepAssign(target, src);
-}
-
 function piepEditorReleaseBlock() {
 	piep_editor_grabbed_block_wrapper.classList.remove("visible");
 	piep_editor.classList.remove("grabbed_block");
+	piep_editor.classList.remove("has_insert_pos");
 
 	piep_editor._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
 	});
 
 	// use whatever the user have seen already, smooth
-	cloneVDom(v_dom_overlay, v_dom);
+	v_dom.splice(0, v_dom.length);
+	deepAssign(v_dom, v_dom_overlay);
 
 	// remove grabbed block that was just hidden so far
 	// MAYBE ONLY IN CASE IT'S A DIFFERENT POSITION?
-	const grabbed_v_node_data = getVDomNodeData(v_dom, piep_editor_grabbed_block_vid);
-	grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+	const grabbed_v_node_data = getVDomNodeDataById(v_dom, piep_editor_grabbed_block_vid);
+	grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
 	piep_editor_grabbed_block_vid = undefined;
 	piep_editor_grabbed_block_wrapper_rect = undefined;
@@ -1247,7 +1233,7 @@ function setPiepEditorFocusNode(vid) {
 	focus_node.classList.add("piep_focus");
 	piep_editor_inspector_tree._child(`.tblc_${vid}`).classList.add("selected");
 
-	const v_node = findNodeInVDom(v_dom, +focus_node.dataset.vid);
+	const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		const prop = input.dataset.style;
 		let val = def(v_node.styles[prop], "");
