@@ -163,43 +163,43 @@ function recreateDom() {
 
 		let attrs = { "data-vid": node.id };
 		Object.assign(attrs, node.attrs);
-		const base_class = `vid_${node.id}`;
+		const base_class = `blc_${node.id}`;
 		let classes = ["blc", base_class, ...node.classes];
 
-		if (level > 0) {
-			const map_tag_display_name = {
-				a: "Link",
-				h1: "Nagłówek",
-				h2: "Nagłówek",
-				h3: "Nagłówek",
-				h4: "Nagłówek",
-				h5: "Nagłówek",
-				h6: "Nagłówek",
-				div: "Kontener",
-				p: "Paragraf",
-				span: "Tekst",
-				img: "Zdjęcie",
-			};
+		//if (level > 0) {
+		const map_tag_display_name = {
+			a: "Link",
+			h1: "Nagłówek",
+			h2: "Nagłówek",
+			h3: "Nagłówek",
+			h4: "Nagłówek",
+			h5: "Nagłówek",
+			h6: "Nagłówek",
+			div: "Kontener",
+			p: "Paragraf",
+			span: "Tekst",
+			img: "Zdjęcie",
+		};
 
-			const display_name = def(map_tag_display_name[tag], "");
+		const display_name = def(map_tag_display_name[tag], "");
 
-			let info = "";
+		let info = "";
 
-			if (text) {
-				info = text;
-			} else if (children !== undefined) {
-				info = children.length + "";
-			}
-
-			if (info) {
-				info = html`<span class="info"> - ${info}</span>`;
-			}
-
-			inspector_tree_html += html`<div class="v_node_label tvid_${node.id}" style="--level:${level}" data-vid="${node.id}">
-				<span class="name">${display_name}</span>
-				${info}
-			</div>`;
+		if (text) {
+			info = text;
+		} else if (children !== undefined) {
+			info = children.length + "";
 		}
+
+		if (info) {
+			info = html`<span class="info"> - ${info}</span>`;
+		}
+
+		inspector_tree_html += html`<div class="v_node_label tblc_${node.id}" style="--level:${level}" data-vid="${node.id}">
+			<span class="name">${display_name}</span>
+			${info}
+		</div>`;
+		//}
 
 		let body = "";
 		if (textable) {
@@ -276,6 +276,14 @@ function findNodeInVDom(vid) {
  * }}
  */
 function getVDomNodeData(vid) {
+	if (vid === 0) {
+		return {
+			node: v_dom,
+			children: v_dom.children,
+			index: 0,
+		};
+	}
+
 	if (!vid) {
 		return undefined;
 	}
@@ -608,6 +616,13 @@ domload(() => {
 
 		const content_active = !!(target._parent(piep_editor_content) || target._parent(".v_node_label"));
 		setPiepEditorContentActive(content_active);
+
+		const click_blc = target._parent(".blc");
+		if (click_blc) {
+			setPiepEditorFocusNode(+click_blc.dataset.vid);
+			removeSelection();
+		}
+
 		// order matters
 		updatePiepCursorPosition();
 
@@ -935,6 +950,19 @@ function piepEditorGrabBlock() {
 		insert_down_blc.addEventListener("click", () => {
 			insertAboveOrBelow(1);
 		});
+
+		/**
+		 *
+		 * @param {PiepNode} blc
+		 */
+		const setInsertBlcContents = (blc) => {
+			blc._set_content(html`<i class="fas fa-plus"></i>`);
+		};
+
+		setInsertBlcContents(insert_left_blc);
+		setInsertBlcContents(insert_right_blc);
+		setInsertBlcContents(insert_up_blc);
+		setInsertBlcContents(insert_down_blc);
 	});
 }
 
@@ -1083,7 +1111,7 @@ function setPiepEditorFocusNode(vid) {
 		return;
 	}
 	focus_node.classList.add("piep_focus");
-	piep_editor_inspector_tree._child(`.tvid_${vid}`).classList.add("selected");
+	piep_editor_inspector_tree._child(`.tblc_${vid}`).classList.add("selected");
 
 	const v_node = findNodeInVDom(+focus_node.dataset.vid);
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
@@ -1117,7 +1145,7 @@ function setPiepEditorFocusNode(vid) {
 }
 
 function getPiepEditorNode(vid) {
-	return piep_editor_content._child(`.vid_${vid}`);
+	return piep_editor_content._child(`.blc_${vid}`);
 }
 
 /**
