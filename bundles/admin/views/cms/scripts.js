@@ -913,12 +913,15 @@ function piepEditorGrabBlock() {
 	let ok_width;
 	if (piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
 		// wrap
-		let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
-		ok_width = Math.min(800, pretty_width);
+		ok_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
+		// let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
+		// ok_width = Math.min(800, pretty_width);
 	} else {
 		ok_width = piep_editor_grabbed_block_wrapper.offsetWidth;
 	}
 	piep_editor_grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
+	const scale = 1 / (1 + ok_width * 0.001);
+	piep_editor_grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
 
 	// ok we grabbed it!
 
