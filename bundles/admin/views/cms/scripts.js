@@ -901,15 +901,44 @@ function piepEditorGrabBlock() {
 		 */
 		const insertOnSides = (dir) => {
 			let from = near_v_node_data.index;
-			if (dir === 1) {
-				from++;
-			}
 			const same_parent = near_v_node_data.children === grabbed_v_node_data.children;
+
 			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
 			if (same_parent && from > grabbed_v_node_data.index) {
 				from--;
 			}
-			near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
+
+			// actually here we should have block / inline-block checking, blocks can be wrapped,
+			// text not so, unless what we place nearby is also a block?
+			if (near_v_node_data.node.text === undefined) {
+				// block
+
+				/** @type {vDomNode} */
+				const insert_container = {
+					tag: "div",
+					attrs: {},
+					children: [near_v_node_data.node],
+					classes: [],
+					id: getPiepEditorId(),
+					styles: { display: "flex" },
+					text: undefined,
+				};
+
+				if (dir === 1) {
+					insert_container.children.push(grabbed_v_node_data.node);
+				} else {
+					insert_container.children.unshift(grabbed_v_node_data.node);
+				}
+
+				near_v_node_data.children.splice(from, 1, insert_container);
+			} else {
+				// inline
+				if (dir === 1) {
+					from++;
+				}
+
+				near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
+			}
 
 			piepEditorReleaseBlock();
 		};
@@ -957,13 +986,16 @@ function piepEditorGrabBlock() {
 		 */
 		const setInsertBlcContents = (blc) => {
 			blc._set_content(html`<i class="fas fa-plus"></i>`);
+
+			blc._set_content(html`1`);
+			//blc.classList.add("multiple");
 			if (Math.random() > 0.8) {
 				blc._set_content(html`3`);
-				blc.classList.add("multiple");
+				//blc.classList.add("multiple");
 			}
 			if (Math.random() > 0.8) {
 				blc._set_content(html`2`);
-				blc.classList.add("multiple");
+				//blc.classList.add("multiple");
 			}
 		};
 
@@ -971,6 +1003,12 @@ function piepEditorGrabBlock() {
 		setInsertBlcContents(insert_right_blc);
 		setInsertBlcContents(insert_up_blc);
 		setInsertBlcContents(insert_down_blc);
+
+		// TODO: rethink that baby
+		if (near_v_node_data.node.text !== undefined) {
+			insert_up_blc.remove();
+			insert_down_blc.remove();
+		}
 	});
 }
 
