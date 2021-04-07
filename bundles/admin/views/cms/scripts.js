@@ -957,6 +957,14 @@ function piepEditorGrabBlock() {
 		 */
 		const setInsertBlcContents = (blc) => {
 			blc._set_content(html`<i class="fas fa-plus"></i>`);
+			if (Math.random() > 0.8) {
+				blc._set_content(html`3`);
+				blc.classList.add("multiple");
+			}
+			if (Math.random() > 0.8) {
+				blc._set_content(html`2`);
+				blc.classList.add("multiple");
+			}
 		};
 
 		setInsertBlcContents(insert_left_blc);
