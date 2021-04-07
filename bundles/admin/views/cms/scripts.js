@@ -307,6 +307,20 @@ function findNodeInVDomById(v_dom, vid) {
 /**
  *
  * @param {vDomNode[]} v_dom
+ * @param {{(v_node: vDomNode): boolean}} test
+ * @returns
+ */
+function findNodeInVDom(v_dom, test) {
+	const node_data = getVDomNodeData(v_dom, test);
+	if (!node_data) {
+		return undefined;
+	}
+	return node_data.v_node;
+}
+
+/**
+ *
+ * @param {vDomNode[]} v_dom
  * @param {number} vid
  * @returns
  */
@@ -1100,14 +1114,20 @@ function piepEditorReleaseBlock() {
 		insert_blc.remove();
 	});
 
-	// use whatever the user have seen already, smooth
-	v_dom.splice(0, v_dom.length);
-	deepAssign(v_dom, v_dom_overlay);
+	if (piep_editor_current_insert_blc) {
+		// use whatever the user have seen already, smooth UX
+		v_dom.splice(0, v_dom.length);
+		deepAssign(v_dom, v_dom_overlay);
 
-	// remove grabbed block that was just hidden so far
-	// MAYBE ONLY IN CASE IT'S A DIFFERENT POSITION?
-	const grabbed_v_node_data = getVDomNodeDataById(v_dom, piep_editor_grabbed_block_vid);
-	grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
+		// remove grabbed block that was just hidden so far
+		const grabbed_v_node_data = getVDomNodeDataById(v_dom, piep_editor_grabbed_block_vid);
+		grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
+
+		const v_node_with_insert = findNodeInVDom(v_dom, (v_node) => v_node.insert);
+		if (v_node_with_insert) {
+			v_node_with_insert.insert = false;
+		}
+	}
 
 	piep_editor_grabbed_block_vid = undefined;
 	piep_editor_grabbed_block_wrapper_rect = undefined;
