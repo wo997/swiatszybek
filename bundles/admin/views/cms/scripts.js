@@ -44,6 +44,8 @@ let v_dom_overlay = [];
 let piep_editor_current_insert_blc;
 /** @type {boolean} */
 let piep_editor_has_insert_pos;
+/** @type {number} */
+let piep_editor_last_v_node_label_vid;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -211,7 +213,7 @@ function recreateDom(target_v_dom = undefined) {
 			if (text) {
 				info = text;
 			} else if (children !== undefined) {
-				info = children.length + "";
+				info = `(${children.length})`;
 			}
 
 			if (info) {
@@ -457,10 +459,21 @@ domload(() => {
 			const target = $(ev.target);
 			const v_node_label = target._parent(".v_node_label");
 
-			removeClasses(".piep_consider_focus", ["piep_consider_focus"], piep_editor_content);
-			if (v_node_label) {
-				const vid = +v_node_label.dataset.vid;
-				getPiepEditorNode(vid).classList.add("piep_consider_focus");
+			let vid = undefined;
+
+			if (!piep_editor_grabbed_block_vid && v_node_label) {
+				vid = +v_node_label.dataset.vid;
+			}
+
+			if (piep_editor_last_v_node_label_vid !== vid) {
+				piep_editor_last_v_node_label_vid = vid;
+				if (vid === undefined) {
+					piep_editor_float_menu.classList.toggle("hidden", !piep_focus_node_vid);
+					piepEditorShowFocusOfNode(piep_focus_node_vid);
+				} else {
+					piep_editor_float_menu.classList.toggle("hidden", vid !== piep_focus_node_vid);
+					piepEditorShowFocusOfNode(vid);
+				}
 			}
 		});
 		document.addEventListener("click", (ev) => {
@@ -713,7 +726,7 @@ domload(() => {
 		const sel = window.getSelection();
 		const focus_node = getPiepEditorFocusNode();
 		const focus_offset = sel.focusOffset;
-		const vid = focus_node ? +focus_node.dataset.vid : -1;
+		const vid = focus_node ? +focus_node.dataset.vid : undefined;
 		const v_node_data = getVDomNodeDataById(v_dom, vid);
 		const v_node = v_node_data ? v_node_data.v_node : undefined;
 
@@ -1268,26 +1281,74 @@ function setPiepEditorFocusNode(vid) {
 	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
 	piep_focus_node_vid = vid;
 	const focus_node = getPiepEditorNode(vid);
-	if (!focus_node) {
+	if (focus_node) {
+		focus_node.classList.add("piep_focus");
+
+		const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
+		piep_editor_float_menu._children("[data-style]").forEach((input) => {
+			const prop = input.dataset.style;
+			let val = def(v_node.styles[prop], "");
+			input._set_value(val, { quiet: true });
+		});
+
+		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
+		if (piep_editor_inspector_tree._child(`.tblc_${vid}`)) {
+			tblc.classList.add("selected");
+		}
+	}
+
+	piepEditorShowFocusOfNode(vid);
+	piepEditorShowFloatMenuToNode(vid);
+}
+
+/**
+ *
+ * @param {number} vid
+ * @returns
+ */
+function piepEditorShowFocusOfNode(vid) {
+	if (vid === undefined) {
 		piep_editor_float_focus.classList.add("hidden");
 		return;
 	}
-	focus_node.classList.add("piep_focus");
-	piep_editor_inspector_tree._child(`.tblc_${vid}`).classList.add("selected");
-
-	const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
-	piep_editor_float_menu._children("[data-style]").forEach((input) => {
-		const prop = input.dataset.style;
-		let val = def(v_node.styles[prop], "");
-		input._set_value(val, { quiet: true });
-	});
 
 	piep_editor_float_focus.classList.remove("hidden");
+
+	const focus_node = getPiepEditorNode(vid);
+	const focus_node_rect = focus_node.getBoundingClientRect();
+	const piep_editor_rect = piep_editor.getBoundingClientRect();
+
+	piep_editor_float_focus._set_absolute_pos(
+		focus_node_rect.left - 1 - piep_editor_rect.left,
+		focus_node_rect.top - 1 - piep_editor_rect.top
+	);
+
+	piep_editor_float_focus.style.width = focus_node_rect.width + 2 + "px";
+	piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
+}
+
+/**
+ *
+ * @param {number} vid
+ * @returns
+ */
+function piepEditorShowFloatMenuToNode(vid) {
+	if (vid === undefined) {
+		piep_editor_float_menu.classList.add("hidden");
+		return;
+	}
+
 	piep_editor_float_menu.classList.remove("hidden");
 
+	const focus_node = getPiepEditorNode(vid);
 	const focus_node_rect = focus_node.getBoundingClientRect();
-	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
+	const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
+
+	piep_editor_float_focus._set_absolute_pos(
+		focus_node_rect.left - 1 - piep_editor_rect.left,
+		focus_node_rect.top - 1 - piep_editor_rect.top
+	);
 
 	let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
 	let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
@@ -1297,13 +1358,7 @@ function setPiepEditorFocusNode(vid) {
 	// DUDE, the top should actually change by sum of heights
 	top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
 
-	piep_editor_float_menu.style.left = left - piep_editor_rect.left + "px";
-	piep_editor_float_menu.style.top = top - piep_editor_rect.top + "px";
-
-	piep_editor_float_focus.style.left = focus_node_rect.left - 1 - piep_editor_rect.left + "px";
-	piep_editor_float_focus.style.top = focus_node_rect.top - 1 - piep_editor_rect.top + "px";
-	piep_editor_float_focus.style.width = focus_node_rect.width + 2 + "px";
-	piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
+	piep_editor_float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
 }
 
 /**
