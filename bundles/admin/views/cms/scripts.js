@@ -469,10 +469,10 @@ domload(() => {
 				piep_editor_last_v_node_label_vid = vid;
 				if (vid === undefined) {
 					piep_editor_float_menu.classList.toggle("hidden", !piep_focus_node_vid);
-					piepEditorShowFocusOfNode(piep_focus_node_vid);
+					piepEditorShowFocusToNode(piep_focus_node_vid);
 				} else {
 					piep_editor_float_menu.classList.toggle("hidden", vid !== piep_focus_node_vid);
-					piepEditorShowFocusOfNode(vid);
+					piepEditorShowFocusToNode(vid);
 				}
 			}
 		});
@@ -898,6 +898,12 @@ function piepEditorMainLoop() {
 			}
 
 			recreateDom(v_dom_overlay);
+
+			if (piep_editor_current_insert_blc) {
+				piepEditorShowFocusToNode(piep_editor_grabbed_block_vid);
+			} else {
+				piep_editor_float_focus.classList.add("hidden");
+			}
 		}
 
 		piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
@@ -1297,7 +1303,7 @@ function setPiepEditorFocusNode(vid) {
 		}
 	}
 
-	piepEditorShowFocusOfNode(vid);
+	piepEditorShowFocusToNode(vid);
 	piepEditorShowFloatMenuToNode(vid);
 }
 
@@ -1306,7 +1312,7 @@ function setPiepEditorFocusNode(vid) {
  * @param {number} vid
  * @returns
  */
-function piepEditorShowFocusOfNode(vid) {
+function piepEditorShowFocusToNode(vid) {
 	if (vid === undefined) {
 		piep_editor_float_focus.classList.add("hidden");
 		return;
@@ -1315,6 +1321,10 @@ function piepEditorShowFocusOfNode(vid) {
 	piep_editor_float_focus.classList.remove("hidden");
 
 	const focus_node = getPiepEditorNode(vid);
+	if (focus_node === undefined) {
+		piep_editor_float_focus.classList.add("hidden");
+		return;
+	}
 	const focus_node_rect = focus_node.getBoundingClientRect();
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
 
