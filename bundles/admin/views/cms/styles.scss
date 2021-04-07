@@ -4,6 +4,20 @@
 // 	background: #0001;
 // }
 
+.piep_editor_grabbed_block_wrapper {
+	& {
+		position: absolute;
+		z-index: 350;
+		pointer-events: none;
+	}
+	&:not(.visible) {
+		display: none;
+	}
+	& .blc {
+		opacity: 0.5;
+	}
+}
+
 .piep_editor_inspector {
 	& {
 		position: absolute;
@@ -121,13 +135,6 @@
 		pointer-events: none;
 		animation: cursor_blink 1s infinite;
 		//box-shadow: 0 0 0 1px #7775;
-	}
-
-	.grabbed_block {
-		position: absolute;
-		opacity: 0.5;
-		z-index: 350;
-		pointer-events: none;
 	}
 
 	.insert_blc {

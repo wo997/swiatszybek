@@ -26,12 +26,14 @@ let piep_editor_float_menu_active;
 let piep_editor_inspector_tree;
 /** @type {number} */
 let piep_focus_node_vid;
+/** @type {number} */
+let piep_editor_grabbed_block_vid;
 /** @type {PiepNode} */
-let piep_editor_grabbed_block;
+let piep_editor_grabbed_block_wrapper;
 /** @type {DOMRect} */
-let piep_editor_grabbed_block_rect;
-/** @type {CSSStyleDeclaration} */
-let piep_editor_grabbed_block_computed_style;
+let piep_editor_grabbed_block_wrapper_rect;
+/** @type {vDomNode} */
+let v_dom_overlay;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -48,7 +50,7 @@ const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input",
  */
 
 /** @type {vDomNode} */
-const v_dom = {
+let v_dom = {
 	tag: "div",
 	id: 0,
 	text: undefined,
@@ -142,29 +144,37 @@ function getPiepEditorId() {
 	return max + 1;
 }
 
-function recreateDom() {
-	// order doesn't really matter
+/**
+ * @param {vDomNode} target_v_dom
+ */
+function recreateDom(target_v_dom = undefined) {
+	if (target_v_dom === undefined) {
+		target_v_dom = v_dom;
+	}
+
+	// order doesn't really matter so far
 	let styles_html = "";
 
 	/**
 	 *
-	 * @param {vDomNode} node
+	 * @param {vDomNode} v_node
 	 * @returns
 	 */
-	const traverseVDom = (node, level = 0) => {
+	const traverseVDom = (v_node, level = 0) => {
 		let content_html = "";
 		let inspector_tree_html = "";
 
-		const children = node.children;
-		const text = node.text;
+		const children = v_node.children;
+		const text = v_node.text;
 
-		const tag = node.tag;
+		const tag = v_node.tag;
 		const textable = text !== undefined;
 
-		let attrs = { "data-vid": node.id };
-		Object.assign(attrs, node.attrs);
-		const base_class = `blc_${node.id}`;
-		let classes = ["blc", base_class, ...node.classes];
+		let attrs = { "data-vid": v_node.id };
+		Object.assign(attrs, v_node.attrs);
+
+		const base_class = getPiepEditorNodeSelector(v_node.id).replace(".", "");
+		let classes = ["blc", base_class, ...v_node.classes];
 
 		//if (level > 0) {
 		const map_tag_display_name = {
@@ -195,7 +205,7 @@ function recreateDom() {
 			info = html`<span class="info"> - ${info}</span>`;
 		}
 
-		inspector_tree_html += html`<div class="v_node_label tblc_${node.id}" style="--level:${level}" data-vid="${node.id}">
+		inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
 			<span class="name">${display_name}</span>
 			${info}
 		</div>`;
@@ -231,10 +241,10 @@ function recreateDom() {
 			content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
 		}
 
-		if (!node.styles) {
-			node.styles = {};
+		if (!v_node.styles) {
+			v_node.styles = {};
 		}
-		const styles = Object.entries(node.styles);
+		const styles = Object.entries(v_node.styles);
 		if (styles.length > 0) {
 			let node_styles = "";
 			styles.forEach(([prop, val]) => {
@@ -246,9 +256,13 @@ function recreateDom() {
 		return { content_html, inspector_tree_html };
 	};
 
-	const { content_html, inspector_tree_html } = traverseVDom(v_dom);
+	const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
 
 	piep_editor_content._set_content(content_html);
+
+	if (piep_editor_grabbed_block_vid !== undefined) {
+		styles_html += `.piep_editor_content ${getPiepEditorNodeSelector(piep_editor_grabbed_block_vid)} {display:none!important}`;
+	}
 
 	piep_editor_styles._set_content(styles_html);
 
@@ -258,8 +272,14 @@ function recreateDom() {
 	registerForms();
 }
 
-function findNodeInVDom(vid) {
-	const node_data = getVDomNodeData(vid);
+/**
+ *
+ * @param {vDomNode} v_dom
+ * @param {number} vid
+ * @returns
+ */
+function findNodeInVDom(v_dom, vid) {
+	const node_data = getVDomNodeData(v_dom, vid);
 	if (!node_data) {
 		return undefined;
 	}
@@ -268,6 +288,7 @@ function findNodeInVDom(vid) {
 
 /**
  *
+ * @param {vDomNode} v_dom
  * @param {number} vid
  * @returns {{
  * node: vDomNode,
@@ -275,7 +296,7 @@ function findNodeInVDom(vid) {
  * index: number,
  * }}
  */
-function getVDomNodeData(vid) {
+function getVDomNodeData(v_dom, vid) {
 	if (vid === 0) {
 		return {
 			node: v_dom,
@@ -359,7 +380,7 @@ function insertPiepText(insert_text) {
 	const anchor_offset = sel.anchorOffset;
 	const focus_node = getPiepEditorFocusNode();
 	const vid = focus_node ? +focus_node.dataset.vid : 0;
-	const v_node = findNodeInVDom(vid);
+	const v_node = findNodeInVDom(v_dom, vid);
 	if (!v_node) {
 		return;
 	}
@@ -393,6 +414,9 @@ domload(() => {
 	piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
 	piep_editor_styles = piep_editor._child(".piep_editor_styles");
 
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
+	piep_editor_grabbed_block_wrapper = piep_editor._child(".piep_editor_grabbed_block_wrapper");
+
 	const initInspector = () => {
 		piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
 		document.addEventListener("mousemove", (ev) => {
@@ -411,7 +435,7 @@ domload(() => {
 
 			if (v_node_label) {
 				const vid = +v_node_label.dataset.vid;
-				//const v_node = findNodeInVDom(vid);
+				//const v_node = findNodeInVDom(v_dom,vid);
 
 				setSelectionRange(undefined);
 				setPiepEditorCursorActive(false);
@@ -514,7 +538,7 @@ domload(() => {
 		input.addEventListener("change", () => {
 			const focus_node = piep_editor_content._child(".piep_focus");
 			if (focus_node) {
-				const v_node = findNodeInVDom(+focus_node.dataset.vid);
+				const v_node = findNodeInVDom(v_dom, +focus_node.dataset.vid);
 				const anchor_offset = piep_editor_last_selection.anchorOffset;
 				const focus_offset = piep_editor_last_selection.focusOffset;
 
@@ -610,7 +634,7 @@ domload(() => {
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		if (piep_editor_grabbed_block) {
+		if (piep_editor_grabbed_block_vid !== undefined) {
 			piepEditorReleaseBlock();
 		}
 
@@ -631,7 +655,7 @@ domload(() => {
 		}
 
 		if (target._parent(".remove_block_btn")) {
-			const v_node_data = getVDomNodeData(piep_focus_node_vid);
+			const v_node_data = getVDomNodeData(v_dom, piep_focus_node_vid);
 			v_node_data.children.splice(v_node_data.index, 1);
 			recreateDom();
 			setPiepEditorFocusNode(undefined);
@@ -639,7 +663,7 @@ domload(() => {
 
 		if (target._parent(piep_editor)) {
 			piep_editor_float_menu_active = !!(content_active || target._parent(piep_editor_float_menu) || target._parent(".picker_wrapper"));
-			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid || piep_editor_grabbed_block) {
+			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid || piep_editor_grabbed_block_vid !== undefined) {
 				piep_editor_float_menu_active = false;
 			}
 
@@ -656,7 +680,7 @@ domload(() => {
 		const focus_node = getPiepEditorFocusNode();
 		const focus_offset = sel.focusOffset;
 		const vid = focus_node ? +focus_node.dataset.vid : -1;
-		const v_node_data = getVDomNodeData(vid);
+		const v_node_data = getVDomNodeData(v_dom, vid);
 		const v_node = v_node_data ? v_node_data.node : undefined;
 
 		//v_node.text === undefined
@@ -804,27 +828,13 @@ domload(() => {
 });
 
 function piepEditorMainLoop() {
-	if (piep_editor_grabbed_block) {
+	if (piep_editor_grabbed_block_vid !== undefined) {
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
-		piep_editor_grabbed_block.classList.add("grabbed_block");
 
-		let left =
-			mouse.pos.x -
-			piep_editor_grabbed_block_rect.width * 0.5 -
-			numberFromStr(piep_editor_grabbed_block_computed_style.marginLeft) -
-			piep_editor_rect.left;
-		let top =
-			mouse.pos.y -
-			piep_editor_grabbed_block_rect.height * 0.5 -
-			numberFromStr(piep_editor_grabbed_block_computed_style.marginTop) -
-			piep_editor_rect.top;
+		let left = mouse.pos.x - piep_editor_grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
+		let top = mouse.pos.y - piep_editor_grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
 
-		piep_editor_grabbed_block.style.left = left + "px";
-		piep_editor_grabbed_block.style.top = top + "px";
-
-		// let them be in any shape, they will change it based on the context anyway
-		// piep_editor_grabbed_block.style.width = piep_editor_grabbed_block_rect.width + "px";
-		// piep_editor_grabbed_block.style.height = piep_editor_grabbed_block_rect.height + "px";
+		piep_editor_grabbed_block_wrapper._set_absolute_pos(left, top);
 	}
 
 	requestAnimationFrame(piepEditorMainLoop);
@@ -836,29 +846,36 @@ function piepEditorGrabBlock() {
 	piep_editor_cursor.classList.add("hidden");
 	piep_editor.classList.add("grabbed_block");
 
-	piep_editor_grabbed_block = getPiepEditorFocusNode();
-	piep_editor_grabbed_block.classList.add("grabbed_block");
+	piep_editor_grabbed_block_vid = piep_focus_node_vid;
+
+	piep_editor_grabbed_block_wrapper._set_content(getPiepEditorFocusNode().outerHTML);
+	piep_editor_grabbed_block_wrapper.classList.add("visible");
 
 	// be as wide as necessary
-	piep_editor_grabbed_block.style.marginRight = "-100000px";
+	piep_editor_grabbed_block_wrapper.style.left = "0";
 	let ok_width;
-	if (piep_editor_grabbed_block.offsetWidth > 500) {
+	if (piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
 		// wrap
-		let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block.offsetWidth * piep_editor_grabbed_block.offsetHeight);
+		let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
 		ok_width = Math.min(800, pretty_width);
 	} else {
-		ok_width = piep_editor_grabbed_block.offsetWidth;
+		ok_width = piep_editor_grabbed_block_wrapper.offsetWidth;
 	}
-	piep_editor_grabbed_block.style.marginRight = "";
-	piep_editor_grabbed_block.style.width = ok_width.toPrecision(5) + "px";
+	piep_editor_grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
 
 	// ok we grabbed it!
 
-	// paddings / margins?
-	piep_editor_grabbed_block_computed_style = window.getComputedStyle(piep_editor_grabbed_block);
-	piep_editor_grabbed_block_rect = piep_editor_grabbed_block.getBoundingClientRect();
+	piep_editor_grabbed_block_wrapper_rect = piep_editor_grabbed_block_wrapper.getBoundingClientRect();
 
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
+
+	v_dom_overlay = cloneObject(v_dom);
+	const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
+	// remove once u release, but in general keep the ref hidden
+	// refresh ref just cause it's ezy
+	// const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
+	// grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
+	recreateDom(v_dom_overlay);
 
 	// prepare all possible places to drop the block yay
 	piep_editor_content._children(".blc").forEach((blc) => {
@@ -867,33 +884,30 @@ function piepEditorGrabBlock() {
 			return;
 		}
 
-		if (blc._parent(piep_editor_grabbed_block)) {
+		if (blc._parent(getPiepEditorNodeSelector(piep_editor_grabbed_block_vid))) {
 			// just no baby
 			return;
 		}
 
-		const grabbed_v_node_data = getVDomNodeData(+piep_editor_grabbed_block.dataset.vid);
-		const near_v_node_data = getVDomNodeData(+blc.dataset.vid);
+		const near_v_node_data = getVDomNodeData(v_dom_overlay, +blc.dataset.vid);
 
 		const blc_rect = blc.getBoundingClientRect();
+
+		// at this point we should store v_dom_overlay as a base val?
 
 		/**
 		 *
 		 * @param {-1 | 1} dir
 		 */
 		const insertAboveOrBelow = (dir) => {
-			let from = near_v_node_data.index;
+			let ind = near_v_node_data.index;
 			if (dir === 1) {
-				from++;
+				ind++;
 			}
-			const same_parent = near_v_node_data.children === grabbed_v_node_data.children;
-			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
-			if (same_parent && from > grabbed_v_node_data.index) {
-				from--;
-			}
-			near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
 
-			piepEditorReleaseBlock();
+			near_v_node_data.children.splice(ind, 0, grabbed_v_node_data.node);
+
+			recreateDom(v_dom_overlay);
 		};
 
 		/**
@@ -901,13 +915,7 @@ function piepEditorGrabBlock() {
 		 * @param {-1 | 1} dir
 		 */
 		const insertOnSides = (dir) => {
-			let from = near_v_node_data.index;
-			const same_parent = near_v_node_data.children === grabbed_v_node_data.children;
-
-			grabbed_v_node_data.children.splice(grabbed_v_node_data.index, 1);
-			if (same_parent && from > grabbed_v_node_data.index) {
-				from--;
-			}
+			let ind = near_v_node_data.index;
 
 			// actually here we should have block / inline-block checking, blocks can be wrapped,
 			// text not so, unless what we place nearby is also a block?
@@ -931,17 +939,17 @@ function piepEditorGrabBlock() {
 					insert_container.children.unshift(grabbed_v_node_data.node);
 				}
 
-				near_v_node_data.children.splice(from, 1, insert_container);
+				near_v_node_data.children.splice(ind, 1, insert_container);
 			} else {
 				// inline
 				if (dir === 1) {
-					from++;
+					ind++;
 				}
 
-				near_v_node_data.children.splice(from, 0, grabbed_v_node_data.node);
+				near_v_node_data.children.splice(ind, 0, grabbed_v_node_data.node);
 			}
 
-			piepEditorReleaseBlock();
+			recreateDom(v_dom_overlay);
 		};
 
 		const getInsertBlc = () => {
@@ -953,31 +961,36 @@ function piepEditorGrabBlock() {
 
 		const insert_left_blc = getInsertBlc();
 		insert_left_blc._set_absolute_pos(blc_rect.left - piep_editor_rect.left, blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top);
-		insert_left_blc.addEventListener("click", () => {
-			insertOnSides(-1);
-		});
 
 		const insert_right_blc = getInsertBlc();
 		insert_right_blc._set_absolute_pos(
 			blc_rect.left + blc_rect.width - piep_editor_rect.left,
 			blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
 		);
-		insert_right_blc.addEventListener("click", () => {
-			insertOnSides(1);
-		});
 
 		const insert_up_blc = getInsertBlc();
 		insert_up_blc._set_absolute_pos(blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left, blc_rect.top - piep_editor_rect.top);
-		insert_up_blc.addEventListener("click", () => {
-			insertAboveOrBelow(-1);
-		});
 
 		const insert_down_blc = getInsertBlc();
 		insert_down_blc._set_absolute_pos(
 			blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left,
 			blc_rect.top + blc_rect.height - piep_editor_rect.top
 		);
-		insert_down_blc.addEventListener("click", () => {
+
+		insert_left_blc.addEventListener("mouseenter", () => {
+			v_dom_overlay = cloneObject(v_dom);
+			insertOnSides(-1);
+		});
+		insert_right_blc.addEventListener("mouseenter", () => {
+			v_dom_overlay = cloneObject(v_dom);
+			insertOnSides(1);
+		});
+		insert_up_blc.addEventListener("mouseenter", () => {
+			v_dom_overlay = cloneObject(v_dom);
+			insertAboveOrBelow(-1);
+		});
+		insert_down_blc.addEventListener("mouseenter", () => {
+			v_dom_overlay = cloneObject(v_dom);
 			insertAboveOrBelow(1);
 		});
 
@@ -988,15 +1001,15 @@ function piepEditorGrabBlock() {
 		const setInsertBlcContents = (blc) => {
 			blc._set_content(html`<i class="fas fa-plus"></i>`);
 
-			blc._set_content(html`1`);
+			//blc._set_content(html`1`);
 			//blc.classList.add("multiple");
 			if (Math.random() > 0.8) {
 				blc._set_content(html`3`);
-				//blc.classList.add("multiple");
+				blc.classList.add("multiple");
 			}
 			if (Math.random() > 0.8) {
 				blc._set_content(html`2`);
-				//blc.classList.add("multiple");
+				blc.classList.add("multiple");
 			}
 		};
 
@@ -1014,14 +1027,17 @@ function piepEditorGrabBlock() {
 }
 
 function piepEditorReleaseBlock() {
-	piep_editor_grabbed_block = undefined;
-	piep_editor_grabbed_block_computed_style = undefined;
-	piep_editor_grabbed_block_rect = undefined;
+	piep_editor_grabbed_block_vid = undefined;
+	piep_editor_grabbed_block_wrapper_rect = undefined;
+	piep_editor_grabbed_block_wrapper.classList.remove("visible");
 	piep_editor.classList.remove("grabbed_block");
 
 	piep_editor._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
 	});
+
+	// use whatever the user have seen already, smooth
+	v_dom = v_dom_overlay;
 
 	recreateDom();
 }
@@ -1161,7 +1177,7 @@ function setPiepEditorFocusNode(vid) {
 	focus_node.classList.add("piep_focus");
 	piep_editor_inspector_tree._child(`.tblc_${vid}`).classList.add("selected");
 
-	const v_node = findNodeInVDom(+focus_node.dataset.vid);
+	const v_node = findNodeInVDom(v_dom, +focus_node.dataset.vid);
 	piep_editor_float_menu._children("[data-style]").forEach((input) => {
 		const prop = input.dataset.style;
 		let val = def(v_node.styles[prop], "");
@@ -1192,8 +1208,22 @@ function setPiepEditorFocusNode(vid) {
 	piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
 }
 
+/**
+ *
+ * @param {number} vid
+ * @returns {string}
+ */
+function getPiepEditorNodeSelector(vid) {
+	return `.blc_${vid}`;
+}
+
+/**
+ *
+ * @param {number} vid
+ * @returns {PiepNode}
+ */
 function getPiepEditorNode(vid) {
-	return piep_editor_content._child(`.blc_${vid}`);
+	return piep_editor_content._child(getPiepEditorNodeSelector(vid));
 }
 
 /**
