@@ -1,5 +1,11 @@
 /* js[view] */
 
+/**
+ * @typedef {{
+ * _insert_action()
+ * } & PiepNode} insertBlc
+ */
+
 /** @type {PiepNode} */
 let piep_editor;
 /** @type {PiepNode} */
@@ -34,6 +40,8 @@ let piep_editor_grabbed_block_wrapper;
 let piep_editor_grabbed_block_wrapper_rect;
 /** @type {vDomNode} */
 let v_dom_overlay;
+/** @type {insertBlc} */
+let piep_editor_current_insert_blc;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -46,6 +54,7 @@ const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input",
  * children: vDomNode[]
  * attrs: object
  * classes: string[]
+ * insert?: boolean
  * }} vDomNode
  */
 
@@ -54,7 +63,7 @@ let v_dom = {
 	tag: "div",
 	id: 0,
 	text: undefined,
-	styles: {},
+	styles: { display: "flex", flexDirection: "column" },
 	attrs: {},
 	classes: [],
 	children: [
@@ -225,7 +234,9 @@ function recreateDom(target_v_dom = undefined) {
 				const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(child, level + 1);
 
 				if (child.id === piep_editor_grabbed_block_vid) {
-					continue;
+					if (!piep_editor_current_insert_blc || !child.insert) {
+						continue;
+					}
 				}
 				body += sub_content_html;
 				inspector_tree_html += sub_inspector_tree_html;
@@ -836,6 +847,20 @@ function piepEditorMainLoop() {
 		let top = mouse.pos.y - piep_editor_grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
 
 		piep_editor_grabbed_block_wrapper._set_absolute_pos(left, top);
+
+		/** @type {insertBlc} */
+		// @ts-ignore
+		const insert_blc = mouse.target ? mouse.target._parent(".insert_blc") : undefined;
+
+		if (piep_editor_current_insert_blc !== insert_blc) {
+			piep_editor_current_insert_blc = insert_blc;
+
+			cloneVDom(v_dom, v_dom_overlay);
+			if (piep_editor_current_insert_blc) {
+				piep_editor_current_insert_blc._insert_action();
+			}
+			recreateDom(v_dom_overlay);
+		}
 	}
 
 	requestAnimationFrame(piepEditorMainLoop);
@@ -872,10 +897,11 @@ function piepEditorGrabBlock() {
 
 	const piep_editor_rect = piep_editor.getBoundingClientRect();
 
-	v_dom_overlay = cloneObject(v_dom);
-	const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
-
-	// idk why it's here
+	if (!v_dom_overlay) {
+		// @ts-ignore
+		v_dom_overlay = {};
+	}
+	cloneVDom(v_dom, v_dom_overlay);
 	recreateDom(v_dom_overlay);
 
 	// prepare all possible places to drop the block yay
@@ -890,25 +916,27 @@ function piepEditorGrabBlock() {
 			return;
 		}
 
-		const near_v_node_data = getVDomNodeData(v_dom_overlay, +blc.dataset.vid);
-
 		const blc_rect = blc.getBoundingClientRect();
-
-		// at this point we should store v_dom_overlay as a base val?
+		const blc_vid = +blc.dataset.vid;
 
 		/**
 		 *
 		 * @param {-1 | 1} dir
 		 */
 		const insertAboveOrBelow = (dir) => {
+			const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
+			const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+
 			let ind = near_v_node_data.index;
 			if (dir === 1) {
 				ind++;
 			}
 
-			near_v_node_data.children.splice(ind, 0, grabbed_v_node_data.node);
+			/** @type {vDomNode} */
+			const grabbed_node_copy = cloneObject(grabbed_v_node_data.node);
+			grabbed_node_copy.insert = true;
 
-			recreateDom(v_dom_overlay);
+			near_v_node_data.children.splice(ind, 0, grabbed_node_copy);
 		};
 
 		/**
@@ -916,12 +944,19 @@ function piepEditorGrabBlock() {
 		 * @param {-1 | 1} dir
 		 */
 		const insertOnSides = (dir) => {
+			const grabbed_v_node_data = getVDomNodeData(v_dom_overlay, piep_editor_grabbed_block_vid);
+			const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+
 			let ind = near_v_node_data.index;
+
+			/** @type {vDomNode} */
+			const grabbed_node_copy = cloneObject(grabbed_v_node_data.node);
+			grabbed_node_copy.insert = true;
 
 			// actually here we should have block / inline-block checking, blocks can be wrapped,
 			// text not so, unless what we place nearby is also a block?
 			if (near_v_node_data.node.text === undefined) {
-				// block
+				// block layout
 
 				/** @type {vDomNode} */
 				const insert_container = {
@@ -935,29 +970,34 @@ function piepEditorGrabBlock() {
 				};
 
 				if (dir === 1) {
-					insert_container.children.push(grabbed_v_node_data.node);
+					insert_container.children.push(grabbed_node_copy);
 				} else {
-					insert_container.children.unshift(grabbed_v_node_data.node);
+					insert_container.children.unshift(grabbed_node_copy);
 				}
 
 				near_v_node_data.children.splice(ind, 1, insert_container);
 			} else {
-				// inline
+				// inline layout
+
 				if (dir === 1) {
 					ind++;
 				}
 
-				near_v_node_data.children.splice(ind, 0, grabbed_v_node_data.node);
+				near_v_node_data.children.splice(ind, 0, grabbed_node_copy);
 			}
-
-			recreateDom(v_dom_overlay);
 		};
 
+		/**
+		 *
+		 * @returns {insertBlc}
+		 */
 		const getInsertBlc = () => {
-			const insert_blc = $(document.createElement("DIV"));
+			const insert_blc = document.createElement("DIV");
 			insert_blc.classList.add("insert_blc");
 			piep_editor.append(insert_blc);
-			return insert_blc;
+
+			// @ts-ignore
+			return $(insert_blc);
 		};
 
 		const insert_left_blc = getInsertBlc();
@@ -978,22 +1018,18 @@ function piepEditorGrabBlock() {
 			blc_rect.top + blc_rect.height - piep_editor_rect.top
 		);
 
-		insert_left_blc.addEventListener("mouseenter", () => {
-			v_dom_overlay = cloneObject(v_dom);
+		insert_left_blc._insert_action = () => {
 			insertOnSides(-1);
-		});
-		insert_right_blc.addEventListener("mouseenter", () => {
-			v_dom_overlay = cloneObject(v_dom);
+		};
+		insert_right_blc._insert_action = () => {
 			insertOnSides(1);
-		});
-		insert_up_blc.addEventListener("mouseenter", () => {
-			v_dom_overlay = cloneObject(v_dom);
+		};
+		insert_up_blc._insert_action = () => {
 			insertAboveOrBelow(-1);
-		});
-		insert_down_blc.addEventListener("mouseenter", () => {
-			v_dom_overlay = cloneObject(v_dom);
+		};
+		insert_down_blc._insert_action = () => {
 			insertAboveOrBelow(1);
-		});
+		};
 
 		/**
 		 *
@@ -1019,12 +1055,30 @@ function piepEditorGrabBlock() {
 		setInsertBlcContents(insert_up_blc);
 		setInsertBlcContents(insert_down_blc);
 
+		const near_v_node_data = getVDomNodeData(v_dom_overlay, blc_vid);
+
 		// TODO: rethink that baby
 		if (near_v_node_data.node.text !== undefined) {
 			insert_up_blc.remove();
 			insert_down_blc.remove();
 		}
 	});
+}
+
+/**
+ *
+ * @param {vDomNode} src
+ * @param {vDomNode} target
+ * @returns
+ */
+function cloneVDom(src, target) {
+	if (target) {
+		target.attrs = {};
+		target.classes = [];
+		target.children = [];
+		target.styles = {};
+	}
+	deepAssign(target, src);
 }
 
 function piepEditorReleaseBlock() {
@@ -1036,7 +1090,7 @@ function piepEditorReleaseBlock() {
 	});
 
 	// use whatever the user have seen already, smooth
-	v_dom = v_dom_overlay;
+	cloneVDom(v_dom_overlay, v_dom);
 
 	// remove grabbed block that was just hidden so far
 	// MAYBE ONLY IN CASE IT'S A DIFFERENT POSITION?
