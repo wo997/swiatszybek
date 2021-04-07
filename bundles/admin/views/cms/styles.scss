@@ -137,6 +137,10 @@
 		//box-shadow: 0 0 0 1px #7775;
 	}
 
+	&.has_insert_pos .insert_blc:not(:hover) {
+		opacity: 0.3;
+	}
+
 	.insert_blc {
 		& {
 			--insert_blc_clr: var(--focus-clr);

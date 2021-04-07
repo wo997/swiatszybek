@@ -42,6 +42,8 @@ let piep_editor_grabbed_block_wrapper_rect;
 let v_dom_overlay;
 /** @type {insertBlc} */
 let piep_editor_current_insert_blc;
+/** @type {boolean} */
+let piep_editor_has_insert_pos;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -852,6 +854,7 @@ function piepEditorMainLoop() {
 		// @ts-ignore
 		const insert_blc = mouse.target ? mouse.target._parent(".insert_blc") : undefined;
 
+		piep_editor_has_insert_pos = !!piep_editor_current_insert_blc;
 		if (piep_editor_current_insert_blc !== insert_blc) {
 			piep_editor_current_insert_blc = insert_blc;
 
@@ -859,9 +862,13 @@ function piepEditorMainLoop() {
 			if (piep_editor_current_insert_blc) {
 				piep_editor_current_insert_blc._insert_action();
 			}
+
 			recreateDom(v_dom_overlay);
 		}
 	}
+
+	piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
+	piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
 
 	requestAnimationFrame(piepEditorMainLoop);
 }
@@ -1099,6 +1106,8 @@ function piepEditorReleaseBlock() {
 
 	piep_editor_grabbed_block_vid = undefined;
 	piep_editor_grabbed_block_wrapper_rect = undefined;
+	piep_editor_current_insert_blc = undefined;
+	piep_editor_has_insert_pos = false;
 
 	recreateDom();
 }
