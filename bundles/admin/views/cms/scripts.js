@@ -834,6 +834,7 @@ function piepEditorGrabBlock() {
 	piep_editor_float_focus.classList.add("hidden");
 	piep_editor_float_menu.classList.add("hidden");
 	piep_editor_cursor.classList.add("hidden");
+	piep_editor.classList.add("grabbed_block");
 
 	piep_editor_grabbed_block = getPiepEditorFocusNode();
 	piep_editor_grabbed_block.classList.add("grabbed_block");
@@ -1016,6 +1017,7 @@ function piepEditorReleaseBlock() {
 	piep_editor_grabbed_block = undefined;
 	piep_editor_grabbed_block_computed_style = undefined;
 	piep_editor_grabbed_block_rect = undefined;
+	piep_editor.classList.remove("grabbed_block");
 
 	piep_editor._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
