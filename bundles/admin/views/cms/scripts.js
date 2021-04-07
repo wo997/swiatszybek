@@ -131,7 +131,7 @@ let v_dom = /*{
 			backgroundColor: "red",
 			padding: "20px",
 		},
-		children: undefined,
+		children: [],
 		attrs: {},
 		classes: [],
 	},
@@ -994,6 +994,14 @@ function piepEditorGrabBlock() {
 			}
 		};
 
+		const insertInside = () => {
+			/** @type {vDomNode} */
+			const grabbed_node_copy = cloneObject(findNodeInVDomById(v_dom_overlay, piep_editor_grabbed_block_vid));
+			grabbed_node_copy.insert = true;
+
+			findNodeInVDomById(v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
+		};
+
 		/**
 		 *
 		 * @returns {insertBlc}
@@ -1005,37 +1013,6 @@ function piepEditorGrabBlock() {
 
 			// @ts-ignore
 			return $(insert_blc);
-		};
-
-		const insert_left_blc = getInsertBlc();
-		insert_left_blc._set_absolute_pos(blc_rect.left - piep_editor_rect.left, blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top);
-
-		const insert_right_blc = getInsertBlc();
-		insert_right_blc._set_absolute_pos(
-			blc_rect.left + blc_rect.width - piep_editor_rect.left,
-			blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
-		);
-
-		const insert_up_blc = getInsertBlc();
-		insert_up_blc._set_absolute_pos(blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left, blc_rect.top - piep_editor_rect.top);
-
-		const insert_down_blc = getInsertBlc();
-		insert_down_blc._set_absolute_pos(
-			blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left,
-			blc_rect.top + blc_rect.height - piep_editor_rect.top
-		);
-
-		insert_left_blc._insert_action = () => {
-			insertOnSides(-1);
-		};
-		insert_right_blc._insert_action = () => {
-			insertOnSides(1);
-		};
-		insert_up_blc._insert_action = () => {
-			insertAboveOrBelow(-1);
-		};
-		insert_down_blc._insert_action = () => {
-			insertAboveOrBelow(1);
 		};
 
 		/**
@@ -1057,17 +1034,59 @@ function piepEditorGrabBlock() {
 			}
 		};
 
-		setInsertBlcContents(insert_left_blc);
-		setInsertBlcContents(insert_right_blc);
-		setInsertBlcContents(insert_up_blc);
-		setInsertBlcContents(insert_down_blc);
-
 		const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
+
+		// left
+		const insert_left_blc = getInsertBlc();
+		insert_left_blc._set_absolute_pos(blc_rect.left - piep_editor_rect.left, blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top);
+		insert_left_blc._insert_action = () => {
+			insertOnSides(-1);
+		};
+		setInsertBlcContents(insert_left_blc);
+
+		// right
+		const insert_right_blc = getInsertBlc();
+		insert_right_blc._set_absolute_pos(
+			blc_rect.left + blc_rect.width - piep_editor_rect.left,
+			blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
+		);
+		insert_right_blc._insert_action = () => {
+			insertOnSides(1);
+		};
+		setInsertBlcContents(insert_right_blc);
 
 		// TODO: rethink that baby
 		if (near_v_node_data.v_node.text !== undefined) {
-			insert_up_blc.remove();
-			insert_down_blc.remove();
+			// up
+			const insert_up_blc = getInsertBlc();
+			insert_up_blc._set_absolute_pos(blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left, blc_rect.top - piep_editor_rect.top);
+			insert_up_blc._insert_action = () => {
+				insertAboveOrBelow(-1);
+			};
+			setInsertBlcContents(insert_up_blc);
+
+			// down
+			const insert_down_blc = getInsertBlc();
+			insert_down_blc._set_absolute_pos(
+				blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left,
+				blc_rect.top + blc_rect.height - piep_editor_rect.top
+			);
+			insert_down_blc._insert_action = () => {
+				insertAboveOrBelow(1);
+			};
+			setInsertBlcContents(insert_down_blc);
+		}
+
+		if (isEquivalent(near_v_node_data.v_node.children, [])) {
+			const insert_inside_blc = getInsertBlc();
+			insert_inside_blc._set_absolute_pos(
+				blc_rect.left + blc_rect.width * 0.5 - piep_editor_rect.left,
+				blc_rect.top + blc_rect.height * 0.5 - piep_editor_rect.top
+			);
+			insert_inside_blc._insert_action = () => {
+				insertInside();
+			};
+			setInsertBlcContents(insert_inside_blc);
 		}
 	});
 }
