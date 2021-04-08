@@ -56,22 +56,23 @@ class Cart
 
     public function getAllData()
     {
-        $product_ids = [];
-        foreach ($this->products as
-            /** @var CartProduct */
-            $product) {
-            $product_ids[] = $product["product_id"];
-        }
+        $cart_product_ids = array_column($this->products, "product_id");
 
         $products_price = 0;
 
         $products_data = [];
-        if ($product_ids) {
-            $product_ids_string = join(",", $product_ids);
+        if ($cart_product_ids) {
+            $product_ids_string = join(",", $cart_product_ids);
             $product_index = -1;
 
             $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url img_url, __name name, __url url, stock, 0 as qty
                 FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+
+            $product_ids_found = array_column($products_data, "product_id");
+            if (count($product_ids_found) !== count($cart_product_ids)) {
+                $this->products = array_filter($this->products, fn ($x) => in_array($x["product_id"], $product_ids_found));
+                $this->save();
+            }
 
             foreach ($products_data as $key => $product_data) {
                 $product_index++;
