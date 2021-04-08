@@ -1148,7 +1148,7 @@ function piepEditorReleaseBlock() {
 		deepAssign(v_dom, v_dom_overlay);
 
 		// remove grabbed block that was just hidden so far
-		const grabbed_v_node_data = getVDomNodeDataById(v_dom, piep_editor_grabbed_block_vid);
+		const grabbed_v_node_data = getVDomNodeData(v_dom, (v_node) => !v_node.insert && v_node.id === piep_editor_grabbed_block_vid);
 		grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
 		const v_node_with_insert = findNodeInVDom(v_dom, (v_node) => v_node.insert);
