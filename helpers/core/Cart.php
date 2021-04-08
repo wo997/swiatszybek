@@ -2,7 +2,7 @@
 
 /**
  * 
- * @typedef CartProduct {
+                                                                                         * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -56,6 +56,8 @@ class Cart
 
     public function getAllData()
     {
+        // this function might return if anything is missing etc
+
         $cart_product_ids = array_column($this->products, "product_id");
 
         $products_price = 0;
@@ -65,14 +67,14 @@ class Cart
             $product_ids_string = join(",", $cart_product_ids);
             $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __img_url img_url, __name name, __url url, stock, 0 as qty
-                FROM product WHERE product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, p.__img_url img_url, p.__name name, p.__url url, p.stock, 0 as qty
+                FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             $product_ids_found = array_column($products_data, "product_id");
-            if (count($product_ids_found) !== count($cart_product_ids)) {
-                $this->products = array_filter($this->products, fn ($x) => in_array($x["product_id"], $product_ids_found));
-                $this->save();
-            }
+            $this->products = array_values(array_filter($this->products, fn ($x) => in_array($x["product_id"], $product_ids_found)));
+            $this->save();
+            // if (count($product_ids_found) !== count($cart_product_ids)) {
+            // }
 
             foreach ($products_data as $key => $product_data) {
                 $product_index++;
