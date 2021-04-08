@@ -101,6 +101,7 @@ function product_featureOptionComp(
 				<input
 					class="field small inline"
 					inputmode="numeric"
+					data-number
 					data-node="{${comp._nodes.physical_value_input}}"
 					data-bind="{${data.double_base}}"
 					data-input_delay="500"
@@ -182,7 +183,7 @@ function product_featureOptionComp(
 					}
 
 					/** @type {Product_FeatureOptionCompData} */
-					const product_feature_option = { product_feature_option_id: data.product_feature_option_id };
+					const save_product_feature_option = { product_feature_option_id: data.product_feature_option_id };
 
 					const curr_option = product_feature_options.find((opt) => opt.product_feature_option_id === data.product_feature_option_id);
 
@@ -192,13 +193,13 @@ function product_featureOptionComp(
 						if (curr_option.text_value !== data.text_value) {
 							need_request = true;
 						}
-						product_feature_option.text_value = data.text_value;
+						save_product_feature_option.text_value = data.text_value;
 					}
 					if (data.data_type === "datetime_value") {
 						if (curr_option.datetime_value !== data.datetime_value) {
 							need_request = true;
 						}
-						product_feature_option.datetime_value = data.datetime_value;
+						save_product_feature_option.datetime_value = data.datetime_value;
 					}
 					if (data.data_type === "double_value") {
 						if (
@@ -209,24 +210,24 @@ function product_featureOptionComp(
 							need_request = true;
 						}
 
-						// send everything and let backend decide what to do
-						product_feature_option.double_value = data.double_value;
-						product_feature_option.double_base = data.double_base;
-						product_feature_option.unit_id = data.unit_id;
+						if (data.unit_id === null) {
+							save_product_feature_option.double_value = data.double_value;
+						} else {
+							save_product_feature_option.double_base = data.double_base;
+							save_product_feature_option.unit_id = data.unit_id;
+						}
 					}
 
 					if (need_request) {
-						comp._render();
-
-						if (isEquivalent(last_saved_product_feature_option, product_feature_option)) {
+						if (isEquivalent(last_saved_product_feature_option, save_product_feature_option)) {
 							return;
 						}
-						last_saved_product_feature_option = product_feature_option;
+						last_saved_product_feature_option = save_product_feature_option;
 
 						xhr({
 							url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
 							params: {
-								product_feature_option,
+								product_feature_option: save_product_feature_option,
 							},
 							success: (res) => {
 								if (refresh) {

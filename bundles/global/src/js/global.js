@@ -197,14 +197,23 @@ function escapeUrl(string) {
 function setValue(input, value = null, options = {}) {
 	input = $(input);
 
-	// if (!options.force) {
-	// 	if (value === null || value === undefined || isEquivalent(input._get_value(), value)) {
-	// 		if (!options.quiet) {
-	// 			input._dispatch_change();
-	// 		}
-	// 		return;
-	// 	}
-	// }
+	if (!options.force) {
+		let same = true;
+		if (value !== null && value !== undefined) {
+			if (input.hasAttribute("data-number")) {
+				same = input._get_value() === numberFromStr(value);
+			} else {
+				same = isEquivalent(input._get_value(), value);
+			}
+		}
+
+		if (same) {
+			if (!options.quiet) {
+				input._dispatch_change();
+			}
+			return;
+		}
+	}
 
 	if (input.classList.contains("radio_group")) {
 		input.dataset.value = value;
@@ -326,7 +335,7 @@ function getValue(input, options = {}) {
 			v = numberFromStr(v);
 			if (was_v != v) {
 				setTimeout(() => {
-					input._set_value(v, { quiet: true, force: true });
+					//input._set_value(v, { quiet: true, force: true });
 				});
 			}
 		}

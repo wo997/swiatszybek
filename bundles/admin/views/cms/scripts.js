@@ -1,11 +1,5 @@
 /* js[view] */
 
-/**
- * @typedef {{
- * _insert_action()
- * } & PiepNode} insertBlc
- */
-
 /** @type {PiepNode} */
 let piep_editor;
 /** @type {PiepNode} */
@@ -46,6 +40,8 @@ let piep_editor_current_insert_blc;
 let piep_editor_has_insert_pos;
 /** @type {number} */
 let piep_editor_last_v_node_label_vid;
+/** @type {PiepNode} */
+let piep_editor_float_multi_insert;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -452,6 +448,9 @@ domload(() => {
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
 	piep_editor_grabbed_block_wrapper = piep_editor._child(".piep_editor_grabbed_block_wrapper");
+
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
+	piep_editor_float_multi_insert = piep_editor._child(".piep_editor_float_multi_insert");
 
 	const initInspector = () => {
 		piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
@@ -900,17 +899,39 @@ function piepEditorMainLoop() {
 
 			v_dom_overlay.splice(0, v_dom_overlay.length);
 			deepAssign(v_dom_overlay, v_dom);
-			if (piep_editor_current_insert_blc) {
-				piep_editor_current_insert_blc._insert_action();
+
+			let showing_suggestion = false;
+
+			if (insert_blc) {
+				if (insert_blc.classList.contains("multiple")) {
+					// clean up
+					piep_editor_float_multi_insert._direct_children().forEach((c) => {
+						piep_editor.append(c);
+						c.classList.add("hidden");
+					});
+					const count = insert_blc._popup_blcs;
+					insert_blc._popup_blcs.forEach((c) => {
+						c.style.left = "0";
+						c.style.top = "0";
+						piep_editor_float_multi_insert.append(c);
+						c.classList.remove("hidden");
+					});
+					piep_editor_float_multi_insert._set_absolute_pos(100, 199);
+					const radius = 50;
+					piep_editor_float_multi_insert.style.width = radius + "px";
+					piep_editor_float_multi_insert.style.height = radius + "px";
+				} else {
+					insert_blc._insert_action();
+					piepEditorShowFocusToNode(piep_editor_grabbed_block_vid);
+					showing_suggestion = true;
+				}
+			}
+
+			if (!showing_suggestion) {
+				piep_editor_float_focus.classList.add("hidden");
 			}
 
 			recreateDom(v_dom_overlay);
-
-			if (piep_editor_current_insert_blc) {
-				piepEditorShowFocusToNode(piep_editor_grabbed_block_vid);
-			} else {
-				piep_editor_float_focus.classList.add("hidden");
-			}
 		}
 
 		piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
@@ -959,7 +980,28 @@ function piepEditorGrabBlock() {
 	deepAssign(v_dom_overlay, v_dom);
 	recreateDom(v_dom_overlay);
 
-	// prepare all possible places to drop the block yay
+	// prepare all possible places to drop the block yay\
+
+	/**
+	 * @typedef {{
+	 * _insert_action()
+	 * _popup_blcs: insertBlc[]
+	 * } & PiepNode} insertBlc
+	 */
+
+	/**
+	 *
+	 * @returns {insertBlc}
+	 */
+	const getInsertBlc = () => {
+		const insert_blc = document.createElement("DIV");
+		insert_blc.classList.add("insert_blc");
+		piep_editor.append(insert_blc);
+
+		// @ts-ignore
+		return $(insert_blc);
+	};
+
 	piep_editor_content._children(".blc").forEach((blc) => {
 		if (blc._parent(getPiepEditorNodeSelector(piep_editor_grabbed_block_vid))) {
 			// just no baby
@@ -1045,38 +1087,6 @@ function piepEditorGrabBlock() {
 			findNodeInVDomById(v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
 		};
 
-		/**
-		 *
-		 * @returns {insertBlc}
-		 */
-		const getInsertBlc = () => {
-			const insert_blc = document.createElement("DIV");
-			insert_blc.classList.add("insert_blc");
-			piep_editor.append(insert_blc);
-
-			// @ts-ignore
-			return $(insert_blc);
-		};
-
-		/**
-		 *
-		 * @param {PiepNode} blc
-		 */
-		const setInsertBlcContents = (blc) => {
-			blc._set_content(html`<i class="fas fa-plus"></i>`);
-
-			//blc._set_content(html`1`);
-			//blc.classList.add("multiple");
-			if (Math.random() > 0.8) {
-				blc._set_content(html`3`);
-				blc.classList.add("multiple");
-			}
-			if (Math.random() > 0.8) {
-				blc._set_content(html`2`);
-				blc.classList.add("multiple");
-			}
-		};
-
 		const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
 
 		// left
@@ -1085,7 +1095,6 @@ function piepEditorGrabBlock() {
 		insert_left_blc._insert_action = () => {
 			insertOnSides(-1);
 		};
-		setInsertBlcContents(insert_left_blc);
 
 		// right
 		const insert_right_blc = getInsertBlc();
@@ -1096,7 +1105,6 @@ function piepEditorGrabBlock() {
 		insert_right_blc._insert_action = () => {
 			insertOnSides(1);
 		};
-		setInsertBlcContents(insert_right_blc);
 
 		// TODO: rethink that baby
 		if (near_v_node_data.v_node.text !== undefined) {
@@ -1106,7 +1114,6 @@ function piepEditorGrabBlock() {
 			insert_up_blc._insert_action = () => {
 				insertAboveOrBelow(-1);
 			};
-			setInsertBlcContents(insert_up_blc);
 
 			// down
 			const insert_down_blc = getInsertBlc();
@@ -1117,7 +1124,6 @@ function piepEditorGrabBlock() {
 			insert_down_blc._insert_action = () => {
 				insertAboveOrBelow(1);
 			};
-			setInsertBlcContents(insert_down_blc);
 		}
 
 		if (isEquivalent(near_v_node_data.v_node.children, [])) {
@@ -1129,41 +1135,195 @@ function piepEditorGrabBlock() {
 			insert_inside_blc._insert_action = () => {
 				insertInside();
 			};
-			setInsertBlcContents(insert_inside_blc);
 		}
 	});
 
-	while (true) {
-		let fine = true;
+	piep_editor._children(".insert_blc").forEach((insert_blc) => {
+		insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
+		insert_blc.dataset.wght = "1";
+	});
 
+	// let ignore_ids_completely = [];
+
+	// while (true) {
+	// 	let fine = true;
+
+	// 	let ignore_ids = cloneObject(ignore_ids_completely);
+
+	// 	const insert_blcs = piep_editor._children(".insert_blc");
+	// 	const insert_blcs_len = insert_blcs.length;
+	// 	for (let a = 0; a < insert_blcs_len; a++) {
+	// 		if (ignore_ids.includes(a)) {
+	// 			continue;
+	// 		}
+	// 		const blc_a = insert_blcs[a];
+	// 		const blc_a_rect = blc_a.getBoundingClientRect();
+	// 		for (let b = a + 1; b < insert_blcs_len; b++) {
+	// 			if (ignore_ids.includes(b)) {
+	// 				continue;
+	// 			}
+	// 			const blc_b = insert_blcs[b];
+	// 			const blc_b_rect = blc_b.getBoundingClientRect();
+
+	// 			const off = 2;
+
+	// 			const inside_horizontally =
+	// 				blc_a_rect.left + blc_a_rect.width + off > blc_b_rect.left && blc_a_rect.left < blc_b_rect.left + blc_b_rect.width + off;
+
+	// 			const inside_vertically =
+	// 				blc_a_rect.top + blc_a_rect.height + off > blc_b_rect.top && blc_a_rect.top < blc_b_rect.top + blc_b_rect.height + off;
+
+	// 			if (inside_horizontally && inside_vertically) {
+	// 				fine = false;
+	// 				ignore_ids.push(a, b);
+	// 				blc_a.style.opacity = "0.5";
+	// 				blc_b.style.opacity = "0.5";
+
+	// 				const weight_a = +blc_a.dataset.wght;
+	// 				const weight_b = +blc_b.dataset.wght;
+	// 				const weight = weight_a + weight_b;
+
+	// 				//let existing_multiple;
+
+	// 				if (blc_a.classList.contains("multiple") || blc_b.classList.contains("multiple")) {
+	// 					// TEMPORARY
+	// 					continue;
+	// 				}
+
+	// 				const master_insert_blc = getInsertBlc();
+	// 				master_insert_blc._set_absolute_pos(
+	// 					(blc_a_rect.left + blc_b_rect.left + blc_a_rect.width) * 0.5 - piep_editor_rect.left,
+	// 					(blc_a_rect.top + blc_b_rect.top + blc_a_rect.height) * 0.5 - piep_editor_rect.top
+	// 				);
+	// 				master_insert_blc.classList.add("multiple", "insert_blc");
+	// 				master_insert_blc._set_content(weight);
+
+	//                 const insert_blc = document.createElement("DIV");
+	//                 insert_blc.classList.add("insert_blc");
+	//                 piep_editor.append(insert_blc);
+
+	//                 // @ts-ignore
+	//                 return $(insert_blc);
+	// 			}
+	// 		}
+	// 	}
+
+	// 	if (fine) {
+	// 		break;
+	// 	}
+	// 	break;
+	// }
+
+	let shrunk_ids = [];
+
+	while (true) {
+		/**
+		 * @type {{
+		 * a: number
+		 * b: number
+		 * cover_area: number
+		 * }[]}
+		 */
+		let covering_blcs_data = [];
+
+		/** @type {insertBlc[]} */
+		// @ts-ignore
 		const insert_blcs = piep_editor._children(".insert_blc");
 		const insert_blcs_len = insert_blcs.length;
 		for (let a = 0; a < insert_blcs_len; a++) {
+			if (shrunk_ids.includes(a)) {
+				continue;
+			}
 			const blc_a = insert_blcs[a];
 			const blc_a_rect = blc_a.getBoundingClientRect();
 			for (let b = a + 1; b < insert_blcs_len; b++) {
+				if (shrunk_ids.includes(b)) {
+					continue;
+				}
 				const blc_b = insert_blcs[b];
 				const blc_b_rect = blc_b.getBoundingClientRect();
 
-				const off = 2;
+				const off = 2; // added to width as margin (half on each side ofc)
 
-				const inside_horizontally =
-					blc_a_rect.left + blc_a_rect.width + off > blc_b_rect.left && blc_a_rect.left < blc_b_rect.left + blc_b_rect.width + off;
+				const cover_x = Math.max(0, blc_a_rect.width + off - Math.abs(blc_a_rect.left - blc_b_rect.left));
+				const cover_y = Math.max(0, blc_a_rect.height + off - Math.abs(blc_a_rect.top - blc_b_rect.top));
 
-				const inside_vertically =
-					blc_a_rect.top + blc_a_rect.height + off > blc_b_rect.top && blc_a_rect.top < blc_b_rect.top + blc_b_rect.height + off;
+				const cover_area = cover_x * cover_y;
 
-				if (inside_horizontally && inside_vertically) {
-					fine = false;
-					console.log(blc_a, blc_b);
+				if (cover_area > 0) {
+					covering_blcs_data.push({ a, b, cover_area });
 				}
 			}
 		}
 
-		if (fine) {
+		if (covering_blcs_data.length === 0) {
 			break;
 		}
-		break;
+
+		covering_blcs_data.sort((a, b) => Math.sign(b.cover_area - a.cover_area));
+
+		covering_blcs_data.forEach((covering_blcs) => {
+			const a = covering_blcs.a;
+			const b = covering_blcs.b;
+
+			if (shrunk_ids.includes(a) || shrunk_ids.includes(b)) {
+				// could happen when we are in this loop
+				return;
+			}
+
+			const blc_a = insert_blcs[a];
+			const blc_b = insert_blcs[b];
+
+			const blc_a_rect = blc_a.getBoundingClientRect();
+			const blc_b_rect = blc_b.getBoundingClientRect();
+
+			const weight_a = +blc_a.dataset.wght;
+			const weight_b = +blc_b.dataset.wght;
+			const weight = weight_a + weight_b;
+
+			const master_insert_blc = getInsertBlc();
+			master_insert_blc.classList.add("multiple");
+
+			shrunk_ids.push(a, b);
+			blc_a.classList.add("hidden");
+			blc_b.classList.add("hidden");
+
+			const popup_blcs = [];
+
+			if (weight_a === 1) {
+				popup_blcs.push(blc_a);
+			} else {
+				popup_blcs.push(...blc_a._popup_blcs);
+			}
+			if (weight_b === 1) {
+				popup_blcs.push(blc_b);
+			} else {
+				popup_blcs.push(...blc_b._popup_blcs);
+			}
+
+			master_insert_blc._popup_blcs = popup_blcs;
+
+			// if (weight_a === 1) {
+			// 	if (weight_b === 1) {
+			// 		// a blc, b blc
+			// 	} else {
+			// 		// a blc, b master
+			// 	}
+			// } else {
+			// 	if (weight_b === 1) {
+			// 		// a master, b blc
+			// 	} else {
+			// 		// a master, b master
+			// 	}
+			// }
+
+			master_insert_blc._set_absolute_pos(
+				(blc_a_rect.left * weight_a) / weight + (blc_b_rect.left * weight_b) / weight + blc_a_rect.width * 0.5 - piep_editor_rect.left,
+				(blc_a_rect.top * weight_a) / weight + (blc_b_rect.top * weight_b) / weight + blc_a_rect.height * 0.5 - piep_editor_rect.top
+			);
+			master_insert_blc._set_content(weight);
+			master_insert_blc.dataset.wght = weight + "";
+		});
 	}
 }
 

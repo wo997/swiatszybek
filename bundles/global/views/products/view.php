@@ -69,6 +69,9 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
         $where .= " AND product_feature_id = $feature_id";
     }
     //$product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY pos ASC");
+    if (!$option_ids_desc_csv) {
+        return "";
+    }
     $product_feature_options = DB::fetchArr("SELECT product_feature_option_id, value, extra_json FROM product_feature_option WHERE $where ORDER BY FIELD(product_feature_option_id,$option_ids_desc_csv) DESC");
     if (!$product_feature_options) {
         return "";
