@@ -461,18 +461,20 @@ domload(() => {
 
 			let vid = undefined;
 
-			if (!piep_editor_grabbed_block_vid && v_node_label) {
-				vid = +v_node_label.dataset.vid;
-			}
+			if (piep_editor_grabbed_block_vid === undefined) {
+				if (v_node_label) {
+					vid = +v_node_label.dataset.vid;
+				}
 
-			if (piep_editor_last_v_node_label_vid !== vid) {
-				piep_editor_last_v_node_label_vid = vid;
-				if (vid === undefined) {
-					piep_editor_float_menu.classList.toggle("hidden", !piep_focus_node_vid);
-					piepEditorShowFocusToNode(piep_focus_node_vid);
-				} else {
-					piep_editor_float_menu.classList.toggle("hidden", vid !== piep_focus_node_vid);
-					piepEditorShowFocusToNode(vid);
+				if (piep_editor_last_v_node_label_vid !== vid) {
+					piep_editor_last_v_node_label_vid = vid;
+					if (vid === undefined) {
+						piep_editor_float_menu.classList.toggle("hidden", !piep_focus_node_vid);
+						piepEditorShowFocusToNode(piep_focus_node_vid);
+					} else {
+						piep_editor_float_menu.classList.toggle("hidden", vid !== piep_focus_node_vid);
+						piepEditorShowFocusToNode(vid);
+					}
 				}
 			}
 		});
@@ -1130,6 +1132,39 @@ function piepEditorGrabBlock() {
 			setInsertBlcContents(insert_inside_blc);
 		}
 	});
+
+	while (true) {
+		let fine = true;
+
+		const insert_blcs = piep_editor._children(".insert_blc");
+		const insert_blcs_len = insert_blcs.length;
+		for (let a = 0; a < insert_blcs_len; a++) {
+			const blc_a = insert_blcs[a];
+			const blc_a_rect = blc_a.getBoundingClientRect();
+			for (let b = a + 1; b < insert_blcs_len; b++) {
+				const blc_b = insert_blcs[b];
+				const blc_b_rect = blc_b.getBoundingClientRect();
+
+				const off = 2;
+
+				const inside_horizontally =
+					blc_a_rect.left + blc_a_rect.width + off > blc_b_rect.left && blc_a_rect.left < blc_b_rect.left + blc_b_rect.width + off;
+
+				const inside_vertically =
+					blc_a_rect.top + blc_a_rect.height + off > blc_b_rect.top && blc_a_rect.top < blc_b_rect.top + blc_b_rect.height + off;
+
+				if (inside_horizontally && inside_vertically) {
+					fine = false;
+					console.log(blc_a, blc_b);
+				}
+			}
+		}
+
+		if (fine) {
+			break;
+		}
+		break;
+	}
 }
 
 function piepEditorReleaseBlock() {
@@ -1284,6 +1319,10 @@ function updatePiepCursorPosition() {
  * @returns
  */
 function setPiepEditorFocusNode(vid) {
+	if (piep_editor_grabbed_block_vid !== undefined) {
+		return;
+	}
+
 	// NEVERMIND! -- was kinda for optimisation but we can easily skip it
 	if (piep_focus_node_vid === vid && piep_editor_content._child(".piep_focus")) {
 		return;
