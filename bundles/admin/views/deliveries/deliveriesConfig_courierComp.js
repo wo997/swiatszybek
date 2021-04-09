@@ -110,7 +110,7 @@ function deliveriesConfig_courierComp(comp, parent, data = undefined) {
 						<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
 
 						<datatable-comp
-							class="space_top small_dataset"
+							class="mtf small_dataset"
 							data-bind="{${data.dimensions_dt}}"
 							data-node="{${comp._nodes.dimenions_dt}}"
 						></datatable-comp>

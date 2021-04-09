@@ -33,7 +33,7 @@ if (Request::getSingleUsageSessionVar("just_logged_in")) {
 
     <?php include "bundles/global/traits/password.php"; ?>
 
-    <button class="btn primary medium fill space_top submit_btn">
+    <button class="btn primary medium fill mtf submit_btn">
         Dalej
         <i class="fa fa-chevron-right"></i>
     </button>

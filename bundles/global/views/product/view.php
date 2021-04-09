@@ -366,7 +366,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                         <?= $variants_less_html ?>
                     </div>
 
-                    <div class="space_top"></div>
+                    <div class="mtf"></div>
                     <button class="btn primary search_btn">
                         Pokaż wyniki
                         <div class="spinner_wrapper inline">

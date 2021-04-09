@@ -169,7 +169,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <span class="semi_bold">Akceptuję regulamin</span>
             </div>
 
-            <button class="btn medium fill confirm_order pay_btn space_top">Płacę (<span class="cart_total_price"></span>)</button>
+            <button class="btn medium fill confirm_order pay_btn mtf">Płacę (<span class="cart_total_price"></span>)</button>
 
             <div style="margin-top: 15px;">Nastąpi przekierowanie na stronę płatności Przelewy24.</div>
 

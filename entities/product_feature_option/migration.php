@@ -12,6 +12,7 @@ DB::createTable("product_feature_option", [
     ["name" => "text_value", "type" => "VARCHAR(255)", "null" => true, "index" => "index"],
     ["name" => "pos", "type" => "INT", "index" => "index"],
     ["name" => "extra_json", "type" => "TEXT"],
+    ["name" => "general_product_id", "type" => "INT", "null" => true, "index" => "index"],
 ]);
 
 DB::createTable("product_to_feature_option", [

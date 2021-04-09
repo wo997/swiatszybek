@@ -24,7 +24,8 @@
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
  *  main_img_url: string
- *  images: product_imgCompData[]
+ *  images: Product_ImgCompData[]
+ *  variants: Product_VariantCompData[]
  *  product_list_view: string
  * }} ProductCompData
  *
@@ -44,6 +45,7 @@
  *      preview_btn: PiepNode
  *      open_btn: PiepNode
  *      add_image_btn: PiepNode
+ *      add_variant_btn: PiepNode
  *      delete_btn: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], dont_ask?: boolean})
@@ -83,6 +85,7 @@ function productComp(comp, parent, data = undefined) {
 			category_ids: [],
 			main_img_url: "",
 			images: [],
+			variants: [],
 			product_list_view: "active",
 		};
 	}
@@ -673,28 +676,36 @@ function productComp(comp, parent, data = undefined) {
 					<option value="length">Długość</option>
 				</select>
 
-				<div style="margin-top:var(--form_small_spacing)">
+				<div class="mt2">
 					<span class="label inline list_label" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
-					<div class="scroll_panel scroll_preview" style="max-height:200px;margin-top:var(--form_small_spacing);cursor:pointer">
+					<div class="scroll_panel scroll_preview mt2" style="max-height:200px;cursor:pointer">
 						<div data-node="{${comp._nodes.print_categories}}"></div>
 					</div>
 				</div>
 
-				<div style="margin:var(--form_small_spacing) 0">
+				<div class="mt2 mb2">
 					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp data-bind="{${data.features}}" data-primary="product_feature_id" class="wireframe space separate light_gray_rows">
+				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 
-				<div style="margin:var(--form_small_spacing) 0">
+				<div class="mt2 mb2">
 					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
 				</div>
 				<list-comp class="wireframe space" data-bind="{${data.images}}">
 					<product_img-comp></product_img-comp>
+				</list-comp>
+
+				<div class="mt2 mb2">
+					<span class="label inline list_label" html="{${"Pola wyboru / Warianty (" + data.variants.length + ")"}}"></span>
+					<button data-node="{${comp._nodes.add_variant_btn}}" class="btn primary">Dodaj pole wyboru <i class="fas fa-plus"></i></button>
+				</div>
+				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.variants}}">
+					<product_variant-comp></product_variant-comp>
 				</list-comp>
 			</div>
 
@@ -786,6 +797,11 @@ function productComp(comp, parent, data = undefined) {
 				};
 				select_file_modal._render();
 				select_file_modal._show();
+			});
+
+			comp._nodes.add_variant_btn.addEventListener("click", () => {
+				comp._data.variants.push({ name: "", options: [] });
+				comp._render();
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {

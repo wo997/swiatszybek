@@ -54,7 +54,7 @@
         </div>
     </div>
 
-    <canvas id="myChart" class="space_top"></canvas>
+    <canvas id="myChart" class="mtf"></canvas>
 </div>
 
 

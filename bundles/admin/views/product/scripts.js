@@ -80,6 +80,8 @@ domload(() => {
 				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
 			});
 
+		data.variants = [];
+
 		product_comp._render();
 
 		product_comp._add_missing_products({ dont_ask: true });

@@ -416,7 +416,7 @@ class EntityManager
             }
         }
 
-        $other_entities_props = DB::fetchArr("SELECT *$meta_sql FROM $other_entity_name INNER JOIN $relation_table USING ($other_entity_id_column) WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
+        $other_entities_props = DB::fetchArr("SELECT *$meta_sql FROM $other_entity_name INNER JOIN $relation_table USING ($other_entity_id_column) WHERE $relation_table." . $obj->getIdColumn() . " = " . $obj->getId());
 
         foreach ($other_entities_props as $other_entity_props) {
             $other_entity = self::getEntity($other_entity_name, $other_entity_props);

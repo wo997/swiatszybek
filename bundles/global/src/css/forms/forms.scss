@@ -44,17 +44,30 @@ label {
 	}
 }
 
-.space_top {
+.mtf {
 	margin-top: var(--form_spacing);
 }
-.space_bottom {
+.mbf {
 	margin-bottom: var(--form_spacing);
 }
-.space_right {
+.mbr {
 	margin-right: var(--form_spacing);
 }
-.space_left {
+.mbl {
 	margin-left: var(--form_spacing);
+}
+
+.mt2 {
+	margin-top: var(--form_small_spacing);
+}
+.mb2 {
+	margin-bottom: var(--form_small_spacing);
+}
+.mr2 {
+	margin-right: var(--form_small_spacing);
+}
+.ml2 {
+	margin-left: var(--form_small_spacing);
 }
 
 .optional_label {
@@ -115,4 +128,17 @@ label {
 	.fa-times {
 		color: var(--error-clr);
 	}
+}
+
+.field_desc {
+	flex-shrink: 0;
+	max-width: 50%;
+	background: #eee;
+	display: flex;
+	align-items: center;
+	padding: 0 7px;
+	border: 1px solid #ccc;
+	color: #555;
+	border-radius: 4px;
+	margin: 0 -2px;
 }

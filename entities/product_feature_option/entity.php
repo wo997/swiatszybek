@@ -12,6 +12,7 @@ EntityManager::register("product_feature_option", [
         "text_value" => ["type" => "string"],
         "extra_json" => ["type" => "string"],
         "pos" => ["type" => "number"],
+        "general_product_id" => ["type" => "number"],
     ],
 ]);
 
