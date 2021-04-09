@@ -12,7 +12,7 @@ function getProductCommentsSearch($general_product_id, $datatable_params, $optio
     $where = "1";
     if ($general_product_id) {
         $general_product_id = intval($general_product_id);
-        $where .= " AND general_product_id = $general_product_id";
+        $where .= " AND c.general_product_id = $general_product_id";
     }
 
     $query_counter = 0;

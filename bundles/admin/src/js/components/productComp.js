@@ -857,6 +857,9 @@ function productComp(comp, parent, data = undefined) {
 						});
 					});
 
+					// get ids of modified product feature options yay, dataset handles all the data
+					const option_ids = modifyProductFeatures();
+
 					xhr({
 						url: STATIC_URLS["ADMIN"] + "/general_product/save",
 						params: {
@@ -877,6 +880,7 @@ function productComp(comp, parent, data = undefined) {
 								products: db_products,
 								images: data.images.map((e, index) => ({ ...e, pos: index + 1 })),
 							},
+							product_feature_options: product_feature_options.filter((pfo) => option_ids.includes(pfo.product_feature_option_id)),
 						},
 						success: (res) => {
 							if (!res.general_product_id) {

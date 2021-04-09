@@ -112,8 +112,23 @@ function refreshProductFeatures(callback = undefined) {
 		success: (res) => {
 			product_features = res.features;
 			product_feature_options = res.options;
+			modifyProductFeatures();
 			loadedProductFeatures();
 			window.dispatchEvent(new CustomEvent("product_features_changed"));
 		},
 	});
+}
+
+function modifyProductFeatures() {
+	const option_ids = [];
+
+	window.dispatchEvent(
+		new CustomEvent("modify_product_features", {
+			detail: {
+				option_ids,
+			},
+		})
+	);
+
+	return option_ids;
 }

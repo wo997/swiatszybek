@@ -229,10 +229,10 @@ EventListener::register("after_save_general_product_entity", function ($params) 
     $general_product_id = $general_product->getId();
 
     $non_list_option_ids = DB::fetchCol("SELECT DISTINCT product_feature_option_id
-        FROM general_product_to_feature_option
+        FROM general_product_to_feature_option gptfo
         INNER JOIN product_feature_option USING (product_feature_option_id)
-        INNER JOIN product_feature USING (product_feature_id)
-        WHERE general_product_id = $general_product_id
+        INNER JOIN product_feature pf USING (product_feature_id)
+        WHERE gptfo.general_product_id = $general_product_id
         AND data_type NOT LIKE '%_list%'");
 
     $non_list_option_ids_csv = $non_list_option_ids ? join(",", $non_list_option_ids) : "-1";
@@ -241,7 +241,7 @@ EventListener::register("after_save_general_product_entity", function ($params) 
         FROM product_feature_option pfo
         INNER JOIN general_product_to_feature_option USING (product_feature_option_id)
         INNER JOIN product_feature USING (product_feature_id)
-        WHERE general_product_id = $general_product_id
+        WHERE pfo.general_product_id = $general_product_id
         AND data_type NOT LIKE '%_list%'
         AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
 

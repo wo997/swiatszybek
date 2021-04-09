@@ -80,7 +80,7 @@ foreach ($general_product_variants as $key => $variant) {
     $product_feature_id = $general_product_variants[$key]["product_feature_id"];
     $general_product_variants[$key]["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
         INNER JOIN product_feature_option USING (product_feature_option_id)
-        WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
+        WHERE gptfo.general_product_id = $general_product_id AND product_feature_id = $product_feature_id
         ORDER BY gptfo.pos");
 
     if (count($general_product_variants[$key]["variant_options"]) < 2) {
@@ -94,7 +94,7 @@ $comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.valu
     FROM comment c
     INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
     INNER JOIN product_feature_option pfo USING (product_feature_option_id)
-    WHERE general_product_id = $general_product_id
+    WHERE pfo.general_product_id = $general_product_id
     GROUP BY pfo.product_feature_option_id
     ORDER BY COUNT(1) DESC");
 $comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");

@@ -80,6 +80,10 @@ function product_featureOptionComp(
 				} else {
 					comp._nodes.physical_value_wrapper.classList.add("hidden");
 				}
+
+				if (!OPTIMIZE_COMPONENTS) {
+					modifyProductFeatures();
+				}
 			},
 		});
 	};
@@ -104,7 +108,6 @@ function product_featureOptionComp(
 					data-number
 					data-node="{${comp._nodes.physical_value_input}}"
 					data-bind="{${data.double_base}}"
-					data-input_delay="500"
 				/>
 				<select
 					class="field inline blank unit_picker"
@@ -175,92 +178,39 @@ function product_featureOptionComp(
 				product_comp._render();
 			});
 
-			const considerSavingToDb = (refresh = true) => {
-				setTimeout(() => {
-					const data = comp._data;
-					if (!data) {
-						return;
+			window.addEventListener("modify_product_features", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+
+				const data = comp._data;
+
+				if (!data.data_type.endsWith("_value")) {
+					return;
+				}
+
+				const product_feature_option = product_feature_options.find(
+					(opt) => opt.product_feature_option_id === data.product_feature_option_id
+				);
+
+				if (!detail.option_ids.includes(data.product_feature_option_id)) {
+					detail.option_ids.push(data.product_feature_option_id);
+				}
+
+				if (data.data_type === "text_value") {
+					product_feature_option.text_value = data.text_value;
+				}
+				if (data.data_type === "datetime_value") {
+					product_feature_option.datetime_value = data.datetime_value;
+				}
+				if (data.data_type === "double_value") {
+					if (data.unit_id === null) {
+						product_feature_option.double_value = data.double_value;
+					} else {
+						product_feature_option.double_base = data.double_base;
+						product_feature_option.unit_id = data.unit_id;
+						// u could precalc double value but seems unnecessary
 					}
-
-					/** @type {Product_FeatureOptionCompData} */
-					const save_product_feature_option = { product_feature_option_id: data.product_feature_option_id };
-
-					const curr_option = product_feature_options.find((opt) => opt.product_feature_option_id === data.product_feature_option_id);
-
-					let need_request = false;
-
-					if (data.data_type === "text_value") {
-						if (curr_option.text_value !== data.text_value) {
-							need_request = true;
-						}
-						save_product_feature_option.text_value = data.text_value;
-					}
-					if (data.data_type === "datetime_value") {
-						if (curr_option.datetime_value !== data.datetime_value) {
-							need_request = true;
-						}
-						save_product_feature_option.datetime_value = data.datetime_value;
-					}
-					if (data.data_type === "double_value") {
-						if (
-							curr_option.double_base !== data.double_base ||
-							curr_option.unit_id !== data.unit_id ||
-							curr_option.double_value !== data.double_value
-						) {
-							need_request = true;
-						}
-
-						if (data.unit_id === null) {
-							save_product_feature_option.double_value = data.double_value;
-						} else {
-							save_product_feature_option.double_base = data.double_base;
-							save_product_feature_option.unit_id = data.unit_id;
-						}
-					}
-
-					if (need_request) {
-						if (isEquivalent(last_saved_product_feature_option, save_product_feature_option)) {
-							return;
-						}
-						last_saved_product_feature_option = save_product_feature_option;
-
-						xhr({
-							url: STATIC_URLS["ADMIN"] + "/product/feature/option/save",
-							params: {
-								product_feature_option: save_product_feature_option,
-							},
-							success: (res) => {
-								if (refresh) {
-									refreshProductFeatures();
-								}
-							},
-						});
-					}
-				});
-			};
-
-			comp._children(".save_to_db").forEach((input) => {
-				input.addEventListener("blur", () => {
-					considerSavingToDb();
-				});
-			});
-
-			comp._children(".bind_datetime_value").forEach((input) => {
-				input.addEventListener("changeDate", () => {
-					considerSavingToDb();
-				});
-			});
-
-			comp._nodes.physical_value_unit.addEventListener("change", () => {
-				considerSavingToDb();
-			});
-
-			comp._nodes.physical_value_input.addEventListener("change", () => {
-				considerSavingToDb();
-			});
-
-			product_comp.addEventListener("history_change", () => {
-				considerSavingToDb(false);
+				}
 			});
 		},
 	});
