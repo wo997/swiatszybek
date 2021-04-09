@@ -1109,6 +1109,10 @@ function piepEditorGrabBlock() {
 	 */
 
 	/**
+	 * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
+	 */
+
+	/**
 	 *
 	 * @returns {insertBlc}
 	 */
@@ -1124,7 +1128,7 @@ function piepEditorGrabBlock() {
 	/**
 	 *
 	 * @param {PiepNode} blc
-	 * @param {"left" | "right" | "top" | "bottom" | "center"} pos
+	 * @param {insertPosEnum} pos
 	 */
 	const getInsertBlcPos = (blc, pos) => {
 		const blc_rect = blc.getBoundingClientRect();
@@ -1248,29 +1252,28 @@ function piepEditorGrabBlock() {
 
 		/**
 		 * @param {insertBlc} insert_blc
-		 * @param {"left" | "right" | "top" | "bottom" | "center"} pos
+		 * @param {insertPosEnum} pos_str
 		 */
-		const setInsertPos = (insert_blc, pos) => {
-			let { left, top } = getInsertBlcPos(blc, pos);
-			insert_blc._set_absolute_pos(left, top);
+		const setInsertPos = (insert_blc, pos_str) => {
+			let pos = getInsertBlcPos(blc, pos_str);
+			insert_blc._set_absolute_pos(pos.left, pos.top);
 
-			switch (pos) {
-				case "left":
-					// prevright same
-					break;
-				case "right":
-					// next left same
-					break;
-				case "top":
-					// prev bottom same
-					break;
-				case "bottom":
-					// next top same
-					break;
-			}
-			// useless? covers the prev pos maybe
-			if (false) {
-				insert_blc.remove();
+			const prev_blc = blc._prev();
+
+			if (prev_blc) {
+				/** @type {insertPosEnum} */
+				let comp_pos_str;
+				if (pos_str === "left") {
+					comp_pos_str = "right";
+				} else if (pos_str === "top") {
+					comp_pos_str = "bottom";
+				}
+				const comp_pos = getInsertBlcPos(prev_blc, comp_pos_str);
+
+				// useless? covers the prev pos
+				if (Math.abs(comp_pos.left - pos.left) < insert_blc.offsetWidth && Math.abs(comp_pos.top - pos.top) < insert_blc.offsetHeight) {
+					insert_blc.remove();
+				}
 			}
 		};
 
