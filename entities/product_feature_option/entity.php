@@ -12,7 +12,7 @@ EntityManager::register("product_feature_option", [
         "text_value" => ["type" => "string"],
         "extra_json" => ["type" => "string"],
         "pos" => ["type" => "number"],
-        "general_product_id" => ["type" => "number"],
+        "just_general_product_id" => ["type" => "number"],
     ],
 ]);
 
@@ -58,13 +58,7 @@ EventListener::register("before_save_product_feature_option_entity", function ($
 
     // shit happens, data may be broken, chill
     if (!$product_feature) {
-        //var_dump("DELETE", $product_feature_option->getAllProps());
-        // var_dump($product_feature_option->getGlobalId());
-        // the definition was wrong and it couldn't spot the parent property at all, solved!
-
-        // HEY, the entity manager should know that already, it knows whether a parent is required,
-        // so u might want to drop this line of code and leave just a check
-        $product_feature_option->setWillDelete();
+        return;
     } else {
         $feature_data_type = $product_feature->getProp("data_type");
 

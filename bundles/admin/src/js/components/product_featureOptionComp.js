@@ -14,6 +14,7 @@
  * save_db_timeout?: number
  * saving_db?: boolean
  * physical_measure?: string
+ * just_general_product_id?: number
  * } & ListCompRowData} Product_FeatureOptionCompData
  *
  * @typedef {{

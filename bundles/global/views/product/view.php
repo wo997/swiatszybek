@@ -94,7 +94,7 @@ $comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.valu
     FROM comment c
     INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
     INNER JOIN product_feature_option pfo USING (product_feature_option_id)
-    WHERE pfo.general_product_id = $general_product_id
+    WHERE ctpfo.general_product_id = $general_product_id
     GROUP BY pfo.product_feature_option_id
     ORDER BY COUNT(1) DESC");
 $comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");

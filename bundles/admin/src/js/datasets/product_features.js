@@ -35,6 +35,7 @@ let product_features = [];
  * datetime_value?: string
  * extra_json?: string
  * extra_color?: string
+ * general_product_id?: number
  * }} ProductFeatureOptionData
  *
  */

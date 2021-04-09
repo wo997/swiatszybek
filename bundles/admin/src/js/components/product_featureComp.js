@@ -96,6 +96,7 @@ function product_featureComp(
 					const product_feature_option = {
 						product_feature_id: comp._data.product_feature_id,
 						product_feature_option_id: -1,
+						just_general_product_id: product_comp._data.general_product_id,
 					};
 
 					xhr({

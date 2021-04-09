@@ -239,9 +239,9 @@ EventListener::register("after_save_general_product_entity", function ($params) 
 
     DB::execute("DELETE pfo
         FROM product_feature_option pfo
-        INNER JOIN general_product_to_feature_option USING (product_feature_option_id)
+        INNER JOIN general_product_to_feature_option gptfo USING (product_feature_option_id)
         INNER JOIN product_feature USING (product_feature_id)
-        WHERE pfo.general_product_id = $general_product_id
+        WHERE gptfo.general_product_id = $general_product_id
         AND data_type NOT LIKE '%_list%'
         AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
 
