@@ -1300,7 +1300,7 @@ function piepEditorGrabBlock() {
 			// bottom
 			const insert_bottom_blc = getInsertBlc();
 			insert_bottom_blc._insert_action = () => {
-				insertAboveOrBelow(-1);
+				insertAboveOrBelow(1);
 			};
 			setInsertPos(insert_bottom_blc, "bottom");
 		}
