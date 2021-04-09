@@ -8,11 +8,42 @@
 /****** THIS SHOULD BE GLOBAL ******/
 
 .piep_editor_float_multi_insert {
-	position: absolute;
-	background: #fff;
-	border: 1px solid #ccc;
-	box-shadow: 0 2px 5px 0 #0003;
-	border-radius: 100%;
+	& {
+		position: absolute;
+		z-index: 310;
+	}
+
+	.foreign_insert_btn {
+		& {
+			pointer-events: none;
+		}
+		i {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			width: 100%;
+			color: var(--focus-clr);
+		}
+		&.foreign_hover i {
+			color: #fff;
+		}
+	}
+	.center_circle {
+		fill: #fff7;
+	}
+	.context_btn {
+		& {
+			stroke: var(--focus-clr);
+			stroke-width: 2px;
+			fill: none;
+			cursor: pointer;
+			fill: #fff7;
+		}
+		&:hover {
+			fill: var(--focus-clr);
+		}
+	}
 }
 
 .piep_editor_grabbed_block_wrapper {
