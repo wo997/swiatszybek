@@ -42,7 +42,7 @@ let piep_editor_has_insert_pos;
 let piep_editor_last_v_node_label_vid;
 /** @type {PiepNode} */
 let piep_editor_float_multi_insert;
-/** @type {PiepNode} */
+/** @type {insertBlc} */
 let piep_editor_showing_float_multi_of_blc;
 
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
@@ -896,7 +896,7 @@ function piepEditorMainLoop() {
 
 		/** @type {insertBlc} */
 		// @ts-ignore
-		const insert_blc = mouse.target ? mouse.target._parent(".insert_blc") : undefined;
+		const insert_blc = mouse.target ? mouse.target._parent(".insert_blc, .svg_insert_btn") : undefined;
 
 		if (piep_editor_showing_float_multi_of_blc) {
 			const piep_editor_float_multi_insert_rect = piep_editor_float_multi_insert.getBoundingClientRect();
@@ -906,9 +906,9 @@ function piepEditorMainLoop() {
 
 			if (inside) {
 				removeClasses(".foreign_hover", ["foreign_hover"], piep_editor_float_multi_insert);
-				const context_btn = mouse.target._parent(".context_btn");
-				if (context_btn) {
-					const index = context_btn.dataset.index;
+				const svg_insert_btn = mouse.target._parent(".svg_insert_btn");
+				if (svg_insert_btn) {
+					const index = svg_insert_btn.dataset.index;
 					piep_editor_float_multi_insert._child(`.foreign_insert_btn[data-index="${index}"]`).classList.add("foreign_hover");
 				}
 			} else {
@@ -924,21 +924,22 @@ function piepEditorMainLoop() {
 			v_dom_overlay.splice(0, v_dom_overlay.length);
 			deepAssign(v_dom_overlay, v_dom);
 
-			let showing_suggestion = false;
+			/** @type {insertBlc} */
+			let show_insert_blc_option = undefined;
 
 			if (insert_blc) {
 				if (insert_blc.classList.contains("multiple")) {
 					// clean up
-					piep_editor_float_multi_insert._direct_children().forEach((c) => {
-						piep_editor.append(c);
-						c.classList.add("hidden");
-					});
-					insert_blc._popup_blcs.forEach((c) => {
-						c.style.left = "0";
-						c.style.top = "0";
-						piep_editor_float_multi_insert.append(c);
-						c.classList.remove("hidden");
-					});
+					// piep_editor_float_multi_insert._direct_children().forEach((c) => {
+					// 	piep_editor.append(c);
+					// 	c.classList.add("hidden");
+					// });
+					// insert_blc._popup_blcs.forEach((c) => {
+					// 	c.style.left = "0";
+					// 	c.style.top = "0";
+					// 	piep_editor_float_multi_insert.append(c);
+					// 	c.classList.remove("hidden");
+					// });
 
 					let edit_block_html = "";
 
@@ -978,7 +979,7 @@ function piepEditorMainLoop() {
 
 						buttons += html`
 							<path
-								class="context_btn"
+								class="svg_insert_btn"
 								data-index="${i}"
 								d="
                                     M${p1.x},${p1.y}
@@ -1026,20 +1027,27 @@ function piepEditorMainLoop() {
 						insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5 - piep_editor_rect.left,
 						insert_blc_rect.top + (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 - piep_editor_rect.top
 					);
-
 					piep_editor_showing_float_multi_of_blc = insert_blc;
 					insert_blc.classList.add("hidden");
-				} else {
-					insert_blc._insert_action();
-					showing_suggestion = true;
+				}
+
+				if (!insert_blc.classList.contains("multiple")) {
+					if (insert_blc.classList.contains("svg_insert_btn")) {
+						if (piep_editor_showing_float_multi_of_blc) {
+							show_insert_blc_option = piep_editor_showing_float_multi_of_blc._popup_blcs[+insert_blc.dataset.index];
+						}
+					} else {
+						show_insert_blc_option = insert_blc;
+					}
 				}
 			}
 
-			recreateDom(v_dom_overlay);
-
-			if (showing_suggestion) {
+			if (show_insert_blc_option) {
+				show_insert_blc_option._insert_action();
+				recreateDom(v_dom_overlay);
 				piepEditorShowFocusToNode(piep_editor_grabbed_block_vid);
 			} else {
+				recreateDom(v_dom_overlay);
 				piep_editor_float_focus.classList.add("hidden");
 			}
 		}
