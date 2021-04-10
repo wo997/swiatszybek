@@ -144,9 +144,10 @@ class EntityManager
      *
      * @return void
      */
-    public static function clearObjects()
+    public static function reset()
     {
         self::$objects = [];
+        self::$warmup_objects = [];
     }
 
     /**

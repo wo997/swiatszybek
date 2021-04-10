@@ -436,7 +436,7 @@ function productComp(comp, parent, data = undefined) {
 					}
 				});
 
-				if (cd.product_variants || cd.products_dt) {
+				if (cd.variants || cd.products_dt) {
 					comp._nodes.all_products._warmup_maps();
 					//comp._render({ force_render: true }); think about it? maybe on timeout?
 
@@ -469,11 +469,11 @@ function productComp(comp, parent, data = undefined) {
 					});
 
 					cross_variants.forEach((variant_set) => {
-						const product_variants = {};
+						const variant_option_map = {};
 						variant_set.forEach((product_variant_option_id) => {
 							const variant = data.variants.find((v) => v.options.find((vo) => vo.product_variant_option_id === product_variant_option_id));
 							if (variant) {
-								product_variants[variant.product_variant_id] = product_variant_option_id;
+								variant_option_map[variant.product_variant_id] = product_variant_option_id;
 							}
 						});
 
@@ -484,7 +484,7 @@ function productComp(comp, parent, data = undefined) {
 							}
 
 							let options_match = true;
-							for (const [variant_id, option_id] of Object.entries(product_variants)) {
+							for (const [variant_id, option_id] of Object.entries(variant_option_map)) {
 								const key = getVariantKeyFromId(variant_id);
 								if (product[key] !== option_id) {
 									options_match = false;
@@ -498,7 +498,7 @@ function productComp(comp, parent, data = undefined) {
 						});
 
 						if (missing_product) {
-							missing_products_variants.push(product_variants);
+							missing_products_variants.push(variant_option_map);
 						}
 					});
 
@@ -657,7 +657,7 @@ function productComp(comp, parent, data = undefined) {
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 
-			<div style="max-width:800px">
+			<div style="max-width:700px">
 				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
 					<div class="checkbox_area box error">
 						<div>
