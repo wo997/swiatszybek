@@ -68,13 +68,13 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 		template: html`
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
 
-			<div style="margin-left: 10px">
-				<div class="select_options_wrapper">
+			<div style="margin: 0 10px">
+				<div class="select_options_wrapper" style="width: 80px;">
 					<select class="field small" data-node="{${comp._nodes.select_options}}"></select>
-					<button class="btn primary small">Połącz z cechą <i class="fas fa-link"></i></button>
+					<button class="btn primary small">Cechy <i class="fas fa-plus"></i></button>
 				</div>
-				<div data-node="{${comp._nodes.selected_options}}"></div>
 			</div>
+			<div data-node="{${comp._nodes.selected_options}}"></div>
 
 			<div style="margin-left:auto">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
