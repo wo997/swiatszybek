@@ -17,6 +17,7 @@ let STATIC_URLS;
 let user_roles;
 let feature_data_types;
 let physical_measures;
+let physical_measure_unit_map;
 
 let countries_options_html;
 

@@ -14,10 +14,14 @@
  * _data: Product_VariantCompData
  * _set_data(data?: Product_VariantCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  fill_options_btn: PiepNode
  *  add_option_btn: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_VariantComp
  */
+
+/** @type {Product_VariantComp} */
+let currently_filling_product_variant_com;
 
 /**
  * @param {Product_VariantComp} comp
@@ -38,12 +42,12 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 			<div class="variant_header">
 				<span class="semi_bold mr2" html="{${data.row_index + 1 + "."}}"></span>
 				<input class="field small inline" data-bind="{${data.name}}" />
-				<button
-					style="margin-left:5px"
-					data-node="{${comp._nodes.add_option_btn}}"
-					class="btn {${data.options.length === 0}?important:primary} small"
-				>
+				<button data-node="{${comp._nodes.add_option_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml2">
 					Dodaj opcję <i class="fas fa-plus"></i>
+				</button>
+
+				<button data-node="{${comp._nodes.fill_options_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml2">
+					Uzupełnij <i class="fas fa-pen"></i>
 				</button>
 
 				<div style="margin-left:auto">
@@ -80,6 +84,128 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 					},
 				});
 			});
+
+			comp._nodes.fill_options_btn.addEventListener("click", () => {
+				const fill = (fill_all = false) => {
+					const data = currently_filling_product_variant_com._data;
+					const feature_id = $("#fillVariantOptionsModal .choose_feature")._get_value();
+					if (!feature_id) {
+						showNotification("Wybierz cechę", { one_line: true, type: "error" });
+						return;
+					}
+
+					/** @type {ProductComp} */
+					// @ts-ignore
+					const product_comp = $("product-comp");
+
+					const feature = product_comp._data.features.find((feature) => feature.product_feature_id === feature_id);
+
+					const product_variant_options = [];
+
+					const add_more = feature.options.length - data.options.length;
+					for (let i = 0; i < add_more; i++) {
+						product_variant_options.push({
+							product_variant_id: data.product_variant_id,
+							name: "",
+						});
+					}
+
+					showLoader();
+
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/general_product/variant/option/save_many",
+						params: {
+							product_variant_options,
+						},
+						success: (res) => {
+							res.product_variant_options.forEach((product_variant_option) => {
+								data.options.push({
+									product_variant_option_id: product_variant_option.product_variant_option_id,
+									product_variant_id: product_variant_option.product_variant_id,
+									name: product_variant_option.name,
+									product_feature_options: [],
+								});
+							});
+
+							data.options.forEach((option, index) => {
+								const f_option = feature.options[index];
+								if (!f_option) {
+									return;
+								}
+								if (fill_all || option.product_feature_options.length === 0) {
+									option.product_feature_options = [f_option.product_feature_option_id];
+								}
+								if (fill_all || option.name.trim() === "") {
+									option.name = f_option.value;
+								}
+							});
+
+							if (fill_all || data.name.trim() === "") {
+								const feature_data = product_features.find((feature) => feature.product_feature_id === feature_id);
+								data.name = feature_data.name;
+							}
+
+							if (fill_all) {
+								data.options.splice(feature.options.length);
+							}
+
+							currently_filling_product_variant_com._render({ freeze: true });
+							hideLoader();
+							hideModal("fillVariantOptionsModal");
+						},
+					});
+				};
+
+				const ex = $("#fillVariantOptionsModal");
+				if (!ex) {
+					registerModalContent(html`
+						<div id="fillVariantOptionsModal" data-dismissable>
+							<div class="modal_body">
+								<div class="custom_toolbar">
+									<span class="title medium">Uzupełnij opcje wariantu</span>
+									<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+								</div>
+								<div class="scroll_panel scroll_shadow panel_padding">
+									<div class="label first">Na podstawie cechy</div>
+									<div class="radio_group hide_checks choose_feature boxes columns_1" data-number></div>
+
+									<div style="display:flex;margin-top: auto;padding-top: 10px;text-align: right;">
+										<button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button>
+										<button class="btn primary fill fill_empty">Uzupełnij puste</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					`);
+
+					$("#fillVariantOptionsModal .fill_all").addEventListener("click", () => {
+						fill(true);
+					});
+
+					$("#fillVariantOptionsModal .fill_empty").addEventListener("click", () => {
+						fill(false);
+					});
+				}
+				let fill_options_html = "";
+				comp._data.features.forEach((fea) => {
+					const feature = product_features.find((f) => f.product_feature_id === fea.product_feature_id);
+					if (feature) {
+						fill_options_html += html`
+							<div class="checkbox_area">
+								<p-checkbox data-value="${feature.product_feature_id}"></p-checkbox>
+								<span>${feature.name}</span>
+							</div>
+						`;
+					}
+				});
+
+				$("#fillVariantOptionsModal .choose_feature")._set_content(fill_options_html);
+
+				currently_filling_product_variant_com = comp;
+				showModal("fillVariantOptionsModal");
+			});
 		},
 	});
 }
+
+function initFillVariantOptionsModal() {}

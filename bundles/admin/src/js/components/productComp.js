@@ -407,7 +407,6 @@ function productComp(comp, parent, data = undefined) {
 					// important usage of product_feature_option_ids, these are ordered properly
 					data.product_feature_option_ids = product_feature_option_ids.filter((e) => missing_option_ids.indexOf(e) === -1);
 				}
-
 				// full product list
 				let cross_variants = [[]];
 				data.variants.forEach((variant) => {
@@ -447,9 +446,6 @@ function productComp(comp, parent, data = undefined) {
 				});
 
 				if (cd.variants || cd.products_dt) {
-					comp._nodes.all_products._warmup_maps();
-					//comp._render({ force_render: true }); think about it? maybe on timeout?
-
 					// redefine products DT columns to make sure the order is right etc
 
 					/** @type {DatatableColumnDef[]} */
@@ -651,6 +647,13 @@ function productComp(comp, parent, data = undefined) {
 
 					comp._nodes.all_products._render();
 				}
+
+				if (cd.variants) {
+					setTimeout(() => {
+						comp._nodes.all_products._warmup_maps();
+						comp._nodes.all_products._render({ force_render: true });
+					});
+				}
 			},
 		});
 	};
@@ -669,13 +672,13 @@ function productComp(comp, parent, data = undefined) {
 
 			<div style="max-width:700px">
 				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
-					<div class="checkbox_area box error">
+					<div class="checkbox_area error">
 						<div>
 							<p-checkbox data-value="0"></p-checkbox>
 							<span class="semi_bold">Nieaktywny <i class="fas fa-eye-slash"></i></span>
 						</div>
 					</div>
-					<div class="checkbox_area box success">
+					<div class="checkbox_area success">
 						<div>
 							<p-checkbox data-value="1"></p-checkbox>
 							<span class="semi_bold">Aktywny <i class="fas fa-eye"></i></span>

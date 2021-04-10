@@ -90,21 +90,21 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
             <div class="label big">Dostawa</div>
             <div class="radio_group boxes big_boxes columns_3 hide_checks delivery">
-                <div class="checkbox_area box">
+                <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="courier"></p-checkbox>
                         <span class="semi_bold">Kurier</span>
                         <span class="pln">20 zł</span>
                     </div>
                 </div>
-                <div class="checkbox_area box">
+                <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="parcel_locker"></p-checkbox>
                         <span class="semi_bold">Paczkomat</span>
                         <span class="pln">15 zł</span>
                     </div>
                 </div>
-                <div class="checkbox_area box">
+                <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="in_person"></p-checkbox>
                         <span class="semi_bold">Odbiór osobisty</span>
@@ -122,13 +122,13 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <span class="semi_bold block" style="margin-bottom:5px">Chcę użyć innego adresu do wysyłki</span>
 
                     <div class="radio_group boxes hide_checks courier_address_different" data-number>
-                        <div class="checkbox_area box">
+                        <div class="checkbox_area">
                             <div>
                                 <p-checkbox data-value="0"></p-checkbox>
                                 <span class="semi_bold">Nie</span>
                             </div>
                         </div>
-                        <div class="checkbox_area box">
+                        <div class="checkbox_area">
                             <div>
                                 <p-checkbox data-value="1"></p-checkbox>
                                 <span class="semi_bold">Tak</span>

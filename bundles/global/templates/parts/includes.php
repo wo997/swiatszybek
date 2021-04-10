@@ -106,6 +106,7 @@ if (defined("ROUTE")) {
     <script>
         const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
         const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;
+        const physical_measure_unit_map = <?= json_encode(getPhysicalMeasureUnitMap()) ?>;
     </script>
 <?php endif ?>
 

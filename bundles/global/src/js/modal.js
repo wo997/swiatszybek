@@ -117,6 +117,9 @@ function showModal(name = null, params = {}) {
 				registerScrollShadows();
 
 				modal.style.pointerEvents = "none";
+				setTimeout(() => {
+					modal.style.pointerEvents = "";
+				}, 150);
 				modal.classList.remove("hidden");
 				modal_wrapper_node.classList.remove("hidden");
 
@@ -131,7 +134,6 @@ function showModal(name = null, params = {}) {
 				const duration = 300;
 
 				const basic_callback = () => {
-					modal.style.pointerEvents = "";
 					modal.style.opacity = "";
 
 					if (params.callback) {
@@ -283,7 +285,10 @@ function hideModal(name) {
 	if (name) {
 		let modal = $(`#${name}`);
 		if (modal) {
-			modal.style.animation = "hide 0.4s";
+			setTimeout(() => {
+				modal.style.animation = "hide 0.4s";
+			});
+			modal.classList.add("hidden");
 			setTimeout(() => {
 				modal.classList.add("hidden");
 				modal.style.animation = "";
@@ -296,16 +301,6 @@ function hideModal(name) {
 					})
 				);
 			}, 200);
-
-			// cleanup validators
-			// TODO: we already clean them up on modal show hmmmm, remove?
-			modal._children("[data-validate]").forEach((e) => {
-				e.classList.remove("required");
-			});
-
-			modal._children(".fa-exclamation-triangle").forEach((e) => {
-				e.remove();
-			});
 		}
 
 		window.dispatchEvent(
@@ -322,7 +317,9 @@ function hideModal(name) {
 	if (visible_modal_count > 0) {
 		modal_wrapper_node.classList.remove("hidden");
 	} else {
-		modal_wrapper_node.style.animation = "hide 0.4s";
+		setTimeout(() => {
+			modal_wrapper_node.style.animation = "hide 0.4s";
+		});
 		setTimeout(() => {
 			modal_wrapper_node.classList.add("hidden");
 			modal_wrapper_node.style.animation = "";

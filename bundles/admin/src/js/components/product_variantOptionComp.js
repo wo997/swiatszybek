@@ -16,6 +16,7 @@
  * _nodes: {
  *  select_options: PiepNode
  *  selected_options: PiepNode
+ *  name: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_VariantOptionComp
  */
@@ -71,13 +72,22 @@ function product_variantOptionComp(
 					comp._nodes.select_options._set_content(options_html);
 					comp._nodes.selected_options._set_content(selected_options_html);
 				}
+
+				if (comp._changed_data.name) {
+					autoHeight(comp._nodes.name);
+				}
 			},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
-			<textarea class="field small inline" data-bind="{${data.name}}" style="height: 54px;"></textarea>
+			<textarea
+				class="field small inline hide_scrollbar"
+				data-bind="{${data.name}}"
+				data-node="{${comp._nodes.name}}"
+				data-input_delay="200"
+			></textarea>
 
 			<div style="margin-left: 10px">
 				<div class="select_options_wrapper">
@@ -92,6 +102,10 @@ function product_variantOptionComp(
 			</div>
 		`,
 		initialize: () => {
+			comp._nodes.name.addEventListener("input", () => {
+				autoHeight(comp._nodes.name);
+			});
+
 			const so = comp._nodes.select_options;
 			so.addEventListener("change", () => {
 				const option_id = +so._get_value();

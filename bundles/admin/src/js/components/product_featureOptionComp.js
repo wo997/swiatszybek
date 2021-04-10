@@ -197,17 +197,26 @@ function product_featureOptionComp(
 
 				if (data.data_type === "text_value") {
 					product_feature_option.text_value = data.text_value;
+					product_feature_option.value = data.text_value;
 				}
 				if (data.data_type === "datetime_value") {
 					product_feature_option.datetime_value = data.datetime_value;
+					product_feature_option.value = data.datetime_value;
 				}
 				if (data.data_type === "double_value") {
 					if (data.unit_id === null) {
 						product_feature_option.double_value = data.double_value;
+						product_feature_option.value = data.double_value + "";
 					} else {
 						product_feature_option.double_base = data.double_base;
 						product_feature_option.unit_id = data.unit_id;
+
 						// u could precalc double value but seems unnecessary
+						// we need a value for sure tho
+						product_feature_option.value = data.double_base;
+						if (physical_measure_unit_map[data.unit_id]) {
+							product_feature_option.value + " " + physical_measure_unit_map[data.unit_id].name;
+						}
 					}
 				}
 			});
