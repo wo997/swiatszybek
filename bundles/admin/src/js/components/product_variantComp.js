@@ -200,7 +200,7 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 				$("#fillVariantOptionsModal .choose_feature")._set_content(fill_options_html);
 
 				currently_filling_product_variant_com = comp;
-				showModal("fillVariantOptionsModal");
+				showModal("fillVariantOptionsModal", { source: comp._nodes.fill_options_btn });
 			});
 		},
 	});
