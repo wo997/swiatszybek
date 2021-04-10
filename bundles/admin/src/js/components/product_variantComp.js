@@ -2,6 +2,8 @@
 
 /**
  * @typedef {{
+ * general_product_variant_id: number
+ * general_product_id: number
  * name: string
  * options: string[]
  * } & ListCompRowData} Product_VariantCompData
@@ -20,7 +22,7 @@
  * @param {*} parent
  * @param {Product_VariantCompData} data
  */
-function product_variantComp(comp, parent, data = { name: "", options: [] }) {
+function product_variantComp(comp, parent, data = { general_product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -45,12 +47,11 @@ function product_variantComp(comp, parent, data = { name: "", options: [] }) {
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
-
-			<list-comp data-bind="{${data.options}}" class="wireframe space">
-				<!-- data-primary="product_feature_option_id" -->
-				<!-- <product_feature-option-comp></product_feature-option-comp> -->
-			</list-comp>
 		`,
+
+		// <list-comp data-bind="{${data.options}}" class="wireframe space" data-primary="general_product_variant_option_id">
+		// <product_feature-option-comp></product_feature-option-comp>
+		// </list-comp>
 		initialize: () => {},
 	});
 }

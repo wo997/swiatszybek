@@ -25,8 +25,10 @@
  *  category_ids: number[]
  *  main_img_url: string
  *  images: Product_ImgCompData[]
- *  variants: Product_VariantCompData[]
  *  product_list_view: string
+ *  general_product_variant_option_ids: number[]
+ *  general_product_variant_ids: number[]
+ *  variants: Product_VariantCompData[]
  * }} ProductCompData
  *
  * @typedef {{
@@ -87,6 +89,8 @@ function productComp(comp, parent, data = undefined) {
 			images: [],
 			variants: [],
 			product_list_view: "active",
+			general_product_variant_option_ids: [],
+			general_product_variant_ids: [],
 		};
 	}
 
@@ -328,10 +332,31 @@ function productComp(comp, parent, data = undefined) {
 			pass_list_data: [{ what: "features", where: "images" }],
 			render: () => {
 				const data = comp._data;
-				const missing_feature_ids = [];
 
 				const cd = comp._changed_data;
 
+				const missing_variant_ids = [];
+				if (cd.general_product_variant_ids) {
+					data.variants = data.general_product_variant_ids.map((general_product_variant_id) => {
+						const gpv = general_product_variants.find((v) => {
+							return v.general_product_variant_id === general_product_variant_id;
+						});
+						if (gpv) {
+							return {
+								general_product_variant_id: gpv.general_product_variant_id,
+								general_product_id: gpv.general_product_id,
+								name: gpv.name,
+								options: [],
+							};
+						} else {
+							missing_variant_ids.push(general_product_variant_id);
+						}
+					});
+
+					data.general_product_variant_ids = data.general_product_variant_ids.filter((e) => missing_variant_ids.indexOf(e) === -1);
+				}
+
+				const missing_feature_ids = [];
 				if (cd.product_feature_ids) {
 					data.features = data.product_feature_ids.map((product_feature_id) => {
 						const fe = product_features.find((pf) => {
@@ -695,7 +720,7 @@ function productComp(comp, parent, data = undefined) {
 					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp class="wireframe space" data-bind="{${data.images}}">
+				<list-comp class="wireframe space" data-bind="{${data.images}}" data-primary="product_img_id">
 					<product_img-comp></product_img-comp>
 				</list-comp>
 
@@ -703,7 +728,11 @@ function productComp(comp, parent, data = undefined) {
 					<span class="label inline list_label" html="{${"Pola wyboru / Warianty (" + data.variants.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_variant_btn}}" class="btn primary">Dodaj pole wyboru <i class="fas fa-plus"></i></button>
 				</div>
-				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.variants}}">
+				<list-comp
+					class="wireframe space separate light_gray_rows"
+					data-bind="{${data.variants}}"
+					data-primary="general_product_variant_id"
+				>
 					<product_variant-comp></product_variant-comp>
 				</list-comp>
 			</div>
@@ -799,8 +828,20 @@ function productComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				comp._data.variants.push({ name: "", options: [] });
-				comp._render();
+				showLoader();
+
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/general_product/variant/save",
+					params: {
+						general_product_variant: {
+							general_product_id: comp._data.general_product_id,
+						},
+					},
+					success: (res) => {
+						comp._data.general_product_variant_ids.push(res.general_product_variant.general_product_variant_id);
+						refreshGeneralProductVariants();
+					},
+				});
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {
@@ -939,11 +980,16 @@ function productComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_features_changed", () => {
+				// TODO: maps will belong to variants actually
 				comp._nodes.all_products._warmup_maps();
 				comp._render({ force_render: true });
 			});
 			window.addEventListener("product_categories_changed", () => {
 				comp._render({ force_render: true });
+			});
+
+			window.addEventListener("general_product_variants_changed", () => {
+				hideLoader();
 			});
 		},
 	});

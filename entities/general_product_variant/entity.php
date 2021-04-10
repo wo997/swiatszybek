@@ -13,3 +13,5 @@ EntityManager::register("general_product", [
         "variants" => ["type" => "general_product_variant[]"]
     ],
 ]);
+
+EntityManager::oneToMany("general_product", "variants", "general_product_variant");

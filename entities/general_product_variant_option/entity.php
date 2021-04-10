@@ -15,6 +15,14 @@ EntityManager::register("general_product_variant", [
 
 EntityManager::oneToMany("general_product_variant", "options", "general_product_variant_option", ["parent_required" => true]);
 
+EntityManager::register("general_product", [
+    "props" => [
+        "variant_options" => ["type" => "general_product_variant_option[]"]
+    ],
+]);
+
+EntityManager::oneToMany("general_product", "variant_options", "general_product_variant_option");
+
 EntityManager::register("product", [
     "props" => [
         "variant_options" => ["type" => "general_product_variant_option[]"]
