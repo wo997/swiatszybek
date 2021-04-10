@@ -147,7 +147,7 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 								data.options.splice(feature.options.length);
 							}
 
-							currently_filling_product_variant_com._render({ freeze: true });
+							currently_filling_product_variant_com._render();
 							hideLoader();
 							hideModal("fillVariantOptionsModal");
 						},

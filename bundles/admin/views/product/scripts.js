@@ -105,6 +105,7 @@ domload(() => {
 
 		product_comp._render();
 
+		// dont cmon
 		product_comp._add_missing_products({ dont_ask: true });
 
 		// lazyloading won't work nicely because there is some lag
