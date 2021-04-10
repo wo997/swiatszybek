@@ -43,9 +43,9 @@ EventListener::register("before_save_product_entity", function ($params) {
         }
         $variant_id = $variant->getId();
 
-        // if (!isset($options[$variant_id])) {
-        //     $options[$variant_id] = [];
-        // }
+        if (!isset($options[$variant_id])) {
+            $options[$variant_id] = [];
+        }
         if (!in_array($option_id, $options[$variant_id])) {
             $options[$variant_id][] = $option_id;
         }

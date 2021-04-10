@@ -55,9 +55,19 @@
 
 const product_copy_keys = ["net_price", "vat", "gross_price", "active"];
 
+/**
+ *
+ * @param {number} variant_id
+ * @returns
+ */
 const getVariantKeyFromId = (variant_id) => {
 	return `variant_${variant_id}`;
 };
+/**
+ *
+ * @param {string} key
+ * @returns
+ */
 const getVariantIdFromKey = (key) => {
 	const variant_id = +key.replace(`variant_`, "");
 	if (isNaN(variant_id)) {
@@ -149,7 +159,7 @@ function productComp(comp, parent, data = undefined) {
 			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 1, active: 1, stock: 0 };
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
-				const key = getVariantKeyFromId(variant_id);
+				const key = getVariantKeyFromId(+variant_id);
 				product_data[key] = option_id;
 			}
 
@@ -485,7 +495,7 @@ function productComp(comp, parent, data = undefined) {
 
 							let options_match = true;
 							for (const [variant_id, option_id] of Object.entries(variant_option_map)) {
-								const key = getVariantKeyFromId(variant_id);
+								const key = getVariantKeyFromId(+variant_id);
 								if (product[key] !== option_id) {
 									options_match = false;
 									break;
@@ -873,66 +883,69 @@ function productComp(comp, parent, data = undefined) {
 				const data = comp._data;
 				const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
 
-				if (errors.length === 0) {
-					const db_products = cloneObject(data.products_dt.dataset);
-					db_products.forEach((product) => {
-						product.variant_options = [];
-						data.variants.forEach((vid) => {
-							const vkey = getVariantKeyFromId(vid);
-							product.variant_options.push(product[vkey]);
-							delete product[vkey];
-						});
-					});
-
-					// get ids of modified product feature options yay, dataset handles all the data
-					const option_ids = modifyProductFeatures();
-					const save_product_feature_options = product_feature_options.filter((pfo) => option_ids.includes(pfo.product_feature_option_id));
-
-					data.variants.forEach((variant, index) => {
-						variant.pos = index + 1;
-						variant.options.forEach((option, index) => {
-							option.pos = index + 1;
-						});
-					});
-
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "/general_product/save",
-						params: {
-							general_product: {
-								general_product_id: data.general_product_id,
-								name: data.name,
-								active: data.active,
-								main_img_url: data.main_img_url,
-								features: data.product_feature_ids.map((product_feature_id, index) => ({
-									product_feature_id,
-									_meta_pos: index + 1,
-								})),
-								feature_options: data.product_feature_option_ids.map((product_feature_option_id, index) => ({
-									product_feature_option_id,
-									_meta_pos: index + 1,
-								})),
-								categories: data.category_ids,
-								products: db_products,
-								images: data.images.map((e, index) => ({ ...e, pos: index + 1 })),
-								variants: data.variants,
-							},
-							product_feature_options: save_product_feature_options,
-						},
-						success: (res) => {
-							if (!res.general_product_id) {
-								alert("Wystąpił błąd krytyczny");
-							}
-
-							showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
-								one_line: true,
-								type: "success",
-							});
-
-							comp._data.general_product_id = res.general_product_id;
-							comp._render();
-						},
-					});
+				if (errors.length > 0) {
+					return;
 				}
+
+				const save_products = cloneObject(data.products_dt.dataset);
+				save_products.forEach((product) => {
+					product.variant_options = [];
+					data.variants.forEach((v) => {
+						const vkey = getVariantKeyFromId(v.product_variant_id);
+						product.variant_options.push(product[vkey]);
+						delete product[vkey];
+					});
+				});
+
+				// get ids of modified product feature options yay, dataset handles all the data
+				const option_ids = modifyProductFeatures();
+				// in case it was a new product we must make sure it's ready to go on backend
+				const save_product_feature_options = product_feature_options.filter((pfo) => option_ids.includes(pfo.product_feature_option_id));
+
+				data.variants.forEach((variant, index) => {
+					variant.pos = index + 1;
+					variant.options.forEach((option, index) => {
+						option.pos = index + 1;
+					});
+				});
+
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/general_product/save",
+					params: {
+						general_product: {
+							general_product_id: data.general_product_id,
+							name: data.name,
+							active: data.active,
+							main_img_url: data.main_img_url,
+							features: data.product_feature_ids.map((product_feature_id, index) => ({
+								product_feature_id,
+								_meta_pos: index + 1,
+							})),
+							feature_options: data.product_feature_option_ids.map((product_feature_option_id, index) => ({
+								product_feature_option_id,
+								_meta_pos: index + 1,
+							})),
+							categories: data.category_ids,
+							products: save_products,
+							images: data.images.map((e, index) => ({ ...e, pos: index + 1 })),
+							variants: data.variants,
+						},
+						product_feature_options: save_product_feature_options,
+					},
+					success: (res) => {
+						if (!res.general_product_id) {
+							alert("Wystąpił błąd krytyczny");
+						}
+
+						showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
+							one_line: true,
+							type: "success",
+						});
+
+						comp._data.general_product_id = res.general_product_id;
+						comp._render();
+					},
+				});
 			});
 
 			comp._nodes.add_products_btn.addEventListener("click", () => {
