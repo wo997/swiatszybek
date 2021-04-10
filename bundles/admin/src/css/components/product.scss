@@ -2,7 +2,8 @@
 
 product-comp {
 	.variant_header,
-	product_feature-option-comp.comp {
+	product_feature-option-comp.comp,
+	product_variant-option-comp.comp {
 		display: flex;
 		align-items: center;
 	}

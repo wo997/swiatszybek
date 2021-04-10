@@ -2,10 +2,11 @@
 
 /**
  * @typedef {{
- * general_product_variant_id: number
+ * product_variant_id: number
  * general_product_id: number
  * name: string
- * options: string[]
+ * options: Product_VariantOptionCompData[]
+ * pos?: number
  * } & ListCompRowData} Product_VariantCompData
  *
  * @typedef {{
@@ -22,7 +23,7 @@
  * @param {*} parent
  * @param {Product_VariantCompData} data
  */
-function product_variantComp(comp, parent, data = { general_product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
+function product_variantComp(comp, parent, data = { product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -47,11 +48,35 @@ function product_variantComp(comp, parent, data = { general_product_variant_id: 
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>
+			<list-comp data-bind="{${data.options}}" class="wireframe space" data-primary="product_variant_option_id">
+				<product_variant-option-comp></product_variant-option-comp>
+			</list-comp>
 		`,
 
-		// <list-comp data-bind="{${data.options}}" class="wireframe space" data-primary="general_product_variant_option_id">
-		// <product_feature-option-comp></product_feature-option-comp>
-		// </list-comp>
-		initialize: () => {},
+		initialize: () => {
+			comp._nodes.add_option_btn.addEventListener("click", () => {
+				showLoader();
+
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/general_product/variant/option/save",
+					params: {
+						product_variant_option: {
+							product_variant_id: comp._data.product_variant_id,
+							name: "",
+						},
+					},
+					success: (res) => {
+						const product_variant_option = res.product_variant_option;
+						comp._data.options.push({
+							product_variant_option_id: product_variant_option.product_variant_option_id,
+							product_variant_id: product_variant_option.product_variant_id,
+							name: product_variant_option.name,
+						});
+						comp._render();
+						hideLoader();
+					},
+				});
+			});
+		},
 	});
 }

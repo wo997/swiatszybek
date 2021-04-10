@@ -30,7 +30,6 @@ if ($general_product_id !== -1) {
 <script>
     <?= preloadProductFeatures() ?>
     <?= preloadProductCategories() ?>
-    <?= preloadGeneralProductVariants() ?>
     let general_product_data = <?= json_encode($general_product_data) ?>;
     let vats = [{
             vat_id: 1,

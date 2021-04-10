@@ -92,10 +92,10 @@ function product_featureOptionComp(
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-			<input class="field small inline save_to_db" data-data_type="text_value" data-bind="{${data.text_value}}" />
+			<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" />
 			<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
 			<input
-				class="field small inline save_to_db"
+				class="field small inline"
 				inputmode="numeric"
 				data-number
 				data-data_type="double_value"

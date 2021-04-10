@@ -80,15 +80,21 @@ domload(() => {
 				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
 			});
 
-		data.general_product_variant_ids = [];
-		for (const variant of general_product_data.variants.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
-			data.general_product_variant_ids.push(variant.general_product_variant_id);
-		}
+		data.variants = general_product_data.variants;
+		data.variants.sort((a, b) => Math.sign(a.pos - b.pos));
+		data.variants.forEach((variant) => {
+			variant.options.sort((a, b) => Math.sign(a.pos - b.pos));
+		});
 
-		data.general_product_variant_option_ids = [];
-		for (const option_data of general_product_data.variant_options.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
-			data.general_product_variant_option_ids.push(option_data.general_product_variant_option_id);
-		}
+		// data.general_product_variant_ids = [];
+		// for (const variant of general_product_data.variants.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
+		// 	data.general_product_variant_ids.push(variant.general_product_variant_id);
+		// }
+
+		// data.general_product_variant_option_ids = [];
+		// for (const option_data of general_product_data.variant_options.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {
+		// 	data.general_product_variant_option_ids.push(option_data.general_product_variant_option_id);
+		// }
 
 		product_comp._render();
 

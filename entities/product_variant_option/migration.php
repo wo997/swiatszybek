@@ -1,0 +1,13 @@
+<?php //hook[migration]
+
+DB::createTable("product_variant_option", [
+    ["name" => "product_variant_option_id", "type" => "INT", "index" => "primary"],
+    ["name" => "product_variant_id", "type" => "INT", "index" => "index"],
+    ["name" => "name", "type" => "VARCHAR(255)"],
+    ["name" => "pos", "type" => "INT"],
+]);
+
+DB::createTable("product_to_product_variant_option", [
+    ["name" => "product_id", "type" => "INT", "index" => "index"],
+    ["name" => "product_variant_option_id", "type" => "INT", "index" => "index"],
+]);

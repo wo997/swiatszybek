@@ -2,10 +2,10 @@
 
 try {
     DB::beginTransaction();
-    $general_product_variant = EntityManager::getEntity("general_product_variant", json_decode($_POST["general_product_variant"], true));
+    $product_variant = EntityManager::getEntity("product_variant", json_decode($_POST["product_variant"], true));
     EntityManager::saveAll();
     DB::commitTransaction();
-    Request::jsonResponse(["general_product_variant" => $general_product_variant->getSimpleProps()]);
+    Request::jsonResponse(["product_variant" => $product_variant->getSimpleProps()]);
 } catch (Exception $e) {
     var_dump($e);
     DB::rollbackTransation();

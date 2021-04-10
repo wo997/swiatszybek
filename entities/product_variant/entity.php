@@ -1,6 +1,6 @@
 <?php //hook[entity]
 
-EntityManager::register("general_product_variant", [
+EntityManager::register("product_variant", [
     "props" => [
         "general_product_id" => ["type" => "number"],
         "name" => ["type" => "string"],
@@ -10,8 +10,8 @@ EntityManager::register("general_product_variant", [
 
 EntityManager::register("general_product", [
     "props" => [
-        "variants" => ["type" => "general_product_variant[]"]
+        "variants" => ["type" => "product_variant[]"]
     ],
 ]);
 
-EntityManager::oneToMany("general_product", "variants", "general_product_variant");
+EntityManager::oneToMany("general_product", "variants", "product_variant", ["parent_required" => true]);
