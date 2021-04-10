@@ -46,9 +46,7 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 					Dodaj opcję <i class="fas fa-plus"></i>
 				</button>
 
-				<button data-node="{${comp._nodes.fill_options_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml2">
-					Uzupełnij <i class="fas fa-pen"></i>
-				</button>
+				<button data-node="{${comp._nodes.fill_options_btn}}" class="btn subtle small ml2">Uzupełnij <i class="fas fa-pen"></i></button>
 
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
