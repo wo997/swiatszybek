@@ -43,8 +43,6 @@ function product_featureOptionComp(
 		product_feature_id: -1,
 	}
 ) {
-	let last_saved_product_feature_option;
-
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

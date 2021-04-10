@@ -73,11 +73,7 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 			<image-input data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-input>
 
 			<div style="margin-left: 10px">
-				<div
-					class="select_image_options_wrapper"
-					data-tooltip="Dzięki temu klient zobaczy te zdjęcia,<br>które go faktycznie interesują"
-					data-tooltip_position="right"
-				>
+				<div class="select_options_wrapper">
 					<select class="field small" data-node="{${comp._nodes.select_options}}"></select>
 					<button class="btn primary small">Połącz z cechą <i class="fas fa-link"></i></button>
 				</div>

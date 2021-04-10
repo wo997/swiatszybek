@@ -11,3 +11,8 @@ DB::createTable("product_to_product_variant_option", [
     ["name" => "product_id", "type" => "INT", "index" => "index"],
     ["name" => "product_variant_option_id", "type" => "INT", "index" => "index"],
 ]);
+
+DB::createTable("product_variant_option_to_feature_option", [
+    ["name" => "product_variant_option_id", "type" => "INT", "index" => "index"],
+    ["name" => "product_feature_option_id", "type" => "INT", "index" => "index"],
+]);

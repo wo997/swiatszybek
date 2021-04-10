@@ -325,7 +325,10 @@ function productComp(comp, parent, data = undefined) {
 
 		setCompData(comp, data, {
 			...options,
-			pass_list_data: [{ what: "features", where: "images" }],
+			pass_list_data: [
+				{ what: "features", where: "images" },
+				{ what: "features", where: "variants" },
+			],
 			render: () => {
 				const data = comp._data;
 
@@ -649,7 +652,7 @@ function productComp(comp, parent, data = undefined) {
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 
-			<div style="max-width:600px">
+			<div style="max-width:800px">
 				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
 					<div class="checkbox_area box error">
 						<div>

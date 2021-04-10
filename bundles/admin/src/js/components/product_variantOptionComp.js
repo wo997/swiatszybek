@@ -6,12 +6,16 @@
  * product_variant_id: number
  * name: string
  * pos?: number
+ * product_feature_options: number[]
+ * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_VariantOptionCompData
  *
  * @typedef {{
  * _data: Product_VariantOptionCompData
  * _set_data(data?: Product_VariantOptionCompData, options?: SetCompDataOptions)
  * _nodes: {
+ *  select_options: PiepNode
+ *  selected_options: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_VariantOptionComp
  */
@@ -28,32 +32,95 @@ function product_variantOptionComp(
 		product_variant_option_id: -1,
 		product_variant_id: -1,
 		name: "",
+		product_feature_options: [],
+		features: [],
 	}
 ) {
-	let last_saved_product_feature_option;
-
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				let options_html = html`<option value="0">―</option>`;
+				if (data.features) {
+					data.features.forEach((feature) => {
+						if (feature.options.length < 2) {
+							return;
+						}
+
+						const fea = product_features.find((f) => f.product_feature_id === feature.product_feature_id);
+						options_html += feature.options
+							.filter((op) => !data.product_feature_options.includes(op.product_feature_option_id))
+							.map((option) => {
+								return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.value}</option>`;
+							});
+					});
+
+					const selected_options_html = html`${data.product_feature_options
+						.map((option_id) => {
+							const option = product_feature_options.find((op) => op.product_feature_option_id === option_id);
+							const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
+							if (option) {
+								return html`
+									<span class="semi_bold">${fea.name}:</span>
+									<span style="margin-left: 5px">${option.value}</span>
+									<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
+										<i class="fas fa-times"></i>
+									</button>
+								`;
+							}
+							return "";
+						})
+						.join("<br>")}`;
+
+					comp._nodes.select_options._set_content(options_html);
+					comp._nodes.selected_options._set_content(selected_options_html);
+				}
+			},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
-			<input class="field small inline" data-bind="{${data.name}}" />
+			<textarea class="field small inline" data-bind="{${data.name}}" style="height: 54px;"></textarea>
+
+			<div style="margin-left: 10px">
+				<div class="select_options_wrapper">
+					<select class="field small" data-node="{${comp._nodes.select_options}}"></select>
+					<button class="btn primary small">Połącz z cechą <i class="fas fa-link"></i></button>
+				</div>
+				<div data-node="{${comp._nodes.selected_options}}"></div>
+			</div>
+
 			<div style="margin-left:auto">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 		`,
 		initialize: () => {
-			/** @type {ListComp} */
-			// @ts-ignore
-			const list = comp._parent_comp;
+			const so = comp._nodes.select_options;
+			so.addEventListener("change", () => {
+				const option_id = +so._get_value();
+				if (option_id) {
+					comp._data.product_feature_options.push(option_id);
+					comp._render();
+				}
+			});
 
-			/** @type {ProductComp} */
-			// @ts-ignore
-			const product_comp = list._parent_comp._parent_comp._parent_comp;
+			comp.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+
+				if (!target) {
+					return;
+				}
+
+				const remove_option = target._parent(".remove_option");
+				if (remove_option) {
+					const ind = comp._data.product_feature_options.indexOf(+remove_option.dataset.option_id);
+					if (ind !== -1) {
+						comp._data.product_feature_options.splice(ind, 1);
+					}
+					comp._render();
+				}
+			});
 		},
 	});
 }

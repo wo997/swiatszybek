@@ -7,6 +7,7 @@
  * name: string
  * options: Product_VariantOptionCompData[]
  * pos?: number
+ * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_VariantCompData
  *
  * @typedef {{
@@ -26,6 +27,7 @@
 function product_variantComp(comp, parent, data = { product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
+			pass_list_data: [{ what: "features", where: "options" }],
 			...options,
 			render: () => {},
 		});
@@ -41,7 +43,7 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 					data-node="{${comp._nodes.add_option_btn}}"
 					class="btn {${data.options.length === 0}?important:primary} small"
 				>
-					Dodaj opcje <i class="fas fa-plus"></i>
+					Dodaj opcję <i class="fas fa-plus"></i>
 				</button>
 
 				<div style="margin-left:auto">
@@ -71,6 +73,7 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 							product_variant_option_id: product_variant_option.product_variant_option_id,
 							product_variant_id: product_variant_option.product_variant_id,
 							name: product_variant_option.name,
+							product_feature_options: [],
 						});
 						comp._render();
 						hideLoader();
