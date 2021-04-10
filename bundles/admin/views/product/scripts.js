@@ -36,17 +36,30 @@ domload(() => {
 			data.product_feature_option_ids.push(option_data.product_feature_option_id);
 		}
 
+		data.variants = general_product_data.variants.map((v) => {
+			v.options.forEach((e) => {
+				e.product_feature_options = e.product_feature_options.map((op) => op.product_feature_option_id);
+			});
+			return v;
+		});
+		data.variants.sort((a, b) => Math.sign(a.pos - b.pos));
+		data.variants.forEach((variant) => {
+			variant.options.sort((a, b) => Math.sign(a.pos - b.pos));
+		});
+
 		data.products_dt.dataset = [];
 		for (const product of general_product_data.products) {
-			product.feature_options.forEach((opt) => {
-				const product_feature_option_id = opt.product_feature_option_id;
-				const product_feature_option = product_feature_options.find((e) => e.product_feature_option_id === product_feature_option_id);
-				if (product_feature_option) {
-					const fkey = getFeatureKeyFromId(product_feature_option.product_feature_id);
-					product[fkey] = product_feature_option_id;
+			product.variant_options.forEach((opt) => {
+				const product_variant_option_id = opt.product_variant_option_id;
+				const product_variant = data.variants.find((v) =>
+					v.options.find((vo) => vo.product_variant_option_id === product_variant_option_id)
+				);
+				if (product_variant) {
+					const vkey = getVariantKeyFromId(product_variant.product_variant_id);
+					product[vkey] = product_variant_option_id;
 				}
 			});
-			delete product.feature_options;
+			delete product.variant_options;
 
 			data.products_dt.dataset.push(product);
 		}
@@ -79,12 +92,6 @@ domload(() => {
 			.map((e) => {
 				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
 			});
-
-		data.variants = general_product_data.variants;
-		data.variants.sort((a, b) => Math.sign(a.pos - b.pos));
-		data.variants.forEach((variant) => {
-			variant.options.sort((a, b) => Math.sign(a.pos - b.pos));
-		});
 
 		// data.general_product_variant_ids = [];
 		// for (const variant of general_product_data.variants.sort((a, b) => Math.sign(a._meta_pos - b._meta_pos))) {

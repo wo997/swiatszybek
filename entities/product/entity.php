@@ -30,24 +30,24 @@ EntityManager::oneToMany("general_product", "products", "product", ["parent_requ
 EventListener::register("before_save_product_entity", function ($params) {
     /** @var Entity Product */
     $product = $params["obj"];
-    /** @var Entity[] ProductFeatureOption */
-    $feature_options = $product->getProp("feature_options");
+    /** @var Entity[] ProductVariantOption */
+    $variant_options = $product->getProp("variant_options");
     $options = [];
-    foreach ($feature_options as $feature_option) {
-        $option_id = $feature_option->getId();
+    foreach ($variant_options as $variant_option) {
+        $option_id = $variant_option->getId();
 
-        /** @var Entity ProductFeature */
-        $feature = $feature_option->getParent("product_feature");
-        if (!$feature) {
+        /** @var Entity ProductVariant */
+        $variant = $variant_option->getParent("product_variant");
+        if (!$variant) {
             continue;
         }
-        $feature_id = $feature->getId();
+        $variant_id = $variant->getId();
 
-        if (!isset($options[$feature_id])) {
-            $options[$feature_id] = [];
-        }
-        if (!in_array($option_id, $options[$feature_id])) {
-            $options[$feature_id][] = $option_id;
+        // if (!isset($options[$variant_id])) {
+        //     $options[$variant_id] = [];
+        // }
+        if (!in_array($option_id, $options[$variant_id])) {
+            $options[$variant_id][] = $option_id;
         }
     }
     $product->setProp("__options_json", $options ? json_encode($options) : "{}");

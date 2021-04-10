@@ -24,14 +24,6 @@ EntityManager::register("product_feature", [
 
 EntityManager::oneToMany("product_feature", "options", "product_feature_option", ["parent_required" => true]);
 
-EntityManager::register("product", [
-    "props" => [
-        "feature_options" => ["type" => "product_feature_option[]"]
-    ],
-]);
-
-EntityManager::manyToMany("product", "product_feature_option", "product_to_feature_option");
-
 EntityManager::register("general_product", [
     "props" => [
         "feature_options" => ["type" => "product_feature_option[]"]

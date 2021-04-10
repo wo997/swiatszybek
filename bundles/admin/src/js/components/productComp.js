@@ -19,7 +19,7 @@
  *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
- *  missing_products_features: Object[]
+ * missing_products_variants: Object[]
  *  unnecessary_product_ids?: number[]
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
@@ -55,15 +55,15 @@
 
 const product_copy_keys = ["net_price", "vat", "gross_price", "active"];
 
-const getFeatureKeyFromId = (feature_id) => {
-	return `feature_${feature_id}`;
+const getVariantKeyFromId = (variant_id) => {
+	return `variant_${variant_id}`;
 };
-const getFeatureIdFromKey = (key) => {
-	const feature_id = +key.replace(`feature_`, "");
-	if (isNaN(feature_id)) {
+const getVariantIdFromKey = (key) => {
+	const variant_id = +key.replace(`variant_`, "");
+	if (isNaN(variant_id)) {
 		return 0;
 	}
-	return feature_id;
+	return variant_id;
 };
 
 /**
@@ -80,7 +80,7 @@ function productComp(comp, parent, data = undefined) {
 			sell_by: "qty",
 			product_feature_ids: [],
 			product_feature_option_ids: [],
-			missing_products_features: [],
+			missing_products_variants: [],
 			features: [],
 			category_ids: [],
 			main_img_url: "",
@@ -102,8 +102,14 @@ function productComp(comp, parent, data = undefined) {
 		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
 		print_row_as_string: (row_data) => {
 			return Object.entries(row_data)
-				.filter(([key, option_id]) => getFeatureIdFromKey(key))
-				.map(([key, option_id]) => product_feature_options.find((option) => option.product_feature_option_id === option_id).value)
+				.filter(([key, option_id]) => getVariantIdFromKey(key))
+				.map(([key, option_id]) => {
+					const option = comp._data.variants
+						.map((variant) => variant.options)
+						.flat(1)
+						.find((option) => option.product_feature_options.find((opt) => opt === option_id));
+					return option ? option.name : "";
+				})
 				.join(" ");
 		},
 		maps: [
@@ -118,9 +124,12 @@ function productComp(comp, parent, data = undefined) {
 				},
 			},
 			{
-				name: "product_feature_option",
+				name: "product_variant_option",
 				getMap: () => {
-					return product_feature_options.map((option) => ({ val: option.product_feature_option_id, label: option.value }));
+					return def(comp._data, data)
+						.variants.map((v) => v.options)
+						.flat(1)
+						.map((option) => ({ val: option.product_variant_option_id, label: option.name }));
 				},
 			},
 		],
@@ -133,57 +142,61 @@ function productComp(comp, parent, data = undefined) {
 		const data = comp._data;
 		const add_products = [];
 
-		const all_feature_keys = data.product_feature_ids.map((feature_id) => getFeatureKeyFromId(feature_id));
+		const all_variant_keys = data.variants.map((variant) => getVariantKeyFromId(variant.product_variant_id));
 
-		data.missing_products_features.forEach((features) => {
+		data.missing_products_variants.forEach((variants) => {
 			/** @type {ProductData} */
 			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 1, active: 1, stock: 0 };
 
-			for (const [feature_id, option_id] of Object.entries(features)) {
-				const key = getFeatureKeyFromId(feature_id);
+			for (const [variant_id, option_id] of Object.entries(variants)) {
+				const key = getVariantKeyFromId(variant_id);
 				product_data[key] = option_id;
 			}
 
 			if (params && params.options_existed) {
 				data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
 					params.options_existed.forEach((option_id) => {
-						const feature_id = product_feature_options.find((option) => option.product_feature_option_id === option_id).product_feature_id;
-						const feature_key = getFeatureKeyFromId(feature_id);
-						other_product[feature_key] = option_id;
+						const variant = data.variants.find((v) => v.options.find((vo) => vo.product_variant_option_id === option_id));
+						if (!variant) {
+							return;
+						}
+						const variant_id = variant.product_variant_id;
+						const variant_key = getVariantKeyFromId(variant_id);
+						other_product[variant_key] = option_id;
 					});
 				});
 			}
 
 			let copy_product = undefined;
-			let max_shared_features_for_similar_products = 0;
+			let max_shared_variants_for_similar_products = 0;
 			let product_existed = false;
 			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
-				let shared_features = 0;
-				let shared_features_for_similar_products = 0;
+				let shared_variants = 0;
+				let shared_variants_for_similar_products = 0;
 
-				for (const feature_key of all_feature_keys) {
-					const pr_opt_id = product_data[feature_key];
+				for (const variant_key of all_variant_keys) {
+					const pr_opt_id = product_data[variant_key];
 
-					if (pr_opt_id === other_product[feature_key]) {
-						shared_features++;
-						shared_features_for_similar_products++;
+					if (pr_opt_id === other_product[variant_key]) {
+						shared_variants++;
+						shared_variants_for_similar_products++;
 					}
 
 					if (params && params.similar_products) {
 						params.similar_products.forEach((e) => {
-							if (e.new_option_id === pr_opt_id && e.option_id === other_product[feature_key]) {
-								shared_features_for_similar_products++;
+							if (e.new_option_id === pr_opt_id && e.option_id === other_product[variant_key]) {
+								shared_variants_for_similar_products++;
 							}
 						});
 					}
 				}
 
-				if (shared_features_for_similar_products > max_shared_features_for_similar_products) {
-					max_shared_features_for_similar_products = shared_features_for_similar_products;
+				if (shared_variants_for_similar_products > max_shared_variants_for_similar_products) {
+					max_shared_variants_for_similar_products = shared_variants_for_similar_products;
 					copy_product = other_product;
 				}
 
-				if (shared_features === all_feature_keys.length) {
+				if (shared_variants === all_variant_keys.length) {
 					product_existed = true;
 				}
 			});
@@ -199,74 +212,83 @@ function productComp(comp, parent, data = undefined) {
 			}
 		});
 
-		// compare features
+		// compare variants
 		const options_before = {};
 
 		data.products_dt.dataset.forEach((/** @type {ProductData} */ product) => {
-			for (const [feature_key, option_id] of Object.entries(product)) {
-				const feature_id = getFeatureIdFromKey(feature_key);
-				if (!feature_id) {
+			for (const [variant_key, option_id] of Object.entries(product)) {
+				const variant_id = getVariantIdFromKey(variant_key);
+				if (!variant_id) {
 					continue;
 				}
 
-				if (!options_before[feature_id]) {
-					options_before[feature_id] = [];
+				if (!options_before[variant_id]) {
+					options_before[variant_id] = [];
 				}
-				options_before[feature_id].push(option_id);
+				options_before[variant_id].push(option_id);
 			}
 		});
 
 		const options_after = {};
-		data.product_feature_option_ids.forEach((option_id) => {
-			const feature_id = product_feature_options.find((opt) => opt.product_feature_option_id === option_id).product_feature_id;
-			if (!options_after[feature_id]) {
-				options_after[feature_id] = [];
-			}
-			options_after[feature_id].push(option_id);
+		data.variants.forEach((variant) => {
+			const variant_id = variant.product_variant_id;
+			options_after[variant_id] = variant.options.map((opt) => opt.product_variant_option_id);
 		});
 
 		/** @type {ManageProductList_QuestionCompData[]} */
 		const questions = [];
 
-		for (const feature_id of Object.keys(options_after)) {
-			if (options_after[feature_id].length < 2) {
+		for (const variant_id of Object.keys(options_after)) {
+			if (options_after[variant_id].length < 2) {
 				continue;
 			}
-			const feature_name = product_features.find((fe) => fe.product_feature_id === +feature_id).name;
-			if (options_before[feature_id]) {
-				for (const option_after_id of options_after[feature_id]) {
-					if (!options_before[feature_id].includes(option_after_id)) {
-						const options = options_before[feature_id].filter(onlyUnique).map((option_id) => {
+			const variant_name = data.variants.find((v) => v.product_variant_id === +variant_id).name;
+			if (options_before[variant_id]) {
+				for (const option_after_id of options_after[variant_id]) {
+					if (!options_before[variant_id].includes(option_after_id)) {
+						const options = options_before[variant_id].filter(onlyUnique).map((option_id) => {
 							return {
-								label: product_feature_options.find((op) => op.product_feature_option_id === option_id).value,
+								label: data.variants
+									.map((v) => v.options)
+									.flat(1)
+									.find((opt) => opt.product_variant_option_id === option_id).name,
 								value: option_id,
 							};
 						});
 						options.push({ label: "Nie kopiuj (utwórz puste)", value: -1 });
 
-						const option_name = product_feature_options.find((op) => op.product_feature_option_id === option_after_id).value;
+						const option_name = data.variants
+							.map((v) => v.options)
+							.flat(1)
+							.find((opt) => opt.product_variant_option_id === option_after_id).name;
 
 						questions.push({
 							type: "copy",
 							copy_option_id: option_after_id,
-							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${feature_name})?`,
+							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${variant_name})?`,
 							options,
 						});
 					}
-					if (options_after[feature_id].length < 2) {
+					if (options_after[variant_id].length < 2) {
 						return;
 					}
 				}
 			} else {
 				if (data.products_dt.dataset.length > 0) {
-					const options = options_after[feature_id].filter(onlyUnique).map((option_id) => {
-						return { label: product_feature_options.find((op) => op.product_feature_option_id === option_id).value, value: option_id };
+					const options = options_after[variant_id].filter(onlyUnique).map((option_id) => {
+						return {
+							label: data.variants
+								.map((v) => v.options)
+								.flat(1)
+								.find((opt) => opt.product_variant_option_id === option_id).name,
+							value: option_id,
+						};
 					});
 					options.push({ label: "Nie", value: -1 });
 
 					questions.push({
 						type: "existed",
-						label: `Czy któraś opcja cechy ${feature_name} należała już do produktu?`,
+						label: `Czy któraś opcja cechy ${variant_name} należała już do produktu?`,
 						options,
 					});
 				}
@@ -279,17 +301,10 @@ function productComp(comp, parent, data = undefined) {
 				data.products_dt.dataset.push(p);
 			});
 
-			data.product_feature_ids.forEach((feature_id) => {
-				const key = getFeatureKeyFromId(feature_id);
-				const feature = data.features.find((f) => f.product_feature_id === feature_id);
-				if (!feature || feature.options.length < 2) {
-					return;
-				}
-
+			data.variants.forEach((variant) => {
+				const key = getVariantKeyFromId(variant.product_variant_id);
 				const columns = data.products_dt.columns;
-				const column_index = columns.findIndex((column) => column.key === key);
-
-				if (column_index === -1) {
+				if (!columns.find((column) => column.key === key)) {
 					columns.unshift({ key });
 				}
 			});
@@ -384,39 +399,30 @@ function productComp(comp, parent, data = undefined) {
 				}
 
 				// full product list
-				let cross_features = [[]];
-				data.features.forEach((feature) => {
-					if (feature.options.length < 2) {
-						return;
-					}
+				let cross_variants = [[]];
+				data.variants.forEach((variant) => {
+					const cross_variants_next = [];
+					cross_variants.forEach((variant_set) => {
+						variant.options.forEach((option) => {
+							const variant_set_copy = cloneObject(variant_set);
 
-					const cross_features_next = [];
-					cross_features.forEach((feature_set) => {
-						feature.options.forEach((option) => {
-							const feature_set_copy = cloneObject(feature_set);
-
-							feature_set_copy.push(option.product_feature_option_id);
-							cross_features_next.push(feature_set_copy);
+							variant_set_copy.push(option.product_variant_option_id);
+							cross_variants_next.push(variant_set_copy);
 						});
 					});
-					cross_features = cross_features_next;
+					cross_variants = cross_variants_next;
 				});
 
-				data.product_feature_ids.forEach((feature_id) => {
-					const key = getFeatureKeyFromId(feature_id);
-					const feature = product_features.find((feature) => feature.product_feature_id === feature_id);
-
-					if (data.features.find((f) => f.product_feature_id === feature_id).options.length < 2) {
-						return;
-					}
+				data.variants.forEach((variant) => {
+					const key = getVariantKeyFromId(variant.product_variant_id);
 
 					/** @type {DatatableColumnDef} */
 					const column = {
 						key,
-						label: feature.name,
+						label: variant.name,
 						width: "1",
 						searchable: "select",
-						map_name: "product_feature_option",
+						map_name: "product_variant_option",
 						quick_filter: true,
 					};
 
@@ -430,32 +436,31 @@ function productComp(comp, parent, data = undefined) {
 					}
 				});
 
-				const selection_changed = cd.product_feature_ids || cd.product_feature_option_ids;
-				if (selection_changed || cd.products_dt) {
+				if (cd.product_variants || cd.products_dt) {
+					comp._nodes.all_products._warmup_maps();
+					//comp._render({ force_render: true }); think about it? maybe on timeout?
+
+					// redefine products DT columns to make sure the order is right etc
+
 					/** @type {DatatableColumnDef[]} */
 					const columns = data.products_dt.columns;
 					/** @type {DatatableColumnDef[]} */
 					const set_columns = [columns.find((c) => c.key === "select")];
 
-					const multi_feature_ids = data.features.filter((fea) => fea.options.length > 1).map((fea) => fea.product_feature_id);
-
-					multi_feature_ids.forEach((feature_id) => {
-						const feature_key = getFeatureKeyFromId(feature_id);
-						const column = columns.find((c) => c.key === feature_key);
+					data.variants.forEach((variant) => {
+						const variant_key = getVariantKeyFromId(variant.product_variant_id);
+						const column = columns.find((c) => c.key === variant_key);
 						if (column) {
 							set_columns.push(column);
 						}
 					});
 
 					const keys_we_have = set_columns.map((c) => c.key);
-
 					set_columns.push(...data.products_dt.columns.filter((column) => !keys_we_have.includes(column.key)));
-
 					data.products_dt.columns = set_columns;
-				}
 
-				if (selection_changed || cd.products_dt) {
-					const missing_products_features = [];
+					// missing product variant columns
+					const missing_products_variants = [];
 
 					/** @type {ProductData[]} */
 					const products = data.products_dt.dataset;
@@ -463,12 +468,12 @@ function productComp(comp, parent, data = undefined) {
 						p.is_necessary = false;
 					});
 
-					cross_features.forEach((feature_set) => {
-						const product_features = {};
-						feature_set.forEach((product_feature_option_id) => {
-							const option = product_feature_options.find((fo) => fo.product_feature_option_id === product_feature_option_id);
-							if (option) {
-								product_features[option.product_feature_id] = product_feature_option_id;
+					cross_variants.forEach((variant_set) => {
+						const product_variants = {};
+						variant_set.forEach((product_variant_option_id) => {
+							const variant = data.variants.find((v) => v.options.find((vo) => vo.product_variant_option_id === product_variant_option_id));
+							if (variant) {
+								product_variants[variant.product_variant_id] = product_variant_option_id;
 							}
 						});
 
@@ -479,8 +484,8 @@ function productComp(comp, parent, data = undefined) {
 							}
 
 							let options_match = true;
-							for (const [feature_id, option_id] of Object.entries(product_features)) {
-								const key = getFeatureKeyFromId(feature_id);
+							for (const [variant_id, option_id] of Object.entries(product_variants)) {
+								const key = getVariantKeyFromId(variant_id);
 								if (product[key] !== option_id) {
 									options_match = false;
 									break;
@@ -493,11 +498,11 @@ function productComp(comp, parent, data = undefined) {
 						});
 
 						if (missing_product) {
-							missing_products_features.push(product_features);
+							missing_products_variants.push(product_variants);
 						}
 					});
 
-					data.missing_products_features = missing_products_features;
+					data.missing_products_variants = missing_products_variants;
 					data.unnecessary_product_ids = products.filter((p) => !p.is_necessary).map((p) => p.product_id);
 				}
 
@@ -720,18 +725,18 @@ function productComp(comp, parent, data = undefined) {
 			</div>
 
 			<button
-				class="btn {${data.missing_products_features.length > 0}?important:subtle}"
+				class="btn {${data.missing_products_variants.length > 0}?important:subtle}"
 				data-node="{${comp._nodes.add_products_btn}}"
-				data-tooltip="{${data.missing_products_features.length > 0
+				data-tooltip="{${data.missing_products_variants.length > 0
 					? "Zalecane po uzupełnieniu wszystkich cech produktu"
 					: "Wszystko się zgadza!"}}"
 			>
-				Dodaj brakujące produkty (<span html="{${data.missing_products_features.length}}"></span>)
+				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)
 			</button>
 			<button
 				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle}"
 				data-node="{${comp._nodes.remove_products_btn}}"
-				disabled="{${data.missing_products_features.length > 0}}"
+				disabled="{${data.missing_products_variants.length > 0}}"
 				data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
 			>
 				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
@@ -871,11 +876,11 @@ function productComp(comp, parent, data = undefined) {
 				if (errors.length === 0) {
 					const db_products = cloneObject(data.products_dt.dataset);
 					db_products.forEach((product) => {
-						product.feature_options = [];
-						data.product_feature_ids.forEach((fid) => {
-							const fkey = getFeatureKeyFromId(fid);
-							product.feature_options.push(product[fkey]);
-							delete product[fkey];
+						product.variant_options = [];
+						data.variants.forEach((vid) => {
+							const vkey = getVariantKeyFromId(vid);
+							product.variant_options.push(product[vkey]);
+							delete product[vkey];
 						});
 					});
 
@@ -969,11 +974,6 @@ function productComp(comp, parent, data = undefined) {
 				}
 			});
 
-			window.addEventListener("product_features_changed", () => {
-				// TODO: maps will belong to variants actually
-				comp._nodes.all_products._warmup_maps();
-				comp._render({ force_render: true });
-			});
 			window.addEventListener("product_categories_changed", () => {
 				comp._render({ force_render: true });
 			});

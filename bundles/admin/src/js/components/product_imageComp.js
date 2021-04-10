@@ -33,10 +33,6 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 			render: () => {
 				let options_html = html`<option value="0">―</option>`;
 				data.features.forEach((feature) => {
-					if (feature.options.length < 2) {
-						return;
-					}
-
 					const fea = product_features.find((f) => f.product_feature_id === feature.product_feature_id);
 					options_html += feature.options
 						.filter((op) => !data.product_feature_options.includes(op.product_feature_option_id))
@@ -48,8 +44,8 @@ function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 				const selected_options_html = html`${data.product_feature_options
 					.map((option_id) => {
 						const option = product_feature_options.find((op) => op.product_feature_option_id === option_id);
-						const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
 						if (option) {
+							const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
 							return html`
 								<span class="semi_bold">${fea.name}:</span>
 								<span style="margin-left: 5px">${option.value}</span>

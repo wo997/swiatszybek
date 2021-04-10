@@ -36,15 +36,14 @@ EventListener::register("before_save_general_product_entity", function ($params)
     /** @var Entity[] Product */
     $products = $general_product->getProp("products");
 
-    /** @var Entity[] ProductFeature */
-    $general_product_features = $general_product->getProp("features");
-    $features = [];
-    foreach ($general_product_features as $general_product_feature) {
-        $features[] = ["id" => $general_product_feature->getProp("product_feature_id"), "pos" => $general_product_feature->getMeta()["pos"]];
+    /** @var Entity[] ProductVariant */
+    $general_product_variants = $general_product->getProp("variants");
+    $variants = [];
+    foreach ($general_product_variants as $general_product_variant) {
+        $variants[] = ["id" => $general_product_variant->getProp("product_variant_id"), "pos" => $general_product_variant->getProp("pos")];
     }
-    usort($features, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
-    $sorted_feature_ids = array_column($features, "id");
-    $sorted_feature_ids_str = join(",", $sorted_feature_ids);
+    usort($variants, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
+    $sorted_variant_ids = array_column($variants, "id");
 
     $options_html = "";
     $options_html_curr_extra = null;
@@ -90,7 +89,6 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $options_html .= "</ul>";
 
-
     $general_product->setProp("__options_html", $options_html);
 
     $alone_options = [];
@@ -111,30 +109,30 @@ EventListener::register("before_save_general_product_entity", function ($params)
     foreach ($products as $product) {
         //$product_id = $product->getId();
 
-        /** @var Entity[] ProductFeatureOption */
-        $feature_options = $product->getProp("feature_options");
-        /** @var Entity[] ProductFeatureOption */
-        $feature_options = array_merge($feature_options, $alone_options);
-        foreach ($feature_options as $key => $feature_option) {
-            if (!in_array($feature_option->getId(), $all_option_ids)) {
-                unset($feature_options[$key]); // not tested but seems legit
+        /** @var Entity[] ProductVariantOption */
+        $variant_options = $product->getProp("variant_options");
+        /** @var Entity[] ProductVariantOption */
+        $variant_options = array_merge($variant_options, $alone_options);
+        foreach ($variant_options as $key => $variant_option) {
+            if (!in_array($variant_option->getId(), $all_option_ids)) {
+                unset($variant_options[$key]); // not tested but seems legit
             }
         }
-        /** @var Entity[] ProductFeatureOption */
-        $feature_options = array_values($feature_options);
-        $product->setProp("feature_options", $feature_options);
+        /** @var Entity[] ProductVariantOption */
+        $variant_options = array_values($variant_options);
+        $product->setProp("variant_options", $variant_options);
 
-        $feature_option_ids = [];
-        foreach ($feature_options as $feature_option) {
-            $feature_option_ids[] = $feature_option->getId();
+        $variant_option_ids = [];
+        foreach ($variant_options as $variant_option) {
+            $variant_option_ids[] = $variant_option->getId();
         }
 
         $__img_url = "";
         $most_matches = -1;
         foreach ($images_data as $image_data) {
             $matches = 0;
-            foreach ($feature_option_ids as $feature_option_id) {
-                if (in_array($feature_option_id, $image_data["option_ids"])) {
+            foreach ($variant_option_ids as $variant_option_id) {
+                if (in_array($variant_option_id, $image_data["option_ids"])) {
                     $matches++;
                 }
             }
@@ -150,33 +148,32 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
         $specific_option_ids = [];
         $specific_option_values = [];
-        if ($sorted_feature_ids_str) {
-            /** @var Entity[] ProductFeatureOption */
-            $product_feature_options = $product->getProp("feature_options");
 
-            $product_feature_options_data = [];
-            foreach ($product_feature_options as $product_feature_option) {
-                $product_feature_option_id = $product_feature_option->getId();
-                if (in_array($product_feature_option_id, $alone_option_ids)) {
-                    continue;
-                }
-                $product_feature_options_data[] = [
-                    "value" => $product_feature_option->getProp("value"),
-                    "pos" => array_search($product_feature_option->getProp("product_feature_id"), $sorted_feature_ids),
-                    "id" => $product_feature_option_id,
-                ];
+        /** @var Entity[] ProductVariantOption */
+        $product_variant_options = $product->getProp("variant_options");
+
+        $product_variant_options_data = [];
+        foreach ($product_variant_options as $product_variant_option) {
+            $product_variant_option_id = $product_variant_option->getId();
+            if (in_array($product_variant_option_id, $alone_option_ids)) {
+                continue;
             }
-            usort($product_feature_options_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
-
-            foreach ($product_feature_options_data as $option_data) {
-                if ($option_data["value"]) {
-                    $product_name .= " | " . $option_data["value"];
-                }
-            }
-
-            $specific_option_ids = array_column($product_feature_options_data, "id");
-            $specific_option_values = array_column($product_feature_options_data, "value");
+            $product_variant_options_data[] = [
+                "name" => $product_variant_option->getProp("name"),
+                "pos" => array_search($product_variant_option->getProp("product_variant_id"), $sorted_variant_ids),
+                "id" => $product_variant_option_id,
+            ];
         }
+        usort($product_variant_options_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
+
+        foreach ($product_variant_options_data as $option_data) {
+            if ($option_data["name"]) {
+                $product_name .= " | " . $option_data["name"];
+            }
+        }
+
+        $specific_option_ids = array_column($product_variant_options_data, "id");
+        $specific_option_values = array_column($product_variant_options_data, "value");
 
         $product_url = "";
 
@@ -237,6 +234,7 @@ EventListener::register("after_save_general_product_entity", function ($params) 
 
     $non_list_option_ids_csv = $non_list_option_ids ? join(",", $non_list_option_ids) : "-1";
 
+    // TODO: not u can remove by just_general_product_id ;)
     DB::execute("DELETE pfo
         FROM product_feature_option pfo
         INNER JOIN general_product_to_feature_option gptfo USING (product_feature_option_id)

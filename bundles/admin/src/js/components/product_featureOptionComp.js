@@ -183,7 +183,7 @@ function product_featureOptionComp(
 
 				const data = comp._data;
 
-				if (!data.data_type.endsWith("_value")) {
+				if (!data || !data.data_type.endsWith("_value")) {
 					return;
 				}
 
