@@ -117,7 +117,7 @@ function productComp(comp, parent, data = undefined) {
 					const option = comp._data.variants
 						.map((variant) => variant.options)
 						.flat(1)
-						.find((option) => option.product_feature_options.find((opt) => opt === option_id));
+						.find((option) => option.product_variant_option_id === option_id);
 					return option ? option.name : "";
 				})
 				.join(" ");
