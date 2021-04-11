@@ -34,6 +34,18 @@
  */
 
 /**
+ *
+ * @param {PiepNode} node
+ * @returns
+ */
+function validPiepInput(node) {
+	if (node.matches) {
+		return node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker, image-input");
+	}
+	return false;
+}
+
+/**
  * @param {PiepSelector} selector
  * @param {*} parent
  * @returns {PiepNode}
@@ -53,12 +65,7 @@ function $(selector, parent = undefined) {
 		return undefined;
 	}
 
-	// jscolor is an input already, .datepicker too
-	const valid_input = node.matches
-		? node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker")
-		: false;
-
-	if (valid_input) {
+	if (validPiepInput(node)) {
 		if (!node._set_value) {
 			node._set_value = (value, options = {}) => {
 				setValue(node, value, options);

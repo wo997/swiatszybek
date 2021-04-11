@@ -71,6 +71,6 @@ function registerImageInputs(parent) {
 			}
 		};
 
-		input._set_value("");
+		input._set_value("", { quiet: true });
 	});
 }

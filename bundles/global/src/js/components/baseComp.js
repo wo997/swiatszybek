@@ -269,15 +269,20 @@ function createComp(node, parent_comp, data, options) {
 		const bind_var = sub_node.dataset.bind;
 		sub_node._bind_var = bind_var;
 
-		if (sub_node._get_value) {
-			sub_node.addEventListener("change", () => {
-				let sub_node_data = sub_node._get_value();
+		if (!validPiepInput(sub_node)) {
+			return;
+		}
 
-				if (sub_node_data !== undefined && comp._data) {
-					comp._data[bind_var] = sub_node_data;
-					comp._render();
-				}
-			});
+		sub_node.addEventListener("change", () => {
+			let sub_node_data = sub_node._get_value();
+
+			if (sub_node_data !== undefined && comp._data) {
+				comp._data[bind_var] = sub_node_data;
+				comp._render();
+			}
+		});
+
+		if (["INPUT", "TEXTAREA"].includes(sub_node.tagName)) {
 			sub_node.addEventListener("input", () => {
 				const dis = () => {
 					sub_node._dispatch_change();
@@ -505,11 +510,13 @@ function propagateCompData(comp) {
 		node._bindNodes.forEach((/** @type {AnyComp} */ sub_node) => {
 			const bind_var = sub_node.dataset.bind;
 
+			if (!validPiepInput(sub_node)) {
+				return;
+			}
+
 			if (!node._changed_data || node._changed_data[bind_var]) {
 				const cb = () => {
-					if (sub_node._set_value) {
-						sub_node._set_value(node._data[bind_var], { quiet: true });
-					}
+					sub_node._set_value(node._data[bind_var], { quiet: true });
 				};
 				if (OPTIMIZE_COMPONENTS) {
 					setTimeout(cb);
