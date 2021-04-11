@@ -9,7 +9,7 @@ EntityManager::register("general_product", [
         "__options_json" => ["type" => "string"],
         "__search" => ["type" => "string"],
         "__url" => ["type" => "string"],
-        "__options_html" => ["type" => "string"],
+        "__features_html" => ["type" => "string"],
         // "seo_title" => ["type" => "string"], // THINK ABOUT IT FIRST
         // "seo_description" => ["type" => "string"],
     ],
@@ -39,70 +39,68 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     /** @var Entity[] ProductVariant */
     $general_product_variants = $general_product->getProp("variants");
-    $variants = [];
-    foreach ($general_product_variants as $general_product_variant) {
-        $variants[] = ["id" => $general_product_variant->getProp("product_variant_id"), "pos" => $general_product_variant->getProp("pos")];
-    }
-    usort($variants, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
-    $sorted_variant_ids = array_column($variants, "id");
+    $variants_data = [];
+    $all_variant_options = [];
+    foreach ($general_product_variants as $variant) {
+        $product_variant_id = $variant->getProp("product_variant_id");
+        $variants_data[] = ["id" => $product_variant_id, "pos" => $variant->getProp("pos")];
 
-    $options_html = "";
-    $options_html_curr_extra = null;
+        /** @var Entity[] ProductVariantOption */
+        $variant_options = $variant->getProp("options");
+        foreach ($variant_options as $variant_option) {
+            if (!isset($all_variant_options[$product_variant_id])) {
+                $all_variant_options[$product_variant_id] = [];
+            }
+            $product_variant_option_id = $variant_option->getProp("product_variant_option_id");
+            if (!isset($all_variant_options[$product_variant_id][$product_variant_option_id])) {
+                $all_variant_options[$product_variant_id][] = $product_variant_option_id;
+            }
+        }
+    }
+    usort($variants_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
+    $sorted_variant_ids = array_column($variants_data, "id");
+
+    $features_html = "";
+    $features_html_curr_extra = null;
 
     /** @var Entity[] ProductFeatureOption */
     $general_product_feature_options = $general_product->getProp("feature_options");
     usort($general_product_feature_options, fn ($a, $b) => $a->getProp("pos") <=> $b->getProp("pos"));
 
-    $all_options = [];
-    $all_option_ids = [];
+    $all_feature_options = [];
     foreach ($general_product_feature_options as $option) {
         $option_id = $option->getId();
         $product_feature = $option->getParent("product_feature");
         $feature_id = $product_feature->getId();
-        if (!isset($all_options[$feature_id])) {
-            $all_options[$feature_id] = [];
-            if ($options_html) {
-                $options_html .= "</ul>";
+        if (!isset($all_feature_options[$feature_id])) {
+            $all_feature_options[$feature_id] = [];
+            if ($features_html) {
+                $features_html .= "</ul>";
             }
 
-            $options_html .= "<ul><li>" . htmlspecialchars($product_feature->getProp("name")) . "</li>";
-            $options_html_curr_extra = $product_feature->getProp("extra");
+            $features_html .= "<ul><li>" . htmlspecialchars($product_feature->getProp("name")) . "</li>";
+            $features_html_curr_extra = $product_feature->getProp("extra");
         }
-        if (!in_array($option_id, $all_options[$feature_id])) {
+        if (!in_array($option_id, $all_feature_options[$feature_id])) {
             $all_options[$feature_id][] = $option_id;
-            $options_html .= "<li>";
+            $features_html .= "<li>";
 
-            if ($options_html_curr_extra === "color") {
+            if ($features_html_curr_extra === "color") {
                 $extra = json_decode($option->getProp("extra_json"), true);
                 $color = "#ffffff";
                 if ($extra) {
                     $color = def($extra, "color", "");
-                    $options_html .= "<span class=\"color_circle\" style=\"background:$color\"></span>";
+                    $features_html .= "<span class=\"color_circle\" style=\"background:$color\"></span>";
                 }
             }
 
-            $options_html .= htmlspecialchars($option->getProp("value")) . "</li>";
-        }
-        if (!in_array($option_id, $all_option_ids)) {
-            $all_option_ids[] = $option_id;
+            $features_html .= htmlspecialchars($option->getProp("value")) . "</li>";
         }
     }
 
-    $options_html .= "</ul>";
+    $features_html .= "</ul>";
 
-    $general_product->setProp("__options_html", $options_html);
-
-
-
-    // DEFINITELY WRONG !!!!
-    // $alone_options = [];
-    // $alone_option_ids = [];
-    // foreach ($all_options as $feature_id => $option_ids) {
-    //     if (count($option_ids) === 1) {
-    //         $alone_options[] = EntityManager::getEntityById("product_feature_option", $option_ids[0]);
-    //         $alone_option_ids[] = $option_ids[0];
-    //     }
-    // }
+    $general_product->setProp("__features_html", $features_html);
 
     $main_img_url = "";
     $first_img = def($images_data, 0, null);
@@ -113,16 +111,6 @@ EventListener::register("before_save_general_product_entity", function ($params)
     foreach ($products as $product) {
         /** @var Entity[] ProductVariantOption */
         $variant_options = $product->getProp("variant_options");
-        ///** @var Entity[] ProductVariantOption */
-        //$variant_options = array_merge($variant_options, $alone_options);
-        // foreach ($variant_options as $key => $variant_option) {
-        //     if (!in_array($variant_option->getId(), $all_option_ids)) {
-        //         unset($variant_options[$key]); // not tested but seems legit
-        //     }
-        // }
-        // /** @var Entity[] ProductVariantOption */
-        // $variant_options = array_values($variant_options);
-        // $product->setProp("variant_options", $variant_options);
 
         $variant_option_ids = [];
         foreach ($variant_options as $variant_option) {
@@ -187,7 +175,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $general_product->setProp("__img_url", $main_img_url);
     $general_product->setProp("__images_json", json_encode($images_data));
-    $general_product->setProp("__options_json", $all_options ? json_encode($all_options) : "{}");
+    $general_product->setProp("__options_json", $all_variant_options ? json_encode($all_variant_options) : "{}");
 
     $search = "";
     $search .= $general_product->getProp("name");

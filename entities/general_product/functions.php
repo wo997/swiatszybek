@@ -18,7 +18,7 @@ function getGlobalProductsSearch($url, $options = [])
 
     //$unique_option_ids = [];
 
-    $from = "general_product gp INNER JOIN product p USING (general_product_id) INNER JOIN product_to_variant_option USING(product_id)";
+    $from = "general_product gp INNER JOIN product p USING (general_product_id) INNER JOIN product_to_variant_option ptvo USING(product_id)";
     if ($product_category_id !== -1) {
         $from .= "INNER JOIN general_product_to_category gptc USING (general_product_id)";
         $where .= " AND gptc.product_category_id = $product_category_id";
@@ -34,8 +34,9 @@ function getGlobalProductsSearch($url, $options = [])
         // }
         $option_ids_csv = clean(implode(",", $option_ids));
         if ($option_ids_csv) {
-            $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
-            $where .= " AND ptfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
+            $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter
+                ON pvotfo_$query_counter.product_variant_option_id = ptvo.product_variant_option_id";
+            $where .= " AND pvotfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
         }
     }
 
@@ -59,10 +60,10 @@ function getGlobalProductsSearch($url, $options = [])
 
             if (!$is_cena) {
                 // for both min and max, thus on top
-                $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter USING (product_variant_option_id)
+                $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter ON pvotfo_$query_counter.product_variant_option_id = ptvo.product_variant_option_id
                     INNER JOIN product_feature_option pfo_$query_counter
-                    ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id
-                    AND pfo_$query_counter.product_feature_id = $product_feature_id";
+                    ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id";
+                // AND pfo_$query_counter.product_feature_id = $product_feature_id - useless? once we have the option the feature should match
             }
             if ($min !== "") {
                 preg_match('/[a-zA-Z]/', $min, $matches, PREG_OFFSET_CAPTURE);
@@ -107,9 +108,10 @@ function getGlobalProductsSearch($url, $options = [])
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
-            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__options_html,
+            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
-            JSON_ARRAYAGG(p.__options_json) products_options_jsons_json,
+            GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
+            COUNT(DISTINCT product_id) as product_count,
             __avg_rating, __rating_count
         ",
         "from" => $from,
@@ -141,7 +143,9 @@ function getGlobalProductsSearch($url, $options = [])
         $sum_stock = $product["sum_stock"];
         $avg_rating = $product["__avg_rating"];
         $rating_count = $product["__rating_count"];
-        $options_html =  $product["__options_html"];
+        $features_html =  $product["__features_html"];
+        $options = json_decode($product["__options_json"], true);
+        $product_count = $product["product_count"];
 
         $display_price = $min_gross_price . " zł";
         if ($min_gross_price !== $max_gross_price) {
@@ -155,39 +159,28 @@ function getGlobalProductsSearch($url, $options = [])
             $stock_class = "unavailable";
         }
 
-        json_decode($product["__options_json"], true);
+        $matched_product_variant_option_ids = explode(",", $product["product_variant_option_ids_csv"]);
 
-        $products_options_jsons = json_decode($product["products_options_jsons_json"]);
-        // pretty tricky, but it works
-        $product_count = count($products_options_jsons);
-
-        $matched_options = [];
-        foreach ($products_options_jsons as $product_options_json) {
-            $product_options = json_decode($product_options_json, true);
-            if ($product_options) {
-                foreach ($product_options as $feature_id => $option_ids) {
-                    if (!isset($matched_options[$feature_id])) {
-                        $matched_options[$feature_id] = [];
+        $product_definite_variant_option_ids = [];
+        foreach ($options as $variant_id => $variant_option_ids) {
+            $first_matched_option_id = null;
+            $definite = true;
+            foreach ($variant_option_ids as $variant_option_id) {
+                if (in_array($variant_option_id, $matched_product_variant_option_ids)) {
+                    if ($first_matched_option_id) {
+                        $definite = false;
+                        break;
                     }
-                    foreach ($option_ids as $option_id) {
-                        if (!in_array($option_id, $matched_options[$feature_id])) {
-                            $matched_options[$feature_id][] = $option_id;
-                        }
-                    }
+                    $first_matched_option_id = $variant_option_id;
                 }
             }
-        }
-
-        $product_unique_feature_option_ids = [];
-
-        foreach ($matched_options as $feature_id => $option_ids) {
-            if (count($option_ids) === 1) {
-                $product_unique_feature_option_ids[] = $option_ids[0];
+            if ($definite && $first_matched_option_id) {
+                $product_definite_variant_option_ids[] = $first_matched_option_id;
             }
         }
 
-        $option_names = getVariantNamesFromOptionIds($product_unique_feature_option_ids);
-        $link = getProductLink($id, $name, $product_unique_feature_option_ids, $option_names);
+        $option_names = getVariantNamesFromOptionIds($product_definite_variant_option_ids);
+        $link = getProductLink($id, $name, $product_definite_variant_option_ids, $option_names);
 
         $option_ids_csv = join(",", $option_ids);
 
@@ -200,9 +193,9 @@ function getGlobalProductsSearch($url, $options = [])
                 $index++;
                 $weight = -$index;
                 foreach ($image["feature_option_ids"] as $feature_option_id) {
-                    if (in_array($feature_option_id, $product_unique_feature_option_ids)) {
-                        $weight += 100;
-                    }
+                    // if (in_array($feature_option_id, $product_definite_variant_option_ids)) {
+                    //     $weight += 100;
+                    // }
                 }
                 $image["weight"] = $weight;
             }
@@ -233,7 +226,7 @@ function getGlobalProductsSearch($url, $options = [])
                         <i class=\"fas fa-list-ul\"></i>
                     </div>
                     <div class=\"list smooth_scrollbar\">
-                        $options_html
+                        $features_html
                     </div>
                 </div>
             </div>
@@ -248,6 +241,7 @@ function getGlobalProductsSearch($url, $options = [])
         "select" => "COUNT(product_id)",
         "from" => $from,
         "where" => $where,
+        "group" => "product_id",
         "datatable_params" => json_encode($datatable_params),
         "search_type" => "extended",
         "quick_search_fields" => ["gp.__search"],
