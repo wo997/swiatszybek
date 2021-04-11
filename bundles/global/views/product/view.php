@@ -67,25 +67,25 @@ User::getCurrent()->last_viewed_products->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
 
-$general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id ORDER BY pv.pos ASC");
+$general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id AND pos <> 0 ORDER BY pv.pos ASC");
 
 foreach ($general_product_variants as $key => $variant) {
     $product_variant_id = $general_product_variants[$key]["product_variant_id"];
     $general_product_variants[$key]["options"] = DB::fetchArr("SELECT *
         FROM product_variant_option pvo
-        WHERE product_variant_id = $product_variant_id
+        WHERE product_variant_id = $product_variant_id AND pos <> 0
         ORDER BY pvo.pos");
 }
 
 // comments
-$comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1) count
+$comments_options = DB::fetchArr("SELECT pvo.product_variant_option_id, pvo.name, COUNT(1) count
     FROM comment c
-    INNER JOIN comment_to_product_feature_option ctpfo USING (comment_id)
-    INNER JOIN product_feature_option pfo USING (product_feature_option_id)
+    INNER JOIN comment_to_product_variant_option ctpvo USING (comment_id)
+    INNER JOIN product_variant_option pvo USING (product_variant_option_id)
     WHERE c.general_product_id = $general_product_id
-    GROUP BY pfo.product_feature_option_id
+    GROUP BY pvo.product_variant_option_id
     ORDER BY COUNT(1) DESC");
-$comments_options_map = getAssociativeArray($comments_options, "product_feature_option_id");
+$comments_options_map = getAssociativeArray($comments_options, "product_variant_option_id");
 
 $comments_data = getProductCommentsSearch($general_product_id, json_encode(["page_id" => 0, "row_count" => 10]));
 

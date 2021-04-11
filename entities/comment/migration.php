@@ -14,7 +14,7 @@ DB::createTable("general_product", [
     ["name" => "__rating_count", "type" => "INT", "index" => "index"],
 ]);
 
-DB::createTable("comment_to_product_feature_option", [
+DB::createTable("comment_to_product_variant_option", [
     ["name" => "comment_id", "type" => "INT", "index" => "index"],
-    ["name" => "product_feature_option_id", "type" => "INT", "index" => "index"],
+    ["name" => "product_variant_option_id", "type" => "INT", "index" => "index"],
 ]);

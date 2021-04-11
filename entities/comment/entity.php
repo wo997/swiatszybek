@@ -5,7 +5,7 @@ EntityManager::register("comment", [
         "comment" => ["type" => "string"],
         "rating" => ["type" => "number"],
         "general_product_id" => ["type" => "number"],
-        "options" => ["type" => "product_feature_option[]"],
+        "options" => ["type" => "product_variant_option[]"],
         "user" => ["type" => "user"],
         "created_at" => ["type" => "string"],
     ],
@@ -19,6 +19,6 @@ EntityManager::register("general_product", [
     ],
 ]);
 
-EntityManager::manyToMany("comment", "product_feature_option", "comment_to_product_feature_option");
+EntityManager::manyToMany("comment", "product_variant_option", "comment_to_product_variant_option");
 
 EntityManager::oneToMany("general_product", "comments", "comment");
