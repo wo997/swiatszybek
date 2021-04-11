@@ -533,7 +533,7 @@ class EntityManager
     {
         $relation_table = $link["relation_table"];
 
-        $our_id = $obj->getId(); // HEY! it won't work before we save it, so you should do it at the end!
+        $our_id = $obj->getId();
         $our_id_column = $obj->getIdColumn();
         $other_entity_id_column = self::getEntityIdColumn($other_entity_name);
 
@@ -586,6 +586,7 @@ class EntityManager
             DB::execute($query);
         }
 
+        // optimize the update, not necessary in mysql tho lol
         foreach ($update_meta_sqls as $update_meta_sql) {
             DB::execute($update_meta_sql);
         }

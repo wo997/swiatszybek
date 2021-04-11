@@ -65,7 +65,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     /** @var Entity[] ProductFeatureOption */
     $general_product_feature_options = $general_product->getProp("feature_options");
-    usort($general_product_feature_options, fn ($a, $b) => $a->getProp("pos") <=> $b->getProp("pos"));
+    usort($general_product_feature_options, fn ($a, $b) => $a->getMeta("pos") <=> $b->getMeta("pos"));
 
     $all_feature_options = [];
     foreach ($general_product_feature_options as $option) {
@@ -82,7 +82,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
             $features_html_curr_extra = $product_feature->getProp("extra");
         }
         if (!in_array($option_id, $all_feature_options[$feature_id])) {
-            $all_options[$feature_id][] = $option_id;
+            $all_feature_options[$feature_id][] = $option_id;
             $features_html .= "<li>";
 
             if ($features_html_curr_extra === "color") {
@@ -98,7 +98,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
         }
     }
 
-    $features_html .= "</ul>";
+    if ($features_html) {
+        $features_html .= "</ul>";
+    }
 
     $general_product->setProp("__features_html", $features_html);
 
@@ -211,6 +213,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {
+    // in case it's slow (I doubt tho) just run it as a cron job
+
     /** @var Entity GeneralProduct */
     $general_product = $params["obj"];
     $general_product_id = $general_product->getId();
