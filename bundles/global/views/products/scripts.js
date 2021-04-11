@@ -368,18 +368,15 @@ function setProductsFilterCountFromUrl() {
 
 	const url_params = new URLSearchParams(current_url_search);
 
+	for (const key of url_params.keys()) {
+		if (key.match(/^(r\d*|cena)$/)) {
+			filter_count++;
+		}
+	}
+
 	const v = def(url_params.get("v"), "");
 	if (v) {
 		filter_count += v.split("-").length;
-	}
-
-	const r = def(url_params.get("r"), "");
-	if (r) {
-		filter_count += r.split("-").length;
-	}
-
-	if (url_params.get("cena")) {
-		filter_count++;
 	}
 
 	feature_filter_count._set_content(filter_count ? `(${filter_count})` : "");
