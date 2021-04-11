@@ -17,5 +17,5 @@ function getValuesFromOptionIds($option_ids)
         return [];
     }
     $option_ids_csv = clean(join(",", $option_ids));
-    return DB::fetchCol("SELECT value FROM product_feature_option WHERE product_feature_option_id IN ($option_ids_csv) ORDER BY FIELD(product_feature_option_id,$option_ids_csv)");
+    return DB::fetchCol("SELECT name FROM product_variant_option WHERE product_variant_option_id IN ($option_ids_csv) ORDER BY FIELD(product_variant_option_id,$option_ids_csv)");
 }
