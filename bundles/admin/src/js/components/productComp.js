@@ -654,7 +654,8 @@ function productComp(comp, parent, data = undefined) {
 				if (cd.variants) {
 					setTimeout(() => {
 						comp._nodes.all_products._warmup_maps();
-						comp._nodes.all_products._render({ force_render: true });
+						// it does render anyway
+						//comp._nodes.all_products._render({ force_render: true });
 					});
 				}
 			},
@@ -995,6 +996,10 @@ function productComp(comp, parent, data = undefined) {
 				if (key === "net_price" || key === "vat_id") {
 					row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
 				}
+			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._render();
 			});
 
 			window.addEventListener("product_categories_changed", () => {

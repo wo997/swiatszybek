@@ -90,8 +90,13 @@ function product_featureOptionComp(
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-			<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" />
-			<input class="field small inline default_datepicker" data-data_type="datetime_value" data-bind="{${data.datetime_value}}" />
+			<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" data-input_delay="200" />
+			<input
+				class="field small inline default_datepicker"
+				data-data_type="datetime_value"
+				data-bind="{${data.datetime_value}}"
+				data-input_delay="200"
+			/>
 			<input
 				class="field small inline"
 				inputmode="numeric"
@@ -99,6 +104,7 @@ function product_featureOptionComp(
 				data-data_type="double_value"
 				data-bind="{${data.double_value}}"
 				data-node="{${comp._nodes.double_value}}"
+				data-input_delay="200"
 			/>
 			<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
 				<input
@@ -107,6 +113,7 @@ function product_featureOptionComp(
 					data-number
 					data-node="{${comp._nodes.physical_value_input}}"
 					data-bind="{${data.double_base}}"
+					data-input_delay="200"
 				/>
 				<select
 					class="field inline blank unit_picker"
@@ -215,7 +222,7 @@ function product_featureOptionComp(
 						// we need a value for sure tho
 						product_feature_option.value = data.double_base;
 						if (physical_measure_unit_map[data.unit_id]) {
-							product_feature_option.value + " " + physical_measure_unit_map[data.unit_id].name;
+							product_feature_option.value += " " + physical_measure_unit_map[data.unit_id].name;
 						}
 					}
 				}

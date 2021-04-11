@@ -205,5 +205,3 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 		},
 	});
 }
-
-function initFillVariantOptionsModal() {}

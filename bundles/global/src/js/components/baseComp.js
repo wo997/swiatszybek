@@ -473,9 +473,9 @@ function setCompData(comp, data = undefined, options = {}) {
 		}
 	}
 
-	// if (equal) {
-	// 	return;
-	// }
+	if (equal) {
+		return;
+	}
 
 	node._prev_data = cloneObject(node._data);
 
@@ -528,9 +528,12 @@ function propagateCompData(comp) {
 			// @ts-ignore
 			const receiver = subscribe ? subscribe.receiver : undefined;
 
-			if (receiver._propagating_data && OPTIMIZE_COMPONENTS) {
+			if (receiver._propagating_data) {
 				continue;
 			}
+			// if (receiver._propagating_data && OPTIMIZE_COMPONENTS) {
+			// 	continue;
+			// }
 
 			if (receiver && receiver._in_body()) {
 				subscribe.fetch(node, receiver);
