@@ -74,7 +74,9 @@ function product_variantOptionComp(
 				}
 
 				if (comp._changed_data.name) {
-					autoHeight(comp._nodes.name);
+					setTimeout(() => {
+						autoHeight(comp._nodes.name);
+					});
 				}
 			},
 		});
