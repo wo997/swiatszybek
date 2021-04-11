@@ -108,6 +108,14 @@ function product_variantOptionComp(
 				autoHeight(comp._nodes.name);
 			});
 
+			$(".main_admin_scroll").addEventListener(
+				"scroll",
+				() => {
+					autoHeight(comp._nodes.name);
+				},
+				{ once: true }
+			);
+
 			const so = comp._nodes.select_options;
 			so.addEventListener("change", () => {
 				const option_id = +so._get_value();

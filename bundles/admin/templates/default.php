@@ -62,7 +62,7 @@ endSection();
     <?php
     }
     ?>
-    <div class="scroll_panel scroll_shadow">
+    <div class="scroll_panel scroll_shadow main_admin_scroll">
         <div class="panel_padding actual-content">
             <?= def($sections, "body_content", ""); ?>
         </div>
