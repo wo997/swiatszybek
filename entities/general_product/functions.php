@@ -16,9 +16,12 @@ function getGlobalProductsSearch($url, $options = [])
 
     $where = "gp.active";
 
-    //$unique_option_ids = [];
+    $selected_unique_option_ids = [];
 
-    $from = "general_product gp INNER JOIN product p USING (general_product_id) INNER JOIN product_to_variant_option ptvo USING(product_id)";
+    $from = "general_product gp
+        INNER JOIN product p USING (general_product_id)
+        INNER JOIN product_to_variant_option ptvo USING(product_id)
+        INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)";
     if ($product_category_id !== -1) {
         $from .= "INNER JOIN general_product_to_category gptc USING (general_product_id)";
         $where .= " AND gptc.product_category_id = $product_category_id";
@@ -28,10 +31,14 @@ function getGlobalProductsSearch($url, $options = [])
     foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
         $query_counter++;
 
+        if (!$option_ids_str) {
+            continue;
+        }
+
         $option_ids = array_map(fn ($x) => intval($x), explode("i", $option_ids_str));
-        // if (count($option_ids) === 1) {
-        //     $unique_option_ids[] = $option_ids[0];
-        // }
+        if (count($option_ids) === 1) {
+            $selected_unique_option_ids[] = $option_ids[0];
+        }
         $option_ids_csv = clean(implode(",", $option_ids));
         if ($option_ids_csv) {
             $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter
@@ -111,6 +118,7 @@ function getGlobalProductsSearch($url, $options = [])
             gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
             GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
+            GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
             COUNT(DISTINCT product_id) as product_count,
             __avg_rating, __rating_count
         ",
@@ -160,6 +168,7 @@ function getGlobalProductsSearch($url, $options = [])
         }
 
         $matched_product_variant_option_ids = explode(",", $product["product_variant_option_ids_csv"]);
+        $product_feature_option_ids = explode(",", $product["product_feature_option_ids_csv"]);
 
         $product_definite_variant_option_ids = [];
         foreach ($options as $variant_id => $variant_option_ids) {
@@ -182,8 +191,6 @@ function getGlobalProductsSearch($url, $options = [])
         $option_names = getVariantNamesFromOptionIds($product_definite_variant_option_ids);
         $link = getProductLink($id, $name, $product_definite_variant_option_ids, $option_names);
 
-        $option_ids_csv = join(",", $option_ids);
-
         // adjust images positions for best relevance
         $images = json_decode($images_json, true);
 
@@ -193,9 +200,9 @@ function getGlobalProductsSearch($url, $options = [])
                 $index++;
                 $weight = -$index;
                 foreach ($image["feature_option_ids"] as $feature_option_id) {
-                    // if (in_array($feature_option_id, $product_definite_variant_option_ids)) {
-                    //     $weight += 100;
-                    // }
+                    if (in_array($feature_option_id, $product_feature_option_ids)) {
+                        $weight += 100;
+                    }
                 }
                 $image["weight"] = $weight;
             }

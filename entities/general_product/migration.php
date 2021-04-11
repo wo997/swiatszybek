@@ -9,5 +9,5 @@ DB::createTable("general_product", [
     ["name" => "__options_json", "type" => "TEXT"],
     ["name" => "__search", "type" => "TEXT"],
     ["name" => "__url", "type" => "VARCHAR(255)"],
-    ["name" => "__features_html", "previous_name" => "__options_html", "type" => "TEXT"],
+    ["name" => "__features_html", "type" => "TEXT"],
 ]);
