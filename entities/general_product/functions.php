@@ -16,7 +16,7 @@ function getGlobalProductsSearch($url, $options = [])
 
     $where = "gp.active";
 
-    $unique_option_ids = [];
+    //$unique_option_ids = [];
 
     $from = "general_product gp INNER JOIN product p USING (general_product_id) INNER JOIN product_to_variant_option USING(product_id)";
     if ($product_category_id !== -1) {
@@ -29,9 +29,9 @@ function getGlobalProductsSearch($url, $options = [])
         $query_counter++;
 
         $option_ids = array_map(fn ($x) => intval($x), explode("i", $option_ids_str));
-        if (count($option_ids) === 1) {
-            $unique_option_ids[] = $option_ids[0];
-        }
+        // if (count($option_ids) === 1) {
+        //     $unique_option_ids[] = $option_ids[0];
+        // }
         $option_ids_csv = clean(implode(",", $option_ids));
         if ($option_ids_csv) {
             $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id)";
@@ -178,16 +178,16 @@ function getGlobalProductsSearch($url, $options = [])
             }
         }
 
-        $unique_option_ids = [];
+        $product_unique_feature_option_ids = [];
 
         foreach ($matched_options as $feature_id => $option_ids) {
             if (count($option_ids) === 1) {
-                $unique_option_ids[] = $option_ids[0];
+                $product_unique_feature_option_ids[] = $option_ids[0];
             }
         }
 
-        $option_names = getVariantNamesFromOptionIds($unique_option_ids);
-        $link = getProductLink($id, $name, $unique_option_ids, $option_names);
+        $option_names = getVariantNamesFromOptionIds($product_unique_feature_option_ids);
+        $link = getProductLink($id, $name, $product_unique_feature_option_ids, $option_names);
 
         $option_ids_csv = join(",", $option_ids);
 
@@ -199,8 +199,8 @@ function getGlobalProductsSearch($url, $options = [])
             foreach ($images as &$image) {
                 $index++;
                 $weight = -$index;
-                foreach ($image["option_ids"] as $option_id) {
-                    if (in_array($option_id, $unique_option_ids)) {
+                foreach ($image["feature_option_ids"] as $feature_option_id) {
+                    if (in_array($feature_option_id, $product_unique_feature_option_ids)) {
                         $weight += 100;
                     }
                 }
