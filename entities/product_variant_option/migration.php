@@ -5,6 +5,7 @@ DB::createTable("product_variant_option", [
     ["name" => "product_variant_id", "type" => "INT", "index" => "index"],
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "pos", "type" => "INT"],
+    ["name" => "__feature_options_json", "type" => "TEXT"],
 ]);
 
 DB::createTable("product_to_variant_option", [
