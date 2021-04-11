@@ -7,7 +7,7 @@ DB::createTable("product_variant_option", [
     ["name" => "pos", "type" => "INT"],
 ]);
 
-DB::createTable("product_to_product_variant_option", [
+DB::createTable("product_to_variant_option", [
     ["name" => "product_id", "type" => "INT", "index" => "index"],
     ["name" => "product_variant_option_id", "type" => "INT", "index" => "index"],
 ]);

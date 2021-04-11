@@ -47,13 +47,9 @@ $general_product_imgs = json_decode($general_product_imgs_json, true);
 
 foreach ($general_product_products as &$product) {
     $product_id = $product["product_id"];
-    // pto.product_feature_option_id, pto.product_feature_id
-    $product["variants"] = DB::fetchCol("SELECT pto.product_feature_option_id
-        FROM product_to_feature_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_feature_option pto USING(product_feature_option_id)
+    $product["variants"] = DB::fetchCol("SELECT pto.product_variant_option_id
+        FROM product_to_variant_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_variant_option pto USING(product_variant_option_id)
         WHERE product_id = $product_id");
-
-    //SELECT pto.product_feature_option_id, pto.product_feature_id feature_name FROM product_to_feature_option ptfo INNER JOIN product p USING(product_id) INNER JOIN product_feature_option pto USING(product_feature_option_id) WHERE product_id = 100
-    //SELECT * FROM product_to_feature_option INNER JOIN product USING(product_id) INNER JOIN product_feature_option USING(product_feature_option_id) INNER JOIN product_feature USING(product_feature_id) WHERE general_product_id = 1
 }
 unset($product);
 
@@ -71,23 +67,15 @@ User::getCurrent()->last_viewed_products->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
 
-$general_product_variants = DB::fetchArr("SELECT * FROM general_product_to_feature gptf
-    INNER JOIN product_feature USING (product_feature_id)
-    WHERE general_product_id = $general_product_id
-    ORDER BY gptf.pos");
+$general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id ORDER BY pv.pos ASC");
 
 foreach ($general_product_variants as $key => $variant) {
-    $product_feature_id = $general_product_variants[$key]["product_feature_id"];
-    $general_product_variants[$key]["variant_options"] = DB::fetchArr("SELECT * FROM general_product_to_feature_option gptfo
-        INNER JOIN product_feature_option USING (product_feature_option_id)
-        WHERE gptfo.general_product_id = $general_product_id AND product_feature_id = $product_feature_id
-        ORDER BY gptfo.pos");
-
-    if (count($general_product_variants[$key]["variant_options"]) < 2) {
-        unset($general_product_variants[$key]);
-    }
+    $product_variant_id = $general_product_variants[$key]["product_variant_id"];
+    $general_product_variants[$key]["variant_options"] = DB::fetchArr("SELECT *
+        FROM product_variant_option pvo
+        WHERE product_variant_id = $product_variant_id
+        ORDER BY pvo.pos");
 }
-$general_product_variants = array_values($general_product_variants);
 
 // comments
 $comments_options = DB::fetchArr("SELECT pfo.product_feature_option_id, pfo.value, COUNT(1) count
@@ -115,14 +103,14 @@ foreach ($general_product_variants as $general_product_variant) {
         </div>
     ";
     foreach ($general_product_variant["variant_options"] as $variant_option) {
-        $product_feature_option_id = $variant_option["product_feature_option_id"];
-        $value = $variant_option["value"];
-        $count = isset($comments_options_map[$product_feature_option_id]) ? $comments_options_map[$product_feature_option_id]["count"] : "0";
+        $product_variant_option_id = $variant_option["product_variant_option_id"];
+        $name = $variant_option["name"];
+        $count = isset($comments_options_map[$product_variant_option_id]) ? $comments_options_map[$product_variant_option_id]["count"] : "0";
         $variants_less_html .= "
             <div>
                 <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
-                    <p-checkbox data-value=\"$product_feature_option_id\"></p-checkbox>
-                    <span>$value</span> <span class=\"count\">($count)</span>
+                    <p-checkbox data-value=\"$product_variant_option_id\"></p-checkbox>
+                    <span>$name</span> <span class=\"count\">($count)</span>
                 </div>
             </div>
         ";
@@ -269,7 +257,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                                 <div>
                                     <div class="price_diff_before"></div>
                                     <div>
-                                        <p-checkbox data-value="<?= $variant_option["product_feature_option_id"] ?>"></p-checkbox>
+                                        <p-checkbox data-value="<?= $variant_option["product_variant_option_id"] ?>"></p-checkbox>
                                         <?php
                                         $color = def($variant_option, ["extra", "color"], "");
                                         if ($color) {
@@ -278,7 +266,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                                         <?php
                                         }
                                         ?>
-                                        <?= $variant_option["value"] ?>
+                                        <?= $variant_option["name"] ?>
                                     </div>
                                     <div class="price_diff"></div>
                                 </div>

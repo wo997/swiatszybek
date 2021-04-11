@@ -22,4 +22,4 @@ EntityManager::register("product", [
         "variant_options" => ["type" => "product_variant_option[]"]
     ],
 ]);
-EntityManager::manyToMany("product", "product_variant_option", "product_to_product_variant_option");
+EntityManager::manyToMany("product", "product_variant_option", "product_to_variant_option");
