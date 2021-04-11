@@ -143,6 +143,7 @@
 			border-radius: 4px;
 			max-height: 250px;
 			overflow-y: auto;
+			border: 1px solid #ccc;
 		}
 		& ul:not(:first-child) {
 			margin-top: 5px;

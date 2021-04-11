@@ -16,12 +16,12 @@ function getGlobalProductsSearch($url, $options = [])
 
     $where = "gp.active";
 
-    $selected_unique_option_ids = [];
-
     $from = "general_product gp
         INNER JOIN product p USING (general_product_id)
-        INNER JOIN product_to_variant_option ptvo USING(product_id)
-        INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)";
+    
+        INNER JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
+        INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
+    ";
     if ($product_category_id !== -1) {
         $from .= "INNER JOIN general_product_to_category gptc USING (general_product_id)";
         $where .= " AND gptc.product_category_id = $product_category_id";
@@ -29,20 +29,19 @@ function getGlobalProductsSearch($url, $options = [])
 
     $query_counter = 0;
     foreach (explode("-", def($get_vars, "v", "")) as $option_ids_str) {
-        $query_counter++;
-
         if (!$option_ids_str) {
             continue;
         }
 
+        $query_counter++;
+
         $option_ids = array_map(fn ($x) => intval($x), explode("i", $option_ids_str));
-        if (count($option_ids) === 1) {
-            $selected_unique_option_ids[] = $option_ids[0];
-        }
         $option_ids_csv = clean(implode(",", $option_ids));
         if ($option_ids_csv) {
-            $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter
-                ON pvotfo_$query_counter.product_variant_option_id = ptvo.product_variant_option_id";
+            $from .= " INNER JOIN product_to_variant_option ptvo_$query_counter
+                ON ptvo_$query_counter.product_id = p.product_id
+                INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter
+                ON pvotfo_$query_counter.product_variant_option_id = ptvo_$query_counter.product_variant_option_id";
             $where .= " AND pvotfo_$query_counter.product_feature_option_id IN ($option_ids_csv)";
         }
     }
@@ -67,7 +66,10 @@ function getGlobalProductsSearch($url, $options = [])
 
             if (!$is_cena) {
                 // for both min and max, thus on top
-                $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter ON pvotfo_$query_counter.product_variant_option_id = ptvo.product_variant_option_id
+                $from .= "
+                    INNER JOIN product_to_variant_option ptvo_$query_counter
+                    ON ptvo_$query_counter.product_id = p.product_id
+                    INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter ON pvotfo_$query_counter.product_variant_option_id = ptvo_$query_counter.product_variant_option_id
                     INNER JOIN product_feature_option pfo_$query_counter
                     ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id
                     AND pfo_$query_counter.product_feature_id = $product_feature_id";
@@ -119,7 +121,7 @@ function getGlobalProductsSearch($url, $options = [])
             MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
             GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
             GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
-            COUNT(DISTINCT product_id) as product_count,
+            COUNT(DISTINCT p.product_id) as product_count,
             __avg_rating, __rating_count
         ",
         "from" => $from,
@@ -132,7 +134,7 @@ function getGlobalProductsSearch($url, $options = [])
     ];
 
     if (isset($options["return_all_ids"])) {
-        $pagination_params["primary_key"] = "product_id";
+        $pagination_params["primary_key"] = "p.product_id";
         $pagination_params["return_all_ids"] = true;
     }
 
@@ -171,6 +173,7 @@ function getGlobalProductsSearch($url, $options = [])
         $product_feature_option_ids = explode(",", $product["product_feature_option_ids_csv"]);
 
         $product_definite_variant_option_ids = [];
+
         foreach ($options as $variant_id => $variant_option_ids) {
             $first_matched_option_id = null;
             $definite = true;
@@ -245,10 +248,10 @@ function getGlobalProductsSearch($url, $options = [])
 
     /** @var PaginationParams */
     $pagination_params = [
-        "select" => "COUNT(product_id)",
+        "select" => "COUNT(p.product_id)",
         "from" => $from,
         "where" => $where,
-        "group" => "product_id",
+        "group" => "p.product_id",
         "datatable_params" => json_encode($datatable_params),
         "search_type" => "extended",
         "quick_search_fields" => ["gp.__search"],
