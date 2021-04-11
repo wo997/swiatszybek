@@ -127,14 +127,16 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 
 							data.options.forEach((option, index) => {
 								const f_option = feature.options[index];
-								if (!f_option) {
+								// not everything is always correct in other components
+								const warm_option = product_feature_options.find((e) => e.product_feature_option_id === f_option.product_feature_option_id);
+								if (!warm_option) {
 									return;
 								}
 								if (fill_all || option.product_feature_options.length === 0) {
-									option.product_feature_options = [f_option.product_feature_option_id];
+									option.product_feature_options = [warm_option.product_feature_option_id];
 								}
 								if (fill_all || option.name.trim() === "") {
-									option.name = f_option.value;
+									option.name = warm_option.value;
 								}
 							});
 

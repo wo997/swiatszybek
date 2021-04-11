@@ -202,14 +202,6 @@ function product_featureOptionComp(
 					detail.option_ids.push(data.product_feature_option_id);
 				}
 
-				if (data.data_type === "text_value") {
-					product_feature_option.text_value = data.text_value;
-					product_feature_option.value = data.text_value;
-				}
-				if (data.data_type === "datetime_value") {
-					product_feature_option.datetime_value = data.datetime_value;
-					product_feature_option.value = data.datetime_value;
-				}
 				if (data.data_type === "double_value") {
 					if (data.unit_id === null) {
 						product_feature_option.double_value = data.double_value;
@@ -225,6 +217,12 @@ function product_featureOptionComp(
 							product_feature_option.value += " " + physical_measure_unit_map[data.unit_id].name;
 						}
 					}
+				} else if (data.data_type === "text_value") {
+					product_feature_option.text_value = data.text_value;
+					product_feature_option.value = data.text_value;
+				} else if (data.data_type === "datetime_value") {
+					product_feature_option.datetime_value = data.datetime_value;
+					product_feature_option.value = data.datetime_value;
 				}
 			});
 		},
