@@ -18,7 +18,7 @@ function getGlobalProductsSearch($url, $options = [])
 
     $unique_option_ids = [];
 
-    $from = "general_product gp INNER JOIN product p USING (general_product_id)";
+    $from = "general_product gp INNER JOIN product p USING (general_product_id) INNER JOIN product_to_variant_option USING(product_id)";
     if ($product_category_id !== -1) {
         $from .= "INNER JOIN general_product_to_category gptc USING (general_product_id)";
         $where .= " AND gptc.product_category_id = $product_category_id";
@@ -58,7 +58,11 @@ function getGlobalProductsSearch($url, $options = [])
             }
 
             if (!$is_cena) {
-                $from .= " INNER JOIN product_to_feature_option ptfo_$query_counter USING (product_id) INNER JOIN product_feature_option pfo_$query_counter ON ptfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id AND pfo_$query_counter.product_feature_id = $product_feature_id";
+                // for both min and max, thus on top
+                $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter USING (product_variant_option_id)
+                    INNER JOIN product_feature_option pfo_$query_counter
+                    ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id
+                    AND pfo_$query_counter.product_feature_id = $product_feature_id";
             }
             if ($min !== "") {
                 preg_match('/[a-zA-Z]/', $min, $matches, PREG_OFFSET_CAPTURE);

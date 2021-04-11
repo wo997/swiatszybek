@@ -15,11 +15,6 @@ DB::createTable("product_feature_option", [
     ["name" => "just_general_product_id", "previous_name" => "general_product_id", "type" => "INT", "null" => true, "index" => "index"],
 ]);
 
-// DB::createTable("product_to_feature_option", [
-//     ["name" => "product_id", "type" => "INT", "index" => "index"],
-//     ["name" => "product_feature_option_id", "type" => "INT", "index" => "index"],
-// ]);
-
 DB::createTable("general_product_to_feature_option", [
     ["name" => "general_product_id", "type" => "INT", "index" => "index"],
     ["name" => "product_feature_option_id", "type" => "INT", "index" => "index"],
