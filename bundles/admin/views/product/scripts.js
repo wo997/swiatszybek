@@ -36,14 +36,17 @@ domload(() => {
 			data.product_feature_option_ids.push(option_data.product_feature_option_id);
 		}
 
-		data.variants = general_product_data.variants.map((v) => {
-			v.options.forEach((e) => {
-				e.product_feature_options = e.product_feature_options.map((op) => op.product_feature_option_id);
-			});
-			return v;
-		});
+		data.variants = general_product_data.variants
+			.map((v) => {
+				v.options.forEach((e) => {
+					e.product_feature_options = e.product_feature_options.map((op) => op.product_feature_option_id);
+				});
+				return v;
+			})
+			.filter((e) => e.pos);
 		data.variants.sort((a, b) => Math.sign(a.pos - b.pos));
 		data.variants.forEach((variant) => {
+			variant.options = variant.options.filter((e) => e.pos);
 			variant.options.sort((a, b) => Math.sign(a.pos - b.pos));
 		});
 
@@ -106,7 +109,7 @@ domload(() => {
 		product_comp._render();
 
 		// dont cmon
-		product_comp._add_missing_products({ dont_ask: true });
+		product_comp._add_missing_products({ pls_add_columns: true });
 
 		// lazyloading won't work nicely because there is some lag
 	}
