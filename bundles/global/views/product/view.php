@@ -15,7 +15,7 @@ $option_ids_str = def($_GET, "v");
 $option_names = [];
 if ($option_ids_str) {
     $option_ids = explode("-", $option_ids_str);
-    $option_names = getValuesFromOptionIds($option_ids);
+    $option_names = getVariantNamesFromOptionIds($option_ids);
 } else {
     $option_ids = [];
 }

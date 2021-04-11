@@ -182,7 +182,7 @@ function getGlobalProductsSearch($url, $options = [])
             }
         }
 
-        $option_names = getValuesFromOptionIds($unique_option_ids);
+        $option_names = getVariantNamesFromOptionIds($unique_option_ids);
         $link = getProductLink($id, $name, $unique_option_ids, $option_names);
 
         $option_ids_csv = join(",", $option_ids);
