@@ -47,10 +47,10 @@ function getGlobalProductsSearch($url, $options = [])
 
         $query_counter++;
 
-        $val_parts = explode("do", $range_str);
+        $val_parts = explode("_do_", $range_str);
 
         $min = def($val_parts, 0, "");
-        $max = strpos($range_str, "do") === false ? $min : def($val_parts, 1, "");
+        $max = strpos($range_str, "_do_") === false ? $min : def($val_parts, 1, "");
 
         if ($min !== "" || $max !== "") {
             $is_cena = $product_feature_id === "cena";
@@ -62,8 +62,8 @@ function getGlobalProductsSearch($url, $options = [])
                 // for both min and max, thus on top
                 $from .= " INNER JOIN product_variant_option_to_feature_option pvotfo_$query_counter ON pvotfo_$query_counter.product_variant_option_id = ptvo.product_variant_option_id
                     INNER JOIN product_feature_option pfo_$query_counter
-                    ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id";
-                // AND pfo_$query_counter.product_feature_id = $product_feature_id - useless? once we have the option the feature should match
+                    ON pvotfo_$query_counter.product_feature_option_id = pfo_$query_counter.product_feature_option_id
+                    AND pfo_$query_counter.product_feature_id = $product_feature_id";
             }
             if ($min !== "") {
                 preg_match('/[a-zA-Z]/', $min, $matches, PREG_OFFSET_CAPTURE);
@@ -86,7 +86,7 @@ function getGlobalProductsSearch($url, $options = [])
                 if ($matches) {
                     $unit_id = substr($max, $matches[0][1]);
                     $unit_data = getPhysicalMeasureUnit($unit_id);
-                    $double_base =  substr($max, 0, $matches[0][1]);
+                    $double_base = substr($max, 0, $matches[0][1]);
                     $max = $double_base * $unit_data["factor"];
                 }
 

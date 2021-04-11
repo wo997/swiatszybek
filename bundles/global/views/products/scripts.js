@@ -155,7 +155,7 @@ function setRangesFromUrl() {
 
 		const product_feature_id = numberFromStr(key);
 
-		let [from, to] = url_params.get(key).split("do");
+		let [from, to] = url_params.get(key).split("_do_");
 		const range_filter = $(`.range_filter[data-product_feature_id="${product_feature_id}"]`);
 
 		if (!range_filter) {
@@ -203,7 +203,7 @@ function setRangesFromUrl() {
 		double_value_quick_list._direct_children().forEach((li) => {
 			const checkbox = li._child(".option_range_checkbox");
 			const val_str = checkbox.dataset.value;
-			const [chck_from, chck_to] = val_str.split("do");
+			const [chck_from, chck_to] = val_str.split("_do_");
 			if (chck_from !== undefined && chck_from == from) {
 				min_checkbox = checkbox;
 			}
@@ -324,7 +324,7 @@ function updatePrettyCheckboxRanges() {
 		let max_checkbox;
 
 		ul._children(".option_range_checkbox.checked").forEach((chck) => {
-			let [from, to] = chck.dataset.value.split("do");
+			let [from, to] = chck.dataset.value.split("_do_");
 			if (from !== undefined) {
 				const fromv = numberFromStr(from);
 				if (fromv < r_min) {
@@ -571,7 +571,7 @@ function mainSearchProducts(force = false) {
 		}
 
 		if (from_selected || to_selected) {
-			const values = (from_selected ? from : "") + "do" + (to_selected ? to : "");
+			const values = (from_selected ? from : "") + "_do_" + (to_selected ? to : "");
 			url_from_ranges[product_feature_id] = values;
 		}
 	});
@@ -582,7 +582,7 @@ function mainSearchProducts(force = false) {
 		if (url_from_ranges[product_feature_id]) {
 			return;
 		}
-		const values = minmax[0] + "do" + minmax[1];
+		const values = minmax[0] + "_do_" + minmax[1];
 		url_from_ranges[product_feature_id] = values;
 	});
 

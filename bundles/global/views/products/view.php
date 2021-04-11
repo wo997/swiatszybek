@@ -235,7 +235,7 @@ function traverseFeatures()
                     if ($max) {
                         $max_pretty_val = prettyPrintPhysicalMeasure($max, $physical_measure);
                         $pretty_val .= " - " . $max_pretty_val;
-                        $search_value .= "do" . $max;
+                        $search_value .= "_do_" . $max;
                         $add_unit($unit_map, $max_pretty_val);
                     }
 
