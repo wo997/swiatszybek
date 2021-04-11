@@ -473,9 +473,10 @@ function setCompData(comp, data = undefined, options = {}) {
 		}
 	}
 
-	if (equal) {
-		return;
-	}
+	// filthy, not needed to optimisation
+	// if (equal) {
+	// 	return;
+	// }
 
 	node._prev_data = cloneObject(node._data);
 

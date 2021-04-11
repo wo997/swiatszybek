@@ -999,7 +999,7 @@ function productComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_features_changed", () => {
-				comp._render();
+				comp._render({ force_render: true });
 			});
 
 			window.addEventListener("product_categories_changed", () => {
