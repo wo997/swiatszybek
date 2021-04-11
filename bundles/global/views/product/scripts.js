@@ -244,16 +244,16 @@ function variantChanged() {
 		let options_names = [];
 		if (ps_selected_option_ids.length > 0) {
 			ps_selected_option_ids.forEach((option_id) => {
-				let option_value;
+				let option_name;
 				general_product_variants.forEach((variants) => {
-					variants.variant_options.forEach((option) => {
-						if (option.product_feature_option_id === option_id) {
-							option_value = option.value;
+					variants.options.forEach((option) => {
+						if (option.product_variant_option_id === option_id) {
+							option_name = option.name;
 						}
 					});
 				});
-				if (option_value) {
-					options_names.push(option_value);
+				if (option_name) {
+					options_names.push(option_name);
 				}
 			});
 		}

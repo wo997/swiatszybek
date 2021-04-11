@@ -71,7 +71,7 @@ $general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE
 
 foreach ($general_product_variants as $key => $variant) {
     $product_variant_id = $general_product_variants[$key]["product_variant_id"];
-    $general_product_variants[$key]["variant_options"] = DB::fetchArr("SELECT *
+    $general_product_variants[$key]["options"] = DB::fetchArr("SELECT *
         FROM product_variant_option pvo
         WHERE product_variant_id = $product_variant_id
         ORDER BY pvo.pos");
@@ -102,7 +102,7 @@ foreach ($general_product_variants as $general_product_variant) {
             </div>
         </div>
     ";
-    foreach ($general_product_variant["variant_options"] as $variant_option) {
+    foreach ($general_product_variant["options"] as $variant_option) {
         $product_variant_option_id = $variant_option["product_variant_option_id"];
         $name = $variant_option["name"];
         $count = isset($comments_options_map[$product_variant_option_id]) ? $comments_options_map[$product_variant_option_id]["count"] : "0";
@@ -251,7 +251,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                     <span class="label"><?= $general_product_variant["name"] ?></span>
                     <div class="variants radio_group boxes big_boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>" data-number>
                         <?php
-                        foreach ($general_product_variant["variant_options"] as $variant_option) {
+                        foreach ($general_product_variant["options"] as $variant_option) {
                         ?>
                             <div class="checkbox_area variant_option">
                                 <div>
