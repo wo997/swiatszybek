@@ -701,7 +701,9 @@ function productComp(comp, parent, data = undefined) {
 
 				<div class="mt2">
 					<span class="label inline list_label" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
-					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary">Dodaj kategorie <i class="fas fa-plus"></i></button>
+					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary small">
+						Dodaj kategorie <i class="fas fa-plus"></i>
+					</button>
 					<div class="scroll_panel scroll_preview mt2" style="max-height:200px;cursor:pointer">
 						<div data-node="{${comp._nodes.print_categories}}"></div>
 					</div>
@@ -709,7 +711,7 @@ function productComp(comp, parent, data = undefined) {
 
 				<div class="mt2 mb2">
 					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
-					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary">Dodaj cechy <i class="fas fa-plus"></i></button>
+					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
 				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
 					<product_feature-comp></product_feature-comp>
@@ -725,7 +727,9 @@ function productComp(comp, parent, data = undefined) {
 
 				<div class="mt2 mb2">
 					<span class="label inline list_label" html="{${"Pola wyboru / Warianty (" + data.variants.length + ")"}}"></span>
-					<button data-node="{${comp._nodes.add_variant_btn}}" class="btn primary">Dodaj pole wyboru <i class="fas fa-plus"></i></button>
+					<button data-node="{${comp._nodes.add_variant_btn}}" class="btn primary small">
+						Dodaj pole wyboru <i class="fas fa-plus"></i>
+					</button>
 				</div>
 				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.variants}}" data-primary="product_variant_id">
 					<product_variant-comp></product_variant-comp>
