@@ -200,10 +200,15 @@ function setRangesFromUrl() {
 		let min_checkbox;
 		/** @type {PiepNode} */
 		let max_checkbox;
+		console.log(double_value_quick_list, double_value_quick_list._direct_children());
 		double_value_quick_list._direct_children().forEach((li) => {
 			const checkbox = li._child(".option_range_checkbox");
 			const val_str = checkbox.dataset.value;
-			const [chck_from, chck_to] = val_str.split("_do_");
+			let [chck_from, chck_to] = val_str.split("_do_");
+			if (chck_to === undefined) {
+				chck_to = chck_from;
+			}
+
 			if (chck_from !== undefined && chck_from == from) {
 				min_checkbox = checkbox;
 			}
