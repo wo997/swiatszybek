@@ -111,9 +111,11 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
         $show_before = "";
         if ($feature_extra === "color") {
             $extra = json_decode($option["extra_json"], true);
-            $color = "#ffffff";
             if ($extra) {
                 $color = def($extra, "color", "");
+            }
+            if (!$color) {
+                $color = "#ffffff";
             }
             $checkbox_style = "--checkbox_color:$color";
         }
