@@ -19,14 +19,14 @@ function getGlobalProductsSearch($url, $options = [])
 
     // categories usually filter the most effectively, thus they are first in the query
 
-    $from = "FROM product";
-    $where = "";
+    $from = "product p INNER JOIN general_product gp USING (general_product_id)";
+    $where = "p.active AND gp.active";
     if ($product_category_id !== -1) {
-        $from = "FROM product p INNER JOIN general_product gp USING (general_product_id) INNER JOIN general_product_to_category gptc USING (general_product_id)";
-        $where = "WHERE gptc.product_category_id = $product_category_id";
+        $from .= " INNER JOIN general_product_to_category gptc USING (general_product_id)";
+        $where .= " AND gptc.product_category_id = $product_category_id";
     }
 
-    $product_ids = DB::fetchCol("SELECT product_id $from $where GROUP BY product_id");
+    $product_ids = DB::fetchCol("SELECT product_id FROM $from WHERE $where GROUP BY product_id");
 
     // then feature options
     // FROM NOW REMEMBER TO ADD PRODUCT_IDS TO THE QUERY
@@ -48,7 +48,8 @@ function getGlobalProductsSearch($url, $options = [])
             INNER JOIN product p USING (general_product_id)
             INNER JOIN product_to_variant_option ptvo USING(product_id)
             INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
-            WHERE p.product_id IN ($product_ids_csv) AND pvotfo.product_feature_option_id IN ($option_ids_csv)
+            INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
+            WHERE p.product_id IN ($product_ids_csv) AND (pvotfo.product_feature_option_id IN ($option_ids_csv) OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id IN ($option_ids_csv)))
             GROUP BY product_id");
     }
 
@@ -81,10 +82,13 @@ function getGlobalProductsSearch($url, $options = [])
             // for both min and max, thus on top
             $from .= "
                 INNER JOIN product_to_variant_option ptvo USING (product_id)
-                INNER JOIN product_variant_option_to_feature_option pvotfo USING (product_variant_option_id)
-                INNER JOIN product_feature_option pfo USING (product_feature_option_id)";
+                INNER JOIN product_variant_option_to_feature_option pvotfo
+                INNER JOIN product_feature_option pfo ON pvotfo.product_feature_option_id = pfo.product_feature_option_id
+                INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
+                INNER JOIN product_feature_option gpfo ON pvotfo.product_feature_option_id = gpfo.product_feature_option_id";
 
             $where .= " AND pfo.product_feature_id = $product_feature_id";
+            $where .= " AND gpfo.product_feature_id = $product_feature_id";
         }
         if ($min !== "") {
             preg_match('/[a-zA-Z]/', $min, $matches, PREG_OFFSET_CAPTURE);
@@ -99,7 +103,7 @@ function getGlobalProductsSearch($url, $options = [])
             if ($is_cena) {
                 $where .= " AND gross_price >= $min";
             } else {
-                $where .= " AND pfo.double_value >= $min";
+                $where .= " AND (pfo.double_value >= $min OR (gptfo.is_shared = 1 AND gpfo.double_value >= $min))";
             }
         }
         if ($max !== "") {
@@ -115,7 +119,7 @@ function getGlobalProductsSearch($url, $options = [])
             if ($is_cena) {
                 $where .= " AND gross_price <= $max";
             } else {
-                $where .= " AND pfo.double_value <= $max";
+                $where .= " AND (pfo.double_value <= $max OR (gptfo.is_shared = 1 AND gpfo.double_value <= $max))";
             }
         }
 
