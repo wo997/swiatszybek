@@ -126,7 +126,7 @@ function productCategoryModalComp(comp, parent, data = undefined) {
 				></select>
 
 				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń <i class="fas fa-trash"></i></button>
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń kategorię <i class="fas fa-trash"></i></button>
 				</div>
 			</div>
 		`,
