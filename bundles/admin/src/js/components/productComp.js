@@ -19,7 +19,7 @@
  *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
- * missing_products_variants: Object[]
+ *  missing_products_variants: Object[]
  *  unnecessary_product_ids?: number[]
  *  products_dt?: DatatableCompData
  *  category_ids: number[]
@@ -47,6 +47,7 @@
  *      add_image_btn: PiepNode
  *      add_variant_btn: PiepNode
  *      delete_btn: PiepNode
+ *      products_dt_wrapper: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _remove_missing_products()
@@ -317,19 +318,21 @@ function productComp(comp, parent, data = undefined) {
 				}
 			});
 		}
-		if (allow) {
-			add_products.forEach((p) => {
-				data.products_dt.dataset.push(p);
-			});
+		if (!params.pls_add_columns) {
+			if (allow) {
+				add_products.forEach((p) => {
+					data.products_dt.dataset.push(p);
+				});
 
-			comp._render();
-		} else if (!params.pls_add_columns) {
-			const manage_product_list_modal_comp = getManageProductListModal();
-			manage_product_list_modal_comp._data.questions = questions;
-			manage_product_list_modal_comp._data.add_products = add_products;
-			manage_product_list_modal_comp._render();
+				comp._render();
+			} else {
+				const manage_product_list_modal_comp = getManageProductListModal();
+				manage_product_list_modal_comp._data.questions = questions;
+				manage_product_list_modal_comp._data.add_products = add_products;
+				manage_product_list_modal_comp._render();
 
-			manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
+				manage_product_list_modal_comp._show({ source: comp._nodes.add_products_btn });
+			}
 		}
 	};
 
@@ -654,10 +657,13 @@ function productComp(comp, parent, data = undefined) {
 				if (cd.variants) {
 					setTimeout(() => {
 						comp._nodes.all_products._warmup_maps();
-						// it does render anyway
-						//comp._nodes.all_products._render({ force_render: true });
 					});
 				}
+
+				const products_dt_wrapper = comp._nodes.products_dt_wrapper;
+				products_dt_wrapper.classList.toggle("missing_products", data.missing_products_variants.length > 0);
+				products_dt_wrapper.dataset.tooltip =
+					data.missing_products_variants.length > 0 ? `Najpierw uzupełnij listę produktów klikając "Dodaj brakujące produkty"` : "";
 			},
 		});
 	};
@@ -707,10 +713,6 @@ function productComp(comp, parent, data = undefined) {
 						Dodaj kategorie <i class="fas fa-plus"></i>
 					</button>
 				</div>
-
-				<p class="user_info mb3 block">
-					<i class="fas fa-info-circle"></i> Kategorie produktów służą do uporządkowania produktów w Twoim sklepie.
-				</p>
 
 				<div class="scroll_panel scroll_preview" style="max-height:200px;cursor:pointer">
 					<div data-node="{${comp._nodes.print_categories}}"></div>
@@ -770,7 +772,7 @@ function productComp(comp, parent, data = undefined) {
 					<div style="height:7px"></div>
 					Domyślnie (bez określenia wariantów) będzie to tylko 1 produkt.
 					<div style="height:7px"></div>
-					Zaleca się by każdy z wariantów połączyć z odpowiadającymi cechami.
+					Zaleca się by każdy z wariantów połączyć z odpowiadającymi cechami. <br /><br />MIEJSCE NA DODANIE ZDJĘĆ KIEDY SKLEP BĘDZIE GOTOWY
 				</div>
 
 				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.variants}}" data-primary="product_variant_id">
@@ -797,12 +799,12 @@ function productComp(comp, parent, data = undefined) {
 				class="btn {${data.missing_products_variants.length > 0}?important:subtle} mr1"
 				data-node="{${comp._nodes.add_products_btn}}"
 				data-tooltip="{${data.missing_products_variants.length > 0
-					? "Zalecane po uzupełnieniu wszystkich cech produktu"
+					? "Zalecane po uzupełnieniu wszystkich wariantów produktu"
 					: "Wszystko się zgadza!"}}"
 			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)</button
 			><button
-				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle} mr1"
+				class="btn error_light mr1"
 				data-node="{${comp._nodes.remove_products_btn}}"
 				disabled="{${data.missing_products_variants.length > 0}}"
 				data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
@@ -818,30 +820,32 @@ function productComp(comp, parent, data = undefined) {
 
 			<br />
 
-			<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
-				<div class="checkbox_area">
-					<p-checkbox data-value="active"></p-checkbox>
-					<span> <i class="fas fa-check"></i> Aktywne </span>
+			<div data-node="{${comp._nodes.products_dt_wrapper}}" data-tooltip_position="over">
+				<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
+					<div class="checkbox_area">
+						<p-checkbox data-value="active"></p-checkbox>
+						<span> <i class="fas fa-check"></i> Aktywne </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="price"></p-checkbox>
+						<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="stock"></p-checkbox>
+						<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="discount"></p-checkbox>
+						<span> <i class="fas fa-percentage"></i> Zniżki </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="weight_dimensions"></p-checkbox>
+						<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
+					</div>
 				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="price"></p-checkbox>
-					<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="stock"></p-checkbox>
-					<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="discount"></p-checkbox>
-					<span> <i class="fas fa-percentage"></i> Zniżki </span>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="weight_dimensions"></p-checkbox>
-					<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
-				</div>
-			</div>
 
-			<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
+				<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
+			</div>
 
 			<div style="height:100px"></div>
 

@@ -50,6 +50,16 @@ product-comp {
 			opacity: 0.7;
 		}
 	}
+
+	.node_products_dt_wrapper.missing_products {
+		& {
+			filter: blur(1px) contrast(0.82);
+			opacity: 0.7;
+		}
+		* {
+			pointer-events: none;
+		}
+	}
 }
 
 .injectable_header {

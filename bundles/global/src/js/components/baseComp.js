@@ -495,6 +495,8 @@ function setCompData(comp, data = undefined, options = {}) {
 		});
 	}*/
 
+	node._render(); // once again for clarity, not everything gonna propagate all the time, but stable enough and fast
+
 	comp._dispatch_change();
 }
 

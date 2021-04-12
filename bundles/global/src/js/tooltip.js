@@ -65,6 +65,12 @@ domload(() => {
 			const nodeRectPosition = e.dataset.tooltip_position;
 			if (nodeRectPosition == "center") {
 				left -= tooltipRect.width / 2 + offsetX;
+			} else if (nodeRectPosition == "top") {
+				left -= tooltipRect.width / 2 + offsetX;
+				top -= nodeRect.height + t.offsetHeight + offsetY * 2;
+			} else if (nodeRectPosition == "over") {
+				left -= tooltipRect.width / 2 + offsetX;
+				top -= 0.5 * (nodeRect.height + t.offsetHeight) + offsetY;
 			} else if (nodeRectPosition == "right") {
 				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
 				left += nodeRect.width / 2;
