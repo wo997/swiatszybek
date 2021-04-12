@@ -84,11 +84,13 @@ function product_variantOptionComp(
 
 	createComp(comp, parent, data, {
 		template: html`
+			<span class="semi_bold mr2" html="{${"Wariant " + (data.row_index + 1) + "."}}"></span>
 			<textarea
 				class="field small inline hide_scrollbar"
 				data-bind="{${data.name}}"
 				data-node="{${comp._nodes.name}}"
 				data-input_delay="200"
+				data-tooltip="Wpisz nazwę wariantu, np. Czerwony"
 			></textarea>
 
 			<div style="margin: 0 10px">

@@ -24,7 +24,7 @@
 <?php startSection("body_content"); ?>
 
 <div>
-    <p class="user_info" style="margin-top:0">
+    <p class="user_info" style="margin-bottom:20px">
         <i class="fas fa-info-circle"></i> Warto ograniczyć ilośc kategorii i skorzystać z cech produktu żeby zachować przejrzystość sklepu.
         <br>
         Przykładowo zamiast utworzyć kategorie

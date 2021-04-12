@@ -675,6 +675,10 @@ function productComp(comp, parent, data = undefined) {
 			</div>
 
 			<div style="max-width:700px">
+				<div class="label first">Nazwa produktu</div>
+				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
+
+				<div class="label">Widoczność w sklepie</div>
 				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
 					<div class="checkbox_area error">
 						<div>
@@ -690,9 +694,6 @@ function productComp(comp, parent, data = undefined) {
 					</div>
 				</div>
 
-				<div class="label">Nazwa produktu</div>
-				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
-
 				<div class="label">Sprzedawaj na (do wdrożenia)</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
@@ -700,69 +701,114 @@ function productComp(comp, parent, data = undefined) {
 					<option value="length">Długość</option>
 				</select>
 
-				<div class="mt2">
-					<span class="label inline list_label" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
+				<div class="mt5 mb2">
+					<span class="label inline medium bold first" html="{${"Kategorie (" + data.category_ids.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_category_btn}}" class="btn primary small">
 						Dodaj kategorie <i class="fas fa-plus"></i>
 					</button>
-					<div class="scroll_panel scroll_preview mt2" style="max-height:200px;cursor:pointer">
-						<div data-node="{${comp._nodes.print_categories}}"></div>
-					</div>
 				</div>
 
-				<div class="mt2 mb2">
-					<span class="label inline list_label" html="{${"Cechy (" + data.features.length + ")"}}"></span>
+				<p class="user_info mb3 block">
+					<i class="fas fa-info-circle"></i> Kategorie produktów służą do uporządkowania produktów w Twoim sklepie.
+				</p>
+
+				<div class="scroll_panel scroll_preview" style="max-height:200px;cursor:pointer">
+					<div data-node="{${comp._nodes.print_categories}}"></div>
+				</div>
+
+				<div class="mt5 mb2">
+					<span class="label inline medium bold first" html="{${"Cechy (" + data.features.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small">Dodaj cechy <i class="fas fa-plus"></i></button>
 				</div>
+
+				<div class="user_info mb3">
+					<i class="fas fa-info-circle"></i> Cechy są szczególnie pomocne przy wyszukiwaniu produktów. Uzupełniając każdą z nich (np.
+					producenta, kolor, rozmiar) masz pewność, że klient sprawniej odnajdzie poszukiwany produkt.
+				</div>
+
 				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
 					<product_feature-comp></product_feature-comp>
 				</list-comp>
 
-				<div class="mt2 mb2">
-					<span class="label inline list_label" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
-					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
+				<div class="mt5 mb2">
+					<span class="label inline medium bold first" html="{${"Zdjęcia (" + data.images.length + ")"}}"></span>
+					<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary small">Dodaj zdjęcie <i class="fas fa-plus"></i></button>
 				</div>
+
+				<div class="user_info mb3">
+					<i class="fas fa-info-circle"></i> Wybierz zdjęcia produktu i ustaw je w odpowiedniej kolejności zaczynając od zdjęcia głównego.
+					Dodatkowo możesz powiązać każde z nich z cechami. Dzięki temu, klient który przegląda produkty i zaznaczył filtr "Kolor: czerwony"
+					zobaczy interesujące go zdjęcia. Pozostałe będą widoczne po najechaniu w postaci galerii.
+				</div>
+
 				<list-comp class="wireframe space" data-bind="{${data.images}}" data-primary="product_img_id">
 					<product_img-comp></product_img-comp>
 				</list-comp>
 
-				<div class="mt2 mb2">
-					<span class="label inline list_label" html="{${"Pola wyboru / Warianty (" + data.variants.length + ")"}}"></span>
+				<div class="mt5 mb2">
+					<span class="label inline medium bold first" html="{${"Pola wyboru / Warianty (" + data.variants.length + ")"}}"></span>
 					<button data-node="{${comp._nodes.add_variant_btn}}" class="btn primary small">
 						Dodaj pole wyboru <i class="fas fa-plus"></i>
 					</button>
 				</div>
+
+				<div class="user_info mb3">
+					<i class="fas fa-info-circle"></i> Określ wszystkie warianty produktu.
+					<div style="height:7px"></div>
+					<span class="bold">Przykład</span><br />
+					<div style="height:7px"></div>
+					Pole wyboru 1. Kolor: czerwony, niebieski<br />
+					Pole wyboru 2. Rozmiar: 36, 37, 38<br />
+					<div style="height:7px"></div>
+					Z podanych wariantów i ich opcji powstanie lista 6 produktów: <br />
+					⋅ Czerwony 36 <br />
+					⋅ Czerwony 37 <br />
+					⋅ Czerwony 38 <br />
+					⋅ Niebieski 36 <br />
+					⋅ Niebieski 37 <br />
+					⋅ Niebieski 38<br />
+					<div style="height:7px"></div>
+					Domyślnie (bez określenia wariantów) będzie to tylko 1 produkt.
+					<div style="height:7px"></div>
+					Zaleca się by każdy z wariantów połączyć z odpowiadającymi cechami.
+				</div>
+
 				<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.variants}}" data-primary="product_variant_id">
 					<product_variant-comp></product_variant-comp>
 				</list-comp>
 			</div>
 
-			<div>
-				<p class="user_info">
-					<i class="fas fa-info-circle"></i> Na podstawie cech zostanie wygenerowana lista produktów - tych samych, które są w Twoim
-					magazynie.<br />Przykładowo jeśli wybierzemy kolory czerwony i niebieski, oraz rozmiary 36, 37 i 38,<br />otrzymamy 6 produktów
-					będących "krzyżówką" podanych cech.<br />Domyślnie (bez wybrania cech) będzie to tylko 1 produkt.
-				</p>
-			</div>
+			<div class="label medium bold mt5">Pełna lista produktów</div>
 
+			<div>
+				<div class="user_info mb3">
+					<i class="fas fa-info-circle"></i> Kliknij przycisk "Dodaj brakujące produkty", a lista produktów uzupełni się automatycznie na
+					podstawie podanych powyżej wariantów. <br />
+					W pierwszej kolejności ustal, które produkty należą do oferty sklepu (zakładka "Aktywne"). Dalej uzupełnij ceny, stany magazynowe
+					itd. <br />
+					<div style="height:7px"></div>
+					Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
+					Poruszanie się po polach (pierwsze z nich musimy kliknąć):
+					<span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
+					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+				</div>
+			</div>
 			<button
-				class="btn {${data.missing_products_variants.length > 0}?important:subtle}"
+				class="btn {${data.missing_products_variants.length > 0}?important:subtle} mr1"
 				data-node="{${comp._nodes.add_products_btn}}"
 				data-tooltip="{${data.missing_products_variants.length > 0
 					? "Zalecane po uzupełnieniu wszystkich cech produktu"
 					: "Wszystko się zgadza!"}}"
 			>
-				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)
-			</button>
-			<button
-				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle}"
+				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)</button
+			><button
+				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle} mr1"
 				data-node="{${comp._nodes.remove_products_btn}}"
 				disabled="{${data.missing_products_variants.length > 0}}"
 				data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
 			>
-				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)
-			</button>
-			<button
+				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)</button
+			><button
 				class="btn error_light"
 				data-node="{${comp._nodes.remove_all_products_btn}}"
 				disabled="{${data.products_dt.dataset.length === 0}}"
@@ -770,17 +816,7 @@ function productComp(comp, parent, data = undefined) {
 				Usuń wszystkie produkty (<span html="{${data.products_dt.dataset.length}}"></span>)
 			</button>
 
-			<div>
-				<p class="user_info">
-					<i class="fas fa-info-circle"></i> Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
-					Poruszanie się po polach: <span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
-					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
-				</p>
-			</div>
-
-			<div class="label medium bold">Pełna lista produktów</div>
-
-			<div class="pretty_radio semi_bold" data-bind="{${data.product_list_view}}">
+			<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="active"></p-checkbox>
 					<span> <i class="fas fa-check"></i> Aktywne </span>

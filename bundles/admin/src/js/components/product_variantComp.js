@@ -40,8 +40,8 @@ function product_variantComp(comp, parent, data = { product_variant_id: -1, gene
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="variant_header">
-				<span class="semi_bold mr2" html="{${data.row_index + 1 + "."}}"></span>
-				<input class="field small inline" data-bind="{${data.name}}" />
+				<span class="semi_bold mr2" html="{${"Pole wyboru " + (data.row_index + 1) + "."}}"></span>
+				<input class="field small inline" data-bind="{${data.name}}" data-tooltip="Wpisz nazwę pola wyboru, np. Kolor" />
 				<button data-node="{${comp._nodes.add_option_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml2">
 					Dodaj opcję <i class="fas fa-plus"></i>
 				</button>
