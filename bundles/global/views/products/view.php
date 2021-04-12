@@ -348,13 +348,13 @@ $products_search_data_0 = getGlobalProductsSearch(
 
 // it's important to split it cause when the where query gets thicc (fe. extended phrase search) we shouldnt repeat it but focus on already known ids
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
-$where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "1";
-$where_general_products_0 = "general_product_id IN (SELECT DISTINCT general_product_id FROM product WHERE $where_products_0)";
+$where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-1";
 
-$options_data = DB::fetchArr("SELECT COUNT(1) count, product_feature_option_id option_id
+$options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, product_feature_option_id option_id
     FROM general_product
+    INNER JOIN product USING(general_product_id)
     INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
-    WHERE $where_general_products_0
+    WHERE $where_products_0
     GROUP BY product_feature_option_id");
 usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
 
