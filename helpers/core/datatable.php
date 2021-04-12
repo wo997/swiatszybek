@@ -5,6 +5,20 @@ function getSearchableString($str)
     return trim(preg_replace('/\s{2,}/', ' ', replacePolishLetters($str)));
 }
 
+/**
+ * @typedef SearchQueryParams {
+ * quick_search_fields: string
+ * quick_search: string
+ * search_type: string
+ * }
+ */
+
+/**
+ * getSearchQuery
+ *
+ * @param  SearchQueryParams $data
+ * @return void
+ */
 function getSearchQuery($data)
 {
 
