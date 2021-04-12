@@ -210,8 +210,8 @@ function recreateDom(target_v_dom = undefined) {
 
 			let info = "";
 
-			if (text) {
-				info = text;
+			if (text !== undefined) {
+				info = text ? text : "(pusty)";
 			} else if (children !== undefined) {
 				info = `(${children.length})`;
 			}
@@ -531,12 +531,10 @@ domload(() => {
 
 	piep_editor_advanced_menu._set_content(html`
 		<div class="label">Margines</div>
-		<select class="field small" data-style="fontSize">
-			<option value=""></option>
-			<option value="1rem">mała</option>
-			<option value="1.5rem">średnia</option>
-			<option value="2rem">duża</option>
-		</select>
+		<input class="field" data-style="margin" />
+
+		<div class="label">Padding</div>
+		<input class="field" data-style="padding" />
 	`);
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
@@ -608,11 +606,12 @@ domload(() => {
 		</button>
 	`);
 
-	piep_editor_float_menu._children("[data-style]").forEach((input) => {
+	piep_editor._children("[data-style]").forEach((input) => {
 		input.addEventListener("change", () => {
 			const focus_node = piep_editor_content._child(".piep_focus");
 			if (focus_node) {
-				const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
+				const v_node_data = getVDomNodeDataById(v_dom, +focus_node.dataset.vid);
+				const v_node = v_node_data.v_node;
 				const anchor_offset = piep_editor_last_selection.anchorOffset;
 				const focus_offset = piep_editor_last_selection.focusOffset;
 
@@ -639,7 +638,7 @@ domload(() => {
 				if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 					if (begin_offset > 0) {
 						const bef_id = getPiepEditorId();
-						v_node.children.push({
+						v_node_data.parent_v_nodes.push({
 							id: bef_id,
 							tag: "span",
 							styles: {},
@@ -659,10 +658,10 @@ domload(() => {
 						attrs: {},
 						classes: [],
 					};
-					v_node.children.push(mid_child);
+					v_node_data.parent_v_nodes.push(mid_child);
 					if (end_offset < v_node.text.length) {
 						const aft_id = getPiepEditorId();
-						v_node.children.push({
+						v_node_data.parent_v_nodes.push({
 							id: aft_id,
 							tag: "span",
 							styles: {},
@@ -686,8 +685,8 @@ domload(() => {
 					recreateDom();
 
 					const node_ref = getPiepEditorNode(v_node.id);
+					setPiepEditorFocusNode(v_node.id);
 					if (v_node.text === undefined) {
-						setPiepEditorFocusNode(v_node.id);
 					} else if (node_ref) {
 						setSelectionByIndex(node_ref, begin_offset, end_offset);
 					}
@@ -1488,6 +1487,8 @@ function piepEditorReleaseBlock() {
 	piep_editor.classList.remove("grabbed_block");
 	piep_editor.classList.remove("has_insert_pos");
 	piep_editor_float_focus.classList.add("hidden");
+	piep_editor_float_multi_insert.classList.add("hidden");
+	piep_editor_parent_float_focus.classList.add("hidden");
 
 	piep_editor._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
