@@ -75,7 +75,7 @@ let v_dom = /*{
 		id: 1,
 		tag: "h1",
 		text: "Dobry frejmwork",
-		styles: { fontSize: "20px", fontWeight: "bold", color: "#d5d" },
+		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d" },
 		children: undefined,
 		attrs: {},
 		classes: [],
@@ -278,7 +278,7 @@ function recreateDom(target_v_dom = undefined) {
 
 	const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
 
-	piep_editor_content._set_content(content_html);
+	piep_editor_content._set_content(content_html, { maintain_height: true });
 
 	piep_editor_styles._set_content(styles_html);
 
@@ -531,11 +531,21 @@ domload(() => {
 
 	piep_editor_advanced_menu._set_content(html`
 		<div class="label">Margines</div>
-		<input class="field" data-style="margin" />
+		<input class="field" data-blc_prop="style.margin" />
 
 		<div class="label">Padding</div>
-		<input class="field" data-style="padding" />
+		<input class="field" data-blc_prop="style.padding" />
+
+		<div class="label">Szerokość</div>
+		<input class="field" data-blc_prop="style.width" />
+
+		<div class="label">Zdjęcie</div>
+		<image-input data-blc_prop="attr.data-src"></image-input>
+
+		<div class="label">Opis zdjęcia (alt)</div>
+		<input class="field" data-blc_prop="attr.alt" />
 	`);
+	registerForms();
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
 	piep_editor_float_focus = piep_editor._child(".piep_editor_float_focus");
@@ -547,7 +557,11 @@ domload(() => {
 	piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
 
 	piep_editor_float_menu._set_content(html`
-		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="fontSize" data-tooltip="Rozmiar czcionki">
+		<p-dropdown
+			class="field small inline pretty_blue center static_label grid"
+			data-blc_prop="style.fontSize"
+			data-tooltip="Rozmiar czcionki"
+		>
 			<p-option data-value="">
 				<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
 			</p-option>
@@ -556,14 +570,14 @@ domload(() => {
 			<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center grid" data-style="fontWeight" data-tooltip="Grubość czcionki">
+		<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
 			<p-option data-value=""><span class="bold">B</span></p-option>
 			<p-option data-value="400">B</p-option>
 			<p-option data-value="600"><span class="semi_bold">B</span></p-option>
 			<p-option data-value="700"><span class="bold">B</span></p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="color" data-tooltip="Kolor czcionki">
+		<p-dropdown class="field small inline pretty_blue center static_label grid" data-blc_prop="style.color" data-tooltip="Kolor czcionki">
 			<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
 			<p-option data-value="var(--primary-clr)">
 				<div class="color_circle" style="background:var(--primary-clr);"></div>
@@ -578,7 +592,11 @@ domload(() => {
 			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
-		<p-dropdown class="field small inline pretty_blue center static_label grid" data-style="backgroundColor" data-tooltip="Kolor tła">
+		<p-dropdown
+			class="field small inline pretty_blue center static_label grid"
+			data-blc_prop="style.backgroundColor"
+			data-tooltip="Kolor tła"
+		>
 			<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
 			<p-option data-value="var(--primary-clr)">
 				<div class="color_circle" style="background:var(--primary-clr);"></div>
@@ -606,7 +624,7 @@ domload(() => {
 		</button>
 	`);
 
-	piep_editor._children("[data-style]").forEach((input) => {
+	piep_editor._children("[data-blc_prop]").forEach((input) => {
 		input.addEventListener("change", () => {
 			const focus_node = piep_editor_content._child(".piep_focus");
 			if (focus_node) {
@@ -624,13 +642,29 @@ domload(() => {
 				const end_offset = Math.max(anchor_offset, focus_offset);
 
 				let val = input._get_value();
-				let prop = input.dataset.style;
 
+				let prop_str = input.dataset.blc_prop;
+
+				/**
+				 *
+				 * @param {vDomNode} edit_v_node
+				 */
 				const setPropOfVNode = (edit_v_node) => {
+					let prop_ref = edit_v_node;
+
+					if (prop_str.startsWith("style.")) {
+						prop_ref = prop_ref.styles;
+						prop_str = prop_str.substring("style.".length);
+					}
+					if (prop_str.startsWith("attr.")) {
+						prop_ref = prop_ref.attrs;
+						prop_str = prop_str.substring("attr.".length);
+					}
+
 					if (val === "") {
-						delete edit_v_node.styles[prop];
+						delete prop_ref[prop_str];
 					} else {
-						edit_v_node.styles[prop] = val;
+						prop_ref[prop_str] = val;
 					}
 				};
 
@@ -638,17 +672,20 @@ domload(() => {
 				if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 					if (begin_offset > 0) {
 						const bef_id = getPiepEditorId();
-						v_node_data.parent_v_nodes.push({
-							id: bef_id,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(0, begin_offset),
-							children: undefined,
-							attrs: {},
-							classes: [],
-						});
+						v_node_data.parent_v_nodes.push(
+							/** @type {vDomNode} */ {
+								id: bef_id,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(0, begin_offset),
+								children: undefined,
+								attrs: {},
+								classes: [],
+							}
+						);
 					}
 					const mid_vid = getPiepEditorId();
+					/** @type {vDomNode} */
 					const mid_child = {
 						id: mid_vid,
 						tag: "span",
@@ -661,15 +698,17 @@ domload(() => {
 					v_node_data.parent_v_nodes.push(mid_child);
 					if (end_offset < v_node.text.length) {
 						const aft_id = getPiepEditorId();
-						v_node_data.parent_v_nodes.push({
-							id: aft_id,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(end_offset),
-							children: undefined,
-							attrs: {},
-							classes: [],
-						});
+						v_node_data.parent_v_nodes.push(
+							/** @type {vDomNode} */ {
+								id: aft_id,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(end_offset),
+								children: undefined,
+								attrs: {},
+								classes: [],
+							}
+						);
 					}
 					v_node.text = undefined;
 
@@ -1100,6 +1139,9 @@ function piepEditorMainLoop() {
 		piep_editor_has_insert_pos = !!(piep_editor_current_insert_blc && !piep_editor_current_insert_blc.classList.contains("multiple"));
 		piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
 		piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
+	} else {
+		piepEditorShowFocusToNode(piep_focus_node_vid);
+		piepEditorShowFloatMenuToNode(piep_focus_node_vid);
 	}
 
 	requestAnimationFrame(piepEditorMainLoop);
@@ -1640,10 +1682,7 @@ function setPiepEditorFocusNode(vid) {
 		return;
 	}
 
-	// NEVERMIND! -- was kinda for optimisation but we can easily skip it
-	if (piep_focus_node_vid === vid && piep_editor_content._child(".piep_focus")) {
-		return;
-	}
+	let just_changed_focus_vid = piep_focus_node_vid !== vid;
 
 	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
@@ -1652,12 +1691,24 @@ function setPiepEditorFocusNode(vid) {
 	if (focus_node) {
 		focus_node.classList.add("piep_focus");
 
-		const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
-		piep_editor_float_menu._children("[data-style]").forEach((input) => {
-			const prop = input.dataset.style;
-			let val = def(v_node.styles[prop], "");
-			input._set_value(val, { quiet: true });
-		});
+		if (just_changed_focus_vid) {
+			const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
+			piep_editor._children("[data-blc_prop]").forEach((input) => {
+				const prop_str = input.dataset.blc_prop;
+				let prop_val;
+
+				if (prop_str.startsWith("style.")) {
+					prop_val = v_node.styles[prop_str.substring("style.".length)];
+				}
+
+				if (prop_str.startsWith("attr.")) {
+					prop_val = v_node.attrs[prop_str.substring("attr.".length)];
+				}
+
+				let val = def(prop_val, "");
+				input._set_value(val, { quiet: true });
+			});
+		}
 
 		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
 		if (piep_editor_inspector_tree._child(`.tblc_${vid}`)) {
@@ -1665,8 +1716,8 @@ function setPiepEditorFocusNode(vid) {
 		}
 	}
 
-	piepEditorShowFocusToNode(vid);
-	piepEditorShowFloatMenuToNode(vid);
+	piepEditorShowFocusToNode(piep_focus_node_vid);
+	piepEditorShowFloatMenuToNode(piep_focus_node_vid);
 }
 
 /**
@@ -1732,7 +1783,10 @@ function piepEditorShowFloatMenuToNode(vid) {
 	const safe_off = 5;
 	left = clamp(safe_off, left, piep_editor_rect.width - safe_off);
 	// DUDE, the top should actually change by sum of heights
-	top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
+	if (top < safe_off) {
+		top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
+	}
+	//top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
 
 	piep_editor_float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
 }
