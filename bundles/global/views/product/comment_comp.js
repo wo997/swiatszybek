@@ -43,7 +43,7 @@ function commentComp(comp, parent, data = {}) {
 					const options = JSON.parse(data.options_json);
 					options.forEach((o) => {
 						if (o.option_id) {
-							options_html += html`<span class="option">${o.value}</span>`;
+							options_html += html`<span class="option">${o.name}</span>`;
 						}
 					});
 				} catch {}
