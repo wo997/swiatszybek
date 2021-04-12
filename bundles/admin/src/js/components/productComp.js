@@ -816,6 +816,8 @@ function productComp(comp, parent, data = undefined) {
 				Usuń wszystkie produkty (<span html="{${data.products_dt.dataset.length}}"></span>)
 			</button>
 
+			<br />
+
 			<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="active"></p-checkbox>
