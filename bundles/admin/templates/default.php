@@ -55,7 +55,7 @@ endSection();
     if (!isset($sections["header"])) {
     ?>
         <style>
-            .content>.scroll_panel {
+            .main_admin_scroll {
                 background: #fafafa;
             }
         </style>
@@ -63,7 +63,7 @@ endSection();
     }
     ?>
     <div class="scroll_panel scroll_shadow main_admin_scroll">
-        <div class="panel_padding actual-content">
+        <div class="panel_padding actual_content">
             <?= def($sections, "body_content", ""); ?>
         </div>
         <div class="footer">Piepsklep <?= date("Y") ?></div>

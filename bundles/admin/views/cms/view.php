@@ -8,6 +8,8 @@
 <?php startSection("body_content"); ?>
 
 <div class="piep_editor">
+    <div class="piep_editor_advanced_menu"></div>
+
     <div class="piep_editor_content"></div>
 
     <div class="piep_editor_inspector">

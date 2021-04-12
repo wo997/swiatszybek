@@ -63,19 +63,50 @@ const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input",
  */
 
 /** @type {vDomNode[]} */
-let v_dom = /*{
-	tag: "div",
-	id: 0,
-	text: undefined,
-	styles: { display: "flex", flexDirection: "column" },
-	attrs: {},
-	classes: [],
-	children:*/ [
+let v_dom = [
 	{
 		id: 1,
 		tag: "h1",
 		text: "Dobry frejmwork",
-		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d" },
+		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 2,
+		tag: "p",
+		text:
+			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		styles: { marginTop: "20px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 1,
+		tag: "h1",
+		text: "Dobry frejmwork",
+		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 2,
+		tag: "p",
+		text:
+			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		styles: { marginTop: "20px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
+		id: 1,
+		tag: "h1",
+		text: "Dobry frejmwork",
+		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
 		children: undefined,
 		attrs: {},
 		classes: [],
@@ -138,7 +169,6 @@ let v_dom = /*{
 		classes: [],
 	},
 ];
-//};
 
 function getPiepEditorId() {
 	let max = 0;
@@ -526,7 +556,6 @@ domload(() => {
 
 	initInspector();
 
-	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_advanced_menu"></div>`);
 	piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
 
 	piep_editor_advanced_menu._set_content(html`
@@ -1715,9 +1744,6 @@ function setPiepEditorFocusNode(vid) {
 			tblc.classList.add("selected");
 		}
 	}
-
-	piepEditorShowFocusToNode(piep_focus_node_vid);
-	piepEditorShowFloatMenuToNode(piep_focus_node_vid);
 }
 
 /**
