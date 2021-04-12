@@ -13,6 +13,9 @@ EntityManager::register("product_feature_option", [
         "extra_json" => ["type" => "string"],
         "pos" => ["type" => "number"],
         "just_general_product_id" => ["type" => "number"],
+
+
+
     ],
 ]);
 
@@ -37,6 +40,7 @@ EntityManager::manyToMany(
     [
         "meta" => [
             "pos" => ["type" => "number"],
+            "is_shared" => ["type" => "number"],
         ]
     ]
 );

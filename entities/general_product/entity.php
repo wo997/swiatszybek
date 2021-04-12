@@ -41,6 +41,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
     $general_product_variants = $general_product->getProp("variants");
     $variants_data = [];
     $all_variant_options = [];
+    $all_feature_option_ids_in_variants = [];
     foreach ($general_product_variants as $variant) {
         $product_variant_id = $variant->getProp("product_variant_id");
         $variants_data[] = ["id" => $product_variant_id, "pos" => $variant->getProp("pos")];
@@ -48,6 +49,15 @@ EventListener::register("before_save_general_product_entity", function ($params)
         /** @var Entity[] ProductVariantOption */
         $variant_options = $variant->getProp("options");
         foreach ($variant_options as $variant_option) {
+            /** @var Entity[] ProductFeatureOption */
+            $variant_option_feature_options = $variant_option->getProp("product_feature_options");
+            foreach ($variant_option_feature_options as $variant_option_feature_option) {
+                $vofoid = $variant_option_feature_option->getId();
+                if (!in_array($vofoid, $all_feature_option_ids_in_variants)) {
+                    $all_feature_option_ids_in_variants[] = $vofoid;
+                }
+            }
+
             if (!isset($all_variant_options[$product_variant_id])) {
                 $all_variant_options[$product_variant_id] = [];
             }
@@ -60,6 +70,7 @@ EventListener::register("before_save_general_product_entity", function ($params)
     usort($variants_data, fn ($a, $b) => $a["pos"] <=> $b["pos"]);
     $sorted_variant_ids = array_column($variants_data, "id");
 
+    // it's decent but a variant view is also cool in other ways
     $features_html = "";
     $features_html_curr_extra = null;
 
@@ -96,6 +107,10 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
             $features_html .= htmlspecialchars($option->getProp("value")) . "</li>";
         }
+
+        // what's shared, what's not, for searching
+        // TODO: ext silent _meta_?
+        $option->setProp("_meta_is_shared", in_array($option_id, $all_feature_option_ids_in_variants) ? 0 : 1);
     }
 
     if ($features_html) {
