@@ -38,7 +38,6 @@ function smoothScroll(diff, params = {}) {
 	if (smooth_scrolling_parents.includes(params.scroll_parent)) {
 		return;
 	}
-	smooth_scrolling_parents.push(params.scroll_parent);
 
 	const scroll_parent = params.scroll_parent;
 	const prodably_duration = def(params.duration, Math.sqrt(Math.abs(diff)));
@@ -53,16 +52,14 @@ function smoothScroll(diff, params = {}) {
 		if (params.callback) {
 			params.callback();
 		}
-		const ind = smooth_scrolling_parents.indexOf(params.scroll_parent);
-		if (ind !== -1) {
-			smooth_scrolling_parents.splice(ind);
-		}
 		return;
 	}
 
 	if (tooltip) {
 		tooltip.dismiss();
 	}
+
+	smooth_scrolling_parents.push(params.scroll_parent);
 
 	params.t = 1;
 	smoothScrolling(diff, params);
