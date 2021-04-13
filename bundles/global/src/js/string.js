@@ -55,6 +55,11 @@ function escapeNumericalExpression(str) {
 	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
 }
 
+/**
+ *
+ * @param {string | number} str
+ * @returns
+ */
 function escapeAttribute(str) {
-	return (str + "").replace(/"/g, "&quot;");
+	return (str + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }

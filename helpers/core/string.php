@@ -49,3 +49,14 @@ function clean($x)
     //$str = htmlentities($str,ENT_QUOTES,'UTF-8');
     return preg_replace("/[^\w ,.-]/", "", $x);
 }
+
+/**
+ * camelToKebabCase
+ *
+ * @param  string $str
+ * @return void
+ */
+function camelToKebabCase($str)
+{
+    return strtolower(preg_replace('%([A-Z])([a-z])%', '-\1\2', $str));
+}
