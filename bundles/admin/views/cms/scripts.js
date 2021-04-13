@@ -51,7 +51,11 @@ let piep_editor_showing_float_multi_of_blc;
 /** @type {PiepNode} */
 let piep_editor_parent_float_focus;
 /** @type {PiepNode} */
-let filter_advanced_menu;
+let piep_editor_filter_advanced_menu;
+/** @type {PiepNode} */
+let piep_editor_alternative_scroll_panel;
+/** @type {PiepNode} */
+let piep_editor_content_scroll;
 
 /**
  * @typedef {"all" | "appearance" | "layout" | "advanced"} cmsEditableGroupEnum
@@ -172,10 +176,20 @@ let v_dom = [
 		classes: [],
 	},
 	{
+		id: 107,
+		tag: "p",
+		text:
+			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+		styles: { marginTop: "20px", fontSize: "30px" },
+		children: undefined,
+		attrs: {},
+		classes: [],
+	},
+	{
 		id: 10,
 		tag: "img",
 		text: undefined,
-		styles: { width: "100%" },
+		styles: { width: "50%" },
 		children: undefined,
 		attrs: {
 			"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
@@ -542,6 +556,7 @@ function insertPiepText(insert_text) {
 domload(() => {
 	piep_editor = $(".piep_editor");
 	piep_editor_content = piep_editor._child(".piep_editor_content");
+	piep_editor_content_scroll = piep_editor._child(".piep_editor_content_scroll");
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
 	piep_editor_cursor = piep_editor._child(".piep_editor_cursor");
@@ -554,6 +569,9 @@ domload(() => {
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
 	piep_editor_float_multi_insert = piep_editor._child(".piep_editor_float_multi_insert");
+
+	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
+	piep_editor_alternative_scroll_panel = piep_editor._child(".piep_editor_alternative_scroll_panel");
 
 	const initInspector = () => {
 		piep_editor_inspector = piep_editor._child(".piep_editor_inspector");
@@ -687,9 +705,9 @@ domload(() => {
 	`);
 	registerForms();
 
-	filter_advanced_menu = piep_editor_advanced_menu._child(".filter_advanced_menu");
-	filter_advanced_menu._set_value("all");
-	filter_advanced_menu.addEventListener("change", () => {
+	piep_editor_filter_advanced_menu = piep_editor_advanced_menu._child(".filter_advanced_menu");
+	piep_editor_filter_advanced_menu._set_value("all");
+	piep_editor_filter_advanced_menu.addEventListener("change", () => {
 		filterPiepEditorMenu();
 	});
 	setPiepEditorFocusNode(undefined);
@@ -919,7 +937,7 @@ domload(() => {
 		updatePiepCursorPosition();
 
 		const v_node_data = getVDomNodeDataById(v_dom, piep_focus_node_vid);
-		const v_node = v_node_data.v_node;
+		const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 		if (target._parent(".move_block_btn")) {
 			piepEditorGrabBlock();
@@ -1303,6 +1321,15 @@ function piepEditorMainLoop() {
 		}
 	}
 
+	const piep_editor_rect = piep_editor.getBoundingClientRect();
+	const alternative_scroll_panel_left = piep_editor_rect.left;
+	const alternative_scroll_panel_top = piep_editor_rect.top - piep_editor_content_scroll.scrollTop;
+
+	piep_editor_alternative_scroll_panel.style.transform = `translate(
+        ${alternative_scroll_panel_left.toPrecision(5)}px,
+        ${alternative_scroll_panel_top.toPrecision(5)}px
+    )`;
+
 	requestAnimationFrame(piepEditorMainLoop);
 }
 
@@ -1318,6 +1345,9 @@ function piepEditorGrabBlock() {
 
 	piep_editor_grabbed_block_wrapper._set_content(getPiepEditorFocusNode().outerHTML);
 	piep_editor_grabbed_block_wrapper.classList.add("visible");
+
+	// won't grow by more than piep_editor_grabbed_block_wrapper.offsetHeight
+	piep_editor_content.style.minHeight = piep_editor_content.scrollHeight + piep_editor_grabbed_block_wrapper.offsetHeight + "px";
 
 	// be as wide as necessary
 	piep_editor_grabbed_block_wrapper.style.left = "0";
@@ -1346,7 +1376,7 @@ function piepEditorGrabBlock() {
 	deepAssign(v_dom_overlay, v_dom);
 	recreateDom(v_dom_overlay);
 
-	// prepare all possible places to drop the block yay\
+	// prepare all possible places to drop the block yay
 
 	/**
 	 * @typedef {{
@@ -1366,7 +1396,7 @@ function piepEditorGrabBlock() {
 	const getInsertBlc = () => {
 		const insert_blc = document.createElement("DIV");
 		insert_blc.classList.add("insert_blc");
-		piep_editor.append(insert_blc);
+		piep_editor_alternative_scroll_panel.append(insert_blc);
 
 		// @ts-ignore
 		return $(insert_blc);
@@ -1405,8 +1435,8 @@ function piepEditorGrabBlock() {
 				break;
 		}
 
-		left -= piep_editor_rect.left;
-		top -= piep_editor_rect.top;
+		left += -piep_editor_rect.left;
+		top += piep_editor_content_scroll.scrollTop - piep_editor_rect.top;
 
 		return { left, top };
 	};
@@ -1565,7 +1595,7 @@ function piepEditorGrabBlock() {
 		}
 	});
 
-	piep_editor._children(".insert_blc").forEach((insert_blc) => {
+	piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
 		insert_blc.dataset.wght = "1";
 	});
@@ -1584,7 +1614,7 @@ function piepEditorGrabBlock() {
 
 		/** @type {insertBlc[]} */
 		// @ts-ignore
-		const insert_blcs = piep_editor._children(".insert_blc");
+		const insert_blcs = piep_editor_alternative_scroll_panel._children(".insert_blc");
 		const insert_blcs_len = insert_blcs.length;
 		for (let a = 0; a < insert_blcs_len; a++) {
 			if (shrunk_ids.includes(a)) {
@@ -1659,23 +1689,13 @@ function piepEditorGrabBlock() {
 
 			master_insert_blc._popup_blcs = popup_blcs;
 
-			// if (weight_a === 1) {
-			// 	if (weight_b === 1) {
-			// 		// a blc, b blc
-			// 	} else {
-			// 		// a blc, b master
-			// 	}
-			// } else {
-			// 	if (weight_b === 1) {
-			// 		// a master, b blc
-			// 	} else {
-			// 		// a master, b master
-			// 	}
-			// }
-
 			master_insert_blc._set_absolute_pos(
 				(blc_a_rect.left * weight_a) / weight + (blc_b_rect.left * weight_b) / weight + blc_a_rect.width * 0.5 - piep_editor_rect.left,
-				(blc_a_rect.top * weight_a) / weight + (blc_b_rect.top * weight_b) / weight + blc_a_rect.height * 0.5 - piep_editor_rect.top
+				(blc_a_rect.top * weight_a) / weight +
+					(blc_b_rect.top * weight_b) / weight +
+					blc_a_rect.height * 0.5 -
+					piep_editor_rect.top +
+					piep_editor_content_scroll.scrollTop
 			);
 			master_insert_blc._set_content(weight);
 			master_insert_blc.dataset.wght = weight + "";
@@ -1691,7 +1711,9 @@ function piepEditorReleaseBlock() {
 	piep_editor_float_multi_insert.classList.add("hidden");
 	piep_editor_parent_float_focus.classList.add("hidden");
 
-	piep_editor._children(".insert_blc").forEach((insert_blc) => {
+	piep_editor_content.style.minHeight = "";
+
+	piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 		insert_blc.remove();
 	});
 
@@ -1885,7 +1907,7 @@ function setPiepEditorFocusNode(vid) {
 
 function filterPiepEditorMenu() {
 	/** @type {cmsEditableGroupEnum} */
-	const group = filter_advanced_menu._get_value();
+	const group = piep_editor_filter_advanced_menu._get_value();
 
 	const focus_node = getPiepEditorNode(piep_focus_node_vid);
 	const v_node = focus_node ? findNodeInVDomById(v_dom, +focus_node.dataset.vid) : undefined;

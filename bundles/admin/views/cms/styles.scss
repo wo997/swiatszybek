@@ -379,3 +379,11 @@ p-option color-picker {
 	bottom: 0;
 	opacity: 0;
 }
+
+.piep_editor_alternative_scroll_panel {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	z-index: 1500;
+}
