@@ -758,6 +758,10 @@ domload(() => {
 			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
+		<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
+			<i class="fas fa-remove-format"></i>
+		</button>
+
 		<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">
 			<i class="fas fa-arrows-alt"></i>
 		</button>
@@ -911,15 +915,22 @@ domload(() => {
 			// otherwise it's just a text, so native selection tells where to point at
 		}
 
-		// order matters
+		// order matters or at least used to matter
 		updatePiepCursorPosition();
+
+		const v_node_data = getVDomNodeDataById(v_dom, piep_focus_node_vid);
+		const v_node = v_node_data.v_node;
 
 		if (target._parent(".move_block_btn")) {
 			piepEditorGrabBlock();
 		}
 
+		if (target._parent(".remove_format_btn")) {
+			v_node.styles = {};
+			recreateDom();
+		}
+
 		if (target._parent(".remove_block_btn")) {
-			const v_node_data = getVDomNodeDataById(v_dom, piep_focus_node_vid);
 			v_node_data.v_nodes.splice(v_node_data.index, 1);
 			recreateDom();
 			setPiepEditorFocusNode(undefined);
@@ -933,10 +944,6 @@ domload(() => {
 
 			piep_editor_float_menu.classList.toggle("hidden", !piep_editor_float_menu_active);
 		}
-	});
-
-	piep_editor_content.addEventListener("mousemove", (ev) => {
-		updatePiepCursorPosition();
 	});
 
 	document.addEventListener("keydown", (ev) => {
@@ -1092,6 +1099,7 @@ domload(() => {
 
 function piepEditorMainLoop() {
 	updateMouseTarget();
+	updatePiepCursorPosition();
 
 	if (mouse.target) {
 		if (piep_editor_grabbed_block_vid !== undefined) {
