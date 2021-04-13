@@ -51,6 +51,36 @@ let piep_editor_showing_float_multi_of_blc;
 /** @type {PiepNode} */
 let piep_editor_parent_float_focus;
 
+/**
+ * @typedef {{
+ * name: string
+ * match_tag?: RegExp
+ * }} cmsEditableProp
+ */
+
+/**
+ * @type {cmsEditableProp[]}
+ */
+const piep_editor_editable_props = [
+	{
+		name: "margin",
+	},
+	{
+		name: "padding",
+	},
+	{
+		name: "data-src",
+		match_tag: /img/,
+	},
+	{
+		name: "alt",
+		match_tag: /img|video|iframe/,
+	},
+	{
+		name: "width",
+	},
+];
+
 const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
 /**
@@ -543,20 +573,65 @@ domload(() => {
 	piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
 
 	piep_editor_advanced_menu._set_content(html`
-		<div class="label">Margines</div>
-		<input class="field" data-blc_prop="style.margin" />
+		<div data-blc_prop_wrapper="margin">
+			<div class="label">Margines zewnętrzny</div>
+			<div class="flex align_center text_center text_center_fields">
+				<div>
+					Lewy
+					<input class="field" data-blc_prop="style.marginLeft" />
+				</div>
+				<div class="ml2 mr2">
+					Górny
+					<input class="field mb3" data-blc_prop="style.marginTop" />
+					Dolny
+					<input class="field" data-blc_prop="style.marginBottom" />
+				</div>
+				<div>
+					Prawy
+					<input class="field" data-blc_prop="style.marginRight" />
+				</div>
+			</div>
+		</div>
 
-		<div class="label">Padding</div>
-		<input class="field" data-blc_prop="style.padding" />
+		<div data-blc_prop_wrapper="padding">
+			<div class="label">Margines wewnętrzny (padding)</div>
+			<div class="flex align_center text_center text_center_fields">
+				<div>
+					Lewy
+					<input class="field" data-blc_prop="style.paddingLeft" />
+				</div>
+				<div class="ml2 mr2">
+					Górny
+					<input class="field mb3" data-blc_prop="style.paddingTop" />
+					Dolny
+					<input class="field" data-blc_prop="style.paddingBottom" />
+				</div>
+				<div>
+					Prawy
+					<input class="field" data-blc_prop="style.paddingRight" />
+				</div>
+			</div>
+		</div>
 
-		<div class="label">Szerokość</div>
-		<input class="field" data-blc_prop="style.width" />
+		<div data-blc_prop_wrapper="width">
+			<div class="label">Szerokość</div>
+			<input class="field" data-blc_prop="style.width" />
+		</div>
 
-		<div class="label">Zdjęcie</div>
-		<image-input data-blc_prop="attr.data-src"></image-input>
+		<div data-blc_prop_wrapper="height">
+			<div class="label">Wysokość</div>
+			<input class="field" data-blc_prop="style.height" />
+		</div>
 
-		<div class="label">Opis zdjęcia (alt)</div>
-		<input class="field" data-blc_prop="attr.alt" />
+		<div data-blc_prop_wrapper="data-src">
+			<div class="label">Zdjęcie</div>
+			<image-input data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-input>
+		</div>
+
+		<div data-blc_prop_wrapper="alt">
+			<div class="label">Opis zdjęcia (alt)</div>
+			<input class="field" data-blc_prop="attr.alt" />
+		</div>
 	`);
 	registerForms();
 
@@ -1712,6 +1787,16 @@ function setPiepEditorFocusNode(vid) {
 
 		if (just_changed_focus_vid) {
 			const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
+
+			piep_editor_editable_props.forEach((prop) => {
+				const visible = prop.match_tag ? v_node.tag.match(prop.match_tag) : true;
+				const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+				if (blc_prop_wrapper) {
+					blc_prop_wrapper.classList.toggle("hidden", !visible);
+				}
+			});
+
+			// will take everything, even hidden items
 			piep_editor._children("[data-blc_prop]").forEach((input) => {
 				const prop_str = input.dataset.blc_prop;
 				let prop_val;
@@ -1727,6 +1812,8 @@ function setPiepEditorFocusNode(vid) {
 				let val = def(prop_val, "");
 				input._set_value(val, { quiet: true });
 			});
+
+			lazyLoadImages({ duration: 0 });
 		}
 
 		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);

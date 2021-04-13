@@ -466,7 +466,7 @@ function setContent(node, html = "", options = {}) {
 	}
 
 	if (options.maintain_height) {
-		node.style.height = node.offsetHeight + "px";
+		node.style.height = node.scrollHeight + "px";
 	}
 	node = $(node);
 	removeContent(node);

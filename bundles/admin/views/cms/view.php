@@ -11,7 +11,9 @@
     <div class="piep_editor_advanced_menu"></div>
 
     <div class="piep_editor_content_wrapper">
-        <div class="piep_editor_content scroll_panel scroll_shadow hide_scrollbar"></div>
+        <div class="piep_editor_content_scroll scroll_panel scroll_shadow hide_scrollbar">
+            <div class="piep_editor_content"></div>
+        </div>
     </div>
 
     <div class="piep_editor_inspector">
