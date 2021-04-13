@@ -1,10 +1,5 @@
 /* css[global] */
 
-/* TEMPORARY */
-h2 i {
-	display: none !important;
-}
-
 :root {
 	--focus-clr: #47a;
 }
@@ -65,15 +60,6 @@ p {
 	flex-grow: 1;
 	flex-direction: column;
 }
-.inline {
-	display: inline-block !important;
-}
-.block {
-	display: block !important;
-}
-.inline_flex {
-	display: inline-flex !important;
-}
 
 .h1 {
 	margin: 1em 0;
@@ -132,42 +118,8 @@ footer {
 	text-align: center;
 }
 
-.flex_children_width {
-	display: flex;
-}
-.flex_children_width * {
-	min-width: 0;
-}
-
-.flex_column {
-	display: flex;
-	flex-direction: column;
-}
-
-.flex {
-	display: flex;
-}
-
-// h1,
-// h2,
-// h3 {
-// 	font-weight: 600;
-// }
-
-.lazy * {
-	display: none;
-}
-
 img {
 	display: inline-block;
-}
-
-.text-bottom {
-	vertical-align: bottom;
-}
-
-.light {
-	font-weight: unset;
 }
 
 .underline {
@@ -185,12 +137,6 @@ img {
 a {
 	cursor: pointer;
 }
-
-// .title .btn,
-// .label .btn,
-// .label + .btn {
-// 	margin-left: 5px;
-// }
 
 ul {
 	padding: 0;

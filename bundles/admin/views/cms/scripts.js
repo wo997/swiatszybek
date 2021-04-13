@@ -23,7 +23,11 @@ let piep_editor_cursor_active;
 /** @type {boolean} */
 let piep_editor_float_menu_active;
 /** @type {PiepNode} */
+let piep_editor_inspector;
+/** @type {PiepNode} */
 let piep_editor_inspector_tree;
+/** @type {boolean} */
+let piep_editor_inspector_open;
 /** @type {number} */
 let piep_focus_node_vid;
 /** @type {number} */
@@ -65,7 +69,7 @@ const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input",
 /** @type {vDomNode[]} */
 let v_dom = [
 	{
-		id: 1,
+		id: 100,
 		tag: "h1",
 		text: "Dobry frejmwork",
 		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
@@ -74,7 +78,7 @@ let v_dom = [
 		classes: [],
 	},
 	{
-		id: 2,
+		id: 101,
 		tag: "p",
 		text:
 			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -84,7 +88,7 @@ let v_dom = [
 		classes: [],
 	},
 	{
-		id: 1,
+		id: 102,
 		tag: "h1",
 		text: "Dobry frejmwork",
 		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
@@ -93,7 +97,7 @@ let v_dom = [
 		classes: [],
 	},
 	{
-		id: 2,
+		id: 103,
 		tag: "p",
 		text:
 			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -103,7 +107,7 @@ let v_dom = [
 		classes: [],
 	},
 	{
-		id: 1,
+		id: 104,
 		tag: "h1",
 		text: "Dobry frejmwork",
 		styles: { fontSize: "1.4rem", fontWeight: "bold", color: "#d5d", marginTop: "50px" },
@@ -112,7 +116,7 @@ let v_dom = [
 		classes: [],
 	},
 	{
-		id: 2,
+		id: 105,
 		tag: "p",
 		text:
 			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -506,30 +510,18 @@ domload(() => {
 	piep_editor_float_multi_insert = piep_editor._child(".piep_editor_float_multi_insert");
 
 	const initInspector = () => {
-		piep_editor_inspector_tree = piep_editor._child(".piep_editor_inspector .tree");
-		document.addEventListener("mousemove", (ev) => {
-			const target = $(ev.target);
-			const v_node_label = target._parent(".v_node_label");
+		piep_editor_inspector = piep_editor._child(".piep_editor_inspector");
+		piep_editor_inspector_tree = piep_editor_inspector._child(".tree");
 
-			let vid = undefined;
-
-			if (piep_editor_grabbed_block_vid === undefined) {
-				if (v_node_label) {
-					vid = +v_node_label.dataset.vid;
-				}
-
-				if (piep_editor_last_v_node_label_vid !== vid) {
-					piep_editor_last_v_node_label_vid = vid;
-					if (vid === undefined) {
-						piep_editor_float_menu.classList.toggle("hidden", !piep_focus_node_vid);
-						piepEditorShowFocusToNode(piep_focus_node_vid);
-					} else {
-						piep_editor_float_menu.classList.toggle("hidden", vid !== piep_focus_node_vid);
-						piepEditorShowFocusToNode(vid);
-					}
-				}
-			}
+		piep_editor_inspector._child(".show_inspector_btn").addEventListener("click", () => {
+			togglePiepEditorInspector(true);
 		});
+		piep_editor_inspector._child(".hide_inspector_btn").addEventListener("click", () => {
+			togglePiepEditorInspector(false);
+		});
+
+		togglePiepEditorInspector(false);
+
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 			const v_node_label = target._parent(".v_node_label");
@@ -976,6 +968,7 @@ function piepEditorMainLoop() {
 	updateMouseTarget();
 
 	if (piep_editor_grabbed_block_vid !== undefined) {
+		// grabbed
 		const radius = 35;
 
 		const piep_editor_rect = piep_editor.getBoundingClientRect();
@@ -987,7 +980,7 @@ function piepEditorMainLoop() {
 
 		/** @type {insertBlc} */
 		// @ts-ignore
-		const insert_blc = mouse.target ? mouse.target._parent(".insert_blc, .svg_insert_btn") : undefined;
+		const insert_blc = mouse.target._parent(".insert_blc, .svg_insert_btn");
 
 		if (piep_editor_showing_float_multi_of_blc) {
 			const piep_editor_float_multi_insert_rect = piep_editor_float_multi_insert.getBoundingClientRect();
@@ -1023,18 +1016,6 @@ function piepEditorMainLoop() {
 
 			if (insert_blc) {
 				if (insert_blc.classList.contains("multiple")) {
-					// clean up
-					// piep_editor_float_multi_insert._direct_children().forEach((c) => {
-					// 	piep_editor.append(c);
-					// 	c.classList.add("hidden");
-					// });
-					// insert_blc._popup_blcs.forEach((c) => {
-					// 	c.style.left = "0";
-					// 	c.style.top = "0";
-					// 	piep_editor_float_multi_insert.append(c);
-					// 	c.classList.remove("hidden");
-					// });
-
 					let edit_block_html = "";
 
 					let buttons = "";
@@ -1169,8 +1150,21 @@ function piepEditorMainLoop() {
 		piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
 		piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
 	} else {
-		piepEditorShowFocusToNode(piep_focus_node_vid);
-		piepEditorShowFloatMenuToNode(piep_focus_node_vid);
+		// not grabbed
+		let show_focus_node_vid = piep_focus_node_vid;
+
+		const v_node_label = mouse.target._parent(".v_node_label");
+		if (v_node_label) {
+			show_focus_node_vid = +v_node_label.dataset.vid;
+		}
+
+		piepEditorShowFocusToNode(show_focus_node_vid);
+		let show_float_menu = piep_editor_float_menu_active;
+		if (show_focus_node_vid !== piep_focus_node_vid) {
+			show_float_menu = false;
+		}
+		piep_editor_float_menu.classList.toggle("hidden", !show_float_menu);
+		piepEditorShowFloatMenuToNode(show_focus_node_vid);
 	}
 
 	requestAnimationFrame(piepEditorMainLoop);
@@ -1787,8 +1781,6 @@ function piepEditorShowFloatMenuToNode(vid) {
 		return;
 	}
 
-	piep_editor_float_menu.classList.remove("hidden");
-
 	const focus_node = getPiepEditorNode(vid);
 	if (focus_node === undefined) {
 		piep_editor_float_menu.classList.add("hidden");
@@ -1990,4 +1982,17 @@ function setSelectionByIndex(node, pos, end = undefined) {
 	sel.removeAllRanges();
 	sel.addRange(range);
 	updatePiepCursorPosition();
+}
+
+/**
+ *
+ * @param {boolean} open
+ */
+function togglePiepEditorInspector(open = undefined) {
+	if (open !== undefined) {
+		piep_editor_inspector_open = open;
+	} else {
+		piep_editor_inspector_open = !piep_editor_inspector_open;
+	}
+	piep_editor_inspector.classList.toggle("open", piep_editor_inspector_open);
 }

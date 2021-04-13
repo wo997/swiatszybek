@@ -28,7 +28,7 @@ domload(() => {
 
 	// crazy shit lol
 	const tacz = (event) => {
-		const t = tooltip.target;
+		const tltp = tooltip.target;
 
 		const target = $(event.target);
 		const e = target._parent("[data-tooltip]");
@@ -49,13 +49,12 @@ domload(() => {
 			}
 
 			if (tooltip.last_target != e) {
-				t.style.display = "block";
-				t._set_content(tooltipText);
-				t.style.animation = "show 0.15s";
+				tltp.style.display = "block";
+				tltp._set_content(tooltipText);
+				tltp.style.animation = "show 0.15s";
 			}
 
 			const nodeRect = e.getBoundingClientRect();
-			const tooltipRect = t.getBoundingClientRect();
 
 			const offsetX = 3;
 			const offsetY = 2;
@@ -64,24 +63,24 @@ domload(() => {
 
 			const nodeRectPosition = e.dataset.tooltip_position;
 			if (nodeRectPosition == "center") {
-				left -= tooltipRect.width / 2 + offsetX;
+				left -= tltp.offsetWidth / 2 + offsetX;
 			} else if (nodeRectPosition == "top") {
-				left -= tooltipRect.width / 2 + offsetX;
-				top -= nodeRect.height + t.offsetHeight + offsetY * 2;
+				left -= tltp.offsetWidth / 2 + offsetX;
+				top -= nodeRect.height + tltp.offsetHeight + offsetY * 2;
 			} else if (nodeRectPosition == "over") {
-				left -= tooltipRect.width / 2 + offsetX;
-				top -= 0.5 * (nodeRect.height + t.offsetHeight) + offsetY;
+				left -= tltp.offsetWidth / 2 + offsetX;
+				top -= 0.5 * (nodeRect.height + tltp.offsetHeight) + offsetY;
 			} else if (nodeRectPosition == "right") {
-				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
+				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
 				left += nodeRect.width / 2;
 			} else if (nodeRectPosition == "left") {
-				top -= nodeRect.height / 2 + tooltipRect.height / 2 + offsetY;
-				left -= nodeRect.width / 2 + tooltipRect.width + offsetX * 2;
+				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
+				left -= nodeRect.width / 2 + tltp.offsetWidth + offsetX * 2;
 			}
 
-			const maxLeft = window.innerWidth - 30 - tooltipRect.width;
+			const maxLeft = window.innerWidth - 30 - tltp.offsetWidth;
 			if (left > maxLeft) {
-				left -= tooltipRect.width + offsetX * 2; // + nodeRect.width;
+				left -= tltp.offsetWidth + offsetX * 2; // + nodeRect.width;
 			}
 			if (left > maxLeft) {
 				left = maxLeft;
@@ -93,14 +92,14 @@ domload(() => {
 			if (top < 10) {
 				top = 10;
 			}
-			const maxH = window.innerHeight - tooltipRect.height - 10;
+			const maxH = window.innerHeight - tltp.offsetHeight - 10;
 			if (top > maxH) {
 				top = maxH - nodeRect.height;
 			}
 
-			t.style.left = left + "px";
-			t.style.top = top + "px";
-		} else t.style.display = "none";
+			tltp.style.left = left + "px";
+			tltp.style.top = top + "px";
+		} else tltp.style.display = "none";
 
 		tooltip.last_target = e;
 	};
