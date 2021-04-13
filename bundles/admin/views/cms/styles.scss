@@ -10,7 +10,7 @@
 .piep_editor_float_multi_insert {
 	& {
 		position: absolute;
-		z-index: 310;
+		z-index: 1200;
 	}
 
 	.foreign_insert_btn {
@@ -49,7 +49,7 @@
 .piep_editor_grabbed_block_wrapper {
 	& {
 		position: absolute;
-		z-index: 350;
+		z-index: 1300;
 		pointer-events: none;
 		transform-origin: 0 0;
 	}
@@ -72,7 +72,7 @@
 		box-shadow: 0 2px 5px #0002;
 		border-radius: 4px;
 		top: 20px;
-		z-index: 380;
+		z-index: 1400;
 		transition: transform 0.2s;
 	}
 	&:not(.open) {
@@ -171,9 +171,8 @@
 .piep_editor_advanced_menu {
 	width: 350px;
 	background: #fff;
-	border: 1px solid #ccc;
+	border-right: 1px solid #ccc;
 	box-shadow: 0 0 5px 0 #0003;
-	border-radius: 4px;
 	padding: 10px;
 	flex-shrink: 0;
 }
@@ -205,17 +204,19 @@
 		height: 100%;
 	}
 
+	.piep_editor_content_wrapper {
+		margin: 20px;
+		overflow: hidden;
+	}
 	.piep_editor_content {
 		& {
 			background: #fff;
 			white-space: pre-wrap;
 			display: flex;
 			flex-direction: column;
-			overflow-y: auto;
-			flex-shrink: 1;
-			margin: 20px;
 			border: 1px solid #ccc;
 			box-shadow: 0 2px 5px 0 #0002;
+			height: 100%;
 		}
 		& > * {
 			flex-shrink: 0;
@@ -248,7 +249,7 @@
 			border-radius: 4px;
 			transform: translate(-50%, -50%);
 			cursor: pointer;
-			z-index: 300;
+			z-index: 1100;
 			display: flex;
 			align-items: center;
 			justify-content: center;

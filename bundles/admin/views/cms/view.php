@@ -10,7 +10,9 @@
 <div class="piep_editor">
     <div class="piep_editor_advanced_menu"></div>
 
-    <div class="piep_editor_content"></div>
+    <div class="piep_editor_content_wrapper">
+        <div class="piep_editor_content scroll_panel scroll_shadow hide_scrollbar"></div>
+    </div>
 
     <div class="piep_editor_inspector">
         <button class="btn primary show_inspector_btn" data-tooltip="Otwórz drzewko elementów" data-tooltip_position="left">

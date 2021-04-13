@@ -30,30 +30,33 @@ function scrollFromTo(parent, diff, time, t = 0) {
 		});
 }
 
-let smooth_scrolling = false;
+let smooth_scrolling_parents = [];
 function smoothScroll(diff, params = {}) {
-	if (smooth_scrolling) {
-		return;
-	}
-	smooth_scrolling = true;
-
 	/** @type {PiepNode} */
 	params.scroll_parent = def(params.scroll_parent, document.documentElement);
+
+	if (smooth_scrolling_parents.includes(params.scroll_parent)) {
+		return;
+	}
+	smooth_scrolling_parents.push(params.scroll_parent);
+
 	const scroll_parent = params.scroll_parent;
 	const prodably_duration = def(params.duration, Math.sqrt(Math.abs(diff)));
-	// duration is weird to be addde here,, but it's intentional
+	// duration is weird to be addded here, but it's intentional
 
 	const min_s = -scroll_parent.scrollTop;
 	const max_s = scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop;
 	diff = clamp(min_s - prodably_duration, diff, max_s + prodably_duration);
 	params.duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
 
-	//console.log(diff);
 	if (Math.abs(diff) < 2) {
 		if (params.callback) {
 			params.callback();
 		}
-		smooth_scrolling = false;
+		const ind = smooth_scrolling_parents.indexOf(params.scroll_parent);
+		if (ind !== -1) {
+			smooth_scrolling_parents.splice(ind);
+		}
 		return;
 	}
 
@@ -89,7 +92,10 @@ function smoothScrolling(diff, params = {}) {
 		if (params.callback) {
 			params.callback();
 		}
-		smooth_scrolling = false;
+		const ind = smooth_scrolling_parents.indexOf(params.scroll_parent);
+		if (ind !== -1) {
+			smooth_scrolling_parents.splice(ind);
+		}
 		return;
 	}
 
