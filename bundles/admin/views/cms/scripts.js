@@ -1899,8 +1899,10 @@ function setPiepEditorFocusNode(vid) {
 
 		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
 		if (piep_editor_inspector_tree._child(`.tblc_${vid}`)) {
+			if (!tblc.classList.contains("selected")) {
+				scrollIntoView(tblc);
+			}
 			tblc.classList.add("selected");
-			scrollIntoView(tblc);
 		}
 	}
 }
