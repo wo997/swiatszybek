@@ -50,11 +50,18 @@ let piep_editor_float_multi_insert;
 let piep_editor_showing_float_multi_of_blc;
 /** @type {PiepNode} */
 let piep_editor_parent_float_focus;
+/** @type {PiepNode} */
+let filter_advanced_menu;
+
+/**
+ * @typedef {"all" | "appearance" | "layout" | "advanced"} cmsEditableGroupEnum
+ */
 
 /**
  * @typedef {{
  * name: string
  * match_tag?: RegExp
+ * groups: cmsEditableGroupEnum[]
  * }} cmsEditableProp
  */
 
@@ -64,20 +71,29 @@ let piep_editor_parent_float_focus;
 const piep_editor_editable_props = [
 	{
 		name: "margin",
+		groups: ["layout"],
 	},
 	{
 		name: "padding",
+		groups: ["layout"],
 	},
 	{
 		name: "data-src",
 		match_tag: /img/,
+		groups: ["advanced", "appearance"],
 	},
 	{
 		name: "alt",
 		match_tag: /img|video|iframe/,
+		groups: ["advanced"],
 	},
 	{
 		name: "width",
+		groups: ["layout"],
+	},
+	{
+		name: "height",
+		groups: ["layout"],
 	},
 ];
 
@@ -671,7 +687,11 @@ domload(() => {
 	`);
 	registerForms();
 
-	piep_editor_advanced_menu._child(".filter_advanced_menu")._set_value("all");
+	filter_advanced_menu = piep_editor_advanced_menu._child(".filter_advanced_menu");
+	filter_advanced_menu._set_value("all");
+	filter_advanced_menu.addEventListener("change", () => {
+		filterPiepEditorMenu();
+	});
 	setPiepEditorFocusNode(undefined);
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
@@ -753,7 +773,7 @@ domload(() => {
 
 	piep_editor._children("[data-blc_prop]").forEach((input) => {
 		input.addEventListener("change", () => {
-			const focus_node = piep_editor_content._child(".piep_focus");
+			const focus_node = getPiepEditorFocusNode();
 			if (focus_node) {
 				const v_node_data = getVDomNodeDataById(v_dom, +focus_node.dataset.vid);
 				const v_node = v_node_data.v_node;
@@ -1816,29 +1836,18 @@ function setPiepEditorFocusNode(vid) {
 	}
 
 	let just_changed_focus_vid = piep_focus_node_vid !== vid;
-	if (vid === undefined) {
-		piep_editor_advanced_menu._children(`[data-blc_prop_wrapper]`).forEach((blc_prop_wrapper) => {
-			blc_prop_wrapper.classList.add("hidden");
-		});
-	}
 
 	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
 	piep_focus_node_vid = vid;
+	filterPiepEditorMenu();
+
 	const focus_node = getPiepEditorNode(vid);
 	if (focus_node) {
 		focus_node.classList.add("piep_focus");
 
 		if (just_changed_focus_vid) {
 			const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
-
-			piep_editor_editable_props.forEach((prop) => {
-				const visible = prop.match_tag ? v_node.tag.match(prop.match_tag) : true;
-				const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
-				if (blc_prop_wrapper) {
-					blc_prop_wrapper.classList.toggle("hidden", !visible);
-				}
-			});
 
 			// will take everything, even hidden items
 			piep_editor._children("[data-blc_prop]").forEach((input) => {
@@ -1856,8 +1865,6 @@ function setPiepEditorFocusNode(vid) {
 				let val = def(prop_val, "");
 				input._set_value(val, { quiet: true });
 			});
-
-			lazyLoadImages({ duration: 0 });
 		}
 
 		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
@@ -1866,6 +1873,37 @@ function setPiepEditorFocusNode(vid) {
 			scrollIntoView(tblc);
 		}
 	}
+}
+
+function filterPiepEditorMenu() {
+	/** @type {cmsEditableGroupEnum} */
+	const group = filter_advanced_menu._get_value();
+
+	const focus_node = getPiepEditorNode(piep_focus_node_vid);
+	const v_node = focus_node ? findNodeInVDomById(v_dom, +focus_node.dataset.vid) : undefined;
+
+	piep_editor_editable_props.forEach((prop) => {
+		const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+		if (!blc_prop_wrapper) {
+			return;
+		}
+
+		let visible = false;
+		if (v_node) {
+			visible = true;
+			if (prop.match_tag) {
+				visible = !!v_node.tag.match(prop.match_tag);
+			}
+
+			if (visible && group !== "all") {
+				visible = prop.groups.includes(group);
+			}
+		}
+
+		blc_prop_wrapper.classList.toggle("hidden", !visible);
+	});
+
+	lazyLoadImages({ duration: 0 });
 }
 
 /**

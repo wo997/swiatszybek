@@ -63,6 +63,9 @@ function setImageSize(img) {
 	img.classList.add("has_size_set");
 
 	const src = img.dataset.src;
+	if (!src) {
+		return;
+	}
 	const data = getResponsiveImageData(src);
 	let rect = img.getBoundingClientRect();
 
@@ -180,16 +183,6 @@ function getResponsiveImageRealUrl(img, base_url = undefined) {
 	}
 
 	return url;
-
-	// dude, why do this when the height is set anyway?
-	// 	window.dispatchEvent(
-	// 		new CustomEvent("wo997_img_loaded", {
-	// 			detail: {
-	// 				img,
-	// 			},
-	// 		})
-	// 	);
-	// });
 }
 
 setInterval(() => {
@@ -244,6 +237,10 @@ function preloadWo997Image(base_url, img) {
 function setResponsiveImageUrl(img, url) {
 	img.classList.remove("wo997_img_waiting");
 	img.classList.remove("wo997_img_shown");
-	img.dataset.src = getResponsiveImageRealUrl(img, url);
+	const data_src = getResponsiveImageRealUrl(img, url);
+	if (!data_src) {
+		return;
+	}
+	img.dataset.src = data_src;
 	delay("lazyLoadImages", 0);
 }
