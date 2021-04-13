@@ -573,67 +573,106 @@ domload(() => {
 	piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
 
 	piep_editor_advanced_menu._set_content(html`
-		<div data-blc_prop_wrapper="margin">
-			<div class="label">Margines zewnętrzny</div>
-			<div class="flex align_center text_center text_center_fields">
+		<div class="filter_advanced_menu radio_group hide_checks">
+			<div class="checkbox_area">
 				<div>
-					Lewy
-					<input class="field" data-blc_prop="style.marginLeft" />
+					<p-checkbox data-value="all"></p-checkbox>
+					<i class="fas fa-th-large filter_icon"></i>
 				</div>
-				<div class="ml2 mr2">
-					Górny
-					<input class="field mb3" data-blc_prop="style.marginTop" />
-					Dolny
-					<input class="field" data-blc_prop="style.marginBottom" />
-				</div>
+				<span>Wszystko</span>
+			</div>
+
+			<div class="checkbox_area">
 				<div>
-					Prawy
-					<input class="field" data-blc_prop="style.marginRight" />
+					<p-checkbox data-value="layout"></p-checkbox>
+					<span> <i class="fas fa-ruler-combined filter_icon"></i> </span>
 				</div>
+				<span>Układ</span>
+			</div>
+
+			<div class="checkbox_area">
+				<div>
+					<p-checkbox data-value="appearance"></p-checkbox>
+					<span> <i class="fas fa-palette filter_icon"></i></span>
+				</div>
+				<span>Wygląd</span>
+			</div>
+
+			<div class="checkbox_area">
+				<div>
+					<p-checkbox data-value="advanced"></p-checkbox>
+					<span> <i class="fas fa-cog filter_icon"></i></span>
+				</div>
+				<span>Więcej</span>
 			</div>
 		</div>
 
-		<div data-blc_prop_wrapper="padding">
-			<div class="label">Margines wewnętrzny (padding)</div>
-			<div class="flex align_center text_center text_center_fields">
-				<div>
-					Lewy
-					<input class="field" data-blc_prop="style.paddingLeft" />
-				</div>
-				<div class="ml2 mr2">
-					Górny
-					<input class="field mb3" data-blc_prop="style.paddingTop" />
-					Dolny
-					<input class="field" data-blc_prop="style.paddingBottom" />
-				</div>
-				<div>
-					Prawy
-					<input class="field" data-blc_prop="style.paddingRight" />
+		<div class="scroll_panel scroll_shadow panel_padding">
+			<div data-blc_prop_wrapper="margin">
+				<div class="label">Margines zewnętrzny</div>
+				<div class="flex align_center text_center text_center_fields">
+					<div>
+						Lewy
+						<input class="field" data-blc_prop="style.marginLeft" />
+					</div>
+					<div class="ml2 mr2">
+						Górny
+						<input class="field mb3" data-blc_prop="style.marginTop" />
+						Dolny
+						<input class="field" data-blc_prop="style.marginBottom" />
+					</div>
+					<div>
+						Prawy
+						<input class="field" data-blc_prop="style.marginRight" />
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div data-blc_prop_wrapper="width">
-			<div class="label">Szerokość</div>
-			<input class="field" data-blc_prop="style.width" />
-		</div>
+			<div data-blc_prop_wrapper="padding">
+				<div class="label">Margines wewnętrzny (padding)</div>
+				<div class="flex align_center text_center text_center_fields">
+					<div>
+						Lewy
+						<input class="field" data-blc_prop="style.paddingLeft" />
+					</div>
+					<div class="ml2 mr2">
+						Górny
+						<input class="field mb3" data-blc_prop="style.paddingTop" />
+						Dolny
+						<input class="field" data-blc_prop="style.paddingBottom" />
+					</div>
+					<div>
+						Prawy
+						<input class="field" data-blc_prop="style.paddingRight" />
+					</div>
+				</div>
+			</div>
 
-		<div data-blc_prop_wrapper="height">
-			<div class="label">Wysokość</div>
-			<input class="field" data-blc_prop="style.height" />
-		</div>
+			<div data-blc_prop_wrapper="width">
+				<div class="label">Szerokość</div>
+				<input class="field" data-blc_prop="style.width" />
+			</div>
 
-		<div data-blc_prop_wrapper="data-src">
-			<div class="label">Zdjęcie</div>
-			<image-input data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-input>
-		</div>
+			<div data-blc_prop_wrapper="height">
+				<div class="label">Wysokość</div>
+				<input class="field" data-blc_prop="style.height" />
+			</div>
 
-		<div data-blc_prop_wrapper="alt">
-			<div class="label">Opis zdjęcia (alt)</div>
-			<input class="field" data-blc_prop="attr.alt" />
+			<div data-blc_prop_wrapper="data-src">
+				<div class="label">Zdjęcie</div>
+				<image-input data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-input>
+			</div>
+
+			<div data-blc_prop_wrapper="alt">
+				<div class="label">Opis zdjęcia (alt)</div>
+				<input class="field" data-blc_prop="attr.alt" />
+			</div>
 		</div>
 	`);
 	registerForms();
+
+	piep_editor_advanced_menu._child(".filter_advanced_menu")._set_value("all");
+	setPiepEditorFocusNode(undefined);
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
 	piep_editor_float_focus = piep_editor._child(".piep_editor_float_focus");
@@ -867,7 +906,7 @@ domload(() => {
 		}
 
 		if (target._parent(piep_editor)) {
-			piep_editor_float_menu_active = !!(content_active || target._parent(piep_editor_float_menu) || target._parent(".picker_wrapper"));
+			piep_editor_float_menu_active = true; // !!(content_active || target._parent(piep_editor_float_menu) || target._parent(".picker_wrapper"));
 			if (target._parent(".hide_menu_btn") || !piep_focus_node_vid || piep_editor_grabbed_block_vid !== undefined) {
 				piep_editor_float_menu_active = false;
 			}
@@ -1777,6 +1816,11 @@ function setPiepEditorFocusNode(vid) {
 	}
 
 	let just_changed_focus_vid = piep_focus_node_vid !== vid;
+	if (vid === undefined) {
+		piep_editor_advanced_menu._children(`[data-blc_prop_wrapper]`).forEach((blc_prop_wrapper) => {
+			blc_prop_wrapper.classList.add("hidden");
+		});
+	}
 
 	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);

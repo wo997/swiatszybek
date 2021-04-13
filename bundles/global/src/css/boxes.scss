@@ -108,12 +108,6 @@
 		width: calc(16.66666% - var(--box_margin));
 	}
 
-	&.hide_checks,
-	.pretty_blue {
-		p-checkbox {
-			display: none !important;
-		}
-	}
 	&.pretty_blue {
 		& {
 			--box_margin: -1px;
@@ -140,5 +134,12 @@
 				z-index: 12;
 			}
 		}
+	}
+}
+
+.hide_checks,
+.boxes .pretty_blue {
+	p-checkbox {
+		display: none !important;
 	}
 }

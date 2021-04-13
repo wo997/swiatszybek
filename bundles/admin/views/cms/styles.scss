@@ -126,6 +126,7 @@
 		border-bottom-right-radius: 0;
 		top: 100px;
 		transition: 0.2s opacity;
+		box-shadow: 0 2px 4px 0 #0006;
 	}
 	.hide_inspector_btn {
 		width: 29px;
@@ -169,13 +170,60 @@
 }
 
 .piep_editor_advanced_menu {
-	width: 350px;
-	background: #fff;
-	border-right: 1px solid #ccc;
-	box-shadow: 0 0 5px 0 #0003;
-	padding: 10px;
-	flex-shrink: 0;
-	z-index: 2500;
+	& {
+		width: 350px;
+		background: #fff;
+		border-right: 1px solid #ccc;
+		box-shadow: 0 0 5px 0 #0003;
+		flex-shrink: 0;
+		z-index: 2500;
+	}
+	.filter_advanced_menu {
+		& {
+			display: flex;
+		}
+		.checkbox_area {
+			& {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				flex: 1 1 0;
+				transition: all 0.2s;
+				padding: 8px 5px;
+				color: #666;
+			}
+			.filter_icon {
+				font-size: 20px;
+				transition: all 0.2s;
+			}
+			&:not(.checked) {
+				& {
+					background: #eee;
+					cursor: pointer;
+				}
+				&:hover {
+					background: #fafafa;
+					box-shadow: inset 0 -3px 0 0 #eee;
+					transition: none;
+				}
+			}
+			&.checked {
+				& {
+					box-shadow: inset 0 -3px 0 0 var(--primary-clr);
+					color: #000;
+					cursor: default;
+				}
+				.filter_icon {
+					color: var(--primary-clr);
+				}
+			}
+			& > span {
+				font-size: 0.9em;
+				display: block;
+				margin-top: 5px;
+			}
+		}
+	}
 }
 
 .actual_content {
@@ -193,12 +241,11 @@
 }
 
 .main_admin_scroll {
-	background: #ddd !important;
+	background: #eee !important;
 }
 
 .piep_editor_content_scroll {
 	height: 100%;
-	border: 1px solid #ccc;
 }
 
 .piep_editor {
@@ -213,7 +260,7 @@
 	&::before,
 	&::after {
 		content: "";
-		background: #ddd;
+		background: #eee;
 		position: absolute;
 		left: -20px;
 		right: -20px;
@@ -230,6 +277,8 @@
 	.piep_editor_content_wrapper {
 		margin: 20px;
 		overflow: hidden;
+		border: 1px solid #ccc;
+		box-shadow: 0 2px 5px 0 #0003;
 	}
 	.piep_editor_content {
 		& {
