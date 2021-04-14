@@ -84,7 +84,7 @@ const piep_editor_editable_props = [
 	{
 		name: "data-src",
 		match_tag: /img/,
-		groups: ["advanced", "appearance"],
+		groups: ["appearance"],
 	},
 	{
 		name: "alt",
@@ -1866,10 +1866,10 @@ function setPiepEditorFocusNode(vid) {
 	}
 
 	let just_changed_focus_vid = piep_focus_node_vid !== vid;
+	piep_focus_node_vid = vid;
 
 	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
 	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
-	piep_focus_node_vid = vid;
 	filterPiepEditorMenu();
 
 	const focus_node = getPiepEditorNode(vid);
@@ -1898,11 +1898,11 @@ function setPiepEditorFocusNode(vid) {
 		}
 
 		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
-		if (piep_editor_inspector_tree._child(`.tblc_${vid}`)) {
-			if (!tblc.classList.contains("selected")) {
+		if (tblc) {
+			tblc.classList.add("selected");
+			if (just_changed_focus_vid) {
 				scrollIntoView(tblc);
 			}
-			tblc.classList.add("selected");
 		}
 	}
 }
