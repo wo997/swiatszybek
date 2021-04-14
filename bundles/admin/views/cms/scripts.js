@@ -1,591 +1,287 @@
 /* js[view] */
 
-{
-	/** @type {PiepNode} */
-	let piep_editor;
-	/** @type {PiepNode} */
-	let piep_editor_cursor;
-	/** @type {PiepNode} */
-	let piep_editor_content;
-	/** @type {PiepNode} */
-	let piep_editor_float_menu;
-	/** @type {PiepNode} */
-	let piep_editor_float_focus;
-	/** @type {PiepNode} */
-	let piep_editor_advanced_menu;
-	/** @type {PiepNode} */
-	let piep_editor_styles;
-	/** @type {Selection} */
-	let piep_editor_last_selection;
-	/** @type {boolean} */
-	let piep_editor_content_active;
-	/** @type {boolean} */
-	let piep_editor_cursor_active;
-	/** @type {boolean} */
-	let piep_editor_float_menu_active;
-	/** @type {PiepNode} */
-	let piep_editor_inspector;
-	/** @type {PiepNode} */
-	let piep_editor_inspector_tree;
-	/** @type {boolean} */
-	let piep_editor_inspector_open;
-	/** @type {number} */
-	let piep_editor_focus_node_vid;
-	/** @type {number} */
-	let piep_editor_grabbed_block_vid;
-	/** @type {PiepNode} */
-	let piep_editor_grabbed_block_wrapper;
-	/** @type {DOMRect} */
-	let piep_editor_grabbed_block_wrapper_rect;
-	/** @type {insertBlc} */
-	let piep_editor_current_insert_blc;
-	/** @type {boolean} */
-	let piep_editor_has_insert_pos;
-	/** @type {PiepNode} */
-	let piep_editor_float_multi_insert;
-	/** @type {insertBlc} */
-	let piep_editor_showing_float_multi_of_blc;
-	/** @type {PiepNode} */
-	let piep_editor_parent_float_focus;
-	/** @type {PiepNode} */
-	let piep_editor_filter_advanced_menu;
-	/** @type {PiepNode} */
-	let piep_editor_alternative_scroll_panel;
-	/** @type {PiepNode} */
-	let piep_editor_content_scroll;
+/** @type {PiepCMS} */
+let piep_cms;
 
-	/** @type {vDomNode[]} */
-	let v_dom = [];
-	/** @type {vDomNode[]} */
-	let v_dom_overlay = [];
+/**
+ * @typedef {{
+ * id: number
+ * tag: string
+ * text?: string
+ * styles: any
+ * children?: vDomNode[]
+ * attrs: object
+ * classes: string[]
+ * insert?: boolean
+ * }} vDomNode
+ */
 
-	/**
-	 * @typedef {"all" | "appearance" | "layout" | "advanced"} cmsEditableGroupEnum
-	 */
+/**
+ * @typedef {"all" | "appearance" | "layout" | "advanced"} cmsEditableGroupEnum
+ */
 
-	/**
-	 * @typedef {{
-	 * name: string
-	 * match_tag?: RegExp
-	 * groups: cmsEditableGroupEnum[]
-	 * }} cmsEditableProp
-	 */
+/**
+ * @typedef {{
+ * name: string
+ * match_tag?: RegExp
+ * groups: cmsEditableGroupEnum[]
+ * }} cmsEditableProp
+ */
 
-	/**
-	 * @type {cmsEditableProp[]}
-	 */
-	const piep_editor_editable_props = [
-		{
-			name: "margin",
-			groups: ["layout"],
-		},
-		{
-			name: "padding",
-			groups: ["layout"],
-		},
-		{
-			name: "data-src",
-			match_tag: /img/,
-			groups: ["appearance"],
-		},
-		{
-			name: "alt",
-			match_tag: /img|video|iframe/,
-			groups: ["advanced"],
-		},
-		{
-			name: "width",
-			groups: ["layout"],
-		},
-		{
-			name: "height",
-			groups: ["layout"],
-		},
-	];
+/**
+ *
+ * @typedef {{
+ * ignore_insert?: boolean
+ * }} findVDomOptions
+ */
 
-	const single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+/**
+ * @typedef {{
+ * _insert_action()
+ * _popup_blcs: insertBlc[]
+ * } & PiepNode} insertBlc
+ */
 
-	/**
-	 * @typedef {{
-	 * id: number
-	 * tag: string
-	 * text: string
-	 * styles: any
-	 * children: vDomNode[]
-	 * attrs: object
-	 * classes: string[]
-	 * insert?: boolean
-	 * }} vDomNode
-	 */
+/**
+ * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
+ */
 
-	v_dom = [
-		{
-			id: 100,
-			tag: "h1",
-			text: "Dobry frejmwork",
-			styles: { fontSize: "1.4rem", fontWeight: "700", marginTop: "50px" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 101,
-			tag: "p",
-			text:
-				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			styles: { marginTop: "20px", backgroundColor: "#3d3" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 102,
-			tag: "h1",
-			text: "123234234563456",
-			styles: { fontSize: "1.4rem", fontWeight: "400", color: "#d5d" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 103,
-			tag: "p",
-			text:
-				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			styles: { marginTop: "20px" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 104,
-			tag: "h1",
-			text: "Dobry frejmwork aaaaaaaaaa",
-			styles: { fontSize: "1.4rem", fontWeight: "600", color: "#d5d" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 105,
-			tag: "p",
-			text:
-				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			styles: { marginTop: "20px" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 107,
-			tag: "p",
-			text:
-				"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			styles: { marginTop: "20px", fontSize: "30px" },
-			children: undefined,
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 10,
-			tag: "img",
-			text: undefined,
-			styles: { width: "50%" },
-			children: undefined,
-			attrs: {
-				"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
+class PiepCMS {
+	constructor(piep_editor) {
+		this.piep_editor = piep_editor;
+		this.piep_editor_content = this.piep_editor._child(".piep_editor_content");
+		this.piep_editor_content_scroll = this.piep_editor._child(".piep_editor_content_scroll");
+
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
+		this.piep_editor_cursor = this.piep_editor._child(".piep_editor_cursor");
+
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
+		this.piep_editor_styles = this.piep_editor._child(".piep_editor_styles");
+
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
+		this.piep_editor_grabbed_block_wrapper = this.piep_editor._child(".piep_editor_grabbed_block_wrapper");
+
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
+		this.piep_editor_float_multi_insert = this.piep_editor._child(".piep_editor_float_multi_insert");
+
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
+		this.piep_editor_alternative_scroll_panel = this.piep_editor._child(".piep_editor_alternative_scroll_panel");
+
+		/** @type {vDomNode[]} */
+		this.v_dom = [];
+		/** @type {vDomNode[]} */
+		this.v_dom_overlay = [];
+
+		/**
+		 * @type {cmsEditableProp[]}
+		 */
+		this.piep_editor_editable_props = [
+			{
+				name: "margin",
+				groups: ["layout"],
 			},
-			classes: ["wo997_img"],
-		},
-		{
-			id: 3,
-			tag: "div",
-			text: undefined,
-			styles: {},
-			children: [
-				{ id: 4, tag: "p", text: "dziecko 1", children: undefined, styles: {}, attrs: {}, classes: [] },
-				{ id: 8, tag: "p", text: "", children: undefined, styles: {}, attrs: {}, classes: [] },
-				{
-					id: 5,
-					tag: "p",
-					text: undefined,
-					children: [
-						{ id: 6, tag: "span", text: "dziecko 2.1", children: undefined, styles: {}, attrs: {}, classes: [] },
-						{ id: 7, tag: "span", text: "dziecko 2.2", children: undefined, styles: {}, attrs: {}, classes: [] },
-					],
-					styles: {},
-					attrs: {},
-					classes: [],
+			{
+				name: "padding",
+				groups: ["layout"],
+			},
+			{
+				name: "data-src",
+				match_tag: /img/,
+				groups: ["appearance"],
+			},
+			{
+				name: "alt",
+				match_tag: /img|video|iframe/,
+				groups: ["advanced"],
+			},
+			{
+				name: "width",
+				groups: ["layout"],
+			},
+			{
+				name: "height",
+				groups: ["layout"],
+			},
+		];
+
+		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
+		/** @type {vDomNode[]} */
+		this.v_dom = [
+			{
+				id: 100,
+				tag: "h1",
+				text: "Dobry frejmwork",
+				styles: { fontSize: "1.4rem", fontWeight: "700", marginTop: "50px" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 101,
+				tag: "p",
+				text:
+					"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				styles: { marginTop: "20px", backgroundColor: "#3d3" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 102,
+				tag: "h1",
+				text: "123234234563456",
+				styles: { fontSize: "1.4rem", fontWeight: "400", color: "#d5d" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 103,
+				tag: "p",
+				text:
+					"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				styles: { marginTop: "20px" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 104,
+				tag: "h1",
+				text: "Dobry frejmwork aaaaaaaaaa",
+				styles: { fontSize: "1.4rem", fontWeight: "600", color: "#d5d" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 105,
+				tag: "p",
+				text:
+					"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				styles: { marginTop: "20px" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 169,
+				tag: "div",
+				styles: { display: "flex", borderWidth: "1px", borderColor: "#00c", borderStyle: "solid", padding: "10px" },
+				attrs: {},
+				classes: [],
+				children: [
+					{
+						id: 170,
+						tag: "div",
+						styles: {
+							display: "flex",
+							borderWidth: "1px",
+							borderColor: "#00c",
+							borderStyle: "solid",
+							padding: "10px",
+							flexDirection: "column",
+						},
+						attrs: {},
+						classes: [],
+						children: [
+							{
+								id: 171,
+								tag: "p",
+								text: "dfgsdgs sdgf sdfgsdg fsdgfsdgfsdfgsd fgsdg f",
+								styles: { display: "flex", borderWidth: "1px", borderColor: "#c00", borderStyle: "solid", padding: "10px" },
+								attrs: {},
+								classes: [],
+							},
+							{
+								id: 172,
+								tag: "p",
+								text: "ADFG DFGSDG SDFGSDF GSDFG SDFG SDGFD FGSDGFS",
+								styles: { display: "flex", borderWidth: "1px", borderColor: "#0c0", borderStyle: "solid", padding: "10px" },
+								attrs: {},
+								classes: [],
+							},
+						],
+					},
+					{
+						id: 173,
+						tag: "p",
+						text: "dfgsdgs sdgf sdfgsdg fsdgfsdgfsdfgsd fgsdg f",
+						styles: { display: "flex", borderWidth: "1px", borderColor: "#c00", borderStyle: "solid", padding: "10px" },
+						attrs: {},
+						classes: [],
+					},
+					{
+						id: 174,
+						tag: "p",
+						text: "ADFG DFGSDG SDFGSDF GSDFG SDFG SDGFD FGSDGFS",
+						styles: { display: "flex", borderWidth: "1px", borderColor: "#0c0", borderStyle: "solid", padding: "10px" },
+						attrs: {},
+						classes: [],
+					},
+				],
+			},
+			{
+				id: 10,
+				tag: "img",
+				styles: { width: "50%" },
+				attrs: {
+					"data-src": "/uploads/-/2021-04-02-19-41-1_559x377.jpg",
 				},
-			],
-			attrs: {},
-			classes: [],
-		},
-		{
-			id: 9,
-			tag: "div",
-			text: undefined,
-			styles: {
-				backgroundColor: "red",
-				padding: "20px",
+				classes: ["wo997_img"],
 			},
-			children: [],
-			attrs: {},
-			classes: [],
-		},
-	];
+			{
+				id: 107,
+				tag: "p",
+				text:
+					"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				styles: { marginTop: "20px", fontSize: "30px" },
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 3,
+				tag: "div",
 
-	function getPiepEditorId() {
-		let max = 0;
-		const traversePiepHtml = (nodes) => {
-			for (const node of nodes) {
-				if (node.id > max) {
-					max = node.id;
-				}
-				if (node.children) {
-					traversePiepHtml(node.children);
-				}
-			}
-		};
-
-		traversePiepHtml(v_dom);
-		return max + 1;
-	}
-
-	/**
-	 * @param {vDomNode[]} target_v_dom
-	 */
-	function recreateDom(target_v_dom = undefined) {
-		if (target_v_dom === undefined) {
-			target_v_dom = v_dom;
-		}
-
-		// order doesn't really matter so far
-		let styles_html = "";
-
-		/**
-		 *
-		 * @param {vDomNode[]} v_nodes
-		 * @returns
-		 */
-		const traverseVDom = (v_nodes, level = 0) => {
-			let content_html = "";
-			let inspector_tree_html = "";
-
-			for (const v_node of v_nodes) {
-				let body = "";
-
-				const children = v_node.children;
-				const text = v_node.text;
-
-				const tag = v_node.tag;
-				const textable = text !== undefined;
-
-				let attrs = { "data-vid": v_node.id };
-				Object.assign(attrs, v_node.attrs);
-
-				const base_class = getPiepEditorNodeSelector(v_node.id).replace(".", "");
-				let classes = ["blc", base_class, ...v_node.classes];
-
-				const map_tag_display_name = {
-					a: "Link",
-					h1: "Nagłówek",
-					h2: "Nagłówek",
-					h3: "Nagłówek",
-					h4: "Nagłówek",
-					h5: "Nagłówek",
-					h6: "Nagłówek",
-					div: "Kontener",
-					p: "Paragraf",
-					span: "Tekst",
-					img: "Zdjęcie",
-				};
-
-				const display_name = def(map_tag_display_name[tag], "");
-
-				let info = "";
-
-				if (text !== undefined) {
-					info = text ? text : "(pusty)";
-				} else if (children !== undefined) {
-					info = `(${children.length})`;
-				}
-
-				if (info) {
-					info = html`<span class="info"> - ${info}</span>`;
-				}
-
-				inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
-					<span class="name">${display_name}</span>
-					${info}
-				</div>`;
-
-				if (textable) {
-					classes.push("textable");
-					if (text) {
-						body += text;
-					} else {
-						body += `<br>`;
-					}
-				} else if (children !== undefined) {
-					// traverse for styles but not contents ;)
-					const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(children, level + 1);
-
-					body += sub_content_html;
-					inspector_tree_html += sub_inspector_tree_html;
-				}
-
-				let add_to_body = true;
-				if (v_node.id === piep_editor_grabbed_block_vid) {
-					if (!piep_editor_current_insert_blc || !v_node.insert) {
-						add_to_body = false;
-					}
-				}
-
-				if (add_to_body) {
-					const classes_csv = classes.join(" ");
-
-					const attrs_csv = Object.entries(attrs)
-						.map(([key, val]) => {
-							return `${key}="${escapeAttribute(val)}"`;
-						})
-						.join(" ");
-
-					if (single_tags.includes(tag)) {
-						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
-					} else {
-						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
-					}
-				}
-
-				const styles = Object.entries(v_node.styles);
-				if (styles.length > 0) {
-					let node_styles = "";
-					styles.forEach(([prop, val]) => {
-						node_styles += `${kebabCase(prop)}: ${val};`;
-					});
-					styles_html += `.${base_class} { ${node_styles} }`;
-				}
-			}
-
-			return { content_html, inspector_tree_html };
-		};
-
-		const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
-
-		piep_editor_content._set_content(content_html, { maintain_height: true });
-
-		piep_editor_styles._set_content(styles_html);
-
-		piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
-
-		lazyLoadImages({ duration: 0 });
-		registerForms();
-	}
-
-	/**
-	 *
-	 * @param {vDomNode[]} v_dom
-	 * @param {number} vid
-	 * @returns
-	 */
-	function findNodeInVDomById(v_dom, vid) {
-		if (!vid) {
-			return undefined;
-		}
-
-		const node_data = getVDomNodeDataById(v_dom, vid);
-		if (!node_data) {
-			return undefined;
-		}
-		return node_data.v_node;
-	}
-
-	/**
-	 *
-	 * @param {vDomNode[]} v_dom
-	 * @param {{(v_node: vDomNode): boolean}} test
-	 * @returns
-	 */
-	function findNodeInVDom(v_dom, test) {
-		const node_data = getVDomNodeData(v_dom, test);
-		if (!node_data) {
-			return undefined;
-		}
-		return node_data.v_node;
-	}
-
-	/**
-	 *
-	 * @param {vDomNode[]} v_dom
-	 * @param {number} vid
-	 * @param {findVDomOptions} [options]
-	 * @returns
-	 */
-	function getVDomNodeDataById(v_dom, vid, options = {}) {
-		if (!vid) {
-			return undefined;
-		}
-
-		return getVDomNodeData(v_dom, (v_node) => v_node.id === vid, options);
-	}
-
-	/**
-	 *
-	 * @typedef {{
-	 * ignore_insert?: boolean
-	 * }} findVDomOptions
-	 */
-
-	/**
-	 *
-	 * @param {vDomNode[]} v_dom
-	 * @param {{(v_node: vDomNode): boolean}} test
-	 * @param {findVDomOptions} [options]
-	 * @returns {{
-	 * v_node: vDomNode
-	 * v_nodes: vDomNode[]
-	 * index: number
-	 * parent_v_nodes: vDomNode[]
-	 * }}
-	 */
-	function getVDomNodeData(v_dom, test, options = {}) {
-		/**
-		 *
-		 * @param {vDomNode[]} v_nodes
-		 * @returns
-		 */
-		const traverseVDom = (v_nodes, parent_v_nodes) => {
-			let index = -1;
-			for (const v_node of v_nodes) {
-				index++;
-
-				if (options.ignore_insert === true) {
-					if (v_node.id === piep_editor_grabbed_block_vid) {
-						if (!piep_editor_current_insert_blc || !v_node.insert) {
-							continue;
-						}
-					}
-				}
-
-				if (test(v_node)) {
-					return {
-						v_node,
-						v_nodes,
-						index,
-						parent_v_nodes,
-					};
-				}
-
-				if (v_node.children) {
-					const res = traverseVDom(v_node.children, [...parent_v_nodes, v_node]);
-					if (res) {
-						return res;
-					}
-				}
-			}
-
-			return undefined;
-		};
-
-		return traverseVDom(v_dom, []);
-	}
-
-	/**
-	 *
-	 * @param {PiepNode} node
-	 * @param {-1 | 1} direction
-	 * @returns {PiepNode | undefined}
-	 */
-	function getTextable(node, direction) {
-		let next_node;
-		let parent = node;
-		while (parent) {
-			const next = direction === 1 ? parent._next() : parent._prev();
-			if (next) {
-				next_node = next;
-				break;
-			} else {
-				parent = parent._parent();
-			}
-		}
-		if (next_node && piep_editor_content.contains(next_node)) {
-			if (direction === 1) {
-				return def(next_node._children("*")[0], next_node);
-			} else {
-				return def(getLast(next_node._children("*")), next_node);
-			}
-		}
-		return undefined;
-	}
-
-	/**
-	 *
-	 * @param {string} insert_text
-	 * @returns
-	 */
-	function insertPiepText(insert_text) {
-		const sel = window.getSelection();
-		const focus_offset = sel.focusOffset;
-		const anchor_offset = sel.anchorOffset;
-		const focus_node = getPiepEditorFocusNode();
-		const vid = focus_node ? +focus_node.dataset.vid : 0;
-		const v_node = findNodeInVDomById(v_dom, vid);
-		if (!v_node) {
-			return;
-		}
-
-		const text = v_node.text;
-
-		let begin_offset = focus_offset;
-		let end_offset = focus_offset;
-		if (anchor_offset === focus_offset) {
-			v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
-		} else {
-			begin_offset = Math.min(anchor_offset, focus_offset);
-			end_offset = Math.max(anchor_offset, focus_offset);
-			v_node.text = text.substr(0, begin_offset) + insert_text + text.substr(end_offset);
-		}
-		recreateDom();
-
-		const node_ref = getPiepEditorNode(vid);
-		if (node_ref) {
-			setSelectionByIndex(node_ref, begin_offset + insert_text.length);
-		}
-	}
-
-	domload(() => {
-		piep_editor = $(".piep_editor");
-		piep_editor_content = piep_editor._child(".piep_editor_content");
-		piep_editor_content_scroll = piep_editor._child(".piep_editor_content_scroll");
-
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
-		piep_editor_cursor = piep_editor._child(".piep_editor_cursor");
-
-		piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
-		piep_editor_styles = piep_editor._child(".piep_editor_styles");
-
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
-		piep_editor_grabbed_block_wrapper = piep_editor._child(".piep_editor_grabbed_block_wrapper");
-
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
-		piep_editor_float_multi_insert = piep_editor._child(".piep_editor_float_multi_insert");
-
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
-		piep_editor_alternative_scroll_panel = piep_editor._child(".piep_editor_alternative_scroll_panel");
+				styles: {},
+				children: [
+					{ id: 4, tag: "p", text: "dziecko 1", styles: {}, attrs: {}, classes: [] },
+					{ id: 8, tag: "p", text: "", styles: {}, attrs: {}, classes: [] },
+					{
+						id: 5,
+						tag: "p",
+						children: [
+							{ id: 6, tag: "span", text: "dziecko 2.1", styles: {}, attrs: {}, classes: [] },
+							{ id: 7, tag: "span", text: "dziecko 2.2", styles: {}, attrs: {}, classes: [] },
+						],
+						styles: {},
+						attrs: {},
+						classes: [],
+					},
+				],
+				attrs: {},
+				classes: [],
+			},
+			{
+				id: 9,
+				tag: "div",
+				styles: {
+					backgroundColor: "red",
+					padding: "20px",
+				},
+				children: [],
+				attrs: {},
+				classes: [],
+			},
+		];
 
 		const initInspector = () => {
-			piep_editor_inspector = piep_editor._child(".piep_editor_inspector");
-			piep_editor_inspector_tree = piep_editor_inspector._child(".tree");
+			this.piep_editor_inspector = this.piep_editor._child(".piep_editor_inspector");
+			this.piep_editor_inspector_tree = this.piep_editor_inspector._child(".tree");
 
-			piep_editor_inspector._child(".show_inspector_btn").addEventListener("click", () => {
-				togglePiepEditorInspector(true);
+			this.piep_editor_inspector._child(".show_inspector_btn").addEventListener("click", () => {
+				this.togglePiepEditorInspector(true);
 			});
-			piep_editor_inspector._child(".hide_inspector_btn").addEventListener("click", () => {
-				togglePiepEditorInspector(false);
+			this.piep_editor_inspector._child(".hide_inspector_btn").addEventListener("click", () => {
+				this.togglePiepEditorInspector(false);
 			});
 
-			togglePiepEditorInspector(false);
+			this.togglePiepEditorInspector(false);
 
 			document.addEventListener("click", (ev) => {
 				const target = $(ev.target);
@@ -594,20 +290,20 @@
 				if (v_node_label) {
 					const vid = +v_node_label.dataset.vid;
 
-					setSelectionRange(undefined);
-					setPiepEditorCursorActive(false);
-					setPiepEditorFocusNode(vid);
+					this.setSelectionRange(undefined);
+					this.setPiepEditorCursorActive(false);
+					this.setPiepEditorFocusNode(vid);
 
-					scrollIntoView(getPiepEditorNode(vid));
+					scrollIntoView(this.getPiepEditorNode(vid));
 				}
 			});
 		};
 
 		initInspector();
 
-		piep_editor_advanced_menu = piep_editor._child(".piep_editor_advanced_menu");
+		this.piep_editor_advanced_menu = this.piep_editor._child(".piep_editor_advanced_menu");
 
-		piep_editor_advanced_menu._set_content(html`
+		this.piep_editor_advanced_menu._set_content(html`
 			<div class="filter_advanced_menu radio_group hide_checks">
 				<div class="checkbox_area">
 					<div>
@@ -710,22 +406,22 @@
 		`);
 		registerForms();
 
-		piep_editor_filter_advanced_menu = piep_editor_advanced_menu._child(".filter_advanced_menu");
-		piep_editor_filter_advanced_menu._set_value("all");
-		piep_editor_filter_advanced_menu.addEventListener("change", () => {
-			filterPiepEditorMenu();
+		this.piep_editor_filter_advanced_menu = this.piep_editor_advanced_menu._child(".filter_advanced_menu");
+		this.piep_editor_filter_advanced_menu._set_value("all");
+		this.piep_editor_filter_advanced_menu.addEventListener("change", () => {
+			this.filterPiepEditorMenu();
 		});
 
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
-		piep_editor_float_focus = piep_editor._child(".piep_editor_float_focus");
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
+		this.piep_editor_float_focus = this.piep_editor._child(".piep_editor_float_focus");
 
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_parent_float_focus hidden"></div>`);
-		piep_editor_parent_float_focus = piep_editor._child(".piep_editor_parent_float_focus");
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_parent_float_focus hidden"></div>`);
+		this.piep_editor_parent_float_focus = this.piep_editor._child(".piep_editor_parent_float_focus");
 
-		piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
-		piep_editor_float_menu = piep_editor._child(".piep_editor_float_menu");
+		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
+		this.piep_editor_float_menu = this.piep_editor._child(".piep_editor_float_menu");
 
-		piep_editor_float_menu._set_content(html`
+		this.piep_editor_float_menu._set_content(html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
 				data-blc_prop="style.fontSize"
@@ -832,19 +528,19 @@
 			});
 		};
 
-		initColorDropdown(piep_editor._child(`p-dropdown[data-blc_prop="style.color"]`));
-		initColorDropdown(piep_editor._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+		initColorDropdown(this.piep_editor._child(`p-dropdown[data-blc_prop="style.color"]`));
+		initColorDropdown(this.piep_editor._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
 
-		piep_editor._children("[data-blc_prop]").forEach((input) => {
+		this.piep_editor._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
-				const focus_node = getPiepEditorFocusNode();
+				const focus_node = this.getPiepEditorFocusNode();
 				if (focus_node) {
-					const v_node_data = getVDomNodeDataById(v_dom, +focus_node.dataset.vid);
+					const v_node_data = this.getVDomNodeDataById(this.v_dom, +focus_node.dataset.vid);
 					const v_node = v_node_data.v_node;
-					const anchor_offset = piep_editor_last_selection.anchorOffset;
-					const focus_offset = piep_editor_last_selection.focusOffset;
+					const anchor_offset = this.piep_editor_last_selection.anchorOffset;
+					const focus_offset = this.piep_editor_last_selection.focusOffset;
 
-					if (piep_editor_last_selection.focusNode !== piep_editor_last_selection.anchorNode) {
+					if (this.piep_editor_last_selection.focusNode !== this.piep_editor_last_selection.anchorNode) {
 						alert("Currently only single line editing is available");
 						return;
 					}
@@ -882,40 +578,40 @@
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 						if (begin_offset > 0) {
-							const bef_id = getPiepEditorId();
+							const bef_id = this.getPiepEditorId();
 							v_node_data.parent_v_nodes.push(
 								/** @type {vDomNode} */ {
 									id: bef_id,
 									tag: "span",
 									styles: {},
 									text: v_node.text.substring(0, begin_offset),
-									children: undefined,
+
 									attrs: {},
 									classes: [],
 								}
 							);
 						}
-						const mid_vid = getPiepEditorId();
+						const mid_vid = this.getPiepEditorId();
 						/** @type {vDomNode} */
 						const mid_child = {
 							id: mid_vid,
 							tag: "span",
 							styles: {},
 							text: v_node.text.substring(begin_offset, end_offset),
-							children: undefined,
+
 							attrs: {},
 							classes: [],
 						};
 						v_node_data.parent_v_nodes.push(mid_child);
 						if (end_offset < v_node.text.length) {
-							const aft_id = getPiepEditorId();
+							const aft_id = this.getPiepEditorId();
 							v_node_data.parent_v_nodes.push(
 								/** @type {vDomNode} */ {
 									id: aft_id,
 									tag: "span",
 									styles: {},
 									text: v_node.text.substring(end_offset),
-									children: undefined,
+
 									attrs: {},
 									classes: [],
 								}
@@ -924,98 +620,98 @@
 						v_node.text = undefined;
 
 						setPropOfVNode(mid_child);
-						recreateDom();
+						this.recreateDom();
 
-						const node_ref = getPiepEditorNode(mid_vid);
+						const node_ref = this.getPiepEditorNode(mid_vid);
 						if (node_ref) {
-							setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
+							this.setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
 						}
 					} else {
 						setPropOfVNode(v_node);
-						recreateDom();
+						this.recreateDom();
 
-						const node_ref = getPiepEditorNode(v_node.id);
-						setPiepEditorFocusNode(v_node.id);
+						const node_ref = this.getPiepEditorNode(v_node.id);
+						this.setPiepEditorFocusNode(v_node.id);
 						if (v_node.text === undefined) {
 						} else if (node_ref) {
-							setSelectionByIndex(node_ref, begin_offset, end_offset);
+							this.setSelectionByIndex(node_ref, begin_offset, end_offset);
 						}
 					}
 				}
 			});
 		});
 
-		piep_editor.addEventListener("paste", (e) => {
+		this.piep_editor.addEventListener("paste", (e) => {
 			e.preventDefault();
 			// "text/html" is cool but dont use it yet
 			const text = e.clipboardData.getData("text/plain");
 			// this text can contain html cool
 			//console.log(text);
-			insertPiepText(text);
+			this.insertPiepText(text);
 		});
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
-			if (piep_editor_grabbed_block_vid !== undefined) {
-				piepEditorReleaseBlock();
+			if (this.piep_editor_grabbed_block_vid !== undefined) {
+				this.piepEditorReleaseBlock();
 			}
 
-			const content_active = !!(target._parent(piep_editor_content) || target._parent(".v_node_label"));
-			setPiepEditorContentActive(content_active);
+			const content_active = !!(target._parent(this.piep_editor_content) || target._parent(".v_node_label"));
+			this.setPiepEditorContentActive(content_active);
 
 			const click_blc = target._parent(".blc");
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
-				const click_v_node = findNodeInVDomById(v_dom, click_blc_vid);
+				const click_v_node = this.findNodeInVDomById(this.v_dom, click_blc_vid);
 				if (click_v_node && click_v_node.text === undefined) {
-					setPiepEditorFocusNode(click_blc_vid);
+					this.setPiepEditorFocusNode(click_blc_vid);
 					removeSelection();
 				}
 				// otherwise it's just a text, so native selection tells where to point at
 			}
 
 			// order matters or at least used to matter
-			updatePiepCursorPosition();
+			this.updatePiepCursorPosition();
 
-			const v_node_data = getVDomNodeDataById(v_dom, piep_editor_focus_node_vid);
+			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.piep_editor_focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			if (target._parent(".move_block_btn")) {
-				piepEditorGrabBlock();
+				this.piepEditorGrabBlock();
 			}
 
 			if (target._parent(".remove_format_btn")) {
 				v_node.styles = {};
-				recreateDom();
+				this.recreateDom();
 			}
 
 			if (target._parent(".remove_block_btn")) {
 				v_node_data.v_nodes.splice(v_node_data.index, 1);
-				recreateDom();
-				setPiepEditorFocusNode(undefined);
+				this.recreateDom();
+				this.setPiepEditorFocusNode(undefined);
 			}
 
-			if (target._parent(piep_editor)) {
-				piep_editor_float_menu_active = true; // !!(content_active || target._parent(piep_editor_float_menu) || target._parent(".picker_wrapper"));
-				if (target._parent(".hide_menu_btn") || !piep_editor_focus_node_vid || piep_editor_grabbed_block_vid !== undefined) {
-					piep_editor_float_menu_active = false;
+			if (target._parent(this.piep_editor)) {
+				this.piep_editor_float_menu_active = true; // !!(content_active || target._parent(this.piep_editor_float_menu) || target._parent(".picker_wrapper"));
+				if (target._parent(".hide_menu_btn") || !this.piep_editor_focus_node_vid || this.piep_editor_grabbed_block_vid !== undefined) {
+					this.piep_editor_float_menu_active = false;
 				}
 
-				piep_editor_float_menu.classList.toggle("hidden", !piep_editor_float_menu_active);
+				this.piep_editor_float_menu.classList.toggle("hidden", !this.piep_editor_float_menu_active);
 			}
 		});
 
 		document.addEventListener("keydown", (ev) => {
 			const sel = window.getSelection();
-			const focus_node = getPiepEditorFocusNode();
+			const focus_node = this.getPiepEditorFocusNode();
 			const focus_offset = sel.focusOffset;
 			const vid = focus_node ? +focus_node.dataset.vid : undefined;
-			const v_node_data = getVDomNodeDataById(v_dom, vid);
+			const v_node_data = this.getVDomNodeDataById(this.v_dom, vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			//v_node.text === undefined
-			if (!piep_editor_cursor_active) {
+			if (!this.piep_editor_cursor_active) {
 				return;
 			}
 
@@ -1024,7 +720,7 @@
 					ev.preventDefault();
 
 					if (focus_node.classList.contains("textable")) {
-						insertPiepText(ev.key);
+						this.insertPiepText(ev.key);
 					}
 				}
 			}
@@ -1043,21 +739,21 @@
 							const prev_v_node_text_before = prev_v_node.text;
 							prev_v_node.text = prev_v_node_text_before + v_node.text;
 							v_node_data.v_nodes.splice(v_node_data.index, 1);
-							recreateDom();
+							this.recreateDom();
 
-							const prev_node_ref = getPiepEditorNode(prev_vid);
+							const prev_node_ref = this.getPiepEditorNode(prev_vid);
 							if (prev_node_ref) {
-								setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
+								this.setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
 							}
 						}
 					}
 				} else {
 					v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
-					recreateDom();
+					this.recreateDom();
 
-					const node_ref = getPiepEditorNode(vid);
+					const node_ref = this.getPiepEditorNode(vid);
 					if (node_ref) {
-						setSelectionByIndex(node_ref, focus_offset - 1);
+						this.setSelectionByIndex(node_ref, focus_offset - 1);
 					}
 				}
 			}
@@ -1076,21 +772,21 @@
 							const v_node_text_before = v_node.text;
 							v_node.text = v_node_text_before + next_v_node.text;
 							v_node_data.v_nodes.splice(next_index, 1);
-							recreateDom();
+							this.recreateDom();
 
-							const node_ref = getPiepEditorNode(node_vid);
+							const node_ref = this.getPiepEditorNode(node_vid);
 							if (node_ref) {
-								setSelectionByIndex(node_ref, v_node_text_before.length);
+								this.setSelectionByIndex(node_ref, v_node_text_before.length);
 							}
 						}
 					}
 				} else {
 					v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
-					recreateDom();
+					this.recreateDom();
 
-					const node_ref = getPiepEditorNode(vid);
+					const node_ref = this.getPiepEditorNode(vid);
 					if (node_ref) {
-						setSelectionByIndex(node_ref, focus_offset);
+						this.setSelectionByIndex(node_ref, focus_offset);
 					}
 				}
 			}
@@ -1099,36 +795,36 @@
 				ev.preventDefault();
 
 				if (focus_offset <= 0) {
-					const prev_textable = getTextable(focus_node, -1);
+					const prev_textable = this.getTextable(focus_node, -1);
 					if (prev_textable) {
-						setSelectionByIndex(prev_textable, prev_textable.textContent.length);
+						this.setSelectionByIndex(prev_textable, prev_textable.textContent.length);
 					}
 				} else {
-					setSelectionByIndex(focus_node, focus_offset - 1);
+					this.setSelectionByIndex(focus_node, focus_offset - 1);
 				}
 			}
 			if (ev.key === "ArrowRight") {
 				ev.preventDefault();
 
 				if (focus_offset >= v_node.text.length) {
-					const next_textable = getTextable(focus_node, 1);
+					const next_textable = this.getTextable(focus_node, 1);
 					if (next_textable) {
-						setSelectionByIndex(next_textable, 0);
+						this.setSelectionByIndex(next_textable, 0);
 					} else {
-						setSelectionByIndex(focus_node, focus_offset);
+						this.setSelectionByIndex(focus_node, focus_offset);
 					}
 				} else {
-					setSelectionByIndex(focus_node, focus_offset + 1);
+					this.setSelectionByIndex(focus_node, focus_offset + 1);
 				}
 			}
 
 			if (ev.key === "ArrowUp") {
-				selectElementContentsFromAnywhere(0, -1);
+				this.selectElementContentsFromAnywhere(0, -1);
 				ev.preventDefault();
 			}
 
 			if (ev.key === "ArrowDown") {
-				selectElementContentsFromAnywhere(0, 1);
+				this.selectElementContentsFromAnywhere(0, 1);
 				ev.preventDefault();
 			}
 
@@ -1139,73 +835,385 @@
 				if (typeof text === "string") {
 					const insert_v_node = cloneObject(v_node);
 					insert_v_node.text = text.substr(focus_offset);
-					const insert_node_vid = getPiepEditorId();
+					const insert_node_vid = this.getPiepEditorId();
 					insert_v_node.id = insert_node_vid;
 					v_node.text = text.substr(0, focus_offset);
 					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
-					recreateDom();
+					this.recreateDom();
 
-					const insert_node_ref = getPiepEditorNode(insert_node_vid);
+					const insert_node_ref = this.getPiepEditorNode(insert_node_vid);
 					if (insert_node_ref) {
-						setSelectionByIndex(insert_node_ref, 0);
+						this.setSelectionByIndex(insert_node_ref, 0);
 					}
 				}
 			}
 		});
 
-		recreateDom();
-		setPiepEditorFocusNode(undefined);
-		piepEditorMainLoop();
-	});
+		this.recreateDom();
+		this.setPiepEditorFocusNode(undefined);
+		this.piepEditorMainLoop();
+	}
 
-	function piepEditorMainLoop() {
+	getPiepEditorId() {
+		let max = 0;
+		const traversePiepHtml = (nodes) => {
+			for (const node of nodes) {
+				if (node.id > max) {
+					max = node.id;
+				}
+				if (node.children) {
+					traversePiepHtml(node.children);
+				}
+			}
+		};
+
+		traversePiepHtml(this.v_dom);
+		return max + 1;
+	}
+
+	/**
+	 * @param {vDomNode[]} target_v_dom
+	 */
+	recreateDom(target_v_dom = undefined) {
+		if (target_v_dom === undefined) {
+			target_v_dom = this.v_dom;
+		}
+
+		// order doesn't really matter so far
+		let styles_html = "";
+
+		/**
+		 *
+		 * @param {vDomNode[]} v_nodes
+		 * @returns
+		 */
+		const traverseVDom = (v_nodes, level = 0) => {
+			let content_html = "";
+			let inspector_tree_html = "";
+
+			for (const v_node of v_nodes) {
+				let body = "";
+
+				const children = v_node.children;
+				const text = v_node.text;
+
+				const tag = v_node.tag;
+				const textable = text !== undefined;
+
+				let attrs = { "data-vid": v_node.id };
+				Object.assign(attrs, v_node.attrs);
+
+				const base_class = this.getPiepEditorNodeSelector(v_node.id).replace(".", "");
+				let classes = ["blc", base_class, ...v_node.classes];
+
+				const map_tag_display_name = {
+					a: "Link",
+					h1: "Nagłówek",
+					h2: "Nagłówek",
+					h3: "Nagłówek",
+					h4: "Nagłówek",
+					h5: "Nagłówek",
+					h6: "Nagłówek",
+					div: "Kontener",
+					p: "Paragraf",
+					span: "Tekst",
+					img: "Zdjęcie",
+				};
+
+				const display_name = def(map_tag_display_name[tag], "");
+
+				let info = "";
+
+				if (text !== undefined) {
+					info = text ? text : "(pusty)";
+				} else if (children !== undefined) {
+					info = `(${children.length})`;
+				}
+
+				if (info) {
+					info = html`<span class="info"> - ${info}</span>`;
+				}
+
+				inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
+					<span class="name">${display_name}</span>
+					${info}
+				</div>`;
+
+				if (textable) {
+					classes.push("textable");
+					if (text) {
+						body += text;
+					} else {
+						body += `<br>`;
+					}
+				} else if (children !== undefined) {
+					// traverse for styles but not contents ;)
+					const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(children, level + 1);
+
+					body += sub_content_html;
+					inspector_tree_html += sub_inspector_tree_html;
+				}
+
+				let add_to_body = true;
+				if (v_node.id === this.piep_editor_grabbed_block_vid) {
+					if (!this.piep_editor_current_insert_blc || !v_node.insert) {
+						add_to_body = false;
+					}
+				}
+
+				if (add_to_body) {
+					const classes_csv = classes.join(" ");
+
+					const attrs_csv = Object.entries(attrs)
+						.map(([key, val]) => {
+							return `${key}="${escapeAttribute(val)}"`;
+						})
+						.join(" ");
+
+					if (this.single_tags.includes(tag)) {
+						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
+					} else {
+						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
+					}
+				}
+
+				const styles = Object.entries(v_node.styles);
+				if (styles.length > 0) {
+					let node_styles = "";
+					styles.forEach(([prop, val]) => {
+						node_styles += `${kebabCase(prop)}: ${val};`;
+					});
+					styles_html += `.${base_class} { ${node_styles} }`;
+				}
+			}
+
+			return { content_html, inspector_tree_html };
+		};
+
+		const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
+
+		this.piep_editor_content._set_content(content_html, { maintain_height: true });
+
+		this.piep_editor_styles._set_content(styles_html);
+
+		this.piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+
+		lazyLoadImages({ duration: 0 });
+		registerForms();
+	}
+
+	/**
+	 *
+	 * @param {vDomNode[]} v_dom
+	 * @param {number} vid
+	 * @returns
+	 */
+	findNodeInVDomById(v_dom, vid) {
+		if (!vid) {
+			return undefined;
+		}
+
+		const node_data = this.getVDomNodeDataById(v_dom, vid);
+		if (!node_data) {
+			return undefined;
+		}
+		return node_data.v_node;
+	}
+
+	/**
+	 *
+	 * @param {vDomNode[]} v_dom
+	 * @param {{(v_node: vDomNode): boolean}} test
+	 * @returns
+	 */
+	findNodeInVDom(v_dom, test) {
+		const node_data = this.getVDomNodeData(v_dom, test);
+		if (!node_data) {
+			return undefined;
+		}
+		return node_data.v_node;
+	}
+
+	/**
+	 *
+	 * @param {vDomNode[]} v_dom
+	 * @param {number} vid
+	 * @param {findVDomOptions} [options]
+	 * @returns
+	 */
+	getVDomNodeDataById(v_dom, vid, options = {}) {
+		if (!vid) {
+			return undefined;
+		}
+
+		return this.getVDomNodeData(v_dom, (v_node) => v_node.id === vid, options);
+	}
+
+	/**
+	 *
+	 * @param {vDomNode[]} v_dom
+	 * @param {{(v_node: vDomNode): boolean}} test
+	 * @param {findVDomOptions} [options]
+	 * @returns {{
+	 * v_node: vDomNode
+	 * v_nodes: vDomNode[]
+	 * index: number
+	 * parent_v_nodes: vDomNode[]
+	 * }}
+	 */
+	getVDomNodeData(v_dom, test, options = {}) {
+		/**
+		 *
+		 * @param {vDomNode[]} v_nodes
+		 * @returns
+		 */
+		const traverseVDom = (v_nodes, parent_v_nodes) => {
+			let index = -1;
+			for (const v_node of v_nodes) {
+				index++;
+
+				if (options.ignore_insert === true) {
+					if (v_node.id === this.piep_editor_grabbed_block_vid) {
+						if (!this.piep_editor_current_insert_blc || !v_node.insert) {
+							continue;
+						}
+					}
+				}
+
+				if (test(v_node)) {
+					return {
+						v_node,
+						v_nodes,
+						index,
+						parent_v_nodes,
+					};
+				}
+
+				if (v_node.children) {
+					const res = traverseVDom(v_node.children, [...parent_v_nodes, v_node]);
+					if (res) {
+						return res;
+					}
+				}
+			}
+
+			return undefined;
+		};
+
+		return traverseVDom(v_dom, []);
+	}
+
+	/**
+	 *
+	 * @param {PiepNode} node
+	 * @param {-1 | 1} direction
+	 * @returns {PiepNode | undefined}
+	 */
+	getTextable(node, direction) {
+		let next_node;
+		let parent = node;
+		while (parent) {
+			const next = direction === 1 ? parent._next() : parent._prev();
+			if (next) {
+				next_node = next;
+				break;
+			} else {
+				parent = parent._parent();
+			}
+		}
+		if (next_node && this.piep_editor_content.contains(next_node)) {
+			if (direction === 1) {
+				return def(next_node._children("*")[0], next_node);
+			} else {
+				return def(getLast(next_node._children("*")), next_node);
+			}
+		}
+		return undefined;
+	}
+
+	/**
+	 *
+	 * @param {string} insert_text
+	 * @returns
+	 */
+	insertPiepText(insert_text) {
+		const sel = window.getSelection();
+		const focus_offset = sel.focusOffset;
+		const anchor_offset = sel.anchorOffset;
+		const focus_node = this.getPiepEditorFocusNode();
+		const vid = focus_node ? +focus_node.dataset.vid : 0;
+		const v_node = this.findNodeInVDomById(this.v_dom, vid);
+		if (!v_node) {
+			return;
+		}
+
+		const text = v_node.text;
+
+		let begin_offset = focus_offset;
+		let end_offset = focus_offset;
+		if (anchor_offset === focus_offset) {
+			v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
+		} else {
+			begin_offset = Math.min(anchor_offset, focus_offset);
+			end_offset = Math.max(anchor_offset, focus_offset);
+			v_node.text = text.substr(0, begin_offset) + insert_text + text.substr(end_offset);
+		}
+		this.recreateDom();
+
+		const node_ref = this.getPiepEditorNode(vid);
+		if (node_ref) {
+			this.setSelectionByIndex(node_ref, begin_offset + insert_text.length);
+		}
+	}
+
+	piepEditorMainLoop() {
 		updateMouseTarget();
-		updatePiepCursorPosition();
+		this.updatePiepCursorPosition();
 
 		if (mouse.target) {
-			if (piep_editor_grabbed_block_vid !== undefined) {
+			if (this.piep_editor_grabbed_block_vid !== undefined) {
 				// grabbed
 				const radius = 35;
 
-				const piep_editor_rect = piep_editor.getBoundingClientRect();
+				const piep_editor_rect = this.piep_editor.getBoundingClientRect();
 
-				let left = mouse.pos.x - piep_editor_grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
-				let top = mouse.pos.y - piep_editor_grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
+				let left = mouse.pos.x - this.piep_editor_grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
+				let top = mouse.pos.y - this.piep_editor_grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
 
-				piep_editor_grabbed_block_wrapper._set_absolute_pos(left, top);
+				this.piep_editor_grabbed_block_wrapper._set_absolute_pos(left, top);
 
 				/** @type {insertBlc} */
 				// @ts-ignore
 				const insert_blc = mouse.target._parent(".insert_blc, .svg_insert_btn");
 
-				if (piep_editor_showing_float_multi_of_blc) {
-					const piep_editor_float_multi_insert_rect = piep_editor_float_multi_insert.getBoundingClientRect();
+				if (this.piep_editor_showing_float_multi_of_blc) {
+					const piep_editor_float_multi_insert_rect = this.piep_editor_float_multi_insert.getBoundingClientRect();
 					const dx = piep_editor_float_multi_insert_rect.left + piep_editor_float_multi_insert_rect.width * 0.5 - mouse.pos.x;
 					const dy = piep_editor_float_multi_insert_rect.top + piep_editor_float_multi_insert_rect.height * 0.5 - mouse.pos.y;
 					const inside = dx * dx + dy * dy < radius * radius;
 
 					if (inside) {
-						removeClasses(".foreign_hover", ["foreign_hover"], piep_editor_float_multi_insert);
+						removeClasses(".foreign_hover", ["foreign_hover"], this.piep_editor_float_multi_insert);
 						const svg_insert_btn = mouse.target._parent(".svg_insert_btn");
 						if (svg_insert_btn) {
 							const index = svg_insert_btn.dataset.index;
-							piep_editor_float_multi_insert._child(`.foreign_insert_btn[data-index="${index}"]`).classList.add("foreign_hover");
+							this.piep_editor_float_multi_insert._child(`.foreign_insert_btn[data-index="${index}"]`).classList.add("foreign_hover");
 						}
 					} else {
-						piep_editor_showing_float_multi_of_blc.classList.remove("hidden");
-						piep_editor_float_multi_insert.classList.add("hidden");
-						piep_editor_showing_float_multi_of_blc = undefined;
+						this.piep_editor_showing_float_multi_of_blc.classList.remove("hidden");
+						this.piep_editor_float_multi_insert.classList.add("hidden");
+						this.piep_editor_showing_float_multi_of_blc = undefined;
 					}
 				}
 
-				if (piep_editor_current_insert_blc !== insert_blc) {
-					piep_editor_current_insert_blc = insert_blc;
+				if (this.piep_editor_current_insert_blc !== insert_blc) {
+					this.piep_editor_current_insert_blc = insert_blc;
 
 					/** @type {PiepNode} */
 					let pretty_focus_parent;
 
-					v_dom_overlay.splice(0, v_dom_overlay.length);
-					deepAssign(v_dom_overlay, v_dom);
+					this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
+					deepAssign(this.v_dom_overlay, this.v_dom);
 
 					/** @type {insertBlc} */
 					let show_insert_blc_option = undefined;
@@ -1287,25 +1295,25 @@
 								</svg>
 							`;
 
-							piep_editor_float_multi_insert._set_content(edit_block_html);
-							piep_editor_float_multi_insert.classList.remove("hidden");
+							this.piep_editor_float_multi_insert._set_content(edit_block_html);
+							this.piep_editor_float_multi_insert.classList.remove("hidden");
 
 							const insert_blc_rect = insert_blc.getBoundingClientRect();
-							const piep_editor_rect = piep_editor.getBoundingClientRect();
-							const piep_editor_float_multi_insert_rect = piep_editor_float_multi_insert.getBoundingClientRect();
+							const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+							const piep_editor_float_multi_insert_rect = this.piep_editor_float_multi_insert.getBoundingClientRect();
 
-							piep_editor_float_multi_insert._set_absolute_pos(
+							this.piep_editor_float_multi_insert._set_absolute_pos(
 								insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5 - piep_editor_rect.left,
 								insert_blc_rect.top + (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 - piep_editor_rect.top
 							);
-							piep_editor_showing_float_multi_of_blc = insert_blc;
+							this.piep_editor_showing_float_multi_of_blc = insert_blc;
 							insert_blc.classList.add("hidden");
 						}
 
 						if (!insert_blc.classList.contains("multiple")) {
 							if (insert_blc.classList.contains("svg_insert_btn")) {
-								if (piep_editor_showing_float_multi_of_blc) {
-									show_insert_blc_option = piep_editor_showing_float_multi_of_blc._popup_blcs[+insert_blc.dataset.index];
+								if (this.piep_editor_showing_float_multi_of_blc) {
+									show_insert_blc_option = this.piep_editor_showing_float_multi_of_blc._popup_blcs[+insert_blc.dataset.index];
 								}
 							} else {
 								show_insert_blc_option = insert_blc;
@@ -1315,122 +1323,116 @@
 
 					if (show_insert_blc_option) {
 						show_insert_blc_option._insert_action();
-						recreateDom(v_dom_overlay);
-						piepEditorShowFocusToNode(piep_editor_grabbed_block_vid);
+						this.recreateDom(this.v_dom_overlay);
+						this.piepEditorShowFocusToNode(this.piep_editor_grabbed_block_vid);
 
-						const v_node_data = getVDomNodeDataById(v_dom_overlay, piep_editor_grabbed_block_vid, { ignore_insert: true });
+						const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid, { ignore_insert: true });
 						if (v_node_data.parent_v_nodes.length > 0) {
 							const parent_vid = v_node_data.parent_v_nodes[0].id;
-							pretty_focus_parent = getPiepEditorNode(parent_vid);
+							pretty_focus_parent = this.getPiepEditorNode(parent_vid);
 						}
 					} else {
-						recreateDom(v_dom_overlay);
-						piep_editor_float_focus.classList.add("hidden");
+						this.recreateDom(this.v_dom_overlay);
+						this.piep_editor_float_focus.classList.add("hidden");
 					}
 
-					piep_editor_parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
+					this.piep_editor_parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
 					if (pretty_focus_parent) {
 						const focus_parent_node_rect = pretty_focus_parent.getBoundingClientRect();
 
-						piep_editor_parent_float_focus._set_absolute_pos(
+						this.piep_editor_parent_float_focus._set_absolute_pos(
 							focus_parent_node_rect.left - 1 - piep_editor_rect.left,
 							focus_parent_node_rect.top - 1 - piep_editor_rect.top
 						);
 
-						piep_editor_parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
-						piep_editor_parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
+						this.piep_editor_parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
+						this.piep_editor_parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
 					}
 				}
 
-				piep_editor_has_insert_pos = !!(piep_editor_current_insert_blc && !piep_editor_current_insert_blc.classList.contains("multiple"));
-				piep_editor_grabbed_block_wrapper.classList.toggle("visible", !piep_editor_has_insert_pos);
-				piep_editor.classList.toggle("has_insert_pos", piep_editor_has_insert_pos);
+				this.piep_editor_has_insert_pos = !!(
+					this.piep_editor_current_insert_blc && !this.piep_editor_current_insert_blc.classList.contains("multiple")
+				);
+				this.piep_editor_grabbed_block_wrapper.classList.toggle("visible", !this.piep_editor_has_insert_pos);
+				this.piep_editor.classList.toggle("has_insert_pos", this.piep_editor_has_insert_pos);
 			} else {
 				// not grabbed
-				let show_focus_node_vid = piep_editor_focus_node_vid;
+				let show_focus_node_vid = this.piep_editor_focus_node_vid;
 
 				const v_node_label = mouse.target._parent(".v_node_label");
 				if (v_node_label) {
 					show_focus_node_vid = +v_node_label.dataset.vid;
 				}
 
-				piepEditorShowFocusToNode(show_focus_node_vid);
-				let show_float_menu = piep_editor_float_menu_active;
-				if (show_focus_node_vid !== piep_editor_focus_node_vid) {
+				this.piepEditorShowFocusToNode(show_focus_node_vid);
+				let show_float_menu = this.piep_editor_float_menu_active;
+				if (show_focus_node_vid !== this.piep_editor_focus_node_vid) {
 					show_float_menu = false;
 				}
-				piep_editor_float_menu.classList.toggle("hidden", !show_float_menu);
-				piepEditorShowFloatMenuToNode(show_focus_node_vid);
+				this.piep_editor_float_menu.classList.toggle("hidden", !show_float_menu);
+				this.piepEditorShowFloatMenuToNode(show_focus_node_vid);
 			}
 		}
 
-		const piep_editor_rect = piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
 		const alternative_scroll_panel_left = piep_editor_rect.left;
-		const alternative_scroll_panel_top = piep_editor_rect.top - piep_editor_content_scroll.scrollTop;
+		const alternative_scroll_panel_top = piep_editor_rect.top - this.piep_editor_content_scroll.scrollTop;
 
-		piep_editor_alternative_scroll_panel.style.transform = `translate(
+		this.piep_editor_alternative_scroll_panel.style.transform = `translate(
         ${alternative_scroll_panel_left.toPrecision(5)}px,
         ${alternative_scroll_panel_top.toPrecision(5)}px
     )`;
 
-		requestAnimationFrame(piepEditorMainLoop);
+		requestAnimationFrame(() => {
+			this.piepEditorMainLoop();
+		});
 	}
 
-	function piepEditorGrabBlock() {
-		piep_editor_float_focus.classList.add("hidden");
-		piep_editor_float_menu.classList.add("hidden");
-		piep_editor_cursor.classList.add("hidden");
-		piep_editor.classList.add("grabbed_block");
-		piep_editor.classList.remove("has_insert_pos");
-		piep_editor_parent_float_focus.classList.add("hidden");
+	piepEditorGrabBlock() {
+		this.piep_editor_float_focus.classList.add("hidden");
+		this.piep_editor_float_menu.classList.add("hidden");
+		this.piep_editor_cursor.classList.add("hidden");
+		this.piep_editor.classList.add("grabbed_block");
+		this.piep_editor.classList.remove("has_insert_pos");
+		this.piep_editor_parent_float_focus.classList.add("hidden");
 
-		piep_editor_grabbed_block_vid = piep_editor_focus_node_vid;
+		this.piep_editor_grabbed_block_vid = this.piep_editor_focus_node_vid;
 
-		piep_editor_grabbed_block_wrapper._set_content(getPiepEditorFocusNode().outerHTML);
-		piep_editor_grabbed_block_wrapper.classList.add("visible");
+		this.piep_editor_grabbed_block_wrapper._set_content(this.getPiepEditorFocusNode().outerHTML);
+		this.piep_editor_grabbed_block_wrapper.classList.add("visible");
 
-		// won't grow by more than piep_editor_grabbed_block_wrapper.offsetHeight
-		piep_editor_content.style.minHeight = piep_editor_content.scrollHeight + piep_editor_grabbed_block_wrapper.offsetHeight + "px";
+		// won't grow by more than this.piep_editor_grabbed_block_wrapper.offsetHeight
+		this.piep_editor_content.style.minHeight =
+			this.piep_editor_content.scrollHeight + this.piep_editor_grabbed_block_wrapper.offsetHeight + "px";
 
 		// be as wide as necessary
-		piep_editor_grabbed_block_wrapper.style.left = "0";
-		piep_editor_grabbed_block_wrapper.style.width = "";
+		this.piep_editor_grabbed_block_wrapper.style.left = "0";
+		this.piep_editor_grabbed_block_wrapper.style.width = "";
 
 		let ok_width;
-		if (piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
+		if (this.piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
 			// wrap
-			ok_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
-			// let pretty_width = Math.sqrt(2 * piep_editor_grabbed_block_wrapper.offsetWidth * piep_editor_grabbed_block_wrapper.offsetHeight);
+			ok_width = Math.sqrt(2 * this.piep_editor_grabbed_block_wrapper.offsetWidth * this.piep_editor_grabbed_block_wrapper.offsetHeight);
+			// let pretty_width = Math.sqrt(2 * this.piep_editor_grabbed_block_wrapper.offsetWidth * this.piep_editor_grabbed_block_wrapper.offsetHeight);
 			// ok_width = Math.min(800, pretty_width);
 		} else {
-			ok_width = piep_editor_grabbed_block_wrapper.offsetWidth;
+			ok_width = this.piep_editor_grabbed_block_wrapper.offsetWidth;
 		}
-		piep_editor_grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
+		this.piep_editor_grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
 		const scale = 1 / (1 + ok_width * 0.001);
-		piep_editor_grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
+		this.piep_editor_grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
 
 		// ok we grabbed it!
 
-		piep_editor_grabbed_block_wrapper_rect = piep_editor_grabbed_block_wrapper.getBoundingClientRect();
+		this.piep_editor_grabbed_block_wrapper_rect = this.piep_editor_grabbed_block_wrapper.getBoundingClientRect();
 
-		const piep_editor_rect = piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
 
-		v_dom_overlay.splice(0, v_dom_overlay.length);
-		deepAssign(v_dom_overlay, v_dom);
-		recreateDom(v_dom_overlay);
+		this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
+		deepAssign(this.v_dom_overlay, this.v_dom);
+		this.recreateDom(this.v_dom_overlay);
 
 		// prepare all possible places to drop the block yay
-
-		/**
-		 * @typedef {{
-		 * _insert_action()
-		 * _popup_blcs: insertBlc[]
-		 * } & PiepNode} insertBlc
-		 */
-
-		/**
-		 * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
-		 */
 
 		/**
 		 *
@@ -1439,7 +1441,7 @@
 		const getInsertBlc = () => {
 			const insert_blc = document.createElement("DIV");
 			insert_blc.classList.add("insert_blc");
-			piep_editor_alternative_scroll_panel.append(insert_blc);
+			this.piep_editor_alternative_scroll_panel.append(insert_blc);
 
 			// @ts-ignore
 			return $(insert_blc);
@@ -1479,13 +1481,13 @@
 			}
 
 			left += -piep_editor_rect.left;
-			top += piep_editor_content_scroll.scrollTop - piep_editor_rect.top;
+			top += this.piep_editor_content_scroll.scrollTop - piep_editor_rect.top;
 
 			return { left, top };
 		};
 
-		piep_editor_content._children(".blc").forEach((blc) => {
-			if (blc._parent(getPiepEditorNodeSelector(piep_editor_grabbed_block_vid))) {
+		this.piep_editor_content._children(".blc").forEach((blc) => {
+			if (blc._parent(this.getPiepEditorNodeSelector(this.piep_editor_grabbed_block_vid))) {
 				// just no baby
 				return;
 			}
@@ -1497,8 +1499,8 @@
 			 * @param {-1 | 1} dir
 			 */
 			const insertAboveOrBelow = (dir) => {
-				const grabbed_v_node_data = getVDomNodeDataById(v_dom_overlay, piep_editor_grabbed_block_vid);
-				const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid);
+				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
 
 				let ind = near_v_node_data.index;
 				if (dir === 1) {
@@ -1517,8 +1519,8 @@
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
-				const grabbed_v_node_data = getVDomNodeDataById(v_dom_overlay, piep_editor_grabbed_block_vid);
-				const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid);
+				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
 
 				let ind = near_v_node_data.index;
 
@@ -1537,9 +1539,8 @@
 						attrs: {},
 						children: [near_v_node_data.v_node],
 						classes: [],
-						id: getPiepEditorId(),
+						id: this.getPiepEditorId(),
 						styles: { display: "flex" },
-						text: undefined,
 					};
 
 					if (dir === 1) {
@@ -1562,13 +1563,13 @@
 
 			const insertInside = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(findNodeInVDomById(v_dom_overlay, piep_editor_grabbed_block_vid));
+				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid));
 				grabbed_node_copy.insert = true;
 
-				findNodeInVDomById(v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
+				this.findNodeInVDomById(this.v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
 			};
 
-			const near_v_node_data = getVDomNodeDataById(v_dom_overlay, blc_vid);
+			const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
 
 			/**
 			 * @param {insertBlc} insert_blc
@@ -1638,7 +1639,7 @@
 			}
 		});
 
-		piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
+		this.piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 			insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
 			insert_blc.dataset.wght = "1";
 		});
@@ -1657,7 +1658,7 @@
 
 			/** @type {insertBlc[]} */
 			// @ts-ignore
-			const insert_blcs = piep_editor_alternative_scroll_panel._children(".insert_blc");
+			const insert_blcs = this.piep_editor_alternative_scroll_panel._children(".insert_blc");
 			const insert_blcs_len = insert_blcs.length;
 			for (let a = 0; a < insert_blcs_len; a++) {
 				if (shrunk_ids.includes(a)) {
@@ -1738,7 +1739,7 @@
 						(blc_b_rect.top * weight_b) / weight +
 						blc_a_rect.height * 0.5 -
 						piep_editor_rect.top +
-						piep_editor_content_scroll.scrollTop
+						this.piep_editor_content_scroll.scrollTop
 				);
 				master_insert_blc._set_content(weight);
 				master_insert_blc.dataset.wght = weight + "";
@@ -1746,51 +1747,54 @@
 		}
 	}
 
-	function piepEditorReleaseBlock() {
-		piep_editor_grabbed_block_wrapper.classList.remove("visible");
-		piep_editor.classList.remove("grabbed_block");
-		piep_editor.classList.remove("has_insert_pos");
-		piep_editor_float_focus.classList.add("hidden");
-		piep_editor_float_multi_insert.classList.add("hidden");
-		piep_editor_parent_float_focus.classList.add("hidden");
+	piepEditorReleaseBlock() {
+		this.piep_editor_grabbed_block_wrapper.classList.remove("visible");
+		this.piep_editor.classList.remove("grabbed_block");
+		this.piep_editor.classList.remove("has_insert_pos");
+		this.piep_editor_float_focus.classList.add("hidden");
+		this.piep_editor_float_multi_insert.classList.add("hidden");
+		this.piep_editor_parent_float_focus.classList.add("hidden");
 
-		piep_editor_content.style.minHeight = "";
+		this.piep_editor_content.style.minHeight = "";
 
-		piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
+		this.piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 			insert_blc.remove();
 		});
 
-		if (piep_editor_current_insert_blc) {
+		if (this.piep_editor_current_insert_blc) {
 			// use whatever the user have seen already, smooth UX
-			v_dom.splice(0, v_dom.length);
-			deepAssign(v_dom, v_dom_overlay);
+			this.v_dom.splice(0, this.v_dom.length);
+			deepAssign(this.v_dom, this.v_dom_overlay);
 
 			// remove grabbed block that was just hidden so far
-			const grabbed_v_node_data = getVDomNodeData(v_dom, (v_node) => !v_node.insert && v_node.id === piep_editor_grabbed_block_vid);
+			const grabbed_v_node_data = this.getVDomNodeData(
+				this.v_dom,
+				(v_node) => !v_node.insert && v_node.id === this.piep_editor_grabbed_block_vid
+			);
 			grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
-			const v_node_with_insert = findNodeInVDom(v_dom, (v_node) => v_node.insert);
+			const v_node_with_insert = this.findNodeInVDom(this.v_dom, (v_node) => v_node.insert);
 			if (v_node_with_insert) {
 				v_node_with_insert.insert = false;
 			}
 		}
 
-		piep_editor_grabbed_block_vid = undefined;
-		piep_editor_grabbed_block_wrapper_rect = undefined;
-		piep_editor_current_insert_blc = undefined;
-		piep_editor_has_insert_pos = false;
+		this.piep_editor_grabbed_block_vid = undefined;
+		this.piep_editor_grabbed_block_wrapper_rect = undefined;
+		this.piep_editor_current_insert_blc = undefined;
+		this.piep_editor_has_insert_pos = false;
 
-		recreateDom();
+		this.recreateDom();
 	}
 
 	/**
 	 *
 	 * @param {boolean} peca
 	 */
-	function setPiepEditorContentActive(peca) {
-		piep_editor_content_active = peca;
-		if (!piep_editor_content_active) {
-			setPiepEditorCursorActive(false);
+	setPiepEditorContentActive(peca) {
+		this.piep_editor_content_active = peca;
+		if (!this.piep_editor_content_active) {
+			this.setPiepEditorCursorActive(false);
 		}
 	}
 
@@ -1798,18 +1802,18 @@
 	 *
 	 * @param {boolean} peca
 	 */
-	function setPiepEditorCursorActive(peca) {
-		piep_editor_cursor_active = peca;
-		piep_editor_cursor.classList.toggle("hidden", !piep_editor_cursor_active);
+	setPiepEditorCursorActive(peca) {
+		this.piep_editor_cursor_active = peca;
+		this.piep_editor_cursor.classList.toggle("hidden", !this.piep_editor_cursor_active);
 	}
 
-	function setSelectionRange(range) {
+	setSelectionRange(range) {
 		const sel = window.getSelection();
 		sel.removeAllRanges();
 		if (range) {
 			sel.addRange(range);
 		}
-		updatePiepCursorPosition();
+		this.updatePiepCursorPosition(); // TODO: u might want to remove these, cause it's in a loop already
 	}
 
 	/**
@@ -1817,7 +1821,7 @@
 	 * @param {PiepNode} node
 	 * @returns {CharacterData}
 	 */
-	function getTextNode(node) {
+	getTextNode(node) {
 		let text_node = node;
 		while (text_node && text_node.nodeType === 1) {
 			const t = text_node.childNodes[0];
@@ -1831,22 +1835,17 @@
 		return text_node;
 	}
 
-	function getPiepEditorFocusNode() {
-		const focus_node = piep_editor_content._child(".piep_focus");
+	getPiepEditorFocusNode() {
+		const focus_node = this.piep_editor_content._child(".piep_focus");
 		return focus_node;
 	}
 
-	// function getFocusTextable() {
-	// 	const focus_node = piep_editor_content._child(".piep_focus");
-	// 	return focus_node ? focus_node._parent(`.textable`) : undefined;
-	// }
-
-	function updatePiepCursorPosition() {
+	updatePiepCursorPosition() {
 		const sel = window.getSelection();
-		if (piep_editor_content_active || piep_editor_float_menu_active) {
-			piep_editor_last_selection = cloneObject(sel);
+		if (this.piep_editor_content_active || this.piep_editor_float_menu_active) {
+			this.piep_editor_last_selection = cloneObject(sel);
 		}
-		const csel = piep_editor_last_selection;
+		const csel = this.piep_editor_last_selection;
 
 		const range = document.createRange();
 		const focus_node = csel ? $(csel.focusNode) : undefined;
@@ -1854,7 +1853,7 @@
 		const focus_textable = focus_node ? focus_node._parent(`.textable`) : undefined;
 
 		if (focus_textable) {
-			const piep_editor_rect = piep_editor.getBoundingClientRect();
+			const piep_editor_rect = this.piep_editor.getBoundingClientRect();
 
 			let cursor_top, cursor_left, cursor_width, cursor_height;
 
@@ -1881,20 +1880,20 @@
 				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
 			}
 
-			piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
-			piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
-			piep_editor_cursor.style.width = cursor_width + "px";
-			piep_editor_cursor.style.height = cursor_height + "px";
+			this.piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
+			this.piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
+			this.piep_editor_cursor.style.width = cursor_width + "px";
+			this.piep_editor_cursor.style.height = cursor_height + "px";
 
-			if (piep_editor_content_active) {
-				setPiepEditorCursorActive(true);
+			if (this.piep_editor_content_active) {
+				this.setPiepEditorCursorActive(true);
 			}
 		} else {
-			setPiepEditorCursorActive(false);
+			this.setPiepEditorCursorActive(false);
 		}
 
 		if (focus_textable) {
-			setPiepEditorFocusNode(+focus_textable.dataset.vid);
+			this.setPiepEditorFocusNode(+focus_textable.dataset.vid);
 		}
 	}
 
@@ -1903,25 +1902,25 @@
 	 * @param {number} vid
 	 * @returns
 	 */
-	function setPiepEditorFocusNode(vid) {
-		if (piep_editor_grabbed_block_vid !== undefined) {
+	setPiepEditorFocusNode(vid) {
+		if (this.piep_editor_grabbed_block_vid !== undefined) {
 			return;
 		}
 
-		let just_changed_focus_vid = piep_editor_focus_node_vid !== vid;
-		piep_editor_focus_node_vid = vid;
+		let just_changed_focus_vid = this.piep_editor_focus_node_vid !== vid;
+		this.piep_editor_focus_node_vid = vid;
 
-		const focus_node = getPiepEditorNode(vid);
+		const focus_node = this.getPiepEditorNode(vid);
 		let tblc;
 
-		filterPiepEditorMenu();
+		this.filterPiepEditorMenu();
 
 		if (focus_node) {
 			if (just_changed_focus_vid) {
-				const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
+				const v_node = this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid);
 
 				// will take everything, even hidden items
-				piep_editor._children("[data-blc_prop]").forEach((input) => {
+				this.piep_editor._children("[data-blc_prop]").forEach((input) => {
 					const prop_str = input.dataset.blc_prop;
 					let prop_val;
 
@@ -1938,30 +1937,30 @@
 				});
 			}
 
-			tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
+			tblc = this.piep_editor_inspector_tree._child(`.tblc_${vid}`);
 			if (tblc && just_changed_focus_vid) {
 				scrollIntoView(tblc);
 			}
 		}
 
-		piep_editor_content._children(".blc").forEach((e) => {
+		this.piep_editor_content._children(".blc").forEach((e) => {
 			e.classList.toggle("piep_focus", e === focus_node);
 		});
-		piep_editor_inspector_tree._children(".v_node_label").forEach((e) => {
+		this.piep_editor_inspector_tree._children(".v_node_label").forEach((e) => {
 			e.classList.toggle("selected", e === tblc);
 		});
 	}
 
-	function filterPiepEditorMenu() {
+	filterPiepEditorMenu() {
 		/** @type {cmsEditableGroupEnum} */
-		const group = piep_editor_filter_advanced_menu._get_value();
+		const group = this.piep_editor_filter_advanced_menu._get_value();
 
-		const focus_node = getPiepEditorNode(piep_editor_focus_node_vid);
-		const v_node = focus_node ? findNodeInVDomById(v_dom, +focus_node.dataset.vid) : undefined;
+		const focus_node = this.getPiepEditorNode(this.piep_editor_focus_node_vid);
+		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
 		if (v_node) {
-			piep_editor_editable_props.forEach((prop) => {
-				const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+			this.piep_editor_editable_props.forEach((prop) => {
+				const blc_prop_wrapper = this.piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
 				if (!blc_prop_wrapper) {
 					return;
 				}
@@ -1979,8 +1978,8 @@
 			});
 		}
 
-		piep_editor_advanced_menu._child(".advanced_menu_scroll_panel").classList.toggle("hidden", !v_node);
-		piep_editor_advanced_menu._child(".case_advanced_menu_empty").classList.toggle("hidden", !!v_node);
+		this.piep_editor_advanced_menu._child(".advanced_menu_scroll_panel").classList.toggle("hidden", !v_node);
+		this.piep_editor_advanced_menu._child(".case_advanced_menu_empty").classList.toggle("hidden", !!v_node);
 
 		lazyLoadImages({ duration: 0 });
 	}
@@ -1990,29 +1989,29 @@
 	 * @param {number} vid
 	 * @returns
 	 */
-	function piepEditorShowFocusToNode(vid) {
+	piepEditorShowFocusToNode(vid) {
 		if (vid === undefined) {
-			piep_editor_float_focus.classList.add("hidden");
+			this.piep_editor_float_focus.classList.add("hidden");
 			return;
 		}
 
-		piep_editor_float_focus.classList.remove("hidden");
+		this.piep_editor_float_focus.classList.remove("hidden");
 
-		const focus_node = getPiepEditorNode(vid);
+		const focus_node = this.getPiepEditorNode(vid);
 		if (focus_node === undefined) {
-			piep_editor_float_focus.classList.add("hidden");
+			this.piep_editor_float_focus.classList.add("hidden");
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
-		const piep_editor_rect = piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
 
-		piep_editor_float_focus._set_absolute_pos(
+		this.piep_editor_float_focus._set_absolute_pos(
 			focus_node_rect.left - 1 - piep_editor_rect.left,
 			focus_node_rect.top - 1 - piep_editor_rect.top
 		);
 
-		piep_editor_float_focus.style.width = focus_node_rect.width + 2 + "px";
-		piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
+		this.piep_editor_float_focus.style.width = focus_node_rect.width + 2 + "px";
+		this.piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
 	}
 
 	/**
@@ -2020,22 +2019,22 @@
 	 * @param {number} vid
 	 * @returns
 	 */
-	function piepEditorShowFloatMenuToNode(vid) {
+	piepEditorShowFloatMenuToNode(vid) {
 		if (vid === undefined) {
-			piep_editor_float_menu.classList.add("hidden");
+			this.piep_editor_float_menu.classList.add("hidden");
 			return;
 		}
 
-		const focus_node = getPiepEditorNode(vid);
+		const focus_node = this.getPiepEditorNode(vid);
 		if (focus_node === undefined) {
-			piep_editor_float_menu.classList.add("hidden");
+			this.piep_editor_float_menu.classList.add("hidden");
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
-		const piep_editor_rect = piep_editor.getBoundingClientRect();
-		const piep_editor_float_menu_rect = piep_editor_float_menu.getBoundingClientRect();
+		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+		const piep_editor_float_menu_rect = this.piep_editor_float_menu.getBoundingClientRect();
 
-		piep_editor_float_focus._set_absolute_pos(
+		this.piep_editor_float_focus._set_absolute_pos(
 			focus_node_rect.left - 1 - piep_editor_rect.left,
 			focus_node_rect.top - 1 - piep_editor_rect.top
 		);
@@ -2049,9 +2048,9 @@
 		if (top < safe_off) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 		}
-		//top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
+		//top = clamp(safe_off, top, this.piep_editor_rect.height - safe_off);
 
-		piep_editor_float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
+		this.piep_editor_float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
 	}
 
 	/**
@@ -2059,7 +2058,7 @@
 	 * @param {number} vid
 	 * @returns {string}
 	 */
-	function getPiepEditorNodeSelector(vid) {
+	getPiepEditorNodeSelector(vid) {
 		return `.blc_${vid}`;
 	}
 
@@ -2068,15 +2067,15 @@
 	 * @param {number} vid
 	 * @returns {PiepNode}
 	 */
-	function getPiepEditorNode(vid) {
-		return piep_editor_content._child(getPiepEditorNodeSelector(vid));
+	getPiepEditorNode(vid) {
+		return this.piep_editor_content._child(this.getPiepEditorNodeSelector(vid));
 	}
 
 	/**
 	 *
 	 * @param {DOMRect} rect
 	 */
-	function getRectCenter(rect) {
+	getRectCenter(rect) {
 		return {
 			x: rect.left + rect.width * 0.5,
 			y: rect.top + rect.height * 0.5,
@@ -2088,20 +2087,20 @@
 	 * @param {number} dx
 	 * @param {number} dy
 	 */
-	function selectElementContentsFromAnywhere(dx, dy) {
+	selectElementContentsFromAnywhere(dx, dy) {
 		const sel = window.getSelection();
 		/** @type {DOMRect} */
 		let sel_rect;
 
-		const focus_node = getPiepEditorFocusNode();
+		const focus_node = this.getPiepEditorFocusNode();
 		if (focus_node && focus_node.innerText === "\n") {
 			sel_rect = focus_node._child("br").getBoundingClientRect();
 		} else {
 			sel_rect = sel.getRangeAt(0).getBoundingClientRect();
 		}
-		const sel_center = getRectCenter(sel_rect);
+		const sel_center = this.getRectCenter(sel_rect);
 
-		const textables = piep_editor_content._children(".textable");
+		const textables = this.piep_editor_content._children(".textable");
 		let closest_textable;
 		let textable_smallest_dist = 100000000;
 		for (const textable of textables) {
@@ -2116,10 +2115,10 @@
 				start_range_rect = textable._child("br").getBoundingClientRect();
 				end_range_rect = start_range_rect;
 			} else {
-				const start_range = getRangeByIndex(textable, 0);
+				const start_range = this.getRangeByIndex(textable, 0);
 				start_range_rect = start_range.getBoundingClientRect();
 
-				const end_range = getRangeByIndex(textable, textable.textContent.length);
+				const end_range = this.getRangeByIndex(textable, textable.textContent.length);
 				end_range_rect = end_range.getBoundingClientRect();
 			}
 
@@ -2144,7 +2143,7 @@
 				}
 			}
 
-			const textable_center = getRectCenter(textable_rect);
+			const textable_center = this.getRectCenter(textable_rect);
 
 			const textable_dist = dx * textable_center.x + dy * textable_center.y;
 			if (textable_dist < textable_smallest_dist) {
@@ -2158,12 +2157,12 @@
 
 			let closest_pos = 0;
 			let pos_smallest_dist = 100000000;
-			const text_node = getTextNode(closest_textable);
+			const text_node = this.getTextNode(closest_textable);
 			for (let pos = 0; pos <= text_node.textContent.length; pos++) {
 				range.setStart(text_node, pos);
 				range.setEnd(text_node, pos);
 
-				const position_center = getRectCenter(range.getBoundingClientRect());
+				const position_center = this.getRectCenter(range.getBoundingClientRect());
 				let pos_dist = 0;
 				const ddx = position_center.x - sel_center.x;
 				const ddy = position_center.y - sel_center.y;
@@ -2192,7 +2191,7 @@
 				}
 			}
 
-			setSelectionByIndex(closest_textable, closest_pos);
+			this.setSelectionByIndex(closest_textable, closest_pos);
 		}
 	}
 
@@ -2202,8 +2201,8 @@
 	 * @param {number} pos
 	 * @returns
 	 */
-	function getRangeByIndex(node, pos, end = undefined) {
-		const text_node = getTextNode(node);
+	getRangeByIndex(node, pos, end = undefined) {
+		const text_node = this.getTextNode(node);
 		const range = document.createRange();
 		if (!text_node) {
 			range.setStart(node, 0);
@@ -2221,24 +2220,28 @@
 	 * @param {number} pos
 	 * @returns
 	 */
-	function setSelectionByIndex(node, pos, end = undefined) {
+	setSelectionByIndex(node, pos, end = undefined) {
 		const sel = window.getSelection();
-		const range = getRangeByIndex(node, pos, end);
+		const range = this.getRangeByIndex(node, pos, end);
 		sel.removeAllRanges();
 		sel.addRange(range);
-		updatePiepCursorPosition();
+		this.updatePiepCursorPosition();
 	}
 
 	/**
 	 *
 	 * @param {boolean} open
 	 */
-	function togglePiepEditorInspector(open = undefined) {
+	togglePiepEditorInspector(open = undefined) {
 		if (open !== undefined) {
-			piep_editor_inspector_open = open;
+			this.piep_editor_inspector_open = open;
 		} else {
-			piep_editor_inspector_open = !piep_editor_inspector_open;
+			this.piep_editor_inspector_open = !this.piep_editor_inspector_open;
 		}
-		piep_editor_inspector.classList.toggle("open", piep_editor_inspector_open);
+		this.piep_editor_inspector.classList.toggle("open", this.piep_editor_inspector_open);
 	}
 }
+
+domload(() => {
+	piep_cms = new PiepCMS($(".piep_editor"));
+});

@@ -35,17 +35,20 @@ function traverseVDom($v_nodes)
 
         $classes_csv = join(" ", $classes);
 
+        //$content_html .= "<a>";
+
         $content_html .= "<$tag class=\"$classes_csv\"";
         foreach ($v_node["attrs"] as $key => $val) {
             $content_html .= " $key=\"" . htmlspecialchars($val) . "\"";
         }
-        $content_html .= ">";
 
         if (in_array($tag, SINGLE_HTML_TAGS)) {
             $content_html .= "/>";
         } else {
-            $content_html .= $body . "</${tag}>";
+            $content_html .= ">" . $body . "</${tag}>";
         }
+
+        //$content_html .= "</a>";
 
         if (isset($v_node["styles"])) {
             $node_styles = "";
