@@ -32,9 +32,9 @@
                 <span> <i class="fas fa-mobile-alt"></i> </span>
             </div>
         </div>
-        <button class="btn subtle" data-node="history_undo" data-tooltip="Cofnij zmiany"><i class="fas fa-undo"></i></button>
-        <button class="btn subtle" data-node="history_redo" data-tooltip="Ponów zmiany"><i class="fas fa-redo"></i></button>
-
+        <button class="btn subtle undo" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
+        <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
+        <button class="btn primary save"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
     <div class="piep_editor_advanced_menu"></div>
