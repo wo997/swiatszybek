@@ -9,7 +9,7 @@
 
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
-        <span class="title breadcrumbs">
+        <span class="title breadcrumbs mr0">
             <a class="btn transparent crumb" href="/admin/produkty">
                 Powrót gdzieś
             </a>
@@ -17,21 +17,21 @@
             <div class="crumb">
                 Edycja jakiejś strony
             </div>
-            <div class="pretty_radio semi_bold select_resolution ml1">
-                <div class="checkbox_area" data-tooltip="Komputer">
-                    <p-checkbox data-value=""></p-checkbox>
-                    <span> <i class="fas fa-desktop"></i> </span>
-                </div>
-                <div class="checkbox_area" data-tooltip="Tablet">
-                    <p-checkbox data-value="1024x768"></p-checkbox>
-                    <span> <i class="fas fa-mobile-alt"></i> </span>
-                </div>
-                <div class="checkbox_area" data-tooltip="Telefon">
-                    <p-checkbox data-value="414x896"></p-checkbox>
-                    <span> <i class="fas fa-mobile-alt"></i> </span>
-                </div>
-            </div>
         </span>
+        <div class="pretty_radio semi_bold select_resolution ml1 mra">
+            <div class="checkbox_area" data-tooltip="Komputer">
+                <p-checkbox data-value=""></p-checkbox>
+                <span> <i class="fas fa-desktop"></i> </span>
+            </div>
+            <div class="checkbox_area" data-tooltip="Tablet">
+                <p-checkbox data-value="1024x768"></p-checkbox>
+                <span> <i class="fas fa-mobile-alt"></i> </span>
+            </div>
+            <div class="checkbox_area" data-tooltip="Telefon">
+                <p-checkbox data-value="414x896"></p-checkbox>
+                <span> <i class="fas fa-mobile-alt"></i> </span>
+            </div>
+        </div>
         <button class="btn subtle" data-node="history_undo" data-tooltip="Cofnij zmiany"><i class="fas fa-undo"></i></button>
         <button class="btn subtle" data-node="history_redo" data-tooltip="Ponów zmiany"><i class="fas fa-redo"></i></button>
 
@@ -40,7 +40,7 @@
     <div class="piep_editor_advanced_menu"></div>
 
     <div class="piep_editor_content_wrapper">
-        <div class="piep_editor_content_scroll scroll_panel scroll_shadow light hide_scrollbar">
+        <div class="piep_editor_content_scroll scroll_panel scroll_shadow light">
             <div class="piep_editor_content"></div>
         </div>
     </div>
