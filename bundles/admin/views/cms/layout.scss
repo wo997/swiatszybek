@@ -1,0 +1,39 @@
+/* css[view] */
+
+.piep_editor {
+	position: relative;
+	display: grid;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	grid-template-columns: 300px auto 40px;
+	grid-template-rows: auto auto;
+}
+
+.piep_editor_header {
+	grid-area: 1 / 1 / 2 / 4;
+	z-index: 2600;
+	background: #fff;
+}
+
+.actual_content {
+	padding: 0 !important;
+	width: 100%;
+	height: 100%;
+}
+.main_admin_scroll {
+	overflow: hidden;
+}
+
+.navbar_admin,
+.footer {
+	display: none;
+}
+
+.main_admin_scroll {
+	background: #eee !important;
+}
+
+.piep_editor_content_scroll {
+	height: 100%;
+}

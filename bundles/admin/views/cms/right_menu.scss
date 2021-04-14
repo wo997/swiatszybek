@@ -1,0 +1,18 @@
+/* css[view] */
+
+.piep_editor_right_menu {
+	& {
+		background: #fff;
+		border-right: 1px solid #ccc;
+		box-shadow: 0 0 5px 0 #0003;
+		flex-shrink: 0;
+		z-index: 2500;
+		grid-area: 2 / 3 / 3 / 4;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	.btn {
+		border-radius: 0;
+	}
+}

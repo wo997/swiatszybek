@@ -1,0 +1,77 @@
+/* css[view] */
+
+.piep_editor_blc_menu {
+	& {
+		background: #fff;
+		border-right: 1px solid #ccc;
+		box-shadow: 0 0 5px 0 #0003;
+		flex-shrink: 0;
+		z-index: 2500;
+		grid-area: 2 / 1 / 3 / 2;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+	.filter_blc_menu {
+		& {
+			display: flex;
+		}
+		.checkbox_area {
+			& {
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+				flex: 1 1 0;
+				transition: all 0.2s;
+				padding: 8px 5px;
+				color: #666;
+			}
+			.filter_icon {
+				font-size: 20px;
+				transition: all 0.2s;
+			}
+			&:not(.checked) {
+				& {
+					background: #eee;
+					cursor: pointer;
+				}
+				&:hover {
+					background: #fafafa;
+					box-shadow: inset 0 -2px 0 0 #ddd;
+					transition: none;
+				}
+			}
+			&.checked {
+				& {
+					box-shadow: inset 0 -3px 0 0 var(--primary-clr);
+					color: #000;
+					cursor: default;
+				}
+				.filter_icon {
+					color: var(--primary-clr);
+				}
+			}
+			& > span {
+				font-size: 0.9em;
+				display: block;
+				margin-top: 5px;
+			}
+		}
+	}
+}
+
+.color_circle {
+	border-radius: 8px;
+	width: 16px;
+	height: 16px;
+	box-shadow: inset 0 0 0 1px #0004;
+}
+
+p-option color-picker {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	opacity: 0;
+}

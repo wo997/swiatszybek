@@ -32,16 +32,14 @@ function updateMouseCoords(event) {
 	mouse.target = $(event.target);
 }
 
-//if (!IS_TOUCH_DEVICE) {
 document.addEventListener("mousemove", (event) => {
 	updateMouseCoords(event);
 });
-//}
 
-/**
- * @type {PiepNode}
- */
-let mouse_down_target = undefined;
-document.addEventListener("mousedown", (ev) => {
-	mouse_down_target = $(ev.target);
-});
+// /**
+//  * @type {PiepNode}
+//  */
+// let mouse_down_target = undefined;
+// document.addEventListener("mousedown", (ev) => {
+// 	mouse_down_target = $(ev.target);
+// });

@@ -6,7 +6,6 @@ function setSelectionRange(range) {
 	if (range) {
 		sel.addRange(range);
 	}
-	this.updatePiepCursorPosition(); // TODO: u might want to remove these, cause it's in a loop already
 }
 
 /**

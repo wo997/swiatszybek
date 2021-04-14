@@ -1,0 +1,71 @@
+/* css[view] */
+
+.piep_editor_inspector {
+	& {
+		position: absolute;
+		right: 40px;
+		width: 350px;
+		background: #fff;
+		padding: 10px;
+		border: 1px solid #ccc;
+		box-shadow: 0 2px 5px #0002;
+		border-radius: 4px;
+		left: 0;
+		top: 0;
+		z-index: 1400;
+		transition: all 0.2s;
+		--scale: 1;
+	}
+	&:not(.open) {
+		--scale: 0.8;
+		opacity: 0;
+		pointer-events: none;
+	}
+	.tree {
+		& {
+			max-height: 350px;
+			border: 1px solid #ccc;
+			margin-top: 3px;
+		}
+		.v_node_label {
+			& {
+				padding: 5px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				flex-shrink: 0;
+				//padding-left: calc(13px * var(--level) - 4px);
+				padding-left: calc(13px * var(--level) + 8px);
+				user-select: none;
+				cursor: pointer;
+			}
+			&:not(.selected):hover {
+				background: #eee;
+			}
+			&.selected {
+				background: var(--pretty_blue_background);
+				color: var(--pretty_blue);
+			}
+			&:not(:first-child) {
+				border-top: 1px solid #eee;
+			}
+			.name {
+				font-weight: 600;
+			}
+			.info {
+				color: #666;
+			}
+		}
+	}
+	&.grabbed {
+		& {
+			transition: none;
+			cursor: grab;
+		}
+		.grab_inspector_btn {
+			pointer-events: none;
+			--btn-background-clr: var(--important-clr);
+			--btn-font-clr: #fff;
+		}
+	}
+}

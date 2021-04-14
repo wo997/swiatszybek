@@ -37,7 +37,7 @@
         <button class="btn primary save"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
-    <div class="piep_editor_advanced_menu"></div>
+    <div class="piep_editor_blc_menu"></div>
 
     <div class="piep_editor_content_wrapper">
         <div class="piep_editor_content_scroll scroll_panel scroll_shadow light">
@@ -45,14 +45,20 @@
         </div>
     </div>
 
-    <div class="piep_editor_inspector">
-        <button class="btn primary show_inspector_btn" data-tooltip="Otwórz drzewko elementów" data-tooltip_position="left">
+    <div class="piep_editor_right_menu">
+        <button class="btn transparent show_inspector_btn" data-tooltip_position="left">
             <i class="fas fa-stream"></i>
         </button>
+    </div>
+
+    <div class="piep_editor_inspector">
         <div class="flex align_center">
-            <div class="medium">Drzewko elementów</div>
-            <button class="btn transparent hide_inspector_btn small">
-                <i class="fas fa-chevron-right"></i>
+            <div class="medium mra">Drzewko elementów</div>
+            <button class="btn transparent grab_inspector_btn small" style="width:29px" data-tooltip="Przemieść">
+                <i class="fas fa-arrows-alt"></i>
+            </button>
+            <button class="btn transparent hide_inspector_btn small" style="width:29px" data-tooltip="Ukryj">
+                <i class="fas fa-times"></i>
             </button>
         </div>
 

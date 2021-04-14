@@ -1,0 +1,55 @@
+/* css[view] */
+
+.piep_editor_float_multi_insert {
+	& {
+		position: absolute;
+		z-index: 1200;
+	}
+
+	.foreign_insert_btn {
+		& {
+			pointer-events: none;
+		}
+		i {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			width: 100%;
+			color: var(--focus-clr);
+		}
+		&.foreign_hover i {
+			color: #fff;
+		}
+	}
+	.center_circle {
+		fill: #fff7;
+	}
+	.svg_insert_btn {
+		& {
+			stroke: var(--focus-clr);
+			stroke-width: 2px;
+			fill: none;
+			cursor: pointer;
+			fill: #fff7;
+		}
+		&:hover {
+			fill: var(--focus-clr);
+		}
+	}
+}
+
+.piep_editor_grabbed_block_wrapper {
+	& {
+		position: absolute;
+		z-index: 1300;
+		pointer-events: none;
+		transform-origin: 0 0;
+	}
+	&:not(.visible) {
+		display: none;
+	}
+	& .blc {
+		opacity: 0.7;
+	}
+}

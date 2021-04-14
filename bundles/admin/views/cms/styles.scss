@@ -7,133 +7,6 @@
 }
 /****** THIS SHOULD BE GLOBAL ******/
 
-.piep_editor_float_multi_insert {
-	& {
-		position: absolute;
-		z-index: 1200;
-	}
-
-	.foreign_insert_btn {
-		& {
-			pointer-events: none;
-		}
-		i {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			height: 100%;
-			width: 100%;
-			color: var(--focus-clr);
-		}
-		&.foreign_hover i {
-			color: #fff;
-		}
-	}
-	.center_circle {
-		fill: #fff7;
-	}
-	.svg_insert_btn {
-		& {
-			stroke: var(--focus-clr);
-			stroke-width: 2px;
-			fill: none;
-			cursor: pointer;
-			fill: #fff7;
-		}
-		&:hover {
-			fill: var(--focus-clr);
-		}
-	}
-}
-
-.piep_editor_grabbed_block_wrapper {
-	& {
-		position: absolute;
-		z-index: 1300;
-		pointer-events: none;
-		transform-origin: 0 0;
-	}
-	&:not(.visible) {
-		display: none;
-	}
-	& .blc {
-		opacity: 0.7;
-	}
-}
-
-.piep_editor_inspector {
-	& {
-		position: absolute;
-		right: 0;
-		width: 350px;
-		background: #fff;
-		padding: 10px;
-		border: 1px solid #ccc;
-		box-shadow: 0 2px 5px #0002;
-		border-radius: 4px;
-		top: 70px;
-		z-index: 1400;
-		transition: transform 0.2s;
-	}
-	&:not(.open) {
-		transform: translateX(100%);
-	}
-	.tree {
-		& {
-			max-height: 350px;
-			border: 1px solid #ccc;
-		}
-		.v_node_label {
-			& {
-				padding: 5px;
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				flex-shrink: 0;
-				//padding-left: calc(13px * var(--level) - 4px);
-				padding-left: calc(13px * var(--level) + 8px);
-				user-select: none;
-				cursor: pointer;
-			}
-			&:not(.selected):hover {
-				background: #eee;
-			}
-			&.selected {
-				background: var(--pretty_blue_background);
-				color: var(--pretty_blue);
-			}
-			&:not(:first-child) {
-				border-top: 1px solid #eee;
-			}
-			.name {
-				font-weight: 600;
-			}
-			.info {
-				color: #666;
-			}
-		}
-	}
-	&.open {
-		.show_inspector_btn {
-			opacity: 0;
-		}
-	}
-	.show_inspector_btn {
-		position: absolute;
-		right: 100%;
-		border-right-width: 0;
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-		top: 100px;
-		transition: 0.2s opacity;
-		box-shadow: 0 2px 4px 0 #0006;
-	}
-	.hide_inspector_btn {
-		width: 29px;
-		margin: 5px 0 5px auto;
-	}
-}
-
 .piep_editor_float_menu {
 	position: absolute;
 	background: #fff;
@@ -169,105 +42,7 @@
 	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%233339' stroke-width='4' stroke-dasharray='2%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
 }
 
-.piep_editor_header {
-	grid-area: 1 / 1 / 2 / 3;
-	z-index: 2600;
-	background: #fff;
-}
-
-.piep_editor_advanced_menu {
-	& {
-		background: #fff;
-		border-right: 1px solid #ccc;
-		box-shadow: 0 0 5px 0 #0003;
-		flex-shrink: 0;
-		z-index: 2500;
-		grid-area: 2 / 1 / 3 / 2;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-	}
-	.filter_advanced_menu {
-		& {
-			display: flex;
-		}
-		.checkbox_area {
-			& {
-				display: flex;
-				align-items: center;
-				flex-direction: column;
-				flex: 1 1 0;
-				transition: all 0.2s;
-				padding: 8px 5px;
-				color: #666;
-			}
-			.filter_icon {
-				font-size: 20px;
-				transition: all 0.2s;
-			}
-			&:not(.checked) {
-				& {
-					background: #eee;
-					cursor: pointer;
-				}
-				&:hover {
-					background: #fafafa;
-					box-shadow: inset 0 -2px 0 0 #ddd;
-					transition: none;
-				}
-			}
-			&.checked {
-				& {
-					box-shadow: inset 0 -3px 0 0 var(--primary-clr);
-					color: #000;
-					cursor: default;
-				}
-				.filter_icon {
-					color: var(--primary-clr);
-				}
-			}
-			& > span {
-				font-size: 0.9em;
-				display: block;
-				margin-top: 5px;
-			}
-		}
-	}
-}
-
-.actual_content {
-	padding: 0 !important;
-	width: 100%;
-	height: 100%;
-}
-.main_admin_scroll {
-	overflow: hidden;
-}
-
-.navbar_admin,
-.footer {
-	display: none;
-}
-
-.main_admin_scroll {
-	background: #eee !important;
-}
-
-.piep_editor_content_scroll {
-	height: 100%;
-}
-
 .piep_editor {
-	& {
-		position: relative;
-		display: grid;
-		overflow: hidden;
-		width: 100%;
-		height: 100%;
-		grid-template-columns: 300px auto;
-		grid-template-rows: auto auto;
-	}
-
 	// &::before,
 	// &::after {
 	// 	content: "";
@@ -286,10 +61,12 @@
 	// }
 
 	.piep_editor_content_wrapper {
-		margin: 20px;
 		overflow: hidden;
 		border: 1px solid #ccc;
 		box-shadow: 0 2px 5px 0 #0003;
+	}
+	.piep_editor_content_scroll {
+		margin: 20px;
 	}
 	.piep_editor_content {
 		& {
@@ -374,22 +151,6 @@
 		//box-shadow: 0 0 1px 1px #fff;
 		//box-shadow: 0 0 1px 1px #0005;
 	}
-}
-
-.color_circle {
-	border-radius: 8px;
-	width: 16px;
-	height: 16px;
-	box-shadow: inset 0 0 0 1px #0004;
-}
-
-p-option color-picker {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	opacity: 0;
 }
 
 .piep_editor_alternative_scroll_panel {
