@@ -8,6 +8,21 @@
 <?php startSection("body_content"); ?>
 
 <div class="piep_editor">
+    <div class="piep_editor_header custom_toolbar">
+        <span class="title breadcrumbs">
+            <a class="btn transparent crumb" href="/admin/produkty">
+                Powrót gdzieś
+            </a>
+            <i class="fas fa-chevron-right"></i>
+            <div class="crumb">
+                Edycja jakiejś strony
+            </div>
+        </span>
+        <button class="btn subtle" data-node="history_undo" data-tooltip="Cofnij zmiany"><i class="fas fa-undo"></i></button>
+        <button class="btn subtle" data-node="history_redo" data-tooltip="Ponów zmiany"><i class="fas fa-redo"></i></button>
+
+    </div>
+
     <div class="piep_editor_advanced_menu"></div>
 
     <div class="piep_editor_content_wrapper">

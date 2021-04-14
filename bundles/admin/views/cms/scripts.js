@@ -641,7 +641,11 @@ domload(() => {
 			</div>
 		</div>
 
-		<div class="scroll_panel scroll_shadow panel_padding">
+		<div class="text_center flex align_center justify_center case_advanced_menu_empty" style="flex-grow: 1;">
+			Nie zaznaczono<br />bloku do edycji
+		</div>
+
+		<div class="scroll_panel scroll_shadow panel_padding advanced_menu_scroll_panel">
 			<div data-blc_prop_wrapper="margin">
 				<div class="label">Margines zewnętrzny</div>
 				<div class="flex align_center text_center text_center_fields">
@@ -710,7 +714,6 @@ domload(() => {
 	piep_editor_filter_advanced_menu.addEventListener("change", () => {
 		filterPiepEditorMenu();
 	});
-	setPiepEditorFocusNode(undefined);
 
 	piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
 	piep_editor_float_focus = piep_editor._child(".piep_editor_float_focus");
@@ -1150,6 +1153,7 @@ domload(() => {
 	});
 
 	recreateDom();
+	setPiepEditorFocusNode(undefined);
 	piepEditorMainLoop();
 });
 
@@ -1954,15 +1958,14 @@ function filterPiepEditorMenu() {
 	const focus_node = getPiepEditorNode(piep_focus_node_vid);
 	const v_node = focus_node ? findNodeInVDomById(v_dom, +focus_node.dataset.vid) : undefined;
 
-	piep_editor_editable_props.forEach((prop) => {
-		const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
-		if (!blc_prop_wrapper) {
-			return;
-		}
+	if (v_node) {
+		piep_editor_editable_props.forEach((prop) => {
+			const blc_prop_wrapper = piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+			if (!blc_prop_wrapper) {
+				return;
+			}
 
-		let visible = false;
-		if (v_node) {
-			visible = true;
+			let visible = true;
 			if (prop.match_tag) {
 				visible = !!v_node.tag.match(prop.match_tag);
 			}
@@ -1970,10 +1973,13 @@ function filterPiepEditorMenu() {
 			if (visible && group !== "all") {
 				visible = prop.groups.includes(group);
 			}
-		}
 
-		blc_prop_wrapper.classList.toggle("hidden", !visible);
-	});
+			blc_prop_wrapper.classList.toggle("hidden", !visible);
+		});
+	}
+
+	piep_editor_advanced_menu._child(".advanced_menu_scroll_panel").classList.toggle("hidden", !v_node);
+	piep_editor_advanced_menu._child(".case_advanced_menu_empty").classList.toggle("hidden", !!v_node);
 
 	lazyLoadImages({ duration: 0 });
 }
