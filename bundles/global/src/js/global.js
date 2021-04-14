@@ -197,6 +197,13 @@ function escapeUrl(string) {
 function setValue(input, value = null, options = {}) {
 	input = $(input);
 
+	const quit = () => {
+		if (!options.quiet) {
+			input._dispatch_change();
+		}
+		input.dispatchEvent(new Event("value_set"));
+	};
+
 	if (!options.force) {
 		let same = true;
 		if (value !== null && value !== undefined) {
@@ -208,9 +215,7 @@ function setValue(input, value = null, options = {}) {
 		}
 
 		if (same) {
-			if (!options.quiet) {
-				input._dispatch_change();
-			}
+			quit();
 			return;
 		}
 	}
@@ -277,9 +282,8 @@ function setValue(input, value = null, options = {}) {
 			return;
 		}
 	}
-	if (!options.quiet) {
-		input._dispatch_change();
-	}
+
+	quit();
 }
 
 function dispatchChange(node) {

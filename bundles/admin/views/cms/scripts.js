@@ -132,7 +132,7 @@ let v_dom = [
 		tag: "p",
 		text:
 			"Wirtualny DOM krul. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-		styles: { marginTop: "20px" },
+		styles: { marginTop: "20px", backgroundColor: "#3d3" },
 		children: undefined,
 		attrs: {},
 		classes: [],
@@ -753,7 +753,12 @@ domload(() => {
 			<p-option data-value="#fff">
 				<div class="color_circle" style="background:#fff;"></div>
 			</p-option>
-			<p-option data-tooltip="Inny kolor"> <i class="fas fa-eye-dropper"></i><color-picker></color-picker> </p-option>
+			<p-option data-value="#f00">
+				<div class="color_circle" style="background:#f00;"></div>
+			</p-option>
+			<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
+				<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
+			</p-option>
 			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
@@ -772,7 +777,12 @@ domload(() => {
 			<p-option data-value="#fff">
 				<div class="color_circle" style="background:#fff;"></div>
 			</p-option>
-			<p-option data-tooltip="Inny kolor"> <i class="fas fa-eye-dropper"></i><color-picker></color-picker> </p-option>
+			<p-option data-value="#f00">
+				<div class="color_circle" style="background:#f00;"></div>
+			</p-option>
+			<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
+				<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
+			</p-option>
 			<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 		</p-dropdown>
 
@@ -792,6 +802,34 @@ domload(() => {
 			<i class="fas fa-times"></i>
 		</button>
 	`);
+
+	registerForms();
+
+	/**
+	 *
+	 * @param {PiepNode} color_dropdown
+	 */
+	const initColorDropdown = (color_dropdown) => {
+		const color_picker = color_dropdown._child("color-picker");
+		color_dropdown.addEventListener("value_set", () => {
+			/** @type {string} */
+			const color = color_dropdown._get_value();
+			if (color.match(/#\w{3,}/)) {
+				color_picker._set_value(color, { quiet: true });
+			}
+		});
+
+		color_picker.addEventListener("change", () => {
+			color_dropdown._set_value(color_picker._get_value());
+		});
+
+		color_picker.addEventListener("color_picker_hidden", () => {
+			color_dropdown.click();
+		});
+	};
+
+	initColorDropdown(piep_editor._child(`p-dropdown[data-blc_prop="style.color"]`));
+	initColorDropdown(piep_editor._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
 
 	piep_editor._children("[data-blc_prop]").forEach((input) => {
 		input.addEventListener("change", () => {
@@ -1868,14 +1906,12 @@ function setPiepEditorFocusNode(vid) {
 	let just_changed_focus_vid = piep_focus_node_vid !== vid;
 	piep_focus_node_vid = vid;
 
-	removeClasses(".piep_focus", ["piep_focus"], piep_editor_content);
-	removeClasses(".v_node_label", ["selected"], piep_editor_inspector_tree);
+	const focus_node = getPiepEditorNode(vid);
+	let tblc;
+
 	filterPiepEditorMenu();
 
-	const focus_node = getPiepEditorNode(vid);
 	if (focus_node) {
-		focus_node.classList.add("piep_focus");
-
 		if (just_changed_focus_vid) {
 			const v_node = findNodeInVDomById(v_dom, +focus_node.dataset.vid);
 
@@ -1897,14 +1933,18 @@ function setPiepEditorFocusNode(vid) {
 			});
 		}
 
-		const tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
-		if (tblc) {
-			tblc.classList.add("selected");
-			if (just_changed_focus_vid) {
-				scrollIntoView(tblc);
-			}
+		tblc = piep_editor_inspector_tree._child(`.tblc_${vid}`);
+		if (tblc && just_changed_focus_vid) {
+			scrollIntoView(tblc);
 		}
 	}
+
+	piep_editor_content._children(".blc").forEach((e) => {
+		e.classList.toggle("piep_focus", e === focus_node);
+	});
+	piep_editor_inspector_tree._children(".v_node_label").forEach((e) => {
+		e.classList.toggle("selected", e === tblc);
+	});
 }
 
 function filterPiepEditorMenu() {

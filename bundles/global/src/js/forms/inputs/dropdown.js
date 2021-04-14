@@ -76,20 +76,34 @@ function registerDropdowns(parent) {
 /**
  *
  * @param {PiepNode} input
- * @param {*} value
+ * @param {string} value
  * @param {SetDataOptions} options
  */
 function setDropdownValue(input, value, options = {}) {
 	const options_wrapper = input._child(".options_wrapper");
 	options_wrapper._direct_children().forEach((option) => {
-		if (option.dataset.value != value) {
-			return;
-		}
-		if (option.dataset.value === "" && option.dataset.value !== value) {
-			return;
-		}
+		const match_value = option.dataset.match;
+		const option_value = option.dataset.value;
 
-		selectDropdownOption(input, option);
+		if (match_value !== undefined) {
+			if (!value.match(new RegExp(match_value))) {
+				return;
+			}
+
+			removeClasses(".selected", ["selected"], input);
+			input.dataset.value = value;
+			input.classList.add("selected");
+			option.classList.add("selected");
+		} else if (option_value !== undefined) {
+			if (option_value != value) {
+				return;
+			}
+			if (option_value === "" && option_value !== value) {
+				return;
+			}
+
+			selectDropdownOption(input, option, options);
+		}
 	});
 }
 
@@ -98,10 +112,9 @@ function setDropdownValue(input, value, options = {}) {
  * @param {PiepNode} option
  * @param {SetDataOptions} options
  */
-function selectDropdownOption(input, option) {
+function selectDropdownOption(input, option, options = {}) {
 	const selected_option = input._child(".selected_option");
 	const options_wrapper = input._child(".options_wrapper");
-	const first_option = options_wrapper._direct_children()[0];
 
 	const value = option.dataset.value;
 
@@ -115,6 +128,7 @@ function selectDropdownOption(input, option) {
 	input.dataset.value = value;
 	input.classList.toggle("selected", value !== "");
 	if (input.classList.contains("static_label")) {
+		const first_option = options_wrapper._direct_children()[0];
 		option = first_option;
 	}
 	selected_option._set_content(option.innerHTML);

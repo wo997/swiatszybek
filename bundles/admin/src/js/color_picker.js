@@ -18,6 +18,7 @@ domload(() => {
 	const hide = () => {
 		if (picker_target) {
 			picker_target.classList.remove("shown");
+			picker_target.dispatchEvent(new Event("color_picker_hidden"));
 		}
 		picker_target = undefined;
 		if (!picker_wrapper) {
@@ -25,7 +26,7 @@ domload(() => {
 		}
 		picker_wrapper._animate(
 			`0%{transform:scale(1);opacity:1}
-                100%{transform:scale(0.8);opacity:0}`,
+            100%{transform:scale(0.8);opacity:0}`,
 			200,
 			{
 				callback: () => {
@@ -41,7 +42,7 @@ domload(() => {
 		}
 		picker_target._dispatch_change();
 		wanna_dispatch_change = false;
-	}, 100);
+	}, 200);
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
@@ -80,8 +81,8 @@ domload(() => {
 			picker_wrapper = parent._child(".picker_wrapper");
 			const picker_done = picker_wrapper._child(".picker_done");
 			picker_done.outerHTML = html`
-				<button class="btn subtle erase_btn small"><i class="fas fa-eraser"></i></button>
-				<button class="btn subtle close_btn small"><i class="fas fa-check"></i></button>
+				<button class="btn subtle erase_btn small" data-tooltip="Wyczyść"><i class="fas fa-eraser"></i></button>
+				<button class="btn subtle close_btn small" data-tooltip="Wybierz"><i class="fas fa-check"></i></button>
 			`;
 			const picker_cancel = picker_wrapper._child(".picker_cancel");
 			if (picker_cancel) {
@@ -104,26 +105,19 @@ domload(() => {
 			const target_rect = picker_target.getBoundingClientRect();
 			const scp_rect = parent.getBoundingClientRect();
 			let left = target_rect.left + (target_rect.width - picker_wrapper.offsetWidth) * 0.5 - scp_rect.left + parent.scrollLeft;
-			// let top = target_rect.top - picker_wrapper.offsetHeight;
 			let top = target_rect.top + picker_target.offsetHeight + 1 - scp_rect.top + parent.scrollTop;
 			const off = 5;
 			left = clamp(off, left, parent.scrollWidth - picker_wrapper.offsetWidth - off);
-			//top = clamp(off, top, parent.scrollHeight - picker_wrapper.offsetHeight - off);
 			if (top > parent.scrollHeight - picker_wrapper.offsetHeight - 1 - off) {
 				top = target_rect.top - picker_wrapper.offsetHeight - 1 - scp_rect.top + parent.scrollTop;
 			}
-			//top = clamp(off, top, parent.scrollHeight - picker_wrapper.offsetHeight - off);
 
-			// picker_wrapper.style.left = left + "px";
-			// picker_wrapper.style.top = top + "px";
 			picker_wrapper.style.left = left + "px";
 			picker_wrapper.style.top = top + "px";
-			// picker_wrapper.style.left = left + parent.scrollLeft + "px";
-			// picker_wrapper.style.top = top + parent.scrollTop + "px";
 
 			picker_wrapper._animate(
 				`0%{transform:scale(0.8);opacity:0}
-                    100%{transform:scale(1);opacity:1}`,
+                100%{transform:scale(1);opacity:1}`,
 				200
 			);
 		} else if (!tacz_picker_wrapper) {
