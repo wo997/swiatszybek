@@ -47,25 +47,25 @@ let piep_cms;
  */
 
 class PiepCMS {
-	constructor(piep_editor) {
-		this.piep_editor = piep_editor;
-		this.piep_editor_content = this.piep_editor._child(".piep_editor_content");
-		this.piep_editor_content_scroll = this.piep_editor._child(".piep_editor_content_scroll");
+	constructor(container) {
+		this.container = container;
+		this.content = this.container._child(".piep_editor_content");
+		this.content_scroll = this.container._child(".piep_editor_content_scroll");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
-		this.piep_editor_cursor = this.piep_editor._child(".piep_editor_cursor");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
+		this.cursor = this.container._child(".piep_editor_cursor");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
-		this.piep_editor_styles = this.piep_editor._child(".piep_editor_styles");
+		this.container.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
+		this.styles = this.container._child(".piep_editor_styles");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
-		this.piep_editor_grabbed_block_wrapper = this.piep_editor._child(".piep_editor_grabbed_block_wrapper");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
+		this.grabbed_block_wrapper = this.container._child(".piep_editor_grabbed_block_wrapper");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
-		this.piep_editor_float_multi_insert = this.piep_editor._child(".piep_editor_float_multi_insert");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
+		this.float_multi_insert = this.container._child(".piep_editor_float_multi_insert");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
-		this.piep_editor_alternative_scroll_panel = this.piep_editor._child(".piep_editor_alternative_scroll_panel");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
+		this.alternative_scroll_panel = this.container._child(".piep_editor_alternative_scroll_panel");
 
 		/** @type {vDomNode[]} */
 		this.v_dom = [];
@@ -75,7 +75,7 @@ class PiepCMS {
 		/**
 		 * @type {cmsEditableProp[]}
 		 */
-		this.piep_editor_editable_props = [
+		this.editable_props = [
 			{
 				name: "margin",
 				groups: ["layout"],
@@ -270,40 +270,11 @@ class PiepCMS {
 			},
 		];
 
-		const initInspector = () => {
-			this.piep_editor_inspector = this.piep_editor._child(".piep_editor_inspector");
-			this.piep_editor_inspector_tree = this.piep_editor_inspector._child(".tree");
+		this.initInspector();
 
-			this.piep_editor_inspector._child(".show_inspector_btn").addEventListener("click", () => {
-				this.togglePiepEditorInspector(true);
-			});
-			this.piep_editor_inspector._child(".hide_inspector_btn").addEventListener("click", () => {
-				this.togglePiepEditorInspector(false);
-			});
+		this.advanced_menu = this.container._child(".piep_editor_advanced_menu");
 
-			this.togglePiepEditorInspector(false);
-
-			document.addEventListener("click", (ev) => {
-				const target = $(ev.target);
-				const v_node_label = target._parent(".v_node_label");
-
-				if (v_node_label) {
-					const vid = +v_node_label.dataset.vid;
-
-					this.setSelectionRange(undefined);
-					this.setPiepEditorCursorActive(false);
-					this.setPiepEditorFocusNode(vid);
-
-					scrollIntoView(this.getPiepEditorNode(vid));
-				}
-			});
-		};
-
-		initInspector();
-
-		this.piep_editor_advanced_menu = this.piep_editor._child(".piep_editor_advanced_menu");
-
-		this.piep_editor_advanced_menu._set_content(html`
+		this.advanced_menu._set_content(html`
 			<div class="filter_advanced_menu radio_group hide_checks">
 				<div class="checkbox_area">
 					<div>
@@ -406,22 +377,22 @@ class PiepCMS {
 		`);
 		registerForms();
 
-		this.piep_editor_filter_advanced_menu = this.piep_editor_advanced_menu._child(".filter_advanced_menu");
-		this.piep_editor_filter_advanced_menu._set_value("all");
-		this.piep_editor_filter_advanced_menu.addEventListener("change", () => {
+		this.filter_advanced_menu = this.advanced_menu._child(".filter_advanced_menu");
+		this.filter_advanced_menu._set_value("all");
+		this.filter_advanced_menu.addEventListener("change", () => {
 			this.filterPiepEditorMenu();
 		});
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
-		this.piep_editor_float_focus = this.piep_editor._child(".piep_editor_float_focus");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
+		this.float_focus = this.container._child(".piep_editor_float_focus");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_parent_float_focus hidden"></div>`);
-		this.piep_editor_parent_float_focus = this.piep_editor._child(".piep_editor_parent_float_focus");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_parent_float_focus hidden"></div>`);
+		this.parent_float_focus = this.container._child(".piep_editor_parent_float_focus");
 
-		this.piep_editor.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
-		this.piep_editor_float_menu = this.piep_editor._child(".piep_editor_float_menu");
+		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
+		this.float_menu = this.container._child(".piep_editor_float_menu");
 
-		this.piep_editor_float_menu._set_content(html`
+		this.float_menu._set_content(html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
 				data-blc_prop="style.fontSize"
@@ -528,19 +499,19 @@ class PiepCMS {
 			});
 		};
 
-		initColorDropdown(this.piep_editor._child(`p-dropdown[data-blc_prop="style.color"]`));
-		initColorDropdown(this.piep_editor._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+		initColorDropdown(this.container._child(`p-dropdown[data-blc_prop="style.color"]`));
+		initColorDropdown(this.container._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
 
-		this.piep_editor._children("[data-blc_prop]").forEach((input) => {
+		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
 				const focus_node = this.getPiepEditorFocusNode();
 				if (focus_node) {
 					const v_node_data = this.getVDomNodeDataById(this.v_dom, +focus_node.dataset.vid);
 					const v_node = v_node_data.v_node;
-					const anchor_offset = this.piep_editor_last_selection.anchorOffset;
-					const focus_offset = this.piep_editor_last_selection.focusOffset;
+					const anchor_offset = this.last_selection.anchorOffset;
+					const focus_offset = this.last_selection.focusOffset;
 
-					if (this.piep_editor_last_selection.focusNode !== this.piep_editor_last_selection.anchorNode) {
+					if (this.last_selection.focusNode !== this.last_selection.anchorNode) {
 						alert("Currently only single line editing is available");
 						return;
 					}
@@ -641,7 +612,7 @@ class PiepCMS {
 			});
 		});
 
-		this.piep_editor.addEventListener("paste", (e) => {
+		this.container.addEventListener("paste", (e) => {
 			e.preventDefault();
 			// "text/html" is cool but dont use it yet
 			const text = e.clipboardData.getData("text/plain");
@@ -653,11 +624,11 @@ class PiepCMS {
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
-			if (this.piep_editor_grabbed_block_vid !== undefined) {
+			if (this.grabbed_block_vid !== undefined) {
 				this.piepEditorReleaseBlock();
 			}
 
-			const content_active = !!(target._parent(this.piep_editor_content) || target._parent(".v_node_label"));
+			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
 			this.setPiepEditorContentActive(content_active);
 
 			const click_blc = target._parent(".blc");
@@ -674,7 +645,7 @@ class PiepCMS {
 			// order matters or at least used to matter
 			this.updatePiepCursorPosition();
 
-			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.piep_editor_focus_node_vid);
+			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			if (target._parent(".move_block_btn")) {
@@ -692,13 +663,13 @@ class PiepCMS {
 				this.setPiepEditorFocusNode(undefined);
 			}
 
-			if (target._parent(this.piep_editor)) {
-				this.piep_editor_float_menu_active = true; // !!(content_active || target._parent(this.piep_editor_float_menu) || target._parent(".picker_wrapper"));
-				if (target._parent(".hide_menu_btn") || !this.piep_editor_focus_node_vid || this.piep_editor_grabbed_block_vid !== undefined) {
-					this.piep_editor_float_menu_active = false;
+			if (target._parent(this.container)) {
+				this.float_menu_active = true; // !!(content_active || target._parent(this.float_menu) || target._parent(".picker_wrapper"));
+				if (target._parent(".hide_menu_btn") || !this.focus_node_vid || this.grabbed_block_vid !== undefined) {
+					this.float_menu_active = false;
 				}
 
-				this.piep_editor_float_menu.classList.toggle("hidden", !this.piep_editor_float_menu_active);
+				this.float_menu.classList.toggle("hidden", !this.float_menu_active);
 			}
 		});
 
@@ -711,7 +682,7 @@ class PiepCMS {
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			//v_node.text === undefined
-			if (!this.piep_editor_cursor_active) {
+			if (!this.cursor_active) {
 				return;
 			}
 
@@ -854,6 +825,35 @@ class PiepCMS {
 		this.piepEditorMainLoop();
 	}
 
+	initInspector() {
+		this.inspector = this.container._child(".piep_editor_inspector");
+		this.inspector_tree = this.inspector._child(".tree");
+
+		this.inspector._child(".show_inspector_btn").addEventListener("click", () => {
+			this.togglePiepEditorInspector(true);
+		});
+		this.inspector._child(".hide_inspector_btn").addEventListener("click", () => {
+			this.togglePiepEditorInspector(false);
+		});
+
+		this.togglePiepEditorInspector(false);
+
+		document.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+			const v_node_label = target._parent(".v_node_label");
+
+			if (v_node_label) {
+				const vid = +v_node_label.dataset.vid;
+
+				this.setSelectionRange(undefined);
+				this.setPiepEditorCursorActive(false);
+				this.setPiepEditorFocusNode(vid);
+
+				scrollIntoView(this.getPiepEditorNode(vid));
+			}
+		});
+	}
+
 	getPiepEditorId() {
 		let max = 0;
 		const traversePiepHtml = (nodes) => {
@@ -955,8 +955,8 @@ class PiepCMS {
 				}
 
 				let add_to_body = true;
-				if (v_node.id === this.piep_editor_grabbed_block_vid) {
-					if (!this.piep_editor_current_insert_blc || !v_node.insert) {
+				if (v_node.id === this.grabbed_block_vid) {
+					if (!this.current_insert_blc || !v_node.insert) {
 						add_to_body = false;
 					}
 				}
@@ -992,11 +992,11 @@ class PiepCMS {
 
 		const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
 
-		this.piep_editor_content._set_content(content_html, { maintain_height: true });
+		this.content._set_content(content_html, { maintain_height: true });
 
-		this.piep_editor_styles._set_content(styles_html);
+		this.styles._set_content(styles_html);
 
-		this.piep_editor_inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+		this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
 
 		lazyLoadImages({ duration: 0 });
 		registerForms();
@@ -1073,8 +1073,8 @@ class PiepCMS {
 				index++;
 
 				if (options.ignore_insert === true) {
-					if (v_node.id === this.piep_editor_grabbed_block_vid) {
-						if (!this.piep_editor_current_insert_blc || !v_node.insert) {
+					if (v_node.id === this.grabbed_block_vid) {
+						if (!this.current_insert_blc || !v_node.insert) {
 							continue;
 						}
 					}
@@ -1121,7 +1121,7 @@ class PiepCMS {
 				parent = parent._parent();
 			}
 		}
-		if (next_node && this.piep_editor_content.contains(next_node)) {
+		if (next_node && this.content.contains(next_node)) {
 			if (direction === 1) {
 				return def(next_node._children("*")[0], next_node);
 			} else {
@@ -1171,43 +1171,43 @@ class PiepCMS {
 		this.updatePiepCursorPosition();
 
 		if (mouse.target) {
-			if (this.piep_editor_grabbed_block_vid !== undefined) {
+			if (this.grabbed_block_vid !== undefined) {
 				// grabbed
 				const radius = 35;
 
-				const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+				const piep_editor_rect = this.container.getBoundingClientRect();
 
-				let left = mouse.pos.x - this.piep_editor_grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
-				let top = mouse.pos.y - this.piep_editor_grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
+				let left = mouse.pos.x - this.grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
+				let top = mouse.pos.y - this.grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
 
-				this.piep_editor_grabbed_block_wrapper._set_absolute_pos(left, top);
+				this.grabbed_block_wrapper._set_absolute_pos(left, top);
 
 				/** @type {insertBlc} */
 				// @ts-ignore
 				const insert_blc = mouse.target._parent(".insert_blc, .svg_insert_btn");
 
-				if (this.piep_editor_showing_float_multi_of_blc) {
-					const piep_editor_float_multi_insert_rect = this.piep_editor_float_multi_insert.getBoundingClientRect();
+				if (this.showing_float_multi_of_blc) {
+					const piep_editor_float_multi_insert_rect = this.float_multi_insert.getBoundingClientRect();
 					const dx = piep_editor_float_multi_insert_rect.left + piep_editor_float_multi_insert_rect.width * 0.5 - mouse.pos.x;
 					const dy = piep_editor_float_multi_insert_rect.top + piep_editor_float_multi_insert_rect.height * 0.5 - mouse.pos.y;
 					const inside = dx * dx + dy * dy < radius * radius;
 
 					if (inside) {
-						removeClasses(".foreign_hover", ["foreign_hover"], this.piep_editor_float_multi_insert);
+						removeClasses(".foreign_hover", ["foreign_hover"], this.float_multi_insert);
 						const svg_insert_btn = mouse.target._parent(".svg_insert_btn");
 						if (svg_insert_btn) {
 							const index = svg_insert_btn.dataset.index;
-							this.piep_editor_float_multi_insert._child(`.foreign_insert_btn[data-index="${index}"]`).classList.add("foreign_hover");
+							this.float_multi_insert._child(`.foreign_insert_btn[data-index="${index}"]`).classList.add("foreign_hover");
 						}
 					} else {
-						this.piep_editor_showing_float_multi_of_blc.classList.remove("hidden");
-						this.piep_editor_float_multi_insert.classList.add("hidden");
-						this.piep_editor_showing_float_multi_of_blc = undefined;
+						this.showing_float_multi_of_blc.classList.remove("hidden");
+						this.float_multi_insert.classList.add("hidden");
+						this.showing_float_multi_of_blc = undefined;
 					}
 				}
 
-				if (this.piep_editor_current_insert_blc !== insert_blc) {
-					this.piep_editor_current_insert_blc = insert_blc;
+				if (this.current_insert_blc !== insert_blc) {
+					this.current_insert_blc = insert_blc;
 
 					/** @type {PiepNode} */
 					let pretty_focus_parent;
@@ -1295,25 +1295,25 @@ class PiepCMS {
 								</svg>
 							`;
 
-							this.piep_editor_float_multi_insert._set_content(edit_block_html);
-							this.piep_editor_float_multi_insert.classList.remove("hidden");
+							this.float_multi_insert._set_content(edit_block_html);
+							this.float_multi_insert.classList.remove("hidden");
 
 							const insert_blc_rect = insert_blc.getBoundingClientRect();
-							const piep_editor_rect = this.piep_editor.getBoundingClientRect();
-							const piep_editor_float_multi_insert_rect = this.piep_editor_float_multi_insert.getBoundingClientRect();
+							const piep_editor_rect = this.container.getBoundingClientRect();
+							const piep_editor_float_multi_insert_rect = this.float_multi_insert.getBoundingClientRect();
 
-							this.piep_editor_float_multi_insert._set_absolute_pos(
+							this.float_multi_insert._set_absolute_pos(
 								insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5 - piep_editor_rect.left,
 								insert_blc_rect.top + (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 - piep_editor_rect.top
 							);
-							this.piep_editor_showing_float_multi_of_blc = insert_blc;
+							this.showing_float_multi_of_blc = insert_blc;
 							insert_blc.classList.add("hidden");
 						}
 
 						if (!insert_blc.classList.contains("multiple")) {
 							if (insert_blc.classList.contains("svg_insert_btn")) {
-								if (this.piep_editor_showing_float_multi_of_blc) {
-									show_insert_blc_option = this.piep_editor_showing_float_multi_of_blc._popup_blcs[+insert_blc.dataset.index];
+								if (this.showing_float_multi_of_blc) {
+									show_insert_blc_option = this.showing_float_multi_of_blc._popup_blcs[+insert_blc.dataset.index];
 								}
 							} else {
 								show_insert_blc_option = insert_blc;
@@ -1324,40 +1324,38 @@ class PiepCMS {
 					if (show_insert_blc_option) {
 						show_insert_blc_option._insert_action();
 						this.recreateDom(this.v_dom_overlay);
-						this.piepEditorShowFocusToNode(this.piep_editor_grabbed_block_vid);
+						this.piepEditorShowFocusToNode(this.grabbed_block_vid);
 
-						const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid, { ignore_insert: true });
+						const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
 						if (v_node_data.parent_v_nodes.length > 0) {
 							const parent_vid = v_node_data.parent_v_nodes[0].id;
 							pretty_focus_parent = this.getPiepEditorNode(parent_vid);
 						}
 					} else {
 						this.recreateDom(this.v_dom_overlay);
-						this.piep_editor_float_focus.classList.add("hidden");
+						this.float_focus.classList.add("hidden");
 					}
 
-					this.piep_editor_parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
+					this.parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
 					if (pretty_focus_parent) {
 						const focus_parent_node_rect = pretty_focus_parent.getBoundingClientRect();
 
-						this.piep_editor_parent_float_focus._set_absolute_pos(
+						this.parent_float_focus._set_absolute_pos(
 							focus_parent_node_rect.left - 1 - piep_editor_rect.left,
 							focus_parent_node_rect.top - 1 - piep_editor_rect.top
 						);
 
-						this.piep_editor_parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
-						this.piep_editor_parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
+						this.parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
+						this.parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
 					}
 				}
 
-				this.piep_editor_has_insert_pos = !!(
-					this.piep_editor_current_insert_blc && !this.piep_editor_current_insert_blc.classList.contains("multiple")
-				);
-				this.piep_editor_grabbed_block_wrapper.classList.toggle("visible", !this.piep_editor_has_insert_pos);
-				this.piep_editor.classList.toggle("has_insert_pos", this.piep_editor_has_insert_pos);
+				this.has_insert_pos = !!(this.current_insert_blc && !this.current_insert_blc.classList.contains("multiple"));
+				this.grabbed_block_wrapper.classList.toggle("visible", !this.has_insert_pos);
+				this.container.classList.toggle("has_insert_pos", this.has_insert_pos);
 			} else {
 				// not grabbed
-				let show_focus_node_vid = this.piep_editor_focus_node_vid;
+				let show_focus_node_vid = this.focus_node_vid;
 
 				const v_node_label = mouse.target._parent(".v_node_label");
 				if (v_node_label) {
@@ -1365,20 +1363,20 @@ class PiepCMS {
 				}
 
 				this.piepEditorShowFocusToNode(show_focus_node_vid);
-				let show_float_menu = this.piep_editor_float_menu_active;
-				if (show_focus_node_vid !== this.piep_editor_focus_node_vid) {
+				let show_float_menu = this.float_menu_active;
+				if (show_focus_node_vid !== this.focus_node_vid) {
 					show_float_menu = false;
 				}
-				this.piep_editor_float_menu.classList.toggle("hidden", !show_float_menu);
+				this.float_menu.classList.toggle("hidden", !show_float_menu);
 				this.piepEditorShowFloatMenuToNode(show_focus_node_vid);
 			}
 		}
 
-		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.container.getBoundingClientRect();
 		const alternative_scroll_panel_left = piep_editor_rect.left;
-		const alternative_scroll_panel_top = piep_editor_rect.top - this.piep_editor_content_scroll.scrollTop;
+		const alternative_scroll_panel_top = piep_editor_rect.top - this.content_scroll.scrollTop;
 
-		this.piep_editor_alternative_scroll_panel.style.transform = `translate(
+		this.alternative_scroll_panel.style.transform = `translate(
         ${alternative_scroll_panel_left.toPrecision(5)}px,
         ${alternative_scroll_panel_top.toPrecision(5)}px
     )`;
@@ -1389,44 +1387,43 @@ class PiepCMS {
 	}
 
 	piepEditorGrabBlock() {
-		this.piep_editor_float_focus.classList.add("hidden");
-		this.piep_editor_float_menu.classList.add("hidden");
-		this.piep_editor_cursor.classList.add("hidden");
-		this.piep_editor.classList.add("grabbed_block");
-		this.piep_editor.classList.remove("has_insert_pos");
-		this.piep_editor_parent_float_focus.classList.add("hidden");
+		this.float_focus.classList.add("hidden");
+		this.float_menu.classList.add("hidden");
+		this.cursor.classList.add("hidden");
+		this.container.classList.add("grabbed_block");
+		this.container.classList.remove("has_insert_pos");
+		this.parent_float_focus.classList.add("hidden");
 
-		this.piep_editor_grabbed_block_vid = this.piep_editor_focus_node_vid;
+		this.grabbed_block_vid = this.focus_node_vid;
 
-		this.piep_editor_grabbed_block_wrapper._set_content(this.getPiepEditorFocusNode().outerHTML);
-		this.piep_editor_grabbed_block_wrapper.classList.add("visible");
+		this.grabbed_block_wrapper._set_content(this.getPiepEditorFocusNode().outerHTML);
+		this.grabbed_block_wrapper.classList.add("visible");
 
-		// won't grow by more than this.piep_editor_grabbed_block_wrapper.offsetHeight
-		this.piep_editor_content.style.minHeight =
-			this.piep_editor_content.scrollHeight + this.piep_editor_grabbed_block_wrapper.offsetHeight + "px";
+		// won't grow by more than this.grabbed_block_wrapper.offsetHeight
+		this.content.style.minHeight = this.content.scrollHeight + this.grabbed_block_wrapper.offsetHeight + "px";
 
 		// be as wide as necessary
-		this.piep_editor_grabbed_block_wrapper.style.left = "0";
-		this.piep_editor_grabbed_block_wrapper.style.width = "";
+		this.grabbed_block_wrapper.style.left = "0";
+		this.grabbed_block_wrapper.style.width = "";
 
 		let ok_width;
-		if (this.piep_editor_grabbed_block_wrapper.offsetWidth > 500) {
+		if (this.grabbed_block_wrapper.offsetWidth > 500) {
 			// wrap
-			ok_width = Math.sqrt(2 * this.piep_editor_grabbed_block_wrapper.offsetWidth * this.piep_editor_grabbed_block_wrapper.offsetHeight);
-			// let pretty_width = Math.sqrt(2 * this.piep_editor_grabbed_block_wrapper.offsetWidth * this.piep_editor_grabbed_block_wrapper.offsetHeight);
+			ok_width = Math.sqrt(2 * this.grabbed_block_wrapper.offsetWidth * this.grabbed_block_wrapper.offsetHeight);
+			// let pretty_width = Math.sqrt(2 * this.grabbed_block_wrapper.offsetWidth * this.grabbed_block_wrapper.offsetHeight);
 			// ok_width = Math.min(800, pretty_width);
 		} else {
-			ok_width = this.piep_editor_grabbed_block_wrapper.offsetWidth;
+			ok_width = this.grabbed_block_wrapper.offsetWidth;
 		}
-		this.piep_editor_grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
+		this.grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
 		const scale = 1 / (1 + ok_width * 0.001);
-		this.piep_editor_grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
+		this.grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
 
 		// ok we grabbed it!
 
-		this.piep_editor_grabbed_block_wrapper_rect = this.piep_editor_grabbed_block_wrapper.getBoundingClientRect();
+		this.grabbed_block_wrapper_rect = this.grabbed_block_wrapper.getBoundingClientRect();
 
-		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.container.getBoundingClientRect();
 
 		this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
 		deepAssign(this.v_dom_overlay, this.v_dom);
@@ -1441,7 +1438,7 @@ class PiepCMS {
 		const getInsertBlc = () => {
 			const insert_blc = document.createElement("DIV");
 			insert_blc.classList.add("insert_blc");
-			this.piep_editor_alternative_scroll_panel.append(insert_blc);
+			this.alternative_scroll_panel.append(insert_blc);
 
 			// @ts-ignore
 			return $(insert_blc);
@@ -1481,13 +1478,13 @@ class PiepCMS {
 			}
 
 			left += -piep_editor_rect.left;
-			top += this.piep_editor_content_scroll.scrollTop - piep_editor_rect.top;
+			top += this.content_scroll.scrollTop - piep_editor_rect.top;
 
 			return { left, top };
 		};
 
-		this.piep_editor_content._children(".blc").forEach((blc) => {
-			if (blc._parent(this.getPiepEditorNodeSelector(this.piep_editor_grabbed_block_vid))) {
+		this.content._children(".blc").forEach((blc) => {
+			if (blc._parent(this.getPiepEditorNodeSelector(this.grabbed_block_vid))) {
 				// just no baby
 				return;
 			}
@@ -1499,7 +1496,7 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertAboveOrBelow = (dir) => {
-				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid);
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid);
 				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
 
 				let ind = near_v_node_data.index;
@@ -1519,7 +1516,7 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
-				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid);
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid);
 				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
 
 				let ind = near_v_node_data.index;
@@ -1563,7 +1560,7 @@ class PiepCMS {
 
 			const insertInside = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.piep_editor_grabbed_block_vid));
+				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.grabbed_block_vid));
 				grabbed_node_copy.insert = true;
 
 				this.findNodeInVDomById(this.v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
@@ -1639,7 +1636,7 @@ class PiepCMS {
 			}
 		});
 
-		this.piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
+		this.alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 			insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
 			insert_blc.dataset.wght = "1";
 		});
@@ -1658,7 +1655,7 @@ class PiepCMS {
 
 			/** @type {insertBlc[]} */
 			// @ts-ignore
-			const insert_blcs = this.piep_editor_alternative_scroll_panel._children(".insert_blc");
+			const insert_blcs = this.alternative_scroll_panel._children(".insert_blc");
 			const insert_blcs_len = insert_blcs.length;
 			for (let a = 0; a < insert_blcs_len; a++) {
 				if (shrunk_ids.includes(a)) {
@@ -1739,7 +1736,7 @@ class PiepCMS {
 						(blc_b_rect.top * weight_b) / weight +
 						blc_a_rect.height * 0.5 -
 						piep_editor_rect.top +
-						this.piep_editor_content_scroll.scrollTop
+						this.content_scroll.scrollTop
 				);
 				master_insert_blc._set_content(weight);
 				master_insert_blc.dataset.wght = weight + "";
@@ -1748,29 +1745,26 @@ class PiepCMS {
 	}
 
 	piepEditorReleaseBlock() {
-		this.piep_editor_grabbed_block_wrapper.classList.remove("visible");
-		this.piep_editor.classList.remove("grabbed_block");
-		this.piep_editor.classList.remove("has_insert_pos");
-		this.piep_editor_float_focus.classList.add("hidden");
-		this.piep_editor_float_multi_insert.classList.add("hidden");
-		this.piep_editor_parent_float_focus.classList.add("hidden");
+		this.grabbed_block_wrapper.classList.remove("visible");
+		this.container.classList.remove("grabbed_block");
+		this.container.classList.remove("has_insert_pos");
+		this.float_focus.classList.add("hidden");
+		this.float_multi_insert.classList.add("hidden");
+		this.parent_float_focus.classList.add("hidden");
 
-		this.piep_editor_content.style.minHeight = "";
+		this.content.style.minHeight = "";
 
-		this.piep_editor_alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
+		this.alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
 			insert_blc.remove();
 		});
 
-		if (this.piep_editor_current_insert_blc) {
+		if (this.current_insert_blc) {
 			// use whatever the user have seen already, smooth UX
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.v_dom_overlay);
 
 			// remove grabbed block that was just hidden so far
-			const grabbed_v_node_data = this.getVDomNodeData(
-				this.v_dom,
-				(v_node) => !v_node.insert && v_node.id === this.piep_editor_grabbed_block_vid
-			);
+			const grabbed_v_node_data = this.getVDomNodeData(this.v_dom, (v_node) => !v_node.insert && v_node.id === this.grabbed_block_vid);
 			grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
 			const v_node_with_insert = this.findNodeInVDom(this.v_dom, (v_node) => v_node.insert);
@@ -1779,10 +1773,10 @@ class PiepCMS {
 			}
 		}
 
-		this.piep_editor_grabbed_block_vid = undefined;
-		this.piep_editor_grabbed_block_wrapper_rect = undefined;
-		this.piep_editor_current_insert_blc = undefined;
-		this.piep_editor_has_insert_pos = false;
+		this.grabbed_block_vid = undefined;
+		this.grabbed_block_wrapper_rect = undefined;
+		this.current_insert_blc = undefined;
+		this.has_insert_pos = false;
 
 		this.recreateDom();
 	}
@@ -1792,8 +1786,8 @@ class PiepCMS {
 	 * @param {boolean} peca
 	 */
 	setPiepEditorContentActive(peca) {
-		this.piep_editor_content_active = peca;
-		if (!this.piep_editor_content_active) {
+		this.content_active = peca;
+		if (!this.content_active) {
 			this.setPiepEditorCursorActive(false);
 		}
 	}
@@ -1803,8 +1797,8 @@ class PiepCMS {
 	 * @param {boolean} peca
 	 */
 	setPiepEditorCursorActive(peca) {
-		this.piep_editor_cursor_active = peca;
-		this.piep_editor_cursor.classList.toggle("hidden", !this.piep_editor_cursor_active);
+		this.cursor_active = peca;
+		this.cursor.classList.toggle("hidden", !this.cursor_active);
 	}
 
 	setSelectionRange(range) {
@@ -1836,16 +1830,16 @@ class PiepCMS {
 	}
 
 	getPiepEditorFocusNode() {
-		const focus_node = this.piep_editor_content._child(".piep_focus");
+		const focus_node = this.content._child(".piep_focus");
 		return focus_node;
 	}
 
 	updatePiepCursorPosition() {
 		const sel = window.getSelection();
-		if (this.piep_editor_content_active || this.piep_editor_float_menu_active) {
-			this.piep_editor_last_selection = cloneObject(sel);
+		if (this.content_active || this.float_menu_active) {
+			this.last_selection = cloneObject(sel);
 		}
-		const csel = this.piep_editor_last_selection;
+		const csel = this.last_selection;
 
 		const range = document.createRange();
 		const focus_node = csel ? $(csel.focusNode) : undefined;
@@ -1853,7 +1847,7 @@ class PiepCMS {
 		const focus_textable = focus_node ? focus_node._parent(`.textable`) : undefined;
 
 		if (focus_textable) {
-			const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+			const piep_editor_rect = this.container.getBoundingClientRect();
 
 			let cursor_top, cursor_left, cursor_width, cursor_height;
 
@@ -1880,12 +1874,12 @@ class PiepCMS {
 				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
 			}
 
-			this.piep_editor_cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
-			this.piep_editor_cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
-			this.piep_editor_cursor.style.width = cursor_width + "px";
-			this.piep_editor_cursor.style.height = cursor_height + "px";
+			this.cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
+			this.cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
+			this.cursor.style.width = cursor_width + "px";
+			this.cursor.style.height = cursor_height + "px";
 
-			if (this.piep_editor_content_active) {
+			if (this.content_active) {
 				this.setPiepEditorCursorActive(true);
 			}
 		} else {
@@ -1903,12 +1897,12 @@ class PiepCMS {
 	 * @returns
 	 */
 	setPiepEditorFocusNode(vid) {
-		if (this.piep_editor_grabbed_block_vid !== undefined) {
+		if (this.grabbed_block_vid !== undefined) {
 			return;
 		}
 
-		let just_changed_focus_vid = this.piep_editor_focus_node_vid !== vid;
-		this.piep_editor_focus_node_vid = vid;
+		let just_changed_focus_vid = this.focus_node_vid !== vid;
+		this.focus_node_vid = vid;
 
 		const focus_node = this.getPiepEditorNode(vid);
 		let tblc;
@@ -1920,7 +1914,7 @@ class PiepCMS {
 				const v_node = this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid);
 
 				// will take everything, even hidden items
-				this.piep_editor._children("[data-blc_prop]").forEach((input) => {
+				this.container._children("[data-blc_prop]").forEach((input) => {
 					const prop_str = input.dataset.blc_prop;
 					let prop_val;
 
@@ -1937,30 +1931,30 @@ class PiepCMS {
 				});
 			}
 
-			tblc = this.piep_editor_inspector_tree._child(`.tblc_${vid}`);
+			tblc = this.inspector_tree._child(`.tblc_${vid}`);
 			if (tblc && just_changed_focus_vid) {
 				scrollIntoView(tblc);
 			}
 		}
 
-		this.piep_editor_content._children(".blc").forEach((e) => {
+		this.content._children(".blc").forEach((e) => {
 			e.classList.toggle("piep_focus", e === focus_node);
 		});
-		this.piep_editor_inspector_tree._children(".v_node_label").forEach((e) => {
+		this.inspector_tree._children(".v_node_label").forEach((e) => {
 			e.classList.toggle("selected", e === tblc);
 		});
 	}
 
 	filterPiepEditorMenu() {
 		/** @type {cmsEditableGroupEnum} */
-		const group = this.piep_editor_filter_advanced_menu._get_value();
+		const group = this.filter_advanced_menu._get_value();
 
-		const focus_node = this.getPiepEditorNode(this.piep_editor_focus_node_vid);
+		const focus_node = this.getPiepEditorNode(this.focus_node_vid);
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
 		if (v_node) {
-			this.piep_editor_editable_props.forEach((prop) => {
-				const blc_prop_wrapper = this.piep_editor_advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+			this.editable_props.forEach((prop) => {
+				const blc_prop_wrapper = this.advanced_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
 				if (!blc_prop_wrapper) {
 					return;
 				}
@@ -1978,8 +1972,8 @@ class PiepCMS {
 			});
 		}
 
-		this.piep_editor_advanced_menu._child(".advanced_menu_scroll_panel").classList.toggle("hidden", !v_node);
-		this.piep_editor_advanced_menu._child(".case_advanced_menu_empty").classList.toggle("hidden", !!v_node);
+		this.advanced_menu._child(".advanced_menu_scroll_panel").classList.toggle("hidden", !v_node);
+		this.advanced_menu._child(".case_advanced_menu_empty").classList.toggle("hidden", !!v_node);
 
 		lazyLoadImages({ duration: 0 });
 	}
@@ -1991,27 +1985,24 @@ class PiepCMS {
 	 */
 	piepEditorShowFocusToNode(vid) {
 		if (vid === undefined) {
-			this.piep_editor_float_focus.classList.add("hidden");
+			this.float_focus.classList.add("hidden");
 			return;
 		}
 
-		this.piep_editor_float_focus.classList.remove("hidden");
+		this.float_focus.classList.remove("hidden");
 
 		const focus_node = this.getPiepEditorNode(vid);
 		if (focus_node === undefined) {
-			this.piep_editor_float_focus.classList.add("hidden");
+			this.float_focus.classList.add("hidden");
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
-		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
+		const piep_editor_rect = this.container.getBoundingClientRect();
 
-		this.piep_editor_float_focus._set_absolute_pos(
-			focus_node_rect.left - 1 - piep_editor_rect.left,
-			focus_node_rect.top - 1 - piep_editor_rect.top
-		);
+		this.float_focus._set_absolute_pos(focus_node_rect.left - 1 - piep_editor_rect.left, focus_node_rect.top - 1 - piep_editor_rect.top);
 
-		this.piep_editor_float_focus.style.width = focus_node_rect.width + 2 + "px";
-		this.piep_editor_float_focus.style.height = focus_node_rect.height + 2 + "px";
+		this.float_focus.style.width = focus_node_rect.width + 2 + "px";
+		this.float_focus.style.height = focus_node_rect.height + 2 + "px";
 	}
 
 	/**
@@ -2021,23 +2012,20 @@ class PiepCMS {
 	 */
 	piepEditorShowFloatMenuToNode(vid) {
 		if (vid === undefined) {
-			this.piep_editor_float_menu.classList.add("hidden");
+			this.float_menu.classList.add("hidden");
 			return;
 		}
 
 		const focus_node = this.getPiepEditorNode(vid);
 		if (focus_node === undefined) {
-			this.piep_editor_float_menu.classList.add("hidden");
+			this.float_menu.classList.add("hidden");
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
-		const piep_editor_rect = this.piep_editor.getBoundingClientRect();
-		const piep_editor_float_menu_rect = this.piep_editor_float_menu.getBoundingClientRect();
+		const piep_editor_rect = this.container.getBoundingClientRect();
+		const piep_editor_float_menu_rect = this.float_menu.getBoundingClientRect();
 
-		this.piep_editor_float_focus._set_absolute_pos(
-			focus_node_rect.left - 1 - piep_editor_rect.left,
-			focus_node_rect.top - 1 - piep_editor_rect.top
-		);
+		this.float_focus._set_absolute_pos(focus_node_rect.left - 1 - piep_editor_rect.left, focus_node_rect.top - 1 - piep_editor_rect.top);
 
 		let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
 		let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
@@ -2048,9 +2036,9 @@ class PiepCMS {
 		if (top < safe_off) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 		}
-		//top = clamp(safe_off, top, this.piep_editor_rect.height - safe_off);
+		//top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
 
-		this.piep_editor_float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
+		this.float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
 	}
 
 	/**
@@ -2068,7 +2056,7 @@ class PiepCMS {
 	 * @returns {PiepNode}
 	 */
 	getPiepEditorNode(vid) {
-		return this.piep_editor_content._child(this.getPiepEditorNodeSelector(vid));
+		return this.content._child(this.getPiepEditorNodeSelector(vid));
 	}
 
 	/**
@@ -2100,7 +2088,7 @@ class PiepCMS {
 		}
 		const sel_center = this.getRectCenter(sel_rect);
 
-		const textables = this.piep_editor_content._children(".textable");
+		const textables = this.content._children(".textable");
 		let closest_textable;
 		let textable_smallest_dist = 100000000;
 		for (const textable of textables) {
@@ -2234,11 +2222,11 @@ class PiepCMS {
 	 */
 	togglePiepEditorInspector(open = undefined) {
 		if (open !== undefined) {
-			this.piep_editor_inspector_open = open;
+			this.inspector_open = open;
 		} else {
-			this.piep_editor_inspector_open = !this.piep_editor_inspector_open;
+			this.inspector_open = !this.inspector_open;
 		}
-		this.piep_editor_inspector.classList.toggle("open", this.piep_editor_inspector_open);
+		this.inspector.classList.toggle("open", this.inspector_open);
 	}
 }
 
