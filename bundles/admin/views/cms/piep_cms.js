@@ -20,6 +20,7 @@ class PiepCMS {
 		this.initInspector();
 		this.initAdvancedMenu();
 		this.initFloatMenu();
+		this.initSelectResolution();
 
 		this.initPaste();
 		this.initClick();
@@ -62,6 +63,11 @@ class PiepCMS {
 		this.float_menu = this.container._child(".piep_editor_float_menu");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
+	}
+
+	initSelectResolution() {
+		this.select_resolution = this.container._child(".select_resolution");
+		this.select_resolution._set_value("desktop", { quiet: true });
 	}
 
 	initColors() {

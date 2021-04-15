@@ -20,15 +20,15 @@
         </span>
         <div class="pretty_radio semi_bold select_resolution ml1 mra">
             <div class="checkbox_area" data-tooltip="Komputer">
-                <p-checkbox data-value=""></p-checkbox>
+                <p-checkbox data-value="desktop"></p-checkbox>
                 <span> <i class="fas fa-desktop"></i> </span>
             </div>
             <div class="checkbox_area" data-tooltip="Tablet">
-                <p-checkbox data-value="1024x768"></p-checkbox>
+                <p-checkbox data-value="tablet"></p-checkbox>
                 <span> <i class="fas fa-tablet-alt"></i> </span>
             </div>
             <div class="checkbox_area" data-tooltip="Telefon">
-                <p-checkbox data-value="414x896"></p-checkbox>
+                <p-checkbox data-value="mobile"></p-checkbox>
                 <span> <i class="fas fa-mobile-alt"></i> </span>
             </div>
         </div>
