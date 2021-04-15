@@ -285,10 +285,7 @@ function hideModal(name) {
 	if (name) {
 		let modal = $(`#${name}`);
 		if (modal) {
-			setTimeout(() => {
-				modal.style.animation = "hide 0.4s";
-			});
-			modal.classList.add("hidden");
+			modal.style.animation = "hide 0.4s";
 			setTimeout(() => {
 				modal.classList.add("hidden");
 				modal.style.animation = "";
@@ -317,9 +314,7 @@ function hideModal(name) {
 	if (visible_modal_count > 0) {
 		modal_wrapper_node.classList.remove("hidden");
 	} else {
-		setTimeout(() => {
-			modal_wrapper_node.style.animation = "hide 0.4s";
-		});
+		modal_wrapper_node.style.animation = "hide 0.4s";
 		setTimeout(() => {
 			modal_wrapper_node.classList.add("hidden");
 			modal_wrapper_node.style.animation = "";

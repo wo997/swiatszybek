@@ -214,7 +214,7 @@ class PiepCMS {
 				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
 					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
 				</p-option>
-				<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
+				<p-option class="edit_color_palette_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			`);
 
 			registerForms();
@@ -234,6 +234,10 @@ class PiepCMS {
 
 			color_picker.addEventListener("color_picker_hidden", () => {
 				color_dropdown.click();
+			});
+
+			color_dropdown._child(".edit_color_palette_btn").addEventListener("click", () => {
+				getColorPaletteModal()._show();
 			});
 		};
 
