@@ -21,7 +21,7 @@ function previewUrl(url, params) {
 								</div>
 								<div class="checkbox_area" data-tooltip="Tablet">
 									<p-checkbox data-value="1024x768"></p-checkbox>
-									<span> <i class="fas fa-mobile-alt"></i> </span>
+									<span> <i class="fas fa-tablet-alt"></i> </span>
 								</div>
 								<div class="checkbox_area" data-tooltip="Telefon">
 									<p-checkbox data-value="414x896"></p-checkbox>

@@ -40,3 +40,10 @@
 /**
  * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
  */
+
+/**
+ * @typedef {{
+ * var_name: string
+ * hex: string
+ * }} piepColor
+ */

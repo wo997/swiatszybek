@@ -25,7 +25,7 @@
             </div>
             <div class="checkbox_area" data-tooltip="Tablet">
                 <p-checkbox data-value="1024x768"></p-checkbox>
-                <span> <i class="fas fa-mobile-alt"></i> </span>
+                <span> <i class="fas fa-tablet-alt"></i> </span>
             </div>
             <div class="checkbox_area" data-tooltip="Telefon">
                 <p-checkbox data-value="414x896"></p-checkbox>
@@ -52,13 +52,13 @@
     </div>
 
     <div class="piep_editor_inspector">
-        <div class="flex align_center">
+        <div class="flex align_center header">
             <div class="medium mra">Drzewko elementów</div>
             <button class="btn transparent grab_inspector_btn small" style="width:29px" data-tooltip="Przemieść">
                 <i class="fas fa-arrows-alt"></i>
             </button>
             <button class="btn transparent hide_inspector_btn small" style="width:29px" data-tooltip="Ukryj">
-                <i class="fas fa-times"></i>
+                <i class="fas fa-times" style="font-size:1.1em"></i>
             </button>
         </div>
 

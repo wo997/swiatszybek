@@ -16,6 +16,7 @@ class PiepCMS {
 
 		this.initConsts();
 
+		this.initColors();
 		this.initInspector();
 		this.initAdvancedMenu();
 		this.initFloatMenu();
@@ -61,6 +62,28 @@ class PiepCMS {
 		this.float_menu = this.container._child(".piep_editor_float_menu");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
+	}
+
+	initColors() {
+		/** @type {piepColor[]} */
+		this.colors = [
+			{
+				var_name: "primary_clr",
+				hex: "#47a",
+			},
+			{
+				var_name: "black_clr",
+				hex: "#000",
+			},
+			{
+				var_name: "white_clr",
+				hex: "#fff",
+			},
+			{
+				var_name: "red_clr",
+				hex: "#d44",
+			},
+		];
 	}
 
 	initConsts() {
@@ -1384,38 +1407,48 @@ class PiepCMS {
 	}
 
 	inspectorGrabbed() {
-		const inspector_rect = this.inspector.getBoundingClientRect();
+		const off = 5;
+
+		//const inspector_rect = this.inspector.getBoundingClientRect();
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
+
+		const inspector_width = 310;
+		const inspector_height = 390;
+		const inspector_grab_btn_offset = 47;
+
+		//const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_rect.width - off;
+		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - off;
+
 		if (this.inspector_grabbed) {
-			const grab_btn_center = getRectCenter(this.grab_inspector_btn.getBoundingClientRect());
+			//const grab_btn_center = getRectCenter(this.grab_inspector_btn.getBoundingClientRect());
 
-			const left = mouse.pos.x + inspector_rect.left - grab_btn_center.x;
-			const top = mouse.pos.y + inspector_rect.top - grab_btn_center.y;
-
-			// this.inspector_pos.x = this.inspector_pos.x * 0.8 + left * 0.2;
-			// this.inspector_pos.y = this.inspector_pos.y * 0.8 + top * 0.2;
+			const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
+			const top = mouse.pos.y - 20;
 
 			this.inspector_pos.x = left;
 			this.inspector_pos.y = top;
+		} else {
+			if (this.inspector_sticks_to_right_size) {
+				this.inspector_pos.x = max_x;
+			}
 		}
 
-		const off = 5;
-
 		this.inspector_pos.x = clamp(
-			content_wrapper_rect.left + off,
+			//content_wrapper_rect.left +
+			off,
 			this.inspector_pos.x,
-			content_wrapper_rect.left + content_wrapper_rect.width - inspector_rect.width - off
+			max_x
 		);
 		this.inspector_pos.y = clamp(
 			content_wrapper_rect.top + off,
 			this.inspector_pos.y,
-			content_wrapper_rect.top + content_wrapper_rect.height - inspector_rect.height - off
+			content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - off
 		);
 
-		this.inspector.style.transform = `translate(
-            ${this.inspector_pos.x.toPrecision(5)}px,
-            ${this.inspector_pos.y.toPrecision(5)}px
-        ) scale(var(--scale))`;
+		this.inspector_sticks_to_right_size = this.inspector_pos.x > max_x - 1;
+
+		this.inspector.style.setProperty("--x", this.inspector_pos.x.toPrecision(5) + "px");
+		this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
 	}
 
 	piepEditorMainLoop() {

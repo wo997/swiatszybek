@@ -57,7 +57,6 @@ function setSelectionByIndex(node, pos, end = undefined) {
 	const range = this.getRangeByIndex(node, pos, end);
 	sel.removeAllRanges();
 	sel.addRange(range);
-	this.updatePiepCursorPosition();
 }
 
 /**
