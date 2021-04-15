@@ -756,7 +756,7 @@ function DatatableComp(comp, parent, data) {
 							</list-comp>
 						</div>
 
-						<div class="expand_y animate_hidden hidden" data-node="{${comp._nodes.empty_table}}">
+						<div class="expand_y" data-node="{${comp._nodes.empty_table}}">
 							<div class="empty_table" html="{${def(data.empty_html, "Brak wyników")}}"></div>
 						</div>
 					</div>

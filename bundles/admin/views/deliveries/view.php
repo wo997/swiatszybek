@@ -15,7 +15,7 @@
         </div>
     </span>
     <div>
-        <button onclick="saveWysylki()" class="btn primary">Zapisz <i class="fas fa-save"></i></button>
+        <button class="btn primary save_btn">Zapisz <i class="fas fa-save"></i></button>
     </div>
 </div>
 

@@ -2,9 +2,9 @@
 
 /**
  * @typedef {{
- * couriers: DeliveriesConfig_CourierCompData[]
- * parcel_lockers: DeliveriesConfig_CourierCompData[]
- * in_persons: DeliveriesConfig_CourierCompData[]
+ * couriers: DeliveriesConfig_CarrierCompData[]
+ * parcel_lockers: DeliveriesConfig_CarrierCompData[]
+ * in_persons: DeliveriesConfig_CarrierCompData[]
  * }} DeliveriesConfigCompData
  *
  * @typedef {{
@@ -12,6 +12,8 @@
  * _set_data(data?: DeliveriesConfigCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  add_courier_btn: PiepNode
+ *  add_parcel_locker_btn: PiepNode
+ *  add_in_person_btn: PiepNode
  * }
  * } & BaseComp} DeliveriesConfigComp
  */
@@ -24,9 +26,7 @@
 function deliveriesConfigComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			couriers: [
-				{ courier_id: -1, name: "xxx", tracking_url_prefix: "https", delivery_time_days: 2, expanded: false, initial_dimensions: [] },
-			],
+			couriers: [],
 			parcel_lockers: [],
 			in_persons: [],
 		};
@@ -35,38 +35,40 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {
-				// reuse the code idk
-				// const toggle_free_from = $(".toggle_free_from");
-				// toggle_free_from.addEventListener("change", () => {
-				// 	expand($(".case_free_from"), toggle_free_from._get_value());
-				// });
-			},
+			render: () => {},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="label big first">Lista przewoźników / punktów odbioru</div>
-
 			<div>
-				<span class="label medium inline first"> Kurierzy (<span html="{${data.couriers.length}}"></span>) </span>
+				<span class="label medium bold inline first"> Kurierzy (<span html="{${data.couriers.length}}"></span>) </span>
 				<button class="btn primary small" data-node="{${comp._nodes.add_courier_btn}}" disabled="{${data.couriers.length > 5}}">
 					Dodaj kuriera <i class="fas fa-plus"></i>
 				</button>
 			</div>
 			<list-comp data-bind="{${data.couriers}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
-				<deliveries-config_courier-comp></deliveries-config_courier-comp>
+				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
-			<div class="label medium">Paczkomaty (<span html="{${data.parcel_lockers.length}}"></span>)</div>
+			<div>
+				<span class="label medium bold inline"> Paczkomaty (<span html="{${data.parcel_lockers.length}}"></span>) </span>
+				<button class="btn primary small" data-node="{${comp._nodes.add_parcel_locker_btn}}" disabled="{${data.parcel_lockers.length > 5}}">
+					Dodaj paczkomat <i class="fas fa-plus"></i>
+				</button>
+			</div>
 			<list-comp data-bind="{${data.parcel_lockers}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
-				<deliveries-config_courier-comp></deliveries-config_courier-comp>
+				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
-			<div class="label medium">Punkty odbioru sklepu (<span html="{${data.in_persons.length}}"></span>)</div>
+			<div>
+				<span class="label medium bold inline"> Punkty odbioru sklepu (<span html="{${data.in_persons.length}}"></span>) </span>
+				<button class="btn primary small" data-node="{${comp._nodes.add_in_person_btn}}" disabled="{${data.in_persons.length > 5}}">
+					Dodaj punkt odbioru <i class="fas fa-plus"></i>
+				</button>
+			</div>
 			<list-comp data-bind="{${data.in_persons}}" class="wireframe space separate light_gray_rows" data-primary="courier_id">
-				<deliveries-config_courier-comp></deliveries-config_courier-comp>
+				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
 			<div class="label big">Ceny wysyłek</div>
@@ -109,10 +111,39 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				const data = comp._data;
 				data.couriers.push({
 					courier_id: -1,
+					delivery_type_id: 1,
 					name: "",
 					tracking_url_prefix: "",
 					delivery_time_days: 0,
-					expanded: false,
+					expanded: true,
+					initial_dimensions: [],
+				});
+				comp._render();
+			});
+
+			comp._nodes.add_parcel_locker_btn.addEventListener("click", () => {
+				const data = comp._data;
+				data.parcel_lockers.push({
+					courier_id: -1,
+					delivery_type_id: 2,
+					name: "",
+					tracking_url_prefix: "",
+					delivery_time_days: 0,
+					expanded: true,
+					initial_dimensions: [],
+				});
+				comp._render();
+			});
+
+			comp._nodes.add_in_person_btn.addEventListener("click", () => {
+				const data = comp._data;
+				data.in_persons.push({
+					courier_id: -1,
+					delivery_type_id: 3,
+					name: "",
+					tracking_url_prefix: "",
+					delivery_time_days: 0,
+					expanded: true,
 					initial_dimensions: [],
 				});
 				comp._render();

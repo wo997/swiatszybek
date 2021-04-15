@@ -160,7 +160,7 @@ function expand(elem, show = null, options = {}) {
 			}
 		);
 	} else {
-		setTimeout(() => {
+		quickTimeout(() => {
 			clb();
 		}, duration);
 	}

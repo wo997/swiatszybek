@@ -15,38 +15,47 @@
 /**
  * @typedef {{
  * courier_id: number
+ * delivery_type_id: number
  * name: string
  * delivery_time_days: number
  * tracking_url_prefix: string
  * expanded: boolean
  * initial_dimensions: DimensionData[]
  * dimensions_dt?: DatatableCompData
- * } & ListCompRowData} DeliveriesConfig_CourierCompData
+ * } & ListCompRowData} DeliveriesConfig_CarrierCompData
  *
  * @typedef {{
- * _data: DeliveriesConfig_CourierCompData
- * _set_data(data?: DeliveriesConfig_CourierCompData, options?: SetCompDataOptions)
+ * _data: DeliveriesConfig_CarrierCompData
+ * _set_data(data?: DeliveriesConfig_CarrierCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  expand_btn: PiepNode
  *  expand: PiepNode
  *  dimenions_dt: PiepNode
  * }
- * } & BaseComp} DeliveriesConfig_CourierComp
+ * } & BaseComp} DeliveriesConfig_CarrierComp
  */
 
 /**
- * @param {DeliveriesConfig_CourierComp} comp
+ * @param {DeliveriesConfig_CarrierComp} comp
  * @param {*} parent
- * @param {DeliveriesConfig_CourierCompData} data
+ * @param {DeliveriesConfig_CarrierCompData} data
  */
-function DeliveriesConfig_CourierComp(comp, parent, data = undefined) {
+function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { courier_id: -1, name: "", tracking_url_prefix: "", delivery_time_days: 0, expanded: false, initial_dimensions: [] };
+		data = {
+			courier_id: -1,
+			delivery_type_id: -1,
+			name: "",
+			tracking_url_prefix: "",
+			delivery_time_days: 0,
+			expanded: false,
+			initial_dimensions: [],
+		};
 	}
 
 	/**
 	 *
-	 * @param {DeliveriesConfig_CourierCompData} data
+	 * @param {DeliveriesConfig_CarrierCompData} data
 	 */
 	const setDefaults = (data) => {
 		if (data && !data.dimensions_dt) {
@@ -98,7 +107,7 @@ function DeliveriesConfig_CourierComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 			<div style="flex-grow:1">
-				<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.expand}}">
+				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
 						<div class="label first">Nazwa kuriera</div>
 						<input class="field small" data-bind="{${data.name}}" />
