@@ -23,7 +23,7 @@
  * @param {*} parent
  * @param {SelectProductFeatureOptionsModalCompData} data
  */
-function selectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
+function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			product_feature_id: -1,
@@ -232,7 +232,7 @@ function getSelectProductFeatureOptionsModal() {
 	// @ts-ignore
 	const select_product_feature_options_modal_comp = $("#selectProductFeatureOptions select-product-feature-options-modal-comp");
 	if (!ex) {
-		selectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
+		SelectProductFeatureOptionsModalComp(select_product_feature_options_modal_comp, undefined);
 	}
 
 	return select_product_feature_options_modal_comp;

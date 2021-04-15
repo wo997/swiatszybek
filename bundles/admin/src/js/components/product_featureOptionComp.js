@@ -35,7 +35,7 @@
  * @param {*} parent
  * @param {Product_FeatureOptionCompData} data
  */
-function product_featureOptionComp(
+function Product_FeatureOptionComp(
 	comp,
 	parent,
 	data = {

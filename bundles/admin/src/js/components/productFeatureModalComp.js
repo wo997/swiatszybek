@@ -22,7 +22,7 @@
  * @param {*} parent
  * @param {ProductFeatureModalCompData} data
  */
-function productFeatureModalComp(comp, parent, data = undefined) {
+function ProductFeatureModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { product_feature: { name: "", data_type: "text_list", product_feature_id: -1, current_group_id: -1, groups: [] } };
 	}
@@ -93,7 +93,7 @@ function getProductFeatureModal() {
 	// @ts-ignore
 	const product_feature_modal_comp = $("#productFeature product-feature-modal-comp");
 	if (!ex) {
-		productFeatureModalComp(product_feature_modal_comp, undefined);
+		ProductFeatureModalComp(product_feature_modal_comp, undefined);
 	}
 
 	return product_feature_modal_comp;

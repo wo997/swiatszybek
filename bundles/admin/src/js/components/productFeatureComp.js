@@ -38,7 +38,7 @@
  * @param {*} parent
  * @param {ProductFeatureCompData} data
  */
-function productFeatureComp(comp, parent, data) {
+function ProductFeatureComp(comp, parent, data) {
 	if (data === undefined) {
 		data = {
 			product_feature_id: -1,

@@ -28,7 +28,7 @@ let currently_filling_product_variant_com;
  * @param {*} parent
  * @param {Product_VariantCompData} data
  */
-function product_variantComp(comp, parent, data = { product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
+function Product_VariantComp(comp, parent, data = { product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			pass_list_data: [{ what: "features", where: "options" }],

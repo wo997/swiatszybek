@@ -24,7 +24,7 @@
  * @param {*} parent
  * @param {Product_FeatureCompData} data
  */
-function product_featureComp(
+function Product_FeatureComp(
 	comp,
 	parent,
 	data = { product_feature_id: -1, options: [], data_type: "text_list", physical_measure: "none" }

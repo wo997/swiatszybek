@@ -21,7 +21,7 @@
  * @param {*} parent
  * @param {ProductCategoriesModalCompData} data
  */
-function productCategoriesModalComp(comp, parent, data = undefined) {
+function ProductCategoriesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			categories: { categories: [] },
@@ -82,7 +82,7 @@ function getProductCategoriesModal() {
 	// @ts-ignore
 	const product_categories_modal_comp = $("#productCategories product-categories-modal-comp");
 	if (!ex) {
-		productCategoriesModalComp(product_categories_modal_comp, undefined);
+		ProductCategoriesModalComp(product_categories_modal_comp, undefined);
 	}
 
 	return product_categories_modal_comp;

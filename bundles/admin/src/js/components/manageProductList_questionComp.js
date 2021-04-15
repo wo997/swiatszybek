@@ -24,7 +24,7 @@
  * @param {*} parent
  * @param {ManageProductList_QuestionCompData} data
  */
-function manageProductList_questionComp(comp, parent, data = undefined) {
+function ManageProductList_QuestionComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { label: "", options: [], type: "copy" };
 	}

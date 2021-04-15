@@ -82,7 +82,7 @@ const getVariantIdFromKey = (key) => {
  * @param {*} parent
  * @param {ProductCompData} data
  */
-function productComp(comp, parent, data = undefined) {
+function ProductComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			active: 0,

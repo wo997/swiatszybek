@@ -24,7 +24,7 @@
  * @param {*} parent
  * @param {ProductCategoryPickerNodeCompData} data
  */
-function productCategoryPickerNodeComp(comp, parent, data = undefined) {
+function ProductCategoryPickerNodeComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			product_category_id: -1,

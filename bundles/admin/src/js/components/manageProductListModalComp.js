@@ -21,7 +21,7 @@
  * @param {*} parent
  * @param {ManageProductListModalCompData} data
  */
-function manageProductListModalComp(comp, parent, data = undefined) {
+function ManageProductListModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { questions: [], add_products: [] };
 	}
@@ -118,7 +118,7 @@ function getManageProductListModal() {
 	// @ts-ignore
 	const manage_product_list_modal_comp = $("#manageProductList manage-product-list-modal-comp");
 	if (!ex) {
-		manageProductListModalComp(manage_product_list_modal_comp, undefined);
+		ManageProductListModalComp(manage_product_list_modal_comp, undefined);
 	}
 
 	return manage_product_list_modal_comp;

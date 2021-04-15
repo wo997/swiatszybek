@@ -29,7 +29,7 @@
  * @param {*} parent
  * @param {SelectProductCategoriesModalCompData} data
  */
-function selectProductCategoriesModalComp(comp, parent, data = undefined) {
+function SelectProductCategoriesModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			selection: [],
@@ -164,7 +164,7 @@ function getSelectProductCategoriesModal() {
 	// @ts-ignore
 	const select_product_categories_modal_comp = $("#selectProductCategories select-product-categories-modal-comp");
 	if (!ex) {
-		selectProductCategoriesModalComp(select_product_categories_modal_comp, undefined);
+		SelectProductCategoriesModalComp(select_product_categories_modal_comp, undefined);
 	}
 
 	return select_product_categories_modal_comp;

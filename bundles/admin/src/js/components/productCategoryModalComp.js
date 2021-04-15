@@ -36,7 +36,7 @@
  * @param {*} parent
  * @param {ProductCategoryModalCompData} data
  */
-function productCategoryModalComp(comp, parent, data = undefined) {
+function ProductCategoryModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { name: "", product_category_id: -1, parent_product_category_id: -1 };
 	}
@@ -157,7 +157,7 @@ function getProductCategoryModal() {
 	// @ts-ignore
 	const product_category_modal_comp = $("#productCategory product-category-modal-comp");
 	if (!ex) {
-		productCategoryModalComp(product_category_modal_comp, undefined);
+		ProductCategoryModalComp(product_category_modal_comp, undefined);
 	}
 	return product_category_modal_comp;
 }

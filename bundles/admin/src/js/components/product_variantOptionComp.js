@@ -26,7 +26,7 @@
  * @param {*} parent
  * @param {Product_VariantOptionCompData} data
  */
-function product_variantOptionComp(
+function Product_VariantOptionComp(
 	comp,
 	parent,
 	data = {

@@ -25,7 +25,7 @@
  * @param {*} parent
  * @param {ProductSubCategoryCompData} data
  */
-function productSubCategoryComp(comp, parent, data = undefined) {
+function ProductSubCategoryComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			product_category_id: -1,

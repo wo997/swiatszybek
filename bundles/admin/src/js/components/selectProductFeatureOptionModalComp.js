@@ -27,7 +27,7 @@
  * @param {*} parent
  * @param {SelectProductFeatureOptionModalCompData} data
  */
-function selectProductFeatureOptionModalComp(comp, parent, data = undefined) {
+function SelectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			datatable: {
@@ -124,7 +124,7 @@ function getSelectProductFeatureOptionModal() {
 	// @ts-ignore
 	const select_product_feature_option_modal_comp = $("#selectProductFeatureOption select-product-feature-option-modal-comp");
 	if (!ex) {
-		selectProductFeatureOptionModalComp(select_product_feature_option_modal_comp, undefined);
+		SelectProductFeatureOptionModalComp(select_product_feature_option_modal_comp, undefined);
 	}
 
 	return select_product_feature_option_modal_comp;

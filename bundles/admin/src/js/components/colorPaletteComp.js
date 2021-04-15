@@ -18,7 +18,7 @@
  * @param {*} parent
  * @param {ColorPaletteCompData} data
  */
-function colorPaletteComp(comp, parent, data = undefined) {
+function ColorPaletteComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {};
 	}
@@ -67,7 +67,7 @@ function getColorPaletteModal() {
 	// @ts-ignore
 	const color_palette_comp = $("#colorPalette color-palette-comp");
 	if (!ex) {
-		colorPaletteComp(color_palette_comp, undefined);
+		ColorPaletteComp(color_palette_comp, undefined);
 	}
 
 	return color_palette_comp;

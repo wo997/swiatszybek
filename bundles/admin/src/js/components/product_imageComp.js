@@ -26,7 +26,7 @@
  * @param {*} parent
  * @param {Product_ImgCompData} data
  */
-function product_imgComp(comp, parent, data = { product_img_id: -1, img_url: "", product_feature_options: [] }) {
+function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "", product_feature_options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

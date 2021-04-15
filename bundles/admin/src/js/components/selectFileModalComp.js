@@ -20,7 +20,7 @@
  * @param {*} parent
  * @param {SelectFileModalCompData} data
  */
-function selectFileModalComp(comp, parent, data = undefined) {
+function SelectFileModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			file_manager: {
@@ -78,7 +78,7 @@ function getSelectFileModal() {
 	// @ts-ignore
 	const select_file_modal_comp = $("#selectFile select-file-modal-comp");
 	if (!ex) {
-		selectFileModalComp(select_file_modal_comp, undefined);
+		SelectFileModalComp(select_file_modal_comp, undefined);
 	}
 
 	return select_file_modal_comp;
