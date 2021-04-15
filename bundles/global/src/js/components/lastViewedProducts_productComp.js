@@ -17,7 +17,7 @@
  * @param {*} parent
  * @param {LastViewedProducts_ProductCompData} data
  */
-function lastViewedProducts_productComp(comp, parent, data = undefined) {
+function LastViewedProducts_ProductComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { general_product_id: -1, img_url: "", name: "", url: "" };
 	}

@@ -19,7 +19,7 @@
  * @param {*} parent
  * @param {CartProductsCompData} data
  */
-function cartProductsComp(comp, parent, data = undefined) {
+function CartProductsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			products: [],

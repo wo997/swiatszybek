@@ -104,7 +104,7 @@
  * @param {*} parent
  * @param {DatatableCompData} data
  */
-function datatableComp(comp, parent, data) {
+function DatatableComp(comp, parent, data) {
 	if (!data) {
 		data = { columns: [] };
 	}

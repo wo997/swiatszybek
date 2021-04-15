@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const dt = $("datatable-comp.product_features");
 
-	datatableComp(dt, undefined, {
+	DatatableComp(dt, undefined, {
 		dataset: product_features,
 		columns: [
 			{

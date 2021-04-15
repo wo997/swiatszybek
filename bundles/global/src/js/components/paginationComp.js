@@ -28,7 +28,7 @@
  * @param {*} parent
  * @param {PaginationCompData} data
  */
-function paginationComp(comp, parent, data = {}) {
+function PaginationComp(comp, parent, data = {}) {
 	comp._set_data = (data, options = {}) => {
 		data.page_id = def(data.page_id, 0);
 		data.row_count = def(data.row_count, 15);

@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const datatable_comp = $("datatable-comp.comments");
 
-	datatableComp(datatable_comp, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/comment/search",
 		columns: [
 			{

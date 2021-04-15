@@ -7,7 +7,7 @@ domload(() => {
 	if (!cart_products_comp) {
 		return;
 	}
-	cartProductsComp(cart_products_comp, undefined);
+	CartProductsComp(cart_products_comp, undefined);
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products;

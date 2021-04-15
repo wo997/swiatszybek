@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const file_manager_comp = $("file-manager-comp.files");
 
-	fileManagerComp(file_manager_comp, undefined);
+	FileManagerComp(file_manager_comp, undefined);
 
 	if (typeof new URL(window.location.href).searchParams.get("przeslij") === "string") {
 		file_manager_comp._show_upload_modal();

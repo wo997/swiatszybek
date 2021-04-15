@@ -390,7 +390,7 @@ function setProductsFilterCountFromUrl() {
 function initPagination() {
 	// @ts-ignore
 	product_list_pagination_comp = $(`pagination-comp.product_list_pagination`);
-	paginationComp(product_list_pagination_comp, undefined, {
+	PaginationComp(product_list_pagination_comp, undefined, {
 		total_rows: +results_info_count.innerText,
 		page_id: 0,
 		row_count_options: [5, 25, 100],

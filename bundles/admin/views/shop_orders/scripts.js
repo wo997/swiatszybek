@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const datatable_comp = $("datatable-comp.shop_orders");
 
-	datatableComp(datatable_comp, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/shop_order/search",
 		columns: [
 			{ label: "Nr", key: "shop_order_id", width: "100px", sortable: true, searchable: "string" },

@@ -18,7 +18,7 @@
  * @param {*} parent
  * @param {LastViewedProductsCompData} data
  */
-function lastViewedProductsComp(comp, parent, data = undefined) {
+function LastViewedProductsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			products: [],

@@ -23,7 +23,7 @@
  * @param {*} parent
  * @param {DatatableRowCompData} data
  */
-function datatableRowComp(comp, parent, data = { row_data: {}, columns: [], sortable: false }) {
+function DatatableRowComp(comp, parent, data = { row_data: {}, columns: [], sortable: false }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

@@ -185,7 +185,7 @@ function createComp(node, parent_comp, data, options) {
 		}
 
 		directComps(comp).forEach((dc) => {
-			const constructor = titleCase(dc.tagName.toLowerCase());
+			const constructor = compTitleCase(dc.tagName.toLowerCase());
 			if (comp.tagName === dc.tagName) {
 				console.error("Cannot nest self");
 				return;

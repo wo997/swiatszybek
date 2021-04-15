@@ -25,7 +25,7 @@
  * @param {*} parent
  * @param {Array} data
  */
-function listComp(comp, parent, data = []) {
+function ListComp(comp, parent, data = []) {
 	comp._row_template = comp.innerHTML;
 	const is_horizontal = comp.classList.contains("horizontal");
 	comp._empty();
@@ -178,7 +178,7 @@ function listComp(comp, parent, data = []) {
 						}
 
 						directComps(child).forEach((dc) => {
-							const constructor = titleCase(dc.tagName.toLocaleLowerCase());
+							const constructor = compTitleCase(dc.tagName.toLocaleLowerCase());
 							if (window[constructor]) {
 								// @ts-ignore
 								window[constructor](dc, comp, row_data);

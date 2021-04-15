@@ -25,7 +25,7 @@
  * @param {*} parent
  * @param {LoginFormModalCompData} data
  */
-function loginFormModalComp(comp, parent, data = undefined) {
+function LoginFormModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			email: "",

@@ -90,7 +90,7 @@ domload(() => {
 	/** @type {CartProductsComp} */
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.has_products");
-	cartProductsComp(cart_products_comp, undefined, { no_redirect: true, products: [] });
+	CartProductsComp(cart_products_comp, undefined, { no_redirect: true, products: [] });
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products.filter((e) => e.general_product_id === general_product_id);
@@ -429,12 +429,12 @@ function initProductCommentsCallback() {
 
 	let filters_open = false;
 
-	listComp(comments_list, undefined, general_product_comments_rows);
+	ListComp(comments_list, undefined, general_product_comments_rows);
 
 	/** @type {PaginationComp} */
 	// @ts-ignore
 	const comments_pagination = $(`pagination-comp.comments`);
-	paginationComp(comments_pagination, undefined, {
+	PaginationComp(comments_pagination, undefined, {
 		total_rows: +$(".product_comments .results_info_count").innerText,
 		page_id: 0,
 		row_count: 10,

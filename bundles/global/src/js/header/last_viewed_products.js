@@ -7,7 +7,7 @@ domload(() => {
 	if (!last_viewed_products_comp) {
 		return;
 	}
-	lastViewedProductsComp(last_viewed_products_comp, undefined);
+	LastViewedProductsComp(last_viewed_products_comp, undefined);
 
 	const loadLastViewdProducts = () => {
 		last_viewed_products_comp._data.products = last_viewed_products.filter((e) => {

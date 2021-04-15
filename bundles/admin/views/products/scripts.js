@@ -33,7 +33,7 @@ domload(() => {
 
 	quickTimeout(
 		() => {
-			datatableComp(general_products, undefined, {
+			DatatableComp(general_products, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/general_product/search",
 				columns: [
 					{
@@ -97,7 +97,7 @@ domload(() => {
 
 	quickTimeout(
 		() => {
-			datatableComp(products, undefined, {
+			DatatableComp(products, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/product/search",
 				columns: [
 					{

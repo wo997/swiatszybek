@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const datatable_comp = $("datatable-comp.users");
 
-	datatableComp(datatable_comp, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/user/search",
 		columns: [
 			{ label: "Imię", key: "first_name", width: "1", searchable: "string" },

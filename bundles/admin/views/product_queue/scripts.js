@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const datatable_comp = $("datatable-comp.product_queue");
 
-	datatableComp(datatable_comp, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/product_queue/search",
 		columns: [
 			{

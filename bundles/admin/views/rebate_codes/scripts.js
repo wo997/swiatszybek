@@ -5,7 +5,7 @@ domload(() => {
 	// @ts-ignore
 	const datatable_comp = $("datatable-comp.rebate_codes");
 
-	datatableComp(datatable_comp, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/rebate_code/search",
 		columns: [
 			{ label: "Kod", key: "code", width: "1", sortable: true, searchable: "string" },

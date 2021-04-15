@@ -94,7 +94,7 @@ domload(() => {
 	/** @type {LoginFormModalComp} */
 	// @ts-ignore
 	const login_form_modal_comp = $("#loginForm login-form-modal-comp");
-	loginFormModalComp(login_form_modal_comp, undefined);
+	LoginFormModalComp(login_form_modal_comp, undefined);
 });
 
 function registerUser(params) {

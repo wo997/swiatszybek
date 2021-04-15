@@ -26,7 +26,7 @@
  * @param {*} parent
  * @param {CartProducts_ProductCompData} data
  */
-function cartProducts_productComp(comp, parent, data = undefined) {
+function CartProducts_ProductComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { product_id: -1, img_url: "", name: "", qty: 0, gross_price: 0, net_price: 0, url: "" };
 	}

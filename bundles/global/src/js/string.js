@@ -45,6 +45,13 @@ function titleCase(str) {
 	return capital.join("");
 }
 
+function compTitleCase(str) {
+	str = titleCase(str);
+	let arr = str.split("_");
+	let capital = arr.map((item) => item.charAt(0).toUpperCase() + item.slice(1));
+	return capital.join("_");
+}
+
 function escapeHTML(unsafeText) {
 	let div = document.createElement("div");
 	div.innerText = unsafeText;
