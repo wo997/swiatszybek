@@ -383,12 +383,15 @@ class PiepCMS {
 			// "text/html" is cool but dont use it yet
 			const text = e.clipboardData.getData("text/plain");
 			// this text can contain html cool
-			//console.log(text);
 			this.insertPiepText(text);
 		});
 	}
 
 	initClick() {
+		document.addEventListener("mousedown", (ev) => {
+			this.just_clicked = true;
+		});
+
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
@@ -399,18 +402,6 @@ class PiepCMS {
 			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
 			this.setPiepEditorContentActive(content_active);
 
-			const click_blc = target._parent(".blc");
-			if (click_blc) {
-				const click_blc_vid = +click_blc.dataset.vid;
-				const click_v_node = this.findNodeInVDomById(this.v_dom, click_blc_vid);
-				if (click_v_node && click_v_node.text === undefined) {
-					this.setPiepEditorFocusNode(click_blc_vid);
-					removeSelection();
-				}
-				// otherwise it's just a text, so native selection tells where to point at
-			}
-
-			// order matters or at least used to matter
 			this.updatePiepCursorPosition();
 
 			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.focus_node_vid);
@@ -428,7 +419,6 @@ class PiepCMS {
 			const choose_img_btn = target._parent(".choose_img_btn");
 			if (choose_img_btn) {
 				const input = this.blc_menu._child(`[data-blc_prop="attr.data-src"]`);
-				console.log(input);
 				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_target = input;
 				select_file_modal._render();
@@ -443,7 +433,7 @@ class PiepCMS {
 
 			if (target._parent(this.container)) {
 				this.float_menu_active = true; // !!(content_active || target._parent(this.float_menu) || target._parent(".picker_wrapper"));
-				if (target._parent(".hide_menu_btn") || !this.focus_node_vid || this.grabbed_block_vid !== undefined) {
+				if (target._parent(".hide_menu_btn") || this.focus_node_vid === undefined || this.grabbed_block_vid !== undefined) {
 					this.float_menu_active = false;
 				}
 
@@ -1956,6 +1946,20 @@ class PiepCMS {
 	}
 
 	updatePiepCursorPosition() {
+		if (mouse.target) {
+			if (this.just_clicked) {
+				const click_blc = mouse.target._parent(".blc");
+				if (click_blc) {
+					const click_blc_vid = +click_blc.dataset.vid;
+					const click_v_node = this.findNodeInVDomById(this.v_dom, click_blc_vid);
+					if (click_v_node && click_v_node.text === undefined) {
+						this.setPiepEditorFocusNode(click_blc_vid);
+						removeSelection();
+					}
+				}
+			}
+		}
+
 		const sel = window.getSelection();
 		if (this.content_active || this.float_menu_active) {
 			this.last_selection = cloneObject(sel);
@@ -2010,6 +2014,8 @@ class PiepCMS {
 		if (focus_textable) {
 			this.setPiepEditorFocusNode(+focus_textable.dataset.vid);
 		}
+
+		this.just_clicked = false;
 	}
 
 	/**
