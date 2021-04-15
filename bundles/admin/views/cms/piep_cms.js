@@ -475,7 +475,7 @@ class PiepCMS {
 				if (!ev.ctrlKey) {
 					ev.preventDefault();
 
-					if (focus_node.classList.contains("textable")) {
+					if (focus_node && focus_node.classList.contains("textable")) {
 						this.insertPiepText(ev.key);
 					}
 				}
