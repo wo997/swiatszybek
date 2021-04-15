@@ -18,21 +18,7 @@
                 Edycja jakiejś strony
             </div>
         </span>
-        <div class="pretty_radio semi_bold select_resolution ml1 mra">
-            <div class="checkbox_area" data-tooltip="Komputer">
-                <p-checkbox data-value="desktop"></p-checkbox>
-                <span> <i class="fas fa-desktop"></i> </span>
-            </div>
-            <div class="checkbox_area" data-tooltip="Tablet">
-                <p-checkbox data-value="tablet"></p-checkbox>
-                <span> <i class="fas fa-tablet-alt"></i> </span>
-            </div>
-            <div class="checkbox_area" data-tooltip="Telefon">
-                <p-checkbox data-value="mobile"></p-checkbox>
-                <span> <i class="fas fa-mobile-alt"></i> </span>
-            </div>
-        </div>
-        <button class="btn subtle undo" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
+        <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
         <button class="btn primary save"> Zapisz <i class="fas fa-save"></i> </button>
     </div>

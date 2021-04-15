@@ -670,6 +670,21 @@ class PiepCMS {
 					<input class="field" data-blc_prop="attr.alt" />
 				</div>
 			</div>
+
+			<div class="pretty_radio semi_bold select_resolution ml1 mra">
+				<div class="checkbox_area" data-tooltip="Komputer">
+					<p-checkbox data-value="desktop"></p-checkbox>
+					<span> <i class="fas fa-desktop"></i> </span>
+				</div>
+				<div class="checkbox_area" data-tooltip="Tablet">
+					<p-checkbox data-value="tablet"></p-checkbox>
+					<span> <i class="fas fa-tablet-alt"></i> </span>
+				</div>
+				<div class="checkbox_area" data-tooltip="Telefon">
+					<p-checkbox data-value="mobile"></p-checkbox>
+					<span> <i class="fas fa-mobile-alt"></i> </span>
+				</div>
+			</div>
 		`);
 		registerForms();
 
