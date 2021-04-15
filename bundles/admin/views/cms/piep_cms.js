@@ -7,16 +7,16 @@ class PiepCMS {
 	 */
 	constructor(container) {
 		this.container = container;
-		this.initNodes();
 
 		/** @type {vDomNode[]} */
 		this.v_dom = [];
 		/** @type {vDomNode[]} */
 		this.v_dom_overlay = [];
 
+		this.initNodes();
+
 		this.initConsts();
 
-		this.initColors();
 		this.initInspector();
 		this.initAdvancedMenu();
 		this.initFloatMenu();
@@ -30,6 +30,8 @@ class PiepCMS {
 		this.recreateDom();
 		this.setPiepEditorFocusNode(undefined);
 
+		this.initColors();
+
 		this.piepEditorMainLoop();
 	}
 
@@ -38,29 +40,26 @@ class PiepCMS {
 		this.content_wrapper = this.container._child(".piep_editor_content_wrapper");
 		this.content_scroll = this.container._child(".piep_editor_content_scroll");
 
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_cursor"></div>`);
-		this.cursor = this.container._child(".piep_editor_cursor");
+		const node = (class_name) => {
+			this.container.insertAdjacentHTML("beforeend", html`<div class="${class_name}"></div>`);
+			return this.container._child(`.${class_name}`);
+		};
 
-		this.container.insertAdjacentHTML("beforeend", html`<style class="piep_editor_styles"></style>`);
-		this.styles = this.container._child(".piep_editor_styles");
+		const styles = (class_name) => {
+			this.container.insertAdjacentHTML("beforeend", html`<style class="${class_name}"></style>`);
+			return this.container._child(`.${class_name}`);
+		};
 
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_grabbed_block_wrapper"></div>`);
-		this.grabbed_block_wrapper = this.container._child(".piep_editor_grabbed_block_wrapper");
+		this.cursor = node("piep_editor_cursor");
+		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
+		this.float_multi_insert = node("piep_editor_float_multi_insert");
+		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
+		this.float_focus = node("piep_editor_float_focus");
+		this.parent_float_focus = node("piep_editor_parent_float_focus");
+		this.float_menu = node("piep_editor_float_menu");
 
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_multi_insert"></div>`);
-		this.float_multi_insert = this.container._child(".piep_editor_float_multi_insert");
-
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_alternative_scroll_panel"></div>`);
-		this.alternative_scroll_panel = this.container._child(".piep_editor_alternative_scroll_panel");
-
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_focus hidden"></div>`);
-		this.float_focus = this.container._child(".piep_editor_float_focus");
-
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_parent_float_focus hidden"></div>`);
-		this.parent_float_focus = this.container._child(".piep_editor_parent_float_focus");
-
-		this.container.insertAdjacentHTML("beforeend", html`<div class="piep_editor_float_menu hidden"></div>`);
-		this.float_menu = this.container._child(".piep_editor_float_menu");
+		this.styles = styles("piep_editor_styles");
+		this.color_palette_styles = styles("piep_editor_color_palette_styles");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
 	}
@@ -90,6 +89,18 @@ class PiepCMS {
 				hex: "#d44",
 			},
 		];
+
+		let color_palette_styles_html = ":root{";
+
+		for (const color of this.colors) {
+			color_palette_styles_html += `--${color.var_name}:${color.hex};`;
+		}
+
+		color_palette_styles_html += "}";
+
+		this.color_palette_styles._set_content(color_palette_styles_html);
+
+		this.container.dispatchEvent(new CustomEvent("color_palette_changed"));
 	}
 
 	initConsts() {
@@ -188,21 +199,18 @@ class PiepCMS {
 
 			const options_wrapper = color_dropdown._child(".options_wrapper");
 
+			let color_options_html = "";
+			this.colors.forEach((color) => {
+				color_options_html += html`
+					<p-option data-value="var(--${color.var_name})">
+						<div class="color_circle" style="background:var(--${color.var_name});"></div>
+					</p-option>
+				`;
+			});
+
 			// rewrites the first element
 			options_wrapper._set_content(html`
-				${options_wrapper._child(`[data-value=""]`).outerHTML}
-				<p-option data-value="var(--primary-clr)">
-					<div class="color_circle" style="background:var(--primary-clr);"></div>
-				</p-option>
-				<p-option data-value="#000">
-					<div class="color_circle" style="background:#000;"></div>
-				</p-option>
-				<p-option data-value="#fff">
-					<div class="color_circle" style="background:#fff;"></div>
-				</p-option>
-				<p-option data-value="#f0f">
-					<div class="color_circle" style="background:#f0f;"></div>
-				</p-option>
+				${options_wrapper._child(`[data-value=""]`).outerHTML} ${color_options_html}
 				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
 					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
 				</p-option>
@@ -229,8 +237,10 @@ class PiepCMS {
 			});
 		};
 
-		updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.color"]`));
-		updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+		this.container.addEventListener("color_palette_changed", () => {
+			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.color"]`));
+			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+		});
 
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
