@@ -26,7 +26,7 @@
  * @param {*} parent
  * @param {CommentCompData} data
  */
-function commentComp(comp, parent, data = {}) {
+function CommentComp(comp, parent, data = {}) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,

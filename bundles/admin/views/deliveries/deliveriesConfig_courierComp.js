@@ -39,7 +39,7 @@
  * @param {*} parent
  * @param {DeliveriesConfig_CourierCompData} data
  */
-function deliveriesConfig_courierComp(comp, parent, data = undefined) {
+function DeliveriesConfig_CourierComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = { courier_id: -1, name: "", tracking_url_prefix: "", delivery_time_days: 0, expanded: false, initial_dimensions: [] };
 	}

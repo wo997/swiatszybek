@@ -680,7 +680,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 
-			<div style="max-width:700px">
+			<div style="max-width:800px">
 				<div class="label first">Nazwa produktu</div>
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
 
