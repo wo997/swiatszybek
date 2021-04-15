@@ -1465,7 +1465,7 @@ class PiepCMS {
 	}
 
 	inspectorGrabbed() {
-		const off = 5;
+		const safe_off = 5;
 
 		//const inspector_rect = this.inspector.getBoundingClientRect();
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
@@ -1475,7 +1475,7 @@ class PiepCMS {
 		const inspector_grab_btn_offset = 47;
 
 		//const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_rect.width - off;
-		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - off;
+		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
 
 		if (this.inspector_grabbed) {
 			//const grab_btn_center = getRectCenter(this.grab_inspector_btn.getBoundingClientRect());
@@ -1493,14 +1493,14 @@ class PiepCMS {
 
 		this.inspector_pos.x = clamp(
 			//content_wrapper_rect.left +
-			off,
+			safe_off,
 			this.inspector_pos.x,
 			max_x
 		);
 		this.inspector_pos.y = clamp(
-			content_wrapper_rect.top + off,
+			content_wrapper_rect.top + safe_off,
 			this.inspector_pos.y,
-			content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - off
+			content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - safe_off
 		);
 
 		this.inspector_sticks_to_right_size = this.inspector_pos.x > max_x - 1;
@@ -2151,6 +2151,7 @@ class PiepCMS {
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
+		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 		const piep_editor_rect = this.container.getBoundingClientRect();
 		const piep_editor_float_menu_rect = this.float_menu.getBoundingClientRect();
 
@@ -2160,12 +2161,18 @@ class PiepCMS {
 		let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
 
 		const safe_off = 5;
-		left = clamp(safe_off, left, piep_editor_rect.width - safe_off);
+		left = clamp(
+			content_wrapper_rect.left + safe_off,
+			left,
+			content_wrapper_rect.left + content_wrapper_rect.width - piep_editor_float_menu_rect.width - safe_off
+		);
 		// DUDE, the top should actually change by sum of heights
 		if (top < safe_off) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 		}
 		//top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
+
+		const off = 5;
 
 		this.float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
 	}

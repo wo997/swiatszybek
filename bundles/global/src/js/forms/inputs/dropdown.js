@@ -55,7 +55,7 @@ function registerDropdowns(parent) {
 			if (dropped) {
 				const children = options_wrapper._direct_children().length;
 				// make is a square assuming the items are small enough
-				const columns = Math.floor(Math.sqrt(children));
+				const columns = children > 5 ? Math.floor(Math.sqrt(children)) : 1;
 				options_wrapper.style.gridTemplateColumns = `repeat(${columns}, auto)`;
 			}
 		});
