@@ -23,7 +23,9 @@ function registerDropdowns(parent) {
 		const options_wrapper = input._child(".options_wrapper");
 		const first_option = options_wrapper._direct_children()[0];
 
-		selectDropdownOption(input, first_option);
+		if (first_option) {
+			selectDropdownOption(input, first_option);
+		}
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
@@ -131,7 +133,9 @@ function selectDropdownOption(input, option, options = {}) {
 		const first_option = options_wrapper._direct_children()[0];
 		option = first_option;
 	}
-	selected_option._set_content(option.innerHTML);
+	if (option) {
+		selected_option._set_content(option.innerHTML);
+	}
 
 	return true;
 }

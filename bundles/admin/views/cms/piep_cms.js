@@ -152,22 +152,6 @@ class PiepCMS {
 
 			<p-dropdown class="field small inline pretty_blue center static_label grid" data-blc_prop="style.color" data-tooltip="Kolor czcionki">
 				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
-				<p-option data-value="var(--primary-clr)">
-					<div class="color_circle" style="background:var(--primary-clr);"></div>
-				</p-option>
-				<p-option data-value="#000">
-					<div class="color_circle" style="background:#000;"></div>
-				</p-option>
-				<p-option data-value="#fff">
-					<div class="color_circle" style="background:#fff;"></div>
-				</p-option>
-				<p-option data-value="#f00">
-					<div class="color_circle" style="background:#f00;"></div>
-				</p-option>
-				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
-					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
-				</p-option>
-				<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			</p-dropdown>
 
 			<p-dropdown
@@ -176,22 +160,6 @@ class PiepCMS {
 				data-tooltip="Kolor tła"
 			>
 				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
-				<p-option data-value="var(--primary-clr)">
-					<div class="color_circle" style="background:var(--primary-clr);"></div>
-				</p-option>
-				<p-option data-value="#000">
-					<div class="color_circle" style="background:#000;"></div>
-				</p-option>
-				<p-option data-value="#fff">
-					<div class="color_circle" style="background:#fff;"></div>
-				</p-option>
-				<p-option data-value="#f00">
-					<div class="color_circle" style="background:#f00;"></div>
-				</p-option>
-				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
-					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
-				</p-option>
-				<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			</p-dropdown>
 
 			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
@@ -211,13 +179,38 @@ class PiepCMS {
 			</button>
 		`);
 
-		registerForms();
-
 		/**
 		 *
 		 * @param {PiepNode} color_dropdown
 		 */
-		const initColorDropdown = (color_dropdown) => {
+		const updateColorDropdown = (color_dropdown) => {
+			registerForms(); // let the options_wrapper appear
+
+			const options_wrapper = color_dropdown._child(".options_wrapper");
+
+			// rewrites the first element
+			options_wrapper._set_content(html`
+				${options_wrapper._child(`[data-value=""]`).outerHTML}
+				<p-option data-value="var(--primary-clr)">
+					<div class="color_circle" style="background:var(--primary-clr);"></div>
+				</p-option>
+				<p-option data-value="#000">
+					<div class="color_circle" style="background:#000;"></div>
+				</p-option>
+				<p-option data-value="#fff">
+					<div class="color_circle" style="background:#fff;"></div>
+				</p-option>
+				<p-option data-value="#f0f">
+					<div class="color_circle" style="background:#f0f;"></div>
+				</p-option>
+				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
+					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
+				</p-option>
+				<p-option data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
+			`);
+
+			registerForms();
+
 			const color_picker = color_dropdown._child("color-picker");
 			color_dropdown.addEventListener("value_set", () => {
 				/** @type {string} */
@@ -236,8 +229,8 @@ class PiepCMS {
 			});
 		};
 
-		initColorDropdown(this.container._child(`p-dropdown[data-blc_prop="style.color"]`));
-		initColorDropdown(this.container._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+		updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.color"]`));
+		updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
 
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
