@@ -94,7 +94,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <div>
                         <p-checkbox data-value="courier"></p-checkbox>
                         <span class="semi_bold">Kurier</span>
-                        <span class="pln">20 zł</span>
+                        <span class="pln">17-20 zł</span>
                     </div>
                 </div>
                 <div class="checkbox_area">
@@ -116,23 +116,54 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
         <div class="expand_y animate_hidden hidden case_courier">
             <div>
+                <div class="label big">Kurier</div>
+
+                <div class="radio_group boxes big_boxes hide_checks payment_time columns_2">
+                    <div class="checkbox_area">
+                        <div>
+                            <p-checkbox data-value="prepayment"></p-checkbox>
+                            <span class="semi_bold">Przedpłata</span>
+                            <span class="pln">+ 0 zł</span>
+
+                        </div>
+                    </div>
+                    <div class="checkbox_area">
+                        <div>
+                            <p-checkbox data-value="cod"></p-checkbox>
+                            <span class="semi_bold">Za pobraniem</span>
+                            <span class="pln">+ 3 zł</span>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="radio_group carrier">
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="inpost"></p-checkbox>
+                        <img src="/src/img/inpost_logo.svg" style="width: 80px;">
+                        <span class="pln">17 zł</span>
+                    </div>
+                    <div class="checkbox_area">
+                        <p-checkbox data-value="ups"></p-checkbox>
+                        <img src="/src/img/ups_logo.svg" style="padding:0 20px;width: 80px;">
+                        <span class="pln">20 zł</span>
+                    </div>
+                </div>
+
                 <div class="label big">Adres wysyłki</div>
 
-                <div class="checkbox_area">
-                    <span class="semi_bold block" style="margin-bottom:5px">Chcę użyć innego adresu do wysyłki</span>
-
-                    <div class="radio_group boxes hide_checks courier_address_different" data-number>
-                        <div class="checkbox_area">
-                            <div>
-                                <p-checkbox data-value="0"></p-checkbox>
-                                <span class="semi_bold">Nie</span>
-                            </div>
+                <span class="label">Chcę użyć innego adresu do wysyłki</span>
+                <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2" data-number>
+                    <div class="checkbox_area">
+                        <div>
+                            <p-checkbox data-value="0"></p-checkbox>
+                            <span class="semi_bold">Nie</span>
                         </div>
-                        <div class="checkbox_area">
-                            <div>
-                                <p-checkbox data-value="1"></p-checkbox>
-                                <span class="semi_bold">Tak</span>
-                            </div>
+                    </div>
+                    <div class="checkbox_area">
+                        <div>
+                            <p-checkbox data-value="1"></p-checkbox>
+                            <span class="semi_bold">Tak</span>
                         </div>
                     </div>
                 </div>

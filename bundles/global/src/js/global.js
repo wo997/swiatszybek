@@ -207,10 +207,11 @@ function setValue(input, value = null, options = {}) {
 	if (!options.force) {
 		let same = true;
 		if (value !== null && value !== undefined) {
+			const curr = input._get_value({ plain: true });
 			if (input.hasAttribute("data-number")) {
-				same = input._get_value() === numberFromStr(value);
+				same = numberFromStr(curr) === numberFromStr(value) && curr !== "";
 			} else {
-				same = isEquivalent(input._get_value(), value);
+				same = isEquivalent(curr, value);
 			}
 		}
 

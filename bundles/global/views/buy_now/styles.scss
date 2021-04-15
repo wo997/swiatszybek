@@ -29,6 +29,10 @@
 }
 
 .buy_now_container {
+	.big_boxes {
+		--box_height: 60px;
+	}
+
 	& {
 		margin: 0 auto;
 		width: 100%;
@@ -52,7 +56,7 @@
 		max-width: 350px;
 	}
 
-	.delivery {
+	.boxes {
 		.pln {
 			display: block;
 			text-align: center;
@@ -60,9 +64,31 @@
 	}
 
 	.courier_address_different {
-		--box-width: 90px;
-		--box_height: 40px;
 		margin-bottom: 0;
+	}
+
+	.carrier {
+		& {
+			margin-top: 12px;
+		}
+		.checkbox_area {
+			& {
+				border-top: 1px solid #ccc;
+				display: flex;
+				height: 65px;
+				align-items: center;
+			}
+			&:last-child {
+				border-bottom: 1px solid #ccc;
+			}
+			img {
+				margin-left: 10px;
+			}
+			.pln {
+				font-weight: 600;
+				margin-left: auto;
+			}
+		}
 	}
 }
 
