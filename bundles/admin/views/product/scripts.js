@@ -6,7 +6,7 @@ domload(() => {
 	/** @type {ProductComp} */
 	// @ts-ignore
 	const product_comp = $("product-comp");
-	productComp(product_comp, undefined);
+	ProductComp(product_comp, undefined);
 	product_comp.style.display = "none";
 
 	$(".main_header .inject_header_nodes").appendChild(product_comp._child(".injectable_header"));
