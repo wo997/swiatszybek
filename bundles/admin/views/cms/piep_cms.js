@@ -1654,6 +1654,7 @@ class PiepCMS {
 						id: this.getPiepEditorId(),
 						styles: { display: "flex" },
 					};
+					// TODO: check if parent is a flex already
 
 					if (dir === 1) {
 						insert_container.children.push(grabbed_node_copy);
