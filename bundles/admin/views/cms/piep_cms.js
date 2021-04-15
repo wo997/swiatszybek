@@ -169,6 +169,14 @@ class PiepCMS {
 				<p-option data-value="700"><span class="bold">B</span></p-option>
 			</p-dropdown>
 
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.textAlign" data-tooltip="Wyrównanie tekstu">
+				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
+				<p-option data-value="left"> <i class="fas fa-align-left"></i> </p-option>
+				<p-option data-value="center"> <i class="fas fa-align-center"></i> </p-option>
+				<p-option data-value="right"> <i class="fas fa-align-right"></i> </p-option>
+				<p-option data-value="justify"> <i class="fas fa-align-justify"></i> </p-option>
+			</p-dropdown>
+
 			<p-dropdown class="field small inline pretty_blue center static_label grid" data-blc_prop="style.color" data-tooltip="Kolor czcionki">
 				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
 			</p-dropdown>
@@ -180,6 +188,10 @@ class PiepCMS {
 			>
 				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
 			</p-dropdown>
+
+			<button class="btn transparent small choose_img_btn" data-tooltip="Wybierz zdjęcie">
+				<i class="fas fa-image"></i>
+			</button>
 
 			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
 				<i class="fas fa-remove-format"></i>
@@ -411,6 +423,16 @@ class PiepCMS {
 			if (target._parent(".remove_format_btn")) {
 				v_node.styles = {};
 				this.recreateDom();
+			}
+
+			const choose_img_btn = target._parent(".choose_img_btn");
+			if (choose_img_btn) {
+				const input = this.blc_menu._child(`[data-blc_prop="attr.data-src"]`);
+				console.log(input);
+				const select_file_modal = getSelectFileModal();
+				select_file_modal._data.file_manager.select_target = input;
+				select_file_modal._render();
+				select_file_modal._show({ source: choose_img_btn });
 			}
 
 			if (target._parent(".remove_block_btn")) {

@@ -185,7 +185,7 @@ function createComp(node, parent_comp, data, options) {
 		}
 
 		directComps(comp).forEach((dc) => {
-			const constructor = snakeCase(dc.tagName.toLocaleLowerCase());
+			const constructor = titleCase(dc.tagName.toLowerCase());
 			if (comp.tagName === dc.tagName) {
 				console.error("Cannot nest self");
 				return;
@@ -198,7 +198,7 @@ function createComp(node, parent_comp, data, options) {
 				window[constructor](dc, comp, data[bind_var]);
 				//window[constructor](dc, comp, undefined);
 			} else {
-				console.error(`Constructor ${constructor} is missing, you might have forgotten to add the annotation`);
+				console.error(`Constructor ${constructor} is missing`);
 			}
 		});
 

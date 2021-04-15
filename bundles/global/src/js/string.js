@@ -21,9 +21,10 @@ function regexCount(str, reg_str) {
 	return (str.match(new RegExp(`${reg_str}`, "g")) || []).length;
 }
 
-function snakeCase(str) {
-	return str.replace(/-([a-z])/gi, (s, gr1) => gr1.toUpperCase());
-}
+// so wrong
+// function snakeCase(str) {
+// 	return str.replace(/-([a-z])/gi, (s, gr1) => gr1.toUpperCase());
+// }
 
 const kebabCase = (str) => {
 	return str
@@ -38,18 +39,24 @@ function camelCase(str) {
 	return capital.join("");
 }
 
+function titleCase(str) {
+	let arr = str.split("-");
+	let capital = arr.map((item) => item.charAt(0).toUpperCase() + item.slice(1).toLowerCase());
+	return capital.join("");
+}
+
 function escapeHTML(unsafeText) {
 	let div = document.createElement("div");
 	div.innerText = unsafeText;
 	return div.innerHTML;
 }
 
-function escapeCSS(prop, val) {
-	const prop_css = snakeCase(prop);
-	let div = document.createElement("div");
-	div.style[prop_css] = val;
-	return div.style[prop_css];
-}
+// function escapeCSS(prop, val) {
+// 	const prop_css = snakeCase(prop);
+// 	let div = document.createElement("div");
+// 	div.style[prop_css] = val;
+// 	return div.style[prop_css];
+// }
 
 function escapeNumericalExpression(str) {
 	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");
