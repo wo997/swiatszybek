@@ -88,6 +88,14 @@ class PiepCMS {
 				var_name: "red_clr",
 				hex: "#d44",
 			},
+			{
+				var_name: "green_clr",
+				hex: "#4d4",
+			},
+			{
+				var_name: "yellow_clr",
+				hex: "#dd4",
+			},
 		];
 
 		let color_palette_styles_html = ":root{";
@@ -2002,27 +2010,10 @@ class PiepCMS {
 
 		if (focus_node) {
 			if (just_changed_focus_vid) {
-				const v_node = this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid);
-
-				// will take everything, even hidden items
-				this.container._children("[data-blc_prop]").forEach((input) => {
-					const prop_str = input.dataset.blc_prop;
-					let prop_val;
-
-					if (prop_str.startsWith("style.")) {
-						prop_val = v_node.styles[prop_str.substring("style.".length)];
-					}
-
-					if (prop_str.startsWith("attr.")) {
-						prop_val = v_node.attrs[prop_str.substring("attr.".length)];
-					}
-
-					let val = def(prop_val, "");
-					input._set_value(val, { quiet: true });
-				});
+				this.setBlcMenuFromFocusedNode();
 			}
 
-			tblc = this.inspector_tree._child(`.tblc_${vid}`);
+			tblc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
 			if (tblc && just_changed_focus_vid) {
 				scrollIntoView(tblc);
 			}
@@ -2033,6 +2024,31 @@ class PiepCMS {
 		});
 		this.inspector_tree._children(".v_node_label").forEach((e) => {
 			e.classList.toggle("selected", e === tblc);
+		});
+	}
+
+	setBlcMenuFromFocusedNode() {
+		const v_node = this.findNodeInVDomById(this.v_dom, this.focus_node_vid);
+
+		if (!v_node) {
+			return;
+		}
+
+		// will take everything, even hidden items
+		this.container._children("[data-blc_prop]").forEach((input) => {
+			const prop_str = input.dataset.blc_prop;
+			let prop_val;
+
+			if (prop_str.startsWith("style.")) {
+				prop_val = v_node.styles[prop_str.substring("style.".length)];
+			}
+
+			if (prop_str.startsWith("attr.")) {
+				prop_val = v_node.attrs[prop_str.substring("attr.".length)];
+			}
+
+			let val = def(prop_val, "");
+			input._set_value(val, { quiet: true });
 		});
 	}
 
@@ -2066,7 +2082,7 @@ class PiepCMS {
 		this.blc_menu._child(".blc_menu_scroll_panel").classList.toggle("hidden", !v_node);
 		this.blc_menu._child(".case_blc_menu_empty").classList.toggle("hidden", !!v_node);
 
-		lazyLoadImages({ duration: 0 });
+		this.setBlcMenuFromFocusedNode();
 	}
 
 	/**
