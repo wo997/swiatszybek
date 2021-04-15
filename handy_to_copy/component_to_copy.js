@@ -18,7 +18,7 @@
  * @param {*} parent
  * @param {MyCompData} data
  */
-function myComp(comp, parent, data = undefined) {
+function MyComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {};
 	}
