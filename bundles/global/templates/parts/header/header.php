@@ -16,7 +16,7 @@ function traverseMenu($parent_id = -1, $level = 0)
 ?>
 
 <header class="main">
-    <a href="/" class="logo-wrapper">
+    <a href="/" class="logo_wrapper">
         <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>
 

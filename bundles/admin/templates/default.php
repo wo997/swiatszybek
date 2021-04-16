@@ -14,10 +14,9 @@ endSection();
 
 
 <header class="mobile">
-    <a href="/" class="logo-wrapper">
+    <a href="/" class="logo_wrapper">
         <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
     </a>
-
     <div class="menu_btn">
         <img class="menu_icon" src="/src/img/menu_icon.svg">
         <span class="close"></span>
@@ -28,10 +27,11 @@ endSection();
 <header class="navbar_admin">
     <div class="scroll_panel scroll_shadow hide_scrollbar">
         <div>
-            <a href="/" class="home logo-wrapper">
+            <a href="/" class="home logo_wrapper">
                 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
                 Strona główna
             </a>
+            <hr>
 
             <div style="padding:0 10px 10px">
                 <div class="label first">Wyszukaj w panelu admina</div>
