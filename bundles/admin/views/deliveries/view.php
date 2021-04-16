@@ -7,6 +7,7 @@
 <title>Wysyłki</title>
 
 <script>
+    <?= preloadDeliveryTypes() ?>
     const carriers_data = <?= json_encode(DB::fetchArr("SELECT * FROM carrier")) ?>;
     const deliveries_config = <?= json_encode(getSetting(["general", "deliveries"])) ?>;
 </script>

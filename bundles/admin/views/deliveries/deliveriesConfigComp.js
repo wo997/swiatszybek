@@ -52,10 +52,34 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 	}
 
 	comp._set_data = (data, options = {}) => {
-		/** @type {DatatableColumnDef[]} */
-		const columns = [{ key: "name", label: "Dostawca", searchable: "string", sortable: true }];
 		/** @type {DatatableCompData} */
-		const pricing_dt = { columns, label: "Ceny dostawy" };
+		const pricing_dt = {
+			columns: [
+				{ key: "name", label: "Dostawca", searchable: "string", sortable: true },
+				{ key: "delivery_type_id", label: "Typ dostawy", searchable: "select", map_name: "delivery_type" },
+				{ key: "base_price", label: "Cena bazowa", batch_edit: true },
+				{ key: "cart_price_percent", label: "+% ceny produktów", batch_edit: true },
+			],
+			label: "Ceny dostawy",
+			maps: [
+				{
+					name: "delivery_type",
+					getMap: () => {
+						const map = delivery_types.map((d) => {
+							const obj = {
+								val: d.delivery_type_id,
+								label: d.name,
+							};
+							return obj;
+						});
+						return map;
+					},
+				},
+			],
+			selectable: true,
+			selection: [],
+			dataset: [],
+		};
 		data.pricing_dt = def(data.pricing_dt, pricing_dt);
 
 		setCompData(comp, data, {
