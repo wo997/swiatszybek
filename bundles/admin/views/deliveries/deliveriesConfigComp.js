@@ -141,15 +141,15 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="expand_y" data-node="{${comp._nodes.case_allow_cod}}">
-				<div class="label">Dodatkowa opłata względem przedpłaty <span class="semi_bold {${data.cod_fee.trim()}?hidden}">(Brak)</span></div>
+				<div class="label">Dodatkowa opłata względem przedpłaty <span class="semi_bold {${data.cod_fee}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field max_weight inline" inputmode="numeric" data-bind="{${data.cod_fee}}" />
+					<input class="field max_weight inline trim" inputmode="numeric" data-bind="{${data.cod_fee}}" />
 					<span class="field_desc"> zł </span>
 				</span>
 
-				<div class="label">Cena minimalna <span class="semi_bold {${data.cod_from_price.trim()}?hidden}">(Brak)</span></div>
+				<div class="label">Cena minimalna <span class="semi_bold {${data.cod_from_price}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field free_from inline" inputmode="numeric" data-bind="{${data.cod_from_price}}" />
+					<input class="field free_from inline trim" inputmode="numeric" data-bind="{${data.cod_from_price}}" />
 					<span class="field_desc"> zł </span>
 				</span>
 			</div>
@@ -168,15 +168,15 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="expand_y" data-node="{${comp._nodes.case_free_from_price}}">
-				<div class="label">Cena minimalna <span class="semi_bold {${data.free_from_price.trim()}?hidden}">(Brak)</span></div>
+				<div class="label">Cena minimalna <span class="semi_bold {${data.free_from_price}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field free_from inline" inputmode="numeric" data-bind="{${data.free_from_price}}" />
+					<input class="field free_from inline trim" inputmode="numeric" data-bind="{${data.free_from_price}}" />
 					<span class="field_desc"> zł </span>
 				</span>
 
-				<div class="label">Waga maksymalna <span class="semi_bold {${data.free_from_price_max_weight.trim()}?hidden}">(Brak)</span></div>
+				<div class="label">Waga maksymalna <span class="semi_bold {${data.free_from_price_max_weight}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field max_weight inline" inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
+					<input class="field max_weight inline trim" inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
 					<span class="field_desc"> kg </span>
 				</span>
 			</div>

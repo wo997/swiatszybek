@@ -27,6 +27,17 @@ domload(() => {
 		is_free_from_price: 0,
 		is_price_based_on_dimensions: 1,
 	};
+
+	if (deliveries_config) {
+		data.allow_cod = deliveries_config.allow_cod;
+		data.cod_fee = deliveries_config.cod_fee;
+		data.cod_from_price = deliveries_config.cod_from_price;
+		data.free_from_price = deliveries_config.free_from_price;
+		data.free_from_price_max_weight = deliveries_config.free_from_price_max_weight;
+		data.is_price_based_on_dimensions = deliveries_config.is_price_based_on_dimensions;
+		data.is_free_from_price = deliveries_config.is_free_from_price;
+	}
+
 	carriers_data.sort((a, b) => Math.sign(a.pos - b.pos));
 	carriers_data.forEach((carrier_data) => {
 		/** @type {DimensionData[]} */

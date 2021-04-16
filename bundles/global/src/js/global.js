@@ -344,6 +344,9 @@ function getValue(input, options = {}) {
 				});
 			}
 		}
+		if (input.classList.contains("trim")) {
+			v = v.trim();
+		}
 	}
 
 	return v;
