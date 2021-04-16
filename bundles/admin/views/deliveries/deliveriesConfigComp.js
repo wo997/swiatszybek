@@ -88,7 +88,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
-			<div class="label medium">Płatność za pobraniem</div>
+			<div class="label medium bold">Płatność za pobraniem</div>
 			<div class="radio_group boxes hide_checks columns_2" style="max-width:200px" data-bind="{${data.allow_cod}}" data-number>
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
@@ -103,13 +103,19 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 
 			<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_allow_cod}}">
 				<div class="label">Dodatkowa opłata względem przedpłaty</div>
-				<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.cod_fee}}" />
+				<span class="glue_children">
+					<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.cod_fee}}" />
+					<span class="field_desc"> zł </span>
+				</span>
 
 				<div class="label">Cena minimalna</div>
-				<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.cod_from_price}}" />
+				<span class="glue_children">
+					<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.cod_from_price}}" />
+					<span class="field_desc"> zł </span>
+				</span>
 			</div>
 
-			<div class="label medium">Sposób wyznaczenia ceny wysyłki zamówienia</div>
+			<div class="label medium bold">Sposób wyznaczenia ceny wysyłki zamówienia</div>
 			<div class="user_info mb3">
 				<i class="fas fa-info-circle"></i> W przypadku sprzedaży produktów niskomarżowych warto rozważyć opcję - Cena na podstawie wymiarów
 				oraz wagi. Umożliwi to utrzymanie stosunkowo niskich cen względem konkurencji, bez obaw, czy stracimy na którymkolwiek z zamówień.
@@ -133,7 +139,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 
-			<div class="label medium">Darmowa wysyłka od określonej ceny minimalnej</div>
+			<div class="label medium bold">Darmowa wysyłka od określonej ceny minimalnej</div>
 			<div class="radio_group boxes hide_checks columns_2" style="max-width:200px" data-bind="{${data.is_free_from_price}}" data-number>
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
@@ -148,10 +154,16 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 
 			<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_free_from_price}}">
 				<div class="label">Cena minimalna</div>
-				<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.free_from_price}}" />
+				<span class="glue_children">
+					<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.free_from_price}}" />
+					<span class="field_desc"> zł </span>
+				</span>
 
 				<div class="label">Waga maksymalna</div>
-				<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
+				<span class="glue_children">
+					<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
+					<span class="field_desc"> kg </span>
+				</span>
 			</div>
 		`,
 		initialize: () => {

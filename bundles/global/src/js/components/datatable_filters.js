@@ -125,9 +125,7 @@ let filter_menus = [
 			</span>
 			<span class="label case_range input_wrapper glue_children">
 				<input type="text" class="field more_than" data-validate="" data-number />
-				<span class="field_desc">
-					<b>do</b>
-				</span>
+				<span class="field_desc"> do </span>
 				<input type="text" class="field less_than" data-validate="" data-number />
 			</span>
 		`,
@@ -199,9 +197,7 @@ let filter_menus = [
 			</span>
 			<span class="label case_range input_wrapper glue_children default_daterangepicker">
 				<input type="text" class="field more_than inline" data-validate="" />
-				<span class="field_desc">
-					<b>do</b>
-				</span>
+				<span class="field_desc"> do </span>
 				<input type="text" class="field less_than inline" data-validate="" />
 			</span>
 		`,

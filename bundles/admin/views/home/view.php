@@ -46,9 +46,7 @@
             <div class="label">Wybierz okres</div>
             <div class="input_wrapper glue_children default_daterangepicker">
                 <input type="text" class="field from inline date" data-validate="" />
-                <span class="field_desc">
-                    <b>do</b>
-                </span>
+                <span class="field_desc">do</span>
                 <input type="text" class="field to inline date" data-validate="" />
             </div>
         </div>
