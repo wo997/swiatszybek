@@ -53,7 +53,7 @@ product-comp {
 
 	.node_products_dt_wrapper.missing_products {
 		& {
-			filter: blur(1px) contrast(0.82);
+			filter: ontrast(0.82);
 			opacity: 0.7;
 		}
 		* {

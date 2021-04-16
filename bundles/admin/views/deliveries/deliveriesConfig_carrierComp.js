@@ -32,6 +32,7 @@
  *  expand_btn: PiepNode
  *  expand: PiepNode
  *  dimenions_dt: DatatableComp
+ *  label: PiepNode
  * }
  * } & BaseComp} DeliveriesConfig_CarrierComp
  */
@@ -92,16 +93,19 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			render: () => {
 				expand(comp._nodes.expand, comp._data.expanded);
 				comp._child(".fa-chevron-right").classList.toggle("open", data.expanded);
-
 				comp._child(".add_dimension_btn").toggleAttribute("disabled", data.dimensions_dt.dataset.length > 5);
+				comp._parent().classList.toggle("inactive", !data.active);
+				comp._nodes.label.classList.toggle("slash", !data.active);
 			},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div style="display:flex;align-items:center">
-				<div class="semi_bold medium clickable_label" html="{${data.row_index + 1 + ". " + data.name}}"></div>
+			<div class="flex align_center">
+				<div class="semi_bold semi_medium" html="{${data.row_index + 1}}"></div>
+				.
+				<div class="semi_bold semi_medium clickable_label ml1" html="{${data.name}}" data-node="{${comp._nodes.label}}"></div>
 				<div style="margin-left:auto">
 					<button class="btn primary small" data-node="{${comp._nodes.expand_btn}}" data-tooltip="{${data.expanded ? "Zwiń" : "Rozwiń"}}">
 						<i class="fas fa-chevron-right"></i>

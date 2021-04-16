@@ -96,6 +96,20 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 		selectable: true,
 		selection: [],
 		dataset: [],
+		print_row_as_string: (row_data) => {
+			const carrier_map_data = comp._nodes.pricing_dt._get_map("carrier");
+			const delivery_type_map_data = comp._nodes.pricing_dt._get_map("delivery_type");
+			let res = "";
+			const carrier_info = carrier_map_data.map.find((e) => e.val === row_data.carrier_id);
+			const delivery_type_info = delivery_type_map_data.map.find((e) => e.val === row_data.delivery_type_id);
+			if (carrier_info) {
+				res += carrier_info.label;
+			}
+			if (delivery_type_info) {
+				res += " " + delivery_type_info.label;
+			}
+			return res;
+		},
 	};
 	data.pricing_dt = def(data.pricing_dt, pricing_dt);
 
@@ -127,6 +141,15 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				expand(comp._nodes.case_free_from_price, !!data.is_free_from_price);
 				expand(comp._nodes.case_allow_cod, !!data.allow_cod);
 				expand(comp._nodes.case_not_dimensions_pricing, !data.is_price_based_on_dimensions);
+
+				comp._nodes.pricing_dt._children("datatable-row-comp").forEach((/** @type {DatatableRowComp} */ row) => {
+					const carrier_id = row._data.row_data.carrier_id;
+					const data = comp._data;
+					const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+					const carrier = carriers.find((e) => e.carrier_id === carrier_id);
+					row.classList.toggle("inactive", !!(!carrier || !carrier.active));
+					carrier_id;
+				});
 			},
 		});
 	};
@@ -171,7 +194,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				produktów, co jest czasochłonnym zadaniem.
 			</div>
 			<div
-				class="radio_group boxes hide_checks columns_2 number"
+				class="radio_group boxes hide_checks columns_2 number semi_bold"
 				style="max-width:400px"
 				data-bind="{${data.is_price_based_on_dimensions}}"
 			>
@@ -191,7 +214,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="label medium bold">Płatność za pobraniem (kurier)</div>
-			<div class="radio_group boxes hide_checks columns_2 number" style="max-width:200px" data-bind="{${data.allow_cod}}">
+			<div class="radio_group boxes hide_checks columns_2 number semi_bold" style="max-width:200px" data-bind="{${data.allow_cod}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
 					<span>Nie</span>
@@ -218,7 +241,11 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="label medium bold">Darmowa wysyłka od określonej ceny minimalnej</div>
-			<div class="radio_group boxes hide_checks columns_2 number" style="max-width:200px" data-bind="{${data.is_free_from_price}}">
+			<div
+				class="radio_group boxes hide_checks columns_2 number semi_bold"
+				style="max-width:200px"
+				data-bind="{${data.is_free_from_price}}"
+			>
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
 					<span>Nie</span>

@@ -48,7 +48,7 @@ function ManageProductListModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first" style="font-size:1.1em">
+				<div class="label first semi_medium">
 					Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
 					<i
 						class="fas fa-info-circle"

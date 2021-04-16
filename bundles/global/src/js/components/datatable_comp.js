@@ -28,6 +28,12 @@
  * @typedef {("asc" | "desc" | "")} DatatableSortOrder
  *
  * @typedef {{
+ * name: string
+ * getMap?(): {val:any,label:any}[]
+ * map?: {val:any,label:any}[]
+ * }} DatatableMap
+ *
+ * @typedef {{
  * key: string
  * order: DatatableSortOrder
  * }} DatatableSortData
@@ -60,11 +66,7 @@
  *  selection?: number[]
  *  save_state_name?: string
  *  print_row_as_string?(row_data: any): string
- *  maps?: {
- *      name: string
- *      getMap?(): {val:any,label:any}[]
- *      map?: {val:any,label:any}[]
- *  }[]
+ *  maps?: DatatableMap[]
  *  sortable?: boolean
  *  deletable?: boolean
  *  require_sort?: DatatableSortData
@@ -94,6 +96,7 @@
  * _save_state()
  * _load_state(data_obj)
  * _warmup_maps(render?: boolean)
+ * _get_map(name: string): DatatableMap
  * _remove_column(key: string)
  * _add_column(column: DatatableColumnDef, index?: number)
  * } & BaseComp} DatatableComp
@@ -183,6 +186,10 @@ function DatatableComp(comp, parent, data) {
 				to[key] = d;
 			}
 		});
+	};
+
+	comp._get_map = (name) => {
+		return comp._data.maps.find((map) => map.name === name);
 	};
 
 	comp._save_state = () => {
@@ -411,7 +418,7 @@ function DatatableComp(comp, parent, data) {
 						if (column) {
 							let comp_val = val;
 							if (column.map_name) {
-								const map = data.maps.find((map) => map.name === column.map_name);
+								const map = comp._get_map(column.map_name);
 								if (map) {
 									const opt = map.map.find((e) => e.val === val);
 									if (opt) {

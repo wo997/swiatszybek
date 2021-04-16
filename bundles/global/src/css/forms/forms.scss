@@ -16,6 +16,9 @@
 		display: block;
 	}
 
+	&.semi_medium {
+		--form_spacing_factor: 1.15;
+	}
 	&.medium {
 		--form_spacing_factor: 1.3;
 	}

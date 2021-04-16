@@ -5,6 +5,16 @@ deliveries-config-comp.main {
 		max-width: 750px;
 	}
 
+	.inactive {
+		filter: contrast(0.82);
+		opacity: 0.7;
+	}
+	datatable-comp .inactive {
+		background: #fff;
+		filter: contrast(0.82);
+		opacity: 0.7;
+	}
+
 	deliveries-config_carrier-comp {
 		.node_list_delete_btn {
 			display: none;

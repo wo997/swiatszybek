@@ -24,6 +24,7 @@ domload(() => {
 		data.free_from_price_max_weight = deliveries_config.free_from_price_max_weight;
 		data.is_price_based_on_dimensions = deliveries_config.is_price_based_on_dimensions;
 		data.is_free_from_price = deliveries_config.is_free_from_price;
+		data.pricing_dt.dataset = def(deliveries_config.non_dimension_price_list, []);
 	}
 
 	carriers_data.sort((a, b) => Math.sign(a.pos - b.pos));
@@ -129,6 +130,7 @@ domload(() => {
 					free_from_price_max_weight: data.free_from_price_max_weight,
 					is_free_from_price: data.is_free_from_price,
 					is_price_based_on_dimensions: data.is_price_based_on_dimensions,
+					non_dimension_price_list: data.pricing_dt.dataset,
 				},
 			},
 			success: (res) => {
