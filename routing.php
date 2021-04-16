@@ -4,7 +4,7 @@ define("time", microtime(true));
 
 require_once 'kernel.php';
 
-// redirect once? so when disabled still can work, test on shitty env
+// final conclusion - no need to fix in case ssl is inactive, connection is marked as unsafe, but still can enter the page
 if (getSetting(["general", "advanced", "ssl"])) {
     if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
         $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
