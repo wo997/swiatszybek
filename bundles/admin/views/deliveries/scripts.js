@@ -15,21 +15,34 @@ domload(() => {
 	deliveriesConfigComp(deliveries_config_comp, undefined);
 
 	/** @type {DeliveriesConfigCompData} */
-	const data = { couriers: [], parcel_lockers: [], in_persons: [] };
+	const data = {
+		couriers: [],
+		parcel_lockers: [],
+		in_persons: [],
+		allow_cod: 0,
+		cod_fee: "",
+		cod_from_price: "",
+		free_from_price: "",
+		free_from_price_max_weight: "",
+		is_free_from_price: 0,
+		is_price_based_on_dimensions: 1,
+	};
 	carriers_data.sort((a, b) => Math.sign(a.pos - b.pos));
 	carriers_data.forEach((carrier_data) => {
 		/** @type {DimensionData[]} */
 		const initial_dimensions = [];
-		for (const dimension_data of JSON.parse(carrier_data.dimensions_json)) {
-			initial_dimensions.push({
-				name: dimension_data.name,
-				weight: dimension_data.weight,
-				length: dimension_data.length,
-				width: dimension_data.width,
-				height: dimension_data.height,
-				price: dimension_data.price,
-			});
-		}
+		try {
+			for (const dimension_data of JSON.parse(carrier_data.dimensions_json)) {
+				initial_dimensions.push({
+					name: dimension_data.name,
+					weight: dimension_data.weight,
+					length: dimension_data.length,
+					width: dimension_data.width,
+					height: dimension_data.height,
+					price: dimension_data.price,
+				});
+			}
+		} catch {}
 
 		let target;
 
@@ -52,6 +65,7 @@ domload(() => {
 				initial_dimensions,
 				name: carrier_data.name,
 				tracking_url_prefix: carrier_data.tracking_url_prefix,
+				active: carrier_data.active,
 			});
 		}
 	});
@@ -91,6 +105,7 @@ domload(() => {
 					tracking_url_prefix: some_carrier.tracking_url_prefix,
 					dimensions_json,
 					pos: some_carrier.row_index,
+					active: some_carrier.active,
 				});
 			});
 		};
@@ -109,9 +124,8 @@ domload(() => {
 				carriers,
 			},
 			success: (res) => {
-				// showNotification("Zapisano zmiany", { one_line: true, type: "success" });
-				// hideLoader();
-				window.location.reload(); // makes sure ids were set, to change in the future
+				showNotification("Zapisano zmiany", { one_line: true, type: "success" });
+				hideLoader();
 			},
 		});
 	});

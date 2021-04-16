@@ -439,8 +439,8 @@ function setCompData(comp, data = undefined, options = {}) {
 	}
 
 	{
-		const data = node._data; // it's passed to the eval, it's just a keyword
 		for (const ev of node._eval_attrs) {
+			const data = node._data; // it's passed to the eval, it's just a keyword
 			for (const attr of ev.evals) {
 				try {
 					const val = eval(attr.eval_str);
@@ -462,6 +462,7 @@ function setCompData(comp, data = undefined, options = {}) {
 	}
 
 	for (const eval_class of node._eval_class) {
+		const data = node._data; // it's passed to the eval, it's just a keyword
 		try {
 			const ok = !!eval(eval_class.eval_str);
 			eval_class.className.split(" ").forEach((e) => {

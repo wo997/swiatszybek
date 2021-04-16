@@ -6,11 +6,13 @@
  * parcel_lockers: DeliveriesConfig_CarrierCompData[]
  * in_persons: DeliveriesConfig_CarrierCompData[]
  * is_free_from_price: number
- * free_from_price: number
- * free_from_price_max_weight: number
+ * free_from_price: string
+ * free_from_price_max_weight: string
  * allow_cod: number
- * cod_from_price: number
- * cod_fee: number
+ * cod_from_price: string
+ * cod_fee: string
+ * is_price_based_on_dimensions: number
+ * pricing_dt?: DatatableCompData
  * }} DeliveriesConfigCompData
  *
  * @typedef {{
@@ -22,6 +24,8 @@
  *  add_in_person_btn: PiepNode
  *  case_free_from_price: PiepNode
  *  case_allow_cod: PiepNode
+ *  pricing_dt: DatatableComp
+ *  case_not_dimensions_pricing: PiepNode
  * }
  * } & BaseComp} DeliveriesConfigComp
  */
@@ -38,20 +42,28 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			parcel_lockers: [],
 			in_persons: [],
 			is_free_from_price: 0,
-			free_from_price: 0,
-			free_from_price_max_weight: 0,
+			free_from_price: "",
+			free_from_price_max_weight: "",
 			allow_cod: 0,
-			cod_from_price: 0,
-			cod_fee: 0,
+			cod_from_price: "",
+			cod_fee: "",
+			is_price_based_on_dimensions: 1,
 		};
 	}
 
 	comp._set_data = (data, options = {}) => {
+		/** @type {DatatableColumnDef[]} */
+		const columns = [{ key: "name", label: "Dostawca", searchable: "string", sortable: true }];
+		/** @type {DatatableCompData} */
+		const pricing_dt = { columns, label: "Ceny dostawy" };
+		data.pricing_dt = def(data.pricing_dt, pricing_dt);
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
 				expand(comp._nodes.case_free_from_price, !!data.is_free_from_price);
 				expand(comp._nodes.case_allow_cod, !!data.allow_cod);
+				expand(comp._nodes.case_not_dimensions_pricing, !data.is_price_based_on_dimensions);
 			},
 		});
 	};
@@ -88,6 +100,34 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
+			<div class="label medium bold">Sposób wyznaczenia ceny wysyłki zamówienia</div>
+			<div class="user_info mb3">
+				<i class="fas fa-info-circle"></i> W przypadku sprzedaży produktów niskomarżowych warto rozważyć opcję - Cena na podstawie wymiarów
+				oraz wagi. Umożliwi to utrzymanie stosunkowo niskich cen względem konkurencji, bez obaw, że stracimy na którymkolwiek z zamówień.
+				Zaletą opcji - cena stała / Cena zależna od wartości produktów - jest to, że nie musimy uzupełniać wszystkich wymiarów oraz wag
+				produktów, co jest czasochłonnym zadaniem.
+			</div>
+			<div
+				class="radio_group boxes hide_checks columns_2"
+				style="max-width:400px"
+				data-bind="{${data.is_price_based_on_dimensions}}"
+				data-number
+			>
+				<div class="checkbox_area">
+					<p-checkbox data-value="1"></p-checkbox>
+					<span>Cena na podstawie wymiarów oraz wagi</span>
+				</div>
+
+				<div class="checkbox_area">
+					<p-checkbox data-value="0"></p-checkbox>
+					<span>Cena stała / zależna od wartości produktów</span>
+				</div>
+			</div>
+
+			<div class="expand_y" data-node="{${comp._nodes.case_not_dimensions_pricing}}">
+				<datatable-comp class="pt2" data-bind="{${data.pricing_dt}}" data-node="{${comp._nodes.pricing_dt}}"></datatable-comp>
+			</div>
+
 			<div class="label medium bold">Płatność za pobraniem</div>
 			<div class="radio_group boxes hide_checks columns_2" style="max-width:200px" data-bind="{${data.allow_cod}}" data-number>
 				<div class="checkbox_area">
@@ -101,42 +141,18 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 
-			<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_allow_cod}}">
-				<div class="label">Dodatkowa opłata względem przedpłaty</div>
+			<div class="expand_y" data-node="{${comp._nodes.case_allow_cod}}">
+				<div class="label">Dodatkowa opłata względem przedpłaty <span class="semi_bold {${data.cod_fee.trim()}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.cod_fee}}" />
+					<input class="field max_weight inline" inputmode="numeric" data-bind="{${data.cod_fee}}" />
 					<span class="field_desc"> zł </span>
 				</span>
 
-				<div class="label">Cena minimalna</div>
+				<div class="label">Cena minimalna <span class="semi_bold {${data.cod_from_price.trim()}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.cod_from_price}}" />
+					<input class="field free_from inline" inputmode="numeric" data-bind="{${data.cod_from_price}}" />
 					<span class="field_desc"> zł </span>
 				</span>
-			</div>
-
-			<div class="label medium bold">Sposób wyznaczenia ceny wysyłki zamówienia</div>
-			<div class="user_info mb3">
-				<i class="fas fa-info-circle"></i> W przypadku sprzedaży produktów niskomarżowych warto rozważyć opcję - Cena na podstawie wymiarów
-				oraz wagi. Umożliwi to utrzymanie stosunkowo niskich cen względem konkurencji, bez obaw, czy stracimy na którymkolwiek z zamówień.
-				Zaletą pozostałych opcji - Stała cena / Cena zależna od wartości produktów - jest to, że nie musimy uzupełniać wszystkich wymiarów
-				oraz wag produktów, co jest czasochłonnym zadaniem.
-			</div>
-			<div class="radio_group space_items">
-				<div class="checkbox_area">
-					<p-checkbox data-value="static"></p-checkbox>
-					<span>Stała cena</span>
-				</div>
-
-				<div class="checkbox_area">
-					<p-checkbox data-value="cart_price"></p-checkbox>
-					<span>Cena zależna od wartości produktów</span>
-				</div>
-
-				<div class="checkbox_area">
-					<p-checkbox data-value="dimensions"></p-checkbox>
-					<span>Cena na podstawie wymiarów oraz wagi</span>
-				</div>
 			</div>
 
 			<div class="label medium bold">Darmowa wysyłka od określonej ceny minimalnej</div>
@@ -152,61 +168,82 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 
-			<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_free_from_price}}">
-				<div class="label">Cena minimalna</div>
+			<div class="expand_y" data-node="{${comp._nodes.case_free_from_price}}">
+				<div class="label">Cena minimalna <span class="semi_bold {${data.free_from_price.trim()}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field free_from inline" data-number inputmode="numeric" data-bind="{${data.free_from_price}}" />
+					<input class="field free_from inline" inputmode="numeric" data-bind="{${data.free_from_price}}" />
 					<span class="field_desc"> zł </span>
 				</span>
 
-				<div class="label">Waga maksymalna</div>
+				<div class="label">Waga maksymalna <span class="semi_bold {${data.free_from_price_max_weight.trim()}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field max_weight inline" data-number inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
+					<input class="field max_weight inline" inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
 					<span class="field_desc"> kg </span>
 				</span>
 			</div>
+
+			<div style="height:100px"></div>
 		`,
 		initialize: () => {
-			comp._nodes.add_courier_btn.addEventListener("click", () => {
-				const data = comp._data;
-				data.couriers.push({
-					carrier_id: -1,
-					delivery_type_id: 1,
-					name: "",
-					tracking_url_prefix: "",
-					delivery_time_days: 0,
-					expanded: true,
-					initial_dimensions: [],
+			const addCarrier = (delivery_type_id) => {
+				showLoader();
+
+				const carrier = {
+					delivery_type_id,
+					initial_dimensions: "[]",
+					active: 0,
+				};
+
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/carrier/save",
+					params: {
+						carrier,
+					},
+					success: (res) => {
+						const data = comp._data;
+						const carrier_data = res.carrier;
+						let target;
+
+						if (carrier_data.delivery_type_id === 1) {
+							target = data.couriers;
+						}
+						if (carrier_data.delivery_type_id === 2) {
+							target = data.parcel_lockers;
+						}
+						if (carrier_data.delivery_type_id === 3) {
+							target = data.in_persons;
+						}
+
+						if (target) {
+							target.push({
+								carrier_id: carrier_data.carrier_id,
+								delivery_time_days: 0,
+								delivery_type_id,
+								expanded: true,
+								initial_dimensions: [],
+								name: "",
+								tracking_url_prefix: "",
+								active: 0,
+							});
+
+							comp._render();
+						}
+
+						hideLoader();
+					},
 				});
-				comp._render();
+			};
+
+			comp._nodes.add_courier_btn.addEventListener("click", () => {
+				addCarrier(1);
 			});
 
 			comp._nodes.add_parcel_locker_btn.addEventListener("click", () => {
-				const data = comp._data;
-				data.parcel_lockers.push({
-					carrier_id: -1,
-					delivery_type_id: 2,
-					name: "",
-					tracking_url_prefix: "",
-					delivery_time_days: 0,
-					expanded: true,
-					initial_dimensions: [],
-				});
-				comp._render();
+				addCarrier(2);
 			});
 
 			comp._nodes.add_in_person_btn.addEventListener("click", () => {
-				const data = comp._data;
-				data.in_persons.push({
-					carrier_id: -1,
-					delivery_type_id: 3,
-					name: "",
-					tracking_url_prefix: "",
-					delivery_time_days: 0,
-					expanded: true,
-					initial_dimensions: [],
-				});
-				comp._render();
+				addCarrier(3);
 			});
 		},
 	});

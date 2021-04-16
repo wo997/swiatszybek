@@ -8,5 +8,6 @@ EntityManager::register("carrier", [
         "tracking_url_prefix" => ["type" => "string"],
         "delivery_time_days" => ["type" => "number"],
         "pos" => ["type" => "number"],
+        "active" => ["type" => "number"],
     ],
 ]);

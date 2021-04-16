@@ -15,6 +15,7 @@
 /**
  * @typedef {{
  * carrier_id: number
+ * active: number
  * delivery_type_id: number
  * name: string
  * delivery_time_days: number
@@ -30,7 +31,7 @@
  * _nodes: {
  *  expand_btn: PiepNode
  *  expand: PiepNode
- *  dimenions_dt: PiepNode
+ *  dimenions_dt: DatatableComp
  * }
  * } & BaseComp} DeliveriesConfig_CarrierComp
  */
@@ -44,6 +45,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			carrier_id: -1,
+			active: 0,
 			delivery_type_id: -1,
 			name: "",
 			tracking_url_prefix: "",
@@ -110,8 +112,24 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			<div style="flex-grow:1">
 				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
-						<div class="label first">Nazwa przewoźnika</div>
+						<div class="label first">Nazwa dostawcy</div>
 						<input class="field small" data-bind="{${data.name}}" />
+
+						<div class="label">Widoczność w sklepie</div>
+						<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
+							<div class="checkbox_area error">
+								<div>
+									<p-checkbox data-value="0"></p-checkbox>
+									<span class="semi_bold">Nieaktywny <i class="fas fa-eye-slash"></i></span>
+								</div>
+							</div>
+							<div class="checkbox_area success">
+								<div>
+									<p-checkbox data-value="1"></p-checkbox>
+									<span class="semi_bold">Aktywny <i class="fas fa-eye"></i></span>
+								</div>
+							</div>
+						</div>
 
 						<div class="label">Czas doręczenia (dni robocze)</div>
 						<input class="field small" data-bind="{${data.delivery_time_days}}" />

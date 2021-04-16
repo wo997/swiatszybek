@@ -198,7 +198,7 @@ textarea {
 		transition: 0s all;
 	}
 	&.invalid {
-		border: 1px solid red !important;
+		border: 1px solid var(--error-clr) !important;
 		background: #fee;
 	}
 }

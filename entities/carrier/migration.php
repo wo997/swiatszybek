@@ -8,4 +8,5 @@ DB::createTable("carrier", [
     ["name" => "tracking_url_prefix", "type" => "VARCHAR(255)"],
     ["name" => "pos", "type" => "INT"],
     ["name" => "delivery_time_days", "type" => "INT"],
+    ["name" => "active", "type" => "TINYINT(1)", "index" => "index"],
 ]);
