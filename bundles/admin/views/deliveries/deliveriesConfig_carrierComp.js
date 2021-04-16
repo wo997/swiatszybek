@@ -2,19 +2,19 @@
 
 /**
  * @typedef {{
- * dimension_id: number
  * name: string
  * weight: number
  * length: number
  * width: number
  * height: number
+ * price: number
  * } & ListCompRowData} DimensionData
  *
  */
 
 /**
  * @typedef {{
- * courier_id: number
+ * carrier_id: number
  * delivery_type_id: number
  * name: string
  * delivery_time_days: number
@@ -43,7 +43,7 @@
 function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			courier_id: -1,
+			carrier_id: -1,
 			delivery_type_id: -1,
 			name: "",
 			tracking_url_prefix: "",
@@ -66,6 +66,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 					{ key: "length", label: "Długość (cm)", editable: "number" },
 					{ key: "width", label: "Szerokość (cm)", editable: "number" },
 					{ key: "height", label: "Wysokość (cm)", editable: "number" },
+					{ key: "price", label: "Cena (zł)", editable: "number" },
 				],
 				empty_html: "Brak gabarytów",
 				dataset: data.initial_dimensions,
@@ -109,7 +110,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			<div style="flex-grow:1">
 				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
-						<div class="label first">Nazwa kuriera</div>
+						<div class="label first">Nazwa przewoźnika</div>
 						<input class="field small" data-bind="{${data.name}}" />
 
 						<div class="label">Czas doręczenia (dni robocze)</div>
@@ -145,7 +146,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 				const target = $(ev.target);
 
 				if (target._parent(".add_dimension_btn")) {
-					comp._data.dimensions_dt.dataset.push({ dimension_id: -1, weight: 0, length: 0, width: 0, height: 0, name: "" });
+					comp._data.dimensions_dt.dataset.push({ weight: 0, length: 0, width: 0, height: 0, name: "" });
 					comp._render();
 				}
 			});

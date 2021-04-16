@@ -6,6 +6,10 @@
 
 <title>Wysyłki</title>
 
+<script>
+    let carriers_data = <?= json_encode(DB::fetchArr("SELECT * FROM carrier")) ?>;
+</script>
+
 <?php startSection("header"); ?>
 
 <div class="custom_toolbar">
