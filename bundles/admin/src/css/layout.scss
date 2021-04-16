@@ -164,7 +164,7 @@ footer {
 .navbar_admin .menu_item a {
 	display: block;
 	width: 100%;
-	padding: 4px 9px;
+	padding: 7px 9px;
 }
 .navbar_admin .menu_item {
 	display: block;
@@ -179,8 +179,9 @@ footer {
 
 .navbar_admin .menu_item .expand_arrow {
 	align-self: center;
-	width: 32px;
-	height: 32px;
+	width: 35px;
+	height: 35px;
+	border-radius: 0;
 }
 @media (hover: hover) {
 	.navbar_admin .menu_item .expand_arrow:hover {
@@ -233,7 +234,7 @@ footer {
 }
 
 .navbar_admin .scroll_panel > div > .menu_item {
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 .admin_shortcuts {

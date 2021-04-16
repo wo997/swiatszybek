@@ -28,7 +28,7 @@ function getAdminNavitationTree()
 }
 
 $admin_navigations_tree = [
-    ["url" => "/pulpit", "title" => '<i class="fas fa-th-large"></i> Pulpit'],
+    ["url" => "/pulpit", "title" => '<i class="fas fa-th-large"></i> Pulpit / Sprzedaż'],
     [
         "title" => '<i class="fas fa-shopping-bag"></i> Zamówienia', "quick_menu" => true,
         "sub" => [
