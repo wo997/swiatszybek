@@ -167,7 +167,7 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 								</div>
 								<div class="scroll_panel scroll_shadow panel_padding">
 									<div class="label first">Na podstawie cechy</div>
-									<div class="radio_group hide_checks choose_feature boxes columns_1" data-number></div>
+									<div class="radio_group hide_checks choose_feature boxes columns_1 number"></div>
 
 									<div style="display:flex;margin-top: auto;padding-top: 10px;text-align: right;">
 										<button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button>

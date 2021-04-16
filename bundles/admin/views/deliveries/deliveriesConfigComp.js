@@ -108,10 +108,9 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				produktów, co jest czasochłonnym zadaniem.
 			</div>
 			<div
-				class="radio_group boxes hide_checks columns_2"
+				class="radio_group boxes hide_checks columns_2 number"
 				style="max-width:400px"
 				data-bind="{${data.is_price_based_on_dimensions}}"
-				data-number
 			>
 				<div class="checkbox_area">
 					<p-checkbox data-value="1"></p-checkbox>
@@ -129,7 +128,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="label medium bold">Płatność za pobraniem</div>
-			<div class="radio_group boxes hide_checks columns_2" style="max-width:200px" data-bind="{${data.allow_cod}}" data-number>
+			<div class="radio_group boxes hide_checks columns_2 number" style="max-width:200px" data-bind="{${data.allow_cod}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
 					<span>Nie</span>
@@ -156,7 +155,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</div>
 
 			<div class="label medium bold">Darmowa wysyłka od określonej ceny minimalnej</div>
-			<div class="radio_group boxes hide_checks columns_2" style="max-width:200px" data-bind="{${data.is_free_from_price}}" data-number>
+			<div class="radio_group boxes hide_checks columns_2 number" style="max-width:200px" data-bind="{${data.is_free_from_price}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>
 					<span>Nie</span>

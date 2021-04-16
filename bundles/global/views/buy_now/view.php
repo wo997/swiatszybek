@@ -153,7 +153,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <div class="label big">Adres wysyłki</div>
 
                 <span class="label">Chcę użyć innego adresu do wysyłki</span>
-                <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2" data-number>
+                <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2 number">
                     <div class="checkbox_area">
                         <div>
                             <p-checkbox data-value="0"></p-checkbox>

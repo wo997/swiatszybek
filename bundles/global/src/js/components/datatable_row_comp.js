@@ -266,7 +266,7 @@ function getEditableCellHtml(dt, column) {
 	if (column.editable === "checkbox") {
 		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
 	} else if (column.editable === "number") {
-		cell_html += html`<input class="field small" data-bind="${column.key}" data-number inputmode="numeric" />`;
+		cell_html += html`<input class="field small number" data-bind="${column.key}" inputmode="numeric" />`;
 	} else if (column.editable === "string") {
 		cell_html += html`<input class="field small" data-bind="${column.key}" />`;
 	} else if (column.editable === "color") {
@@ -282,12 +282,12 @@ function getEditableCellHtml(dt, column) {
 			map.map.forEach((e) => {
 				options += html`<option value="${e.val}">${e.label}</option>`;
 				if (typeof e.val === "number") {
-					number = "data-number";
+					number = "number";
 				}
 			});
 		}
 
-		cell_html += html`<select class="field small" data-bind="${column.key}" ${number}>
+		cell_html += html`<select class="field small ${number}" data-bind="${column.key}">
 			${options}
 		</select>`;
 	}

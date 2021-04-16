@@ -208,7 +208,7 @@ function setValue(input, value = null, options = {}) {
 		let same = true;
 		if (value !== null && value !== undefined) {
 			const curr = input._get_value({ plain: true });
-			if (input.hasAttribute("data-number")) {
+			if (input.classList.contains("number")) {
 				same = numberFromStr(curr) === numberFromStr(value) && curr !== "";
 			} else {
 				same = isEquivalent(curr, value);
@@ -335,7 +335,7 @@ function getValue(input, options = {}) {
 	}
 
 	if (!options.plain) {
-		if (input.hasAttribute("data-number")) {
+		if (input.classList.contains("number")) {
 			const was_v = v;
 			v = numberFromStr(v);
 			if (was_v != v) {

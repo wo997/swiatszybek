@@ -48,14 +48,14 @@ let filter_menus = [
 				map_map.forEach((e) => {
 					options += html`<option value="${e.val}">${e.label}</option>`;
 					if (typeof e.val === "number") {
-						number = "data-number";
+						number = "number";
 					}
 				});
 			}
 
 			return html`
 				<span>Wybierz opcję</span>
-				<select class="field" ${number}>
+				<select class="field ${number}">
 					<option value=""></option>
 					${options}
 				</select>
@@ -121,12 +121,12 @@ let filter_menus = [
 				<option value="<>">Przedział</option>
 			</select>
 			<span class="label case_single input_wrapper glue_children">
-				<input type="text" class="field num" data-validate="" data-number />
+				<input type="text" class="field num number" data-validate="" />
 			</span>
-			<span class="label case_range input_wrapper glue_children">
-				<input type="text" class="field more_than" data-validate="" data-number />
+			<span class="label case_range input_wrapper glue_children ">
+				<input type="text" class="field more_than number" data-validate="" />
 				<span class="field_desc"> do </span>
-				<input type="text" class="field less_than" data-validate="" data-number />
+				<input type="text" class="field less_than number" data-validate="" />
 			</span>
 		`,
 		open: (elem, data = { equal: "", smaller: "", bigger: "" }) => {

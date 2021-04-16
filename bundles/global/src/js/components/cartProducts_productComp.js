@@ -57,14 +57,7 @@ function CartProducts_ProductComp(comp, parent, data = undefined) {
 					<i class="fas fa-minus"></i>
 				</button>
 				<div class="spinner_wrapper inline">
-					<input
-						type="text"
-						class="field inline val_qty"
-						data-bind="{${data.qty}}"
-						data-number
-						inputmode="numeric"
-						data-input_delay="3000"
-					/>
+					<input type="text" class="field inline val_qty number" data-bind="{${data.qty}}" inputmode="numeric" data-input_delay="3000" />
 					<div class="spinner overlay"></div>
 				</div>
 				<button class="btn subtle add_qty small">

@@ -16,6 +16,7 @@ for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
         if (!$image_version) {
             $image_version = 1;
         } else {
+            // ide is dumb
             $image_version++;
         }
         saveSettings("theme", "copied_images", [

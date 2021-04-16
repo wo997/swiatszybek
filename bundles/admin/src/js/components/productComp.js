@@ -685,7 +685,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Widoczność w sklepie</div>
-				<div class="radio_group boxes hide_checks" data-number data-bind="{${data.active}}">
+				<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">
 					<div class="checkbox_area error">
 						<div>
 							<p-checkbox data-value="0"></p-checkbox>

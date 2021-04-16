@@ -73,7 +73,7 @@ function PaginationComp(comp, parent, data = {}) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="pages">
-				<select data-bind="{${data.row_count}}" class="field inline" data-number></select>
+				<select data-bind="{${data.row_count}}" class="field inline number"></select>
 				/ stronę z <span html="{${data.total_rows}}"></span>
 			</div>
 
@@ -82,7 +82,7 @@ function PaginationComp(comp, parent, data = {}) {
 					<i class="fas fa-chevron-left"></i>
 				</button>
 				<div style="position:relative;margin:0 -1px">
-					<select data-node="{${comp._nodes.select}}" class="field inline blank" data-number data-bind="{${data.page_id}}"></select>
+					<select data-node="{${comp._nodes.select}}" class="field inline blank number" data-bind="{${data.page_id}}"></select>
 					<div class="select_overlay" data-node="{${comp._nodes.select_overlay}}"></div>
 				</div>
 				<button class="btn subtle" disabled="{${data.page_id >= data.page_count - 1}}" data-node="{${comp._nodes.next}}">

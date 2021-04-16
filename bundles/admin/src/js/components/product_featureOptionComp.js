@@ -98,9 +98,8 @@ function Product_FeatureOptionComp(
 				data-input_delay="200"
 			/>
 			<input
-				class="field small inline"
+				class="field small inline number"
 				inputmode="numeric"
-				data-number
 				data-data_type="double_value"
 				data-bind="{${data.double_value}}"
 				data-node="{${comp._nodes.double_value}}"
@@ -108,9 +107,8 @@ function Product_FeatureOptionComp(
 			/>
 			<div class="glue_children" data-node="{${comp._nodes.physical_value_wrapper}}">
 				<input
-					class="field small inline"
+					class="field small inline number"
 					inputmode="numeric"
-					data-number
 					data-node="{${comp._nodes.physical_value_input}}"
 					data-bind="{${data.double_base}}"
 					data-input_delay="200"
