@@ -5,7 +5,10 @@ deliveries-config-comp.main {
 		max-width: 750px;
 	}
 
-	list-comp {
+	deliveries-config_carrier-comp {
+		.node_list_delete_btn {
+			display: none;
+		}
 	}
 
 	.clickable_label {

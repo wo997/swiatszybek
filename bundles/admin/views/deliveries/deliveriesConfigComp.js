@@ -51,36 +51,75 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 		};
 	}
 
-	comp._set_data = (data, options = {}) => {
-		/** @type {DatatableCompData} */
-		const pricing_dt = {
-			columns: [
-				{ key: "name", label: "Dostawca", searchable: "string", sortable: true },
-				{ key: "delivery_type_id", label: "Typ dostawy", searchable: "select", map_name: "delivery_type" },
-				{ key: "base_price", label: "Cena bazowa", batch_edit: true },
-				{ key: "cart_price_percent", label: "+% ceny produktów", batch_edit: true },
-			],
-			label: "Ceny dostawy",
-			maps: [
-				{
-					name: "delivery_type",
-					getMap: () => {
-						const map = delivery_types.map((d) => {
-							const obj = {
-								val: d.delivery_type_id,
-								label: d.name,
-							};
-							return obj;
-						});
-						return map;
-					},
+	/** @type {DatatableCompData} */
+	const pricing_dt = {
+		columns: [
+			{ key: "carrier_id", label: "Dostawca", searchable: "string", sortable: true, map_name: "carrier" },
+			{ key: "delivery_type_id", label: "Typ dostawy", searchable: "select", map_name: "delivery_type", quick_filter: true },
+			{ key: "base_price", label: "Cena bazowa", editable: "number", batch_edit: true },
+			{ key: "cart_price_percent", label: "+% ceny produktów", editable: "number", batch_edit: true },
+		],
+		label: "Ceny dostawy",
+		maps: [
+			{
+				name: "carrier",
+				getMap: () => {
+					const data = comp._data;
+					if (!data) {
+						return;
+					}
+					const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+					const map = carriers.map((d) => {
+						const obj = {
+							val: d.carrier_id,
+							label: d.name,
+						};
+						return obj;
+					});
+					return map;
 				},
-			],
-			selectable: true,
-			selection: [],
-			dataset: [],
-		};
-		data.pricing_dt = def(data.pricing_dt, pricing_dt);
+			},
+			{
+				name: "delivery_type",
+				getMap: () => {
+					const map = delivery_types.map((d) => {
+						const obj = {
+							val: d.delivery_type_id,
+							label: d.name,
+						};
+						return obj;
+					});
+					return map;
+				},
+			},
+		],
+		selectable: true,
+		selection: [],
+		dataset: [],
+	};
+	data.pricing_dt = def(data.pricing_dt, pricing_dt);
+
+	comp._set_data = (data, options = {}) => {
+		const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+		for (const carrier of carriers) {
+			if (!data.pricing_dt.dataset.find((c) => c.carrier_id === carrier.carrier_id)) {
+				data.pricing_dt.dataset.push({
+					carrier_id: carrier.carrier_id,
+					delivery_type_id: carrier.delivery_type_id,
+					base_price: 0,
+					cart_price_percent: 0,
+				});
+			}
+		}
+		const existing_ids = [];
+		for (const carrier of data.pricing_dt.dataset) {
+			if (carriers.map((e) => e.carrier_id).includes(carrier.carrier_id)) {
+				existing_ids.push(carrier.carrier_id);
+			}
+		}
+		if (existing_ids.length < data.pricing_dt.dataset.length) {
+			data.pricing_dt.dataset = data.pricing_dt.dataset.filter((e) => existing_ids.includes(e.carrier_id));
+		}
 
 		setCompData(comp, data, {
 			...options,
@@ -115,7 +154,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			</list-comp>
 
 			<div>
-				<span class="label medium bold inline"> Punkty odbioru sklepu (<span html="{${data.in_persons.length}}"></span>) </span>
+				<span class="label medium bold inline"> Punkty odbioru (<span html="{${data.in_persons.length}}"></span>) </span>
 				<button class="btn primary small" data-node="{${comp._nodes.add_in_person_btn}}" disabled="{${data.in_persons.length > 5}}">
 					Dodaj punkt odbioru <i class="fas fa-plus"></i>
 				</button>
@@ -151,7 +190,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				<datatable-comp class="pt2" data-bind="{${data.pricing_dt}}" data-node="{${comp._nodes.pricing_dt}}"></datatable-comp>
 			</div>
 
-			<div class="label medium bold">Płatność za pobraniem</div>
+			<div class="label medium bold">Płatność za pobraniem (kurier)</div>
 			<div class="radio_group boxes hide_checks columns_2 number" style="max-width:200px" data-bind="{${data.allow_cod}}">
 				<div class="checkbox_area">
 					<p-checkbox data-value="0"></p-checkbox>

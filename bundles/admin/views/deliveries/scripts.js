@@ -14,19 +14,7 @@ domload(() => {
 	deliveries_config_comp.style.display = "none";
 	deliveriesConfigComp(deliveries_config_comp, undefined);
 
-	/** @type {DeliveriesConfigCompData} */
-	const data = {
-		couriers: [],
-		parcel_lockers: [],
-		in_persons: [],
-		allow_cod: 0,
-		cod_fee: "",
-		cod_from_price: "",
-		free_from_price: "",
-		free_from_price_max_weight: "",
-		is_free_from_price: 0,
-		is_price_based_on_dimensions: 1,
-	};
+	const data = deliveries_config_comp._data;
 
 	if (deliveries_config) {
 		data.allow_cod = deliveries_config.allow_cod;
