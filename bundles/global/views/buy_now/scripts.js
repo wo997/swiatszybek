@@ -64,6 +64,8 @@ domload(() => {
 	const your_address_label = buy_now_form._child(".your_address_label");
 	const delivery_input = buy_now_form._child(".delivery");
 	const case_courier = buy_now_form._child(".case_courier");
+	const case_courier_above = buy_now_form._child(".case_courier_above");
+
 	const case_parcel_locker = buy_now_form._child(".case_parcel_locker");
 	const case_in_person = buy_now_form._child(".case_in_person");
 	const case_form_filled = buy_now_form._child(".case_form_filled");
@@ -77,7 +79,10 @@ domload(() => {
 	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 
 	const loadCart = () => {
-		const carrier_html = user_cart.available_carriers
+		const now_carriers = user_cart.available_carriers.filter(
+			(available_carrier) => available_carrier.delivery_type_id === user_cart.delivery_type_id
+		);
+		const carrier_html = now_carriers
 			.map(
 				(available_carrier) =>
 					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
@@ -97,6 +102,10 @@ domload(() => {
 		registerForms();
 
 		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
+
+		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
+			carrier_input._set_value(now_carriers[0].carrier_id);
+		}
 
 		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimensions.price);
 		const courier_price_min = Math.min(...courier_prices);
@@ -135,8 +144,12 @@ domload(() => {
 	delivery_input.addEventListener("change", () => {
 		const delivery_text = delivery_input._get_value();
 		expand(case_courier, delivery_text === "courier");
+		expand(case_courier_above, delivery_text === "courier");
+
 		expand(case_parcel_locker, delivery_text === "parcel_locker");
+
 		expand(case_in_person, delivery_text === "in_person");
+
 		expand(case_form_filled, true, { full_height_all_time: true });
 
 		if (ready) {

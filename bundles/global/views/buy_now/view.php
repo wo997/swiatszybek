@@ -114,31 +114,31 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
         </div>
 
-        <div class="expand_y animate_hidden hidden case_courier">
-            <div>
-                <div class="label big">Kurier</div>
+        <div class="expand_y animate_hidden hidden case_courier_above">
+            <div class="radio_group boxes big_boxes hide_checks payment_time columns_2 pt4">
+                <div class="checkbox_area">
+                    <div>
+                        <p-checkbox data-value="prepayment"></p-checkbox>
+                        <span class="semi_bold">Przedpłata</span>
+                        <span class="pln">+ 0 zł</span>
 
-                <div class="radio_group boxes big_boxes hide_checks payment_time columns_2">
-                    <div class="checkbox_area">
-                        <div>
-                            <p-checkbox data-value="prepayment"></p-checkbox>
-                            <span class="semi_bold">Przedpłata</span>
-                            <span class="pln">+ 0 zł</span>
-
-                        </div>
-                    </div>
-                    <div class="checkbox_area">
-                        <div>
-                            <p-checkbox data-value="cod"></p-checkbox>
-                            <span class="semi_bold">Za pobraniem</span>
-                            <span class="pln">+ <span class="cod_fee">3</span></span>
-
-                        </div>
                     </div>
                 </div>
+                <div class="checkbox_area">
+                    <div>
+                        <p-checkbox data-value="cod"></p-checkbox>
+                        <span class="semi_bold">Za pobraniem</span>
+                        <span class="pln">+ <span class="cod_fee">3</span></span>
 
-                <div class="radio_group carrier number"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <div class="radio_group carrier number mtf"></div>
+
+        <div class="expand_y animate_hidden hidden case_courier">
+            <div>
                 <div class="label big">Adres wysyłki</div>
 
                 <span class="label">Chcę użyć innego adresu do wysyłki</span>
@@ -164,15 +164,14 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y animate_hidden hidden case_parcel_locker">
-            <div class="label big">Paczkomat</div>
             <div>
-                <button class="btn primary pick_inpost_parcel_locker_btn">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
+                <button class="btn primary pick_inpost_parcel_locker_btn mtf">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
                 <div class="choosen_parcel_locker"> </div>
             </div>
         </div>
 
         <div class="expand_y animate_hidden hidden case_in_person">
-            <div class="label big">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
+            <div class="label medium">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
         </div>
 
         <div class="expand_y animate_hidden hidden case_form_filled">

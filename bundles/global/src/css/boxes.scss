@@ -9,7 +9,7 @@
 		display: flex;
 		flex-flow: row wrap;
 		margin-right: calc(var(--box_margin) * -1);
-		margin-bottom: calc(var(--box_margin) * -1);
+		margin-top: calc(var(--box_margin) * -1);
 		--box-width: auto;
 		--box-padding: 10px;
 	}
@@ -31,7 +31,7 @@
 			align-items: center;
 			justify-content: center;
 			margin-right: var(--box_margin);
-			margin-bottom: var(--box_margin);
+			margin-top: var(--box_margin);
 			transition: all 0.2s;
 			border-radius: 4px;
 			border: 1px solid #bbb;

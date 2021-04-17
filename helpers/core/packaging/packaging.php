@@ -7,7 +7,7 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
 
     // up to 4 hella quick
     if ($top > 4) {
-        $part_can_be_full = 0.8;
+        $part_can_be_full = 0.7; // offset based on the amount? the more the lower it can get, basically gets "wet"
         $products_volume = 0;
         $xx = $package_dims[0];
         $yy = $package_dims[1];
