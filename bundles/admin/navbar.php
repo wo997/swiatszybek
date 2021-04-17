@@ -2,10 +2,10 @@
 <div class="admin_shortcuts">
     <div class="header">Szybki dostęp</div>
     <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="link">
-        Produkt +
+        Dodaj produkt
     </a>
     <a href="<?= Request::$static_urls["ADMIN"] ?>/kody-rabatowe?dodaj" class="link">
-        Kod rabatowy +
+        Utwórz kod rabatowy
     </a>
 </div>
 <hr>

@@ -60,7 +60,7 @@ $admin_navigations_tree = [
         "sub" => [
             //["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
             ["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tags"></i> Kody rabatowe'],
-            ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj kod rabatowy'],
+            ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
             //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'], // nah
         ]
     ],
