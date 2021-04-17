@@ -73,7 +73,8 @@ domload(() => {
 	const pick_inpost_parcel_locker_btn = buy_now_form._child(".pick_inpost_parcel_locker_btn");
 	const accept_regulations_check = buy_now_form._child(".accept_regulations");
 	const carrier_input = buy_now_form._child(".carrier");
-	const payment_time = buy_now_form._child(".payment_time");
+	const payment_time_input = buy_now_form._child(".payment_time");
+	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 
 	const loadCart = () => {
 		const carrier_html = user_cart.available_carriers
@@ -91,7 +92,7 @@ domload(() => {
 
 		carrier_input._set_content(carrier_html);
 
-		payment_time.classList.toggle("hidden", !user_cart.allow_cod);
+		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
 
 		registerForms();
 
@@ -134,7 +135,6 @@ domload(() => {
 				smoothScroll(diff);
 			}
 
-			const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 			cart_delivery_price_wrapper.classList.add("spinning");
 			const delivery = delivery_types.find((d) => d.text === delivery_text);
 			if (delivery) {
@@ -155,10 +155,40 @@ domload(() => {
 			}
 		}
 	});
+
 	const set_delivery = delivery_types.find((d) => d.delivery_type_id === user_cart.delivery_type_id);
 	if (set_delivery) {
 		delivery_input._set_value(set_delivery.text);
 	}
+
+	payment_time_input.addEventListener("change", () => {
+		if (ready) {
+			const rect = payment_time_input.getBoundingClientRect();
+			const diff = rect.top - 60 - header_height;
+			if (diff > 0) {
+				smoothScroll(diff);
+			}
+
+			cart_delivery_price_wrapper.classList.add("spinning");
+
+			const payment_time = payment_time_input._get_value();
+			xhr({
+				url: "/cart/set_payment_time",
+				params: {
+					payment_time,
+				},
+				success: (res) => {
+					user_cart = res.user_cart;
+					loadedUserCart();
+					adding_product_from_cart = false;
+
+					removeClasses(".spinning", ["spinning"]);
+				},
+			});
+		}
+	});
+
+	payment_time_input._set_value(user_cart.payment_time);
 
 	carrier_input.addEventListener("change", () => {
 		if (ready) {
@@ -168,7 +198,6 @@ domload(() => {
 				smoothScroll(diff);
 			}
 
-			const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 			cart_delivery_price_wrapper.classList.add("spinning");
 			xhr({
 				url: "/cart/set_carrier",

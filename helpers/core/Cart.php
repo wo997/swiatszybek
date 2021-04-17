@@ -2,7 +2,7 @@
 
 /**
  * 
- * @typedef CartProduct {
+                                                                                         * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -17,6 +17,7 @@ class Cart
     private $rebate_codes;
     private $delivery_type_id;
     private $carrier_id;
+    private $payment_time;
     private $available_carriers;
 
     // other vars
@@ -56,6 +57,16 @@ class Cart
     public function getCarrierId()
     {
         return intval($this->carrier_id);
+    }
+
+    public function setPaymentTime($payment_time)
+    {
+        $this->payment_time = $payment_time;
+    }
+
+    public function getPaymentTime()
+    {
+        return $this->payment_time;
     }
 
     public function getCarriers()
@@ -213,8 +224,8 @@ class Cart
             "delivery_type_id" => $this->getDeliveryTypeId(),
             "carrier_id" => $this->getCarrierId(),
             "available_carriers" => $this->available_carriers,
-            "allow_cod" => getSetting(["general", "deliveries", "allow_cod"])
-
+            "allow_cod" => getSetting(["general", "deliveries", "allow_cod"]),
+            "payment_time" => $this->getPaymentTime()
         ];
     }
 
@@ -400,6 +411,7 @@ class Cart
         $cart_data["rebate_codes"] = $this->getActiveRebateCodes();
         $cart_data["delivery_type_id"] = $this->getDeliveryTypeId();
         $cart_data["carrier_id"] = $this->getCarrierId();
+        $cart_data["payment_time"] = $this->getPaymentTime();
 
         $cart_json = json_encode($cart_data);
 
@@ -431,6 +443,7 @@ class Cart
         $this->products = def($cart_data, "products", []);
         $this->delivery_type_id = def($cart_data, "delivery_type_id", -1);
         $this->carrier_id = def($cart_data, "carrier_id", -1);
+        $this->payment_time = def($cart_data, "payment_time", "prepayment");
 
         $any_failed = false;
         foreach (def($cart_data, "rebate_codes", []) as $code) {

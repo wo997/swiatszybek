@@ -42,6 +42,7 @@
  * rebate_codes: {code:string, value:string}[]
  * available_carriers: AvailableCarrierData[]
  * allow_cod: boolean
+ * payment_time: string
  * }} UserCartData
  */
 
