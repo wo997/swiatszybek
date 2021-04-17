@@ -97,6 +97,17 @@ domload(() => {
 		registerForms();
 
 		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
+
+		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimension.price);
+		const courier_price_min = Math.min(...courier_prices);
+		const courier_price_max = Math.max(...courier_prices);
+		/** @type {any} */
+		let display_courier_prices = courier_price_min;
+		if (courier_price_min !== courier_price_max) {
+			display_courier_prices += " - " + courier_price_max;
+		}
+		display_courier_prices += " zł";
+		$(".courier_prices")._set_content(display_courier_prices);
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);

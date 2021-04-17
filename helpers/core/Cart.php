@@ -71,6 +71,11 @@ class Cart
 
     public function getCarriers()
     {
+        $cod_fee = 0;
+        if ($this->getPaymentTime() === "cod") {
+            $cod_fee = getSetting(["general", "deliveries", "cod_fee"], 0);
+        }
+
         $cart_product_ids = array_column($this->products, "product_id");
 
         $anything_to_ship = false;
@@ -130,6 +135,9 @@ class Cart
                 }
 
                 if (isset($dimension_fits)) {
+                    if ($carrier["delivery_type_id"] === 1) {
+                        $dimension_fits["price"] += $cod_fee;
+                    }
                     $carrier["fit_dimension"] = $dimension_fits;
                     $available_carriers[] = $carrier;
                 }
@@ -142,12 +150,14 @@ class Cart
 
     public function getDeliveryPrice()
     {
+        $delivery_price = 0;
         foreach ($this->available_carriers as $carrier) {
             if ($carrier["carrier_id"] === $this->carrier_id) {
-                return $carrier["fit_dimension"]["price"];
+                $delivery_price = $carrier["fit_dimension"]["price"];
             }
         }
-        return 0;
+
+        return $delivery_price;
     }
 
     public function getAllData()
@@ -215,6 +225,8 @@ class Cart
 
         $total_price += $delivery_price;
 
+
+
         return [
             "products" => $products_data,
             "products_price" => roundPrice($products_price),
@@ -225,7 +237,8 @@ class Cart
             "carrier_id" => $this->getCarrierId(),
             "available_carriers" => $this->available_carriers,
             "allow_cod" => getSetting(["general", "deliveries", "allow_cod"]),
-            "payment_time" => $this->getPaymentTime()
+            "payment_time" => $this->getPaymentTime(),
+            "cod_fee" => getSetting(["general", "deliveries", "cod_fee"]),
         ];
     }
 

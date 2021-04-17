@@ -86,19 +86,19 @@
 				margin-left: 3%;
 			}
 			.duration {
-				margin-left: calc(25% - 35px);
+				margin-left: calc(30% - 65px);
 			}
 			.carrier_img {
 				margin-left: 10px;
 				width: 80px;
 				height: 48px;
 				object-fit: contain;
+				// object-position: left;
 			}
 			.pln {
 				font-weight: 600;
 				min-width: 50px;
 				margin-left: auto;
-				text-align: center;
 			}
 		}
 	}

@@ -94,7 +94,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <div>
                         <p-checkbox data-value="courier"></p-checkbox>
                         <span class="semi_bold">Kurier</span>
-                        <span class="pln">17-20 zł</span>
+                        <span class="pln courier_prices"></span>
                     </div>
                 </div>
                 <div class="checkbox_area">
@@ -131,7 +131,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                         <div>
                             <p-checkbox data-value="cod"></p-checkbox>
                             <span class="semi_bold">Za pobraniem</span>
-                            <span class="pln">+ 3 zł</span>
+                            <span class="pln">+ <span class="cod_fee">3</span></span>
 
                         </div>
                     </div>

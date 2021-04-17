@@ -331,7 +331,7 @@ function DatatableComp(comp, parent, data) {
 							d._row_id = d[data.primary_key];
 						} else {
 							if (nextRowId === 0) {
-								nextRowId = applyToArray(Math.min, [...data.dataset.map((e) => e._row_id).filter((e) => e), -1000]);
+								nextRowId = Math.min(-1000, ...data.dataset.map((e) => e._row_id).filter((e) => e));
 							}
 							d._row_id = --nextRowId;
 						}

@@ -32,6 +32,9 @@ domload(() => {
 		$$(".cart_total_price").forEach((e) => {
 			e._set_content(user_cart.total_price + " zł");
 		});
+		$$(".cod_fee").forEach((e) => {
+			e._set_content(user_cart.cod_fee + " zł");
+		});
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);

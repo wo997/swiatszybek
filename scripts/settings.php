@@ -5,7 +5,7 @@
  *
  * @param  array $path
  * @param  mixed $default
- * @return void
+ * @return mixed
  */
 function getSetting($path, $default = "")
 {

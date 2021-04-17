@@ -9,6 +9,7 @@
 /**
  * @typedef {{
  * carrier_id: number
+ * delivery_type_id: number
  * api_key: string
  * delivery_time_days: number
  * name: string
@@ -43,6 +44,7 @@
  * available_carriers: AvailableCarrierData[]
  * allow_cod: boolean
  * payment_time: string
+ * cod_fee: number
  * }} UserCartData
  */
 

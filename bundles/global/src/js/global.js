@@ -768,10 +768,6 @@ function isObjectdef(obj) {
 	return !obj || Object.keys(obj).length === 0;
 }
 
-function applyToArray(func, array) {
-	return func.apply(Math, array);
-}
-
 /**
  *
  * @param {*} src

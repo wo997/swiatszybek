@@ -80,7 +80,7 @@ function ListComp(comp, parent, data = []) {
 				}
 				if (row_data.row_id === undefined || row_data.row_id === -1) {
 					if (nextRowId === 0) {
-						nextRowId = applyToArray(Math.min, [...data.map((e) => e.row_id).filter((e) => e), -1000]);
+						nextRowId = Math.min(-1000, ...data.map((e) => e.row_id).filter((e) => e));
 					}
 					row_data.row_id = --nextRowId;
 				}
