@@ -2,7 +2,7 @@
 
 /**
  * 
-                                                                                         * @typedef CartProduct {
+ * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }
@@ -48,6 +48,62 @@ class Cart
 
     public function getDeliveryPrice()
     {
+        $cart_product_ids = array_column($this->products, "product_id");
+
+        $products_data = [];
+        if ($cart_product_ids) {
+            $product_ids_string = join(",", $cart_product_ids);
+            $product_index = -1;
+
+            $products_data = DB::fetchArr("SELECT weight, length, width, height
+                FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string)");
+
+            $products_dims = [];
+            $products_weight = 0;
+            foreach ($products_data as $product_data) {
+                $product_index++;
+
+                $cart_product =
+                    /** @var CartProduct */
+                    $this->products[$product_index];
+
+                $qty = $cart_product["qty"];
+
+                for ($i = 0; $i < $qty; $i++) {
+                    $products_weight += $product_data["weight"];
+                    $products_dims[] = [
+                        floatval($product_data["length"]),
+                        floatval($product_data["width"]),
+                        floatval($product_data["height"])
+                    ];
+                }
+            }
+        }
+
+        // hayya, nice!
+
+        // var_dump($products_dims);
+        // var_dump(putBoxIntoPackage3D(
+        //     [28, 10, 30],
+        //     $products_dims
+        // ));
+        // die;
+
+        // var_dump(putBoxIntoPackage3D(
+        //     [80, 60, 30],
+        //     [
+        //         [10, 20, 60],
+        //         [20, 20, 30],
+        //         [15, 19, 39],
+        //         [20, 40, 30],
+        //         [12, 50, 40],
+        //         [50, 1, 1],
+        //         //[10, 25, 40],
+        //         //[10, 55, 40],
+        //     ]
+        // ));
+
+        // we need all anyway to display on the front
         if ($this->delivery_type_id <= 0) {
             return 0;
         }
@@ -57,7 +113,6 @@ class Cart
     public function getAllData()
     {
         // this function might return if anything is missing etc
-
         $cart_product_ids = array_column($this->products, "product_id");
 
         $products_price = 0;
