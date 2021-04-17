@@ -1,6 +1,6 @@
-<?php //route[/cart/set-delivery-type]
+<?php //route[/cart/set_carrier]
 
 $cart = User::getCurrent()->cart;
-$cart->setDeliveryTypeId($_POST["delivery_type_id"]);
+$cart->setCarrierId($_POST["carrier_id"]);
 $cart->save();
 Request::jsonResponse(["user_cart" => $cart->getAllData()]);

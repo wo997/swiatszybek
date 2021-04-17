@@ -137,31 +137,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     </div>
                 </div>
 
-                <div class="radio_group carrier">
-                    <?php
-                    foreach (DB::fetchArr("SELECT * FROM carrier WHERE active = 1 ORDER BY pos ASC") as $carrier) {
-                        //json_decode($carrier["dimensions_json"]);
-                    ?>
-                        <div class="checkbox_area" data-carrier_id="<?= $carrier["carrier_id"] ?>">
-                            <p-checkbox data-value="<?= $carrier["carrier_id"] ?>"></p-checkbox>
-                            <img src="<?= $carrier["img_url"] ?>" style="width: 80px;">
-                            <span class="pln">xxx 17 zł</span>
-                        </div>
-                    <?php
-                    }
-                    ?>
-
-                    <!-- <div class="checkbox_area">
-                        <p-checkbox data-value="inpost"></p-checkbox>
-                        <img src="/src/img/inpost_logo.svg" style="width: 80px;">
-                        <span class="pln">17 zł</span>
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="ups"></p-checkbox>
-                        <img src="/src/img/ups_logo.svg" style="padding:0 20px;width: 80px;">
-                        <span class="pln">20 zł</span>
-                    </div> -->
-                </div>
+                <div class="radio_group carrier number"></div>
 
                 <div class="label big">Adres wysyłki</div>
 
@@ -182,7 +158,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
 
                 <div class="expand_y animate_hidden hidden case_courier_address_different">
-                    <address-comp class="courier_address optional_phone_email"></address-comp>
+                    <address-comp class="courier_address optional_phone_email pt4"></address-comp>
                 </div>
             </div>
         </div>

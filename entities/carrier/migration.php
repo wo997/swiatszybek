@@ -60,11 +60,50 @@ $required_carriers = [
             ]
         ])
     ],
+    [
+        "api_key" => "ups",
+        "delivery_type_id" => 1,
+        "name" => "UPS",
+        "img_url" => "/src/img/ups_logo.svg",
+        "active" => 0,
+        "tracking_url_prefix" => "https://upsupsups=",
+        "dimensions_json" => json_encode([
+            [
+                "name" => "A",
+                "api_key" => "small",
+                "weight" => "25",
+                "length" => "64",
+                "width" => "38",
+                "height" => "8",
+                "price" => "0",
+            ], [
+                "name" => "B",
+                "api_key" => "medium",
+                "weight" => "25",
+                "length" => "64",
+                "width" => "38",
+                "height" => "19",
+                "price" => "0",
+            ], [
+                "name" => "C",
+                "api_key" => "large",
+                "weight" => "25",
+                "length" => "64",
+                "width" => "38",
+                "height" => "41",
+                "price" => "0",
+            ], [
+                "name" => "D",
+                "api_key" => "xlarge",
+                "weight" => "25",
+                "length" => "80",
+                "width" => "50",
+                "height" => "50",
+                "price" => "0",
+            ]
+        ])
+    ],
 ];
-
-// "real_carrier_id" => 2,
-// "name" => "UPS",
-// "img" => "/src/img/ups_logo.svg",
 
 foreach ($required_carriers as $required_carrier) {
     if (!in_array($required_carrier["api_key"] . " " . $required_carrier["delivery_type_id"], $curr_carrier_keys)) {

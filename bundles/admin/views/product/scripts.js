@@ -91,6 +91,8 @@ domload(() => {
 
 		data.main_img_url = general_product_data.main_img_url;
 
+		data.product_type = general_product_data.product_type;
+
 		data.images = general_product_data.images
 			.sort((a, b) => Math.sign(a.pos - b.pos))
 			.map((e) => {

@@ -33,6 +33,10 @@ select {
 	font-weight: 700;
 }
 
+.normal {
+	font-weight: 400;
+}
+
 .semi_bold {
 	font-weight: 600;
 }

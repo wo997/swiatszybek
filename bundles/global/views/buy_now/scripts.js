@@ -58,7 +58,7 @@ domload(() => {
 	initRebateCodes();
 
 	const buy_now_form = $(".buy_now_form");
-	const choosen_account = buy_now_form._child(".choosen_account");
+	//const choosen_account = buy_now_form._child(".choosen_account");
 	const buy_without_registration = buy_now_form._child(".buy_without_registration");
 	const case_choosen_account = buy_now_form._child(".case_choosen_account");
 	const your_address_label = buy_now_form._child(".your_address_label");
@@ -72,6 +72,34 @@ domload(() => {
 	const confirm_order_btn = buy_now_form._child(".confirm_order");
 	const pick_inpost_parcel_locker_btn = buy_now_form._child(".pick_inpost_parcel_locker_btn");
 	const accept_regulations_check = buy_now_form._child(".accept_regulations");
+	const carrier_input = buy_now_form._child(".carrier");
+	const payment_time = buy_now_form._child(".payment_time");
+
+	const loadCart = () => {
+		const carrier_html = user_cart.available_carriers
+			.map(
+				(available_carrier) =>
+					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
+						<p-checkbox data-value="${available_carrier.carrier_id}"></p-checkbox>
+						<span class="semi_bold name">${available_carrier.name}</span>
+						<img src="${available_carrier.img_url}" class="carrier_img" />
+						<span class="duration">${available_carrier.delivery_time_days} dni</span>
+						<span class="pln">${available_carrier.fit_dimension.price} zł</span>
+					</div>`
+			)
+			.join("");
+
+		carrier_input._set_content(carrier_html);
+
+		payment_time.classList.toggle("hidden", !user_cart.allow_cod);
+
+		registerForms();
+
+		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
+	};
+
+	window.addEventListener("user_cart_changed", loadCart);
+	loadCart();
 
 	if (IS_LOGGED) {
 		// done in the view
@@ -112,7 +140,7 @@ domload(() => {
 			if (delivery) {
 				const delivery_type_id = delivery.delivery_type_id;
 				xhr({
-					url: "/cart/set-delivery-type",
+					url: "/cart/set_delivery_type",
 					params: {
 						delivery_type_id,
 					},
@@ -131,6 +159,33 @@ domload(() => {
 	if (set_delivery) {
 		delivery_input._set_value(set_delivery.text);
 	}
+
+	carrier_input.addEventListener("change", () => {
+		if (ready) {
+			const rect = carrier_input.getBoundingClientRect();
+			const diff = rect.top - 60 - header_height;
+			if (diff > 0) {
+				smoothScroll(diff);
+			}
+
+			const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
+			cart_delivery_price_wrapper.classList.add("spinning");
+			xhr({
+				url: "/cart/set_carrier",
+				params: {
+					carrier_id: carrier_input._get_value(),
+				},
+				success: (res) => {
+					user_cart = res.user_cart;
+					loadedUserCart();
+					adding_product_from_cart = false;
+
+					removeClasses(".spinning", ["spinning"]);
+				},
+			});
+		}
+	});
+	carrier_input._set_value(user_cart.carrier_id);
 
 	courier_address_different_input.addEventListener("change", () => {
 		const courier_address_different = courier_address_different_input._get_value();

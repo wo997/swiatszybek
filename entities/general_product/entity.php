@@ -4,6 +4,7 @@ EntityManager::register("general_product", [
     "props" => [
         "name" => ["type" => "string"],
         "active" => ["type" => "number"],
+        "product_type" => ["type" => "string"],
         "__img_url" => ["type" => "string"],
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],

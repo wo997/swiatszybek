@@ -81,12 +81,24 @@
 			&:last-child {
 				border-bottom: 1px solid #ccc;
 			}
-			img {
+			.name {
+				width: 15%;
+				margin-left: 3%;
+			}
+			.duration {
+				margin-left: calc(25% - 35px);
+			}
+			.carrier_img {
 				margin-left: 10px;
+				width: 80px;
+				height: 48px;
+				object-fit: contain;
 			}
 			.pln {
 				font-weight: 600;
+				min-width: 50px;
 				margin-left: auto;
+				text-align: center;
 			}
 		}
 	}
@@ -211,8 +223,4 @@
 		text-transform: uppercase;
 		text-align: center;
 	}
-}
-
-.buy_now_form .courier_address {
-	margin-top: 25px;
 }

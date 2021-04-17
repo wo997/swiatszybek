@@ -27,6 +27,7 @@
  *  images: Product_ImgCompData[]
  *  product_list_view: string
  *  variants: Product_VariantCompData[]
+ *  product_type: string
  * }} ProductCompData
  *
  * @typedef {{
@@ -98,6 +99,7 @@ function ProductComp(comp, parent, data = undefined) {
 			images: [],
 			variants: [],
 			product_list_view: "active",
+			product_type: "normal",
 		};
 	}
 
@@ -700,6 +702,22 @@ function ProductComp(comp, parent, data = undefined) {
 					</div>
 				</div>
 
+				<div class="label">Typ produktu</div>
+				<div class="radio_group boxes hide_checks" data-bind="{${data.product_type}}">
+					<div class="checkbox_area" data-tooltip="Do wysyłki">
+						<div>
+							<p-checkbox data-value="normal"></p-checkbox>
+							<span class="semi_bold">Produkt standardowy</span>
+						</div>
+					</div>
+					<div class="checkbox_area" data-tooltip="Usługa, rezerwacja, do pobrania">
+						<div>
+							<p-checkbox data-value="virtual"></p-checkbox>
+							<span class="semi_bold">Produkt wirtualny</span>
+						</div>
+					</div>
+				</div>
+
 				<div class="label">Sprzedawaj na (do wdrożenia)</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
@@ -968,6 +986,7 @@ function ProductComp(comp, parent, data = undefined) {
 						general_product: {
 							general_product_id: data.general_product_id,
 							name: data.name,
+							product_type: data.product_type,
 							active: data.active,
 							main_img_url: data.main_img_url,
 							features: data.product_feature_ids.map((product_feature_id, index) => ({

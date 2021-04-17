@@ -16,6 +16,8 @@ class Cart
     /** @var Entity[] RebateCode */
     private $rebate_codes;
     private $delivery_type_id;
+    private $carrier_id;
+    private $available_carriers;
 
     // other vars
     private $rebate_codes_limit = 2; // that will be a subject to change
@@ -38,7 +40,7 @@ class Cart
 
     public function setDeliveryTypeId($delivery_type_id)
     {
-        $this->delivery_type_id = $delivery_type_id;
+        $this->delivery_type_id = intval($delivery_type_id);
     }
 
     public function getDeliveryTypeId()
@@ -46,22 +48,40 @@ class Cart
         return intval($this->delivery_type_id);
     }
 
-    public function getDeliveryPrice()
+    public function setCarrierId($carrier_id)
+    {
+        $this->carrier_id = intval($carrier_id);
+    }
+
+    public function getCarrierId()
+    {
+        return intval($this->carrier_id);
+    }
+
+    public function getCarriers()
     {
         $cart_product_ids = array_column($this->products, "product_id");
+
+        $anything_to_ship = false;
 
         $products_data = [];
         if ($cart_product_ids) {
             $product_ids_string = join(",", $cart_product_ids);
             $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT weight, length, width, height
+            $products_data = DB::fetchArr("SELECT weight, length, width, height, product_type
                 FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string)");
 
             $products_dims = [];
             $products_weight = 0;
             foreach ($products_data as $product_data) {
                 $product_index++;
+
+                if ($product_data["product_type"] === "normal") {
+                    $anything_to_ship = true;
+                } else {
+                    continue;
+                }
 
                 $cart_product =
                     /** @var CartProduct */
@@ -80,34 +100,43 @@ class Cart
             }
         }
 
-        // hayya, nice!
+        $available_carriers = [];
 
-        // var_dump($products_dims);
-        // var_dump(putBoxIntoPackage3D(
-        //     [28, 10, 30],
-        //     $products_dims
-        // ));
-        // die;
+        if ($anything_to_ship) {
+            foreach (DB::fetchArr("SELECT * FROM carrier WHERE active = 1 ORDER BY pos ASC") as $carrier) {
+                $dimensions = json_decode($carrier["dimensions_json"], true);
 
-        // var_dump(putBoxIntoPackage3D(
-        //     [80, 60, 30],
-        //     [
-        //         [10, 20, 60],
-        //         [20, 20, 30],
-        //         [15, 19, 39],
-        //         [20, 40, 30],
-        //         [12, 50, 40],
-        //         [50, 1, 1],
-        //         //[10, 25, 40],
-        //         //[10, 55, 40],
-        //     ]
-        // ));
+                foreach ($dimensions as $dimension) {
+                    $fits = putBoxIntoPackage3D([
+                        $dimension["length"],
+                        $dimension["width"],
+                        $dimension["height"],
+                    ], $products_dims);
+                    if ($fits) {
+                        $dimension_fits = $dimension;
+                        break;
+                    }
+                }
 
-        // we need all anyway to display on the front
-        if ($this->delivery_type_id <= 0) {
-            return 0;
+                if (isset($dimension_fits)) {
+                    $carrier["fit_dimension"] = $dimension_fits;
+                    $available_carriers[] = $carrier;
+                }
+            }
+        } else {
         }
-        return $this->delivery_type_id * 10;
+
+        return $available_carriers;
+    }
+
+    public function getDeliveryPrice()
+    {
+        foreach ($this->available_carriers as $carrier) {
+            if ($carrier["carrier_id"] === $this->carrier_id) {
+                return $carrier["fit_dimension"]["price"];
+            }
+        }
+        return 0;
     }
 
     public function getAllData()
@@ -146,6 +175,8 @@ class Cart
             }
         }
 
+        $this->available_carriers = $this->getCarriers();
+        // the order matters!
         $delivery_price = $this->getDeliveryPrice();
 
         $total_price = $products_price;
@@ -180,6 +211,10 @@ class Cart
             "total_price" => roundPrice($total_price),
             "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x->getSimpleProps(), ["code", "value"]), $this->rebate_codes),
             "delivery_type_id" => $this->getDeliveryTypeId(),
+            "carrier_id" => $this->getCarrierId(),
+            "available_carriers" => $this->available_carriers,
+            "allow_cod" => getSetting(["general", "deliveries", "allow_cod"])
+
         ];
     }
 
@@ -364,6 +399,7 @@ class Cart
         $cart_data["products"] = $this->getProducts();
         $cart_data["rebate_codes"] = $this->getActiveRebateCodes();
         $cart_data["delivery_type_id"] = $this->getDeliveryTypeId();
+        $cart_data["carrier_id"] = $this->getCarrierId();
 
         $cart_json = json_encode($cart_data);
 
@@ -394,6 +430,7 @@ class Cart
 
         $this->products = def($cart_data, "products", []);
         $this->delivery_type_id = def($cart_data, "delivery_type_id", -1);
+        $this->carrier_id = def($cart_data, "carrier_id", -1);
 
         $any_failed = false;
         foreach (def($cart_data, "rebate_codes", []) as $code) {
