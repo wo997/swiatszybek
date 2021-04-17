@@ -14,7 +14,7 @@
  * delivery_time_days: number
  * name: string
  * img_url: string
- * fit_dimension: FitDimensionData
+ * fit_dimensions: FitDimensionData
  * }} AvailableCarrierData
  */
 

@@ -102,6 +102,10 @@ cart-products-comp.comp {
 			margin-right: 10px;
 		}
 	}
+
+	&:not(.skinny) .product_price {
+		min-width: 90px;
+	}
 }
 
 .btn.pay_btn {

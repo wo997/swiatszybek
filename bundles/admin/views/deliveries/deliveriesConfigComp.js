@@ -68,8 +68,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 					if (!data) {
 						return;
 					}
-					const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
-					const map = carriers.map((d) => {
+					const all_carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+					const map = all_carriers.map((d) => {
 						const obj = {
 							val: d.carrier_id,
 							label: d.name,
@@ -114,8 +114,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 	data.pricing_dt = def(data.pricing_dt, pricing_dt);
 
 	comp._set_data = (data, options = {}) => {
-		const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
-		for (const carrier of carriers) {
+		const all_carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+		for (const carrier of all_carriers) {
 			if (!data.pricing_dt.dataset.find((c) => c.carrier_id === carrier.carrier_id)) {
 				data.pricing_dt.dataset.push({
 					carrier_id: carrier.carrier_id,
@@ -127,7 +127,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 		}
 		const existing_ids = [];
 		for (const carrier of data.pricing_dt.dataset) {
-			if (carriers.map((e) => e.carrier_id).includes(carrier.carrier_id)) {
+			if (all_carriers.map((e) => e.carrier_id).includes(carrier.carrier_id)) {
 				existing_ids.push(carrier.carrier_id);
 			}
 		}
@@ -145,8 +145,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				comp._nodes.pricing_dt._children("datatable-row-comp").forEach((/** @type {DatatableRowComp} */ row) => {
 					const carrier_id = row._data.row_data.carrier_id;
 					const data = comp._data;
-					const carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
-					const carrier = carriers.find((e) => e.carrier_id === carrier_id);
+					const all_carriers = [...data.couriers, ...data.parcel_lockers, ...data.in_persons];
+					const carrier = all_carriers.find((e) => e.carrier_id === carrier_id);
 					row.classList.toggle("inactive", !!(!carrier || !carrier.active));
 					carrier_id;
 				});

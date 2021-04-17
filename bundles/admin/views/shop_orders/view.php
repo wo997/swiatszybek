@@ -8,6 +8,7 @@
 <script>
     <?= preloadOrderStatuses() ?>
     <?= preloadDeliveryTypes() ?>
+    <?= preloadCarriers() ?>
 </script>
 
 <?php startSection("body_content"); ?>

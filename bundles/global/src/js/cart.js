@@ -5,7 +5,7 @@ function resizeCartCallback() {
 			return;
 		}
 
-		cart.classList.toggle("skinny", cart.offsetWidth < 350);
+		cart.classList.toggle("skinny", cart.offsetWidth < 390);
 	});
 }
 

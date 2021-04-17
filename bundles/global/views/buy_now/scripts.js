@@ -85,7 +85,7 @@ domload(() => {
 						<span class="semi_bold name">${available_carrier.name}</span>
 						<img src="${available_carrier.img_url}" class="carrier_img" />
 						<span class="duration">${available_carrier.delivery_time_days} dni</span>
-						<span class="pln">${available_carrier.fit_dimension.price} zł</span>
+						<span class="pln">${available_carrier.fit_dimensions.price} zł</span>
 					</div>`
 			)
 			.join("");
@@ -98,7 +98,7 @@ domload(() => {
 
 		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
 
-		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimension.price);
+		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimensions.price);
 		const courier_price_min = Math.min(...courier_prices);
 		const courier_price_max = Math.max(...courier_prices);
 		/** @type {any} */
@@ -231,6 +231,7 @@ domload(() => {
 		const courier_address_different = courier_address_different_input._get_value();
 		expand(case_courier_address_different, !!courier_address_different);
 	});
+	courier_address_different_input._set_value(0);
 
 	confirm_order_btn.addEventListener("click", () => {
 		let valid = true;

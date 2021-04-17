@@ -94,7 +94,7 @@ domload(() => {
 				}
 				const dimensions_json = JSON.stringify(dimensions);
 
-				carriers.push({
+				all_carriers.push({
 					carrier_id: carrier_data.carrier_id,
 					name: carrier_data.name,
 					delivery_time_days: carrier_data.delivery_time_days,
@@ -109,7 +109,7 @@ domload(() => {
 			});
 		};
 
-		const carriers = [];
+		const all_carriers = [];
 
 		append_data(data.couriers);
 		append_data(data.parcel_lockers);
@@ -120,7 +120,7 @@ domload(() => {
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "/carrier/save_many",
 			params: {
-				carriers,
+				carriers: all_carriers,
 				config: {
 					allow_cod: data.allow_cod,
 					cod_fee: data.cod_fee,

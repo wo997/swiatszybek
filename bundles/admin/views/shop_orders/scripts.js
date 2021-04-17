@@ -37,14 +37,27 @@ domload(() => {
 					return html`${data.total_price} zł`;
 				},
 			},
+			// {
+			// 	label: "Rodzaj dostawy",
+			// 	key: "delivery_type_id",
+			// 	map_name: "delivery_type",
+			// 	width: "130px",
+			// 	searchable: "select",
+			// },
+			// {
+			// 	label: "Dostawa",
+			// 	key: "carrier_id",
+			// 	map_name: "carrier",
+			// 	width: "110px",
+			// 	searchable: "select",
+			// },
 			{
 				label: "Dostawa",
-				key: "delivery_type_id",
-				map_name: "delivery_type",
-				width: "140px",
+				key: "carrier_id",
+				map_name: "carrier_full",
+				width: "120px",
 				searchable: "select",
 			},
-
 			{
 				label: "Status",
 				key: "status_id",
@@ -118,6 +131,21 @@ domload(() => {
 						const obj = {
 							val: d.delivery_type_id,
 							label: d.name,
+						};
+						return obj;
+					});
+					return map;
+				},
+			},
+			{
+				name: "carrier_full",
+				getMap: () => {
+					const map = carriers.map((c) => {
+						const d = delivery_types.find((d) => d.delivery_type_id === c.delivery_type_id);
+
+						const obj = {
+							val: c.carrier_id,
+							label: (d ? d.name : "") + " " + c.name,
 						};
 						return obj;
 					});

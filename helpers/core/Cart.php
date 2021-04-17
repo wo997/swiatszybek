@@ -138,7 +138,7 @@ class Cart
                     if ($carrier["delivery_type_id"] === 1) {
                         $dimension_fits["price"] += $cod_fee;
                     }
-                    $carrier["fit_dimension"] = $dimension_fits;
+                    $carrier["fit_dimensions"] = $dimension_fits;
                     $available_carriers[] = $carrier;
                 }
             }
@@ -148,13 +148,25 @@ class Cart
         return $available_carriers;
     }
 
-    public function getDeliveryPrice()
+    public function getDeliveryFitDimensions()
     {
-        $delivery_price = 0;
         foreach ($this->available_carriers as $carrier) {
             if ($carrier["carrier_id"] === $this->carrier_id) {
-                $delivery_price = $carrier["fit_dimension"]["price"];
+                return $carrier["fit_dimensions"];
             }
+        }
+
+        return null;
+    }
+
+    public function getDeliveryPrice()
+    {
+        $delivery_fit_dimensions = $this->getDeliveryFitDimensions();
+
+        $delivery_price = 0;
+
+        if ($delivery_fit_dimensions) {
+            $delivery_price = $delivery_fit_dimensions["price"];
         }
 
         return $delivery_price;
@@ -224,8 +236,6 @@ class Cart
         }
 
         $total_price += $delivery_price;
-
-
 
         return [
             "products" => $products_data,

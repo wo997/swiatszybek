@@ -82,10 +82,16 @@ function confirmOrder($shop_order_data)
     $shop_order->setProp("delivery_price", $cart_data["delivery_price"]);
     $shop_order->setProp("total_price", $cart_data["total_price"]);
     $shop_order->setProp("rebate_codes", $cart_data["rebate_codes"]);
+    $shop_order->setProp("delivery_type", $cart_data["delivery_type_id"]);
+    $shop_order->setProp("carrier", $cart_data["carrier_id"]);
 
-    $shop_order->setProp("delivery_type", $user_cart->getDeliveryTypeId());
+    // it's set here so the user can store the selection but once he confirms the order it might change the state
+    $payment_time = $cart_data["delivery_type_id"] === 1 ? $cart_data["payment_time"] : "prepayment";
+    $shop_order->setProp("payment_time", $payment_time);
 
-    $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME, cause in the future you will reuse the basket to calculate the order price
+    $shop_order->setProp("package_api_key", $user_cart->getDeliveryFitDimensions()["api_key"]);
+
+    $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME
 
     $shop_order->setProp("user_id", User::getCurrent()->getId());
 

@@ -15,6 +15,3 @@
 let delivery_types = [];
 
 function loadedDeliveryTypes() {}
-
-// function refreshDeliveryTypes() {
-// }
