@@ -313,6 +313,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 								name: "",
 								tracking_url_prefix: "",
 								active: 0,
+								api_key: "",
+								img_url: "",
 							});
 
 							comp._render();

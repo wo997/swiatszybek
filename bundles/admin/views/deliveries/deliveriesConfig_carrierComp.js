@@ -8,6 +8,7 @@
  * width: number
  * height: number
  * price: number
+ * api_key: string
  * } & ListCompRowData} DimensionData
  *
  */
@@ -23,6 +24,8 @@
  * expanded: boolean
  * initial_dimensions: DimensionData[]
  * dimensions_dt?: DatatableCompData
+ * api_key: string
+ * img_url: string
  * } & ListCompRowData} DeliveriesConfig_CarrierCompData
  *
  * @typedef {{
@@ -53,6 +56,8 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			delivery_time_days: 0,
 			expanded: false,
 			initial_dimensions: [],
+			api_key: "",
+			img_url: "",
 		};
 	}
 
@@ -65,6 +70,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			data.dimensions_dt = {
 				columns: [
 					{ key: "name", label: "Gabaryt", editable: "string" },
+					{ key: "api_key", label: "Klucz integracji", editable: "string" },
 					{ key: "weight", label: "Waga (kg)", editable: "number" },
 					{ key: "length", label: "Długość (cm)", editable: "number" },
 					{ key: "width", label: "Szerokość (cm)", editable: "number" },
@@ -102,7 +108,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div class="flex align_center">
+			<div class="flex align_center header">
 				<div class="semi_bold semi_medium" html="{${data.row_index + 1}}"></div>
 				.
 				<div class="semi_bold semi_medium clickable_label ml1" html="{${data.name}}" data-node="{${comp._nodes.label}}"></div>
@@ -116,7 +122,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			<div style="flex-grow:1">
 				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
-						<div class="label first">Nazwa dostawcy</div>
+						<div class="label">Nazwa dostawcy</div>
 						<input class="field small" data-bind="{${data.name}}" />
 
 						<div class="label">Widoczność w sklepie</div>
@@ -134,6 +140,12 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 								</div>
 							</div>
 						</div>
+
+						<div class="label">Klucz integracji</div>
+						<input class="field small" data-bind="{${data.api_key}}" />
+
+						<div class="label">Link do ikonki</div>
+						<input class="field small" data-bind="{${data.img_url}}" />
 
 						<div class="label">Czas doręczenia (dni robocze)</div>
 						<input class="field small" data-bind="{${data.delivery_time_days}}" />

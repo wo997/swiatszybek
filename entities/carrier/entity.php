@@ -9,5 +9,7 @@ EntityManager::register("carrier", [
         "delivery_time_days" => ["type" => "number"],
         "pos" => ["type" => "number"],
         "active" => ["type" => "number"],
+        "api_key" => ["type" => "string"],
+        "img_url" => ["type" => "string"],
     ],
 ]);

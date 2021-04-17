@@ -2,7 +2,7 @@
 
 deliveries-config-comp.main {
 	& {
-		max-width: 750px;
+		max-width: 900px;
 	}
 
 	.inactive {
@@ -16,7 +16,7 @@ deliveries-config-comp.main {
 	}
 
 	deliveries-config_carrier-comp {
-		.node_list_delete_btn {
+		.header .node_list_delete_btn {
 			display: none;
 		}
 	}

@@ -12,7 +12,7 @@ try {
         saveSetting("general", "deliveries", [
             "path" => [],
             "value" => json_decode($_POST["config"], true)
-        ]);
+        ], false);
     }
 
     Request::jsonResponse(["success" => true]);

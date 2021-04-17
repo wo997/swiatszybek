@@ -627,10 +627,15 @@ function DatatableComp(comp, parent, data) {
 					}
 				}
 
-				setTimeout(() => {
-					// it listens to list's event
+				const exp = () => {
 					expand(comp._nodes.empty_table, data.rows.length === 0);
-				});
+				};
+				if (comp._parent(".freeze")) {
+					exp();
+				} else {
+					// it listens to list's event
+					setTimeout(exp);
+				}
 
 				if (data.selectable) {
 					let select_count = 0;

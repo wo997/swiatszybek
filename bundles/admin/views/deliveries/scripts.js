@@ -1,12 +1,5 @@
 /* js[view] */
 
-// inpost parcel dimension examples
-// this could be a map easily
-// "small", "Gabaryt A - 8 x 38 x 64 cm, do 25 kg"
-// "medium", "Gabaryt B - 19 x 38 x 64 cm, do 25 kg"
-// "large", "Gabaryt C - 41 x 38 x 64 cm, do 25 kg"
-// "xlarge", "Gabaryt D - 50 x 50 x 80 cm, do 25 kg"
-
 domload(() => {
 	/** @type {DeliveriesConfigComp} */
 	// @ts-ignore
@@ -40,6 +33,7 @@ domload(() => {
 					width: dimension_data.width,
 					height: dimension_data.height,
 					price: dimension_data.price,
+					api_key: dimension_data.api_key,
 				});
 			}
 		} catch {}
@@ -66,6 +60,8 @@ domload(() => {
 				name: carrier_data.name,
 				tracking_url_prefix: carrier_data.tracking_url_prefix,
 				active: carrier_data.active,
+				api_key: carrier_data.api_key,
+				img_url: carrier_data.img_url,
 			});
 		}
 	});
@@ -81,9 +77,9 @@ domload(() => {
 		 * @param {DeliveriesConfig_CarrierCompData[]} some_carriers
 		 */
 		const append_data = (some_carriers) => {
-			some_carriers.forEach((some_carrier) => {
+			some_carriers.forEach((carrier_data) => {
 				let dimensions = [];
-				for (const dimension of some_carrier.dimensions_dt.dataset) {
+				for (const dimension of carrier_data.dimensions_dt.dataset) {
 					/** @type {DimensionData} */
 					const dimension_data = dimension;
 					dimensions.push({
@@ -93,19 +89,22 @@ domload(() => {
 						width: dimension_data.width,
 						height: dimension_data.height,
 						price: dimension_data.price,
+						api_key: dimension_data.api_key,
 					});
 				}
 				const dimensions_json = JSON.stringify(dimensions);
 
 				carriers.push({
-					carrier_id: some_carrier.carrier_id,
-					name: some_carrier.name,
-					delivery_time_days: some_carrier.delivery_time_days,
-					delivery_type_id: some_carrier.delivery_type_id,
-					tracking_url_prefix: some_carrier.tracking_url_prefix,
+					carrier_id: carrier_data.carrier_id,
+					name: carrier_data.name,
+					delivery_time_days: carrier_data.delivery_time_days,
+					delivery_type_id: carrier_data.delivery_type_id,
+					tracking_url_prefix: carrier_data.tracking_url_prefix,
 					dimensions_json,
-					pos: some_carrier.row_index,
-					active: some_carrier.active,
+					pos: carrier_data.row_index,
+					active: carrier_data.active,
+					api_key: carrier_data.api_key,
+					img_url: carrier_data.img_url,
 				});
 			});
 		};

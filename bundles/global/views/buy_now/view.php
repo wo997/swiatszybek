@@ -138,6 +138,19 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
 
                 <div class="radio_group carrier">
+                    <?php
+                    foreach (DB::fetchArr("SELECT * FROM carrier WHERE active = 1 ORDER BY pos ASC") as $carrier) {
+                        var_dump($carrier);
+                    ?>
+                        <div class="checkbox_area">
+                            <p-checkbox data-value="inpost"></p-checkbox>
+                            <img src="/src/img/inpost_logo.svg" style="width: 80px;">
+                            <span class="pln">17 zł</span>
+                        </div>
+                    <?php
+                    }
+                    ?>
+
                     <div class="checkbox_area">
                         <p-checkbox data-value="inpost"></p-checkbox>
                         <img src="/src/img/inpost_logo.svg" style="width: 80px;">
