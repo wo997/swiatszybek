@@ -6,20 +6,20 @@
 	font-weight: 600;
 }
 .btn.primary {
-	background: var(--primary-clr);
+	background: var(--primary_clr);
 	color: white;
 }
 .btn.secondary {
 	background: white;
-	color: var(--primary-clr);
+	color: var(--primary_clr);
 }
 .btn.red {
 	background: var(--red-clr);
 	color: white;
 }
 .btn.subtle {
-	background: var(--subtle-background-clr);
-	color: var(--subtle-font-clr);
+	background: var(--subtle_bckg_clr);
+	color: var(--subtle_font_clr);
 } */
 
 /* body {

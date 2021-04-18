@@ -86,10 +86,10 @@ CSS;
         $colors_css = "/* css[global] */";
 
         // .global_root {
-        //     --primary-clr: #35c;
-        //     --buynow-clr: #f50000;
-        //     --subtle-font-clr: #333333;
-        //     --subtle-background-clr: #fbfbfb;
+        //     --primary_clr: #35c;
+        //     --buynow_clr: #f50000;
+        //     --subtle_font_clr: #333333;
+        //     --subtle_bckg_clr: #fbfbfb;
         // }
 
         $colors_css .= ".global_root {";

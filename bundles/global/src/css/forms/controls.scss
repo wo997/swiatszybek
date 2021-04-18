@@ -59,12 +59,12 @@ textarea {
 		font-weight: 600;
 	}
 	&.primary {
-		--btn-background-clr: var(--primary-clr);
+		--btn-background-clr: var(--primary_clr);
 		--btn-font-clr: #fff;
 	}
 	&.secondary {
 		--btn-background-clr: #fafafa;
-		--btn-border-clr: var(--primary-clr);
+		--btn-border-clr: var(--primary_clr);
 	}
 	&.subtle {
 		--btn-background-clr: #0000000c;
@@ -98,7 +98,7 @@ textarea {
 		--btn-hover-clr: #0001;
 	}
 	&.buy_btn {
-		--btn-background-clr: var(--buynow-clr);
+		--btn-background-clr: var(--buynow_clr);
 		--btn-font-clr: #fff;
 	}
 

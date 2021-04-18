@@ -21,7 +21,7 @@
 //     <p style='color: white; background: #1b1; border-radius: 3px; padding: 3px 10px;text-align:center;max-width:450px;margin:50px auto -60px'>Wysłaliśmy zaproszenie na Twoją skrzynkę pocztową <i class='fa fa-check'></i></p>
 //     <form onsubmit='sendNews(this); return false;' style='padding:10px;box-sizing:border-box;transition: 0.5s;max-height:800px;overflow: hidden;width: 100%;max-width: 630px;background: white;margin:0 auto 25px;border: 1px solid #ddd;background: #fcfcfc;'>
 //         <div style='text-align:center; margin-top: 20px'>
-//             <h3 style='font-weight:normal;font-size: 28px; margin: 15px 0 0;'>Zapisz się do <b style='color:var(--primary-clr)'>Newslettera</b></h3>
+//             <h3 style='font-weight:normal;font-size: 28px; margin: 15px 0 0;'>Zapisz się do <b style='color:var(--primary_clr)'>Newslettera</b></h3>
 //         </div>
 //         <div class='desktop_row form-spacing'>
 //             <div style='width:100%'>

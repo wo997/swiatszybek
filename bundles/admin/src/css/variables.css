@@ -1,9 +1,9 @@
 /* css[admin] */
 
 .admin_root {
-	--primary-clr: #47a;
-	--subtle-font-clr: #333;
-	--subtle-background-clr: #ececec;
+	--primary_clr: #47a;
+	--subtle_font_clr: #333;
+	--subtle_bckg_clr: #ececec;
 	--important-clr: #d37;
 	--red-clr: #e22;
 }
