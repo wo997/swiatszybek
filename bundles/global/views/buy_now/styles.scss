@@ -97,26 +97,6 @@
 	}
 }
 
-.rebate_code_block {
-	& {
-		display: inline-flex;
-		background: #eee;
-		border-radius: 100px;
-		padding: 0 0 0 15px;
-		height: 32px;
-		align-items: center;
-		margin: 2px 0;
-		box-shadow: 0 1px 2px 0 #0003;
-	}
-	& .btn {
-		border-radius: 100px;
-		margin-right: -5px;
-		width: 32px;
-		height: 32px;
-		margin: -2px -1px -2px 2px;
-	}
-}
-
 @media only screen and (max-width: 999px), (max-height: 599px) {
 	.buy_now_container {
 		& {

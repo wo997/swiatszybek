@@ -81,7 +81,7 @@ function confirmOrder($shop_order_data)
     $shop_order->setProp("products_price", $cart_data["products_price"]);
     $shop_order->setProp("delivery_price", $cart_data["delivery_price"]);
     $shop_order->setProp("total_price", $cart_data["total_price"]);
-    $shop_order->setProp("rebate_codes", $cart_data["rebate_codes"]);
+    $shop_order->setProp("rebate_codes_json", json_encode($cart_data["rebate_codes"]));
     $shop_order->setProp("delivery_type", $cart_data["delivery_type_id"]);
     $shop_order->setProp("carrier", $cart_data["carrier_id"]);
 

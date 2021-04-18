@@ -13,7 +13,7 @@ DB::createTable("shop_order", [
     ["name" => "delivery_price", "type" => "DECIMAL(10,2)"],
     ["name" => "total_price", "type" => "DECIMAL(10,2)"],
     ["name" => "user_id", "type" => "INT", "index" => "index"],
-    ["name" => "rebate_codes", "type" => "VARCHAR(255)"],
+    ["name" => "rebate_codes_json", "type" => "TEXT"],
     ["name" => "main_address_id", "type" => "INT", "null" => true],
     ["name" => "courier_address_id", "type" => "INT", "null" => true, "index" => "index"],
     ["name" => "parcel_locker_id", "type" => "INT", "null" => true, "index" => "index"],

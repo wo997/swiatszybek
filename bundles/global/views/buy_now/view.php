@@ -38,7 +38,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <div class="cart_summary">
 
                 <div>
-                    Suma:
+                    Produkty:
                     <span class="cart_products_price pln"></span>
                 </div>
                 <div>
@@ -50,7 +50,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
                 <div class="rebate_codes_list"></div>
                 <div class="big">
-                    Do zapłaty:
+                    Suma:
                     <span class="cart_total_price pln"></span>
                 </div>
             </div>

@@ -327,7 +327,7 @@ function initBuyNowCart() {
 				.map(
 					(e) =>
 						html`<span class="rebate_code_block">
-							<span><span style="font-weight: 400;"> ${e.code}:</span> -${e.value + (e.value.includes("%") ? "" : " zł")}</span>
+							<span><span class="normal"> ${e.code}:</span> -${e.value + (e.value.includes("%") ? "" : " zł")}</span>
 							<button class="btn transparent small remove_rebate_code" data-code="${e.code}">
 								<i class="fas fa-times"></i>
 							</button>

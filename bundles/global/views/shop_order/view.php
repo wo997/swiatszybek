@@ -46,6 +46,7 @@ $order_status = $shop_order->getProp("status");
 
 $requires_payment = $shop_order->getProp("status")->getId() === 1;
 
+
 ?>
 
 <div class="order_all">
@@ -72,6 +73,7 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
                         </span>
                     </div>
                 </div> -->
+
                 <div class="label big">Opłać zamówienie (<?= $shop_order->getProp("total_price"); ?> zł)</div>
                 <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
                 <a class="btn fill medium pay_btn" href="/przelewy24/pay">Płacę</a>
@@ -148,6 +150,27 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
                 }
                 ?>
             </ul>
+
+            <div style="text-align:right" class="mt2">
+                <div class="semi_bold">Produkty: <span class="pln"><?= $shop_order->getProp("products_price") ?> zł</span></div>
+                <div class="semi_bold">Dostawa: <span class="pln"><?= $shop_order->getProp("delivery_price"); ?> zł</span></div>
+                <?php
+                $rebate_codes = json_decode($shop_order->getProp("rebate_codes_json"), true);
+                if ($rebate_codes) {
+                    foreach ($rebate_codes as $rebate_code) {
+                        $code = $rebate_code["code"];
+                        $value = $rebate_code["value"];
+                ?>
+                        <span class="rebate_code_block">
+                            <span><span class="normal"> <?= $code ?>:</span> -<?= $value . (strpos($value, "%") !== false ? "" : " zł") ?></span>
+                        </span>
+                <?php
+                    }
+                }
+                ?>
+
+                <div class="semi_bold medium">Suma: <span class="pln"><?= $shop_order->getProp("total_price") ?> zł</span></div>
+            </div>
         </div>
     </div>
 
