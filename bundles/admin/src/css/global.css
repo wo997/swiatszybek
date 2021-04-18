@@ -6,12 +6,12 @@
 	font-weight: 600;
 }
 .btn.primary {
-	background: var(--primary_clr);
+	background: var(--clr_primary);
 	color: white;
 }
 .btn.secondary {
 	background: white;
-	color: var(--primary_clr);
+	color: var(--clr_primary);
 }
 .btn.red {
 	background: var(--red-clr);

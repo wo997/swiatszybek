@@ -2,7 +2,7 @@
 	transition: 0.2s;
 }
 .contact-info a:hover {
-	color: var(--primary_clr);
+	color: var(--clr_primary);
 }
 
 .contact-info {

@@ -107,7 +107,7 @@
 			border-radius: 4px;
 		}
 		&.selected_slide::before {
-			border: 2px solid var(--primary_clr);
+			border: 2px solid var(--clr_primary);
 			box-shadow: 0 2px 4px 0 #0002;
 		}
 		img {

@@ -42,12 +42,12 @@
 			}
 			&.checked {
 				& {
-					box-shadow: inset 0 -3px 0 0 var(--primary_clr);
+					box-shadow: inset 0 -3px 0 0 var(--clr_primary);
 					color: #000;
 					cursor: default;
 				}
 				.filter_icon {
-					color: var(--primary_clr);
+					color: var(--clr_primary);
 				}
 			}
 			& > span {

@@ -6,6 +6,10 @@
 
 <title>Szablon</title>
 
+<script>
+    <?= preloadColorPalette() ?>
+</script>
+
 <?php startSection("header"); ?>
 
 <div class="custom_toolbar">

@@ -47,7 +47,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
-					<div class="user_info mb3"><i class="fas fa-info-circle"></i> Uwaga - wszystkie zmiany wprowadzanie tutaj są globalne!</div>
+					<div class="user_info mb3"><i class="fas fa-info-circle"></i> Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div>
 
 					<div class="label first">Główna czcionka</div>
 					<div class="pretty_radio semi_bold">

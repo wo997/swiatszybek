@@ -36,7 +36,7 @@
 			border-radius: 4px;
 			border: 1px solid #bbb;
 			width: var(--box-width);
-			--selection_clr: var(--primary_clr);
+			--selection_clr: var(--clr_primary);
 		}
 		&.error {
 			--selection_clr: var(--error-clr);
