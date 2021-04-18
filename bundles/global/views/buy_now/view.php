@@ -89,110 +89,110 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>
-            <div class="radio_group boxes big_boxes columns_3 hide_checks delivery">
+            <div class="radio_group boxes big_boxes columns_3 hide_checks delivery number">
                 <div class="checkbox_area">
                     <div>
-                        <p-checkbox data-value="courier"></p-checkbox>
+                        <p-checkbox data-value="1"></p-checkbox>
                         <span class="semi_bold">Kurier</span>
                         <span class="pln courier_prices"></span>
                     </div>
                 </div>
                 <div class="checkbox_area">
                     <div>
-                        <p-checkbox data-value="parcel_locker"></p-checkbox>
+                        <p-checkbox data-value="2"></p-checkbox>
                         <span class="semi_bold">Paczkomat</span>
                         <span class="pln">15 zł</span>
                     </div>
                 </div>
                 <div class="checkbox_area">
                     <div>
-                        <p-checkbox data-value="in_person"></p-checkbox>
+                        <p-checkbox data-value="3"></p-checkbox>
                         <span class="semi_bold">Odbiór osobisty</span>
                         <span class="pln">0 zł</span>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="expand_y animate_hidden hidden case_courier_above">
-            <div class="radio_group boxes big_boxes hide_checks payment_time columns_2 pt4">
-                <div class="checkbox_area">
-                    <div>
-                        <p-checkbox data-value="prepayment"></p-checkbox>
-                        <span class="semi_bold">Przedpłata</span>
-                        <span class="pln">+ 0 zł</span>
-
-                    </div>
-                </div>
-                <div class="checkbox_area">
-                    <div>
-                        <p-checkbox data-value="cod"></p-checkbox>
-                        <span class="semi_bold">Za pobraniem</span>
-                        <span class="pln">+ <span class="cod_fee">3</span></span>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="radio_group carrier number mtf"></div>
-
-        <div class="expand_y animate_hidden hidden case_courier">
-            <div>
-                <div class="label big">Adres wysyłki</div>
-
-                <span class="label">Chcę użyć innego adresu do wysyłki</span>
-                <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2 number">
+            <div class="expand_y animate_hidden hidden case_courier_above">
+                <div class="radio_group boxes big_boxes hide_checks payment_time columns_2 pt4">
                     <div class="checkbox_area">
                         <div>
-                            <p-checkbox data-value="0"></p-checkbox>
-                            <span class="semi_bold">Nie</span>
+                            <p-checkbox data-value="prepayment"></p-checkbox>
+                            <span class="semi_bold">Przedpłata</span>
+                            <span class="pln">+ 0 zł</span>
+
                         </div>
                     </div>
                     <div class="checkbox_area">
                         <div>
-                            <p-checkbox data-value="1"></p-checkbox>
-                            <span class="semi_bold">Tak</span>
+                            <p-checkbox data-value="cod"></p-checkbox>
+                            <span class="semi_bold">Za pobraniem</span>
+                            <span class="pln">+ <span class="cod_fee">3</span></span>
+
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="expand_y animate_hidden hidden case_courier_address_different">
-                    <address-comp class="courier_address optional_phone_email pt4"></address-comp>
+            <div class="radio_group carrier number mtf"></div>
+
+            <div class="expand_y animate_hidden hidden case_courier">
+                <div>
+                    <div class="label big">Adres wysyłki</div>
+
+                    <span class="label">Chcę użyć innego adresu do wysyłki</span>
+                    <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2 number">
+                        <div class="checkbox_area">
+                            <div>
+                                <p-checkbox data-value="0"></p-checkbox>
+                                <span class="semi_bold">Nie</span>
+                            </div>
+                        </div>
+                        <div class="checkbox_area">
+                            <div>
+                                <p-checkbox data-value="1"></p-checkbox>
+                                <span class="semi_bold">Tak</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="expand_y animate_hidden hidden case_courier_address_different">
+                        <address-comp class="courier_address optional_phone_email pt4"></address-comp>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="expand_y animate_hidden hidden case_parcel_locker">
-            <div>
-                <button class="btn primary pick_inpost_parcel_locker_btn mtf">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
-                <div class="choosen_parcel_locker"> </div>
-            </div>
-        </div>
-
-        <div class="expand_y animate_hidden hidden case_in_person">
-            <div class="label medium">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
-        </div>
-
-        <div class="expand_y animate_hidden hidden case_form_filled">
-            <div class="label big">Potwierdzenie zamówienia</div>
-
-            <div class="label">Dodatkowe informacje do sprzedawcy <span class="optional_label"></span></div>
-            <textarea class="field client_notes" style="min-height: 60px;max-height: 70px;"></textarea>
-
-            <div class="label">Skorzystaj z szybkich i bezpiecznych płatności</div>
-            <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0 10px;">
-
-            <div class="checkbox_area">
-                <p-checkbox class="square accept_regulations"></p-checkbox>
-                <span class="semi_bold">Akceptuję regulamin</span>
+            <div class="expand_y animate_hidden hidden case_parcel_locker">
+                <div>
+                    <button class="btn primary pick_inpost_parcel_locker_btn mtf">Wybierz paczkomat <i class="fas fa-map-marker-alt"></i></button>
+                    <div class="choosen_parcel_locker"> </div>
+                </div>
             </div>
 
-            <button class="btn medium fill confirm_order pay_btn mtf">Płacę (<span class="cart_total_price"></span>)</button>
+            <div class="expand_y animate_hidden hidden case_in_person">
+                <div class="label medium">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
+            </div>
 
-            <div style="margin-top: 15px;">Nastąpi przekierowanie na stronę płatności Przelewy24.</div>
+            <div class="expand_y animate_hidden hidden case_form_filled">
+                <div class="label big">Potwierdzenie zamówienia</div>
 
-            <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
+                <div class="label">Dodatkowe informacje do sprzedawcy <span class="optional_label"></span></div>
+                <textarea class="field client_notes" style="min-height: 60px;max-height: 70px;"></textarea>
+
+                <div class="label">Skorzystaj z szybkich i bezpiecznych płatności</div>
+                <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0 10px;">
+
+                <div class="checkbox_area">
+                    <p-checkbox class="square accept_regulations"></p-checkbox>
+                    <span class="semi_bold">Akceptuję regulamin</span>
+                </div>
+
+                <button class="btn medium fill confirm_order pay_btn mtf">Płacę (<span class="cart_total_price"></span>)</button>
+
+                <div style="margin-top: 15px;">Nastąpi przekierowanie na stronę płatności Przelewy24.</div>
+
+                <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div>
+            </div>
         </div>
     </div>
 </div>

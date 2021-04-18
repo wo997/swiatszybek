@@ -79,34 +79,6 @@ domload(() => {
 	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 
 	const loadCart = () => {
-		const now_carriers = user_cart.available_carriers.filter(
-			(available_carrier) => available_carrier.delivery_type_id === user_cart.delivery_type_id
-		);
-		const carrier_html = now_carriers
-			.map(
-				(available_carrier) =>
-					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
-						<p-checkbox data-value="${available_carrier.carrier_id}"></p-checkbox>
-						<span class="semi_bold name">${available_carrier.name}</span>
-						<img src="${available_carrier.img_url}" class="carrier_img" />
-						<span class="duration">${available_carrier.delivery_time_days} dni</span>
-						<span class="pln">${available_carrier.fit_dimensions.price} zł</span>
-					</div>`
-			)
-			.join("");
-
-		carrier_input._set_content(carrier_html);
-
-		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
-
-		registerForms();
-
-		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
-
-		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
-			carrier_input._set_value(now_carriers[0].carrier_id);
-		}
-
 		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimensions.price);
 		const courier_price_min = Math.min(...courier_prices);
 		const courier_price_max = Math.max(...courier_prices);
@@ -131,7 +103,7 @@ domload(() => {
 			expand(case_choosen_account, true, { full_height_all_time: true });
 			const rect = buy_without_registration.getBoundingClientRect();
 			const diff = rect.top + rect.height + 10 - header_height;
-			if (diff > 0) {
+			if (diff > 50) {
 				smoothScroll(diff);
 			}
 		});
@@ -142,54 +114,77 @@ domload(() => {
 	}
 
 	delivery_input.addEventListener("change", () => {
-		const delivery_text = delivery_input._get_value();
-		expand(case_courier, delivery_text === "courier");
-		expand(case_courier_above, delivery_text === "courier");
+		const delivery_type_id = delivery_input._get_value();
+		expand(case_courier, delivery_type_id === 1);
+		expand(case_courier_above, delivery_type_id === 1);
 
-		expand(case_parcel_locker, delivery_text === "parcel_locker");
+		expand(case_parcel_locker, delivery_type_id === 2);
 
-		expand(case_in_person, delivery_text === "in_person");
+		expand(case_in_person, delivery_type_id === 3);
 
 		expand(case_form_filled, true, { full_height_all_time: true });
 
 		if (ready) {
 			const rect = delivery_input.getBoundingClientRect();
 			const diff = rect.top - 60 - header_height;
-			if (diff > 0) {
+			if (diff > 50) {
 				smoothScroll(diff);
 			}
 
 			cart_delivery_price_wrapper.classList.add("spinning");
-			const delivery = delivery_types.find((d) => d.text === delivery_text);
-			if (delivery) {
-				const delivery_type_id = delivery.delivery_type_id;
-				xhr({
-					url: "/cart/set_delivery_type",
-					params: {
-						delivery_type_id,
-					},
-					success: (res) => {
-						user_cart = res.user_cart;
-						loadedUserCart();
-						adding_product_from_cart = false;
+			xhr({
+				url: "/cart/set_delivery_type",
+				params: {
+					delivery_type_id,
+				},
+				success: (res) => {
+					user_cart = res.user_cart;
+					loadedUserCart();
+					adding_product_from_cart = false;
 
-						removeClasses(".spinning", ["spinning"]);
-					},
-				});
-			}
+					removeClasses(".spinning", ["spinning"]);
+				},
+			});
+		}
+
+		const now_carriers = user_cart.available_carriers.filter(
+			(available_carrier) => available_carrier.delivery_type_id === delivery_type_id
+		);
+		const carrier_html = now_carriers
+			.map(
+				(available_carrier) =>
+					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
+						<p-checkbox data-value="${available_carrier.carrier_id}"></p-checkbox>
+						<span class="semi_bold name">${available_carrier.name}</span>
+						<img src="${available_carrier.img_url}" class="carrier_img" />
+						<span class="duration">${available_carrier.delivery_time_days} dni</span>
+						<span class="pln">${available_carrier.fit_dimensions.price} zł</span>
+					</div>`
+			)
+			.join("");
+
+		const was_h = carrier_input.scrollHeight;
+		carrier_input._set_content(carrier_html);
+		const now_h = carrier_input.scrollHeight;
+		animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
+
+		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
+
+		registerForms();
+
+		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
+
+		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
+			carrier_input._set_value(now_carriers[0].carrier_id);
 		}
 	});
-
-	const set_delivery = delivery_types.find((d) => d.delivery_type_id === user_cart.delivery_type_id);
-	if (set_delivery) {
-		delivery_input._set_value(set_delivery.text);
-	}
+	delivery_input._set_value(user_cart.delivery_type_id);
 
 	payment_time_input.addEventListener("change", () => {
 		if (ready) {
 			const rect = payment_time_input.getBoundingClientRect();
 			const diff = rect.top - 60 - header_height;
-			if (diff > 0) {
+			if (diff > 50) {
 				smoothScroll(diff);
 			}
 
@@ -211,14 +206,13 @@ domload(() => {
 			});
 		}
 	});
-
 	payment_time_input._set_value(user_cart.payment_time);
 
 	carrier_input.addEventListener("change", () => {
 		if (ready) {
 			const rect = carrier_input.getBoundingClientRect();
 			const diff = rect.top - 60 - header_height;
-			if (diff > 0) {
+			if (diff > 50) {
 				smoothScroll(diff);
 			}
 
