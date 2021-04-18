@@ -15,10 +15,8 @@ endSection();
 
 <body class="freeze">
     <div class="main_wrapper">
-        <div class="main_container">
-            <?= def($sections, "body", ""); ?>
-            <?php include "bundles/global/templates/parts/footer.php"; ?>
-        </div>
+        <?= def($sections, "body", ""); ?>
+        <?php include "bundles/global/templates/parts/footer.php"; ?>
     </div>
 </body>
 

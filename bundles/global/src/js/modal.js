@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[!global] */
 
 /** @type {PiepNode} */
 let modal_wrapper_node = undefined;
@@ -7,11 +7,7 @@ let modal_container_node = undefined;
 
 let modalObserverTimeout = undefined;
 
-function initModal() {
-	if (modal_wrapper_node !== undefined) {
-		return;
-	}
-
+domload(() => {
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		html`
@@ -24,10 +20,11 @@ function initModal() {
 	modal_wrapper_node = $("#modal_wrapper");
 	modal_container_node = modal_wrapper_node._child(".modal_container");
 
-	registerModals();
-}
+	const root_class = window.location.pathname.startsWith("/admin/") ? "admin_root" : "global_root";
+	modal_wrapper_node.classList.add(root_class);
 
-domload(initModal);
+	registerModals();
+});
 
 function registerModals() {
 	$$("[data-modal]").forEach((e) => {
@@ -42,8 +39,6 @@ function registerModalContent(html, callback = undefined) {
 		});
 		return;
 	}
-
-	initModal();
 
 	const div = document.createElement("DIV");
 	div.insertAdjacentHTML("afterbegin", html);

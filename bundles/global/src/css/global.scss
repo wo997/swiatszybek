@@ -55,10 +55,9 @@ p {
 	display: flex;
 	flex-direction: column;
 }
-.main_container {
-	display: flex;
+
+.global_root {
 	flex-grow: 1;
-	flex-direction: column;
 }
 
 .h1 {
