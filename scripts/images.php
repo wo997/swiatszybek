@@ -1,11 +1,10 @@
 <?php
 
 // define WebP support also for XHR requests
-define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos($_SERVER['HTTP_ACCEPT'], 'image/webp') !== false ? 1 : 0);
+define("WEBP_SUPPORT", isset($_SESSION["HAS_WEBP_SUPPORT"]) || strpos(def($_SERVER, 'HTTP_ACCEPT', ''), 'image/webp') !== false ? 1 : 0);
 if (WEBP_SUPPORT) {
     $_SESSION["HAS_WEBP_SUPPORT"] = true;
 }
-
 
 // logo
 define("LOGO_PATH_LOCAL", "/" . getSetting(["theme", "copied_images", "logo", "path"], ""));

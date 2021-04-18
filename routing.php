@@ -150,9 +150,7 @@ if (Request::$is_admin_url) {
 
 $deployment_routes = [
     "/deployment/build",
-    "/deployment/migrate",
     "/deployment/warmup_cache",
-    "/deployment/warmup_images",
     "/deployment/export",
     "/deployment/install",
     "/deployment/get_size",

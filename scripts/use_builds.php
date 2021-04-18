@@ -11,8 +11,6 @@ $version_settings = 0;
 
 @include BUILD_INFO_PATH;
 
-define("ASSETS_RELEASE", $version_assets);
-
 $link_route_path = @include BUILDS_PATH . "link_route_path.php";
 if (!$link_route_path) {
     $link_route_path = [];

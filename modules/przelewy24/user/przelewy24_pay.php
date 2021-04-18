@@ -32,7 +32,7 @@ if ($zamowienie_data["status_id"] === 0) {
     $P24->addValue("p24_amount", round($zamowienie_data["koszt"] * 100));
     $P24->addValue("p24_currency", $currency);
 
-    $P24->addValue("p24_description", $app["company_data"]['shop_name'] . " zamowienie #" . $zamowienie_data["zamowienie_id"]);
+    $P24->addValue("p24_description", getSetting(["general", "company", 'shop_name'], "") . " zamowienie #" . $zamowienie_data["zamowienie_id"]);
     /*$P24->addValue("p24_client", $zamowienie_data["imie"] . " " . $zamowienie_data["nazwisko"]);
   $P24->addValue("p24_address", "ul. " . $zamowienie_data["ulica"] . " " . $zamowienie_data["nr_domu"] . "/" . $zamowienie_data["nr_lokalu"]);
   $P24->addValue("p24_zip", $zamowienie_data["kod_pocztowy"]);

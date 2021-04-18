@@ -72,8 +72,7 @@ CSS;
         Files::save(PREBUILDS_PATH . "header_build.scss", $header_build_css);
     }
 
-
-    public function saveThemeSettings($post)
+    public static function saveSettings($post)
     {
         $colors_palette_json = def($post, "colors_palette", "");
         if ($colors_palette_json) {
@@ -85,23 +84,35 @@ CSS;
 
         $colors_css = "/* css[global] */";
 
-        // .global_root {
-        //     --primary_clr: #35c;
-        //     --buynow_clr: #f50000;
-        //     --subtle_font_clr: #333333;
-        //     --subtle_bckg_clr: #fbfbfb;
-        // }
-
         $colors_css .= ".global_root {";
         foreach ($colors_palette as $color) {
             $color_name = $color["name"];
             $color_value = $color["value"];
-            $colors_css .= "--$color_name: $color_value;";
+            if (strlen($color_value) > 3) {
+                $colors_css .= "--$color_name: $color_value;";
+            }
         }
         $colors_css .= "}";
 
-        Files::save(PREBUILDS_PATH . "theme.css", $colors_css);
+        Files::save(PREBUILDS_PATH . "theme.scss", $colors_css);
 
-        triggerEvent("assets_change");
+        $build_url = SITE_URL . "/deployment/build";
+        file_get_contents($build_url); // a token might be necessary for safety purpose
+
+        $res = [
+            "colors_palette" => $colors_palette,
+        ];
+        $res = array_merge($res, json_decode(file_get_contents(SITE_URL . "/get_assets_release"), true));
+
+        return $res;
     }
+}
+
+function preloadColorPalette()
+{
+    $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"]));
+    return <<<JS
+    colors_palette = $colors_palette;
+    loadedColorPalette();
+JS;
 }

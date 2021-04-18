@@ -125,6 +125,5 @@ function buildSettings()
 
     if (file_get_contents($sp) !== $res) {
         Files::save($sp, $res);
-        Request::reload(true);
     }
 }

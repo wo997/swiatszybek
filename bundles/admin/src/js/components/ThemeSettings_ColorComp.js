@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * value: string
+ * name: string
  * }} ThemeSettings_ColorCompData
  *
  * @typedef {{
@@ -21,7 +22,7 @@
  */
 function ThemeSettings_ColorComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { value: "" };
+		data = { value: "", name: "" };
 	}
 
 	comp._set_data = (data, options = {}) => {
@@ -33,6 +34,7 @@ function ThemeSettings_ColorComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html` <color-picker data-bind="{${data.value}}" class="inline small"></color-picker>
+			<input class="inline small ml1" style="width: 95px" data-bind="{${data.name}}" data-tooltip="<span class='font_error'>Nie zaleca się zmiany nazw kolorów bez wiedzy technicznej</span>"></div>
 			<div class="mla">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>`,

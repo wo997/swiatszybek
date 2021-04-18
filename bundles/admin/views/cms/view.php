@@ -5,6 +5,10 @@
 
 <title>Strony</title>
 
+<script>
+    <?= preloadColorPalette() ?>
+</script>
+
 <?php startSection("body_content"); ?>
 
 <div class="piep_editor">

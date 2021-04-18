@@ -129,7 +129,7 @@ if (defined("ROUTE")) {
     <meta name="image" content="<?= $page_data["seo_image"] ?>">
     <meta property="og:image" content="<?= $page_data["seo_image"] ?>">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:site_name" content="<?= $app["company_data"]['shop_name'] ?>" />
+    <meta property="og:site_name" content="<?= getSetting(["general", "company", "shop_name"], "") ?>" />
     <meta name="twitter:card" content="summary" />
     <meta property="og:locale" content="pl_PL" />
     <meta property="og:type" content="website" />

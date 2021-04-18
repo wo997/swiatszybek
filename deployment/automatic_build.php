@@ -36,12 +36,13 @@ scanDirectories(
     }
 );
 
+
 $any_changed = false;
 $php_changed = false;
 $assets_changed = false;
 $settings_changed = false;
 
-// only when url is different than deployment so we can debug the app
+//sendEmail("wojtekwo997@gmail.com", Request::$full_url . " => " . (Request::$is_deployment_url ? 100 : 1), "xxx");
 if (!Request::$is_deployment_url) {
     if ($prev_mod_time_php != $mod_time_php) {
         $any_changed = true;
@@ -56,6 +57,7 @@ if (!Request::$is_deployment_url) {
     }
 
     if ($prev_mod_time_settings != $mod_time_settings) {
+        $any_changed = true;
         $settings_changed = true;
         $version_settings++;
     }
@@ -74,20 +76,12 @@ PHP;
         Files::save(BUILD_INFO_PATH, $content);
     }
 
-    if ($php_changed) {
-        ob_start();
-        include "scripts/build.php";
-        ob_clean();
-    }
-
-    if ($settings_changed) {
-        buildSettings();
-    }
+    // if ($settings_changed) {
+    //     buildSettings();
+    // }
 
     if ($any_changed) {
-        Assets::build();
-
-        // drop it and update defines, well - defines, they are tricky, getters are getter or idk
-        Request::reload(true);
+        $build_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/deployment/build";
+        file_get_contents($build_url); // a token might be necessary for safety purpose
     }
 }

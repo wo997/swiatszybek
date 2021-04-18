@@ -78,28 +78,29 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 		initialize: () => {
 			comp._nodes.add_color_btn.addEventListener("click", () => {
 				const data = comp._data;
-				data.colors.push({ value: "" });
+				const next_id = Math.max(0, ...comp._data.colors.map((c) => numberFromStr(c.name))) + 1;
+				const name = `clr_${next_id}`;
+				data.colors.push({ value: "", name });
 				comp._render();
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
-				//comp._data.colors[0].value
+				const save_colors_palette = comp._data.colors.map((c) => ({ name: c.name, value: c.value }));
 
 				showLoader();
 
-				// build
+				// TODO: save, build, and return in one go, cmon!
 				xhr({
-					url: "/pusta-strona",
+					url: STATIC_URLS["ADMIN"] + "/theme/save_settings",
+					params: {
+						colors_palette: save_colors_palette,
+					},
 					success: (res) => {
-						// get assets release
-						xhr({
-							url: "/get_assets_release",
-							success: (res) => {
-								$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
-								showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
-								hideLoader();
-							},
-						});
+						colors_palette = res.colors_palette;
+						loadedColorPalette();
+						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
+						showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
+						hideLoader();
 					},
 				});
 			});
