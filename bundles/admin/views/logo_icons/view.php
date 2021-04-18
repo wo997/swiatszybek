@@ -6,9 +6,17 @@
 
 <title>Logo / ikony</title>
 
-<?php startSection("body_content"); ?>
+<?php startSection("header"); ?>
 
-<h1>Logo / Ikony</h1>
+<div class="custom_toolbar">
+    <span class="title breadcrumbs">
+        <div class="crumb">
+            Logo / Ikony
+        </div>
+    </span>
+</div>
+
+<?php startSection("body_content"); ?>
 
 <div class="label">Logo sklepu</div>
 <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>

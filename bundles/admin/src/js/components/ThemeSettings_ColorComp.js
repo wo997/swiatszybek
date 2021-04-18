@@ -33,8 +33,9 @@ function ThemeSettings_ColorComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html` <color-picker data-bind="{${data.color}}" class="inline small"></color-picker>
-			<div style="flex-grow:1"></div>
-			<p-batch-trait data-trait="list_controls"></p-batch-trait>`,
+			<div class="mla">
+				<p-batch-trait data-trait="list_controls"></p-batch-trait>
+			</div>`,
 		initialize: () => {},
 		ready: () => {},
 	});
