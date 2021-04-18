@@ -35,6 +35,9 @@
         <button class="btn transparent show_inspector_btn" data-tooltip_position="left">
             <i class="fas fa-stream"></i>
         </button>
+        <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
+            <i class="fas fa-cogs"></i>
+        </button>
     </div>
 
     <div class="piep_editor_inspector">

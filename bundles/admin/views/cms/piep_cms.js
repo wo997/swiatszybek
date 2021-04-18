@@ -736,6 +736,10 @@ class PiepCMS {
 		/** @type {Position} */
 		this.inspector_pos = { x: 1000000, y: 0 };
 
+		this.container._child(".edit_theme_btn").addEventListener("click", () => {
+			getThemeSettingsModal()._show();
+		});
+
 		this.container._child(".show_inspector_btn").addEventListener("click", () => {
 			this.togglePiepEditorInspector();
 		});
@@ -1270,14 +1274,10 @@ class PiepCMS {
 	}
 
 	notGrabbedBlock() {
-		if (!mouse.target) {
-			return;
-		}
-
 		// not grabbed
 		let show_focus_node_vid = this.focus_node_vid;
 
-		const v_node_label = mouse.target._parent(".v_node_label");
+		const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
 		if (v_node_label) {
 			show_focus_node_vid = +v_node_label.dataset.vid;
 		}
