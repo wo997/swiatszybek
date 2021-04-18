@@ -78,8 +78,30 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 		initialize: () => {
 			comp._nodes.add_color_btn.addEventListener("click", () => {
 				const data = comp._data;
-				data.colors.push({ color: "" });
+				data.colors.push({ value: "" });
 				comp._render();
+			});
+
+			comp._nodes.save_btn.addEventListener("click", () => {
+				//comp._data.colors[0].value
+
+				showLoader();
+
+				// build
+				xhr({
+					url: "/pusta-strona",
+					success: (res) => {
+						// get assets release
+						xhr({
+							url: "/get_assets_release",
+							success: (res) => {
+								$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
+								showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
+								hideLoader();
+							},
+						});
+					},
+				});
 			});
 		},
 		ready: () => {},

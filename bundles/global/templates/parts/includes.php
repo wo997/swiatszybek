@@ -18,7 +18,7 @@ if (defined("ROUTE")) {
 }
 ?>
 
-<link href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 <script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
 
 <script>

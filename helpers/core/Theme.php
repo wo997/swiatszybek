@@ -71,4 +71,37 @@ CSS;
 
         Files::save(PREBUILDS_PATH . "header_build.scss", $header_build_css);
     }
+
+
+    public function saveThemeSettings($post)
+    {
+        $colors_palette_json = def($post, "colors_palette", "");
+        if ($colors_palette_json) {
+            $colors_palette = json_decode($colors_palette_json, true);
+            saveSetting("theme", "general", ["path" => ["colors_palette"], "value" => $colors_palette], false);
+        } else {
+            $colors_palette = getSetting(["theme", "general", "colors_palette"]);
+        }
+
+        $colors_css = "/* css[global] */";
+
+        // .global_root {
+        //     --primary-clr: #35c;
+        //     --buynow-clr: #f50000;
+        //     --subtle-font-clr: #333333;
+        //     --subtle-background-clr: #fbfbfb;
+        // }
+
+        $colors_css .= ".global_root {";
+        foreach ($colors_palette as $color) {
+            $color_name = $color["name"];
+            $color_value = $color["value"];
+            $colors_css .= "--$color_name: $color_value;";
+        }
+        $colors_css .= "}";
+
+        Files::save(PREBUILDS_PATH . "theme.css", $colors_css);
+
+        triggerEvent("assets_change");
+    }
 }

@@ -1,7 +1,7 @@
 /* js[admin] */
 
 function buildResponsiveHeader() {
-	previewUrl("/pusta-strona");
+	previewUrl("/experimental");
 	const preview_url = $("#previewUrl");
 	preview_url.classList.add("hidden");
 	showLoader();
@@ -14,7 +14,6 @@ window.addEventListener(
 		if (event.origin !== window.location.origin || event.data !== "iframe_domload") {
 			return;
 		}
-		console.log("lala");
 
 		const preview_url = $("#previewUrl");
 		preview_url.style.visibility = "hidden";
