@@ -45,10 +45,11 @@ footer {
 	background: #0001;
 }
 .admin_root {
-	height: 100vh;
-	flex-direction: row;
 	display: flex;
+	flex-direction: row;
 	align-items: stretch;
+	flex-grow: 1;
+	height: 100vh;
 }
 @media only screen and (max-width: 999px) {
 	.navbar_admin {
@@ -61,7 +62,6 @@ footer {
 	.admin_root {
 		flex-direction: column;
 		height: auto;
-		flex-grow: 1;
 	}
 	.navbar_admin.hidden > .scroll_panel {
 		overflow: initial !important;
@@ -83,16 +83,22 @@ footer {
 		margin: auto;
 	}
 	.menu_btn {
-		margin: -7px;
-		padding: 9px 0;
-		cursor: pointer;
-		font-size: 32px;
-		line-height: 1;
-		width: 50px;
-		height: 50px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+		& {
+			margin: -7px;
+			padding: 9px 0;
+			cursor: pointer;
+			font-size: 32px;
+			line-height: 1;
+			width: 50px;
+			height: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #eee;
+		}
+		.menu_icon {
+			width: 28px;
+		}
 	}
 	.navbar_admin .logo_wrapper {
 		visibility: hidden;
@@ -121,8 +127,8 @@ footer {
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		width: 3px;
-		height: 30px;
+		width: 2px;
+		height: 23px;
 		background-color: #000;
 		transform: rotate(45deg) translate(-50%, -50%);
 		transform-origin: top left;
