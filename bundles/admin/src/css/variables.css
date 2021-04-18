@@ -1,6 +1,6 @@
 /* css[admin] */
 
-:root {
+.admin_root {
 	--primary-clr: #47a !important;
 	--subtle-font-clr: #333 !important;
 	--subtle-background-clr: #ececec !important;

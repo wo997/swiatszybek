@@ -27,7 +27,7 @@
 
     <div class="piep_editor_content_wrapper">
         <div class="piep_editor_content_scroll scroll_panel scroll_shadow light">
-            <div class="piep_editor_content"></div>
+            <div class="piep_editor_content global_root"></div>
         </div>
     </div>
 

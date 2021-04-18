@@ -6,9 +6,10 @@ endSection();
 
 <?php startSection("body"); ?>
 
-<?php include "bundles/global/templates/parts/header/header.php";
-?>
+<div class="global_root">
+    <?php include "bundles/global/templates/parts/header/header.php"; ?>
 
-<?= def($sections, "body_content", ""); ?>
+    <?= def($sections, "body_content", ""); ?>
+</div>
 
 <?php include "bundles/global/templates/blank.php"; ?>

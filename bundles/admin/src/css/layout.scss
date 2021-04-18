@@ -5,12 +5,6 @@ body {
 	opacity: 1 !important;
 }
 
-.main-container {
-	flex-grow: 1;
-	display: flex;
-	height: 100%;
-}
-
 .home {
 	display: block;
 	text-align: center;
@@ -50,9 +44,11 @@ footer {
 .menu_item.current {
 	background: #0001;
 }
-#admin .main_container {
+.admin_root {
 	height: 100vh;
 	flex-direction: row;
+	display: flex;
+	align-items: stretch;
 }
 @media only screen and (max-width: 999px) {
 	.navbar_admin {
@@ -62,9 +58,10 @@ footer {
 	.content {
 		height: auto;
 	}
-	#admin .main_container {
+	.admin_root {
 		flex-direction: column;
 		height: auto;
+		flex-grow: 1;
 	}
 	.navbar_admin.hidden > .scroll_panel {
 		overflow: initial !important;

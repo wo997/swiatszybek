@@ -1,0 +1,13 @@
+/* css[admin] */
+
+theme-settings-comp.comp {
+	.bind_colors {
+		max-width: 350px;
+	}
+}
+
+theme-settings_color-comp.comp {
+	& {
+		display: flex;
+	}
+}
