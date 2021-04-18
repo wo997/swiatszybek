@@ -84,7 +84,7 @@ CSS;
 
         $colors_css = "/* css[global] */";
 
-        $colors_css .= ".global_root {";
+        $colors_css .= ":root {";
         foreach ($colors_palette as $color) {
             $color_name = $color["name"];
             $color_value = $color["value"];
@@ -93,6 +93,16 @@ CSS;
             }
         }
         $colors_css .= "}";
+
+        // $colors_css .= ".global_root {";
+        //     foreach ($colors_palette as $color) {
+        //         $color_name = $color["name"];
+        //         $color_value = $color["value"];
+        //         if (strlen($color_value) > 3) {
+        //             $colors_css .= "--$color_name: $color_value;";
+        //         }
+        //     }
+        //     $colors_css .= "}";
 
         Files::save(PREBUILDS_PATH . "theme.scss", $colors_css);
 
@@ -110,7 +120,7 @@ CSS;
 
 function preloadColorPalette()
 {
-    $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"]));
+    $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
     return <<<JS
     colors_palette = $colors_palette;
     loadedColorPalette();

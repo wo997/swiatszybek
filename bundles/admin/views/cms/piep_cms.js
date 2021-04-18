@@ -26,8 +26,6 @@ class PiepCMS {
 		this.initClick();
 		this.initKeyDown();
 
-		this.initColors();
-
 		this.piepEditorMainLoop();
 	}
 
@@ -55,7 +53,6 @@ class PiepCMS {
 		this.float_menu = node("piep_editor_float_menu");
 
 		this.styles = styles("piep_editor_styles");
-		this.color_palette_styles = styles("piep_editor_color_palette_styles");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
 	}
@@ -63,48 +60,6 @@ class PiepCMS {
 	initSelectResolution() {
 		this.select_resolution = this.container._child(".select_resolution");
 		this.select_resolution._set_value("desktop", { quiet: true });
-	}
-
-	initColors() {
-		/** @type {piepColor[]} */
-		this.colors = [
-			{
-				var_name: "primary_clr",
-				hex: "#47a",
-			},
-			{
-				var_name: "black_clr",
-				hex: "#000",
-			},
-			{
-				var_name: "white_clr",
-				hex: "#fff",
-			},
-			{
-				var_name: "red_clr",
-				hex: "#d44",
-			},
-			{
-				var_name: "green_clr",
-				hex: "#4d4",
-			},
-			{
-				var_name: "yellow_clr",
-				hex: "#dd4",
-			},
-		];
-
-		let color_palette_styles_html = ":root{";
-
-		for (const color of this.colors) {
-			color_palette_styles_html += `--${color.var_name}:${color.hex};`;
-		}
-
-		color_palette_styles_html += "}";
-
-		this.color_palette_styles._set_content(color_palette_styles_html);
-
-		this.container.dispatchEvent(new CustomEvent("color_palette_changed"));
 	}
 
 	initConsts() {
@@ -216,10 +171,10 @@ class PiepCMS {
 			const options_wrapper = color_dropdown._child(".options_wrapper");
 
 			let color_options_html = "";
-			this.colors.forEach((color) => {
+			colors_palette.forEach((color) => {
 				color_options_html += html`
-					<p-option data-value="var(--${color.var_name})">
-						<div class="color_circle" style="background:var(--${color.var_name});"></div>
+					<p-option data-value="var(--${color.name})">
+						<div class="color_circle" style="background:var(--${color.name});"></div>
 					</p-option>
 				`;
 			});
@@ -257,10 +212,12 @@ class PiepCMS {
 			});
 		};
 
-		this.container.addEventListener("color_palette_changed", () => {
+		const colorPaletteChanged = () => {
 			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.color"]`));
 			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
-		});
+		};
+		window.addEventListener("color_palette_changed", colorPaletteChanged);
+		colorPaletteChanged();
 
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {

@@ -132,6 +132,9 @@ function getThemeSettingsModal() {
 		ThemeSettingsComp(theme_settings_comp, undefined);
 	}
 
+	theme_settings_comp._data.colors = colors_palette;
+	theme_settings_comp._render();
+
 	$("#ThemeSettings .custom_toolbar").append(theme_settings_comp._nodes.save_btn);
 
 	return theme_settings_comp;
