@@ -249,21 +249,25 @@ domload(() => {
 
 		const data = { main_address: main_address._data };
 
-		const delivery_text = delivery_input._get_value();
-		const delivery = delivery_types.find((d) => d.text === delivery_text);
-		if (!delivery) {
+		const delivery_type = delivery_input._get_value();
+		if (delivery_type <= 0) {
 			showNotification(`Wybierz formę dostawy`, { type: "error", one_line: true });
 			return;
 		}
-		data.delivery_type = delivery.delivery_type_id;
+		data.delivery_type = delivery_type.delivery_type_id;
 
-		if (delivery_text === "courier") {
-			if (!courier_address._validate()) {
-				valid = false;
+		if (delivery_type === 1) {
+			const courier_address_different = courier_address_different_input._get_value();
+			if (courier_address_different) {
+				if (!courier_address._validate()) {
+					valid = false;
+				}
+				data.courier_address = courier_address._data;
+			} else {
+				data.courier_address = main_address._data;
 			}
-			data.courier_address = courier_address._data;
 		}
-		if (delivery_text === "parcel_locker") {
+		if (delivery_type === 2) {
 			if (!choose_parcel_locker) {
 				if (valid) {
 					showNotification(`Wybierz paczkomat`, { type: "error", one_line: true });
