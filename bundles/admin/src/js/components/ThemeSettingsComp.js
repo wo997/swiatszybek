@@ -88,6 +88,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				const save_colors_palette = comp._data.colors.map((c) => ({ name: c.name, value: c.value }));
 
 				showLoader();
+				hideModal("ThemeSettings");
 
 				// TODO: save, build, and return in one go, cmon!
 				xhr({

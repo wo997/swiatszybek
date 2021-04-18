@@ -84,7 +84,7 @@ CSS;
 
         $colors_css = "/* css[global] */";
 
-        $colors_css .= ":root {";
+        $colors_css .= ":root, .global_root {";
         foreach ($colors_palette as $color) {
             $color_name = $color["name"];
             $color_value = $color["value"];
@@ -106,7 +106,7 @@ CSS;
 
         Files::save(PREBUILDS_PATH . "theme.scss", $colors_css);
 
-        $build_url = SITE_URL . "/deployment/build";
+        $build_url = SITE_URL . "/deployment/build_assets";
         file_get_contents($build_url); // a token might be necessary for safety purpose
 
         $res = [

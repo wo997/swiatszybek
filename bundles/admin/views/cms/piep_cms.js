@@ -51,6 +51,7 @@ class PiepCMS {
 		this.float_focus = node("piep_editor_float_focus");
 		this.parent_float_focus = node("piep_editor_parent_float_focus");
 		this.float_menu = node("piep_editor_float_menu");
+		this.float_menu.classList.add("global_root");
 
 		this.styles = styles("piep_editor_styles");
 
