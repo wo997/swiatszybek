@@ -11,15 +11,15 @@ include "scripts/include_core_helpers.php";
 include "scripts/request.php";
 include "scripts/define_paths.php";
 
+include "scripts/settings.php";
+include "scripts/server_settings.php";
+
 include "scripts/use_builds.php";
 include "deployment/automatic_build.php";
 define("ASSETS_RELEASE", $version_assets);
 
-
 //ini_set('max_execution_time', '1000');
 ini_set('max_execution_time', '5');
-
-include "scripts/settings.php";
 
 include "scripts/set_time_zone.php";
 
@@ -40,7 +40,6 @@ function secret($var, $default = "")
 
 include "scripts/db_connect.php";
 
-include "scripts/server_settings.php";
 if (DEV_MODE) {
     include "scripts/errors.php";
 }

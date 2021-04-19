@@ -91,16 +91,17 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 
 				// TODO: save, build, and return in one go, cmon!
 				xhr({
-					url: STATIC_URLS["ADMIN"] + "/theme/save_settings",
+					url: STATIC_URLS["ADMIN"] + "/theme/save_settings?no_build",
 					params: {
 						colors_palette: save_colors_palette,
 						font_family: data.font_family,
 					},
 					success: (res) => {
 						colors_palette = res.colors_palette;
+						main_font_family = res.font_family;
 						loadedColorPalette();
 						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
-						$("#main_font").href = fonts[data.font_family].link;
+						$("#main_font").href = fonts[main_font_family].link;
 
 						showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
 						hideLoader();

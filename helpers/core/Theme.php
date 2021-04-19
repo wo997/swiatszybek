@@ -201,12 +201,13 @@ CSS;
 
         Files::save(PREBUILDS_PATH . "theme.scss", $theme_css);
 
-        file_get_contents(SITE_URL . "/deployment/build_assets"); // a token might be necessary for safety purpose
+        $build_res = file_get_contents(SITE_URL . "/deployment/build"); // a token might be necessary for safety purpose
 
         $res = [
             "colors_palette" => $colors_palette,
+            "font_family" => $font_family
         ];
-        $res = array_merge($res, json_decode(file_get_contents(SITE_URL . "/get_assets_release"), true));
+        $res = array_merge($res, json_decode($build_res, true));
 
         return $res;
     }

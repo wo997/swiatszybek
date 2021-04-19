@@ -1,5 +1,7 @@
 <?php
 
+ob_start();
+
 echo "<style>body{font-family: Verdana;font-size:14px}</style>";
 
 include "deployment/create_directories.php";
@@ -16,3 +18,7 @@ if (isset($_SERVER["HTTP_HOST"]) && !getSetting(["general", "advanced", "domain"
 }
 
 Assets::build();
+
+ob_clean();
+
+Request::jsonResponse(["ASSETS_RELEASE" => ASSETS_RELEASE]);
