@@ -137,6 +137,10 @@ class PiepCMS {
 		 */
 		this.editable_props = [
 			{
+				name: "fontWeight",
+				groups: ["appearance"],
+			},
+			{
 				name: "margin",
 				groups: ["layout"],
 			},
@@ -146,7 +150,7 @@ class PiepCMS {
 			},
 			{
 				name: "data-src",
-				match_tag: /img/,
+				match_tag: /img/, // TODO: matches array with order number?
 				groups: ["appearance"],
 			},
 			{
@@ -168,6 +172,10 @@ class PiepCMS {
 	}
 
 	initFloatMenu() {
+		// <p-option data-tooltip="Inny rozmiar" data-match="#\\d{1,}">
+		// 	<input class="small inline" />
+		// </p-option>;
+
 		this.float_menu._set_content(html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
@@ -667,6 +675,28 @@ class PiepCMS {
 			</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
+				<div data-blc_prop_wrapper="fontWeight">
+					<div class="label">Grubość czcionki</div>
+					<div class="pretty_radio pretty_blue flex columns_4" data-blc_prop="style.fontWeight">
+						<div class="checkbox_area">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="var(--normal)"></p-checkbox>
+							<span>B</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="var(--semi_bold)"></p-checkbox>
+							<span class="semi_bold">B</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="var(--bold)"></p-checkbox>
+							<span class="bold">B</span>
+						</div>
+					</div>
+				</div>
+
 				<div data-blc_prop_wrapper="margin">
 					<div class="label">Margines zewnętrzny</div>
 					<div class="flex align_center text_center text_center_fields">
