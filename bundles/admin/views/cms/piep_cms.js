@@ -26,7 +26,7 @@ class PiepCMS {
 		this.initClick();
 		this.initKeyDown();
 
-		this.piepEditorMainLoop();
+		this.mainLoop();
 	}
 
 	initNodes() {
@@ -222,7 +222,7 @@ class PiepCMS {
 
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
-				const focus_node = this.getPiepEditorFocusNode();
+				const focus_node = this.getFocusNode();
 				if (focus_node) {
 					const v_node_data = this.getVDomNodeDataById(this.v_dom, +focus_node.dataset.vid);
 					const v_node = v_node_data.v_node;
@@ -311,7 +311,7 @@ class PiepCMS {
 						setPropOfVNode(mid_child);
 						this.recreateDom();
 
-						const node_ref = this.getPiepEditorNode(mid_vid);
+						const node_ref = this.getNode(mid_vid);
 						if (node_ref) {
 							setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
 						}
@@ -319,8 +319,8 @@ class PiepCMS {
 						setPropOfVNode(v_node);
 						this.recreateDom();
 
-						const node_ref = this.getPiepEditorNode(v_node.id);
-						this.setPiepEditorFocusNode(v_node.id);
+						const node_ref = this.getNode(v_node.id);
+						this.setFocusNode(v_node.id);
 						if (v_node.text === undefined) {
 						} else if (node_ref) {
 							setSelectionByIndex(node_ref, begin_offset, end_offset);
@@ -350,19 +350,19 @@ class PiepCMS {
 			const target = $(ev.target);
 
 			if (this.grabbed_block_vid !== undefined) {
-				this.piepEditorReleaseBlock();
+				this.releaseBlock();
 			}
 
 			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
-			this.setPiepEditorContentActive(content_active);
+			this.setContentActive(content_active);
 
-			this.updatePiepCursorPosition();
+			this.updateCursorPosition();
 
 			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			if (target._parent(".move_block_btn")) {
-				this.piepEditorGrabBlock();
+				this.grabBlock();
 			}
 
 			if (target._parent(".remove_format_btn")) {
@@ -382,7 +382,7 @@ class PiepCMS {
 			if (target._parent(".remove_block_btn")) {
 				v_node_data.v_nodes.splice(v_node_data.index, 1);
 				this.recreateDom();
-				this.setPiepEditorFocusNode(undefined);
+				this.setFocusNode(undefined);
 			}
 
 			if (target._parent(this.container)) {
@@ -404,7 +404,7 @@ class PiepCMS {
 	initKeyDown() {
 		document.addEventListener("keydown", (ev) => {
 			const sel = window.getSelection();
-			const focus_node = this.getPiepEditorFocusNode();
+			const focus_node = this.getFocusNode();
 			const focus_offset = sel.focusOffset;
 			const vid = focus_node ? +focus_node.dataset.vid : undefined;
 			const v_node_data = this.getVDomNodeDataById(this.v_dom, vid);
@@ -441,7 +441,7 @@ class PiepCMS {
 							v_node_data.v_nodes.splice(v_node_data.index, 1);
 							this.recreateDom();
 
-							const prev_node_ref = this.getPiepEditorNode(prev_vid);
+							const prev_node_ref = this.getNode(prev_vid);
 							if (prev_node_ref) {
 								setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
 							}
@@ -451,7 +451,7 @@ class PiepCMS {
 					v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
 					this.recreateDom();
 
-					const node_ref = this.getPiepEditorNode(vid);
+					const node_ref = this.getNode(vid);
 					if (node_ref) {
 						setSelectionByIndex(node_ref, focus_offset - 1);
 					}
@@ -474,7 +474,7 @@ class PiepCMS {
 							v_node_data.v_nodes.splice(next_index, 1);
 							this.recreateDom();
 
-							const node_ref = this.getPiepEditorNode(node_vid);
+							const node_ref = this.getNode(node_vid);
 							if (node_ref) {
 								setSelectionByIndex(node_ref, v_node_text_before.length);
 							}
@@ -484,7 +484,7 @@ class PiepCMS {
 					v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
 					this.recreateDom();
 
-					const node_ref = this.getPiepEditorNode(vid);
+					const node_ref = this.getNode(vid);
 					if (node_ref) {
 						setSelectionByIndex(node_ref, focus_offset);
 					}
@@ -541,7 +541,7 @@ class PiepCMS {
 					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
 					this.recreateDom();
 
-					const insert_node_ref = this.getPiepEditorNode(insert_node_vid);
+					const insert_node_ref = this.getNode(insert_node_vid);
 					if (insert_node_ref) {
 						setSelectionByIndex(insert_node_ref, 0);
 					}
@@ -672,7 +672,7 @@ class PiepCMS {
 		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
-			this.filterPiepEditorMenu();
+			this.filterMenu();
 		});
 	}
 
@@ -683,7 +683,7 @@ class PiepCMS {
 	import(set_v_dom) {
 		this.v_dom = set_v_dom;
 		this.recreateDom();
-		this.setPiepEditorFocusNode(undefined);
+		this.setFocusNode(undefined);
 	}
 
 	initInspector() {
@@ -699,10 +699,10 @@ class PiepCMS {
 		});
 
 		this.container._child(".show_inspector_btn").addEventListener("click", () => {
-			this.togglePiepEditorInspector();
+			this.toggleInspector();
 		});
 		this.container._child(".hide_inspector_btn").addEventListener("click", () => {
-			this.togglePiepEditorInspector(false);
+			this.toggleInspector(false);
 		});
 		this.grab_inspector_btn.addEventListener("click", () => {
 			if (!this.inspector_grabbed) {
@@ -713,7 +713,7 @@ class PiepCMS {
 			}
 		});
 
-		this.togglePiepEditorInspector(false);
+		this.toggleInspector(false);
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
@@ -723,10 +723,10 @@ class PiepCMS {
 				const vid = +v_node_label.dataset.vid;
 
 				setSelectionRange(undefined);
-				this.setPiepEditorCursorActive(false);
-				this.setPiepEditorFocusNode(vid);
+				this.setCursorActive(false);
+				this.setFocusNode(vid);
 
-				scrollIntoView(this.getPiepEditorNode(vid));
+				scrollIntoView(this.getNode(vid));
 			}
 		});
 	}
@@ -780,7 +780,7 @@ class PiepCMS {
 				let attrs = { "data-vid": v_node.id };
 				Object.assign(attrs, v_node.attrs);
 
-				const base_class = this.getPiepEditorNodeSelector(v_node.id).replace(".", "");
+				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
 				let classes = ["blc", base_class, ...v_node.classes];
 
 				const map_tag_display_name = {
@@ -1017,7 +1017,7 @@ class PiepCMS {
 		const sel = window.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
-		const focus_node = this.getPiepEditorFocusNode();
+		const focus_node = this.getFocusNode();
 		const vid = focus_node ? +focus_node.dataset.vid : 0;
 		const v_node = this.findNodeInVDomById(this.v_dom, vid);
 		if (!v_node) {
@@ -1037,7 +1037,7 @@ class PiepCMS {
 		}
 		this.recreateDom();
 
-		const node_ref = this.getPiepEditorNode(vid);
+		const node_ref = this.getNode(vid);
 		if (node_ref) {
 			setSelectionByIndex(node_ref, begin_offset + insert_text.length);
 		}
@@ -1200,12 +1200,12 @@ class PiepCMS {
 			if (show_insert_blc_option) {
 				show_insert_blc_option._insert_action();
 				this.recreateDom(this.v_dom_overlay);
-				this.piepEditorShowFocusToNode(this.grabbed_block_vid);
+				this.showFocusToNode(this.grabbed_block_vid);
 
 				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
 				if (v_node_data.parent_v_nodes.length > 0) {
 					const parent_vid = v_node_data.parent_v_nodes[0].id;
-					pretty_focus_parent = this.getPiepEditorNode(parent_vid);
+					pretty_focus_parent = this.getNode(parent_vid);
 				}
 			} else {
 				this.recreateDom(this.v_dom_overlay);
@@ -1240,13 +1240,13 @@ class PiepCMS {
 			show_focus_node_vid = +v_node_label.dataset.vid;
 		}
 
-		this.piepEditorShowFocusToNode(show_focus_node_vid);
+		this.showFocusToNode(show_focus_node_vid);
 		let show_float_menu = this.float_menu_active;
 		if (show_focus_node_vid !== this.focus_node_vid) {
 			show_float_menu = false;
 		}
 		this.float_menu.classList.toggle("hidden", !show_float_menu);
-		this.piepEditorShowFloatMenuToNode(show_focus_node_vid);
+		this.showFloatMenuToNode(show_focus_node_vid);
 	}
 
 	inspectorGrabbed() {
@@ -1294,9 +1294,9 @@ class PiepCMS {
 		this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
 	}
 
-	piepEditorMainLoop() {
+	mainLoop() {
 		updateMouseTarget();
-		this.updatePiepCursorPosition();
+		this.updateCursorPosition();
 
 		if (this.grabbed_block_vid !== undefined) {
 			this.grabbedBlock();
@@ -1316,11 +1316,11 @@ class PiepCMS {
         )`;
 
 		requestAnimationFrame(() => {
-			this.piepEditorMainLoop();
+			this.mainLoop();
 		});
 	}
 
-	piepEditorGrabBlock() {
+	grabBlock() {
 		this.float_focus.classList.add("hidden");
 		this.float_menu.classList.add("hidden");
 		this.cursor.classList.add("hidden");
@@ -1330,7 +1330,7 @@ class PiepCMS {
 
 		this.grabbed_block_vid = this.focus_node_vid;
 
-		this.grabbed_block_wrapper._set_content(this.getPiepEditorFocusNode().outerHTML);
+		this.grabbed_block_wrapper._set_content(this.getFocusNode().outerHTML);
 		this.grabbed_block_wrapper.classList.add("visible");
 
 		// won't grow by more than this.grabbed_block_wrapper.offsetHeight
@@ -1418,7 +1418,7 @@ class PiepCMS {
 		};
 
 		this.content._children(".blc").forEach((blc) => {
-			if (blc._parent(this.getPiepEditorNodeSelector(this.grabbed_block_vid))) {
+			if (blc._parent(this.getNodeSelector(this.grabbed_block_vid))) {
 				// just no baby
 				return;
 			}
@@ -1679,7 +1679,7 @@ class PiepCMS {
 		}
 	}
 
-	piepEditorReleaseBlock() {
+	releaseBlock() {
 		this.grabbed_block_wrapper.classList.remove("visible");
 		this.container.classList.remove("grabbed_block");
 		this.container.classList.remove("has_insert_pos");
@@ -1720,10 +1720,10 @@ class PiepCMS {
 	 *
 	 * @param {boolean} peca
 	 */
-	setPiepEditorContentActive(peca) {
+	setContentActive(peca) {
 		this.content_active = peca;
 		if (!this.content_active) {
-			this.setPiepEditorCursorActive(false);
+			this.setCursorActive(false);
 		}
 	}
 
@@ -1731,16 +1731,16 @@ class PiepCMS {
 	 *
 	 * @param {boolean} peca
 	 */
-	setPiepEditorCursorActive(peca) {
+	setCursorActive(peca) {
 		this.cursor_active = peca;
 		this.cursor.classList.toggle("hidden", !this.cursor_active);
 	}
-	getPiepEditorFocusNode() {
+	getFocusNode() {
 		const focus_node = this.content._child(".piep_focus");
 		return focus_node;
 	}
 
-	updatePiepCursorPosition() {
+	updateCursorPosition() {
 		if (mouse.target) {
 			if (this.just_clicked) {
 				const click_blc = mouse.target._parent(".blc");
@@ -1748,7 +1748,7 @@ class PiepCMS {
 					const click_blc_vid = +click_blc.dataset.vid;
 					const click_v_node = this.findNodeInVDomById(this.v_dom, click_blc_vid);
 					if (click_v_node && click_v_node.text === undefined) {
-						this.setPiepEditorFocusNode(click_blc_vid);
+						this.setFocusNode(click_blc_vid);
 						removeSelection();
 					}
 				}
@@ -1800,14 +1800,14 @@ class PiepCMS {
 			this.cursor.style.height = cursor_height + "px";
 
 			if (this.content_active) {
-				this.setPiepEditorCursorActive(true);
+				this.setCursorActive(true);
 			}
 		} else {
-			this.setPiepEditorCursorActive(false);
+			this.setCursorActive(false);
 		}
 
 		if (focus_textable) {
-			this.setPiepEditorFocusNode(+focus_textable.dataset.vid);
+			this.setFocusNode(+focus_textable.dataset.vid);
 		}
 
 		this.just_clicked = false;
@@ -1818,7 +1818,7 @@ class PiepCMS {
 	 * @param {number} vid
 	 * @returns
 	 */
-	setPiepEditorFocusNode(vid) {
+	setFocusNode(vid) {
 		if (this.grabbed_block_vid !== undefined) {
 			return;
 		}
@@ -1826,10 +1826,10 @@ class PiepCMS {
 		let just_changed_focus_vid = this.focus_node_vid !== vid;
 		this.focus_node_vid = vid;
 
-		const focus_node = this.getPiepEditorNode(vid);
+		const focus_node = this.getNode(vid);
 		let tblc;
 
-		this.filterPiepEditorMenu();
+		this.filterMenu();
 
 		if (focus_node) {
 			if (just_changed_focus_vid) {
@@ -1875,11 +1875,11 @@ class PiepCMS {
 		});
 	}
 
-	filterPiepEditorMenu() {
+	filterMenu() {
 		/** @type {cmsEditableGroupEnum} */
 		const group = this.filter_blc_menu._get_value();
 
-		const focus_node = this.getPiepEditorNode(this.focus_node_vid);
+		const focus_node = this.getNode(this.focus_node_vid);
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
 		if (v_node) {
@@ -1913,7 +1913,7 @@ class PiepCMS {
 	 * @param {number} vid
 	 * @returns
 	 */
-	piepEditorShowFocusToNode(vid) {
+	showFocusToNode(vid) {
 		if (vid === undefined) {
 			this.float_focus.classList.add("hidden");
 			return;
@@ -1921,7 +1921,7 @@ class PiepCMS {
 
 		this.float_focus.classList.remove("hidden");
 
-		const focus_node = this.getPiepEditorNode(vid);
+		const focus_node = this.getNode(vid);
 		if (focus_node === undefined) {
 			this.float_focus.classList.add("hidden");
 			return;
@@ -1940,13 +1940,13 @@ class PiepCMS {
 	 * @param {number} vid
 	 * @returns
 	 */
-	piepEditorShowFloatMenuToNode(vid) {
+	showFloatMenuToNode(vid) {
 		if (vid === undefined) {
 			this.float_menu.classList.add("hidden");
 			return;
 		}
 
-		const focus_node = this.getPiepEditorNode(vid);
+		const focus_node = this.getNode(vid);
 		if (focus_node === undefined) {
 			this.float_menu.classList.add("hidden");
 			return;
@@ -1983,7 +1983,7 @@ class PiepCMS {
 	 * @param {number} vid
 	 * @returns {string}
 	 */
-	getPiepEditorNodeSelector(vid) {
+	getNodeSelector(vid) {
 		return `.blc_${vid}`;
 	}
 
@@ -1992,8 +1992,8 @@ class PiepCMS {
 	 * @param {number} vid
 	 * @returns {PiepNode}
 	 */
-	getPiepEditorNode(vid) {
-		return this.content._child(this.getPiepEditorNodeSelector(vid));
+	getNode(vid) {
+		return this.content._child(this.getNodeSelector(vid));
 	}
 
 	/**
@@ -2006,7 +2006,7 @@ class PiepCMS {
 		/** @type {DOMRect} */
 		let sel_rect;
 
-		const focus_node = this.getPiepEditorFocusNode();
+		const focus_node = this.getFocusNode();
 		if (focus_node && focus_node.innerText === "\n") {
 			sel_rect = focus_node._child("br").getBoundingClientRect();
 		} else {
@@ -2113,7 +2113,7 @@ class PiepCMS {
 	 *
 	 * @param {boolean} open
 	 */
-	togglePiepEditorInspector(open = undefined) {
+	toggleInspector(open = undefined) {
 		if (open !== undefined) {
 			this.inspector_open = open;
 		} else {
