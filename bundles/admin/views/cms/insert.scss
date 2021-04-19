@@ -5,7 +5,9 @@
 		position: absolute;
 		z-index: 1200;
 	}
-
+	svg {
+		display: block;
+	}
 	.foreign_insert_btn {
 		& {
 			pointer-events: none;

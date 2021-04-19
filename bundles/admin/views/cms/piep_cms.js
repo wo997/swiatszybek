@@ -51,7 +51,6 @@ class PiepCMS {
 
 		this.cursor = node("piep_editor_cursor");
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
-		this.float_multi_insert = node("piep_editor_float_multi_insert");
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
 		this.float_focus = node("piep_editor_float_focus");
 		this.parent_float_focus = node("piep_editor_parent_float_focus");
@@ -60,6 +59,9 @@ class PiepCMS {
 		this.styles = styles("piep_editor_styles");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
+
+		this.float_multi_insert = node("piep_editor_float_multi_insert");
+		this.alternative_scroll_panel.append(this.float_multi_insert);
 	}
 
 	initHistory() {
@@ -1125,7 +1127,7 @@ class PiepCMS {
 		}
 
 		// grabbed
-		const radius = 35;
+		const radius = 23; //35;
 
 		const piep_editor_rect = this.container.getBoundingClientRect();
 
@@ -1176,7 +1178,7 @@ class PiepCMS {
 
 					let buttons = "";
 
-					const inner_radius = 15;
+					const inner_radius = 0; //15;
 
 					const norad = Math.PI / 180;
 
@@ -1188,7 +1190,7 @@ class PiepCMS {
 					const icon_size = 20;
 
 					const space_ratio = 0; // 0.5;
-					const inner_space_ratio = (space_ratio * radius) / inner_radius;
+					const inner_space_ratio = 0; //(space_ratio * radius) / inner_radius;
 
 					const point = (a, r) => {
 						return {
@@ -1206,7 +1208,7 @@ class PiepCMS {
 						const p3 = point(a2 - inner_space_ratio, inner_radius);
 						const p4 = point(a1 + inner_space_ratio, inner_radius);
 
-						const p5 = point((a1 + a2) * 0.5, (radius + inner_radius) * 0.485);
+						const p5 = point((a1 + a2) * 0.5, (radius + inner_radius) * 0.5);
 
 						buttons += html`
 							<path
@@ -1256,7 +1258,10 @@ class PiepCMS {
 
 					this.float_multi_insert._set_absolute_pos(
 						insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5 - piep_editor_rect.left,
-						insert_blc_rect.top + (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 - piep_editor_rect.top
+						insert_blc_rect.top +
+							(insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 -
+							piep_editor_rect.top +
+							this.content_scroll.scrollTop
 					);
 					this.showing_float_multi_of_blc = insert_blc;
 					insert_blc.classList.add("hidden");
