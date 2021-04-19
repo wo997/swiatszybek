@@ -16,6 +16,8 @@ if (defined("ROUTE")) {
     $has_css = false;
     $has_js = false;
 }
+
+$main_font_family = getSetting(["theme", "general", "font_family"]);
 ?>
 
 <script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
@@ -40,9 +42,6 @@ if (defined("ROUTE")) {
     const IS_ADMIN_URL = <?= Request::$is_admin_url ? 1 : 0 ?>;
     const root_class = IS_ADMIN_URL ? "admin_root" : "global_root";
 
-    <?php
-    $main_font_family = getSetting(["theme", "general", "font_family"]);
-    ?>
     fonts = <?= json_encode(Theme::$fonts) ?>;
     main_font_family = <?= json_encode($main_font_family) ?>;
 
