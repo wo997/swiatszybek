@@ -23,6 +23,7 @@ class PiepCMS {
 		this.initAdvancedMenu();
 		this.initFloatMenu();
 		this.initSelectResolution();
+		this.initEditables();
 
 		this.initPaste();
 		this.initClick();
@@ -255,7 +256,9 @@ class PiepCMS {
 		};
 		window.addEventListener("color_palette_changed", colorPaletteChanged);
 		colorPaletteChanged();
+	}
 
+	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			input.addEventListener("change", () => {
 				const focus_node = this.getFocusNode();
