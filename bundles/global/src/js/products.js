@@ -53,7 +53,6 @@ domload(() => {
 					product_img_wrapper.insertAdjacentHTML("beforeend", html`<img class="wo997_img product_img overlay" />`);
 					const base_img = product_img_wrapper._first();
 					const overlay = product_img_wrapper._last();
-					lazyLoadImages({ duration: 0 });
 
 					product_focus_unique_id++;
 					let curr_product_focus_unique_id = product_focus_unique_id;
@@ -67,11 +66,10 @@ domload(() => {
 						image_id = (image_id + 1) % images.length;
 
 						overlay.style.opacity = "1";
-						// @ts-ignore
-						overlay.src = images[image_id];
+						setResponsiveImageUrl(overlay, images[image_id]);
 						setTimeout(() => {
-							// @ts-ignore
-							base_img.src = images[image_id];
+							setResponsiveImageUrl(base_img, images[image_id]);
+							lazyLoadImages({ duration: 0 });
 							overlay.style.opacity = "0";
 
 							preloadWo997Image(images[(image_id + 1) % images.length], base_img);
@@ -95,10 +93,10 @@ domload(() => {
 
 			if (overlay && images.length > 1) {
 				overlay.style.opacity = "1";
-				overlay.setAttribute("src", images[0]);
+				setResponsiveImageUrl(overlay, images[0]);
 				setTimeout(() => {
-					base_img.setAttribute("src", images[0]);
-
+					setResponsiveImageUrl(base_img, images[0]);
+					lazyLoadImages({ duration: 0 });
 					overlay.style.opacity = "0";
 
 					setTimeout(() => {

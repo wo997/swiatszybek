@@ -12,6 +12,8 @@ class PiepCMS {
 		this.v_dom = [];
 		/** @type {vDomNode[]} */
 		this.v_dom_overlay = [];
+		/** @type {vDomNode[][]} */
+		this.v_dom_history = [];
 
 		this.initNodes();
 
@@ -25,6 +27,8 @@ class PiepCMS {
 		this.initPaste();
 		this.initClick();
 		this.initKeyDown();
+
+		this.initHistory();
 
 		this.mainLoop();
 	}
@@ -56,6 +60,35 @@ class PiepCMS {
 		this.styles = styles("piep_editor_styles");
 
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
+	}
+
+	initHistory() {
+		this.v_dom_history = [];
+		this.pushHistory();
+
+		this.undo_btn = this.container._child(".piep_editor_header .undo");
+		this.redo_btn = this.container._child(".piep_editor_header .redo");
+		this.undo_btn.addEventListener("click", () => {
+			this.popHistory();
+		});
+		this.redo_btn.addEventListener("click", () => {
+			this.pushHistory();
+		});
+	}
+	pushHistory() {
+		if (this.v_dom_history.length > 0 && isEquivalent(this.v_dom_history[this.v_dom_history.length - 1], this.v_dom)) {
+			return;
+		}
+		this.v_dom_history.push(cloneObject(this.v_dom));
+		console.log(this.v_dom_history);
+	}
+	popHistory() {
+		if (this.v_dom_history.length < 2) {
+			return;
+		}
+		this.v_dom_history.pop();
+		this.v_dom = cloneObject(this.v_dom_history[this.v_dom_history.length - 1]);
+		this.recreateDom();
 	}
 
 	initSelectResolution() {
@@ -684,6 +717,7 @@ class PiepCMS {
 		this.v_dom = set_v_dom;
 		this.recreateDom();
 		this.setFocusNode(undefined);
+		this.initHistory();
 	}
 
 	initInspector() {
@@ -1723,6 +1757,7 @@ class PiepCMS {
 		this.has_insert_pos = false;
 
 		this.recreateDom();
+		this.pushHistory();
 	}
 
 	/**
