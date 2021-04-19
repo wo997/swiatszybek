@@ -55,7 +55,6 @@ class PiepCMS {
 		this.float_focus = node("piep_editor_float_focus");
 		this.parent_float_focus = node("piep_editor_parent_float_focus");
 		this.float_menu = node("piep_editor_float_menu");
-		this.float_menu.classList.add("global_root");
 
 		this.styles = styles("piep_editor_styles");
 
@@ -162,12 +161,16 @@ class PiepCMS {
 				<p-option data-value="justify"> <i class="fas fa-align-justify"></i> </p-option>
 			</p-dropdown>
 
-			<p-dropdown class="field small inline pretty_blue center static_label grid" data-blc_prop="style.color" data-tooltip="Kolor czcionki">
+			<p-dropdown
+				class="field small inline pretty_blue center static_label grid global_root"
+				data-blc_prop="style.color"
+				data-tooltip="Kolor czcionki"
+			>
 				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid"
+				class="field small inline pretty_blue center static_label grid global_root"
 				data-blc_prop="style.backgroundColor"
 				data-tooltip="Kolor tła"
 			>
