@@ -697,6 +697,32 @@ class PiepCMS {
 					</div>
 				</div>
 
+				<div data-blc_prop_wrapper="fontWeight">
+					<div class="label">Wyrównanie tekstu</div>
+					<div class="pretty_radio pretty_blue flex columns_5" data-blc_prop="style.textAlign">
+						<div class="checkbox_area">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="left"></p-checkbox>
+							<i class="fas fa-align-left"></i>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<i class="fas fa-align-center"></i>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="right"></p-checkbox>
+							<i class="fas fa-align-right"></i>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="justify"></p-checkbox>
+							<i class="fas fa-align-justify"></i>
+						</div>
+					</div>
+				</div>
+
 				<div data-blc_prop_wrapper="margin">
 					<div class="label">Margines zewnętrzny</div>
 					<div class="flex align_center text_center text_center_fields">
