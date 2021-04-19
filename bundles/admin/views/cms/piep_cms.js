@@ -1006,15 +1006,22 @@ class PiepCMS {
 
 	/**
 	 *
-	 * @param {vDomNode[]} v_dom
-	 * @param {{(v_node: vDomNode): boolean}} test
-	 * @param {findVDomOptions} [options]
-	 * @returns {{
+	 * @typedef {{
 	 * v_node: vDomNode
 	 * v_nodes: vDomNode[]
 	 * index: number
 	 * parent_v_nodes: vDomNode[]
-	 * }}
+	 * }} vDomNodeData
+	 *
+	 * parent_v_nodes are ordered so the closest one is the direct parent
+	 */
+
+	/**
+	 *
+	 * @param {vDomNode[]} v_dom
+	 * @param {{(v_node: vDomNode): boolean}} test
+	 * @param {findVDomOptions} [options]
+	 * @returns {vDomNodeData}
 	 */
 	getVDomNodeData(v_dom, test, options = {}) {
 		/**
@@ -1045,7 +1052,7 @@ class PiepCMS {
 				}
 
 				if (v_node.children) {
-					const res = traverseVDom(v_node.children, [...parent_v_nodes, v_node]);
+					const res = traverseVDom(v_node.children, [v_node, ...parent_v_nodes]);
 					if (res) {
 						return res;
 					}
@@ -1284,7 +1291,7 @@ class PiepCMS {
 				this.showFocusToNode(this.grabbed_block_vid);
 
 				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
-				if (v_node_data.parent_v_nodes.length > 0) {
+				if (v_node_data.parent_v_nodes[0]) {
 					const parent_vid = v_node_data.parent_v_nodes[0].id;
 					pretty_focus_parent = this.getNode(parent_vid);
 				}
@@ -1546,9 +1553,8 @@ class PiepCMS {
 				if (near_v_node_data.v_node.text === undefined) {
 					wrap_with_a_flex = true;
 				}
-				if (near_v_node_data.parent_v_nodes.length > 0) {
-					const parent_v_node = near_v_node_data.parent_v_nodes[near_v_node_data.parent_v_nodes.length - 1];
-
+				const parent_v_node = near_v_node_data.parent_v_nodes[0];
+				if (parent_v_node) {
 					const parent_display = parent_v_node.styles.display;
 					if (parent_display === "flex") {
 						wrap_with_a_flex = false;
@@ -1634,8 +1640,18 @@ class PiepCMS {
 			};
 			setInsertPos(insert_right_blc, "right");
 
-			// TODO: rethink that baby
+			let do_up_and_down = true;
 			if (near_v_node_data.v_node.text !== undefined) {
+				do_up_and_down = false;
+			}
+			const parent_v_node = near_v_node_data.parent_v_nodes[0];
+			if (parent_v_node) {
+				const parent_display = parent_v_node.styles.display;
+				if (parent_display === "flex") {
+					do_up_and_down = false;
+				}
+			}
+			if (do_up_and_down) {
 				// top
 				const insert_top_blc = getInsertBlc();
 				insert_top_blc._insert_action = () => {
