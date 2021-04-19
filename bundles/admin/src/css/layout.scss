@@ -44,16 +44,23 @@ footer {
 .menu_item.current {
 	background: #0001;
 }
-.admin_root {
+.admin_layout {
 	display: flex;
 	flex-direction: row;
 	align-items: stretch;
 	flex-grow: 1;
 	height: 100vh;
+}
+.admin_root {
 	--normal: 400;
 	--semi_bold: 600;
 	--bold: 700;
 	--font_family: "Open Sans", sans-serif;
+	--clr_primary: #47a;
+	--subtle_font_clr: #333;
+	--subtle_bckg_clr: #ececec;
+	--important-clr: #d37;
+	--red-clr: #e22;
 }
 @media only screen and (max-width: 999px) {
 	.navbar_admin {
@@ -63,7 +70,7 @@ footer {
 	.content {
 		height: auto;
 	}
-	.admin_root {
+	.admin_layout {
 		flex-direction: column;
 		height: auto;
 	}

@@ -104,7 +104,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 						$("#main_font").href = fonts[main_font_family].link;
 
 						showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
-						hideLoader();
+						buildResponsiveHeader();
 					},
 				});
 			});

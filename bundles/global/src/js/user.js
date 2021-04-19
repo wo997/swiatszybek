@@ -95,6 +95,19 @@ domload(() => {
 	// @ts-ignore
 	const login_form_modal_comp = $("#loginForm login-form-modal-comp");
 	LoginFormModalComp(login_form_modal_comp, undefined);
+
+	window.addEventListener("modal_show", (event) => {
+		// @ts-ignore
+		const node = event.detail.node;
+
+		if (!node || node.id != "loginForm") {
+			return;
+		}
+		loadScript("https://apis.google.com/js/platform.js");
+		loadScript("https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1", {
+			crossorigin: "anonymous",
+		});
+	});
 });
 
 function registerUser(params) {

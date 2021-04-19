@@ -42,7 +42,8 @@ function showNotification(message, params = {}) {
 	/** @type {PiepNotification} */
 	// @ts-ignore
 	const notification = $(document.createElement("DIV"));
-	notification.className = "notification";
+
+	notification.classList.add("notification", root_class);
 	notification.insertAdjacentHTML(
 		"beforeend",
 		html`

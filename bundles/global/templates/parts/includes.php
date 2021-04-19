@@ -18,7 +18,6 @@ if (defined("ROUTE")) {
 }
 ?>
 
-<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 <script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
 
 <script>
@@ -38,11 +37,14 @@ if (defined("ROUTE")) {
     const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
+    const IS_ADMIN_URL = <?= Request::$is_admin_url ? 1 : 0 ?>;
+    const root_class = IS_ADMIN_URL ? "admin_root" : "global_root";
+
     <?php
     $main_font_family = getSetting(["theme", "general", "font_family"]);
-    echo "fonts = " . json_encode(Theme::$fonts) . ";";
-    echo "main_font_family = \"$main_font_family\"";
     ?>
+    fonts = <?= json_encode(Theme::$fonts) ?>;
+    main_font_family = <?= json_encode($main_font_family) ?>;
 
     user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
     loadedUserCart();
@@ -73,18 +75,6 @@ if (defined("ROUTE")) {
         });
     <?php endif ?>
 
-    window.addEventListener("modal_show", (event) => {
-        var node = event.detail.node;
-
-        if (!node || node.id != "loginForm") {
-            return;
-        }
-        loadScript("https://apis.google.com/js/platform.js");
-        loadScript("https://connect.facebook.net/pl_PL/sdk.js#xfbml=1&version=v6.0&appId=<?= secret('facebook_app_id') ?>&autoLogAppEvents=1", {
-            crossorigin: "anonymous"
-        });
-    });
-
     <?php if (Request::getSingleUsageSessionVar("login")) : ?>
         domload(() => {
             showModal("loginForm");
@@ -93,6 +83,8 @@ if (defined("ROUTE")) {
 
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>
+
+<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 
 <?php if (Request::$is_user_url) : ?>
     <link href="/builds/user.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">

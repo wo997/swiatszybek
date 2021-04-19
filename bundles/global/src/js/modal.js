@@ -11,17 +11,15 @@ domload(() => {
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		html`
-			<div id="modal_wrapper" class="hidden">
+			<div id="modal_wrapper">
 				<div class="modal_container"></div>
 			</div>
 		`
 	);
 
 	modal_wrapper_node = $("#modal_wrapper");
+	modal_wrapper_node.classList.add(root_class, "hidden");
 	modal_container_node = modal_wrapper_node._child(".modal_container");
-
-	const root_class = window.location.pathname.startsWith("/admin/") ? "admin_root" : "global_root";
-	modal_wrapper_node.classList.add(root_class);
 
 	registerModals();
 });

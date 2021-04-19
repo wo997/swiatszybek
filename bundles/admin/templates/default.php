@@ -12,7 +12,7 @@ endSection();
 
 <?php startSection("body"); ?>
 
-<div class="admin_root">
+<div class="admin_layout admin_root">
     <header class="mobile">
         <a href="/" class="logo_wrapper">
             <img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
