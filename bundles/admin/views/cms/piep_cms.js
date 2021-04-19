@@ -148,6 +148,14 @@ class PiepCMS {
 				groups: ["appearance"],
 			},
 			{
+				name: "color",
+				groups: ["appearance"],
+			},
+			{
+				name: "backgroundColor",
+				groups: ["appearance"],
+			},
+			{
 				name: "margin",
 				groups: ["layout"],
 			},
@@ -719,18 +727,18 @@ class PiepCMS {
 
 				<div class="checkbox_area">
 					<div>
-						<p-checkbox data-value="layout"></p-checkbox>
-						<span> <i class="fas fa-ruler-combined filter_icon"></i> </span>
-					</div>
-					<span>Układ</span>
-				</div>
-
-				<div class="checkbox_area">
-					<div>
 						<p-checkbox data-value="appearance"></p-checkbox>
 						<span> <i class="fas fa-palette filter_icon"></i></span>
 					</div>
 					<span>Wygląd</span>
+				</div>
+
+				<div class="checkbox_area">
+					<div>
+						<p-checkbox data-value="layout"></p-checkbox>
+						<span> <i class="fas fa-ruler-combined filter_icon"></i> </span>
+					</div>
+					<span>Układ</span>
 				</div>
 
 				<div class="checkbox_area">
