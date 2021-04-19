@@ -141,6 +141,10 @@ class PiepCMS {
 				groups: ["appearance"],
 			},
 			{
+				name: "textAlign",
+				groups: ["appearance"],
+			},
+			{
 				name: "margin",
 				groups: ["layout"],
 			},
@@ -697,7 +701,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="fontWeight">
+				<div data-blc_prop_wrapper="textAlign">
 					<div class="label">Wyrównanie tekstu</div>
 					<div class="pretty_radio pretty_blue flex columns_5" data-blc_prop="style.textAlign">
 						<div class="checkbox_area">
