@@ -88,7 +88,7 @@ $page_width = "1500px";
         }
         ?>
 
-        <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:600;text-align:center">
+        <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:var(--semi_bold);text-align:center">
             <?= $info_label ?>
         </div>
         <button class="btn <?= $btn_class ?> fill" onclick="togglePagePublish()"><?= $btn_label ?></button>

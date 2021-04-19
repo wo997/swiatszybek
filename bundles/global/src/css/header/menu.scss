@@ -20,7 +20,7 @@
 		}
 	}
 	.level_0 > li > a {
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 	.level_1 a {
 		padding-left: 30px;
@@ -57,7 +57,7 @@ header .main_menu {
 		}
 		& > a {
 			padding: 10px 10px;
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 			font-size: 1.05em;
 			text-align: center;
 		}
@@ -68,7 +68,7 @@ header .main_menu {
 	}
 	.level_1 {
 		& {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 			display: none;
 		}
 		a {
@@ -81,7 +81,7 @@ header .main_menu {
 		}
 	}
 	.level_2 {
-		font-weight: 400;
+		font-weight: var(--normal);
 		margin-left: 18px;
 	}
 }

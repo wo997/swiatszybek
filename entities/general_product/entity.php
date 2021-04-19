@@ -83,6 +83,9 @@ EventListener::register("before_save_general_product_entity", function ($params)
     foreach ($general_product_feature_options as $option) {
         $option_id = $option->getId();
         $product_feature = $option->getParent("product_feature");
+        if (!$product_feature) {
+            continue;
+        }
         $feature_id = $product_feature->getId();
         if (!isset($all_feature_options[$feature_id])) {
             $all_feature_options[$feature_id] = [];

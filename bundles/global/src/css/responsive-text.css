@@ -6,43 +6,32 @@ select {
 	width: 185px; /* default width man */
 }
 
-/* buttons */
-/* .btn {
-	font-size: 1em;
-}
-.btn.medium {
-	font-size: 1.2em;
-}
-.btn.big {
-	font-size: 1.4em;
-} */
-
 .btn {
 	font-size: 1em;
 }
 .semi_medium {
 	font-size: 1.1em;
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 .medium {
 	font-size: 1.2em;
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 .big {
 	font-size: 1.4em;
-	font-weight: 700;
+	font-weight: var(--bold);
 }
 
 .normal {
-	font-weight: 400;
+	font-weight: var(--normal);
 }
 
 .semi_bold {
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 
 .bold {
-	font-weight: 900;
+	font-weight: var(--bold);
 }
 
 /* buttons */

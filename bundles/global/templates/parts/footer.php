@@ -12,7 +12,7 @@
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
 <?php if (DEBUG_MODE) : ?>
-    <div data-tooltip="Całkowity czas generowania po stronie serwera" style="position:fixed;font-weight:600;right:5px;bottom:5px;background:#eee;color:#444;padding:7px 10px;border-radius:5px;box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);z-index:100">
+    <div data-tooltip="Całkowity czas generowania po stronie serwera" style="position:fixed;font-weight:var(--semi_bold);right:5px;bottom:5px;background:#eee;color:#444;padding:7px 10px;border-radius:5px;box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);z-index:100">
         <i class="far fa-clock"></i> <?= round(1000 * (microtime(true) - time)); ?>ms
     </div>
 <?php endif ?>
@@ -34,8 +34,21 @@ if (isset($JS_files)) {
 
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet"> -->
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<?php
+$main_font = def(Theme::$fonts, $main_font_family);
+if ($main_font) {
+?>
+    <link id="main_font" href="<?= $main_font["link"] ?>" rel="stylesheet">
+<?php
+}
+
+if (Request::$is_admin_url) {
+?>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<?php
+}
+
+?>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 

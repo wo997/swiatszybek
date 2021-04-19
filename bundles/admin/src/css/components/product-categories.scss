@@ -14,7 +14,7 @@
 // }
 product-sub-category-comp {
 	& .category_name {
-		font-weight: 700;
+		font-weight: var(--bold);
 		width: 250px;
 		padding: 0 10px;
 		display: inline-block;
@@ -76,14 +76,14 @@ product-sub-category-comp {
 			margin-left: 35px;
 		}
 		& .category_name {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 		}
 		& .category_wrapper {
 			background: #fafafa;
 		}
 		& list-comp {
 			& .category_name {
-				font-weight: 400;
+				font-weight: var(--normal);
 			}
 		}
 	}

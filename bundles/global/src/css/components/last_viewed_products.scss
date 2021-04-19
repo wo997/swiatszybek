@@ -7,7 +7,7 @@ last-viewed-products-comp.comp {
 	}
 	.product_name {
 		& {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 			display: block;
 			text-align: center;
 			margin-top: 5px;

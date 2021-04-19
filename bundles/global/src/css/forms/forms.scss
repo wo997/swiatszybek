@@ -12,7 +12,7 @@
 		margin-bottom: calc((var(--form_spacing_factor) - 0.75) * 0.8em);
 		user-select: none;
 		-webkit-user-select: none;
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 		display: block;
 	}
 
@@ -74,7 +74,7 @@ label {
 
 .input_errors {
 	color: var(--error-clr);
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 
 .pretty_errors .input_errors_wrapper {
@@ -118,5 +118,5 @@ label {
 	color: #555;
 	border-radius: 4px;
 	margin: 0 -2px;
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }

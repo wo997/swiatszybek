@@ -118,7 +118,7 @@
 		& > *.checked {
 			background: var(--pretty_blue_background) !important;
 			color: var(--pretty_blue);
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 			--selection_clr: var(--pretty_blue_border);
 			z-index: 10;
 		}

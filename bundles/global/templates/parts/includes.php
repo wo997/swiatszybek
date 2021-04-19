@@ -38,6 +38,12 @@ if (defined("ROUTE")) {
     const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
+    <?php
+    $main_font_family = getSetting(["theme", "general", "font_family"]);
+    echo "fonts = " . json_encode(Theme::$fonts) . ";";
+    echo "main_font_family = \"$main_font_family\"";
+    ?>
+
     user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
     loadedUserCart();
 

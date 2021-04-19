@@ -50,6 +50,10 @@ footer {
 	align-items: stretch;
 	flex-grow: 1;
 	height: 100vh;
+	--normal: 400;
+	--semi_bold: 600;
+	--bold: 700;
+	--font_family: "Open Sans", sans-serif;
 }
 @media only screen and (max-width: 999px) {
 	.navbar_admin {
@@ -243,7 +247,7 @@ footer {
 
 .admin_shortcuts {
 	.header {
-		font-weight: 700;
+		font-weight: var(--bold);
 	}
 	.header,
 	a {
@@ -252,7 +256,7 @@ footer {
 	a {
 		display: block;
 		width: 100%;
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 }
 

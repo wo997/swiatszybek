@@ -116,9 +116,9 @@ class PiepCMS {
 
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
 				<p-option data-value=""><span class="bold">B</span></p-option>
-				<p-option data-value="400">B</p-option>
-				<p-option data-value="600"><span class="semi_bold">B</span></p-option>
-				<p-option data-value="700"><span class="bold">B</span></p-option>
+				<p-option data-value="var(--normal)">B</p-option>
+				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
+				<p-option data-value="var(--bold)"><span class="bold">B</span></p-option>
 			</p-dropdown>
 
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.textAlign" data-tooltip="Wyrównanie tekstu">

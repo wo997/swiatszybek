@@ -2,6 +2,94 @@
 
 class Theme
 {
+    public static $fonts = [
+        "Open Sans" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Open Sans', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
+        ],
+        "Montserrat" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Montserrat', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap'
+        ],
+        "Lato" => [
+            "weights" => ["normal" => 400, "semi_bold" => 700, "bold" => 900],
+            "use" => "'Lato', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap'
+        ],
+        "Poppins" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Poppins', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap'
+        ],
+        "Archivo" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Archivo', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap'
+        ],
+        "Inter" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Inter', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
+        ],
+        "Sarabun" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Sarabun', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap'
+        ],
+        "Epilogue" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Epilogue', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap'
+        ],
+        "Signika" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Signika', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Signika:wght@400;600;700&display=swap'
+        ],
+        "Prompt" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Prompt', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap'
+        ],
+        "Krub" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Krub', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Krub:wght@400;600;700&display=swap'
+        ],
+        "Niramit" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Niramit', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Niramit:wght@400;600;700&display=swap'
+        ],
+        "Blinker" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Blinker', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Blinker:wght@400;600;700&display=swap'
+        ],
+        "Proza Libre" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Proza Libre', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Proza Libre:wght@400;600;700&display=swap'
+        ],
+        "Fahkwang" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Fahkwang', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Fahkwang:wght@400;600;700&display=swap'
+        ],
+        "Tomorrow" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Tomorrow', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;600;700&display=swap'
+        ],
+        "Kodchasan" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Kodchasan', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;600;700&display=swap'
+        ],
+    ];
+
     public static function buildHeader($post)
     {
         if (!isset($post["inner_responsive_width"]) || !isset($post["outer_responsive_width"])) {
@@ -72,7 +160,7 @@ CSS;
         Files::save(PREBUILDS_PATH . "header_build.scss", $header_build_css);
     }
 
-    public static function saveSettings($post)
+    public static function saveSettings($post = [])
     {
         $colors_palette_json = def($post, "colors_palette", "");
         if ($colors_palette_json) {
@@ -82,32 +170,38 @@ CSS;
             $colors_palette = getSetting(["theme", "general", "colors_palette"]);
         }
 
-        $colors_css = "/* css[global] */";
+        $font_family = def($post, "font_family", "");
+        if ($font_family) {
+            saveSetting("theme", "general", ["path" => ["font_family"], "value" => $font_family]);
+        } else {
+            $font_family = getSetting(["theme", "general", "font_family"]);
+        }
 
-        $colors_css .= ":root, .global_root {";
+        $theme_css = "/* css[global] */";
+
+        $theme_css .= ":root, .global_root {";
+
         foreach ($colors_palette as $color) {
             $color_name = $color["name"];
             $color_value = $color["value"];
             if (strlen($color_value) > 3) {
-                $colors_css .= "--$color_name: $color_value;";
+                $theme_css .= "--$color_name: $color_value;";
             }
         }
-        $colors_css .= "}";
 
-        // $colors_css .= ".global_root {";
-        //     foreach ($colors_palette as $color) {
-        //         $color_name = $color["name"];
-        //         $color_value = $color["value"];
-        //         if (strlen($color_value) > 3) {
-        //             $colors_css .= "--$color_name: $color_value;";
-        //         }
-        //     }
-        //     $colors_css .= "}";
+        $font = def(self::$fonts, $font_family);
+        if ($font) {
+            foreach ($font["weights"] as $key => $val) {
+                $theme_css .= "--$key: $val;";
+            }
+            $theme_css .= "--font_family: $font[use];";
+        }
 
-        Files::save(PREBUILDS_PATH . "theme.scss", $colors_css);
+        $theme_css .= "}";
 
-        $build_url = SITE_URL . "/deployment/build_assets";
-        file_get_contents($build_url); // a token might be necessary for safety purpose
+        Files::save(PREBUILDS_PATH . "theme.scss", $theme_css);
+
+        file_get_contents(SITE_URL . "/deployment/build_assets"); // a token might be necessary for safety purpose
 
         $res = [
             "colors_palette" => $colors_palette,

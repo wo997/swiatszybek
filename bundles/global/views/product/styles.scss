@@ -1,12 +1,12 @@
 /* css[view] */
 
 .variant_option {
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 
 .price_diff,
 .price_diff_before {
-	font-weight: 400;
+	font-weight: var(--normal);
 	transition: all 0.15s;
 }
 
@@ -144,7 +144,7 @@
 			transition: 0.2s transform;
 		}
 		span {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 			flex-shrink: 1;
 		}
 		.img_wrapper {
@@ -264,7 +264,7 @@ comment-comp.comp {
 	}
 
 	.nickname {
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 		margin-right: 5px;
 		font-size: 1.1em;
 	}
@@ -293,7 +293,7 @@ comment-comp.comp {
 		min-width: 36px;
 		text-align: center;
 		box-shadow: 0 1px 2px 0 #0003;
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 
 	@media only screen and (max-width: 600px) {

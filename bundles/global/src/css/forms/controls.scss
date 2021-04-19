@@ -11,9 +11,11 @@ button,
 input,
 textarea,
 select {
-	font-family: "Open Sans", sans-serif;
-	// font-family: "Montserrat", sans-serif;
+	font-weight: var(--normal);
 	margin: 0;
+}
+* {
+	font-family: var(--font_family);
 }
 
 button,
@@ -56,7 +58,7 @@ textarea {
 		-webkit-user-select: none;
 		--brighten-factor: 1.1;
 		--disabled-opacity: 0.8;
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 	&.primary {
 		--btn-background-clr: var(--clr_primary);
@@ -225,11 +227,6 @@ select.field.unit_picker {
 		padding: 0 6px;
 		text-align: center;
 		background: #e5e5e5;
-
-		// background: #f0f0ff;
-		// color: #379;
-		// font-weight: 600;
-		// border-color: #69a;
 	}
 	&:hover,
 	&:focus {

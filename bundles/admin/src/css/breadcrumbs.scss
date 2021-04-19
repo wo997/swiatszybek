@@ -9,7 +9,7 @@
 .breadcrumbs.title {
 	&,
 	& .btn {
-		font-weight: 700;
+		font-weight: var(--bold);
 	}
 	.crumb {
 		padding: 0.1em;

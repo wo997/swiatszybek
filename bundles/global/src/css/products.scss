@@ -17,7 +17,7 @@
 }
 
 .product_block .product_name {
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 	margin: 7px 0;
 	font-size: 1.1em;
 }
@@ -64,7 +64,7 @@
 	}
 	&::after {
 		font-size: 0.85em;
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 	&.available {
 		&::before {
@@ -134,7 +134,7 @@
 	.list {
 		& {
 			font-size: 1rem;
-			font-weight: 400;
+			font-weight: var(--normal);
 			position: absolute;
 			background: #fff;
 			padding: 6px 10px;
@@ -149,7 +149,7 @@
 			margin-top: 5px;
 		}
 		& li:first-child {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 		}
 	}
 	.header {
@@ -157,7 +157,7 @@
 			font-size: 0.8em;
 			text-align: right;
 			opacity: 0.8;
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 		}
 		& .fa-list-ul {
 		}

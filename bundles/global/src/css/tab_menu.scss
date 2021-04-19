@@ -27,7 +27,7 @@
 	&.current {
 		background: var(--pretty_blue_background);
 		color: var(--pretty_blue);
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 		border-color: var(--pretty_blue_border);
 		z-index: 10;
 	}

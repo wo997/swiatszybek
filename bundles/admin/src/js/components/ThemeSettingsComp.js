@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * colors: ThemeSettings_ColorCompData[]
+ * font_family: string
  * }} ThemeSettingsCompData
  *
  * @typedef {{
@@ -23,7 +24,7 @@
  */
 function ThemeSettingsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { colors: [] };
+		data = { colors: [], font_family: "" };
 	}
 
 	comp._show = (options = {}) => {
@@ -50,19 +51,16 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					<div class="user_info mb3"><i class="fas fa-info-circle"></i> Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div>
 
 					<div class="label first">Główna czcionka</div>
-					<div class="pretty_radio semi_bold">
-						<div class="checkbox_area">
-							<p-checkbox data-value="Open Sans"></p-checkbox>
-							<span> Open Sans </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="Montserrat"></p-checkbox>
-							<span> Montserrat </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="Lato"></p-checkbox>
-							<span> Lato </span>
-						</div>
+					<div class="pretty_radio semi_bold columns_3" data-bind="{${data.font_family}}" style="max-width: 500px">
+						${Object.entries(fonts)
+							.map(
+								([font_family, data]) =>
+									html`<div class="checkbox_area">
+										<p-checkbox data-value="${font_family}"></p-checkbox>
+										<span>${font_family}</span>
+									</div>`
+							)
+							.join("")}
 					</div>
 
 					<div>
@@ -85,7 +83,8 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
-				const save_colors_palette = comp._data.colors.map((c) => ({ name: c.name, value: c.value }));
+				const data = comp._data;
+				const save_colors_palette = data.colors.map((c) => ({ name: c.name, value: c.value }));
 
 				showLoader();
 				hideModal("ThemeSettings");
@@ -95,11 +94,14 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					url: STATIC_URLS["ADMIN"] + "/theme/save_settings",
 					params: {
 						colors_palette: save_colors_palette,
+						font_family: data.font_family,
 					},
 					success: (res) => {
 						colors_palette = res.colors_palette;
 						loadedColorPalette();
 						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
+						$("#main_font").href = fonts[data.font_family].link;
+
 						showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });
 						hideLoader();
 					},
@@ -134,6 +136,7 @@ function getThemeSettingsModal() {
 	}
 
 	theme_settings_comp._data.colors = colors_palette;
+	theme_settings_comp._data.font_family = main_font_family;
 	theme_settings_comp._render();
 
 	$("#ThemeSettings .custom_toolbar").append(theme_settings_comp._nodes.save_btn);

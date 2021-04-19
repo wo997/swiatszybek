@@ -44,6 +44,6 @@ table img {
 	border-radius: 4px;
 	color: #444;
 	box-shadow: 0 1px 4px 0 #0003;
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 	display: inline-block;
 }

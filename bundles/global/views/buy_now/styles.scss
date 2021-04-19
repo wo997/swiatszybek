@@ -44,7 +44,7 @@
 	}
 
 	.cart_summary {
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 	}
 
 	.buy_products .list_row {
@@ -89,7 +89,7 @@
 				// object-position: left;
 			}
 			.pln {
-				font-weight: 600;
+				font-weight: var(--semi_bold);
 				min-width: 50px;
 				margin-left: auto;
 			}
@@ -189,7 +189,7 @@
 .activateRebateCode {
 	.show_errors:not(:empty) {
 		color: var(--error-clr);
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 		margin-top: 3px;
 	}
 	.rebate_code {

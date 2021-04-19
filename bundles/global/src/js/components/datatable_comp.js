@@ -597,11 +597,11 @@ function DatatableComp(comp, parent, data) {
 						if (column.mobile_label_before) {
 							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
 								column_index + 1
-							}) .cell_wrapper::before { content: "${column.mobile_label_before} ";font-weight:600; } }`;
+							}) .cell_wrapper::before { content: "${column.mobile_label_before} ";font-weight:var(--semi_bold); } }`;
 						} else if (column.mobile_label_above) {
 							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
 								column_index + 1
-							}) .cell_wrapper::before { display:block;content:"${column.mobile_label_above} ";font-weight:600; } }`;
+							}) .cell_wrapper::before { display:block;content:"${column.mobile_label_above} ";font-weight:var(--semi_bold); } }`;
 						}
 					}
 
@@ -742,7 +742,7 @@ function DatatableComp(comp, parent, data) {
 				<span class="datatable_label medium bold" html="{${def(data.label, "")}}"></span>
 				<span html="{${data.after_label}}"></span>
 				<div style="flex-grow:1"></div>
-				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:600"></div>
+				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:var(--semi_bold)"></div>
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
 					<i class="fas fa-times"></i>
 				</div>

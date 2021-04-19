@@ -117,7 +117,7 @@ function registerUser(params) {
 				} else {
 					body += html`
 						<br />
-						<span style="color: #444;font-weight: 600;">
+						<span class="semi_bold" style="color: #444">
 							Nieznany adres pocztowy
 							<i
 								class="fas fa-info-circle"

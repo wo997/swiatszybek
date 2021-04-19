@@ -35,7 +35,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						searchable: "string",
 						render: (data) => {
 							if (data.selected) {
-								return html`<div style="font-weight: 600;color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
+								return html`<div class="semi_bold" style="color: var(--success-clr);"><i class="fas fa-check"></i> ${data.name}</div>`;
 							}
 							return data.name;
 						},

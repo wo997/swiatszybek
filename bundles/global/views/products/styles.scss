@@ -41,7 +41,7 @@
 .results_info {
 	text-align: center;
 	margin-bottom: 20px;
-	font-weight: 600;
+	font-weight: var(--semi_bold);
 }
 
 .product_list_pagination.comp {
@@ -52,7 +52,7 @@
 	.search_header {
 		& > span {
 			font-size: 1.2em;
-			font-weight: 700;
+			font-weight: var(--bold);
 		}
 		& {
 			margin-bottom: 10px;
@@ -98,7 +98,7 @@
 	.level_0 > li {
 		& > a,
 		& > .count {
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 		}
 	}
 	.level_1 a {
@@ -111,7 +111,7 @@
 
 .product_features {
 	.feature_label {
-		font-weight: 600;
+		font-weight: var(--semi_bold);
 		display: block;
 		margin-bottom: 0.2em;
 	}
@@ -226,7 +226,7 @@
 		}
 		& > span {
 			font-size: max(1em, min(3vw, 1.3em));
-			font-weight: 600;
+			font-weight: var(--semi_bold);
 		}
 		& > .btn {
 			margin-top: 15px;

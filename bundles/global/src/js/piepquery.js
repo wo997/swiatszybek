@@ -40,7 +40,9 @@
  */
 function validPiepInput(node) {
 	if (node.matches) {
-		return node.matches(".radio_group, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker, image-input");
+		return node.matches(
+			".radio_group, .pretty_radio, .wo997_img, p-checkbox, input, select, textarea, p-dropdown, color-picker, image-input"
+		);
 	}
 	return false;
 }
