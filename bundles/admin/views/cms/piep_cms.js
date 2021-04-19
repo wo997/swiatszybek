@@ -63,32 +63,65 @@ class PiepCMS {
 	}
 
 	initHistory() {
+		if (!this.undo_btn) {
+			this.undo_btn = this.container._child(".piep_editor_header .undo");
+			this.redo_btn = this.container._child(".piep_editor_header .redo");
+			this.undo_btn.addEventListener("click", () => {
+				this.undoHistory();
+			});
+			this.redo_btn.addEventListener("click", () => {
+				this.redoHistory();
+			});
+			// document.addEventListener("keydown", (ev) => {
+			//     if (!history_comp_focus) {
+			//         return;
+			//     }
+
+			//     if (ev.key && ev.ctrlKey) {
+			//         if (ev.key.toLowerCase() == "z") {
+			//             ev.preventDefault();
+			//         }
+			//         if (ev.key.toLowerCase() == "y") {
+			//             ev.preventDefault();
+			//         }
+			//     }
+			// });
+		}
+
+		this.history_steps_back = 0;
 		this.v_dom_history = [];
 		this.pushHistory();
-
-		this.undo_btn = this.container._child(".piep_editor_header .undo");
-		this.redo_btn = this.container._child(".piep_editor_header .redo");
-		this.undo_btn.addEventListener("click", () => {
-			this.popHistory();
-		});
-		this.redo_btn.addEventListener("click", () => {
-			this.pushHistory();
-		});
 	}
+
 	pushHistory() {
+		this.v_dom_history.splice(this.v_dom_history.length - this.history_steps_back, this.history_steps_back);
+		this.history_steps_back = 0;
+
 		if (this.v_dom_history.length > 0 && isEquivalent(this.v_dom_history[this.v_dom_history.length - 1], this.v_dom)) {
 			return;
 		}
 		this.v_dom_history.push(cloneObject(this.v_dom));
-		console.log(this.v_dom_history);
+		this.renderHistory();
 	}
-	popHistory() {
-		if (this.v_dom_history.length < 2) {
-			return;
-		}
-		this.v_dom_history.pop();
-		this.v_dom = cloneObject(this.v_dom_history[this.v_dom_history.length - 1]);
+	redoHistory() {
+		this.history_steps_back = Math.max(0, this.history_steps_back - 1);
+		this.setDataFromHistory();
+	}
+	undoHistory() {
+		this.history_steps_back = Math.min(this.history_steps_back + 1, this.v_dom_history.length - 1);
+		this.setDataFromHistory();
+	}
+
+	setDataFromHistory() {
+		this.v_dom = cloneObject(this.v_dom_history[this.v_dom_history.length - 1 - this.history_steps_back]);
 		this.recreateDom();
+		this.renderHistory();
+		this.setFocusNode(undefined);
+	}
+
+	renderHistory() {
+		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.v_dom_history.length - 1);
+		this.redo_btn.toggleAttribute("disabled", this.history_steps_back === 0);
 	}
 
 	initSelectResolution() {
@@ -365,6 +398,8 @@ class PiepCMS {
 							setSelectionByIndex(node_ref, begin_offset, end_offset);
 						}
 					}
+
+					this.pushHistory();
 				}
 			});
 		});
@@ -734,8 +769,9 @@ class PiepCMS {
 		/** @type {Position} */
 		this.inspector_pos = { x: 1000000, y: 0 };
 
-		this.container._child(".edit_theme_btn").addEventListener("click", () => {
-			getThemeSettingsModal()._show();
+		const edit_theme_btn = this.container._child(".edit_theme_btn");
+		edit_theme_btn.addEventListener("click", () => {
+			getThemeSettingsModal()._show({ source: edit_theme_btn });
 		});
 
 		this.container._child(".show_inspector_btn").addEventListener("click", () => {
