@@ -42,7 +42,7 @@ domload(() => {
 		}
 		picker_target._dispatch_change();
 		wanna_dispatch_change = false;
-	}, 200);
+	}, 100);
 
 	document.addEventListener("click", (ev) => {
 		const target = $(ev.target);
