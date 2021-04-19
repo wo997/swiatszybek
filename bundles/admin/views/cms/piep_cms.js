@@ -1461,9 +1461,20 @@ class PiepCMS {
 
 				// actually here we should have block / inline-block checking, blocks can be wrapped,
 				// text not so, unless what we place nearby is also a block?
+				let wrap_with_a_flex = false;
 				if (near_v_node_data.v_node.text === undefined) {
-					// block layout
+					wrap_with_a_flex = true;
+				}
+				if (near_v_node_data.parent_v_nodes.length > 0) {
+					const parent_v_node = near_v_node_data.parent_v_nodes[near_v_node_data.parent_v_nodes.length - 1];
 
+					const parent_display = parent_v_node.styles.display;
+					if (parent_display === "flex") {
+						wrap_with_a_flex = false;
+					}
+				}
+
+				if (wrap_with_a_flex) {
 					/** @type {vDomNode} */
 					const insert_container = {
 						tag: "div",
@@ -1483,8 +1494,6 @@ class PiepCMS {
 
 					near_v_node_data.v_nodes.splice(ind, 1, insert_container);
 				} else {
-					// inline layout
-
 					if (dir === 1) {
 						ind++;
 					}
