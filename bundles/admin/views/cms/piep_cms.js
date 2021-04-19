@@ -24,6 +24,7 @@ class PiepCMS {
 		this.initFloatMenu();
 		this.initSelectResolution();
 		this.initEditables();
+		this.initEditingColors();
 
 		this.initPaste();
 		this.initClick();
@@ -104,6 +105,8 @@ class PiepCMS {
 		}
 		this.v_dom_history.push(cloneObject(this.v_dom));
 		this.renderHistory();
+
+		this.filterMenu();
 	}
 	redoHistory() {
 		this.history_steps_back = Math.max(0, this.history_steps_back - 1);
@@ -245,6 +248,65 @@ class PiepCMS {
 				<i class="fas fa-times"></i>
 			</button>
 		`);
+	}
+
+	initEditingColors() {
+		/**
+		 *
+		 * @param {PiepNode} color_wrapper
+		 */
+		const updateColorWrapper = (color_wrapper) => {
+			registerForms();
+
+			const input = color_wrapper._child("input");
+			const radio_group = color_wrapper._child(".radio_group");
+			const color_picker = color_wrapper._child("color-picker");
+
+			let color_options_html = html`
+				<div class="checkbox_area">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+			`;
+			colors_palette.forEach((color) => {
+				color_options_html += html`
+					<div class="checkbox_area">
+						<p-checkbox data-value="var(--${color.name})"></p-checkbox>
+						<div class="color_circle" style="background:var(--${color.name});"></div>
+					</div>
+				`;
+			});
+
+			// rewrites the first element
+			radio_group._set_content(color_options_html);
+
+			registerForms();
+
+			if (!input.classList.contains("wrrgstrd")) {
+				input.classList.add("wrrgstrd");
+				input.addEventListener("value_set", () => {
+					/** @type {string} */
+					const color = input._get_value();
+					let radio_value, picker_value;
+					if (color.match(/#\w{3,}/)) {
+						radio_value = false;
+						picker_value = color;
+					} else {
+						radio_value = color;
+						picker_value = "";
+					}
+					radio_group._set_value(radio_value, { quiet: true });
+					color_picker._set_value(picker_value, { quiet: true });
+				});
+			}
+
+			radio_group.addEventListener("change", () => {
+				input._set_value(radio_group._get_value());
+			});
+			color_picker.addEventListener("change", () => {
+				input._set_value(color_picker._get_value());
+			});
+		};
 
 		/**
 		 *
@@ -270,7 +332,7 @@ class PiepCMS {
 				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
 					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
 				</p-option>
-				<p-option class="edit_color_palette_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
+				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			`);
 
 			registerForms();
@@ -291,18 +353,24 @@ class PiepCMS {
 			color_picker.addEventListener("color_picker_hidden", () => {
 				color_dropdown.click();
 			});
-
-			color_dropdown._child(".edit_color_palette_btn").addEventListener("click", () => {
-				getThemeSettingsModal()._show();
-			});
 		};
 
 		const colorPaletteChanged = () => {
-			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.color"]`));
-			updateColorDropdown(this.float_menu._child(`p-dropdown[data-blc_prop="style.backgroundColor"]`));
+			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.color"]`));
+			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.backgroundColor"]`));
+			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="color"]`));
+			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="backgroundColor"]`));
 		};
 		window.addEventListener("color_palette_changed", colorPaletteChanged);
 		colorPaletteChanged();
+
+		document.addEventListener("click", (event) => {
+			const target = $(event.target);
+			const edit_theme_btn = target._parent(".edit_theme_btn");
+			if (edit_theme_btn) {
+				getThemeSettingsModal()._show({ source: edit_theme_btn });
+			}
+		});
 	}
 
 	initEditables() {
@@ -681,7 +749,7 @@ class PiepCMS {
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
 				<div data-blc_prop_wrapper="fontWeight">
 					<div class="label">Grubość czcionki</div>
-					<div class="pretty_radio pretty_blue flex columns_4" data-blc_prop="style.fontWeight">
+					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.fontWeight">
 						<div class="checkbox_area">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
@@ -703,7 +771,7 @@ class PiepCMS {
 
 				<div data-blc_prop_wrapper="textAlign">
 					<div class="label">Wyrównanie tekstu</div>
-					<div class="pretty_radio pretty_blue flex columns_5" data-blc_prop="style.textAlign">
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textAlign">
 						<div class="checkbox_area">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
@@ -725,6 +793,36 @@ class PiepCMS {
 							<i class="fas fa-align-justify"></i>
 						</div>
 					</div>
+				</div>
+
+				<div data-blc_prop_wrapper="color">
+					<div class="label">Kolor czcionki</div>
+
+					<input class="field hidden" data-blc_prop="style.color" />
+
+					<div class="label normal">
+						<span class="case_palette">Kolor z palety</span>
+						<span class="edit_theme_btn normal link">Zarządzaj</span>
+					</div>
+					<div class="pretty_radio flex columns_6 global_root spiky"></div>
+
+					<div class="label normal">Inny kolor</div>
+					<color-picker class="inline"></color-picker>
+				</div>
+
+				<div data-blc_prop_wrapper="backgroundColor">
+					<div class="label">Kolor czcionki</div>
+
+					<input class="field hidden" data-blc_prop="style.backgroundColor" />
+
+					<div class="label normal">
+						<span class="case_palette">Kolor z palety</span>
+						<span class="edit_theme_btn normal link">Zarządzaj</span>
+					</div>
+					<div class="pretty_radio flex columns_6 global_root spiky"></div>
+
+					<div class="label normal">Inny kolor</div>
+					<color-picker class="inline"></color-picker>
 				</div>
 
 				<div data-blc_prop_wrapper="margin">
@@ -788,7 +886,7 @@ class PiepCMS {
 				</div>
 			</div>
 
-			<div class="pretty_radio semi_bold select_resolution ml1 mra">
+			<div class="pretty_radio semi_bold select_resolution mla mra">
 				<div class="checkbox_area" data-tooltip="Komputer">
 					<p-checkbox data-value="desktop"></p-checkbox>
 					<span> <i class="fas fa-desktop"></i> </span>
@@ -1996,7 +2094,9 @@ class PiepCMS {
 		const focus_node = this.getNode(vid);
 		let tblc;
 
-		this.filterMenu();
+		if (just_changed_focus_vid) {
+			this.filterMenu();
+		}
 
 		if (focus_node) {
 			if (just_changed_focus_vid) {

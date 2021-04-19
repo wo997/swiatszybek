@@ -79,6 +79,11 @@
 			box-shadow: 0 0 0 1px var(--selection_clr), inset 0 0 0 1px var(--selection_clr) !important;
 		}
 	}
+	&.spiky {
+		& > * {
+			border-radius: 0;
+		}
+	}
 
 	&.columns_1,
 	&.columns_2,

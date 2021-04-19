@@ -57,6 +57,11 @@
 			}
 		}
 	}
+
+	[data-blc_prop_wrapper] {
+		border-top: 1px solid #ccc;
+		margin-top: var(--form_spacing);
+	}
 }
 
 .color_circle {
