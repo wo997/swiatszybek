@@ -819,7 +819,7 @@ class PiepCMS {
 				</div>
 
 				<div data-blc_prop_wrapper="backgroundColor">
-					<div class="label">Kolor czcionki</div>
+					<div class="label">Kolor tła</div>
 
 					<input class="field hidden" data-blc_prop="style.backgroundColor" />
 
