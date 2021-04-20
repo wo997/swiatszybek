@@ -30,7 +30,7 @@ function registerDropdowns(parent) {
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
-			if (target._parent(".picker_wrapper")) {
+			if (target._parent(".any_picker_wrapper")) {
 				// you might want to add a single class to both datepicker and colorpickers so they don't close any other windows
 				return;
 			}
@@ -83,9 +83,32 @@ function registerDropdowns(parent) {
  */
 function setDropdownValue(input, value, options = {}) {
 	const options_wrapper = input._child(".options_wrapper");
-	options_wrapper._direct_children().forEach((option) => {
-		const match_value = option.dataset.match;
+	const options_nodes = options_wrapper._direct_children();
+	let ret = false;
+	options_nodes.forEach((option) => {
+		if (ret) {
+			return;
+		}
 		const option_value = option.dataset.value;
+
+		if (option_value !== undefined) {
+			if (option_value != value) {
+				return;
+			}
+			if (option_value === "" && option_value !== value) {
+				return;
+			}
+
+			selectDropdownOption(input, option, options);
+			ret = true;
+		}
+	});
+
+	options_nodes.forEach((option) => {
+		if (ret) {
+			return;
+		}
+		const match_value = option.dataset.match;
 
 		if (match_value !== undefined) {
 			if (!value.match(new RegExp(match_value))) {
@@ -96,15 +119,7 @@ function setDropdownValue(input, value, options = {}) {
 			input.dataset.value = value;
 			input.classList.add("selected");
 			option.classList.add("selected");
-		} else if (option_value !== undefined) {
-			if (option_value != value) {
-				return;
-			}
-			if (option_value === "" && option_value !== value) {
-				return;
-			}
-
-			selectDropdownOption(input, option, options);
+			ret = true;
 		}
 	});
 }

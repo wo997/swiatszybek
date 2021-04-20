@@ -22,3 +22,23 @@ p-option color-picker {
 	padding: 0 !important;
 	overflow: hidden;
 }
+
+.input_icon {
+	border: 1px solid #555;
+	width: 22px;
+	height: 18px;
+	border-radius: 3px;
+	font-weight: var(--semi_bold);
+	font-size: 0.8em;
+	line-height: 1;
+	padding-right: 10px;
+	padding-top: 1px;
+}
+
+.font_size_float {
+	background: #fff;
+	box-shadow: 0 2px 4px 0 #0004;
+	border: 1px solid #aaa;
+	padding: 5px;
+	border-radius: 4px;
+}

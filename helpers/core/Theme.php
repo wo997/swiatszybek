@@ -222,24 +222,16 @@ CSS;
         return self::$main_font_family;
     }
 
-    public static function preloadColorPalette()
-    {
-        $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
-        return <<<JS
-    colors_palette = $colors_palette;
-    loadedColorPalette();
-JS;
-    }
-
-
-    public static function preloadFonts()
+    public static function preloadThemeSettings()
     {
         $main_font_family = json_encode(self::getMainFontFamily());
         $fonts = json_encode(Theme::$fonts);
+        $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
         return <<<JS
     fonts = $fonts;
     main_font_family = $main_font_family; 
-    loadedColorPalette();
+    colors_palette = $colors_palette;
+    loadedThemeSettings();
 JS;
     }
 }

@@ -13,6 +13,6 @@
  */
 let colors_palette = [];
 
-function loadedColorPalette() {
-	window.dispatchEvent(new CustomEvent("color_palette_changed"));
+function loadedThemeSettings() {
+	window.dispatchEvent(new CustomEvent("theme_settings_changed"));
 }

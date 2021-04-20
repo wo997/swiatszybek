@@ -99,7 +99,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					success: (res) => {
 						colors_palette = res.colors_palette;
 						main_font_family = res.font_family;
-						loadedColorPalette();
+						loadedThemeSettings();
 						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
 						$("#main_font").href = fonts[main_font_family].link;
 

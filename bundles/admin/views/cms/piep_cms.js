@@ -23,8 +23,10 @@ class PiepCMS {
 		this.initAdvancedMenu();
 		this.initFloatMenu();
 		this.initSelectResolution();
+
 		this.initEditables();
 		this.initEditingColors();
+		this.initEditingFontSize();
 
 		this.initPaste();
 		this.initClick();
@@ -196,13 +198,6 @@ class PiepCMS {
 				<p-option data-value="">
 					<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
 				</p-option>
-				<p-option data-value="1rem"><span style="font-size:1em">A</span></p-option>
-				<p-option data-value="1.2rem"><span style="font-size:1.2em">A</span></p-option>
-				<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
-				<p-option data-tooltip="Inny rozmiar" data-match="#\\d{1,}">
-					<input class="small inline" />
-				</p-option>
-				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj listą rozmiarów"> <i class="fas fa-cog"></i> </p-option>
 			</p-dropdown>
 
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
@@ -256,6 +251,93 @@ class PiepCMS {
 				<i class="fas fa-times"></i>
 			</button>
 		`);
+	}
+
+	initEditingFontSize() {
+		/**
+		 *
+		 * @param {PiepNode} font_size_dropdown
+		 */
+		const updateFontSizeDropdown = (font_size_dropdown) => {
+			registerForms(); // let the options_wrapper appear
+
+			const options_wrapper = font_size_dropdown._child(".options_wrapper");
+
+			let font_size_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
+
+			const font_sizes = [{ name: "2rem" }, { name: "3rem" }];
+
+			font_sizes.forEach((font_size) => {
+				font_size_options_html += html`
+					<p-option data-value="var(--${font_size.name})">
+						<div style="font-size:var(--${font_size.name});">A</div>
+					</p-option>
+				`;
+			});
+
+			font_size_options_html += html`<p-option data-tooltip="Inny rozmiar" class="different_size" data-match=".*">
+					<div class="input_icon">|</div>
+				</p-option>
+				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj listą rozmiarów"> <i class="fas fa-cog"></i> </p-option>`;
+
+			// rewrites the first element
+			options_wrapper._set_content(font_size_options_html);
+
+			registerForms();
+
+			const different_size = options_wrapper._child(".different_size");
+			different_size.addEventListener("click", () => {
+				any_picker.wrapper._set_content(
+					html`<div class="font_size_float">
+						<div class="label first">Rozmiar:</div>
+						<input class="field small" />
+					</div>`
+				);
+				const input = any_picker.wrapper._child("input");
+				const input_value = different_size.classList.contains("selected") ? font_size_dropdown._get_value() : "";
+				input._set_value(input_value);
+
+				const change = () => {
+					font_size_dropdown._set_value(input._get_value());
+				};
+				input.addEventListener("change", change);
+				input.addEventListener("input", change);
+
+				any_picker.show(different_size);
+			});
+
+			// const color_picker = font_size_dropdown._child("color-picker");
+			// font_size_dropdown.addEventListener("value_set", () => {
+			// 	/** @type {string} */
+			// 	const color = font_size_dropdown._get_value();
+			// 	if (color.match(/#\w{3,}/)) {
+			// 		color_picker._set_value(color, { quiet: true });
+			// 	}
+			// });
+
+			// const color_picker = font_size_dropdown._child("color-picker");
+			// font_size_dropdown.addEventListener("value_set", () => {
+			// 	/** @type {string} */
+			// 	const color = font_size_dropdown._get_value();
+			// 	if (color.match(/#\w{3,}/)) {
+			// 		color_picker._set_value(color, { quiet: true });
+			// 	}
+			// });
+
+			// color_picker.addEventListener("change", () => {
+			// 	font_size_dropdown._set_value(color_picker._get_value());
+			// });
+
+			// color_picker.addEventListener("any_picker_hidden", () => {
+			// 	font_size_dropdown.click();
+			// });
+		};
+
+		const themeSettingsChanged = () => {
+			updateFontSizeDropdown(this.float_menu._child(`[data-blc_prop="style.fontSize"]`));
+		};
+		window.addEventListener("theme_settings_changed", themeSettingsChanged);
+		themeSettingsChanged();
 	}
 
 	initEditingColors() {
@@ -325,7 +407,7 @@ class PiepCMS {
 
 			const options_wrapper = color_dropdown._child(".options_wrapper");
 
-			let color_options_html = "";
+			let color_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
 			colors_palette.forEach((color) => {
 				color_options_html += html`
 					<p-option data-value="var(--${color.name})">
@@ -334,14 +416,15 @@ class PiepCMS {
 				`;
 			});
 
-			// rewrites the first element
-			options_wrapper._set_content(html`
-				${options_wrapper._child(`[data-value=""]`).outerHTML} ${color_options_html}
+			color_options_html += html`
 				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
 					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
 				</p-option>
 				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
-			`);
+			`;
+
+			// rewrites the first element
+			options_wrapper._set_content(color_options_html);
 
 			registerForms();
 
@@ -363,14 +446,14 @@ class PiepCMS {
 			});
 		};
 
-		const colorPaletteChanged = () => {
+		const themeSettingsChanged = () => {
 			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.color"]`));
 			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.backgroundColor"]`));
 			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="color"]`));
 			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="backgroundColor"]`));
 		};
-		window.addEventListener("color_palette_changed", colorPaletteChanged);
-		colorPaletteChanged();
+		window.addEventListener("theme_settings_changed", themeSettingsChanged);
+		themeSettingsChanged();
 
 		document.addEventListener("click", (event) => {
 			const target = $(event.target);
@@ -426,6 +509,8 @@ class PiepCMS {
 						}
 					};
 
+					let select_node, select_start, select_end;
+
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 						// since the first one is the greatest so the other two will be
@@ -478,7 +563,9 @@ class PiepCMS {
 
 						const node_ref = this.getNode(mid_vid);
 						if (node_ref) {
-							setSelectionByIndex(node_ref, 0, end_offset - begin_offset);
+							select_node = node_ref;
+							select_start = 0;
+							select_end = end_offset - begin_offset;
 						}
 					} else {
 						setPropOfVNode(v_node);
@@ -488,8 +575,14 @@ class PiepCMS {
 						this.setFocusNode(v_node.id);
 						if (v_node.text === undefined) {
 						} else if (node_ref) {
-							setSelectionByIndex(node_ref, begin_offset, end_offset);
+							select_node = node_ref;
+							select_start = begin_offset;
+							select_end = end_offset;
 						}
+					}
+
+					if (!validPiepInput($(document.activeElement))) {
+						setSelectionByIndex(select_node, select_start, select_end);
 					}
 
 					this.pushHistory();
@@ -1501,27 +1594,27 @@ class PiepCMS {
 		let show_float_menu = this.float_menu_active;
 		if (show_focus_node_vid !== this.focus_node_vid) {
 			show_float_menu = false;
+			any_picker.hide();
+			this.float_menu._children("p-dropdown.dropped").forEach((d) => {
+				d.click();
+			});
 		}
 		this.float_menu.classList.toggle("hidden", !show_float_menu);
 		this.showFloatMenuToNode(show_focus_node_vid);
 	}
 
-	inspectorGrabbed() {
+	inspectorMove() {
 		const safe_off = 5;
 
-		//const inspector_rect = this.inspector.getBoundingClientRect();
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 
 		const inspector_width = 310;
 		const inspector_height = 390;
 		const inspector_grab_btn_offset = 47;
 
-		//const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_rect.width - off;
 		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
 
 		if (this.inspector_grabbed) {
-			//const grab_btn_center = getRectCenter(this.grab_inspector_btn.getBoundingClientRect());
-
 			const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
 			const top = mouse.pos.y - 20;
 
@@ -1533,12 +1626,7 @@ class PiepCMS {
 			}
 		}
 
-		this.inspector_pos.x = clamp(
-			//content_wrapper_rect.left +
-			safe_off,
-			this.inspector_pos.x,
-			max_x
-		);
+		this.inspector_pos.x = clamp(safe_off, this.inspector_pos.x, max_x);
 		this.inspector_pos.y = clamp(
 			content_wrapper_rect.top + safe_off,
 			this.inspector_pos.y,
@@ -1561,7 +1649,7 @@ class PiepCMS {
 			this.notGrabbedBlock();
 		}
 
-		this.inspectorGrabbed();
+		this.inspectorMove();
 
 		const piep_editor_rect = this.container.getBoundingClientRect();
 		const alternative_scroll_panel_left = piep_editor_rect.left;

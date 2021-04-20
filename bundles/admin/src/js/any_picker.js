@@ -20,34 +20,36 @@ domload(() => {
 		target: undefined,
 		wrapper: any_picker_wrapper,
 		show: (target) => {
-			any_picker.target = target;
-			target.classList.add("any_picker_shown");
+			setTimeout(() => {
+				any_picker.target = target;
+				target.classList.add("any_picker_shown");
 
-			const parent = target._scroll_parent();
-			parent.append(any_picker_wrapper);
+				const parent = target._scroll_parent();
+				parent.append(any_picker_wrapper);
 
-			// reset pos
-			any_picker_wrapper.classList.add("visible");
-			any_picker_wrapper._set_absolute_pos(0, 0);
+				// reset pos
+				any_picker_wrapper.classList.add("visible");
+				any_picker_wrapper._set_absolute_pos(0, 0);
 
-			const target_rect = target.getBoundingClientRect();
-			const scp_rect = parent.getBoundingClientRect();
+				const target_rect = target.getBoundingClientRect();
+				const scp_rect = parent.getBoundingClientRect();
 
-			let left = target_rect.left + (target_rect.width - any_picker_wrapper.offsetWidth) * 0.5 - scp_rect.left + parent.scrollLeft;
-			let top = target_rect.top + target_rect.height + 1 - scp_rect.top + parent.scrollTop;
-			const off = 5;
-			left = clamp(off, left, parent.scrollWidth - any_picker_wrapper.offsetWidth - off);
-			if (top > parent.scrollHeight - any_picker_wrapper.offsetHeight - 1 - off) {
-				top = target_rect.top - any_picker_wrapper.offsetHeight - 1 - scp_rect.top + parent.scrollTop;
-			}
+				let left = target_rect.left + (target_rect.width - any_picker_wrapper.offsetWidth) * 0.5 - scp_rect.left + parent.scrollLeft;
+				let top = target_rect.top + target_rect.height + 1 - scp_rect.top + parent.scrollTop;
+				const off = 5;
+				left = clamp(off, left, parent.scrollWidth - any_picker_wrapper.offsetWidth - off);
+				if (top > parent.scrollHeight - any_picker_wrapper.offsetHeight - 1 - off) {
+					top = target_rect.top - any_picker_wrapper.offsetHeight - 1 - scp_rect.top + parent.scrollTop;
+				}
 
-			any_picker_wrapper._set_absolute_pos(left, top);
+				any_picker_wrapper._set_absolute_pos(left, top);
 
-			any_picker_wrapper._animate(
-				`0%{transform:scale(0.8);opacity:0}
+				any_picker_wrapper._animate(
+					`0%{transform:scale(0.8);opacity:0}
                 100%{transform:scale(1);opacity:1}`,
-				200
-			);
+					200
+				);
+			});
 		},
 		hide: () => {
 			const target = any_picker.target;

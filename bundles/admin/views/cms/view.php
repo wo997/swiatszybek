@@ -6,8 +6,7 @@
 <title>Strony</title>
 
 <script>
-    <?= Theme::preloadColorPalette() ?>
-    <?= Theme::preloadFonts() ?>
+    <?= Theme::preloadThemeSettings() ?>
 </script>
 
 <?php startSection("body_content"); ?>

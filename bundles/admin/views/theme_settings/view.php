@@ -7,8 +7,7 @@
 <title>Szablon</title>
 
 <script>
-    <?= Theme::preloadColorPalette() ?>
-    <?= Theme::preloadFonts() ?>
+    <?= Theme::preloadThemeSettings() ?>
 </script>
 
 <?php startSection("header"); ?>
