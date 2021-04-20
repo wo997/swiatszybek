@@ -428,46 +428,49 @@ class PiepCMS {
 
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
-						if (begin_offset > 0) {
-							const bef_id = this.getPiepEditorId();
-							v_node_data.parent_v_nodes.push(
-								/** @type {vDomNode} */ {
-									id: bef_id,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(0, begin_offset),
+						// since the first one is the greatest so the other two will be
+						const bef_vid = this.getPiepEditorId();
+						const mid_vid = this.getPiepEditorId() + 1;
+						const aft_vid = this.getPiepEditorId() + 2;
 
-									attrs: {},
-									classes: [],
-								}
-							);
-						}
-						const mid_vid = this.getPiepEditorId();
+						/** @type {vDomNode} */
+						const bef_child = {
+							id: bef_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(0, begin_offset),
+							attrs: {},
+							classes: [],
+						};
 						/** @type {vDomNode} */
 						const mid_child = {
 							id: mid_vid,
 							tag: "span",
 							styles: {},
 							text: v_node.text.substring(begin_offset, end_offset),
-
 							attrs: {},
 							classes: [],
 						};
-						v_node_data.parent_v_nodes.push(mid_child);
-						if (end_offset < v_node.text.length) {
-							const aft_id = this.getPiepEditorId();
-							v_node_data.parent_v_nodes.push(
-								/** @type {vDomNode} */ {
-									id: aft_id,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(end_offset),
+						/** @type {vDomNode} */
+						const aft_child = {
+							id: aft_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(end_offset),
+							attrs: {},
+							classes: [],
+						};
 
-									attrs: {},
-									classes: [],
-								}
-							);
+						v_node.children = [];
+
+						if (begin_offset > 0) {
+							v_node.children.push(bef_child);
 						}
+						v_node.children.push(mid_child);
+						if (end_offset < v_node.text.length) {
+							v_node.children.push(aft_child);
+						}
+
 						v_node.text = undefined;
 
 						setPropOfVNode(mid_child);
