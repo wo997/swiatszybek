@@ -2,6 +2,8 @@
 
 class Theme
 {
+    public static $main_font_family;
+
     public static $fonts = [
         "Open Sans" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
@@ -211,13 +213,33 @@ CSS;
 
         return $res;
     }
-}
 
-function preloadColorPalette()
-{
-    $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
-    return <<<JS
+    public static function getMainFontFamily()
+    {
+        if (!isset(self::$main_font_family)) {
+            self::$main_font_family = getSetting(["theme", "general", "font_family"], "");
+        }
+        return self::$main_font_family;
+    }
+
+    public static function preloadColorPalette()
+    {
+        $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
+        return <<<JS
     colors_palette = $colors_palette;
     loadedColorPalette();
 JS;
+    }
+
+
+    public static function preloadFonts()
+    {
+        $main_font_family = json_encode(self::getMainFontFamily());
+        $fonts = json_encode(Theme::$fonts);
+        return <<<JS
+    fonts = $fonts;
+    main_font_family = $main_font_family; 
+    loadedColorPalette();
+JS;
+    }
 }

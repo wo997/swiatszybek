@@ -35,7 +35,7 @@ if (isset($JS_files)) {
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <?php
-$main_font = def(Theme::$fonts, $main_font_family);
+$main_font = def(Theme::$fonts, Theme::getMainFontFamily());
 if ($main_font) {
 ?>
     <link id="main_font" href="<?= $main_font["link"] ?>" rel="stylesheet">

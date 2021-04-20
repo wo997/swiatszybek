@@ -17,13 +17,12 @@ if (defined("ROUTE")) {
     $has_js = false;
 }
 
-$main_font_family = getSetting(["theme", "general", "font_family"]);
 ?>
 
+<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 <script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
 
 <script>
-    // TODO: should go to cookie maybe window.devicePixelRatio, probably no
     const ASSETS_RELEASE = <?= ASSETS_RELEASE ?>;
 
     const IS_LOGGED = <?= User::getCurrent()->isLoggedIn() ? "true" : "false" ?>;
@@ -39,11 +38,10 @@ $main_font_family = getSetting(["theme", "general", "font_family"]);
     const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
 
+    const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
+
     const IS_ADMIN_URL = <?= Request::$is_admin_url ? 1 : 0 ?>;
     const root_class = IS_ADMIN_URL ? "admin_root" : "global_root";
-
-    fonts = <?= json_encode(Theme::$fonts) ?>;
-    main_font_family = <?= json_encode($main_font_family) ?>;
 
     user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
     loadedUserCart();
@@ -56,7 +54,6 @@ $main_font_family = getSetting(["theme", "general", "font_family"]);
             //const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
         <?php endif ?>
     <?php endif ?>
-
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
             showNotification("Zalogowano pomyślnie", {
@@ -65,7 +62,6 @@ $main_font_family = getSetting(["theme", "general", "font_family"]);
             });
         });
     <?php endif ?>
-
     <?php if ($message_modal = Request::getSingleUsageSessionVar("message_modal")) : ?>
         windowload(() => {
             showMessageModal(getMessageHTML(
@@ -73,17 +69,13 @@ $main_font_family = getSetting(["theme", "general", "font_family"]);
             ));
         });
     <?php endif ?>
-
     <?php if (Request::getSingleUsageSessionVar("login")) : ?>
         domload(() => {
             showModal("loginForm");
         });
     <?php endif ?>
-
-    const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 </script>
 
-<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 
 <?php if (Request::$is_user_url) : ?>
     <link href="/builds/user.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
