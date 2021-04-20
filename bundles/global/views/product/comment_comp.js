@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[view] */
 
 /**
  *
