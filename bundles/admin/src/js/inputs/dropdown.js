@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[admin] */
 
 window.addEventListener("register-form-components", (ev) => {
 	// @ts-ignore

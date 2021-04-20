@@ -64,9 +64,9 @@ function xhr(params) {
 		// }
 	};
 
-	var formData = params.formData ? params.formData : new FormData();
+	const formData = params.formData ? params.formData : new FormData();
 	if (params.params) {
-		for (var [key, value] of Object.entries(params.params)) {
+		for (let [key, value] of Object.entries(params.params)) {
 			if (typeof value === "object" && value !== null) {
 				value = JSON.stringify(value);
 			}

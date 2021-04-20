@@ -20,12 +20,6 @@ domload(() => {
 		const empty = last_viewed_products_comp._data.products.length === 0;
 		expand($(".case_last_viewed_products_not_empty"), !empty);
 		expand($(".case_last_viewed_products_empty"), empty);
-		// $$(".case_last_viewed_products_not_empty").forEach((ne) => {
-		// 	expand(ne, !empty);
-		// });
-		// $$(".case_last_viewed_products_empty").forEach((e) => {
-		// 	expand(e, empty);
-		// });
 	};
 
 	window.addEventListener("last_viewed_products_changed", loadLastViewdProducts);

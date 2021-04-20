@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[!global] */
 
 let IS_TOUCH_DEVICE = false;
 setTouchDevice();

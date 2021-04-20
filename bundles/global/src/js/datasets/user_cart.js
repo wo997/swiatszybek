@@ -50,16 +50,6 @@
 
 /** @type {UserCartData} */
 let user_cart;
-/* = {
-	products: [],
-	total_price: 0,
-	products_price: 0,
-	delivery_type_id: -1,
-	delivery_price: 0,
-	rebate_codes: [],
-	allow_cod: false,
-	available_carriers: [],
-};*/
 
 function loadedUserCart() {
 	window.dispatchEvent(new CustomEvent("user_cart_changed"));

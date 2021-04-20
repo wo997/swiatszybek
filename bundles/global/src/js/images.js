@@ -126,7 +126,6 @@ function onScrollImages(options = {}) {
 			img.classList.remove("wo997_img_waiting");
 			img.classList.add("wo997_img_shown");
 			const duration = def(options.duration, show_image_duration);
-			//animate(img, ANIMATIONS.show, duration);
 			img.style.animation = `show ${duration}ms`;
 
 			setTimeout(() => {
