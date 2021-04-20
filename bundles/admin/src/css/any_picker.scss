@@ -1,0 +1,12 @@
+/* css[admin] */
+
+.any_picker_wrapper {
+	& {
+		position: absolute;
+		z-index: 450;
+		transform-origin: 50% 0;
+	}
+	&:not(.visible) {
+		display: none !important;
+	}
+}

@@ -44,7 +44,7 @@ color-picker {
 		border-top-left-radius: 4px;
 		opacity: 0.5;
 	}
-	&.shown {
+	&.any_picker_shown {
 		& {
 			box-shadow: 0 0 0 1px var(--focus-clr);
 			border-color: var(--focus-clr);
@@ -61,12 +61,6 @@ color-picker {
 .picker_wrapper {
 	& {
 		font-size: 8px !important;
-		position: absolute;
-		transform-origin: 50% 0;
-		z-index: 450;
-	}
-	&:not(.visible) {
-		display: none !important;
 	}
 	.close_btn,
 	.erase_btn {

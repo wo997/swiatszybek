@@ -187,10 +187,6 @@ class PiepCMS {
 	}
 
 	initFloatMenu() {
-		// <p-option data-tooltip="Inny rozmiar" data-match="#\\d{1,}">
-		// 	<input class="small inline" />
-		// </p-option>;
-
 		this.float_menu._set_content(html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
@@ -203,6 +199,10 @@ class PiepCMS {
 				<p-option data-value="1rem"><span style="font-size:1em">A</span></p-option>
 				<p-option data-value="1.2rem"><span style="font-size:1.2em">A</span></p-option>
 				<p-option data-value="1.4rem"><span style="font-size:1.4em">A</span></p-option>
+				<p-option data-tooltip="Inny rozmiar" data-match="#\\d{1,}">
+					<input class="small inline" />
+				</p-option>
+				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj listą rozmiarów"> <i class="fas fa-cog"></i> </p-option>
 			</p-dropdown>
 
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
@@ -358,7 +358,7 @@ class PiepCMS {
 				color_dropdown._set_value(color_picker._get_value());
 			});
 
-			color_picker.addEventListener("color_picker_hidden", () => {
+			color_picker.addEventListener("any_picker_hidden", () => {
 				color_dropdown.click();
 			});
 		};
