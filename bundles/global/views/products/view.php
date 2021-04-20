@@ -351,9 +351,9 @@ $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-1";
 
 $options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, product_feature_option_id option_id
-    FROM general_product
-    INNER JOIN product USING(general_product_id)
-    INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
+    FROM product p 
+    INNER JOIN product_to_variant_option ptvo USING(product_id)
+    INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
     WHERE $where_products_0
     GROUP BY product_feature_option_id");
 usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
