@@ -195,10 +195,11 @@ function checkUrl($url)
 if ($pageName) {
     // hardcoded page example - will be removed in the future
     if (!Request::$is_deployment_url) {
-        $page_data = DB::fetchRow(
-            "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
-            [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong
-        );
+        $page_data = [];
+        //  DB::fetchRow(
+        //     "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
+        //     [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong
+        // );
     }
 
     include $pageName;
@@ -206,7 +207,7 @@ if ($pageName) {
 } else {
 
     $canSee = User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
-    $page_data = DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
+    $page_data = []; //DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
 
     if (isset($_POST["content"])) {
         $page_data["content"] = $_POST["content"];
