@@ -20,7 +20,7 @@ class PiepCMS {
 		this.initConsts();
 
 		this.initInspector();
-		this.initAdvancedMenu();
+		this.initBlcMenu();
 		this.initFloatMenu();
 		this.initSelectResolution();
 
@@ -792,7 +792,7 @@ class PiepCMS {
 		});
 	}
 
-	initAdvancedMenu() {
+	initBlcMenu() {
 		this.blc_menu._set_content(html`
 			<div class="filter_blc_menu radio_group hide_checks">
 				<div class="checkbox_area">
@@ -1023,6 +1023,10 @@ class PiepCMS {
 				</div>
 			</div>
 		`);
+
+		this.blc_menu_scroll_panel = this.blc_menu._child(".blc_menu_scroll_panel");
+		this.case_blc_menu_empty = this.blc_menu._child(".case_blc_menu_empty");
+
 		registerForms();
 
 		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
@@ -2266,6 +2270,8 @@ class PiepCMS {
 		const focus_node = this.getNode(this.focus_node_vid);
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
+		let first = true;
+
 		if (v_node) {
 			this.editable_props.forEach((prop) => {
 				const blc_prop_wrapper = this.blc_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
@@ -2283,11 +2289,21 @@ class PiepCMS {
 				}
 
 				blc_prop_wrapper.classList.toggle("hidden", !visible);
+				blc_prop_wrapper.classList.toggle("first", first);
+
+				if (visible) {
+					// put it on top as u iterate yay, probably should be pushed into array and then sorted but that's ok
+					this.blc_menu_scroll_panel.append(blc_prop_wrapper);
+				}
+
+				if (visible) {
+					first = false;
+				}
 			});
 		}
 
-		this.blc_menu._child(".blc_menu_scroll_panel").classList.toggle("hidden", !v_node);
-		this.blc_menu._child(".case_blc_menu_empty").classList.toggle("hidden", !!v_node);
+		this.blc_menu_scroll_panel.classList.toggle("hidden", !v_node);
+		this.case_blc_menu_empty.classList.toggle("hidden", !!v_node);
 
 		this.setBlcMenuFromFocusedNode();
 	}
