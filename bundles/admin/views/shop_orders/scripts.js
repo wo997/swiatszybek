@@ -37,20 +37,6 @@ domload(() => {
 					return html`${data.total_price} zł`;
 				},
 			},
-			// {
-			// 	label: "Rodzaj dostawy",
-			// 	key: "delivery_type_id",
-			// 	map_name: "delivery_type",
-			// 	width: "130px",
-			// 	searchable: "select",
-			// },
-			// {
-			// 	label: "Dostawa",
-			// 	key: "carrier_id",
-			// 	map_name: "carrier",
-			// 	width: "110px",
-			// 	searchable: "select",
-			// },
 			{
 				label: "Dostawa",
 				key: "carrier_id",

@@ -87,6 +87,18 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     $status = $shop_order->getProp("status");
     $status_id = $status ? $status->getId() : 0;
 
+    /** @var Entity Carrier */
+    $carrier = $shop_order->getProp("carrier");
+
+    $payment_time = $shop_order->getProp("payment_time");
+    $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
+
+    /** @var Entity Address */
+    $courier_address = $shop_order->getProp("courier_address");
+
+    /** @var Entity ParcelLocker */
+    $parcel_locker = $shop_order->getProp("parcel_locker");
+
     if ($status_id === $curr_status_id) {
         return;
     }
@@ -134,6 +146,23 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         $email_body .= "<div style=\"{label}\">Adres</div>\n";
         $email_body .= "<div>" . $main_address->getProp("__address_line_1") . "</div>\n";
         $email_body .= "<div>" . $main_address->getProp("__address_line_2") . "</div>\n";
+
+        if ($courier_address) {
+            $email_body .= "<div style=\"{label}\">Dostawa</div>\n";
+            $email_body .= "<div>" . $carrier->getProp("__full_name") . " " . $payment_time_label . "</div>\n";
+            $email_body .= "<div>" . $courier_address->getProp("__address_line_1") . "</div>\n";
+            $email_body .= "<div>" . $courier_address->getProp("__address_line_2") . "</div>\n";
+            $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) . "\">Pokaż na mapie</a>\n";
+        }
+
+        if ($parcel_locker) {
+            $email_body .= "<div style=\"{label}\">Dostawa</div>\n";
+            $email_body .= "<div>" . $carrier->getProp("__full_name") . "</div>\n";
+            $email_body .= "<div>" . $parcel_locker->getProp("name") . "</div>\n";
+            $email_body .= "<div>" . $parcel_locker->getProp("__address_line_1") . "</div>\n";
+            $email_body .= "<div>" . $parcel_locker->getProp("__address_line_2") . "</div>\n";
+            $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode("Paczkomat " . $parcel_locker->getProp("name")) . "\">Pokaż na mapie</a>\n";
+        }
 
         /** @var Entity[] OrderedProduct */
         $ordered_products = $shop_order->getProp("ordered_products");

@@ -100,3 +100,8 @@ function confirmOrder($shop_order_data)
 
     return $shop_order;
 }
+
+function getShopOrderPaymentTimeLabel($payment_time)
+{
+    return $payment_time === "cod" ? "(Za pobraniem)" : "";
+}
