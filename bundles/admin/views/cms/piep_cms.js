@@ -144,53 +144,53 @@ class PiepCMS {
 		this.editable_props = [
 			{
 				name: "fontWeight",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "textAlign",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "fontStyle",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "textDecoration",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "color",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "backgroundColor",
-				groups: ["appearance"],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "margin",
-				groups: ["layout"],
+				type_groups: ["layout"],
 			},
 			{
 				name: "padding",
-				groups: ["layout"],
+				type_groups: ["layout"],
 			},
 			{
 				name: "data-src",
-				match_tag: /img/, // TODO: matches array with order number?
-				groups: ["appearance"],
+				tag_groups: [{ match: /img/ }],
+				type_groups: ["appearance"],
 			},
 			{
 				name: "alt",
-				match_tag: /img|video|iframe/,
-				groups: ["advanced"],
+				tag_groups: [{ match: /img|video|iframe/ }],
+				type_groups: ["advanced"],
 			},
 			{
 				name: "width",
-				groups: ["layout"],
+				type_groups: ["layout"],
 			},
 			{
 				name: "height",
-				groups: ["layout"],
+				type_groups: ["layout"],
 			},
 		];
 
@@ -2275,7 +2275,7 @@ class PiepCMS {
 
 	filterMenu() {
 		/** @type {cmsEditableGroupEnum} */
-		const group = this.filter_blc_menu._get_value();
+		const type_group = this.filter_blc_menu._get_value();
 
 		const focus_node = this.getNode(this.focus_node_vid);
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
@@ -2290,12 +2290,14 @@ class PiepCMS {
 				}
 
 				let visible = true;
-				if (prop.match_tag) {
-					visible = !!v_node.tag.match(prop.match_tag);
+				if (prop.tag_groups) {
+					for (const tag_group of prop.tag_groups) {
+						visible = !!v_node.tag.match(tag_group.match);
+					}
 				}
 
-				if (visible && group !== "all") {
-					visible = prop.groups.includes(group);
+				if (visible && type_group !== "all") {
+					visible = prop.type_groups.includes(type_group);
 				}
 
 				blc_prop_wrapper.classList.toggle("hidden", !visible);

@@ -17,9 +17,16 @@
 
 /**
  * @typedef {{
+ * match: RegExp
+ * priority?: number
+ * }} TagGroup
+ */
+
+/**
+ * @typedef {{
  * name: string
- * match_tag?: RegExp
- * groups: cmsEditableGroupEnum[]
+ * tag_groups?: TagGroup[]
+ * type_groups: cmsEditableGroupEnum[]
  * }} cmsEditableProp
  */
 
