@@ -247,11 +247,15 @@ class PiepCMS {
 				<i class="fas fa-remove-format"></i>
 			</button>
 
-			<button class="btn transparent small move_block_btn" data-tooltip="Przemieść blok">
+			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary">
+				<i class="fas fa-ruler-combined filter_icon"></i>
+			</button>
+
+			<button class="btn transparent small move_btn" data-tooltip="Przemieść blok">
 				<i class="fas fa-arrows-alt"></i>
 			</button>
 
-			<button class="btn transparent small remove_block_btn" data-tooltip="Usuń blok">
+			<button class="btn transparent small remove_btn" data-tooltip="Usuń blok">
 				<i class="fas fa-trash"></i>
 			</button>
 
@@ -601,7 +605,7 @@ class PiepCMS {
 			const v_node_data = this.getVDomNodeDataById(this.v_dom, this.focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
-			if (target._parent(".move_block_btn")) {
+			if (target._parent(".move_btn")) {
 				this.grabBlock();
 			}
 
@@ -619,7 +623,7 @@ class PiepCMS {
 				select_file_modal._show({ source: choose_img_btn });
 			}
 
-			if (target._parent(".remove_block_btn")) {
+			if (target._parent(".remove_btn")) {
 				v_node_data.v_nodes.splice(v_node_data.index, 1);
 				this.recreateDom();
 				this.setFocusNode(undefined);
@@ -634,11 +638,6 @@ class PiepCMS {
 				}
 
 				this.float_menu.classList.toggle("hidden", !this.float_menu_active);
-			}
-
-			if (this.inspector_grabbed) {
-				this.inspector_grabbed = false;
-				this.inspector.classList.remove("grabbed");
 			}
 		});
 	}
@@ -1066,12 +1065,10 @@ class PiepCMS {
 		this.container._child(".hide_inspector_btn").addEventListener("click", () => {
 			this.toggleInspector(false);
 		});
-		this.grab_inspector_btn.addEventListener("click", () => {
+		this.grab_inspector_btn.addEventListener("mousedown", () => {
 			if (!this.inspector_grabbed) {
-				setTimeout(() => {
-					this.inspector_grabbed = true;
-					this.inspector.classList.add("grabbed");
-				});
+				this.inspector_grabbed = true;
+				this.inspector.classList.add("grabbed");
 			}
 		});
 
@@ -1626,6 +1623,11 @@ class PiepCMS {
 	}
 
 	inspectorMove() {
+		if (this.inspector_grabbed && !mouse.down) {
+			this.inspector_grabbed = false;
+			this.inspector.classList.remove("grabbed");
+		}
+
 		const safe_off = 5;
 
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();

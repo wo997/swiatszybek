@@ -11,6 +11,7 @@
  * @type {{
  * target: PiepNode | undefined
  * pos: Position
+ * down: boolean
  * }}
  */
 let mouse = {
@@ -19,6 +20,7 @@ let mouse = {
 		x: -100,
 		y: -100,
 	},
+	down: false,
 };
 
 // use when necessary, theoretically a loop would be fine
@@ -34,6 +36,14 @@ function updateMouseCoords(event) {
 
 document.addEventListener("mousemove", (event) => {
 	updateMouseCoords(event);
+});
+
+document.addEventListener("mousedown", (event) => {
+	mouse.down = true;
+});
+
+document.addEventListener("mouseup", (event) => {
+	mouse.down = false;
 });
 
 // /**
