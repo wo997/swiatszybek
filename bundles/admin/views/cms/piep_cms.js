@@ -641,6 +641,8 @@ class PiepCMS {
 				v_node_data.v_nodes.splice(v_node_data.index, 1);
 				this.recreateDom();
 				this.setFocusNode(undefined);
+
+				this.pushHistory();
 			}
 
 			if (target._parent(this.container)) {
