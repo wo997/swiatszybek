@@ -247,17 +247,6 @@ function setValue(input, value = null, options = {}) {
 	} else if (input.classList.contains("table-selection-value")) {
 		var datatable = input._parent(".datatable-wrapper");
 		window[datatable.getAttribute("data-datatable-name")].setSelectedValuesFromString(value);
-	} else if (input.classList.contains("jscolor")) {
-		value = rgbStringToHex(value);
-		var hex = value.replace("#", "");
-		// @ts-ignore
-		input.value = hex;
-		if (hex) {
-			// @ts-ignore
-			input.jscolor.importColor();
-		} else {
-			input.style.backgroundColor = "";
-		}
 	} else {
 		var type = input.getAttribute("data-type");
 		if (type == "html") {
@@ -311,7 +300,7 @@ function getValue(input, options = {}) {
 	let v = input.value;
 
 	if (input.classList.contains("radio_group")) {
-		v = def(input.dataset.value, "");
+		v = input.dataset.value;
 	} else if (input.tagName == "P-CHECKBOX") {
 		v = input.classList.contains("checked") ? 1 : 0;
 	} else if (input.tagName == "COLOR-PICKER") {
@@ -323,8 +312,6 @@ function getValue(input, options = {}) {
 		if (v && v.substr(6, 4).match(/\d{4}/)) {
 			v = reverseDateString(v, "-");
 		}
-	} else if (input.classList.contains("jscolor")) {
-		v = v.replace("#", "");
 	} else {
 		var type = input.dataset.type;
 		if (type == "html") {
@@ -336,13 +323,7 @@ function getValue(input, options = {}) {
 
 	if (!options.plain) {
 		if (input.classList.contains("number")) {
-			const was_v = v;
 			v = numberFromStr(v);
-			if (was_v != v) {
-				setTimeout(() => {
-					//input._set_value(v, { quiet: true, force: true });
-				});
-			}
 		}
 		if (input.classList.contains("trim")) {
 			v = v.trim();

@@ -150,6 +150,14 @@ class PiepCMS {
 				groups: ["appearance"],
 			},
 			{
+				name: "fontStyle",
+				groups: ["appearance"],
+			},
+			{
+				name: "textDecoration",
+				groups: ["appearance"],
+			},
+			{
 				name: "color",
 				groups: ["appearance"],
 			},
@@ -303,32 +311,6 @@ class PiepCMS {
 
 				any_picker.show(different_size);
 			});
-
-			// const color_picker = font_size_dropdown._child("color-picker");
-			// font_size_dropdown.addEventListener("value_set", () => {
-			// 	/** @type {string} */
-			// 	const color = font_size_dropdown._get_value();
-			// 	if (color.match(/#\w{3,}/)) {
-			// 		color_picker._set_value(color, { quiet: true });
-			// 	}
-			// });
-
-			// const color_picker = font_size_dropdown._child("color-picker");
-			// font_size_dropdown.addEventListener("value_set", () => {
-			// 	/** @type {string} */
-			// 	const color = font_size_dropdown._get_value();
-			// 	if (color.match(/#\w{3,}/)) {
-			// 		color_picker._set_value(color, { quiet: true });
-			// 	}
-			// });
-
-			// color_picker.addEventListener("change", () => {
-			// 	font_size_dropdown._set_value(color_picker._get_value());
-			// });
-
-			// color_picker.addEventListener("any_picker_hidden", () => {
-			// 	font_size_dropdown.click();
-			// });
 		};
 
 		const themeSettingsChanged = () => {
@@ -895,6 +877,42 @@ class PiepCMS {
 						<div class="checkbox_area">
 							<p-checkbox data-value="justify"></p-checkbox>
 							<i class="fas fa-align-justify"></i>
+						</div>
+					</div>
+				</div>
+
+				<div data-blc_prop_wrapper="fontStyle">
+					<div class="label">Kursywa (pochylenie czcionki)</div>
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.fontStyle">
+						<div class="checkbox_area">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="normal"></p-checkbox>
+							<i class="fas fa-italic" style="transform: skewX(15deg);"></i>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="italic"></p-checkbox>
+							<i class="fas fa-italic"></i>
+						</div>
+					</div>
+				</div>
+
+				<div data-blc_prop_wrapper="textDecoration">
+					<div class="label">Zdobienie czcionki</div>
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textDecoration">
+						<div class="checkbox_area">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="underline"></p-checkbox>
+							<i class="fas fa-underline"></i>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="line-through"></p-checkbox>
+							<i class="fas fa-strikethrough"></i>
 						</div>
 					</div>
 				</div>

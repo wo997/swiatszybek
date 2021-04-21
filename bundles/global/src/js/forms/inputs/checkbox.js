@@ -97,7 +97,7 @@ function registerCheckboxes(parent) {
 				radio_group._set_value(input._get_value() ? input.dataset.value : "");
 			});
 
-			radio_group.dataset.value = "";
+			//radio_group.dataset.value = "";
 		}
 	});
 }
