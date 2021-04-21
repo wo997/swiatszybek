@@ -42,7 +42,7 @@
         <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
             <i class="fas fa-cogs"></i>
         </button>
-        <button class="btn transparent edit_seo bold" data-tooltip_position="left" data-tooltip="Optymalizacja pod wyszukiwanie strony">
+        <button class="btn transparent edit_seo_btn bold" data-tooltip_position="left" data-tooltip="Optymalizacja pod wyszukiwanie strony">
             SEO
         </button>
     </div>

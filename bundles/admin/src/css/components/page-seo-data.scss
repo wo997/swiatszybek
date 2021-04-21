@@ -1,0 +1,22 @@
+/* css[admin] */
+
+page-seo-data-comp.comp {
+	.bind_seo_title,
+	.bind_seo_description {
+		font-family: arial, sans-serif !important;
+		box-sizing: content-box;
+		width: 100%;
+		max-width: 600px;
+		padding: 4px 8px;
+	}
+	.bind_seo_description {
+		width: 100%;
+		height: 44px;
+		font-size: 14px;
+		resize: none;
+		padding: 4px 8px;
+	}
+	.bind_seo_title {
+		font-size: 20px;
+	}
+}
