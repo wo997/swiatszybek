@@ -8,6 +8,7 @@ page-seo-data-comp.comp {
 		width: 100%;
 		max-width: 600px;
 		padding: 4px 8px;
+		line-height: 1.58;
 	}
 	.bind_seo_description {
 		width: 100%;
@@ -18,5 +19,8 @@ page-seo-data-comp.comp {
 	}
 	.bind_seo_title {
 		font-size: 20px;
+	}
+	.is_ok > * {
+		padding: 5px;
 	}
 }

@@ -10,9 +10,11 @@
  * _data: PageSeoDataCompData
  * _set_data(data?: PageSeoDataCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  add_color_btn: PiepNode
+ *  seo_title: PiepNode
+ *  title_ok: PiepNode
+ *  seo_description: PiepNode
+ *  description_ok: PiepNode
  *  save_btn: PiepNode
- *  add_font_size_btn: PiepNode
  * }
  * _show(options?: ShowModalParams)
  * } & BaseComp} PageSeoDataComp
@@ -39,7 +41,43 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				// give it a tiny margin
+				comp._nodes.seo_description._set_value(data.seo_description + "m", { quiet: true });
+				comp._nodes.seo_title._set_value(data.seo_title + "m", { quiet: true });
+
+				let description_ok = "";
+				if (data.seo_description.length > 0) {
+					if (comp._nodes.seo_description.scrollHeight > comp._nodes.seo_description.clientHeight) {
+						description_ok = html`<span class="text_error" data-tooltip="Zbyt długi"> <i class="fas fa-times"></i> </span>`;
+					} else if (data.seo_description.length < 100) {
+						description_ok = html`<span class="text_warning" data-tooltip="Zbyt krótki">
+							<i class="fas fa-exclamation"></i>
+						</span>`;
+					} else {
+						description_ok = html`<span class="text_success" data-tooltip="Odpowiednia długość"> <i class="fas fa-check"></i> </span>`;
+					}
+				}
+				comp._nodes.description_ok._set_content(description_ok);
+
+				let title_ok = "";
+				if (data.seo_title.length > 0) {
+					if (comp._nodes.seo_title.scrollWidth > comp._nodes.seo_title.clientWidth) {
+						title_ok = html`<span class="text_error" data-tooltip="Zbyt długi"> <i class="fas fa-times"></i> </span>`;
+					} else if (data.seo_title.length < 40) {
+						title_ok = html`<span class="text_warning" data-tooltip="Zbyt krótki">
+							<i class="fas fa-exclamation"></i>
+						</span>`;
+					} else {
+						title_ok = html`<span class="text_success" data-tooltip="Odpowiednia długość"> <i class="fas fa-check"></i> </span>`;
+					}
+				}
+				comp._nodes.title_ok._set_content(title_ok);
+
+				// and remove the margin, ezy
+				comp._nodes.seo_description._set_value(data.seo_description, { quiet: true });
+				comp._nodes.seo_title._set_value(data.seo_title, { quiet: true });
+			},
 		});
 	};
 
@@ -49,11 +87,27 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
-					<div class="label first">Tytuł strony (title)</div>
-					<input class="field" data-bind="{${data.seo_title}}" />
+					<div class="user_info mb3">
+						<i class="fas fa-info-circle"></i> Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google). Na
+						podstawie tych danych klient podejmie decyzję czy chce odwiedzić stronę sklepu czy przejść dalej. Postaraj się wypełnić poniższe
+						pola.
+					</div>
 
-					<div class="label">Opis (description)</div>
-					<textarea class="field" data-bind="{${data.seo_description}}"></textarea>
+					<div class="label first">
+						<span>Tytuł strony (title)</span>
+						<span class="is_ok" data-node="{${comp._nodes.title_ok}}"></span>
+					</div>
+					<input class="field" data-bind="{${data.seo_title}}" data-node="{${comp._nodes.seo_title}}" />
+
+					<div class="label">
+						<span>Opis (description)</span>
+						<span class="is_ok" data-node="{${comp._nodes.description_ok}}"></span>
+					</div>
+					<textarea
+						class="field hide_scrollbar"
+						data-bind="{${data.seo_description}}"
+						data-node="{${comp._nodes.seo_description}}"
+					></textarea>
 				</div>
 			</div>
 		`,
