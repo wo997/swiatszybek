@@ -4,7 +4,7 @@
 
 <?php startSection("head_content"); ?>
 
-<title>Szablon</title>
+<title>Ustawienia motywu</title>
 
 <script>
     <?= Theme::preloadThemeSettings() ?>

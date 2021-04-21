@@ -10,7 +10,7 @@
  */
 let tooltip;
 domload(() => {
-	document.body.insertAdjacentHTML("beforeend", html`<div class="wo997tooltip" style="display:none"></div>`);
+	document.body.insertAdjacentHTML("beforeend", html`<div class="wo997tooltip ${root_class}" style="display:none"></div>`);
 	tooltip = {
 		target: $(".wo997tooltip"),
 		dismiss: () => {

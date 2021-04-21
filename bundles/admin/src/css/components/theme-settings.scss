@@ -4,9 +4,18 @@ theme-settings-comp.comp {
 	.bind_colors {
 		max-width: 350px;
 	}
+	.bind_font_sizes {
+		max-width: 550px;
+	}
 }
 
 theme-settings_color-comp.comp {
+	& {
+		display: flex;
+	}
+}
+
+theme-settings_font-size-comp.comp {
 	& {
 		display: flex;
 	}

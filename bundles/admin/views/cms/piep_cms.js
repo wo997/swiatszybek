@@ -265,8 +265,6 @@ class PiepCMS {
 
 			let font_size_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
 
-			const font_sizes = [{ name: "2rem" }, { name: "3rem" }];
-
 			font_sizes.forEach((font_size) => {
 				font_size_options_html += html`
 					<p-option data-value="var(--${font_size.name})">
@@ -290,7 +288,7 @@ class PiepCMS {
 				any_picker.wrapper._set_content(
 					html`<div class="font_size_float">
 						<div class="label first">Rozmiar:</div>
-						<input class="field small" />
+						<input class="field small" style="width: 100px;" />
 					</div>`
 				);
 				const input = any_picker.wrapper._child("input");

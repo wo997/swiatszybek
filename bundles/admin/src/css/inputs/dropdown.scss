@@ -80,7 +80,7 @@ p-dropdown {
 		}
 	}
 	&.grid p-option {
-		padding: var(--field_padding_ver);
+		padding: 5px;
 	}
 	&:not(.grid) p-option {
 		padding: var(--field_padding_ver) var(--field_padding_hor);
@@ -91,9 +91,8 @@ p-dropdown {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			min-width: 28px;
-			min-height: 28px;
 			position: relative;
+			line-height: 1;
 		}
 		&:hover {
 			background: #eee;

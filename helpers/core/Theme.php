@@ -4,6 +4,12 @@ class Theme
 {
     public static $main_font_family;
 
+    public static $responsive_dimensions = [
+        "desktop" => 0,
+        "tablet" => 1100,
+        "mobile" => 600
+    ];
+
     public static $fonts = [
         "Open Sans" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
@@ -172,6 +178,14 @@ CSS;
             $colors_palette = getSetting(["theme", "general", "colors_palette"]);
         }
 
+        $font_sizes_json = def($post, "font_sizes", "");
+        if ($font_sizes_json) {
+            $font_sizes = json_decode($font_sizes_json, true);
+            saveSetting("theme", "general", ["path" => ["font_sizes"], "value" => $font_sizes], false);
+        } else {
+            $font_sizes = getSetting(["theme", "general", "font_sizes"]);
+        }
+
         $font_family = def($post, "font_family", "");
         if ($font_family) {
             saveSetting("theme", "general", ["path" => ["font_family"], "value" => $font_family]);
@@ -179,35 +193,55 @@ CSS;
             $font_family = getSetting(["theme", "general", "font_family"]);
         }
 
-        $theme_css = "/* css[global] */";
+        $theme_scss = "/* css[global] */";
 
-        $theme_css .= ":root, .global_root {";
+        $theme_scss .= ":root, .global_root {";
 
+        // colors palette
         foreach ($colors_palette as $color) {
             $color_name = $color["name"];
             $color_value = $color["value"];
             if (strlen($color_value) > 3) {
-                $theme_css .= "--$color_name: $color_value;";
+                $theme_scss .= "--$color_name: $color_value;";
             }
         }
 
+        // font sizes
+        foreach (["desktop", "tablet", "mobile"] as $size_name) {
+            if ($size_name !== "desktop") {
+                $theme_scss .= "@media (max-width: " . (self::$responsive_dimensions[$size_name] - 1) . "px) {";
+            }
+            foreach ($font_sizes as $font_size) {
+                $font_size_name = $font_size["name"];
+                $font_size_value = $font_size[$size_name . "_value"];
+                if ($font_size_value) {
+                    $theme_scss .= "--$font_size_name: $font_size_value;";
+                }
+            }
+            if ($size_name !== "desktop") {
+                $theme_scss .= "}";
+            }
+        }
+
+        // main font
         $font = def(self::$fonts, $font_family);
         if ($font) {
             foreach ($font["weights"] as $key => $val) {
-                $theme_css .= "--$key: $val;";
+                $theme_scss .= "--$key: $val;";
             }
-            $theme_css .= "--font_family: $font[use];";
+            $theme_scss .= "--font_family: $font[use];";
         }
 
-        $theme_css .= "}";
+        $theme_scss .= "}";
 
-        Files::save(PREBUILDS_PATH . "theme.scss", $theme_css);
+        Files::save(PREBUILDS_PATH . "theme.scss", $theme_scss);
 
         $build_res = file_get_contents(SITE_URL . "/deployment/build"); // a token might be necessary for safety purpose
 
         $res = [
             "colors_palette" => $colors_palette,
-            "font_family" => $font_family
+            "font_family" => $font_family,
+            "font_sizes" => $font_sizes,
         ];
         $res = array_merge($res, json_decode($build_res, true));
 
@@ -227,10 +261,12 @@ CSS;
         $main_font_family = json_encode(self::getMainFontFamily());
         $fonts = json_encode(Theme::$fonts);
         $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
+        $font_sizes = json_encode(getSetting(["theme", "general", "font_sizes"], "[]"));
         return <<<JS
     fonts = $fonts;
     main_font_family = $main_font_family; 
     colors_palette = $colors_palette;
+    font_sizes = $font_sizes;
     loadedThemeSettings();
 JS;
     }

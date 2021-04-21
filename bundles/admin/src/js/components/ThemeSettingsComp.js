@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * colors: ThemeSettings_ColorCompData[]
+ * font_sizes: ThemeSettings_FontSizeCompData[]
  * font_family: string
  * }} ThemeSettingsCompData
  *
@@ -12,6 +13,7 @@
  * _nodes: {
  *  add_color_btn: PiepNode
  *  save_btn: PiepNode
+ *  add_font_size_btn: PiepNode
  * }
  * _show(options?: ShowModalParams)
  * } & BaseComp} ThemeSettingsComp
@@ -24,7 +26,7 @@
  */
 function ThemeSettingsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { colors: [], font_family: "" };
+		data = { colors: [], font_sizes: [], font_family: "" };
 	}
 
 	comp._show = (options = {}) => {
@@ -70,6 +72,19 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					<list-comp data-bind="{${data.colors}}" class="wireframe space">
 						<theme-settings_color-comp></theme-settings_color-comp>
 					</list-comp>
+
+					<div>
+						<span class="label medium bold inline"> Lista rozmiarów czcionek (<span html="{${data.font_sizes.length}}"></span>) </span>
+						<button class="btn primary small" data-node="{${comp._nodes.add_font_size_btn}}">
+							Dodaj rozmiar czcionki <i class="fas fa-plus"></i>
+						</button>
+					</div>
+					<div style="display:flex;justify-content:space-around;max-width: 300px;margin-left: 7px;padding: 5px 0;">
+						<i class="fas fa-desktop"></i> <i class="fas fa-tablet-alt"></i> <i class="fas fa-mobile-alt"></i>
+					</div>
+					<list-comp data-bind="{${data.font_sizes}}" class="wireframe space">
+						<theme-settings_font-size-comp></theme-settings_font-size-comp>
+					</list-comp>
 				</div>
 			</div>
 		`,
@@ -82,9 +97,23 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				comp._render();
 			});
 
+			comp._nodes.add_font_size_btn.addEventListener("click", () => {
+				const data = comp._data;
+				const next_id = Math.max(0, ...comp._data.font_sizes.map((c) => numberFromStr(c.name))) + 1;
+				const name = `size_${next_id}`;
+				data.font_sizes.push({ desktop_value: "", tablet_value: "", mobile_value: "", name });
+				comp._render();
+			});
+
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
 				const save_colors_palette = data.colors.map((c) => ({ name: c.name, value: c.value }));
+				const save_font_sizes = data.font_sizes.map((c) => ({
+					name: c.name,
+					desktop_value: c.desktop_value,
+					tablet_value: c.tablet_value,
+					mobile_value: c.mobile_value,
+				}));
 
 				showLoader();
 				hideModal("ThemeSettings");
@@ -95,10 +124,12 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					params: {
 						colors_palette: save_colors_palette,
 						font_family: data.font_family,
+						font_sizes: save_font_sizes,
 					},
 					success: (res) => {
 						colors_palette = res.colors_palette;
 						main_font_family = res.font_family;
+						font_sizes = res.font_sizes;
 						loadedThemeSettings();
 						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
 						$("#main_font").href = fonts[main_font_family].link;
@@ -138,6 +169,7 @@ function getThemeSettingsModal() {
 
 	theme_settings_comp._data.colors = colors_palette;
 	theme_settings_comp._data.font_family = main_font_family;
+	theme_settings_comp._data.font_sizes = font_sizes;
 	theme_settings_comp._render();
 
 	$("#ThemeSettings .custom_toolbar").append(theme_settings_comp._nodes.save_btn);
