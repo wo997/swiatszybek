@@ -24,7 +24,14 @@
 
 /**
  * @typedef {{
- * name: string
+ * selector: string
+ * tag_groups?: TagGroup[]
+ * }} cmsFloatingEditableProp
+ */
+
+/**
+ * @typedef {{
+ * selector: string
  * tag_groups?: TagGroup[]
  * type_groups: cmsEditableGroupEnum[]
  * }} cmsEditableProp

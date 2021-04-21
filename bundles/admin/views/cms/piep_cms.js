@@ -139,6 +139,8 @@ class PiepCMS {
 
 	initConsts() {
 		this.match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
+		this.match_media = /^(img|video|iframe)$/;
+
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
 		/**
@@ -146,64 +148,116 @@ class PiepCMS {
 		 */
 		this.editable_props = [
 			{
-				name: "fontWeight",
+				selector: ".prop_fontSize",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "textAlign",
+				selector: ".prop_fontWeight",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "fontStyle",
+				selector: ".prop_textAlign",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "textDecoration",
+				selector: ".prop_fontStyle",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "color",
+				selector: ".prop_textDecoration",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "backgroundColor",
+				selector: ".prop_color",
 				type_groups: ["appearance"],
 				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
-				name: "margin",
+				selector: ".prop_backgroundColor",
+				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".prop_margin",
 				type_groups: ["layout"],
 			},
 			{
-				name: "padding",
+				selector: ".prop_padding",
 				type_groups: ["layout"],
 			},
 			{
-				name: "data-src",
+				selector: ".prop_data-src",
 				tag_groups: [{ match: /^(img)$/ }],
 				type_groups: ["appearance"],
 			},
 			{
-				name: "alt",
-				tag_groups: [{ match: /^(img|video|iframe)$/ }],
+				selector: ".prop_alt",
+				tag_groups: [{ match: this.match_media }],
 				type_groups: ["advanced"],
 			},
 			{
-				name: "width",
+				selector: ".prop_width",
 				tag_groups: [
-					{ match: /^(img|video|iframe)$/, priority: 1 },
+					{ match: this.match_media, priority: 1 },
 					{ match: /.*/, priority: 0 },
 				],
 				type_groups: ["layout"],
 			},
 			{
-				name: "height",
+				selector: ".prop_height",
 				type_groups: ["layout"],
+			},
+		];
+
+		/**
+		 * @type {cmsFloatingEditableProp[]}
+		 */
+		this.floating_editable_props = [
+			{
+				selector: ".prop_fontSize",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".prop_fontWeight",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".prop_textAlign",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".prop_color",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".prop_backgroundColor",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".remove_format_btn",
+				tag_groups: [{ match: this.match_tags_containing_text }],
+			},
+			{
+				selector: ".choose_img_btn",
+				tag_groups: [{ match: /^(img)$/ }],
+			},
+			{
+				selector: ".prop_alt",
+				tag_groups: [{ match: /^(img|video|iframe)$/ }],
+			},
+			{
+				selector: ".layout_btn",
+			},
+			{
+				selector: ".move_btn",
+			},
+			{
+				selector: ".remove_btn",
 			},
 		];
 	}
@@ -211,7 +265,7 @@ class PiepCMS {
 	initFloatMenu() {
 		this.float_menu._set_content(html`
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid"
+				class="field small inline pretty_blue center static_label grid prop_fontSize"
 				data-blc_prop="style.fontSize"
 				data-tooltip="Rozmiar czcionki"
 			>
@@ -220,14 +274,22 @@ class PiepCMS {
 				</p-option>
 			</p-dropdown>
 
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
+			<p-dropdown
+				class="field small inline pretty_blue center grid prop_fontWeight"
+				data-blc_prop="style.fontWeight"
+				data-tooltip="Grubość czcionki"
+			>
 				<p-option data-value=""><span class="bold">B</span></p-option>
 				<p-option data-value="var(--normal)">B</p-option>
 				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
 				<p-option data-value="var(--bold)"><span class="bold">B</span></p-option>
 			</p-dropdown>
 
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.textAlign" data-tooltip="Wyrównanie tekstu">
+			<p-dropdown
+				class="field small inline pretty_blue center grid prop_textAlign"
+				data-blc_prop="style.textAlign"
+				data-tooltip="Wyrównanie tekstu"
+			>
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
 				<p-option data-value="left"> <i class="fas fa-align-left"></i> </p-option>
 				<p-option data-value="center"> <i class="fas fa-align-center"></i> </p-option>
@@ -236,7 +298,7 @@ class PiepCMS {
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root"
+				class="field small inline pretty_blue center static_label grid global_root prop_color"
 				data-blc_prop="style.color"
 				data-tooltip="Kolor czcionki"
 			>
@@ -244,7 +306,7 @@ class PiepCMS {
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root"
+				class="field small inline pretty_blue center static_label grid global_root prop_backgroundColor"
 				data-blc_prop="style.backgroundColor"
 				data-tooltip="Kolor tła"
 			>
@@ -443,10 +505,10 @@ class PiepCMS {
 		};
 
 		const themeSettingsChanged = () => {
-			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.color"]`));
-			updateColorDropdown(this.float_menu._child(`[data-blc_prop="style.backgroundColor"]`));
-			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="color"]`));
-			updateColorWrapper(this.blc_menu._child(`[data-blc_prop_wrapper="backgroundColor"]`));
+			updateColorDropdown(this.float_menu._child(`.prop_color`));
+			updateColorDropdown(this.float_menu._child(`.prop_backgroundColor`));
+			updateColorWrapper(this.blc_menu._child(`.prop_color`));
+			updateColorWrapper(this.blc_menu._child(`.prop_backgroundColor`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -851,7 +913,12 @@ class PiepCMS {
 			</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
-				<div data-blc_prop_wrapper="fontWeight">
+				<div class="prop_fontSize">
+					<div class="label">Rozmiar czcionki</div>
+					<input class="field" data-blc_prop="style.fontSize" />
+				</div>
+
+				<div class="prop_fontWeight">
 					<div class="label">Grubość czcionki</div>
 					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.fontWeight">
 						<div class="checkbox_area">
@@ -873,7 +940,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="textAlign">
+				<div class="prop_textAlign">
 					<div class="label">Wyrównanie tekstu</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textAlign">
 						<div class="checkbox_area">
@@ -899,7 +966,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="fontStyle">
+				<div class="prop_fontStyle">
 					<div class="label">Kursywa (pochylenie czcionki)</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.fontStyle">
 						<div class="checkbox_area">
@@ -917,7 +984,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="textDecoration">
+				<div class="prop_textDecoration">
 					<div class="label">Zdobienie czcionki</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textDecoration">
 						<div class="checkbox_area">
@@ -935,7 +1002,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="color">
+				<div class="prop_color">
 					<div class="label">Kolor czcionki</div>
 
 					<input class="field hidden" data-blc_prop="style.color" />
@@ -950,7 +1017,7 @@ class PiepCMS {
 					<color-picker class="inline"></color-picker>
 				</div>
 
-				<div data-blc_prop_wrapper="backgroundColor">
+				<div class="prop_backgroundColor">
 					<div class="label">Kolor tła</div>
 
 					<input class="field hidden" data-blc_prop="style.backgroundColor" />
@@ -965,7 +1032,7 @@ class PiepCMS {
 					<color-picker class="inline"></color-picker>
 				</div>
 
-				<div data-blc_prop_wrapper="margin">
+				<div class="prop_margin">
 					<div class="label">Margines zewnętrzny</div>
 					<div class="flex align_center text_center text_center_fields">
 						<div>
@@ -985,7 +1052,7 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="padding">
+				<div class="prop_padding">
 					<div class="label">Margines wewnętrzny (padding)</div>
 					<div class="flex align_center text_center text_center_fields">
 						<div>
@@ -1005,22 +1072,22 @@ class PiepCMS {
 					</div>
 				</div>
 
-				<div data-blc_prop_wrapper="width">
+				<div class="prop_width">
 					<div class="label">Szerokość</div>
 					<input class="field" data-blc_prop="style.width" />
 				</div>
 
-				<div data-blc_prop_wrapper="height">
+				<div class="prop_height">
 					<div class="label">Wysokość</div>
 					<input class="field" data-blc_prop="style.height" />
 				</div>
 
-				<div data-blc_prop_wrapper="data-src">
+				<div class="prop_data-src">
 					<div class="label">Zdjęcie</div>
 					<image-input data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-input>
 				</div>
 
-				<div data-blc_prop_wrapper="alt">
+				<div class="prop_alt">
 					<div class="label">Opis zdjęcia (alt)</div>
 					<input class="field" data-blc_prop="attr.alt" />
 				</div>
@@ -2301,8 +2368,9 @@ class PiepCMS {
 		if (has_selection) {
 			this.editable_props
 				.map((prop, index) => {
-					const blc_prop_wrapper = this.blc_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+					const blc_prop_wrapper = this.blc_menu._child(prop.selector);
 					if (!blc_prop_wrapper) {
+						console.log(prop.selector);
 						return undefined;
 					}
 
@@ -2327,7 +2395,6 @@ class PiepCMS {
 					blc_prop_wrapper.classList.toggle("hidden", !visible);
 
 					return {
-						prop_name: prop.name,
 						blc_prop_wrapper,
 						priority,
 					};
