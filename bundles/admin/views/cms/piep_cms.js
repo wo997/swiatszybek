@@ -217,7 +217,7 @@ class PiepCMS {
 		/**
 		 * @type {cmsFloatingEditableProp[]}
 		 */
-		this.floating_editable_props = [
+		this.float_editable_props = [
 			{
 				selector: ".prop_fontSize",
 				tag_groups: [{ match: this.match_tags_containing_text }],
@@ -246,10 +246,10 @@ class PiepCMS {
 				selector: ".choose_img_btn",
 				tag_groups: [{ match: /^(img)$/ }],
 			},
-			{
-				selector: ".prop_alt",
-				tag_groups: [{ match: /^(img|video|iframe)$/ }],
-			},
+			// {
+			// 	selector: ".prop_alt",
+			// 	tag_groups: [{ match: /^(img|video|iframe)$/ }],
+			// },
 			{
 				selector: ".layout_btn",
 			},
@@ -646,7 +646,7 @@ class PiepCMS {
 						}
 					}
 
-					if (!validPiepInput($(document.activeElement))) {
+					if (select_node && !validPiepInput($(document.activeElement))) {
 						setSelectionByIndex(select_node, select_start, select_end);
 					}
 
@@ -2370,8 +2370,7 @@ class PiepCMS {
 				.map((prop, index) => {
 					const blc_prop_wrapper = this.blc_menu._child(prop.selector);
 					if (!blc_prop_wrapper) {
-						console.log(prop.selector);
-						return undefined;
+						console.error(prop.selector);
 					}
 
 					let visible = true;
@@ -2404,6 +2403,40 @@ class PiepCMS {
 					x.blc_prop_wrapper.classList.toggle("first", index === 0);
 					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
 				});
+
+			this.float_editable_props
+				.map((prop, index) => {
+					const blc_prop = this.float_menu._child(prop.selector);
+					if (!blc_prop) {
+						console.error(prop.selector);
+					}
+
+					let visible = true;
+					let priority = -index * 0.001;
+					if (prop.tag_groups) {
+						visible = false;
+						for (const tag_group of prop.tag_groups) {
+							const matches = !!v_node.tag.match(tag_group.match);
+							if (matches) {
+								priority += def(tag_group.priority, 1);
+								visible = true;
+								break;
+							}
+						}
+					}
+
+					blc_prop.classList.toggle("hidden", !visible);
+
+					return {
+						blc_prop,
+						priority,
+					};
+				})
+				.sort((a, b) => Math.sign(b.priority - a.priority))
+				.forEach((x, index) => {
+					this.float_menu.append(x.blc_prop);
+				});
+			this.float_menu.append(this.float_menu._child(".hide_menu_btn"));
 		}
 
 		this.blc_menu_scroll_panel.classList.toggle("hidden", !has_selection);
