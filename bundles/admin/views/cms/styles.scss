@@ -45,6 +45,9 @@
 	// &::after {
 	// 	bottom: 0;
 	// }
+	&.grabbed_block {
+		cursor: grab;
+	}
 
 	.piep_editor_content_wrapper {
 		overflow: hidden;
