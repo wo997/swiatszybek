@@ -138,6 +138,9 @@ class PiepCMS {
 	}
 
 	initConsts() {
+		this.match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
+		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
 		/**
 		 * @type {cmsEditableProp[]}
 		 */
@@ -145,26 +148,32 @@ class PiepCMS {
 			{
 				name: "fontWeight",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "textAlign",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "fontStyle",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "textDecoration",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "color",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "backgroundColor",
 				type_groups: ["appearance"],
+				tag_groups: [{ match: this.match_tags_containing_text }],
 			},
 			{
 				name: "margin",
@@ -176,16 +185,20 @@ class PiepCMS {
 			},
 			{
 				name: "data-src",
-				tag_groups: [{ match: /img/ }],
+				tag_groups: [{ match: /^(img)$/ }],
 				type_groups: ["appearance"],
 			},
 			{
 				name: "alt",
-				tag_groups: [{ match: /img|video|iframe/ }],
+				tag_groups: [{ match: /^(img|video|iframe)$/ }],
 				type_groups: ["advanced"],
 			},
 			{
 				name: "width",
+				tag_groups: [
+					{ match: /^(img|video|iframe)$/, priority: 1 },
+					{ match: /.*/, priority: 0 },
+				],
 				type_groups: ["layout"],
 			},
 			{
@@ -193,8 +206,6 @@ class PiepCMS {
 				type_groups: ["layout"],
 			},
 		];
-
-		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 	}
 
 	initFloatMenu() {
@@ -1039,7 +1050,7 @@ class PiepCMS {
 		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
-			this.filterMenu();
+			this.filterMenu({ scroll_to_top: true });
 		});
 	}
 
@@ -1650,8 +1661,8 @@ class PiepCMS {
 			const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
 			const top = mouse.pos.y - 20;
 
-			this.inspector_pos.x = left;
-			this.inspector_pos.y = top;
+			this.inspector_pos.x = this.inspector_pos.x * 0.5 + left * 0.5;
+			this.inspector_pos.y = this.inspector_pos.y * 0.5 + top * 0.5;
 		} else {
 			if (this.inspector_sticks_to_right_size) {
 				this.inspector_pos.x = max_x;
@@ -2226,7 +2237,7 @@ class PiepCMS {
 		let tblc;
 
 		if (just_changed_focus_vid) {
-			this.filterMenu();
+			this.filterMenu({ scroll_to_top: true });
 		}
 
 		if (focus_node) {
@@ -2273,49 +2284,67 @@ class PiepCMS {
 		});
 	}
 
-	filterMenu() {
+	/**
+	 *
+	 * @param {{
+	 * scroll_to_top?: boolean
+	 * }} options
+	 */
+	filterMenu(options = {}) {
 		/** @type {cmsEditableGroupEnum} */
 		const type_group = this.filter_blc_menu._get_value();
 
 		const focus_node = this.getNode(this.focus_node_vid);
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
-		let first = true;
-
-		if (v_node) {
-			this.editable_props.forEach((prop) => {
-				const blc_prop_wrapper = this.blc_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
-				if (!blc_prop_wrapper) {
-					return;
-				}
-
-				let visible = true;
-				if (prop.tag_groups) {
-					for (const tag_group of prop.tag_groups) {
-						visible = !!v_node.tag.match(tag_group.match);
+		const has_selection = !!v_node;
+		if (has_selection) {
+			this.editable_props
+				.map((prop, index) => {
+					const blc_prop_wrapper = this.blc_menu._child(`[data-blc_prop_wrapper="${prop.name}"]`);
+					if (!blc_prop_wrapper) {
+						return undefined;
 					}
-				}
 
-				if (visible && type_group !== "all") {
-					visible = prop.type_groups.includes(type_group);
-				}
+					let visible = true;
+					let priority = -index * 0.001;
+					if (prop.tag_groups) {
+						visible = false;
+						for (const tag_group of prop.tag_groups) {
+							const matches = !!v_node.tag.match(tag_group.match);
+							if (matches) {
+								priority += def(tag_group.priority, 1);
+								visible = true;
+								break;
+							}
+						}
+					}
 
-				blc_prop_wrapper.classList.toggle("hidden", !visible);
-				blc_prop_wrapper.classList.toggle("first", first);
+					if (visible && type_group !== "all") {
+						visible = prop.type_groups.includes(type_group);
+					}
 
-				if (visible) {
-					// put it on top as u iterate yay, probably should be pushed into array and then sorted but that's ok
-					this.blc_menu_scroll_panel.append(blc_prop_wrapper);
-				}
+					blc_prop_wrapper.classList.toggle("hidden", !visible);
 
-				if (visible) {
-					first = false;
-				}
-			});
+					return {
+						prop_name: prop.name,
+						blc_prop_wrapper,
+						priority,
+					};
+				})
+				.sort((a, b) => Math.sign(b.priority - a.priority))
+				.forEach((x, index) => {
+					x.blc_prop_wrapper.classList.toggle("first", index === 0);
+					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
+				});
 		}
 
-		this.blc_menu_scroll_panel.classList.toggle("hidden", !v_node);
-		this.case_blc_menu_empty.classList.toggle("hidden", !!v_node);
+		this.blc_menu_scroll_panel.classList.toggle("hidden", !has_selection);
+		this.case_blc_menu_empty.classList.toggle("hidden", has_selection);
+
+		if (has_selection && options.scroll_to_top) {
+			this.blc_menu_scroll_panel.scrollTop = 0;
+		}
 
 		this.setBlcMenuFromFocusedNode();
 	}
