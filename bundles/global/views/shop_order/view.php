@@ -46,7 +46,8 @@ $order_status = $shop_order->getProp("status");
 
 $requires_payment = $shop_order->getProp("status")->getId() === 1;
 
-
+/** @var Entity Carrier */
+$carrier = $shop_order->getProp("carrier");
 ?>
 
 <div class="order_all">
@@ -104,7 +105,8 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
             <div><?= $main_address->getProp("__address_line_2") ?></div>
 
             <?php if ($courier_address) : ?>
-                <div class="label big bold">Dostawa (kurier)</div>
+                <div class="label big bold">Dostawa</div>
+                <div><?= $carrier->getProp("__full_name") ?></div>
                 <div><?= $courier_address->getProp("__address_line_1") ?></div>
                 <div><?= $courier_address->getProp("__address_line_2") ?></div>
                 <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) ?>">
@@ -113,7 +115,7 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
             <?php endif ?>
 
             <?php if ($parcel_locker) : ?>
-                <div class="label big bold">Dostawa (paczkomat)</div>
+                <div class="label big bold">Dostawa</div>
                 <div> <?= $parcel_locker->getProp("name") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
                 <div><?= $parcel_locker->getProp("__address_line_2") ?></div>

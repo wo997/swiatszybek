@@ -1,6 +1,6 @@
 <?php
 
-$args = [];
+$dont_return = true;
 include "deployment/build.php";
 Theme::saveSettings();
 

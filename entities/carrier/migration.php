@@ -11,6 +11,7 @@ DB::createTable("carrier", [
     ["name" => "pos", "type" => "INT"],
     ["name" => "delivery_time_days", "type" => "INT"],
     ["name" => "active", "type" => "TINYINT(1)", "index" => "index"],
+    ["name" => "__full_name", "type" => "VARCHAR(255)"],
 ]);
 
 //DB::delete("carrier", "1");

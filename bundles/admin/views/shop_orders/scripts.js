@@ -54,7 +54,7 @@ domload(() => {
 			{
 				label: "Dostawa",
 				key: "carrier_id",
-				map_name: "carrier_full",
+				map_name: "carrier",
 				width: "120px",
 				searchable: "select",
 			},
@@ -128,26 +128,22 @@ domload(() => {
 				name: "delivery_type",
 				getMap: () => {
 					const map = delivery_types.map((d) => {
-						const obj = {
+						return {
 							val: d.delivery_type_id,
 							label: d.name,
 						};
-						return obj;
 					});
 					return map;
 				},
 			},
 			{
-				name: "carrier_full",
+				name: "carrier",
 				getMap: () => {
 					const map = carriers.map((c) => {
-						const d = delivery_types.find((d) => d.delivery_type_id === c.delivery_type_id);
-
-						const obj = {
+						return {
 							val: c.carrier_id,
-							label: (d ? d.name : "") + " " + c.name,
+							label: c.__full_name,
 						};
-						return obj;
 					});
 					return map;
 				},

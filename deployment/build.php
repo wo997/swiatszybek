@@ -21,4 +21,6 @@ Assets::build();
 
 ob_clean();
 
-Request::jsonResponse(["ASSETS_RELEASE" => ASSETS_RELEASE]);
+if (!isset($dont_return)) {
+    Request::jsonResponse(["ASSETS_RELEASE" => ASSETS_RELEASE]);
+}
