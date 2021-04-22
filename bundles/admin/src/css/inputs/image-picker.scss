@@ -1,6 +1,6 @@
 /* css[admin] */
 
-image-input {
+image-picker {
 	& {
 		position: relative;
 		width: 100px;
@@ -35,7 +35,7 @@ image-input {
 	}
 
 	&.selected:not(:hover) .controls {
-		opacity: 0;
+		visibility: hidden;
 	}
 
 	&.selected .select_btn {
@@ -49,7 +49,7 @@ image-input {
 			}
 		}
 		img {
-			opacity: 0;
+			visibility: hidden;
 		}
 	}
 }

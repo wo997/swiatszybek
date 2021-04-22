@@ -40,7 +40,12 @@ function getResponsiveImageData(src) {
 		return;
 	}
 
-	const dimensions = path_wo_ext.substring(last_floor_index + 1).split("x");
+	const dimsstr = path_wo_ext.substring(last_floor_index + 1);
+	if (!dimsstr[0].match(/^\d*x^\d*$/)) {
+		return;
+	}
+
+	const dimensions = dimsstr.split("x");
 	const file_name = path_wo_ext.replace(/(\/)?uploads\/.{0,10}\//, ``);
 
 	return {
@@ -141,10 +146,10 @@ function onScrollImages(options = {}) {
  */
 function getResponsiveImageRealUrl(img, base_url = undefined) {
 	base_url = def(base_url, img.dataset.src);
-	const data = getResponsiveImageData(base_url);
+	const img_data = getResponsiveImageData(base_url);
 
-	if (!data) {
-		return;
+	if (!img_data) {
+		return base_url;
 	}
 
 	const rect = img.getBoundingClientRect();
@@ -156,7 +161,7 @@ function getResponsiveImageRealUrl(img, base_url = undefined) {
 		return;
 	}
 
-	const natural_image_dimension = Math.max(data.w, data.h);
+	const natural_image_dimension = Math.max(img_data.w, img_data.h);
 	let target_size_name = "df";
 
 	if (image_dimension < natural_image_dimension + 1) {
@@ -171,10 +176,10 @@ function getResponsiveImageRealUrl(img, base_url = undefined) {
 		});
 	}
 
-	let url = "/" + UPLOADS_PATH + target_size_name + "/" + data.file_name;
+	let url = "/" + UPLOADS_PATH + target_size_name + "/" + img_data.file_name;
 
-	if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(data.extension) !== -1) {
-		url += "." + data.extension;
+	if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(img_data.extension) !== -1) {
+		url += "." + img_data.extension;
 	} else if (WEBP_SUPPORT) {
 		url += ".webp";
 	} else {

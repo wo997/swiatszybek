@@ -10,8 +10,8 @@ window.addEventListener("register-form-components", (ev) => {
  * @param {PiepNode} parent
  */
 function registerImageInputs(parent) {
-	parent._children("image-input:not(.image-input-registered)").forEach((input) => {
-		input.classList.add("image-input-registered");
+	parent._children("image-picker:not(.image-picker-registered)").forEach((input) => {
+		input.classList.add("image-picker-registered");
 
 		input.insertAdjacentHTML(
 			"afterbegin",
@@ -31,7 +31,9 @@ function registerImageInputs(parent) {
 		const preview_btn = input._child(".preview_btn");
 
 		img.addEventListener("change", () => {
-			const selected = !!img._get_value();
+			const value = img._get_value();
+			console.log(value);
+			const selected = !!value && value != "/src/img/empty_img.svg";
 			if (!input._setting_value) {
 				input._dispatch_change();
 			}

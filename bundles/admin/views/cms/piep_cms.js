@@ -622,7 +622,7 @@ class PiepCMS {
 					children: undefined,
 					styles: {},
 					classes: ["wo997_img"],
-					attrs: {},
+					attrs: { "data-src": "/src/img/empty_img.svg" },
 				},
 			},
 		];
@@ -1208,7 +1208,7 @@ class PiepCMS {
 
 				<div class="prop_data-src">
 					<div class="label">Zdjęcie</div>
-					<image-input data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-input>
+					<image-picker data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-picker>
 				</div>
 
 				<div class="prop_alt">
@@ -1946,6 +1946,7 @@ class PiepCMS {
 		this.grabbed_block_vid = this.focus_node_vid;
 
 		this.grabbed_block_wrapper._set_content(this.getFocusNode().outerHTML);
+		lazyLoadImages({ duration: 0 });
 		this.grabbed_block_wrapper.classList.add("visible");
 
 		// won't grow by more than this.grabbed_block_wrapper.offsetHeight
