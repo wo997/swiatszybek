@@ -2,7 +2,7 @@
 
 class LastViewedProducts
 {
-    private static $limit = 50;
+    private static $limit = 10;
     private $general_product_ids;
     public ?User $user;
 

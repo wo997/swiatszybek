@@ -75,7 +75,7 @@ $page_width = "1500px";
         </button>
         <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
 
-        <?php if ($page_data["published"] === 1) {
+        <?php if (1) { //$page_data["published"] === 1) {
             $clr = "var(--success-clr)";
             $info_label = "<i class='fas fa-eye'></i> Widoczna";
             $btn_label = 'Ukryj';
@@ -107,8 +107,10 @@ $page_width = "1500px";
                 params: {
                     table: "cms",
                     primary: "cms_id",
-                    primary_id: <?= $page_data["cms_id"] ?>,
-                    published: <?= 1  - $page_data["published"] ?>,
+                    primary_id: <?= 0 //$page_data["cms_id"] 
+                                ?>,
+                    published: <?= 1 //  - $page_data["published"] 
+                                ?>,
                 },
                 success: () => {
                     window.location.reload();
@@ -116,7 +118,8 @@ $page_width = "1500px";
             });
         }
 
-        <?php if ($page_data["published"] == 0) : ?>
+        <?php if (false) : //$page_data["published"] == 0) : 
+        ?>
             domload(() => {
                 toggleRightSideMenu();
             })
