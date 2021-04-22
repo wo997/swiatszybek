@@ -31,12 +31,14 @@ domload(() => {
 });
 
 domload(() => {
-	let exact = null;
 	/** @type {PiepNode} */
-	let shortest_hit = null;
+	let exact_hit = undefined;
+	let exact_length = 100000;
+	/** @type {PiepNode} */
+	let shortest_hit = undefined;
 	let shortest_length = 100000;
 	$$(".navbar_admin .menu_item").forEach((e) => {
-		var a = e._child("a");
+		const a = e._child("a");
 		if (!a) {
 			return;
 		}
@@ -50,26 +52,29 @@ domload(() => {
 		}
 
 		if (href && href.substr(0, location.pathname.length) == location.pathname) {
-			exact = e;
+			if (href.length <= exact_length) {
+				exact_hit = e;
+				exact_length = href.length;
+			}
 		}
 	});
 
-	if (exact) {
-		shortest_hit = exact;
+	if (exact_hit) {
+		shortest_hit = exact_hit;
 	}
 
 	if (shortest_hit) {
-		shortest_hit.classList.add("current-route");
+		shortest_hit.classList.add("current_route");
 
-		var parent_sub_menu = shortest_hit._parent(".sub_menu");
+		const parent_sub_menu = shortest_hit._parent(".sub_menu");
 		if (parent_sub_menu) {
 			expandMenu(parent_sub_menu, parent_sub_menu._prev(), null, {
 				duration: 0,
 			});
-			parent_sub_menu._prev().classList.add("current-route");
+			parent_sub_menu._prev().classList.add("current_route");
 		}
 
-		var sub_menu = shortest_hit._next();
+		const sub_menu = shortest_hit._next();
 		if (sub_menu && sub_menu.classList.contains("sub_menu")) {
 			expandMenu(sub_menu, sub_menu._prev(), null, {
 				duration: 0,

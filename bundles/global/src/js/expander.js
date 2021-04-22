@@ -44,7 +44,7 @@ function expandMenu(elem, btn, open = null, options = {}) {
 	if (options.single && open) {
 		btn
 			._parent()
-			._children(".menu_item:not(.current-route) .expand_arrow.open")
+			._children(".menu_item:not(.current_route) .expand_arrow.open")
 			.forEach((e) => {
 				if (e != expand_btn) {
 					expandMenu(e._parent()._next(), e._parent());
@@ -173,12 +173,12 @@ domload(() => {
 		const href = a.getAttribute("href");
 		if (href == "/") {
 			if (location.pathname == "/") {
-				a.classList.add("current-route");
+				a.classList.add("current_route");
 			}
 		} else if (location.pathname.indexOf(href) === 0) {
-			a.classList.add("current-route");
+			a.classList.add("current_route");
 		} else if (location.href.indexOf(href) === 0) {
-			a.classList.add("current-route");
+			a.classList.add("current_route");
 		}
 	});
 
