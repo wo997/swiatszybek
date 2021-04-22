@@ -42,7 +42,9 @@ class Files
 
         $name_suffix = "";
 
-        if ($file_type == "image") {
+        //if ($file_type == "image") {
+        // TODO: option to save gif as a plain gif lol
+        if (in_array(["jpg", "png", "gif", "bmp", "webp"], $file_ext)) {
             $info = getimagesize($tmp_file_path);
 
             $width = $info[0];
@@ -207,7 +209,12 @@ class Files
             return null;
         }
 
-        $dimensions = explode("x", substr($path_wo_ext, $last_floor_index + 1));
+        $dimsstr = substr($path_wo_ext, $last_floor_index + 1);
+        if (!preg_match('/^\d*x^\d*$/', $dimsstr)) {
+            return;
+        }
+
+        $dimensions = explode("x", $dimsstr);
 
         $file_name = preg_replace("/(\/)?uploads\/.{0,10}\//", "", $path_wo_ext);
 
@@ -269,12 +276,16 @@ class Files
 
         @unlink($file_path);
 
-        if ($file_type == "image") {
-            foreach (self::$image_fixed_dimensions as $size_name => $area) {
-                foreach (self::$image_minified_formats as $format) {
-                    $min_file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;
-                    if (file_exists($min_file_path)) {
-                        @unlink($min_file_path);
+        // wont match f.e. svgs
+        $image_data = self::getResponsiveImageData($file_path);
+        if ($image_data) {
+            if ($file_type == "image") {
+                foreach (self::$image_fixed_dimensions as $size_name => $area) {
+                    foreach (self::$image_minified_formats as $format) {
+                        $min_file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;
+                        if (file_exists($min_file_path)) {
+                            @unlink($min_file_path);
+                        }
                     }
                 }
             }

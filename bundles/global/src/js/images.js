@@ -41,7 +41,7 @@ function getResponsiveImageData(src) {
 	}
 
 	const dimsstr = path_wo_ext.substring(last_floor_index + 1);
-	if (!dimsstr[0].match(/^\d*x^\d*$/)) {
+	if (!dimsstr.match(/^\d*x^\d*$/)) {
 		return;
 	}
 
