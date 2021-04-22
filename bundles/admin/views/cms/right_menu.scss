@@ -15,6 +15,10 @@
 		border-radius: 0;
 		padding-left: 0;
 		padding-right: 0;
+		box-shadow: none;
+	}
+	.btn::after {
+		box-shadow: none !important;
 	}
 	.add_block_btn_wrapper {
 		& {

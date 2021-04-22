@@ -1847,8 +1847,7 @@ class PiepCMS {
 			this.add_block_menu.classList.remove("visible");
 		}
 
-		this.add_block_btn.classList.toggle("transparent", !show_add_block_menu);
-		this.add_block_btn.classList.toggle("important", show_add_block_menu);
+		this.add_block_btn.style.setProperty("--btn-background-clr", show_add_block_menu ? "#eee" : "");
 	}
 
 	inspectorMove() {
