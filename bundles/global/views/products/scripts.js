@@ -350,7 +350,6 @@ function updatePrettyCheckboxRanges() {
 		removeClasses(".angle_down", ["angle_down"], ul);
 
 		if (min_checkbox || max_checkbox) {
-			console.log(r_min, r_max);
 			ranges[ul.dataset.product_feature_id] = [r_min, r_max];
 		}
 

@@ -188,7 +188,7 @@ function getPhysicalMeasureUnit($unit_id)
  *
  * @param  float $double_value
  * @param  string $physical_measure
- * @return AssetSchema
+ * @return PrettyPhysicalMeasureData
  */
 function prettyPrintPhysicalMeasure($double_value, $physical_measure)
 {
@@ -209,7 +209,7 @@ function prettyPrintPhysicalMeasure($double_value, $physical_measure)
         return [
             "value" => round($accuracy * $double_value / $target_unit["factor"]) / $accuracy,
             "unit_name" => $target_unit["name"],
-            "unit_id" => $target_unit["name"],
+            "unit_id" => $target_unit["id"],
         ];
     }
 

@@ -82,7 +82,7 @@ function getGlobalProductsSearch($url, $options = [])
             // for both min and max, thus on top
             $from .= "
                 INNER JOIN product_to_variant_option ptvo USING (product_id)
-                INNER JOIN product_variant_option_to_feature_option pvotfo
+                INNER JOIN product_variant_option_to_feature_option pvotfo USING (product_variant_option_id)
                 INNER JOIN product_feature_option pfo ON pvotfo.product_feature_option_id = pfo.product_feature_option_id
                 INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
                 INNER JOIN product_feature_option gpfo ON pvotfo.product_feature_option_id = gpfo.product_feature_option_id";
@@ -123,8 +123,10 @@ function getGlobalProductsSearch($url, $options = [])
             }
         }
 
+        //var_dump("SELECT product_id FROM $from WHERE $where GROUP BY product_id");
         $product_ids = DB::fetchCol("SELECT product_id FROM $from WHERE $where GROUP BY product_id");
     }
+    //die;
 
     // and text search at the end
     if ($search_phrase) {
@@ -162,8 +164,8 @@ function getGlobalProductsSearch($url, $options = [])
         ",
         "from" => "general_product gp
             INNER JOIN product p USING (general_product_id)
-            INNER JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
-            INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
+            LEFT JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
+            LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
         "group" => "general_product_id",
         "order" => "general_product_id DESC",
         "where" => "p.product_id IN ($product_ids_csv)",
