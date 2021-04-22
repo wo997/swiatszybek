@@ -19,7 +19,7 @@
 <?php startSection("body_content"); ?>
 
 <div class="label">Logo sklepu</div>
-<img class="logo logo-default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
+<img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext style='margin-left:0'>
 <div class="btn primary upload_img_btn" data-upload_name="logo" data-upload_label="Prześlij logo">Prześlij plik <i class="fas fa-cloud-upload-alt"></i></div>
 
 <div class="label">Ikonka sklepu (favicon)</div>

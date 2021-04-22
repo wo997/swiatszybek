@@ -8,7 +8,7 @@
 		border: 1px solid #ccc;
 		z-index: 2600;
 		background: #fff;
-		transform: opacity 0.15s;
+		transition: opacity 0.15s;
 		display: grid;
 		grid-template-columns: auto auto;
 	}

@@ -214,7 +214,7 @@ class Files
         }
 
         $dimsstr = substr($path_wo_ext, $last_floor_index + 1);
-        if (!preg_match('/^\d*x^\d*$/', $dimsstr)) {
+        if (!preg_match('/^\d*x\d*$/', $dimsstr)) {
             return;
         }
 
@@ -236,6 +236,7 @@ class Files
         $image_dimension -= 1;
 
         $image_data = self::getResponsiveImageData($src);
+
         if (!$image_data) {
             return null;
         }
