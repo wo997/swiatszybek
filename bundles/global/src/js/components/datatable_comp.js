@@ -500,8 +500,10 @@ function DatatableComp(comp, parent, data) {
 			render: () => {
 				const cd = comp._changed_data;
 
+				let asked_search = false;
 				if (cd.quick_search) {
 					if (data.search_url) {
+						asked_search = true;
 						comp._backend_search();
 					}
 				}
@@ -615,7 +617,8 @@ function DatatableComp(comp, parent, data) {
 					registerForms();
 
 					if (data.search_url) {
-						if (!cd.selection) {
+						if (!cd.selection && !asked_search) {
+							asked_search = true;
 							comp._backend_search();
 						}
 					} else {
