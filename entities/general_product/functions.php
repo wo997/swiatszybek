@@ -134,7 +134,7 @@ function getGlobalProductsSearch($url, $options = [])
 
         $from = "general_product gp INNER JOIN product p USING (general_product_id)";
         $where = "p.product_id IN ($product_ids_csv)";
-        $where .= " " . getSearchQuery(["quick_search" => $search_phrase, "quick_search_fields" => ["gp.__search"], "search_type" => "extended"]);
+        $where .= " AND " . getSearchQuery(["quick_search" => $search_phrase, "quick_search_fields" => ["gp.__search"], "search_type" => "extended"]);
 
         $product_ids = DB::fetchCol("SELECT product_id
             FROM general_product gp
