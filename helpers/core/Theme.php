@@ -17,9 +17,9 @@ class Theme
             "link" => 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap'
         ],
         "Montserrat" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "weights" => ["normal" => 500, "semi_bold" => 600, "bold" => 700],
             "use" => "'Montserrat', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap'
+            "link" => 'https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;800&display=swap'
         ],
         "Lato" => [
             "weights" => ["normal" => 400, "semi_bold" => 700, "bold" => 900],
