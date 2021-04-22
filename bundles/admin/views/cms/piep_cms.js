@@ -125,6 +125,7 @@ class PiepCMS {
 		this.recreateDom();
 		this.renderHistory();
 		this.setFocusNode(undefined);
+		this.last_selection = undefined;
 	}
 
 	renderHistory() {
