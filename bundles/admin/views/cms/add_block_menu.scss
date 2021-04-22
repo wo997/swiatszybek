@@ -1,0 +1,32 @@
+/* css[view] */
+
+.piep_editor_add_block_menu {
+	& {
+		position: absolute;
+		box-shadow: 0 2px 5px 0 #0003;
+		// padding: 10px;
+		border: 1px solid #ccc;
+		z-index: 2600;
+		background: #fff;
+		transform: opacity 0.15s;
+		display: grid;
+		grid-template-columns: auto auto;
+	}
+	&:not(.visible) {
+		pointer-events: none;
+		opacity: 0;
+	}
+	.block_to_add {
+		& {
+			display: block;
+			text-align: left;
+			border-radius: 0;
+		}
+		// &:not(:first-child) {
+		// 	margin-top: 5px;
+		// }
+		> *:first-child {
+			margin-right: 5px;
+		}
+	}
+}

@@ -16,7 +16,6 @@ class PiepCMS {
 		this.v_dom_history = [];
 
 		this.initNodes();
-
 		this.initConsts();
 
 		this.initInspector();
@@ -24,6 +23,7 @@ class PiepCMS {
 		this.initFloatMenu();
 		this.initSelectResolution();
 		this.initRightMenu();
+		this.initAddBlockMenu();
 
 		this.initEditables();
 		this.initEditingColors();
@@ -59,6 +59,7 @@ class PiepCMS {
 		this.float_focus = node("piep_editor_float_focus");
 		this.parent_float_focus = node("piep_editor_parent_float_focus");
 		this.float_menu = node("piep_editor_float_menu");
+		this.add_block_menu = node("piep_editor_add_block_menu");
 
 		this.styles = styles("piep_editor_styles");
 
@@ -516,6 +517,9 @@ class PiepCMS {
 	}
 
 	initRightMenu() {
+		this.add_block_btn = this.container._child(".add_block_btn");
+		this.add_block_btn_wrapper = this.container._child(".add_block_btn_wrapper");
+
 		document.addEventListener("click", (event) => {
 			const target = $(event.target);
 			const edit_theme_btn = target._parent(".edit_theme_btn");
@@ -526,6 +530,118 @@ class PiepCMS {
 			const edit_seo_btn = target._parent(".edit_seo_btn");
 			if (edit_seo_btn) {
 				getPageSeoDataModal()._show({ source: edit_seo_btn });
+			}
+		});
+	}
+
+	initAddBlockMenu() {
+		let menu_html = "";
+
+		/**
+		 * @typedef {{
+		 * id: string
+		 * label: string
+		 * v_node: vDomNode
+		 * }} BlockToAdd
+		 */
+
+		/** @type {BlockToAdd[]} */
+		const blocks_to_add = [
+			{
+				id: "h1",
+				label: html`<span class="bold">H1</span> Nagłówek`,
+				v_node: {
+					tag: "h1",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+			{
+				id: "h2",
+				label: html`<span class="bold">H2</span> Nagłówek`,
+				v_node: {
+					tag: "h2",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+			{
+				id: "h3",
+				label: html`<span class="bold">H3</span> Nagłówek`,
+				v_node: {
+					tag: "h3",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+			{
+				id: "p",
+				label: html`<i class="fas fa-align-center"></i> Paragraf / Tekst`,
+				v_node: {
+					tag: "p",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+			{
+				id: "container",
+				label: html`<i class="fas fa-border-all"></i> Kontener`,
+				v_node: {
+					tag: "div",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+			{
+				id: "img",
+				label: html`<i class="far fa-image"></i> Zdjęcie`,
+				v_node: {
+					tag: "img",
+					id: -1,
+					text: "",
+					children: undefined,
+					styles: {},
+					classes: [],
+					attrs: {},
+				},
+			},
+		];
+
+		for (const block_to_add of blocks_to_add) {
+			menu_html += html` <div class="btn transparent block_to_add" data-id="${block_to_add.id}">${block_to_add.label}</div> `;
+		}
+
+		menu_html += html` <div class="btn transparent mt2"><i class="fas fa-ellipsis-h"></i> Więcej</div> `;
+
+		this.add_block_menu._set_content(menu_html);
+
+		this.add_block_menu.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+
+			const block_to_add_btn = target._parent(".block_to_add");
+			if (block_to_add_btn) {
+				const block_to_add = blocks_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
+				console.log(block_to_add.v_node);
 			}
 		});
 	}
@@ -1709,6 +1825,32 @@ class PiepCMS {
 		this.showFloatMenuToNode(show_focus_node_vid);
 	}
 
+	addBtnMove() {
+		let show_add_block_menu = false;
+		if (mouse.target) {
+			show_add_block_menu = !!(mouse.target._parent(this.add_block_btn_wrapper) || mouse.target._parent(this.add_block_menu));
+		}
+		if (show_add_block_menu) {
+			if (!this.add_block_menu.classList.contains("visible")) {
+				this.add_block_menu.classList.add("visible");
+
+				const add_block_btn_rect = this.add_block_btn.getBoundingClientRect();
+				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
+				const piep_editor_rect = this.container.getBoundingClientRect();
+
+				const left = add_block_btn_rect.left - add_block_menu_rect.width - piep_editor_rect.left;
+				const top = add_block_btn_rect.top - piep_editor_rect.top;
+
+				this.add_block_menu._set_absolute_pos(left, top);
+			}
+		} else {
+			this.add_block_menu.classList.remove("visible");
+		}
+
+		this.add_block_btn.classList.toggle("transparent", !show_add_block_menu);
+		this.add_block_btn.classList.toggle("important", show_add_block_menu);
+	}
+
 	inspectorMove() {
 		if (this.inspector_grabbed && !mouse.down) {
 			this.inspector_grabbed = false;
@@ -1761,6 +1903,8 @@ class PiepCMS {
 		}
 
 		this.inspectorMove();
+
+		this.addBtnMove();
 
 		const piep_editor_rect = this.container.getBoundingClientRect();
 		const alternative_scroll_panel_left = piep_editor_rect.left;

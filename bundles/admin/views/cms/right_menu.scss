@@ -16,4 +16,13 @@
 		padding-left: 0;
 		padding-right: 0;
 	}
+	.add_block_btn_wrapper {
+		& {
+			cursor: pointer;
+		}
+		.add_block_btn {
+			pointer-events: none;
+			width: 100%;
+		}
+	}
 }

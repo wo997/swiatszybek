@@ -36,6 +36,11 @@
     </div>
 
     <div class="piep_editor_right_menu">
+        <div class="add_block_btn_wrapper">
+            <button class="btn transparent add_block_btn">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
         <button class="btn transparent show_inspector_btn" data-tooltip_position="left">
             <i class="fas fa-stream"></i>
         </button>
