@@ -33,6 +33,7 @@ function getResponsiveImageData(src) {
 	}
 	const last_dot_index = src.lastIndexOf(".");
 	const ext = src.substring(last_dot_index + 1);
+
 	const path_wo_ext = src.substring(0, last_dot_index);
 
 	const last_floor_index = path_wo_ext.lastIndexOf("_");
@@ -51,6 +52,7 @@ function getResponsiveImageData(src) {
 	return {
 		file_name: file_name,
 		extension: ext,
+		responsive: minify_extensions.includes(ext),
 		w: parseInt(dimensions[0]),
 		h: parseInt(dimensions[1]),
 	};
@@ -148,7 +150,7 @@ function getResponsiveImageRealUrl(img, base_url = undefined) {
 	base_url = def(base_url, img.dataset.src);
 	const img_data = getResponsiveImageData(base_url);
 
-	if (!img_data) {
+	if (!img_data || !img_data.responsive) {
 		return base_url;
 	}
 

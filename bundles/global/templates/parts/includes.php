@@ -37,6 +37,7 @@ if (defined("ROUTE")) {
 
     const image_fixed_dimensions = <?= json_encode(Files::$image_fixed_dimensions) ?>;
     const same_ext_image_allowed_types = <?= json_encode(Files::$same_ext_image_allowed_types) ?>;
+    const minify_extensions = <?= json_encode(Files::$minify_extensions) ?>;
 
     const STATIC_URLS = <?= json_encode(Request::$static_urls) ?>;
 

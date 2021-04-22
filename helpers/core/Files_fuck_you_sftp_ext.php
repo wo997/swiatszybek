@@ -16,8 +16,11 @@ class Files
     ];
 
     public static $image_minified_formats = [
-        "jpg",
-        "webp"
+        "jpg", "webp"
+    ];
+
+    public static $minify_extensions = [
+        "jpg", "png", "gif", "bmp", "webp"
     ];
 
     /**
@@ -44,7 +47,7 @@ class Files
 
         //if ($file_type == "image") {
         // TODO: option to save gif as a plain gif lol
-        if (in_array(["jpg", "png", "gif", "bmp", "webp"], $file_ext)) {
+        if ($file_type == "image") {
             $info = getimagesize($tmp_file_path);
 
             $width = $info[0];
@@ -79,7 +82,8 @@ class Files
             "user_id" => $user_id,
         ]);
 
-        if ($file_type == "image") {
+        //if ($file_type == "image") {
+        if (in_array(self::$minify_extensions, $file_ext)) {
             self::processImage($file_path);
         }
 
@@ -272,14 +276,14 @@ class Files
     {
         $file_path = ltrim($full_file_path, "/");
         $file_name = self::getFileNameWithoutExtension($file_path);
-        $file_type = DB::fetchVal("SELECT file_type FROM file WHERE file_path = ?", [$file_path]);
+        $file_ext = self::getFileExtension($file_path);
+        //$file_type = DB::fetchVal("SELECT file_type FROM file WHERE file_path = ?", [$file_path]);
 
         @unlink($file_path);
 
-        // wont match f.e. svgs
-        $image_data = self::getResponsiveImageData($file_path);
-        if ($image_data) {
-            if ($file_type == "image") {
+        if (in_array(self::$minify_extensions, $file_ext)) {
+            $image_data = self::getResponsiveImageData($file_path);
+            if ($image_data) {
                 foreach (self::$image_fixed_dimensions as $size_name => $area) {
                     foreach (self::$image_minified_formats as $format) {
                         $min_file_path = UPLOADS_PATH . $size_name . "/" . $file_name . "." . $format;

@@ -622,7 +622,7 @@ class PiepCMS {
 					children: undefined,
 					styles: {},
 					classes: ["wo997_img"],
-					attrs: { "data-src": "/src/img/empty_img.svg" },
+					attrs: { "data-src": "/src/img/empty_img_147x94.svg" },
 				},
 			},
 		];
@@ -1779,7 +1779,9 @@ class PiepCMS {
 			if (show_insert_blc_option) {
 				show_insert_blc_option._insert_action();
 				this.recreateDom(this.v_dom_overlay);
-				this.showFocusToNode(this.grabbed_block_vid);
+				setTimeout(() => {
+					this.showFocusToNode(this.grabbed_block_vid);
+				});
 
 				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
 				if (v_node_data.parent_v_nodes[0]) {
@@ -1946,6 +1948,8 @@ class PiepCMS {
 		this.grabbed_block_vid = this.focus_node_vid;
 
 		this.grabbed_block_wrapper._set_content(this.getFocusNode().outerHTML);
+		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
+		removeClasses(".wo997_img_waiting", ["wo997_img_waiting"], this.grabbed_block_wrapper);
 		lazyLoadImages({ duration: 0 });
 		this.grabbed_block_wrapper.classList.add("visible");
 

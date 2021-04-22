@@ -13,7 +13,10 @@ let UPLOADS_PATH;
 let UPLOADS_PLAIN_PATH;
 
 let image_fixed_dimensions;
+/** @type {string[]} */
 let same_ext_image_allowed_types;
+/** @type {string[]} */
+let minify_extensions;
 
 let STATIC_URLS;
 
