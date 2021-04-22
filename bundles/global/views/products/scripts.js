@@ -320,29 +320,28 @@ function initProductFeatures() {
 function updatePrettyCheckboxRanges() {
 	const ranges = {};
 	$$(".product_features .double_value_quick_list").forEach((ul) => {
-		let r_min = 1000000000;
-		let r_max = -r_min;
+		let r_min = undefined;
+		let r_max = undefined;
 		/** @type {PiepNode} */
 		let min_checkbox;
 		/** @type {PiepNode} */
 		let max_checkbox;
 
+		// first match is highest, the last one is the lowest, ezy ;)
 		ul._children(".option_range_checkbox.checked").forEach((chck) => {
+			/** @type {*} */
 			let [from, to] = chck.dataset.value.split("_do_");
 			if (from !== undefined) {
-				const fromv = numberFromStr(from);
-				if (fromv < r_min) {
-					r_min = fromv;
-					min_checkbox = chck;
-				}
-			}
-			if (from) {
+				// last one low so override everything
+				r_min = from;
+				min_checkbox = chck;
+
 				if (to === undefined) {
 					to = from;
 				}
-				const tov = numberFromStr(to);
-				if (tov > r_max) {
-					r_max = tov;
+				// first one high
+				if (r_max === undefined) {
+					r_max = to;
 					max_checkbox = chck;
 				}
 			}
@@ -351,6 +350,7 @@ function updatePrettyCheckboxRanges() {
 		removeClasses(".angle_down", ["angle_down"], ul);
 
 		if (min_checkbox || max_checkbox) {
+			console.log(r_min, r_max);
 			ranges[ul.dataset.product_feature_id] = [r_min, r_max];
 		}
 

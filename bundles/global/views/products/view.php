@@ -210,7 +210,7 @@ function traverseFeatures()
                 $pretty_min = prettyPrintPhysicalMeasure($min_value, $physical_measure);
                 $pretty_max = prettyPrintPhysicalMeasure($max_value, $physical_measure);
 
-                $feature_label .= " ($pretty_min - $pretty_max)";
+                $feature_label .= " ($pretty_min[value] $pretty_min[unit_name] - $pretty_max[value] $pretty_max[unit_name])";
 
                 $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\" class=\"double_value_quick_list\">";
 
@@ -218,27 +218,26 @@ function traverseFeatures()
 
                 $unit_map = [];
 
-                $add_unit = function (&$unit_map, $pretty_val) {
-                    if ($unit = def(explode(" ", $pretty_val), 1)) {
-                        if (!isset($unit_map[$unit])) {
-                            $unit_map[$unit] = 0;
-                        }
-                        $unit_map[$unit]++;
+                $add_unit = function (&$unit_map, $unit_id) {
+                    if (!isset($unit_map[$unit_id])) {
+                        $unit_map[$unit_id] = 0;
                     }
+                    $unit_map[$unit_id]++;
                 };
 
                 foreach ($double_values as $double_value) {
                     $value = $double_value["v"];
                     $max = def($double_value, "max", 0);
                     $count = $double_value["c"];
-                    $pretty_val = prettyPrintPhysicalMeasure($value, $physical_measure);
-                    $search_value = $value;
-                    $add_unit($unit_map, $pretty_val);
+                    $pretty_val_data = prettyPrintPhysicalMeasure($value, $physical_measure);
+                    $pretty_val = "$pretty_val_data[value] $pretty_val_data[unit_name]";
+                    $search_value = "$pretty_val_data[value]$pretty_val_data[unit_id]";
+                    $add_unit($unit_map, $pretty_val_data["unit_id"]);
                     if ($max) {
-                        $max_pretty_val = prettyPrintPhysicalMeasure($max, $physical_measure);
-                        $pretty_val .= " - " . $max_pretty_val;
-                        $search_value .= "_do_" . $max;
-                        $add_unit($unit_map, $max_pretty_val);
+                        $max_pretty_val_data = prettyPrintPhysicalMeasure($max, $physical_measure);
+                        $pretty_val .= " - $max_pretty_val_data[value] $max_pretty_val_data[unit_name]";
+                        $search_value .= "_do_$max_pretty_val_data[value]$max_pretty_val_data[unit_id]";
+                        $add_unit($unit_map, $max_pretty_val_data["unit_id"]);
                     }
 
                     $quick_list_html .= "<li class=\"option_row\">";
@@ -251,12 +250,12 @@ function traverseFeatures()
                 }
                 $quick_list_html .= "</ul>";
 
-                $most_unit = "";
+                $most_unit_id = "";
                 $most_unit_cnt = 0;
-                foreach ($unit_map as $unit => $unit_cnt) {
+                foreach ($unit_map as $unit_id => $unit_cnt) {
                     if ($unit_cnt > $most_unit_cnt) {
                         $most_unit_cnt = $unit_cnt;
-                        $most_unit = $unit;
+                        $most_unit_id = $unit_id;
                     }
                 }
 
@@ -271,7 +270,7 @@ function traverseFeatures()
                         $unit_id = $unit["id"];
                         $name = $unit["name"];
 
-                        $selected = $name === $most_unit ? "selected" : "";
+                        $selected = $unit_id === $most_unit_id ? "selected" : "";
 
                         if ($max_value + 0.000001 < $factor) {
                             continue;

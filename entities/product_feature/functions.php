@@ -175,13 +175,20 @@ function getPhysicalMeasureUnit($unit_id)
     return def(getPhysicalMeasureUnitMap(), $unit_id, ["name" => "", "factor" => 1]);
 }
 
+/**
+ * @typedef PrettyPhysicalMeasureData {
+ * value: number
+ * name: string
+ * unit_id: string
+ * }
+ */
 
 /**
  * prettyPrintPhysicalMeasure
  *
  * @param  float $double_value
  * @param  string $physical_measure
- * @return void
+ * @return AssetSchema
  */
 function prettyPrintPhysicalMeasure($double_value, $physical_measure)
 {
@@ -199,7 +206,11 @@ function prettyPrintPhysicalMeasure($double_value, $physical_measure)
         }
 
         $accuracy = 100000;
-        return (round($accuracy * $double_value / $target_unit["factor"]) / $accuracy) . " " . $target_unit["name"];
+        return [
+            "value" => round($accuracy * $double_value / $target_unit["factor"]) / $accuracy,
+            "unit_name" => $target_unit["name"],
+            "unit_id" => $target_unit["name"],
+        ];
     }
 
     return $double_value;
