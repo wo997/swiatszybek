@@ -7,7 +7,7 @@
  * children?: vDomNode[]
  * attrs: object
  * classes: string[]
- * insert?: boolean
+ * insert_on_release?: boolean
  * }} vDomNode
  */
 
@@ -60,4 +60,10 @@
  * var_name: string
  * hex: string
  * }} piepColor
+ */
+
+/**
+ * @typedef {{
+ * type: ("move" | "insert")
+ * }} GrabBlockOptions
  */
