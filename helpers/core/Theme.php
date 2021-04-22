@@ -36,26 +36,26 @@ class Theme
             "use" => "'Archivo', sans-serif",
             "link" => 'https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap'
         ],
-        "Inter" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
-            "use" => "'Inter', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
-        ],
+        // "Inter" => [
+        //     "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+        //     "use" => "'Inter', sans-serif",
+        //     "link" => 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap'
+        // ],
         "Sarabun" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
             "use" => "'Sarabun', sans-serif",
             "link" => 'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap'
         ],
-        "Epilogue" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
-            "use" => "'Epilogue', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap'
-        ],
-        "Signika" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
-            "use" => "'Signika', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Signika:wght@400;600;700&display=swap'
-        ],
+        // "Epilogue" => [
+        //     "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+        //     "use" => "'Epilogue', sans-serif",
+        //     "link" => 'https://fonts.googleapis.com/css2?family=Epilogue:wght@400;600;700&display=swap'
+        // ],
+        // "Signika" => [
+        //     "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+        //     "use" => "'Signika', sans-serif",
+        //     "link" => 'https://fonts.googleapis.com/css2?family=Signika:wght@400;600;700&display=swap'
+        // ],
         "Prompt" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
             "use" => "'Prompt', sans-serif",
@@ -66,11 +66,11 @@ class Theme
             "use" => "'Krub', sans-serif",
             "link" => 'https://fonts.googleapis.com/css2?family=Krub:wght@400;600;700&display=swap'
         ],
-        "Niramit" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
-            "use" => "'Niramit', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Niramit:wght@400;600;700&display=swap'
-        ],
+        // "Niramit" => [
+        //     "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+        //     "use" => "'Niramit', sans-serif",
+        //     "link" => 'https://fonts.googleapis.com/css2?family=Niramit:wght@400;600;700&display=swap'
+        // ],
         "Blinker" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
             "use" => "'Blinker', sans-serif",
@@ -86,15 +86,25 @@ class Theme
             "use" => "'Fahkwang', sans-serif",
             "link" => 'https://fonts.googleapis.com/css2?family=Fahkwang:wght@400;600;700&display=swap'
         ],
-        "Tomorrow" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
-            "use" => "'Tomorrow', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;600;700&display=swap'
-        ],
+        // "Tomorrow" => [
+        //     "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+        //     "use" => "'Tomorrow', sans-serif",
+        //     "link" => 'https://fonts.googleapis.com/css2?family=Tomorrow:wght@400;600;700&display=swap'
+        // ],
         "Kodchasan" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
             "use" => "'Kodchasan', sans-serif",
             "link" => 'https://fonts.googleapis.com/css2?family=Kodchasan:wght@400;600;700&display=swap'
+        ],
+        "Spartan" => [
+            "weights" => ["normal" => 500, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Spartan', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Spartan:wght@500;600;700&display=swap'
+        ],
+        "Rubik" => [
+            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "use" => "'Rubik', sans-serif",
+            "link" => 'https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap'
         ],
     ];
 

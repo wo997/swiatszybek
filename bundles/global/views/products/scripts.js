@@ -228,8 +228,11 @@ function setRangesFromUrl() {
 function initProductCategories() {
 	$$(".product_categories ul:not(.level_0)").forEach((ul) => {
 		const a = ul._prev();
-		a.insertAdjacentHTML("beforeend", html`<button class="expand_btn btn transparent"><i class="fas fa-chevron-right"></button>`);
-		//ul.classList.add("expand_y", "hidden", "animate_hidden");
+		let classes = "expand_btn btn transparent";
+		if (!ul.classList.contains("hidden")) {
+			classes += " open";
+		}
+		a.insertAdjacentHTML("beforeend", html`<button class="${classes}"><i class="fas fa-chevron-right"></button>`);
 	});
 
 	$(".product_categories").addEventListener("click", (ev) => {

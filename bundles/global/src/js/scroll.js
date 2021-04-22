@@ -46,7 +46,7 @@ function smoothScroll(diff, params = {}) {
 	const min_s = -scroll_parent.scrollTop;
 	const max_s = scroll_parent.scrollHeight - scroll_parent.clientHeight - scroll_parent.scrollTop;
 	diff = clamp(min_s - prodably_duration, diff, max_s + prodably_duration);
-	params.duration = def(params.duration, 10 + 1 * Math.ceil(Math.sqrt(Math.abs(diff))));
+	params.duration = def(params.duration, 10 + 0.5 * Math.ceil(Math.sqrt(Math.abs(diff))));
 
 	if (Math.abs(diff) < 2) {
 		if (params.callback) {
