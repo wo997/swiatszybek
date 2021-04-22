@@ -16,10 +16,13 @@
 		pointer-events: none;
 		opacity: 0;
 	}
+	& > .btn {
+		text-align: left;
+		--hover-shadow: none;
+	}
 	.block_to_add {
 		& {
 			display: block;
-			text-align: left;
 			border-radius: 0;
 		}
 		// &:not(:first-child) {

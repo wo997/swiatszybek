@@ -59,6 +59,7 @@ textarea {
 		--brighten-factor: 1.1;
 		--disabled-opacity: 0.8;
 		font-weight: var(--semi_bold);
+		--hover-shadow: 0 2px 3px 0 #0003;
 	}
 	&.primary {
 		--btn-background-clr: var(--clr_primary);
@@ -125,11 +126,10 @@ textarea {
 		border-radius: inherit;
 	}
 	.no_touch &:hover:not(:disabled):not(.disabled):not(:active)::after {
-		box-shadow: 0 2px 3px 0 #0003;
+		box-shadow: var(--hover-shadow);
 	}
 	&:active::after {
 		background: #0001;
-		box-shadow: 0 1px 2px 0 #0002;
 	}
 
 	&:disabled,
@@ -143,6 +143,10 @@ textarea {
 		display: block;
 		flex-grow: 1;
 		width: 100%;
+	}
+
+	&.no_hover_shadow {
+		--hover-shadow: none;
 	}
 
 	.fas,

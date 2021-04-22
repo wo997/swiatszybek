@@ -16,9 +16,7 @@
 		padding-left: 0;
 		padding-right: 0;
 		box-shadow: none;
-	}
-	.btn::after {
-		box-shadow: none !important;
+		--hover-shadow: none;
 	}
 	.add_block_btn_wrapper {
 		& {
