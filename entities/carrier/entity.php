@@ -11,6 +11,8 @@ EntityManager::register("carrier", [
         "active" => ["type" => "number"],
         "api_key" => ["type" => "string"],
         "img_url" => ["type" => "string"],
+        "google_maps_share_link" => ["type" => "string"],
+        "google_maps_embed_code" => ["type" => "string"],
         "__full_name" => ["type" => "string"],
     ],
 ]);

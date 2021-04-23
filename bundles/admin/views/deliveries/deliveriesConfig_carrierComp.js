@@ -26,6 +26,8 @@
  * dimensions_dt?: DatatableCompData
  * api_key: string
  * img_url: string
+ * google_maps_share_link: string
+ * google_maps_embed_code: string
  * } & ListCompRowData} DeliveriesConfig_CarrierCompData
  *
  * @typedef {{
@@ -36,6 +38,8 @@
  *  expand: PiepNode
  *  dimenions_dt: DatatableComp
  *  label: PiepNode
+ *  case_in_person: PiepNode
+ *  case_not_in_person: PiepNode
  * }
  * } & BaseComp} DeliveriesConfig_CarrierComp
  */
@@ -58,6 +62,8 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			initial_dimensions: [],
 			api_key: "",
 			img_url: "",
+			google_maps_embed_code: "",
+			google_maps_share_link: "",
 		};
 	}
 
@@ -102,6 +108,9 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 				comp._child(".add_dimension_btn").toggleAttribute("disabled", data.dimensions_dt.dataset.length > 5);
 				comp._parent().classList.toggle("inactive", !data.active);
 				comp._nodes.label.classList.toggle("slash", !data.active);
+
+				comp._nodes.case_in_person.classList.toggle("hidden", data.delivery_type_id !== 3);
+				comp._nodes.case_not_in_person.classList.toggle("hidden", data.delivery_type_id === 3);
 			},
 		});
 	};
@@ -122,7 +131,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			<div style="flex-grow:1">
 				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
-						<div class="label">Nazwa dostawcy</div>
+						<div class="label first">Nazwa dostawcy / dostawy</div>
 						<input class="field small" data-bind="{${data.name}}" />
 
 						<div class="label">Widoczność w sklepie</div>
@@ -141,17 +150,27 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 							</div>
 						</div>
 
-						<div class="label">Klucz integracji</div>
-						<input class="field small" data-bind="{${data.api_key}}" />
+						<div data-node="{${comp._nodes.case_not_in_person}}">
+							<div class="label">Klucz integracji</div>
+							<input class="field small" data-bind="{${data.api_key}}" />
 
-						<div class="label">Link do ikonki</div>
-						<input class="field small" data-bind="{${data.img_url}}" />
+							<div class="label">Link do ikonki</div>
+							<input class="field small" data-bind="{${data.img_url}}" />
 
-						<div class="label">Czas doręczenia (dni robocze)</div>
-						<input class="field small" data-bind="{${data.delivery_time_days}}" />
+							<div class="label">Czas doręczenia (dni robocze)</div>
+							<input class="field small" data-bind="{${data.delivery_time_days}}" />
 
-						<div class="label">Link do śledzenia paczki (prefix)</div>
-						<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
+							<div class="label">Link do śledzenia paczki (prefix)</div>
+							<input class="field small" data-bind="{${data.tracking_url_prefix}}" />
+						</div>
+
+						<div data-node="{${comp._nodes.case_in_person}}">
+							<div class="label">Link udostępniania mapy Google</div>
+							<input class="field small" data-bind="{${data.google_maps_share_link}}" />
+
+							<div class="label">Kod umieszczania mapy Google</div>
+							<input class="field small" data-bind="{${data.google_maps_embed_code}}" />
+						</div>
 
 						<datatable-comp
 							class="mtf small_dataset"
