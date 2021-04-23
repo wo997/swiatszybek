@@ -78,6 +78,42 @@ domload(() => {
 	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 	const in_person_map_wrapper = buy_now_form._child(".in_person_map_wrapper");
 
+	const renderCarriers = () => {
+		const delivery_type_id = delivery_input._get_value();
+
+		const now_carriers = user_cart.available_carriers.filter(
+			(available_carrier) => available_carrier.delivery_type_id === delivery_type_id
+		);
+		const carrier_html = now_carriers
+			.map(
+				(available_carrier) =>
+					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
+						<p-checkbox data-value="${available_carrier.carrier_id}"></p-checkbox>
+						<span class="semi_bold name">${available_carrier.name}</span>
+						<img src="${available_carrier.img_url}" class="carrier_img" />
+						<span class="duration">${available_carrier.delivery_time_days} dni</span>
+						<span class="pln">${available_carrier.fit_dimensions.price} zł</span>
+					</div>`
+			)
+			.join("");
+
+		const was_h = carrier_input.scrollHeight;
+		carrier_input._set_content(carrier_html);
+		carrier_input.dataset.value = "";
+		const now_h = carrier_input.scrollHeight;
+		animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
+
+		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
+
+		registerForms();
+
+		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
+
+		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
+			carrier_input._set_value(now_carriers[0].carrier_id);
+		}
+	};
+
 	const loadCart = () => {
 		const setPrettyPrices = (delivery_type_id, target) => {
 			const prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === delivery_type_id).map((c) => c.fit_dimensions.price);
@@ -94,6 +130,8 @@ domload(() => {
 		setPrettyPrices(1, buy_now_form._child(".courier_prices"));
 		setPrettyPrices(2, buy_now_form._child(".parcel_prices"));
 		//setPrettyPrices(3, buy_now_form._child(".in_person_prices"));
+
+		renderCarriers();
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);
@@ -154,37 +192,7 @@ domload(() => {
 			});
 		}
 
-		const now_carriers = user_cart.available_carriers.filter(
-			(available_carrier) => available_carrier.delivery_type_id === delivery_type_id
-		);
-		const carrier_html = now_carriers
-			.map(
-				(available_carrier) =>
-					html`<div class="checkbox_area carrier_${available_carrier.api_key}">
-						<p-checkbox data-value="${available_carrier.carrier_id}"></p-checkbox>
-						<span class="semi_bold name">${available_carrier.name}</span>
-						<img src="${available_carrier.img_url}" class="carrier_img" />
-						<span class="duration">${available_carrier.delivery_time_days} dni</span>
-						<span class="pln">${available_carrier.fit_dimensions.price} zł</span>
-					</div>`
-			)
-			.join("");
-
-		const was_h = carrier_input.scrollHeight;
-		carrier_input._set_content(carrier_html);
-		carrier_input.dataset.value = "";
-		const now_h = carrier_input.scrollHeight;
-		animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
-
-		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
-
-		registerForms();
-
-		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
-
-		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
-			carrier_input._set_value(now_carriers[0].carrier_id);
-		}
+		renderCarriers();
 	});
 	delivery_input._set_value(user_cart.delivery_type_id);
 

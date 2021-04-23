@@ -7,7 +7,7 @@
  * in_persons: DeliveriesConfig_CarrierCompData[]
  * is_free_from_price: number
  * free_from_price: string
- * free_from_price_max_weight: string
+ * free_from_price_max_weight_kg: string
  * allow_cod: number
  * cod_from_price: string
  * cod_fee: string
@@ -43,7 +43,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 			in_persons: [],
 			is_free_from_price: 0,
 			free_from_price: "",
-			free_from_price_max_weight: "",
+			free_from_price_max_weight_kg: "",
 			allow_cod: 0,
 			cod_from_price: "",
 			cod_fee: "",
@@ -264,9 +264,9 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 					<span class="field_desc"> zł </span>
 				</span>
 
-				<div class="label">Waga maksymalna <span class="semi_bold {${data.free_from_price_max_weight}?hidden}">(Brak)</span></div>
+				<div class="label">Waga maksymalna <span class="semi_bold {${data.free_from_price_max_weight_kg}?hidden}">(Brak)</span></div>
 				<span class="glue_children">
-					<input class="field max_weight inline trim" inputmode="numeric" data-bind="{${data.free_from_price_max_weight}}" />
+					<input class="field max_weight inline trim" inputmode="numeric" data-bind="{${data.free_from_price_max_weight_kg}}" />
 					<span class="field_desc"> kg </span>
 				</span>
 			</div>

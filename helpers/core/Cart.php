@@ -19,6 +19,9 @@ class Cart
     private $carrier_id;
     private $payment_time;
     private $available_carriers;
+    private $products_weight_g;
+    private $delivery_price;
+    private $products_price;
 
     // other vars
     private $rebate_codes_limit = 2; // that will be a subject to change
@@ -69,7 +72,7 @@ class Cart
         return $this->payment_time;
     }
 
-    public function getCarriers()
+    public function setDeliveryData()
     {
         $cod_fee = 0;
         if ($this->getPaymentTime() === "cod") {
@@ -79,6 +82,7 @@ class Cart
         $cart_product_ids = array_column($this->products, "product_id");
 
         $anything_to_ship = false;
+        $products_weight_g = 0;
 
         $products_data = [];
         if ($cart_product_ids) {
@@ -89,7 +93,6 @@ class Cart
                 FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string)");
 
             $products_dims = [];
-            $products_weight = 0;
             foreach ($products_data as $product_data) {
                 $product_index++;
 
@@ -106,7 +109,7 @@ class Cart
                 $qty = $cart_product["qty"];
 
                 for ($i = 0; $i < $qty; $i++) {
-                    $products_weight += $product_data["weight"];
+                    $products_weight_g += $product_data["weight"];
                     $products_dims[] = [
                         floatval($product_data["length"]),
                         floatval($product_data["width"]),
@@ -116,28 +119,61 @@ class Cart
             }
         }
 
+        $this->products_weight_g = $products_weight_g;
+
         $available_carriers = [];
 
         if ($anything_to_ship) {
             foreach (DB::fetchArr("SELECT * FROM carrier WHERE active = 1 ORDER BY pos ASC") as $carrier) {
                 $dimensions = json_decode($carrier["dimensions_json"], true);
 
+                $dimension_fits = null;
+
                 foreach ($dimensions as $dimension) {
-                    $fits = putBoxIntoPackage3D([
-                        $dimension["length"],
-                        $dimension["width"],
-                        $dimension["height"],
-                    ], $products_dims);
+                    $fits = true;
+
+                    if ($dimension["length"] && $dimension["width"] && $dimension["height"]) {
+                        $fits = putBoxIntoPackage3D([
+                            $dimension["length"],
+                            $dimension["width"],
+                            $dimension["height"],
+                        ], $products_dims);
+                    }
+
                     if ($fits) {
                         $dimension_fits = $dimension;
                         break;
                     }
                 }
 
-                if (isset($dimension_fits)) {
+                if ($dimension_fits) {
+                    $delivery_price = $dimension_fits["price"];
+
                     if ($carrier["delivery_type_id"] === 1) {
-                        $dimension_fits["price"] += $cod_fee;
+                        $delivery_price += $cod_fee;
                     }
+
+                    $is_free_from_price = getSetting(["general", "deliveries", "is_free_from_price"], false);
+                    if ($is_free_from_price) {
+                        $free_shipping_allowed = true;
+                        $free_from_price_max_weight_kg = getSetting(["general", "deliveries", "free_from_price_max_weight_kg"], "");
+                        if ($free_from_price_max_weight_kg) {
+                            if ($this->products_weight_g > $free_from_price_max_weight_kg * 1000) {
+                                $free_shipping_allowed = false;
+                            }
+                        }
+                        if ($free_shipping_allowed) {
+                            $free_from_price = getSetting(["general", "deliveries", "free_from_price"], 0);
+                            if ($free_from_price) {
+                                if ($this->products_price >= $free_from_price) {
+                                    $delivery_price = 0;
+                                }
+                            }
+                        }
+                    }
+
+                    $dimension_fits["price"] = $delivery_price;
+
                     $carrier["fit_dimensions"] = $dimension_fits;
                     $available_carriers[] = $carrier;
                 }
@@ -145,7 +181,9 @@ class Cart
         } else {
         }
 
-        return $available_carriers;
+        $this->available_carriers = $available_carriers;
+
+        $this->calculateDeliveryPrice();
     }
 
     public function getDeliveryFitDimensions()
@@ -159,7 +197,7 @@ class Cart
         return null;
     }
 
-    public function getDeliveryPrice()
+    public function calculateDeliveryPrice()
     {
         $delivery_fit_dimensions = $this->getDeliveryFitDimensions();
 
@@ -167,9 +205,28 @@ class Cart
 
         if ($delivery_fit_dimensions) {
             $delivery_price = $delivery_fit_dimensions["price"];
+
+            $is_free_from_price = getSetting(["general", "deliveries", "is_free_from_price"], false);
+            if ($is_free_from_price) {
+                $free_shipping_allowed = true;
+                $free_from_price_max_weight_kg = getSetting(["general", "deliveries", "free_from_price_max_weight_kg"], "");
+                if ($free_from_price_max_weight_kg) {
+                    if ($this->products_weight_g > $free_from_price_max_weight_kg * 1000) {
+                        $free_shipping_allowed = false;
+                    }
+                }
+                if ($free_shipping_allowed) {
+                    $free_from_price = getSetting(["general", "deliveries", "free_from_price"], 0);
+                    if ($free_from_price) {
+                        if ($this->products_price >= $free_from_price) {
+                            $delivery_price = 0;
+                        }
+                    }
+                }
+            }
         }
 
-        return $delivery_price;
+        $this->delivery_price =  $delivery_price;
     }
 
     public function getAllData()
@@ -208,11 +265,11 @@ class Cart
             }
         }
 
-        $this->available_carriers = $this->getCarriers();
-        // the order matters!
-        $delivery_price = $this->getDeliveryPrice();
+        $this->products_price = $products_price;
 
-        $total_price = $products_price;
+        $this->setDeliveryData();
+
+        $total_price = $this->products_price;
 
         // subtract statics first
         foreach ($this->rebate_codes as
@@ -235,12 +292,12 @@ class Cart
             }
         }
 
-        $total_price += $delivery_price;
+        $total_price += $this->delivery_price;
 
         return [
             "products" => $products_data,
-            "products_price" => roundPrice($products_price),
-            "delivery_price" => roundPrice($delivery_price),
+            "products_price" => roundPrice($this->products_price),
+            "delivery_price" => roundPrice($this->delivery_price),
             "total_price" => roundPrice($total_price),
             "rebate_codes" => array_map(fn ($x) => filterArrayKeys($x->getSimpleProps(), ["code", "value"]), $this->rebate_codes),
             "delivery_type_id" => $this->getDeliveryTypeId(),
