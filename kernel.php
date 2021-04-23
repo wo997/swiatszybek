@@ -15,7 +15,9 @@ include "scripts/settings.php";
 include "scripts/server_settings.php";
 
 include "scripts/use_builds.php";
-include "deployment/automatic_build.php";
+if (def($_SESSION, "backend_access", false)) {
+    include "deployment/automatic_build.php";
+}
 define("ASSETS_RELEASE", $version_assets);
 
 //ini_set('max_execution_time', '1000');

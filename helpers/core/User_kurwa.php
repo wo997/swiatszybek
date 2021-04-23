@@ -257,13 +257,19 @@ class User
 
         Request::setSingleUsageSessionVar("just_logged_in", true);
 
+        $backend_access = self::getCurrent()->priveleges["backend_access"];
+
         if (isset($_SESSION["redirect_on_login"])) {
             $res["data"]["redirect_url"] = $_SESSION["redirect_on_login"];
             unset($_SESSION["redirect_on_login"]);
         } else {
-            if (self::getCurrent()->priveleges["backend_access"]) {
+            if ($backend_access) {
                 $res["data"]["redirect_url"] = Request::$static_urls["ADMIN"] . "/pulpit";
             }
+        }
+
+        if ($backend_access) {
+            $_SESSION["backend_access"] = true;
         }
 
         $res["success"] = true;
@@ -276,6 +282,7 @@ class User
         unset($_SESSION["redirect_on_login"]);
         unset($_SESSION["current_user_cart_json"]);
         unset($_SESSION["current_user_last_viewed_products_json"]);
+        unset($_SESSION["backend_access"]);
         setcookie("remember_me_token", "", 0);
     }
 
