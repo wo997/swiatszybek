@@ -36,9 +36,17 @@ p-option color-picker {
 }
 
 .font_size_float {
-	background: #fff;
-	box-shadow: 0 2px 4px 0 #0004;
-	border: 1px solid #aaa;
-	padding: 5px;
-	border-radius: 4px;
+	& {
+		background: #fff;
+		box-shadow: 0 2px 4px 0 #0004;
+		border: 1px solid #aaa;
+		padding: 5px;
+		border-radius: 4px;
+	}
+	.value_input {
+		width: 100px;
+	}
+	.unit_input {
+		width: 64px;
+	}
 }

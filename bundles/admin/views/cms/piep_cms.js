@@ -376,18 +376,39 @@ class PiepCMS {
 				any_picker.wrapper._set_content(
 					html`<div class="font_size_float">
 						<div class="label first">Rozmiar:</div>
-						<input class="field small" style="width: 100px;" />
+						<div class="glue_children">
+							<input class="field small value_input" />
+							<select class="unit_input field inline small">
+								<option value="px">px</option>
+								<option value="em">em</option>
+								<option value="rem">rem</option>
+								<option value=""></option>
+							</select>
+						</div>
 					</div>`
 				);
-				const input = any_picker.wrapper._child("input");
-				const input_value = different_size.classList.contains("selected") ? font_size_dropdown._get_value() : "";
-				input._set_value(input_value);
+				const value_input = any_picker.wrapper._child(".value_input");
+				const unit_input = any_picker.wrapper._child(".unit_input");
+				/** @type {string} */
+				const get_value = different_size.classList.contains("selected") ? font_size_dropdown._get_value() : "";
+				/** @type {any} */
+				let val = get_value;
+				let uni = "";
+				for (const unit of ["px", "em", "rem"]) {
+					if (get_value.endsWith(unit)) {
+						val = numberFromStr(val);
+						uni = unit;
+					}
+				}
+				value_input._set_value(val);
+				unit_input._set_value(uni);
 
 				const change = () => {
-					font_size_dropdown._set_value(input._get_value());
+					font_size_dropdown._set_value(value_input._get_value() + unit_input._get_value());
 				};
-				input.addEventListener("change", change);
-				input.addEventListener("input", change);
+				unit_input.addEventListener("change", change);
+				value_input.addEventListener("change", change);
+				value_input.addEventListener("input", change);
 
 				any_picker.show(different_size);
 			});
