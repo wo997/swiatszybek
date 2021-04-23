@@ -209,7 +209,7 @@ function setValue(input, value = null, options = {}) {
 		if (value !== null && value !== undefined) {
 			const curr = input._get_value({ plain: true });
 			if (input.classList.contains("number")) {
-				same = numberFromStr(curr) === numberFromStr(value) && curr !== "";
+				same = numberFromStr(curr) === numberFromStr(value) && curr !== undefined;
 			} else {
 				same = isEquivalent(curr, value);
 			}
