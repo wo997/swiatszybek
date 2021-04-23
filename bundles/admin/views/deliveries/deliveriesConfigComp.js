@@ -315,6 +315,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 								active: 0,
 								api_key: "",
 								img_url: "",
+								google_maps_embed_code: "",
+								google_maps_share_link: "",
 							});
 
 							comp._render();

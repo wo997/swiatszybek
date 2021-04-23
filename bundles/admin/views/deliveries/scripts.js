@@ -62,6 +62,8 @@ domload(() => {
 				active: carrier_data.active,
 				api_key: carrier_data.api_key,
 				img_url: carrier_data.img_url,
+				google_maps_embed_code: carrier_data.google_maps_embed_code,
+				google_maps_share_link: carrier_data.google_maps_share_link,
 			});
 		}
 	});
@@ -105,6 +107,8 @@ domload(() => {
 					active: carrier_data.active,
 					api_key: carrier_data.api_key,
 					img_url: carrier_data.img_url,
+					google_maps_embed_code: carrier_data.google_maps_embed_code,
+					google_maps_share_link: carrier_data.google_maps_share_link,
 				});
 			});
 		};
