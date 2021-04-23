@@ -69,11 +69,11 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
         "sub" => [
+            ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
             ["url" => "/edycja-strony", "title" => '<i class="fas fa-heart"></i> Edycja Strony'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
-            //["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
             ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
             ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-cogs"></i> Ustawienia motywu'],
@@ -95,6 +95,7 @@ function getNotificationCountForPage($page, $children_notification_count = 0)
         //} else if ($page['url'] == "/oczekujacy") {
         //$notification_count += DB::fetchVal("SELECT COUNT(1) FROM notifications WHERE sent = 0");
         //}
+        // hooks more preferable, entity should probably contain these, or a view? prob no
     }
     return $notification_count;
 }
