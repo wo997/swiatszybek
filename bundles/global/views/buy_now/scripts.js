@@ -46,13 +46,12 @@ domload(() => {
 			if (bottom < 0) {
 				margin_top = bottom;
 			}
+			buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
 		}
-
-		buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
 	};
 
-	document.addEventListener("scroll", onBuyNowScroll);
-	window.addEventListener("resize", onBuyNowScroll);
+	document.addEventListener("scroll", onBuyNowScroll, { passive: true });
+	window.addEventListener("resize", onBuyNowScroll, { passive: true });
 	onBuyNowScroll();
 
 	initRebateCodes();
@@ -165,6 +164,7 @@ domload(() => {
 
 		const was_h = carrier_input.scrollHeight;
 		carrier_input._set_content(carrier_html);
+		carrier_input.dataset.value = "";
 		const now_h = carrier_input.scrollHeight;
 		animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
 
