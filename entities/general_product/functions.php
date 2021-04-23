@@ -282,8 +282,7 @@ function getGlobalProductsSearch($url, $options = [])
 
     $products_data["html"] = $html;
 
-    // print actual (not general) product count
-    $products_data["total_rows"] = count($product_ids);
+    $products_data["total_products"] = count($product_ids);
     $products_data["all_ids"] = $product_ids;
 
     return $products_data;

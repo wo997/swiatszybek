@@ -8,6 +8,12 @@ if (!$shop_order || $shop_order->getProp("reference") !== $reference) {
     Request::redirect("/");
 }
 
+$force_payment = Request::getSingleUsageSessionVar("force_payment");
+if ($force_payment) {
+    // basically click with js buddy
+}
+
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -48,6 +54,10 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
 
 /** @var Entity Carrier */
 $carrier = $shop_order->getProp("carrier");
+
+/** @var Entity DeliveryType */
+$delivery_type = $carrier->getProp("delivery_type");
+$delivery_type_id = $delivery_type->getProp("delivery_type_id");
 
 $payment_time = $shop_order->getProp("payment_time");
 $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
@@ -107,26 +117,39 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
             <div><?= $main_address->getProp("__address_line_1") ?></div>
             <div><?= $main_address->getProp("__address_line_2") ?></div>
 
-            <?php if ($courier_address) : ?>
+            <?php if ($delivery_type_id === 1) : ?>
                 <div class="label big bold">Dostawa</div>
-                <div class="semi_bold"><?= $carrier->getProp("__full_name") ?> <?= $payment_time_label ?></div>
-                <div><?= $courier_address->getProp("__address_line_1") ?></div>
-                <div><?= $courier_address->getProp("__address_line_2") ?></div>
-                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) ?>">
-                    Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
-                </a>
+                <div class="semi_bold">Kurier <?= $carrier->getProp("name") ?> <?= $payment_time_label ?></div>
+                <?php if ($courier_address === 1) : ?>
+                    <div><?= $courier_address->getProp("__address_line_1") ?></div>
+                    <div><?= $courier_address->getProp("__address_line_2") ?></div>
+                    <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) ?>">
+                        Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                <?php endif ?>
             <?php endif ?>
 
             <?php if ($parcel_locker) : ?>
                 <div class="label big bold">Dostawa</div>
-                <div class="semi_bold"><?= $carrier->getProp("__full_name") ?> <?= $payment_time_label ?></div>
-                <div> <?= $parcel_locker->getProp("name") ?></div>
-                <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
-                <div><?= $parcel_locker->getProp("__address_line_2") ?></div>
-                <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode("Paczkomat " . $parcel_locker->getProp("name")) ?>">
+                <div class="semi_bold">Paczkomat <?= $carrier->getProp("name") ?></div>
+                <?php if ($delivery_type_id === 2) : ?>
+                    <div> <?= $parcel_locker->getProp("name") ?></div>
+                    <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
+                    <div><?= $parcel_locker->getProp("__address_line_2") ?></div>
+                    <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode("Paczkomat " . $parcel_locker->getProp("name")) ?>">
+                        Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                <?php endif ?>
+            <?php endif ?>
+
+            <?php if ($delivery_type_id === 3) : ?>
+                <div class="label big bold">Odbiór osobisty</div>
+                <div class="semi_bold"><?= $carrier->getProp("name") ?></div>
+                <a target="_blank" class="link" href="<?= $carrier->getProp("google_maps_share_link") ?>">
                     Pokaż na mapie <i class="fas fa-map-marker-alt"></i>
                 </a>
             <?php endif ?>
+
         </div>
 
         <div class="order_products">

@@ -382,6 +382,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
     const product_category_id = <?= $product_category_id ?>;
     const product_category_path = <?= $product_category_data["__category_path_json"] ?>;
     const prices_data = <?= json_encode($prices_data) ?>;
+    const products_total_rows = <?= $products_search_data["total_rows"] ?>;
 </script>
 
 <?php startSection("body_content"); ?>
@@ -431,7 +432,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
             <span>
                 Znaleziono wyników:
                 <div class="spinner_wrapper inline" style="margin-left:1px">
-                    <span class="products_total_rows"><?= $products_search_data["total_rows"] ?></span>
+                    <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
                     <div class="spinner overlay"></div>
                 </div>
             </span>

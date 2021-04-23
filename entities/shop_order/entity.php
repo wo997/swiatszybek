@@ -90,6 +90,10 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
     /** @var Entity Carrier */
     $carrier = $shop_order->getProp("carrier");
 
+    /** @var Entity DeliveryType */
+    $delivery_type = $carrier->getProp("delivery_type");
+    $delivery_type_id = $delivery_type->getProp("delivery_type_id");
+
     $payment_time = $shop_order->getProp("payment_time");
     $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
 
@@ -147,21 +151,31 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         $email_body .= "<div>" . $main_address->getProp("__address_line_1") . "</div>\n";
         $email_body .= "<div>" . $main_address->getProp("__address_line_2") . "</div>\n";
 
-        if ($courier_address) {
+        if ($delivery_type_id === 1) {
             $email_body .= "<div style=\"{label}\">Dostawa</div>\n";
-            $email_body .= "<div>" . $carrier->getProp("__full_name") . " " . $payment_time_label . "</div>\n";
-            $email_body .= "<div>" . $courier_address->getProp("__address_line_1") . "</div>\n";
-            $email_body .= "<div>" . $courier_address->getProp("__address_line_2") . "</div>\n";
-            $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) . "\">Pokaż na mapie</a>\n";
+            $email_body .= "<div>Kurier " . $carrier->getProp("name") . " " . $payment_time_label . "</div>\n";
+            if ($courier_address) {
+                $email_body .= "<div>" . $courier_address->getProp("__address_line_1") . "</div>\n";
+                $email_body .= "<div>" . $courier_address->getProp("__address_line_2") . "</div>\n";
+                $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) . "\">Pokaż na mapie</a>\n";
+            }
         }
 
-        if ($parcel_locker) {
+        if ($delivery_type_id === 2) {
             $email_body .= "<div style=\"{label}\">Dostawa</div>\n";
-            $email_body .= "<div>" . $carrier->getProp("__full_name") . "</div>\n";
-            $email_body .= "<div>" . $parcel_locker->getProp("name") . "</div>\n";
-            $email_body .= "<div>" . $parcel_locker->getProp("__address_line_1") . "</div>\n";
-            $email_body .= "<div>" . $parcel_locker->getProp("__address_line_2") . "</div>\n";
-            $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode("Paczkomat " . $parcel_locker->getProp("name")) . "\">Pokaż na mapie</a>\n";
+            $email_body .= "<div>Paczkomat " . $carrier->getProp("name") . "</div>\n";
+            if ($parcel_locker) {
+                $email_body .= "<div>" . $parcel_locker->getProp("name") . "</div>\n";
+                $email_body .= "<div>" . $parcel_locker->getProp("__address_line_1") . "</div>\n";
+                $email_body .= "<div>" . $parcel_locker->getProp("__address_line_2") . "</div>\n";
+                $email_body .= "<a href=\"http://maps.google.com/maps?q=" . urlencode("Paczkomat " . $parcel_locker->getProp("name")) . "\">Pokaż na mapie</a>\n";
+            }
+        }
+
+        if ($delivery_type_id === 3) {
+            $email_body .= "<div style=\"{label}\">Odbiór osobisty</div>\n";
+            $email_body .= "<div>" . $carrier->getProp("name") . "</div>\n";
+            $email_body .= "<a href=\"" . $carrier->getProp("google_maps_share_link") . "\">Pokaż na mapie</a>\n";
         }
 
         /** @var Entity[] OrderedProduct */

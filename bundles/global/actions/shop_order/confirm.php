@@ -9,8 +9,9 @@ try {
     $cart->empty();
     $cart->save();
     DB::commitTransaction();
-    // sometimes it should be p24, but you can easily do a double redirect, only once though, "zaplac" will help
-    Request::redirect($shop_order->getProp("__url") . "?zaplac");
+
+    Request::setSingleUsageSessionVar("force_payment", true);
+    Request::redirect($shop_order->getProp("__url"));
 } catch (Exception $e) {
     var_dump($e);
     DB::rollbackTransation();
