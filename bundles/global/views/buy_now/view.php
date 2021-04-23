@@ -101,14 +101,14 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <div>
                         <p-checkbox data-value="2"></p-checkbox>
                         <span class="semi_bold">Paczkomat</span>
-                        <span class="pln">15 zł</span>
+                        <span class="pln parcel_prices"></span>
                     </div>
                 </div>
                 <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="3"></p-checkbox>
                         <span class="semi_bold">Odbiór osobisty</span>
-                        <span class="pln">0 zł</span>
+                        <span class="pln in_person_prices">0 zł</span>
                     </div>
                 </div>
             </div>
@@ -170,7 +170,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
 
             <div class="expand_y animate_hidden hidden case_in_person">
-                <div class="label medium">Pojawi się możliwość utworzenia mapy punktów odbioru</div>
+                <div class="in_person_map_wrapper"></div>
             </div>
 
             <div class="expand_y animate_hidden hidden case_form_filled">

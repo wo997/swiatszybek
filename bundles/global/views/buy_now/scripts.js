@@ -76,18 +76,24 @@ domload(() => {
 	const carrier_input = buy_now_form._child(".carrier");
 	const payment_time_input = buy_now_form._child(".payment_time");
 	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
+	const in_person_map_wrapper = buy_now_form._child(".in_person_map_wrapper");
 
 	const loadCart = () => {
-		const courier_prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === 1).map((c) => c.fit_dimensions.price);
-		const courier_price_min = Math.min(...courier_prices);
-		const courier_price_max = Math.max(...courier_prices);
-		/** @type {any} */
-		let display_courier_prices = courier_price_min;
-		if (courier_price_min !== courier_price_max) {
-			display_courier_prices += " - " + courier_price_max;
-		}
-		display_courier_prices += " zł";
-		$(".courier_prices")._set_content(display_courier_prices);
+		const setPrettyPrices = (delivery_type_id, target) => {
+			const prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === delivery_type_id).map((c) => c.fit_dimensions.price);
+			const price_min = Math.min(...prices);
+			const price_max = Math.max(...prices);
+			/** @type {any} */
+			let display_prices = price_min;
+			if (price_min !== price_max) {
+				display_prices += " - " + price_max;
+			}
+			display_prices += " zł";
+			target._set_content(display_prices);
+		};
+		setPrettyPrices(1, buy_now_form._child(".courier_prices"));
+		setPrettyPrices(2, buy_now_form._child(".parcel_prices"));
+		//setPrettyPrices(3, buy_now_form._child(".in_person_prices"));
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);
@@ -122,6 +128,8 @@ domload(() => {
 		expand(case_in_person, delivery_type_id === 3);
 
 		expand(case_form_filled, true, { full_height_all_time: true });
+
+		carrier_input.dataset.delivery_type_id = delivery_type_id;
 
 		if (ready) {
 			const rect = delivery_input.getBoundingClientRect();
@@ -209,6 +217,8 @@ domload(() => {
 	payment_time_input._set_value(user_cart.payment_time);
 
 	carrier_input.addEventListener("change", () => {
+		const carrier_id = carrier_input._get_value();
+
 		if (ready) {
 			const rect = carrier_input.getBoundingClientRect();
 			const diff = rect.top - 60 - header_height;
@@ -220,7 +230,7 @@ domload(() => {
 			xhr({
 				url: "/cart/set_carrier",
 				params: {
-					carrier_id: carrier_input._get_value(),
+					carrier_id,
 				},
 				success: (res) => {
 					user_cart = res.user_cart;
@@ -231,6 +241,10 @@ domload(() => {
 				},
 			});
 		}
+
+		const carrier = user_cart.available_carriers.find((c) => c.carrier_id === carrier_id);
+
+		in_person_map_wrapper._set_content(carrier.google_maps_embed_code);
 	});
 	carrier_input._set_value(user_cart.carrier_id);
 

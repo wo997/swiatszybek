@@ -12,8 +12,8 @@ DB::createTable("carrier", [
     ["name" => "delivery_time_days", "type" => "INT"],
     ["name" => "active", "type" => "TINYINT(1)", "index" => "index"],
     ["name" => "__full_name", "type" => "VARCHAR(255)"],
-    ["name" => "google_maps_share_link", "type" => "VARCHAR(255)"],
-    ["name" => "google_maps_embed_code", "type" => "VARCHAR(255)"],
+    ["name" => "google_maps_share_link", "type" => "TEXT"],
+    ["name" => "google_maps_embed_code", "type" => "TEXT"],
 ]);
 
 //DB::delete("carrier", "1");

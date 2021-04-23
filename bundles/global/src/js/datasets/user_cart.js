@@ -15,6 +15,8 @@
  * name: string
  * img_url: string
  * fit_dimensions: FitDimensionData
+ * google_maps_embed_code: string
+ * google_maps_share_link: string
  * }} AvailableCarrierData
  */
 

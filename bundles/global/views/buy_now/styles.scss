@@ -197,3 +197,21 @@
 		text-align: center;
 	}
 }
+
+.radio_group.carrier[data-delivery_type_id="3"] {
+	.checkbox_area {
+		.name {
+			width: auto;
+		}
+		.carrier_img,
+		.duration {
+			display: none;
+		}
+	}
+}
+
+.in_person_map_wrapper iframe {
+	width: 100%;
+	height: 450px;
+	margin-top: 20px;
+}
