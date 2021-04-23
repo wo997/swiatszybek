@@ -11,7 +11,7 @@ header.main {
 		background: #fff;
 		border-bottom: 1px solid #ccc;
 		box-shadow: 0 2px 9px 0 #0003;
-		--header_padding_vertical: 10px;
+		--header_padding_vertical: 5px;
 		--header_padding_horizontal: 15px;
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
@@ -26,7 +26,7 @@ header.main {
 
 	@media only screen and (min-width: 1200px) {
 		& {
-			--header_padding_vertical: 15px;
+			--header_padding_vertical: 10px;
 			--header_padding_horizontal: 20px;
 		}
 	}
