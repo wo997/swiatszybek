@@ -254,6 +254,10 @@ domload(() => {
 		const carrier = user_cart.available_carriers.find((c) => c.carrier_id === carrier_id);
 
 		in_person_map_wrapper._set_content(carrier.google_maps_embed_code);
+		// const map_iframe = in_person_map_wrapper._child("iframe");
+		// if (map_iframe) {
+		// 	map_iframe.removeAttribute("loading");
+		// }
 	});
 	carrier_input._set_value(user_cart.carrier_id);
 
