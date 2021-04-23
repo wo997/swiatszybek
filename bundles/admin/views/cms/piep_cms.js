@@ -1627,10 +1627,8 @@ class PiepCMS {
 		// grabbed
 		const radius = 23; //35;
 
-		const piep_editor_rect = this.container.getBoundingClientRect();
-
-		let left = mouse.pos.x - this.grabbed_block_wrapper_rect.width * 0.5 - piep_editor_rect.left;
-		let top = mouse.pos.y - this.grabbed_block_wrapper_rect.height * 0.5 - piep_editor_rect.top;
+		let left = mouse.pos.x - this.grabbed_block_wrapper_rect.width * 0.5;
+		let top = mouse.pos.y - this.grabbed_block_wrapper_rect.height * 0.5;
 
 		this.grabbed_block_wrapper._set_absolute_pos(left, top);
 
@@ -1751,14 +1749,12 @@ class PiepCMS {
 					this.float_multi_insert.classList.remove("hidden");
 
 					const insert_blc_rect = insert_blc.getBoundingClientRect();
-					const piep_editor_rect = this.container.getBoundingClientRect();
 					const piep_editor_float_multi_insert_rect = this.float_multi_insert.getBoundingClientRect();
 
 					this.float_multi_insert._set_absolute_pos(
-						insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5 - piep_editor_rect.left,
+						insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5,
 						insert_blc_rect.top +
-							(insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 -
-							piep_editor_rect.top +
+							(insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 +
 							this.content_scroll.scrollTop
 					);
 					this.showing_float_multi_of_blc = insert_blc;
@@ -1797,10 +1793,7 @@ class PiepCMS {
 			if (pretty_focus_parent) {
 				const focus_parent_node_rect = pretty_focus_parent.getBoundingClientRect();
 
-				this.parent_float_focus._set_absolute_pos(
-					focus_parent_node_rect.left - 1 - piep_editor_rect.left,
-					focus_parent_node_rect.top - 1 - piep_editor_rect.top
-				);
+				this.parent_float_focus._set_absolute_pos(focus_parent_node_rect.left - 1, focus_parent_node_rect.top - 1);
 
 				this.parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
 				this.parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
@@ -1848,10 +1841,9 @@ class PiepCMS {
 
 				const add_block_btn_rect = this.add_block_btn.getBoundingClientRect();
 				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
-				const piep_editor_rect = this.container.getBoundingClientRect();
 
-				const left = add_block_btn_rect.left - add_block_menu_rect.width - piep_editor_rect.left;
-				const top = add_block_btn_rect.top - piep_editor_rect.top;
+				const left = add_block_btn_rect.left - add_block_menu_rect.width;
+				const top = add_block_btn_rect.top;
 
 				this.add_block_menu._set_absolute_pos(left, top);
 			}
@@ -1917,9 +1909,8 @@ class PiepCMS {
 
 		this.addBtnMove();
 
-		const piep_editor_rect = this.container.getBoundingClientRect();
-		const alternative_scroll_panel_left = piep_editor_rect.left;
-		const alternative_scroll_panel_top = piep_editor_rect.top - this.content_scroll.scrollTop;
+		const alternative_scroll_panel_left = 0;
+		const alternative_scroll_panel_top = 0 - this.content_scroll.scrollTop;
 
 		this.alternative_scroll_panel.style.transform = `translate(
             ${alternative_scroll_panel_left.toPrecision(5)}px,
@@ -1977,8 +1968,6 @@ class PiepCMS {
 
 		this.grabbed_block_wrapper_rect = this.grabbed_block_wrapper.getBoundingClientRect();
 
-		const piep_editor_rect = this.container.getBoundingClientRect();
-
 		this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
 		deepAssign(this.v_dom_overlay, this.v_dom);
 		this.recreateDom(this.v_dom_overlay);
@@ -2031,8 +2020,7 @@ class PiepCMS {
 					break;
 			}
 
-			left += -piep_editor_rect.left;
-			top += this.content_scroll.scrollTop - piep_editor_rect.top;
+			top += this.content_scroll.scrollTop;
 
 			return { left, top };
 		};
@@ -2304,11 +2292,10 @@ class PiepCMS {
 				master_insert_blc._popup_blcs = popup_blcs;
 
 				master_insert_blc._set_absolute_pos(
-					(blc_a_rect.left * weight_a) / weight + (blc_b_rect.left * weight_b) / weight + blc_a_rect.width * 0.5 - piep_editor_rect.left,
+					(blc_a_rect.left * weight_a) / weight + (blc_b_rect.left * weight_b) / weight + blc_a_rect.width * 0.5,
 					(blc_a_rect.top * weight_a) / weight +
 						(blc_b_rect.top * weight_b) / weight +
-						blc_a_rect.height * 0.5 -
-						piep_editor_rect.top +
+						blc_a_rect.height * 0.5 +
 						this.content_scroll.scrollTop
 				);
 				master_insert_blc._set_content(weight);
@@ -2428,8 +2415,6 @@ class PiepCMS {
 		const focus_textable = focus_node ? focus_node._parent(`.textable`) : undefined;
 
 		if (focus_textable) {
-			const piep_editor_rect = this.container.getBoundingClientRect();
-
 			let cursor_top, cursor_left, cursor_width, cursor_height;
 
 			if (focus_textable.innerText === "\n") {
@@ -2455,8 +2440,8 @@ class PiepCMS {
 				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
 			}
 
-			this.cursor.style.left = cursor_left - cursor_width * 0.5 - piep_editor_rect.left + "px";
-			this.cursor.style.top = cursor_top - cursor_height * 0.5 - piep_editor_rect.top + "px";
+			this.cursor.style.left = cursor_left - cursor_width * 0.5 + "px";
+			this.cursor.style.top = cursor_top - cursor_height * 0.5 + "px";
 			this.cursor.style.width = cursor_width + "px";
 			this.cursor.style.height = cursor_height + "px";
 
@@ -2659,9 +2644,8 @@ class PiepCMS {
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
-		const piep_editor_rect = this.container.getBoundingClientRect();
 
-		this.float_focus._set_absolute_pos(focus_node_rect.left - 1 - piep_editor_rect.left, focus_node_rect.top - 1 - piep_editor_rect.top);
+		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1);
 
 		this.float_focus.style.width = focus_node_rect.width + 2 + "px";
 		this.float_focus.style.height = focus_node_rect.height + 2 + "px";
@@ -2685,29 +2669,29 @@ class PiepCMS {
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
-		const piep_editor_rect = this.container.getBoundingClientRect();
 		const piep_editor_float_menu_rect = this.float_menu.getBoundingClientRect();
 
-		this.float_focus._set_absolute_pos(focus_node_rect.left - 1 - piep_editor_rect.left, focus_node_rect.top - 1 - piep_editor_rect.top);
+		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1);
 
 		let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
 		let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
 
-		const safe_off = 5;
+		const safe_off_x = 5;
+		const safe_off_y = 25;
 		left = clamp(
-			content_wrapper_rect.left + safe_off,
+			content_wrapper_rect.left + safe_off_x,
 			left,
-			content_wrapper_rect.left + content_wrapper_rect.width - piep_editor_float_menu_rect.width - safe_off
+			content_wrapper_rect.left + content_wrapper_rect.width - piep_editor_float_menu_rect.width - safe_off_x
 		);
 		// DUDE, the top should actually change by sum of heights
-		if (top < safe_off) {
+		if (top < content_wrapper_rect.top + safe_off_y) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 		}
-		//top = clamp(safe_off, top, piep_editor_rect.height - safe_off);
+		if (top > content_wrapper_rect.top + content_wrapper_rect.height - safe_off_y) {
+			top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
+		}
 
-		const off = 5;
-
-		this.float_menu._set_absolute_pos(left - piep_editor_rect.left, top - piep_editor_rect.top);
+		this.float_menu._set_absolute_pos(left, top);
 	}
 
 	/**
