@@ -65,8 +65,13 @@
 				background: #ddd;
 				opacity: 0.6;
 			}
-			&:not(:hover) {
-				border-color: #ddd;
+		}
+		&:not(.checked) {
+			&.disabled,
+			&.inactive {
+				&:not(:hover) {
+					border-color: #ddd;
+				}
 			}
 		}
 
@@ -74,10 +79,12 @@
 			pointer-events: none;
 		}
 
-		&.checked {
-			border-color: var(--selection_clr) !important;
-			box-shadow: 0 0 0 1px var(--selection_clr), inset 0 0 0 1px var(--selection_clr) !important;
+		&.checked:not(.empty) {
+			border-color: var(--selection_clr);
 		}
+	}
+	&:not(.pretty_blue) > .checked {
+		box-shadow: 0 0 0 1px var(--selection_clr), inset 0 0 0 1px var(--selection_clr);
 	}
 	&.spiky {
 		& > * {
@@ -120,14 +127,15 @@
 		& > * {
 			box-shadow: none !important;
 		}
-		& > *.checked {
-			background: var(--pretty_blue_background) !important;
+		& > *.checked:not(.empty) {
+			background: var(--pretty_blue_background);
 			color: var(--pretty_blue);
 			font-weight: var(--semi_bold);
 			--selection_clr: var(--pretty_blue_border);
 			z-index: 10;
 		}
-		& > *:not(.checked) {
+		& > *:not(.checked),
+		& > .empty {
 			& {
 				background: #fff;
 				color: #777;

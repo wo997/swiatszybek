@@ -413,7 +413,7 @@ class PiepCMS {
 			const color_picker = color_wrapper._child("color-picker");
 
 			let color_options_html = html`
-				<div class="checkbox_area">
+				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
 				</div>
@@ -1045,7 +1045,7 @@ class PiepCMS {
 				<div class="prop_fontWeight">
 					<div class="label">Grubość czcionki</div>
 					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.fontWeight">
-						<div class="checkbox_area">
+						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
 						</div>
@@ -1067,7 +1067,7 @@ class PiepCMS {
 				<div class="prop_textAlign">
 					<div class="label">Wyrównanie tekstu</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textAlign">
-						<div class="checkbox_area">
+						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
 						</div>
@@ -1093,7 +1093,7 @@ class PiepCMS {
 				<div class="prop_fontStyle">
 					<div class="label">Kursywa (pochylenie czcionki)</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.fontStyle">
-						<div class="checkbox_area">
+						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
 						</div>
@@ -1111,7 +1111,7 @@ class PiepCMS {
 				<div class="prop_textDecoration">
 					<div class="label">Zdobienie czcionki</div>
 					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textDecoration">
-						<div class="checkbox_area">
+						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
 						</div>
