@@ -2,7 +2,7 @@
 
 DB::createTable("carrier", [
     ["name" => "carrier_id", "type" => "INT", "index" => "primary", "increment" => true],
-    ["name" => "api_key", "type" => "VARCHAR(16)", "index" => "index"],
+    ["name" => "api_key", "type" => "VARCHAR(15)", "index" => "index"],
     ["name" => "img_url", "type" => "VARCHAR(255)", "index" => "index"],
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "delivery_type_id", "type" => "INT", "index" => "index"],
