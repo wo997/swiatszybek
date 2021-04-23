@@ -101,9 +101,11 @@ domload(() => {
 		carrier_input._set_content(carrier_html);
 		carrier_input.dataset.value = "";
 		const now_h = carrier_input.scrollHeight;
-		animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
+		if (Math.abs(was_h - now_h) > 10) {
+			animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
+		}
 
-		payment_time_input.classList.toggle("hidden", !user_cart.allow_cod);
+		expand(case_courier_above, delivery_type_id === 1 && user_cart.allow_cod);
 
 		registerForms();
 
@@ -159,7 +161,6 @@ domload(() => {
 	delivery_input.addEventListener("change", () => {
 		const delivery_type_id = delivery_input._get_value();
 		expand(case_courier, delivery_type_id === 1);
-		expand(case_courier_above, delivery_type_id === 1);
 
 		expand(case_parcel_locker, delivery_type_id === 2);
 

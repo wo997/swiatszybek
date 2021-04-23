@@ -10,7 +10,7 @@ header.main {
 		z-index: 600;
 		background: #fff;
 		border-bottom: 1px solid #ccc;
-		box-shadow: 0 2px 9px 0 #0003;
+		box-shadow: 0 0px 8px 0 #0002;
 		--header_padding_vertical: 5px;
 		--header_padding_horizontal: 15px;
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
@@ -51,7 +51,7 @@ header.main {
 		transition: 0.2s opacity;
 		background: #fff;
 		border-radius: 4px;
-		box-shadow: 0 2px 9px 0 #0003;
+		box-shadow: 0 0px 8px 0 #0002;
 		border: 1px solid #ccc;
 		cursor: default;
 	}

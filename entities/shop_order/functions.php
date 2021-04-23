@@ -86,7 +86,11 @@ function confirmOrder($shop_order_data)
     $shop_order->setProp("carrier", $cart_data["carrier_id"]);
 
     // it's set here so the user can store the selection but once he confirms the order it might change the state
-    $payment_time = $cart_data["delivery_type_id"] === 1 ? $cart_data["payment_time"] : "prepayment";
+    $payment_time = "prepayment";
+    if ($cart_data["delivery_type_id"] === 1 && $cart_data["allow_cod"]) {
+        $payment_time = $cart_data["payment_time"];
+    }
+
     $shop_order->setProp("payment_time", $payment_time);
 
     $shop_order->setProp("package_api_key", $user_cart->getDeliveryFitDimensions()["api_key"]);

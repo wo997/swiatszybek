@@ -127,7 +127,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                         <div>
                             <p-checkbox data-value="cod"></p-checkbox>
                             <span class="semi_bold">Za pobraniem</span>
-                            <span class="pln">+ <span class="cod_fee">3</span></span>
+                            <span class="pln">+ <span class="cod_fee"></span></span>
 
                         </div>
                     </div>

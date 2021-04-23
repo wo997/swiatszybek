@@ -109,7 +109,7 @@ class Cart
                 $qty = $cart_product["qty"];
 
                 for ($i = 0; $i < $qty; $i++) {
-                    $products_weight_g += $product_data["weight"];
+                    $products_weight_g += floatval($product_data["weight"]);
                     $products_dims[] = [
                         floatval($product_data["length"]),
                         floatval($product_data["width"]),
@@ -294,6 +294,14 @@ class Cart
 
         $total_price += $this->delivery_price;
 
+        $allow_cod = getSetting(["general", "deliveries", "allow_cod"]);
+        $cod_from_price = getSetting(["general", "deliveries", "cod_from_price"], 0);
+        if ($this->products_price < $cod_from_price) {
+            $allow_cod = false;
+        }
+
+        $cod_fee = $this->delivery_price ? getSetting(["general", "deliveries", "cod_fee"]) : 0;
+
         return [
             "products" => $products_data,
             "products_price" => roundPrice($this->products_price),
@@ -303,9 +311,9 @@ class Cart
             "delivery_type_id" => $this->getDeliveryTypeId(),
             "carrier_id" => $this->getCarrierId(),
             "available_carriers" => $this->available_carriers,
-            "allow_cod" => getSetting(["general", "deliveries", "allow_cod"]),
+            "allow_cod" => $allow_cod,
             "payment_time" => $this->getPaymentTime(),
-            "cod_fee" => getSetting(["general", "deliveries", "cod_fee"]),
+            "cod_fee" => $cod_fee,
         ];
     }
 
