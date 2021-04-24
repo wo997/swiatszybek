@@ -131,6 +131,9 @@ function MenuModalComp(comp, parent, data = undefined) {
 				const traverse = (menu_branch, level = 0, slug = "") => {
 					menu_branch.forEach((menu) => {
 						const cat_display = slug + (slug ? " ― " : "") + menu.name;
+						if (menu.menu_id === data.menu_id) {
+							return;
+						}
 						options += html`<option value="${menu.menu_id}">${cat_display}</option>`;
 						if (level < 1) {
 							traverse(menu.sub_menus, level + 1, cat_display);
