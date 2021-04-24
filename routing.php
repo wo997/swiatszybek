@@ -69,9 +69,9 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
         "sub" => [
-            ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
             ["url" => "/edycja-strony", "title" => '<i class="fas fa-heart"></i> Edycja Strony'],
+            ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
             //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],

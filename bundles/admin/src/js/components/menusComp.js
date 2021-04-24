@@ -45,6 +45,9 @@ function MenusComp(comp, parent, data = undefined) {
 				/** @type {SubMenuCompData} */
 				const sub_cat = {
 					name: copy_cat.name,
+					link_what: copy_cat.link_what,
+					link_what_id: copy_cat.link_what_id,
+					url: copy_cat.url,
 					menu_id: copy_cat.menu_id,
 					menus: [],
 					expanded: true,
@@ -75,6 +78,9 @@ function MenusComp(comp, parent, data = undefined) {
 				data.push({
 					name: cat.name,
 					pos,
+					link_what: cat.link_what,
+					link_what_id: cat.link_what_id,
+					url: cat.url,
 					menu_id: cat.menu_id,
 					sub_menus,
 				});
@@ -203,6 +209,9 @@ function MenusComp(comp, parent, data = undefined) {
 					save_callback: (cat) => {
 						comp._data.menus.unshift({
 							name: cat.name,
+							link_what: cat.link_what,
+							link_what_id: cat.link_what_id,
+							url: cat.url,
 							menu_id: cat.menu_id,
 							menus: [],
 							expanded: true,

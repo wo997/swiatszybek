@@ -6,8 +6,8 @@ EntityManager::register("menu", [
         "parent_menu_id" => ["type" => "number"],
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
-        "url" => ["type" => "number"],
         "link_what" => ["type" => "string"],
         "link_what_id" => ["type" => "number"],
+        "url" => ["type" => "number"],
     ],
 ]);

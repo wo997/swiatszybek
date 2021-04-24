@@ -86,6 +86,7 @@ function ProductSubCategoryComp(comp, parent, data = undefined) {
 					source: edit_btn,
 					save_callback: (cat) => {
 						data.name = cat.name;
+						comp._render();
 
 						const category_data = product_categories.find((c) => c.product_category_id === data.product_category_id);
 						if (category_data.parent_product_category_id !== cat.parent_product_category_id) {

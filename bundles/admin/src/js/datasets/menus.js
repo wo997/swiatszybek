@@ -3,19 +3,25 @@
 /**
  * @typedef {{
  * menu_id: number
- * parent_menu_id: number
  * name: string
- * pos: number
- * }} MenuData
+ * url: string
+ * link_what: string
+ * link_what_id: number
+ * }} BaseMenuData
  */
 
 /**
  * @typedef {{
- * menu_id: number
- * name: string
+ * parent_menu_id: number
+ * pos: number
+ * } & BaseMenuData} MenuData
+ */
+
+/**
+ * @typedef {{
  * pos: number
  * sub_menus: MenusBranch[]
- * }} MenusBranch
+ * } & BaseMenuData} MenusBranch
  */
 
 /** @type {MenuData[]} */
@@ -38,6 +44,9 @@ function loadedMenu() {
 				/** @type {MenusBranch} */
 				const sub_cat = {
 					name: cat.name,
+					link_what: cat.link_what,
+					link_what_id: cat.link_what_id,
+					url: cat.url,
 					menu_id: cat.menu_id,
 					pos: cat.pos,
 					sub_menus: [],

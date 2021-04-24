@@ -2,11 +2,9 @@
 
 /**
  * @typedef {{
- * menu_id: number
- * name: string
  * menus: SubMenuCompData[]
  * expanded: boolean
- * } & ListCompRowData} SubMenuCompData
+ * } & BaseMenuData & ListCompRowData} SubMenuCompData
  *
  * @typedef {{
  * _data: SubMenuCompData
@@ -30,6 +28,9 @@ function SubMenuComp(comp, parent, data = undefined) {
 		data = {
 			menu_id: -1,
 			name: "",
+			link_what: "",
+			link_what_id: undefined,
+			url: undefined,
 			menus: [],
 			expanded: true,
 		};
@@ -50,13 +51,13 @@ function SubMenuComp(comp, parent, data = undefined) {
 			<div class="menu_wrapper">
 				<span class="menu_name" html="{${data.name}}"></span>
 				<p-trait data-trait="expand_multi_list_btn"></p-trait>
-				<button class="btn subtle small multi_list_add_btn" data-tooltip="Dodaj kategorię podrzędną" data-node="{${comp._nodes.add_btn}}">
+				<button class="btn subtle small multi_list_add_btn" data-tooltip="Dodaj menu podrzędne" data-node="{${comp._nodes.add_btn}}">
 					<i class="fas fa-plus"></i>
 				</button>
-				<button class="btn subtle small" data-tooltip="Edytuj kategorię" data-node="{${comp._nodes.edit_btn}}">
+				<button class="btn subtle small" data-tooltip="Edytuj menu" data-node="{${comp._nodes.edit_btn}}">
 					<i class="fas fa-edit"></i>
 				</button>
-				<p-trait data-trait="multi_list_grab_btn" data-tooltip="Zmień położenie kategorię" data-invisible="1"></p-trait>
+				<p-trait data-trait="multi_list_grab_btn" data-tooltip="Zmień położenie menu" data-invisible="1"></p-trait>
 			</div>
 			<div class="expand_y" data-node="{${comp._nodes.expand}}">
 				<list-comp data-bind="{${data.menus}}" class="clean">
@@ -79,12 +80,19 @@ function SubMenuComp(comp, parent, data = undefined) {
 					name: data.name,
 					parent_menu_id: menus.find((c) => c.menu_id === data.menu_id).parent_menu_id,
 					menu_id: data.menu_id,
+					link_what: data.link_what,
+					link_what_id: data.link_what_id,
+					url: data.url,
 				};
 				getMenuModal()._show({
 					cat,
 					source: edit_btn,
 					save_callback: (cat) => {
 						data.name = cat.name;
+						data.link_what = cat.link_what;
+						data.link_what_id = cat.link_what_id;
+						data.url = cat.url;
+						comp._render();
 
 						const menu_data = menus.find((c) => c.menu_id === data.menu_id);
 						if (menu_data.parent_menu_id !== cat.parent_menu_id) {
@@ -126,10 +134,14 @@ function SubMenuComp(comp, parent, data = undefined) {
 			add_btn.addEventListener("click", () => {
 				getMenuModal()._show({
 					source: add_btn,
+					is_new: true,
 					save_callback: (cat) => {
 						comp._data.menus.unshift({
 							name: cat.name,
 							menu_id: cat.menu_id,
+							link_what: cat.link_what,
+							link_what_id: cat.link_what_id,
+							url: cat.url,
 							menus: [],
 							expanded: true,
 						});

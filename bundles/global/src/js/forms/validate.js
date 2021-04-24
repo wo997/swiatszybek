@@ -126,7 +126,7 @@ function getInputValidationErrors(input) {
 	const extras = validator.split("|");
 
 	const optional = extras.includes("optional");
-	const empty = value.trim() === "";
+	const empty = value ? value.trim() === "" : true;
 
 	if (empty) {
 		if (!optional) {

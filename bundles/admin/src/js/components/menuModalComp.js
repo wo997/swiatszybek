@@ -4,16 +4,15 @@
  * @typedef {{
  * cat?: MenuModalCompData,
  * source?: PiepNode,
+ * is_new?: boolean
  * save_callback?(cat: MenuModalCompData),
  * delete_callback?()}} ShowMenuModalOptions
  */
 
 /**
  * @typedef {{
- * menu_id: number
- * name: string
  * parent_menu_id: number
- * }} MenuModalCompData
+ * } & BaseMenuData} MenuModalCompData
  *
  * @typedef {{
  * _data: MenuModalCompData
@@ -21,7 +20,6 @@
  * _nodes: {
  *      save_btn: PiepNode
  *      delete_btn: PiepNode
- *      name: PiepNode
  *      parent_menu: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
@@ -38,21 +36,40 @@
  */
 function MenuModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { name: "", menu_id: -1, parent_menu_id: -1 };
+		data = {
+			name: "",
+			url: undefined,
+			link_what: "",
+			link_what_id: undefined,
+			menu_id: -1,
+			parent_menu_id: -1,
+		};
 	}
 
 	comp._show = (options = {}) => {
 		comp._options = options;
 
 		if (!options.cat) {
-			options.cat = { menu_id: -1, name: "", parent_menu_id: -1 };
+			options.cat = {
+				menu_id: -1,
+				link_what: "",
+				link_what_id: undefined,
+				url: undefined,
+				name: "",
+				parent_menu_id: -1,
+			};
 		}
 
 		comp._data.name = options.cat.name;
 		comp._data.menu_id = options.cat.menu_id;
 		comp._data.parent_menu_id = options.cat.parent_menu_id;
+		comp._data.link_what = options.cat.link_what;
+		comp._data.link_what_id = options.cat.link_what_id;
+		comp._data.url = options.cat.url;
 
 		comp._render();
+
+		comp._child(".parent_menu_wrapper").classList.toggle("hidden", !!options.is_new);
 
 		showModal("Menu", {
 			source: options.source,
@@ -60,7 +77,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._save = () => {
-		const errors = validateInputs([comp._nodes.name]);
+		const errors = validateInputs([comp._child(".bind_name"), comp._child(".bind_link_what")]);
 		if (errors.length > 0) {
 			return;
 		}
@@ -83,7 +100,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				let options = html`<option value="-1">BRAK (KATEGORIA GŁÓWNA)</option>`;
+				let options = html`<option value="-1">BRAK (MENU GŁÓWNE)</option>`;
 
 				/**
 				 *
@@ -109,19 +126,37 @@ function MenuModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Kategoria produktu</span>
+				<span class="title medium">Menu</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Nazwa menu</div>
-				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="" />
+				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
-				<div class="label">Kategoria nadrzędna</div>
-				<select class="field" data-bind="{${data.parent_menu_id}}" data-node="{${comp._nodes.parent_menu}}"></select>
+				<div class="label">Typ linku</div>
+				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.link_what}}" data-validate="">
+					<div class="checkbox_area">
+						<p-checkbox data-value="product_category"></p-checkbox>
+						<span>Kategoria produktów</span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="product"></p-checkbox>
+						<span>Produkt</span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="url"></p-checkbox>
+						<span>Dowolny link</span>
+					</div>
+				</div>
+
+				<div class="parent_menu_wrapper">
+					<div class="label">Kategoria nadrzędna</div>
+					<select class="field" data-bind="{${data.parent_menu_id}}" data-node="{${comp._nodes.parent_menu}}"></select>
+				</div>
 
 				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń kategorię <i class="fas fa-trash"></i></button>
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń menu <i class="fas fa-trash"></i></button>
 				</div>
 			</div>
 		`,
@@ -141,7 +176,7 @@ function getMenuModal() {
 	if (!ex) {
 		registerModalContent(html`
 			<div id="Menu" data-expand data-dismissable>
-				<div class="modal_body" style="max-width: calc(20% + 250px);max-height: calc(20% + 100px);">
+				<div class="modal_body" style="max-width: calc(10% + 500px);max-height: calc(20% + 500px);">
 					<menu-modal-comp class="flex_stretch"></menu-modal-comp>
 				</div>
 			</div>
