@@ -363,7 +363,7 @@ class PiepCMS {
 				font_size_options_html += html`
 					<div class="checkbox_area">
 						<p-checkbox data-value="var(--${font_size.name})"></p-checkbox>
-						<div style="font-size:var(--${font_size.name});">A</div>
+						<div style="font-size:var(--${font_size.name});line-height: 1;">A</div>
 					</div>
 				`;
 			});
@@ -373,7 +373,7 @@ class PiepCMS {
 			registerForms();
 
 			const value_input = font_size_wrapper._child(".value_input");
-			const unit_input = font_size_wrapper._child(".unit_input");
+			const unit_input = font_size_wrapper._child(".piep_editor_unit_input");
 
 			if (!middle_input.classList.contains("wrrgstrd")) {
 				middle_input.classList.add("wrrgstrd");
@@ -391,25 +391,25 @@ class PiepCMS {
 							uni = unit;
 						}
 					}
-					value_input._set_value(on_the_list ? "" : val, { quiet: true });
+
+					const set_val = on_the_list ? "" : val;
+					value_input._set_value(set_val, { quiet: true });
 					unit_input._set_value(on_the_list ? "px" : uni, { quiet: true });
 
-					if (on_the_list) {
-						radio_group._set_value(get_value, { quiet: true });
-					}
+					radio_group._set_value(on_the_list ? get_value : "", { quiet: true });
+				});
+
+				const change = () => {
+					middle_input._set_value(value_input._get_value() + unit_input._get_value());
+				};
+				unit_input.addEventListener("change", change);
+				value_input.addEventListener("change", change);
+				value_input.addEventListener("input", change);
+
+				radio_group.addEventListener("change", () => {
+					middle_input._set_value(radio_group._get_value());
 				});
 			}
-
-			const change = () => {
-				middle_input._set_value(value_input._get_value() + unit_input._get_value());
-			};
-			unit_input.addEventListener("change", change);
-			value_input.addEventListener("change", change);
-			value_input.addEventListener("input", change);
-
-			radio_group.addEventListener("change", () => {
-				middle_input._set_value(radio_group._get_value());
-			});
 		};
 
 		/**
@@ -447,7 +447,7 @@ class PiepCMS {
 						<div class="label first">Rozmiar:</div>
 						<div class="glue_children">
 							<input class="field small value_input" />
-							<select class="unit_input field inline small">
+							<select class="piep_editor_unit_input field inline small">
 								<option value="px">px</option>
 								<option value="em">em</option>
 								<option value="rem">rem</option>
@@ -457,7 +457,7 @@ class PiepCMS {
 					</div>`
 				);
 				const value_input = any_picker.wrapper._child(".value_input");
-				const unit_input = any_picker.wrapper._child(".unit_input");
+				const unit_input = any_picker.wrapper._child(".piep_editor_unit_input");
 				/** @type {string} */
 				const get_value = different_size.classList.contains("selected") ? font_size_dropdown._get_value() : "";
 				/** @type {any} */
@@ -1139,7 +1139,7 @@ class PiepCMS {
 					<div class="label normal">Inny rozmiar</div>
 					<div class="glue_children">
 						<input class="field small value_input" />
-						<select class="unit_input field inline small">
+						<select class="piep_editor_unit_input field inline small">
 							<option value="px">px</option>
 							<option value="em">em</option>
 							<option value="rem">rem</option>
@@ -2647,7 +2647,7 @@ class PiepCMS {
 		const v_node = focus_node ? this.findNodeInVDomById(this.v_dom, +focus_node.dataset.vid) : undefined;
 
 		const has_selection = !!v_node;
-		if (has_selection) {
+		if (has_selection && this.last_set_filter_menu_to_vid !== this.focus_node_vid) {
 			this.editable_props
 				.map((prop, index) => {
 					const blc_prop_wrapper = this.blc_menu._child(prop.selector);
@@ -2715,10 +2715,12 @@ class PiepCMS {
 					};
 				})
 				.sort((a, b) => Math.sign(b.priority - a.priority))
-				.forEach((x, index) => {
+				.forEach((x) => {
 					this.float_menu.append(x.blc_prop);
 				});
 			this.float_menu.append(this.float_menu._child(".hide_menu_btn"));
+
+			this.last_set_filter_menu_to_vid = this.focus_node_vid;
 		}
 
 		this.blc_menu_scroll_panel.classList.toggle("hidden", !has_selection);
