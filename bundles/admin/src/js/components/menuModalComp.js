@@ -87,16 +87,15 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 				/**
 				 *
-				 * @param {MenusBranch[]} category_branch
+				 * @param {MenusBranch[]} menu_branch
 				 * @param {number} level
 				 */
-				const traverse = (category_branch, level = 0, slug = "") => {
-					category_branch.forEach((category) => {
-						const cat_display = slug + (slug ? " ― " : "") + category.name;
-						options += html`<option value="${category.menu_id}">${cat_display}</option>`;
-						// HARDCODED 2 LEVELS
+				const traverse = (menu_branch, level = 0, slug = "") => {
+					menu_branch.forEach((menu) => {
+						const cat_display = slug + (slug ? " ― " : "") + menu.name;
+						options += html`<option value="${menu.menu_id}">${cat_display}</option>`;
 						if (level < 1) {
-							traverse(category.sub_menus, level + 1, cat_display);
+							traverse(menu.sub_menus, level + 1, cat_display);
 						}
 					});
 				};

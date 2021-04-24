@@ -94,7 +94,6 @@ function ProductCategoryModalComp(comp, parent, data = undefined) {
 					category_branch.forEach((category) => {
 						const cat_display = slug + (slug ? " ― " : "") + category.name;
 						options += html`<option value="${category.product_category_id}">${cat_display}</option>`;
-						// HARDCODED 2 LEVELS
 						if (level < 1) {
 							traverse(category.sub_categories, level + 1, cat_display);
 						}
