@@ -58,12 +58,16 @@
 		}
 	}
 
-	[data-blc_prop_wrapper]:not(.first) {
-		border-top: 1px solid #ccc;
-		margin-top: var(--form_spacing);
-	}
-	[data-blc_prop_wrapper].first {
-		margin-top: calc(-1 * var(--form_spacing));
+	.blc_menu_scroll_panel {
+		& > * {
+			&:not(.first) {
+				border-top: 1px solid #ccc;
+				margin-top: var(--form_spacing);
+			}
+			&.first {
+				margin-top: calc(-1 * var(--form_spacing));
+			}
+		}
 	}
 }
 
