@@ -32,7 +32,6 @@ function registerImageInputs(parent) {
 
 		img.addEventListener("change", () => {
 			const value = img._get_value();
-			console.log(value);
 			const selected = !!value && value != "/src/img/empty_img_147x94.svg";
 			if (!input._setting_value) {
 				input._dispatch_change();

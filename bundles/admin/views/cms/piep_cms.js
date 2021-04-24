@@ -344,6 +344,76 @@ class PiepCMS {
 	initEditingFontSize() {
 		/**
 		 *
+		 * @param {PiepNode} font_size_wrapper
+		 */
+		const updateFontSizeWrapper = (font_size_wrapper) => {
+			registerForms(); // let the options_wrapper appear
+
+			const middle_input = font_size_wrapper._child("input.hidden");
+
+			const radio_group = font_size_wrapper._child(".radio_group");
+			let font_size_options_html = html`
+				<div class="checkbox_area empty">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+			`;
+
+			font_sizes.forEach((font_size) => {
+				font_size_options_html += html`
+					<div class="checkbox_area">
+						<p-checkbox data-value="var(--${font_size.name})"></p-checkbox>
+						<div style="font-size:var(--${font_size.name});">A</div>
+					</div>
+				`;
+			});
+
+			radio_group._set_content(font_size_options_html);
+
+			registerForms();
+
+			const value_input = font_size_wrapper._child(".value_input");
+			const unit_input = font_size_wrapper._child(".unit_input");
+
+			if (!middle_input.classList.contains("wrrgstrd")) {
+				middle_input.classList.add("wrrgstrd");
+				middle_input.addEventListener("value_set", () => {
+					/** @type {string} */
+					const get_value = middle_input._get_value();
+					const on_the_list = !!font_sizes.find((f) => `var(--${f.name})` === get_value);
+
+					/** @type {any} */
+					let val = get_value;
+					let uni = "";
+					for (const unit of ["px", "em", "rem"]) {
+						if (get_value.endsWith(unit)) {
+							val = numberFromStr(val);
+							uni = unit;
+						}
+					}
+					value_input._set_value(on_the_list ? "" : val, { quiet: true });
+					unit_input._set_value(on_the_list ? "px" : uni, { quiet: true });
+
+					if (on_the_list) {
+						radio_group._set_value(get_value, { quiet: true });
+					}
+				});
+			}
+
+			const change = () => {
+				middle_input._set_value(value_input._get_value() + unit_input._get_value());
+			};
+			unit_input.addEventListener("change", change);
+			value_input.addEventListener("change", change);
+			value_input.addEventListener("input", change);
+
+			radio_group.addEventListener("change", () => {
+				middle_input._set_value(radio_group._get_value());
+			});
+		};
+
+		/**
+		 *
 		 * @param {PiepNode} font_size_dropdown
 		 */
 		const updateFontSizeDropdown = (font_size_dropdown) => {
@@ -366,7 +436,6 @@ class PiepCMS {
 				</p-option>
 				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj listą rozmiarów"> <i class="fas fa-cog"></i> </p-option>`;
 
-			// rewrites the first element
 			options_wrapper._set_content(font_size_options_html);
 
 			registerForms();
@@ -416,6 +485,7 @@ class PiepCMS {
 
 		const themeSettingsChanged = () => {
 			updateFontSizeDropdown(this.float_menu._child(`[data-blc_prop="style.fontSize"]`));
+			updateFontSizeWrapper(this.blc_menu._child(`.prop_fontSize`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -429,7 +499,7 @@ class PiepCMS {
 		const updateColorWrapper = (color_wrapper) => {
 			registerForms();
 
-			const input = color_wrapper._child("input");
+			const middle_input = color_wrapper._child("input");
 			const radio_group = color_wrapper._child(".radio_group");
 			const color_picker = color_wrapper._child("color-picker");
 
@@ -448,16 +518,15 @@ class PiepCMS {
 				`;
 			});
 
-			// rewrites the first element
 			radio_group._set_content(color_options_html);
 
 			registerForms();
 
-			if (!input.classList.contains("wrrgstrd")) {
-				input.classList.add("wrrgstrd");
-				input.addEventListener("value_set", () => {
+			if (!middle_input.classList.contains("wrrgstrd")) {
+				middle_input.classList.add("wrrgstrd");
+				middle_input.addEventListener("value_set", () => {
 					/** @type {string} */
-					const color = input._get_value();
+					const color = middle_input._get_value();
 					let radio_value, picker_value;
 					if (color.match(/#\w{3,}/)) {
 						radio_value = false;
@@ -472,10 +541,10 @@ class PiepCMS {
 			}
 
 			radio_group.addEventListener("change", () => {
-				input._set_value(radio_group._get_value());
+				middle_input._set_value(radio_group._get_value());
 			});
 			color_picker.addEventListener("change", () => {
-				input._set_value(color_picker._get_value());
+				middle_input._set_value(color_picker._get_value());
 			});
 		};
 
@@ -504,7 +573,6 @@ class PiepCMS {
 				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			`;
 
-			// rewrites the first element
 			options_wrapper._set_content(color_options_html);
 
 			registerForms();
@@ -1060,7 +1128,24 @@ class PiepCMS {
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
 				<div class="prop_fontSize">
 					<div class="label">Rozmiar czcionki</div>
-					<input class="field" data-blc_prop="style.fontSize" />
+					<input class="field hidden" data-blc_prop="style.fontSize" />
+
+					<div class="label normal">
+						<span class="case_palette">Rozmiar z listy</span>
+						<span class="edit_theme_btn normal link">Zarządzaj</span>
+					</div>
+					<div class="pretty_radio flex columns_6 global_root spiky"></div>
+
+					<div class="label normal">Inny rozmiar</div>
+					<div class="glue_children">
+						<input class="field small value_input" />
+						<select class="unit_input field inline small">
+							<option value="px">px</option>
+							<option value="em">em</option>
+							<option value="rem">rem</option>
+							<option value=""></option>
+						</select>
+					</div>
 				</div>
 
 				<div class="prop_fontWeight">
