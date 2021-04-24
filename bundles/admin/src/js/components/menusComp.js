@@ -206,6 +206,7 @@ function MenusComp(comp, parent, data = undefined) {
 			add_btn.addEventListener("click", () => {
 				menu_modal_comp._show({
 					source: add_btn,
+					is_new: true,
 					save_callback: (cat) => {
 						comp._data.menus.unshift({
 							name: cat.name,

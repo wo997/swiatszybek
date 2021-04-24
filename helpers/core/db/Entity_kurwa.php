@@ -319,8 +319,8 @@ class Entity
         }
 
         if (endsWith($prop_name, "_id")) {
-            foreach (array_keys(EntityManager::getEntityData($this->getName())["props"]) as $def_prop_nm) {
-                if ($def_prop_nm . "_id" === $prop_name) {
+            foreach (EntityManager::getEntityData($this->getName())["props"] as $def_prop_nm => $def_prop_data) {
+                if ($def_prop_nm . "_id" === $prop_name && EntityManager::getEntityData(str_replace("[]", "", $def_prop_data["type"]))) {
                     $prop_name = $def_prop_nm;
                     break;
                 }

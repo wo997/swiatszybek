@@ -131,6 +131,7 @@ function ProductSubCategoryComp(comp, parent, data = undefined) {
 			add_btn.addEventListener("click", () => {
 				getProductCategoryModal()._show({
 					source: add_btn,
+					is_new: true,
 					save_callback: (cat) => {
 						comp._data.categories.unshift({
 							name: cat.name,

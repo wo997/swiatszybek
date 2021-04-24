@@ -10,15 +10,15 @@ try {
         foreach ($arr as $item) {
             $menu_data = filterArrayKeys($item, ["name", "link_what", "link_what_id", "url", "menu_id", "pos", "menu_id"]);
             if ($menu_data["link_what"] === "url") {
-                unset($menu_data["link_what_id"]);
+                $menu_data["link_what_id"] = null;
             } else {
-                unset($menu_data["url"]);
+                $menu_data["url"] = null;
             }
             $menu_data["parent_menu_id"] = $parent_id;
             $menu = EntityManager::getEntity("menu", $menu_data);
-            $category_id = $menu->getId();
-            $ids_we_have[] = $category_id;
-            $ids_we_have = array_merge($ids_we_have, $traverse($item["sub_menus"], $category_id));
+            $menu_id = $menu->getId();
+            $ids_we_have[] = $menu_id;
+            $ids_we_have = array_merge($ids_we_have, $traverse($item["sub_menus"], $menu_id));
         }
         return $ids_we_have;
     };

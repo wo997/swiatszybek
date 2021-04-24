@@ -12,6 +12,8 @@
 /**
  * @typedef {{
  * parent_menu_id: number
+ * product_category_id?: number,
+ * product_id?: number
  * } & BaseMenuData} MenuModalCompData
  *
  * @typedef {{
@@ -21,6 +23,9 @@
  *      save_btn: PiepNode
  *      delete_btn: PiepNode
  *      parent_menu: PiepNode
+ *      case_product_category: PiepNode
+ *      case_product: PiepNode
+ *      case_url: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
  * _save()
@@ -43,10 +48,14 @@ function MenuModalComp(comp, parent, data = undefined) {
 			link_what_id: undefined,
 			menu_id: -1,
 			parent_menu_id: -1,
+			product_category_id: -1,
+			product_id: -1,
 		};
 	}
 
 	comp._show = (options = {}) => {
+		const data = comp._data;
+
 		comp._options = options;
 
 		if (!options.cat) {
@@ -60,12 +69,15 @@ function MenuModalComp(comp, parent, data = undefined) {
 			};
 		}
 
-		comp._data.name = options.cat.name;
-		comp._data.menu_id = options.cat.menu_id;
-		comp._data.parent_menu_id = options.cat.parent_menu_id;
-		comp._data.link_what = options.cat.link_what;
-		comp._data.link_what_id = options.cat.link_what_id;
-		comp._data.url = options.cat.url;
+		data.name = options.cat.name;
+		data.menu_id = options.cat.menu_id;
+		data.parent_menu_id = options.cat.parent_menu_id;
+		data.link_what = options.cat.link_what;
+		data.link_what_id = options.cat.link_what_id;
+		data.url = options.cat.url;
+
+		data.product_category_id = data.link_what === "product_category" ? data.link_what_id : null;
+		data.product_id = data.link_what === "product" ? data.link_what_id : null;
 
 		comp._render();
 
@@ -77,13 +89,14 @@ function MenuModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._save = () => {
-		const errors = validateInputs([comp._child(".bind_name"), comp._child(".bind_link_what")]);
+		const data = comp._data;
+		const errors = validateInputs(comp._children("[data-validate]").filter((e) => !e._parent(".hidden")));
 		if (errors.length > 0) {
 			return;
 		}
 
 		if (comp._options.save_callback) {
-			comp._options.save_callback(comp._data);
+			comp._options.save_callback(data);
 		}
 
 		hideParentModal(comp);
@@ -97,6 +110,14 @@ function MenuModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		if (data.link_what === "product_category") {
+			data.link_what_id = data.product_category_id;
+		} else if (data.link_what === "product") {
+			data.link_what_id = data.product_id;
+		} else {
+			data.link_what_id = null;
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -119,6 +140,10 @@ function MenuModalComp(comp, parent, data = undefined) {
 				traverse(menu_tree);
 				comp._nodes.parent_menu._set_content(options);
 				comp._nodes.parent_menu._set_value(data.parent_menu_id, { quiet: true });
+
+				expand(comp._nodes.case_product_category, data.link_what === "product_category");
+				expand(comp._nodes.case_product, data.link_what === "product");
+				expand(comp._nodes.case_url, data.link_what === "url");
 			},
 		});
 	};
@@ -148,6 +173,19 @@ function MenuModalComp(comp, parent, data = undefined) {
 						<p-checkbox data-value="url"></p-checkbox>
 						<span>Dowolny link</span>
 					</div>
+				</div>
+
+				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
+					<div class="label">Kategoria Produkt</div>
+					<input class="field number" data-bind="{${data.product_category_id}}" data-validate="" />
+				</div>
+				<div class="expand_y" data-node="{${comp._nodes.case_product}}">
+					<div class="label">Produkt</div>
+					<input class="field number" data-bind="{${data.product_id}}" data-validate="" />
+				</div>
+				<div class="expand_y" data-node="{${comp._nodes.case_url}}">
+					<div class="label">Link</div>
+					<input class="field trim" data-bind="{${data.url}}" data-validate="" />
 				</div>
 
 				<div class="parent_menu_wrapper">
