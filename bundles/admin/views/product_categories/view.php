@@ -40,6 +40,6 @@
     </p>
 </div>
 
-<product-categories-comp></product-categories-comp>
+<product-categories-comp class="main"></product-categories-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>

@@ -2,12 +2,12 @@
 
 /**
  * @typedef {{
- * categories: ProductSubCategoryCompData[]
- * }} ProductCategoriesCompData
+ * menus: SubMenuCompData[]
+ * }} MenusCompData
  *
  * @typedef {{
- * _data: ProductCategoriesCompData
- * _set_data(data?: ProductCategoriesCompData, options?: SetCompDataOptions)
+ * _data: MenusCompData
+ * _set_data(data?: MenusCompData, options?: SetCompDataOptions)
  * _nodes: {
  *      add_btn: PiepNode
  *      save_btn: PiepNode
@@ -16,45 +16,45 @@
  * } & CompWithHistoryNodes
  * _recreate_tree()
  * _save()
- * } & BaseComp} ProductCategoriesComp
+ * } & BaseComp} MenusComp
  */
 
 /**
- * @param {ProductCategoriesComp} comp
+ * @param {MenusComp} comp
  * @param {*} parent
- * @param {ProductCategoriesCompData} data
+ * @param {MenusCompData} data
  */
-function ProductCategoriesComp(comp, parent, data = undefined) {
+function MenusComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			categories: [],
+			menus: [],
 		};
 	}
 
 	comp._recreate_tree = () => {
-		comp._data.categories = [];
+		comp._data.menus = [];
 
 		/**
 		 *
-		 * @param {ProductSubCategoryCompData} branch
-		 * @param {ProductCategoryBranch[]} sub_categories
+		 * @param {SubMenuCompData} branch
+		 * @param {MenusBranch[]} sub_categories
 		 */
 		const connectWithParent = (branch, sub_categories) => {
-			const list = branch ? branch.categories : comp._data.categories;
+			const list = branch ? branch.menus : comp._data.menus;
 			for (const copy_cat of sub_categories) {
-				/** @type {ProductSubCategoryCompData} */
+				/** @type {SubMenuCompData} */
 				const sub_cat = {
 					name: copy_cat.name,
-					product_category_id: copy_cat.product_category_id,
-					categories: [],
+					menu_id: copy_cat.menu_id,
+					menus: [],
 					expanded: true,
 				};
 				list.push(sub_cat);
-				connectWithParent(sub_cat, copy_cat.sub_categories);
+				connectWithParent(sub_cat, copy_cat.sub_menus);
 			}
 		};
 
-		connectWithParent(undefined, product_categories_tree);
+		connectWithParent(undefined, menu_tree);
 
 		comp._render({ freeze: true });
 	};
@@ -62,42 +62,43 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 	comp._save = () => {
 		/**
 		 *
-		 * @param {ProductSubCategoryCompData[]} categories
-		 * @return {ProductCategoryBranch[]}
+		 * @param {SubMenuCompData[]} menus
+		 * @return {MenusBranch[]}
 		 */
-		const traverse = (categories) => {
+		const traverse = (menus) => {
 			let data = [];
 			let pos = 0;
 
-			for (const cat of categories) {
+			for (const cat of menus) {
 				pos++;
-				const sub_categories = traverse(cat.categories);
+				const sub_menus = traverse(cat.menus);
 				data.push({
 					name: cat.name,
 					pos,
-					product_category_id: cat.product_category_id,
-					sub_categories,
-					__product_count: 0,
+					menu_id: cat.menu_id,
+					sub_menus,
 				});
 			}
 
 			return data;
 		};
 
-		const data = traverse(comp._data.categories);
+		const data = traverse(comp._data.menus);
 
 		xhr({
-			url: STATIC_URLS["ADMIN"] + "/product/category/save_all",
+			url: STATIC_URLS["ADMIN"] + "/menu/save_all",
 			params: {
-				product_categories: data,
+				menus: data,
 			},
 			success: (res) => {
-				comp.dispatchEvent(new CustomEvent("saved_product_categories"));
-				showNotification("Zapisano kategorie produktów", {
+				comp.dispatchEvent(new CustomEvent("saved_menu"));
+				showNotification("Zapisano menu", {
 					one_line: true,
 					type: "success",
 				});
-				setTimeout(refreshProductCategories, 200);
+				setTimeout(refreshMenu, 200);
+
+				buildResponsiveHeader();
 			},
 		});
 	};
@@ -110,21 +111,21 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 					const multi_master = comp._child(".multi_master");
 
 					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
-					comp._children("product-sub-category-comp").forEach((/** @type {ProductSubCategoryComp} */ com) => {
+					comp._children("sub-menu-comp").forEach((/** @type {SubMenuComp} */ com) => {
 						if (!com._data) {
 							return;
 						}
 						const list_row = com._parent(".list_row");
 						const pr = list_row._prev();
 						const ne = list_row._next();
-						const round = com._data.categories.length > 0;
-						const category_wrapper = com._child(".category_wrapper");
-						category_wrapper.classList.toggle("round_bottom", !ne || round);
+						const round = com._data.menus.length > 0;
+						const menu_wrapper = com._child(".menu_wrapper");
+						menu_wrapper.classList.toggle("round_bottom", !ne || round);
 						if (!pr) {
-							category_wrapper.classList.add("round_top");
+							menu_wrapper.classList.add("round_top");
 						}
 						if (ne && round) {
-							ne._child(".category_wrapper").classList.add("round_top");
+							ne._child(".menu_wrapper").classList.add("round_top");
 						}
 
 						// expand_btn
@@ -138,7 +139,7 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 						}
 						const max_expand = 1;
 
-						const active = level <= max_expand && com._data.categories.length > 0;
+						const active = level <= max_expand && com._data.menus.length > 0;
 						expand_multi_list_btn.classList.toggle("active", active);
 
 						// add_btn
@@ -162,7 +163,7 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
 			<button class="btn primary" data-node="{${comp._nodes.add_btn}}">
-				Dodaj kategorię główną
+				Dodaj menu główne
 				<i class="fas fa-plus"></i>
 			</button>
 
@@ -178,13 +179,8 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 			<div style="height:20px"></div>
 
 			<div style="position: relative;user-select: none;">
-				<list-comp
-					data-bind="{${data.categories}}"
-					class="clean multi_master"
-					data-max_level="3"
-					data-multi_row_selector=".category_wrapper"
-				>
-					<product-sub-category-comp></product-sub-category-comp>
+				<list-comp data-bind="{${data.menus}}" class="clean multi_master" data-max_level="3" data-multi_row_selector=".menu_wrapper">
+					<sub-menu-comp></sub-menu-comp>
 				</list-comp>
 			</div>
 
@@ -199,16 +195,16 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 				comp._save();
 			});
 
-			const product_category_modal_comp = getProductCategoryModal();
+			const menu_modal_comp = getMenuModal();
 			const add_btn = comp._nodes.add_btn;
 			add_btn.addEventListener("click", () => {
-				product_category_modal_comp._show({
+				menu_modal_comp._show({
 					source: add_btn,
 					save_callback: (cat) => {
-						comp._data.categories.unshift({
+						comp._data.menus.unshift({
 							name: cat.name,
-							product_category_id: cat.product_category_id,
-							categories: [],
+							menu_id: cat.menu_id,
+							menus: [],
 							expanded: true,
 						});
 						comp._render();
@@ -228,7 +224,7 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 				});
 			});
 
-			window.addEventListener("product_categories_changed", () => {
+			window.addEventListener("menu_changed", () => {
 				comp._recreate_tree();
 			});
 		},

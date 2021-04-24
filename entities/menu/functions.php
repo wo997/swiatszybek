@@ -1,5 +1,6 @@
 <?php //hook[helper]
 
+// wait a sec, that seems a bit wrong
 // /**
 //  * getMenuLink
 //  *
@@ -21,16 +22,16 @@
 //     return $link;
 // }
 
-// function getAllMenus()
-// {
-//     return DB::fetchArr("SELECT * FROM menu");
-// }
+function getAllMenus()
+{
+    return DB::fetchArr("SELECT * FROM menu");
+}
 
-// function preloadMenus()
-// {
-//     $menus = json_encode(getAllMenus());
-//     return <<<JS
-//     menus = $menus;
-//     loadedMenus();
-// JS;
-// }
+function preloadMenus()
+{
+    $menus = json_encode(getAllMenus());
+    return <<<JS
+    menus = $menus;
+    loadedMenu();
+JS;
+}

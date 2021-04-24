@@ -6,7 +6,7 @@
 <title>Menu główne</title>
 
 <script>
-    <?= preloadProductCategories() ?>
+    <?= preloadMenus() ?>
 </script>
 
 <?php startSection("header"); ?>
@@ -25,21 +25,10 @@
 
 <div>
     <p class="user_info" style="margin-bottom:20px">
-        <i class="fas fa-info-circle"></i> Warto ograniczyć ilośc kategorii i skorzystać z cech produktu żeby zachować przejrzystość sklepu.
-        <br>
-        Przykładowo zamiast utworzyć kategorie
-        <span style="text-decoration: underline;">
-            Smartfony
-            <i class="fas fa-chevron-right"></i>
-            Lista producentów
-            <i class="fas fa-chevron-right"></i>
-            Modele</span>
-
-        zalecamy<br>utworzyć tylko kategorię <span style="text-decoration: underline;">Smartfony</span>
-        i oprócz tego cechy produktu taką jak Producent, Model itd.
+        <i class="fas fa-info-circle"></i> Jakiś opis się pojawi
     </p>
 </div>
 
-<product-categories-comp></product-categories-comp>
+<menus-comp class="main"></menus-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>
