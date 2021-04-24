@@ -320,7 +320,15 @@ class Entity
 
         if (endsWith($prop_name, "_id")) {
             foreach (EntityManager::getEntityData($this->getName())["props"] as $def_prop_nm => $def_prop_data) {
-                if ($def_prop_nm . "_id" === $prop_name && EntityManager::getEntityData(str_replace("[]", "", $def_prop_data["type"]))) {
+                // if ($def_prop_nm . "_id" === $prop_name && EntityManager::getEntityData(str_replace("[]", "", $def_prop_data["type"]))) {
+                //     $prop_name = $def_prop_nm;
+                //     break;
+                // }
+                // if ($def_prop_nm . "_id" === $prop_name) { // was previously
+                //     $prop_name = $def_prop_nm;
+                //     break;
+                // }
+                if ($def_prop_nm . "_id" === $prop_name && EntityManager::getEntityData($def_prop_data["type"])) { // but that seems legit
                     $prop_name = $def_prop_nm;
                     break;
                 }

@@ -120,7 +120,7 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
             <?php if ($delivery_type_id === 1) : ?>
                 <div class="label big bold">Dostawa</div>
                 <div class="semi_bold">Kurier <?= $carrier->getProp("name") ?> <?= $payment_time_label ?></div>
-                <?php if ($courier_address === 1) : ?>
+                <?php if ($courier_address) : ?>
                     <div><?= $courier_address->getProp("__address_line_1") ?></div>
                     <div><?= $courier_address->getProp("__address_line_2") ?></div>
                     <a target="_blank" class="link" href="http://maps.google.com/maps?q=<?= urlencode($courier_address->getProp("street") . " " . $courier_address->getProp("building_number") . " " . $courier_address->getProp("city")) ?>">
@@ -129,10 +129,10 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
                 <?php endif ?>
             <?php endif ?>
 
-            <?php if ($parcel_locker) : ?>
+            <?php if ($delivery_type_id === 2) : ?>
                 <div class="label big bold">Dostawa</div>
                 <div class="semi_bold">Paczkomat <?= $carrier->getProp("name") ?></div>
-                <?php if ($delivery_type_id === 2) : ?>
+                <?php if ($parcel_locker) : ?>
                     <div> <?= $parcel_locker->getProp("name") ?></div>
                     <div><?= $parcel_locker->getProp("__address_line_1") ?></div>
                     <div><?= $parcel_locker->getProp("__address_line_2") ?></div>
