@@ -133,17 +133,21 @@ EventListener::register("before_save_general_product_entity", function ($params)
         /** @var Entity[] ProductVariantOption */
         $variant_options = $product->getProp("variant_options");
 
-        $variant_option_ids = [];
+        $feature_option_ids = [];
         foreach ($variant_options as $variant_option) {
-            $variant_option_ids[] = $variant_option->getId();
+            /** @var Entity[] ProductFeatureOption */
+            $product_feature_options = $variant_option->getProp("product_feature_options");
+            foreach ($product_feature_options as $product_feature_option) {
+                $feature_option_ids[] = $product_feature_option->getId();
+            }
         }
 
         $__img_url = "";
         $most_matches = -1;
         foreach ($images_data as $image_data) {
             $matches = 0;
-            foreach ($variant_option_ids as $variant_option_id) {
-                if (in_array($variant_option_id, $image_data["feature_option_ids"])) {
+            foreach ($feature_option_ids as $feature_option_id) {
+                if (in_array($feature_option_id, $image_data["feature_option_ids"])) {
                     $matches++;
                 }
             }
