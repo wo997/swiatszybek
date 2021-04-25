@@ -101,25 +101,25 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Kod</div>
-				<input type="text" class="field" data-bind="{${data.code}}" data-validate="length:{3,20}" style="text-transform: uppercase;" />
+				<input class="field" data-bind="{${data.code}}" data-validate="length:{3,20}" style="text-transform: uppercase;" />
 
 				<div class="label">Wartość</div>
 				<div class="glue_children">
-					<input type="text" class="field" data-bind="{${data.value}}" data-node="{${comp._nodes.value}}" />
-					<select type="text" class="field" data-bind="{${data.discount_type}}">
+					<input class="field" data-bind="{${data.value}}" data-node="{${comp._nodes.value}}" />
+					<select class="field" data-bind="{${data.discount_type}}">
 						<option value="static">Stała kwota (zł)</option>
 						<option value="relative">Kwota proporcjonalna (%)</option>
 					</select>
 				</div>
 
 				<div class="label">Ilość</div>
-				<input type="text" class="field" data-bind="{${data.qty}}" data-validate="value:{0,}" />
+				<input class="field" data-bind="{${data.qty}}" data-validate="value:{0,}" />
 
 				<div class="label">Dostępny od</div>
-				<input type="text" class="field default_datepicker" data-bind="{${data.available_from}}" />
+				<input class="field default_datepicker" data-bind="{${data.available_from}}" />
 
 				<div class="label">Dostępny do</div>
-				<input type="text" class="field default_datepicker" data-bind="{${data.available_till}}" />
+				<input class="field default_datepicker" data-bind="{${data.available_till}}" />
 			</div>
 		`,
 		ready: () => {

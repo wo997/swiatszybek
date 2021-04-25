@@ -36,7 +36,7 @@ function previewUrl(url, params) {
 					</div>
 				</div>
 				<form class="preview_form" method="post" target="preview_iframe">
-					<input type="text" name="preview_params" />
+					<input name="preview_params" />
 				</form>
 			</div>
 		`);

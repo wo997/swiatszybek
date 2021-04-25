@@ -684,7 +684,7 @@ function ProductComp(comp, parent, data = undefined) {
 
 			<div style="max-width:800px">
 				<div class="label first">Nazwa produktu</div>
-				<input type="text" class="field" data-bind="{${data.name}}" data-validate="" />
+				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Widoczność w sklepie</div>
 				<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">

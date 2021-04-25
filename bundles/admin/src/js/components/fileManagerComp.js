@@ -141,7 +141,7 @@ function FileManagerComp(comp, parent, data = undefined) {
 				></span>
 
 				<div class="float_icon">
-					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
+					<input placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
 					<i class="fas fa-search"></i>
 				</div>
 			</div>

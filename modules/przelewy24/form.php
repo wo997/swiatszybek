@@ -2,13 +2,13 @@
 ?>
 
 <span class="label first">ID sprzedawcy</span>
-<input type="text" name="merchant_id" class="field" />
+<input name="merchant_id" class="field" />
 
 <span class="label">ID punktu sprzedaży</span>
-<input type="text" name="pos_id" class="field" />
+<input name="pos_id" class="field" />
 
 <span class="label">Klucz CRC</span>
-<input type="text" name="crc" class="field" />
+<input name="crc" class="field" />
 
 <label class="checkbox-wrapper label block">
     Tryb testowy

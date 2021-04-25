@@ -35,7 +35,7 @@ endSection();
 
                 <div style="padding:0 10px 10px">
                     <div class="label first">Wyszukaj w panelu admina</div>
-                    <input type="text" class="field" placeholder="W planach...">
+                    <input class="field" placeholder="W planach...">
                 </div>
 
                 <?php include "bundles/admin/navbar.php" ?>

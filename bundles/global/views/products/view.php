@@ -397,7 +397,15 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 </div>
 
                 <div class="label"> <span>Wyszukaj po frazie</span> </div>
-                <input type="text" class="field search_phrase" placeholder="Nazwa produktu">
+                <input class="field search_phrase" placeholder="Nazwa produktu">
+
+                <div class="label"> <span>Sortuj wyniki</span> </div>
+                <select class="field search_order">
+                    <option value="bestsellery">Bestsellery</option>
+                    <option value="najnowsze">Najnowsze</option>
+                    <option value="ceny-rosnaco">Ceny rosnąco</option>
+                    <option value="ceny-malejaco">Ceny malejąco</option>
+                </select>
 
                 <div class="search_header">
                     <span>Cechy</span>

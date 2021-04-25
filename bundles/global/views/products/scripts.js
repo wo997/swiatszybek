@@ -1,5 +1,7 @@
 /* js[view] */
 
+const default_search_order = "bestsellery";
+
 let currPage = 1;
 let rowCount = 24;
 /** @type {number[][]} */
@@ -20,6 +22,8 @@ let results_info_count;
 let results_info_count_spinner_wrapper;
 /** @type {PiepNode} */
 let search_phrase;
+/** @type {PiepNode} */
+let search_order;
 /** @type {PiepNode} */
 let feature_filter_count;
 /** @type {PaginationComp} */
@@ -47,6 +51,7 @@ domload(() => {
 	initProductFeatures();
 	initProductCategories();
 	initSearchPhrase();
+	initSearchOrder();
 	initPagination();
 	productsPopState();
 
@@ -95,6 +100,13 @@ domload(() => {
 	});
 });
 
+function initSearchOrder() {
+	search_order = $(".searching_wrapper .search_order");
+	search_order.addEventListener("change", () => {
+		delay("mainSearchProducts");
+	});
+}
+
 function initSearchPhrase() {
 	search_phrase = $(".searching_wrapper .search_phrase");
 	search_phrase.addEventListener("input", () => {
@@ -141,8 +153,16 @@ function setSearchPhraseFromUrl() {
 	const url_params = new URLSearchParams(current_url_search);
 
 	/** @type {string} */
-	const search_phrase_val = def(url_params.get("znajdz"), "");
+	const search_phrase_val = def(url_params.get("znajdz"));
 	search_phrase._set_value(search_phrase_val, { quiet: true });
+}
+
+function setSearchOrderFromUrl() {
+	const url_params = new URLSearchParams(current_url_search);
+
+	/** @type {string} */
+	const search_order_val = def(url_params.get("sortuj"), default_search_order);
+	search_order._set_value(search_order_val, { quiet: true });
 }
 
 function setRangesFromUrl() {
@@ -415,6 +435,7 @@ function productsPopState() {
 	setCategoryFeaturesFromUrl();
 	setRangesFromUrl();
 	setSearchPhraseFromUrl();
+	setSearchOrderFromUrl();
 	setProductsFilterCountFromUrl();
 	updatePrettyCheckboxRanges();
 	mainSearchProducts(true);
@@ -537,6 +558,12 @@ function mainSearchProducts(force = false) {
 	const search_phrase_val = search_phrase._get_value();
 	if (search_phrase_val.trim() !== "") {
 		url_params.append("znajdz", search_phrase_val);
+	}
+
+	/** @type {string} */
+	const search_order_val = search_order._get_value();
+	if (search_order_val.trim() !== default_search_order) {
+		url_params.append("sortuj", search_order_val);
 	}
 
 	if (options_data.length > 0) {

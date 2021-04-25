@@ -14,6 +14,7 @@ function getGlobalProductsSearch($url, $options = [])
     $row_count = intval(def($get_vars, "ile", 25));
 
     $search_phrase = def($get_vars, "znajdz", "");
+    $search_order = def($get_vars, "sortuj", "bestsellery");
 
     // do the search for product_ids iteratively, not with a big query that would quickly slow down
 
@@ -152,6 +153,19 @@ function getGlobalProductsSearch($url, $options = [])
 
     $product_ids_csv = $product_ids ? join(",", $product_ids) : "-1";
 
+    $search_order = def($get_vars, "sortuj", "bestsellery");
+
+    $actual_order = "general_product_id DESC";
+    if ($search_order === "bestsellery") {
+        //$actual_order = "compare_sales DESC"; just do it
+    }
+    if ($search_order === "ceny-rosnaco") {
+        $actual_order = "AVG(gross_price) ASC";
+    }
+    if ($search_order === "ceny-malejaco") {
+        $actual_order = "AVG(gross_price) DESC";
+    }
+
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
@@ -167,7 +181,7 @@ function getGlobalProductsSearch($url, $options = [])
             LEFT JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
             LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
         "group" => "general_product_id",
-        "order" => "general_product_id DESC",
+        "order" => $actual_order,
         "where" => "p.product_id IN ($product_ids_csv)",
         "datatable_params" => json_encode($datatable_params),
         "search_type" => "extended",
