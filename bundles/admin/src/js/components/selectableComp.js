@@ -7,8 +7,13 @@
  * }} SelectableOptionData
  *
  * @typedef {{
- * value: string
+ * single?: boolean
+ * }} SelectableCompOptions
+ *
+ * @typedef {{
+ * options?: SelectableCompOptions
  * dataset: SelectableOptionData[]
+ * selection?: string[]
  * }} SelectableCompData
  *
  * @typedef {{
@@ -17,6 +22,7 @@
  * _nodes: {
  *  input: PiepNode
  *  suggestions: PiepNode
+ *  selection: PiepNode
  * }
  * } & BaseComp} SelectableComp
  */
@@ -27,30 +33,55 @@
  * @param {SelectableCompData} data
  */
 function SelectableComp(comp, parent, data = undefined) {
-	if (data === undefined) {
-		data = {
-			value: "",
-			dataset: [],
-		};
-	}
+	data.dataset = def(data.dataset, []);
+	data.selection = def(data.selection, []);
 
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				comp.dataset.selection = data.selection.length + "";
+			},
 		});
 	};
 
 	createComp(comp, parent, data, {
-		template: html`<input class="field" data-node="{${comp._nodes.input}}" />
-			<div data-node="{${comp._nodes.suggestions}}"></div>`,
-		initialize: () => {
+		template: html`
+			<div style="position:relative">
+				<input class="field" data-node="{${comp._nodes.input}}" />
+				<div data-node="{${comp._nodes.suggestions}}"></div>
+			</div>
+			<div data-node="{${comp._nodes.selection}}"></div>
+		`,
+		ready: () => {
 			const refreshSuggestions = () => {
+				const data = comp._data;
 				let suggestions_html = "";
 				for (const datapart of data.dataset) {
-					suggestions_html += html`<div class="suggestion" data-value="${datapart.value}">${datapart.label}</div>`;
+					if (data.selection.includes(datapart.value)) {
+						continue;
+					}
+					suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">${datapart.label}</div>`;
 				}
 				comp._nodes.suggestions._set_content(suggestions_html);
+			};
+
+			const refreshSelection = () => {
+				const data = comp._data;
+				let selection_html = "";
+				for (const sel of data.selection) {
+					const datapart = data.dataset.find((e) => e.value === sel);
+					if (!datapart) {
+						continue;
+					}
+					selection_html += html`<div class="selection flex align_center" data-value="${escapeAttribute(datapart.value)}">
+						${datapart.label}
+						<button class="btn transparent small mla">
+							<i class="fas fa-trash"></i>
+						</button>
+					</div>`;
+				}
+				comp._nodes.selection._set_content(selection_html);
 			};
 
 			document.addEventListener("click", (ev) => {
@@ -61,10 +92,16 @@ function SelectableComp(comp, parent, data = undefined) {
 					refreshSuggestions();
 				}
 
-				comp._nodes.suggestions.classList.toggle("visible", hit_input);
-
-				if (target._parent(comp._nodes.suggestions)) {
+				if (target._parent(comp)) {
+					const suggestion = target._parent(".suggestion");
+					if (suggestion) {
+						comp._data.selection.push(suggestion.dataset.value);
+						comp._render();
+						refreshSelection();
+					}
 				}
+
+				comp._nodes.suggestions.classList.toggle("visible", hit_input);
 			});
 
 			comp._nodes.input.addEventListener("change", () => {
@@ -136,6 +173,8 @@ function SelectableComp(comp, parent, data = undefined) {
 					e.classList.toggle("selected", e === select);
 				});
 			});
+
+			refreshSelection();
 		},
 	});
 }

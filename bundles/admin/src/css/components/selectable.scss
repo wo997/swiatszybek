@@ -1,8 +1,16 @@
 /* css[admin] */
 
 selectable-comp.comp {
-	& {
-		position: relative;
+	&:not([data-selection="0"]) {
+		.node_input {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+	}
+	&[data-selection="0"] {
+		.node_selection {
+			display: none;
+		}
 	}
 	.node_suggestions {
 		& {
@@ -13,15 +21,15 @@ selectable-comp.comp {
 			transition: opacity 0.15s;
 			box-shadow: 0 2px 5px 0 #0002;
 			border: 1px solid #ccc;
+			border-top-width: 0;
 			border-bottom-left-radius: 4px;
 			border-bottom-right-radius: 4px;
 			background: #fff;
 			z-index: 500;
-			border-top-width: 0;
 		}
 		.suggestion {
 			& {
-				padding: 3px var(--field_padding_hor);
+				padding: 4px var(--field_padding_hor);
 				cursor: pointer;
 			}
 			&.selected {
@@ -33,6 +41,21 @@ selectable-comp.comp {
 		&:not(.visible) {
 			opacity: 0;
 			pointer-events: none;
+		}
+	}
+	.node_selection {
+		& {
+			border: 1px solid #ccc;
+			border-top-width: 0;
+			border-bottom-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+		}
+		.selection {
+			padding: 4px 4px 4px var(--field_padding_hor);
+		}
+		.btn {
+			color: #555;
+			margin: -4px;
 		}
 	}
 }

@@ -15,7 +15,6 @@ domload(() => {
 	const selectable = $("selectable-comp");
 
 	SelectableComp(selectable, undefined, {
-		value: "xxx",
 		dataset: [
 			{ value: "11", label: "abc" },
 			{ value: "12", label: "abcd" },
