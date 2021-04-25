@@ -87,6 +87,9 @@ window.addEventListener(
 				});
 				//window.location.reload(); // intrusive, u can actually just open an empty iframe and that would build everything. funny, right?
 				hideLoader();
+
+				// build the page in background, hope nobody will notice
+				xhr({ url: "/pusta-strona", success: () => {} });
 			},
 		});
 
