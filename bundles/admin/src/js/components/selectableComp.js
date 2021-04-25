@@ -128,8 +128,9 @@ function SelectableComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<div style="position:relative">
+			<div class="float_icon">
 				<input class="field" data-node="{${comp._nodes.input}}" />
+				<i class="fas fa-search"></i>
 				<div data-node="{${comp._nodes.suggestions}}" class="scroll_panel"></div>
 			</div>
 			<div data-node="{${comp._nodes.selection}}"></div>

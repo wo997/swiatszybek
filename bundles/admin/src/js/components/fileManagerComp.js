@@ -147,7 +147,7 @@ function FileManagerComp(comp, parent, data = undefined) {
 					<button class="btn primary" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
 				></span>
 
-				<div class="float_icon" style="display: inline-block;">
+				<div class="float_icon">
 					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
 					<i class="fas fa-search"></i>
 				</div>
