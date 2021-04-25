@@ -117,6 +117,7 @@ function SelectableComp(comp, parent, data = undefined) {
 						data.selection.push(suggestion.dataset.value);
 						comp._render();
 						refreshSelection();
+						comp._nodes.input._set_value("");
 					}
 					const selection = target._parent(".selection");
 					if (selection && target._parent(".btn")) {
@@ -149,6 +150,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 			comp._nodes.input.addEventListener("keydown", (event) => {
 				if (!comp._nodes.suggestions.classList.contains("visible")) {
+					comp._nodes.suggestions.classList.add("visible");
 					return;
 				}
 
