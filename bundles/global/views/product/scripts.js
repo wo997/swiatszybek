@@ -151,7 +151,12 @@ domload(() => {
 						showNotification(`Dodano sztuk: ${product_in_cart.qty - was_qty}`, { one_line: true, type: "error" });
 					}
 				} else {
-					showNotification(`Dodano ${single_product.__name} do koszyka`, { one_line: true, type: "success" });
+					//showNotification(`Dodano ${single_product.__name} do koszyka`, { one_line: true, type: "success" });
+					showNotification(
+						html`<div class="header">Dodano do koszyka</div>
+							${single_product.__name}`,
+						{ width: "min(80vw, 300px)" }
+					);
 				}
 			},
 		});

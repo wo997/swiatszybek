@@ -114,7 +114,9 @@ function dismissParentNotification(n) {
 	n = $(n)._parent(".notification");
 	if (!n) return;
 
-	n.style.animation = "hide 200ms";
+	setTimeout(() => {
+		n.style.animation = "hide 200ms";
+	});
 	setTimeout(() => {
 		n.remove();
 	}, 200);

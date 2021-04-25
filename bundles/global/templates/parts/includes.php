@@ -57,10 +57,9 @@ if (defined("ROUTE")) {
     <?php endif ?>
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
-            showNotification("Zalogowano pomyślnie", {
-                one_line: true,
-                type: "success",
-            });
+            showNotification(
+                `<div class="header">Sukces</div>Zalogowano pomyślnie`,
+            );
         });
     <?php endif ?>
     <?php if ($message_modal = Request::getSingleUsageSessionVar("message_modal")) : ?>
