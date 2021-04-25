@@ -171,6 +171,33 @@ function MenusComp(comp, parent, data = undefined) {
 							if (pretty_product_category) {
 								tooltip = pretty_product_category.label;
 							}
+
+							/** @type {string[]} */
+							let categories_inside = [];
+							/**
+							 * @param {ProductCategoryBranch[]} category_branch
+							 * @param {number} level
+							 */
+							const traverse = (category_branch, level = 0, slug = "", inside = false) => {
+								category_branch.forEach((category) => {
+									const cat_display = slug + (slug ? " ― " : "") + category.name;
+									if (inside) {
+										categories_inside.push("<br> ⋅ " + cat_display);
+									}
+									traverse(
+										category.sub_categories,
+										level + 1,
+										cat_display,
+										inside || category.product_category_id === com._data.link_what_id
+									);
+								});
+							};
+							traverse(product_categories_tree);
+
+							if (categories_inside.length) {
+								info += ` (${categories_inside.length})`;
+								tooltip += html`<div class="mt1"><span class="semi_bold">Automatycznie dołączone do menu:</span>${categories_inside}</div>`;
+							}
 						} else if (link_what === "general_product") {
 							info = "Produkt";
 							const pretty_general_product = menu_modal_comp._data.select_general_product.dataset.find(
