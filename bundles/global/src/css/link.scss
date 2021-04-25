@@ -1,7 +1,7 @@
 /* css[global] */
 
 .link {
-	color: #33d;
+	color: var(--clr_link);
 	font-weight: var(--semi_bold);
 	cursor: pointer;
 }

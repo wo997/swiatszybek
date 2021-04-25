@@ -300,6 +300,10 @@
 	text-align: center;
 }
 
+.text_primary {
+	color: var(--clr_primary);
+}
+
 .text_error {
 	color: var(--error-clr);
 }
@@ -310,4 +314,8 @@
 
 .text_warning {
 	color: var(--warning-clr);
+}
+
+.text_link {
+	color: var(--clr_link);
 }

@@ -90,20 +90,13 @@ function FileManagerComp(comp, parent, data = undefined) {
 					} else {
 						display = html`<img style="width:100%;object-fit:contain" data-height="1w" class="wo997_img" data-src="/${image.file_path}" />`;
 					}
-					// const image_metadata_html = html`
-					// 	<b>Ścieżka:</b> ${image.file_path}
-					// 	<hr style="margin:2px 0" />
-					// 	<b>Nazwa:</b> ${image.uploaded_file_name}
-					// 	<hr style="margin:2px 0" />
-					// 	<b>Autor:</b> ${def(image.email, "-")}
-					// `;
 					out += html`
 						<div class="file_wrapper">
 							<div class="display">${display}</div>
 							<div class="file_controls glue_children">
 								<button class="btn primary select_btn" data-tooltip="Dodaj"><i class="fas fa-plus"></i></button>
 								<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>
-								<button class="btn subtle edit_btn" data-tooltip="Edytuj"><i class="fas fa-cog"></i></button>
+								<button class="btn subtle edit_btn" disabled data-tooltip="Edytuj"><i class="fas fa-cog"></i></button>
 								<button class="btn subtle trash_btn" data-tooltip="Usuń"><i class="fas fa-trash"></i></button>
 							</div>
 						</div>

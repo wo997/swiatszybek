@@ -116,6 +116,8 @@ function MenusComp(comp, parent, data = undefined) {
 				setTimeout(() => {
 					const multi_master = comp._child(".multi_master");
 
+					const menu_modal_comp = getMenuModal();
+
 					comp._children(".round_top").forEach((e) => e.classList.remove("round_top"));
 					comp._children("sub-menu-comp").forEach((/** @type {SubMenuComp} */ com) => {
 						if (!com._data) {
@@ -157,6 +159,34 @@ function MenusComp(comp, parent, data = undefined) {
 						if (!active && !expand_multi_list_btn.classList.contains("expanded")) {
 							expand_multi_list_btn.click();
 						}
+
+						const link_what = com._data.link_what;
+						let info = "";
+						let tooltip = "";
+						if (link_what === "product_category") {
+							info = "Kategoria produktów";
+							const pretty_product_category = menu_modal_comp._data.select_product_category.dataset.find(
+								(d) => d.value === com._data.link_what_id.toString()
+							);
+							if (pretty_product_category) {
+								tooltip = pretty_product_category.label;
+							}
+						} else if (link_what === "general_product") {
+							info = "Produkt";
+							const pretty_general_product = menu_modal_comp._data.select_general_product.dataset.find(
+								(d) => d.value === com._data.link_what_id.toString()
+							);
+							if (pretty_general_product) {
+								tooltip = pretty_general_product.label;
+							}
+						} else if (link_what === "url") {
+							info = "Link";
+						}
+						if (info) {
+							info = " - " + info;
+						}
+						com._nodes.info._set_content(info);
+						com._nodes.info.dataset.tooltip = tooltip;
 					});
 				});
 			},
