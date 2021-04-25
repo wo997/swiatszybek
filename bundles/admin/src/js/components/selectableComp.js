@@ -86,6 +86,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 			document.addEventListener("click", (ev) => {
 				const target = $(ev.target);
+				const data = comp._data;
 
 				const hit_input = !!target._parent(comp._nodes.input);
 				if (hit_input) {
@@ -95,7 +96,13 @@ function SelectableComp(comp, parent, data = undefined) {
 				if (target._parent(comp)) {
 					const suggestion = target._parent(".suggestion");
 					if (suggestion) {
-						comp._data.selection.push(suggestion.dataset.value);
+						data.selection.push(suggestion.dataset.value);
+						comp._render();
+						refreshSelection();
+					}
+					const selection = target._parent(".selection");
+					if (selection && target._parent(".btn")) {
+						data.selection.splice(data.selection.indexOf(selection.dataset.value), 1);
 						comp._render();
 						refreshSelection();
 					}
@@ -119,6 +126,10 @@ function SelectableComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.input.addEventListener("keydown", (event) => {
+				if (!comp._nodes.suggestions.classList.contains("visible")) {
+					return;
+				}
+
 				const down = event.key == "ArrowDown";
 				const up = event.key == "ArrowUp";
 
@@ -130,10 +141,6 @@ function SelectableComp(comp, parent, data = undefined) {
 						selected.click();
 						event.preventDefault();
 						return false;
-					} else if ($(".main_search_wrapper input")._get_value().trim()) {
-						goToSearchProducts();
-					} else {
-						topSearchProducts(true);
 					}
 				}
 
