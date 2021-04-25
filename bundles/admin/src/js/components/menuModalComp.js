@@ -14,6 +14,7 @@
  * parent_menu_id: number
  * product_category_id?: number,
  * product_id?: number
+ * select_product_category?: SelectableCompData
  * } & BaseMenuData} MenuModalCompData
  *
  * @typedef {{
@@ -26,8 +27,6 @@
  *      case_product_category: PiepNode
  *      case_product: PiepNode
  *      case_url: PiepNode
- *      select_product_category_btn: PiepNode
- *      select_product_btn: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
  * _save()
@@ -52,6 +51,34 @@ function MenuModalComp(comp, parent, data = undefined) {
 			parent_menu_id: -1,
 			product_category_id: -1,
 			product_id: -1,
+		};
+	}
+
+	if (data.select_product_category === undefined) {
+		/** @type {SelectableOptionData[]} */
+		let category_options = [];
+
+		/**
+		 *
+		 * @param {ProductCategoryBranch[]} category_branch
+		 * @param {number} level
+		 */
+		const traverse = (category_branch, level = 0, slug = "") => {
+			category_branch.forEach((category) => {
+				const cat_display = slug + (slug ? " ― " : "") + category.name;
+				category_options.push({ label: cat_display, value: category.product_category_id + "" });
+				if (level < 1) {
+					traverse(category.sub_categories, level + 1, cat_display);
+				}
+			});
+		};
+		traverse(product_categories_tree);
+
+		data.select_product_category = {
+			options: {
+				single: true,
+			},
+			dataset: category_options,
 		};
 	}
 
@@ -183,12 +210,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
 					<div class="label">Kategoria Produkt</div>
 					<input class="field number hidden" data-bind="{${data.product_category_id}}" data-validate="" />
-					<div class="glue_children">
-						<input class="field" type="text" onclick="$(this)._next().click()" readonly />
-						<button class="btn primary" data-node="{${comp._nodes.select_product_category_btn}}" style="flex-shrink:0">
-							Wybierz kategorię <i class="fas fa-search"></i>
-						</button>
-					</div>
+					<selectable-comp data-bind="{${data.select_product_category}}"></selectable-comp>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_product}}">
 					<div class="label">Produkt</div>
@@ -215,16 +237,6 @@ function MenuModalComp(comp, parent, data = undefined) {
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				comp._delete();
-			});
-
-			comp._nodes.select_product_category_btn.addEventListener("click", () => {
-				getSelectProductCategoryModal()._show({
-					select_callback: (product_category_id) => {
-						const data = comp._data;
-						data.product_category_id = product_category_id;
-						comp._render();
-					},
-				});
 			});
 		},
 	});

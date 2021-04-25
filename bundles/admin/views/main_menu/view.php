@@ -30,8 +30,6 @@
     </p>
 </div>
 
-<selectable-comp></selectable-comp>
-
 <menus-comp class="main"></menus-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>
