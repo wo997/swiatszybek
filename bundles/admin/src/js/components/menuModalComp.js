@@ -14,8 +14,10 @@
  * parent_menu_id: number
  * product_category_id?: number,
  * general_product_id?: number
+ * page_id?: number
  * select_product_category?: SelectableCompData
  * select_general_product?: SelectableCompData
+ * select_page?: SelectableCompData
  * } & BaseMenuData} MenuModalCompData
  *
  * @typedef {{
@@ -27,6 +29,7 @@
  *      parent_menu: PiepNode
  *      case_product_category: PiepNode
  *      case_general_product: PiepNode
+ *      case_page: PiepNode
  *      case_url: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
@@ -52,6 +55,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 			parent_menu_id: -1,
 			product_category_id: -1,
 			general_product_id: -1,
+			page_id: -1,
 		};
 	}
 
@@ -94,6 +98,16 @@ function MenuModalComp(comp, parent, data = undefined) {
 		};
 	}
 
+	if (data.select_page === undefined) {
+		data.select_page = {
+			options: {
+				single: true,
+			},
+			dataset: [], //pages.map((p) => ({ value: p.page_id.toString(), label: p.seo_title })),
+			parent_variable: "page",
+		};
+	}
+
 	comp._show = (options = {}) => {
 		const data = comp._data;
 
@@ -119,6 +133,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 		data.product_category_id = data.link_what === "product_category" ? data.link_what_id : null;
 		data.general_product_id = data.link_what === "general_product" ? data.link_what_id : null;
+		data.page_id = data.link_what === "page" ? data.link_what_id : null;
 
 		comp._render();
 
@@ -155,6 +170,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 			data.link_what_id = data.product_category_id;
 		} else if (data.link_what === "general_product") {
 			data.link_what_id = data.general_product_id;
+		} else if (data.link_what === "page") {
+			data.link_what_id = data.page_id;
 		} else {
 			data.link_what_id = null;
 		}
@@ -187,6 +204,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 				expand(comp._nodes.case_product_category, data.link_what === "product_category");
 				expand(comp._nodes.case_general_product, data.link_what === "general_product");
+				expand(comp._nodes.case_page, data.link_what === "page");
 				expand(comp._nodes.case_url, data.link_what === "url");
 			},
 		});
@@ -214,6 +232,10 @@ function MenuModalComp(comp, parent, data = undefined) {
 						<span>Produkt</span>
 					</div>
 					<div class="checkbox_area">
+						<p-checkbox data-value="page"></p-checkbox>
+						<span>Strona</span>
+					</div>
+					<div class="checkbox_area">
 						<p-checkbox data-value="url"></p-checkbox>
 						<span>Dowolny link</span>
 					</div>
@@ -226,6 +248,10 @@ function MenuModalComp(comp, parent, data = undefined) {
 				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
 					<div class="label">Produkt</div>
 					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
+				</div>
+				<div class="expand_y" data-node="{${comp._nodes.case_page}}">
+					<div class="label">Strona</div>
+					<selectable-comp data-bind="{${data.select_page}}" data-validate=""></selectable-comp>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_url}}">
 					<div class="label">Link</div>

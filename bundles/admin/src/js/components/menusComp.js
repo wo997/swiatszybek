@@ -181,6 +181,7 @@ function MenusComp(comp, parent, data = undefined) {
 							}
 						} else if (link_what === "url") {
 							info = "Link";
+							tooltip = com._data.url;
 						}
 						if (info) {
 							info = " - " + info;

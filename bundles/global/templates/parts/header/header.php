@@ -2,6 +2,7 @@
 
 function traverseMenu($parent_id = -1, $level = 0)
 {
+    //$menus = DB::fetchArr("SELECT menu_id, name, link_what, link_what_id FROM menu WHERE parent_menu_id = $parent_id ORDER BY pos ASC");
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
