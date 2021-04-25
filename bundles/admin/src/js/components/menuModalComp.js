@@ -72,9 +72,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 			category_branch.forEach((category) => {
 				const cat_display = slug + (slug ? " ― " : "") + category.name;
 				category_options.push({ label: cat_display, value: category.product_category_id + "" });
-				if (level < 1) {
-					traverse(category.sub_categories, level + 1, cat_display);
-				}
+				traverse(category.sub_categories, level + 1, cat_display);
 			});
 		};
 		traverse(product_categories_tree);

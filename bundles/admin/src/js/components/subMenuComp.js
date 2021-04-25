@@ -15,6 +15,7 @@
  * add_btn: PiepNode
  * expand: PiepNode
  * info: PiepNode
+ * children_info: PiepNode
  * }
  * } & BaseComp} SubMenuComp
  */
@@ -52,7 +53,8 @@ function SubMenuComp(comp, parent, data = undefined) {
 			<div class="menu_wrapper">
 				<span class="menu_name">
 					<span html="{${data.name}}"></span>
-					<span data-node="{${comp._nodes.info}}" class="text_link semi_bold" data-tooltip_position="right"></span>
+					<span data-node="{${comp._nodes.info}}" class="text_link semi_bold" data-tooltip_position="bottom"></span>
+					<span data-node="{${comp._nodes.children_info}}" class="bold" data-tooltip_position="bottom"></span>
 				</span>
 				<p-trait data-trait="expand_multi_list_btn"></p-trait>
 				<button class="btn subtle small multi_list_add_btn" data-tooltip="Dodaj menu podrzędne" data-node="{${comp._nodes.add_btn}}">
