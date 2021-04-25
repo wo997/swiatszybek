@@ -1,19 +1,37 @@
 <?php
 
-function traverseMenu($parent_id = -1, $level = 0)
-{
-    //$menus = DB::fetchArr("SELECT menu_id, name, link_what, link_what_id FROM menu WHERE parent_menu_id = $parent_id ORDER BY pos ASC");
+$traverseProductCategories = function ($parent_id = -1, $level = 0) use (&$traverseProductCategories) {
     $categories = DB::fetchArr("SELECT product_category_id, name, __category_path_json FROM product_category WHERE parent_product_category_id = $parent_id ORDER BY pos ASC");
     if (!$categories) {
         return "";
     }
     $html = "<ul class=\"level_$level\">";
     foreach ($categories as $category) {
-        $html .= "<li><a href=\"" . getProductCategoryLink(json_decode($category["__category_path_json"], true)) . "\">" . $category["name"] . "</a>" .  traverseMenu($category["product_category_id"], $level + 1) . "</li>";
+        $html .= "<li><a href=\"" . getProductCategoryLink(json_decode($category["__category_path_json"], true)) . "\">" . $category["name"] . "</a>" .  $traverseProductCategories($category["product_category_id"], $level + 1) . "</li>";
     }
     $html .= "</ul>";
     return $html;
-}
+};
+
+$traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$traverseProductCategories) {
+    $menus = DB::fetchArr("SELECT menu_id, name, link_what, link_what_id, url FROM menu WHERE parent_menu_id = $parent_id ORDER BY pos ASC");
+    if (!$menus) {
+        return "";
+    }
+    $html = "<ul class=\"level_$level\">";
+    foreach ($menus as $menu) {
+        if ($menu["link_what"] === "product_category") {
+            $__category_path_json = DB::fetchVal("SELECT __category_path_json FROM product_category WHERE product_category_id = " . $menu["link_what_id"] . " ORDER BY pos ASC");
+            $menu["url"] = getProductCategoryLink(json_decode($__category_path_json, true));
+            $traverse_result = $traverseProductCategories($menu["link_what_id"], $level + 1);
+        } else {
+            $traverse_result = $traverseMenu($menu["menu_id"], $level + 1);
+        }
+        $html .= "<li><a href=\"" . $menu["url"] . "\">" . $menu["name"] . "</a>" .  $traverse_result . "</li>";
+    }
+    $html .= "</ul>";
+    return $html;
+};
 ?>
 
 <header class="main">
@@ -22,7 +40,7 @@ function traverseMenu($parent_id = -1, $level = 0)
     </a>
 
     <nav class="main_menu">
-        <?= traverseMenu() ?>
+        <?= $traverseMenu() ?>
     </nav>
 
     <div class="main_search_wrapper">

@@ -118,7 +118,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 				menu_id: -1,
 				link_what: "",
 				link_what_id: undefined,
-				url: undefined,
+				url: "",
 				name: "",
 				parent_menu_id: -1,
 			};
