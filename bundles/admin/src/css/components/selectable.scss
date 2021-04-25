@@ -26,6 +26,8 @@ selectable-comp.comp {
 			border-bottom-right-radius: 4px;
 			background: #fff;
 			z-index: 500;
+			max-height: 200px;
+			overflow-y: auto;
 		}
 		.suggestion {
 			& {

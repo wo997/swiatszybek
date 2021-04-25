@@ -14,11 +14,29 @@ domload(() => {
 	// @ts-ignore
 	const selectable = $("selectable-comp");
 
+	/** @type {SelectableOptionData[]} */
+	let category_options = [];
+
+	/**
+	 *
+	 * @param {ProductCategoryBranch[]} category_branch
+	 * @param {number} level
+	 */
+	const traverse = (category_branch, level = 0, slug = "") => {
+		category_branch.forEach((category) => {
+			const cat_display = slug + (slug ? " ― " : "") + category.name;
+			category_options.push({ label: cat_display, value: category.product_category_id + "" });
+			if (level < 1) {
+				traverse(category.sub_categories, level + 1, cat_display);
+			}
+		});
+	};
+	traverse(product_categories_tree);
+
 	SelectableComp(selectable, undefined, {
-		dataset: [
-			{ value: "11", label: "abc" },
-			{ value: "12", label: "abcd" },
-			{ value: "13", label: "xx x vcvxcv dvxc vx" },
-		],
+		options: {
+			single: true,
+		},
+		dataset: category_options,
 	});
 });

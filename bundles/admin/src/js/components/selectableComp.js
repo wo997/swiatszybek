@@ -35,6 +35,7 @@
 function SelectableComp(comp, parent, data = undefined) {
 	data.dataset = def(data.dataset, []);
 	data.selection = def(data.selection, []);
+	data.options = def(data.options, {});
 
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
@@ -96,6 +97,9 @@ function SelectableComp(comp, parent, data = undefined) {
 				if (target._parent(comp)) {
 					const suggestion = target._parent(".suggestion");
 					if (suggestion) {
+						if (data.options.single) {
+							data.selection = [];
+						}
 						data.selection.push(suggestion.dataset.value);
 						comp._render();
 						refreshSelection();
