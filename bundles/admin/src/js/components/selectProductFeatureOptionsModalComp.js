@@ -44,7 +44,7 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						searchable: "string",
 						render: (data) => {
 							if (data.selected) {
-								return html`<div class="semi_bold" style="color: var(--success-clr);"><i class="fas fa-check"></i> ${data.value}</div>`;
+								return html`<div class="semi_bold text_success"><i class="fas fa-check"></i> ${data.value}</div>`;
 							}
 							return data.value;
 						},
@@ -61,7 +61,7 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 								</button>`;
 							} else {
 								cell += html` <button class="btn primary small select_btn" style="min-width: 73px;">
-									Dodaj <i class="fas fa-plus"></i>
+									Wybierz <i class="fas fa-check"></i>
 								</button>`;
 							}
 

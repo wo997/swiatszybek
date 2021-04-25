@@ -156,11 +156,14 @@ textarea {
 	}
 }
 
+:root {
+	--field_padding_hor: 0.8em;
+	--field_padding_ver: 0.42em;
+}
+
 .btn,
 .field {
 	& {
-		--field_padding_hor: 0.8em;
-		--field_padding_ver: 0.42em;
 		padding: var(--field_padding_ver) var(--field_padding_hor);
 	}
 	&.small {

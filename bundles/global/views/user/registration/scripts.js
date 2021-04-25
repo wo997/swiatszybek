@@ -22,7 +22,7 @@ function validateUserEmailExists() {
 				let message = "";
 				let log_html = "";
 				if (!IS_LOGGED) {
-					log_html += html` <b style="color:var(--success-clr);" class="link" onclick="accountExists(this)">ZALOGUJ SIĘ</b>`;
+					log_html += html` <b class="link" onclick="accountExists(this)">ZALOGUJ SIĘ</b>`;
 				}
 				message += html`<span style="color: black">To konto jest aktywne</span> ${log_html}`;
 				errors.push(message);
@@ -30,7 +30,7 @@ function validateUserEmailExists() {
 				errors.push(
 					html`<span style="color: black">
 						Konto istnieje
-						<b style="color:var(--success-clr);" class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
+						<b class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
 					</span>`
 				);
 			} else if (res.status == "invalid") {

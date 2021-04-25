@@ -7,6 +7,7 @@
 
 <script>
     <?= preloadMenus() ?>
+    <?= preloadProductCategories() ?>
 </script>
 
 <?php startSection("header"); ?>
@@ -28,6 +29,8 @@
         <i class="fas fa-info-circle"></i> Jakiś opis się pojawi
     </p>
 </div>
+
+<selectable-comp></selectable-comp>
 
 <menus-comp class="main"></menus-comp>
 

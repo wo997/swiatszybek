@@ -57,7 +57,7 @@ function validateLoginUserEmail(input) {
 			if (res.status == "unauthenticated") {
 				errors.push(html`<span style="color: black">
 					Konto nieaktywne<br />
-					<b style="color:var(--success-clr);" class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
+					<b class="link" onclick="registerUser({user_id:${res.user_id}})"> WYŚLIJ LINK AKTYWACYJNY</b>
 				</span>`);
 			} else if (res.status != "exists") {
 				errors.push("Takie konto nie istnieje");

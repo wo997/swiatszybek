@@ -26,6 +26,8 @@
  *      case_product_category: PiepNode
  *      case_product: PiepNode
  *      case_url: PiepNode
+ *      select_product_category_btn: PiepNode
+ *      select_product_btn: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
  * _save()
@@ -180,7 +182,13 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
 					<div class="label">Kategoria Produkt</div>
-					<input class="field number" data-bind="{${data.product_category_id}}" data-validate="" />
+					<input class="field number hidden" data-bind="{${data.product_category_id}}" data-validate="" />
+					<div class="glue_children">
+						<input class="field" type="text" onclick="$(this)._next().click()" readonly />
+						<button class="btn primary" data-node="{${comp._nodes.select_product_category_btn}}" style="flex-shrink:0">
+							Wybierz kategorię <i class="fas fa-search"></i>
+						</button>
+					</div>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_product}}">
 					<div class="label">Produkt</div>
@@ -207,6 +215,16 @@ function MenuModalComp(comp, parent, data = undefined) {
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				comp._delete();
+			});
+
+			comp._nodes.select_product_category_btn.addEventListener("click", () => {
+				getSelectProductCategoryModal()._show({
+					select_callback: (product_category_id) => {
+						const data = comp._data;
+						data.product_category_id = product_category_id;
+						comp._render();
+					},
+				});
 			});
 		},
 	});
