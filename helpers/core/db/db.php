@@ -75,6 +75,7 @@ class DB
      */
     public static function fetchVal($sql, $params = [])
     {
+        // it could add a limit by itself
         $res = DB::fetchRow($sql, $params);
         return isset(array_keys($res)[0]) ? $res[array_keys($res)[0]] : null;
     }

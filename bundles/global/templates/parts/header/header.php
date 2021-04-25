@@ -21,9 +21,13 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
     $html = "<ul class=\"level_$level\">";
     foreach ($menus as $menu) {
         if ($menu["link_what"] === "product_category") {
-            $__category_path_json = DB::fetchVal("SELECT __category_path_json FROM product_category WHERE product_category_id = " . $menu["link_what_id"] . " ORDER BY pos ASC");
+            $__category_path_json = DB::fetchVal("SELECT __category_path_json FROM product_category WHERE product_category_id = " . $menu["link_what_id"]);
             $menu["url"] = getProductCategoryLink(json_decode($__category_path_json, true));
             $traverse_result = $traverseProductCategories($menu["link_what_id"], $level + 1);
+        } else if ($menu["link_what"] === "general_product") {
+            $general_product_name = DB::fetchVal("SELECT name FROM general_product WHERE general_product_id = " . $menu["link_what_id"]);
+            $menu["url"] = getProductLink($menu["link_what_id"], $general_product_name);
+            $traverse_result = $traverseMenu($menu["menu_id"], $level + 1); // not sure if that's necessary tho
         } else {
             $traverse_result = $traverseMenu($menu["menu_id"], $level + 1);
         }
