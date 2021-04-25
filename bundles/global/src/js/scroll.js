@@ -40,6 +40,10 @@ function smoothScroll(diff, params = {}) {
 	}
 
 	const scroll_parent = params.scroll_parent;
+	if (params.duration === 0) {
+		scroll_parent.scrollBy(0, diff);
+		return 0;
+	}
 	const prodably_duration = def(params.duration, Math.sqrt(Math.abs(diff)));
 	// duration is weird to be addded here, but it's intentional
 
@@ -161,10 +165,14 @@ function scrollIntoView(elem, params = {}) {
 		return;
 	}
 
-	return smoothScroll(diff, {
+	const par = {
 		callback: params.callback,
 		scroll_parent: scroll_parent,
-	});
+	};
+	if (params.duration !== undefined) {
+		par.duration = params.duration;
+	}
+	return smoothScroll(diff, par);
 }
 
 // prevent scroll below

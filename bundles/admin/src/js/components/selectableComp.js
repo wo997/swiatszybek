@@ -50,16 +50,30 @@ function SelectableComp(comp, parent, data = undefined) {
 		template: html`
 			<div style="position:relative">
 				<input class="field" data-node="{${comp._nodes.input}}" />
-				<div data-node="{${comp._nodes.suggestions}}"></div>
+				<div data-node="{${comp._nodes.suggestions}}" class="scroll_panel"></div>
 			</div>
 			<div data-node="{${comp._nodes.selection}}"></div>
 		`,
 		ready: () => {
 			const refreshSuggestions = () => {
 				const data = comp._data;
+				/** @type {string} */
+				const search = comp._nodes.input
+					._get_value()
+					.trim()
+					.replace(/\s{2,}/g, "");
 				let suggestions_html = "";
 				for (const datapart of data.dataset) {
 					if (data.selection.includes(datapart.value)) {
+						continue;
+					}
+					let match = true;
+					for (const word of search.split(" ")) {
+						if (!datapart.label.toLowerCase().includes(word.toLowerCase())) {
+							match = false;
+						}
+					}
+					if (!match) {
 						continue;
 					}
 					suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">${datapart.label}</div>`;
@@ -119,6 +133,10 @@ function SelectableComp(comp, parent, data = undefined) {
 				refreshSuggestions();
 			});
 
+			comp._nodes.input.addEventListener("input", () => {
+				refreshSuggestions();
+			});
+
 			comp.addEventListener("mousemove", (ev) => {
 				const target = $(ev.target);
 				const suggestion = target._parent(".suggestion");
@@ -150,7 +168,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 				if (event.key == "Escape") {
 					comp._nodes.input.blur();
-					comp._nodes.suggestions.classList.remove("active");
+					comp._nodes.suggestions.classList.remove("visible");
 				}
 
 				if (!up && !down) {
@@ -183,6 +201,8 @@ function SelectableComp(comp, parent, data = undefined) {
 				comp._nodes.suggestions._children(".suggestion").forEach((e) => {
 					e.classList.toggle("selected", e === select);
 				});
+
+				scrollIntoView(select, { duration: 0 });
 			});
 
 			refreshSelection();
