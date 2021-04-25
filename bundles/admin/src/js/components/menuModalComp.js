@@ -13,8 +13,9 @@
  * @typedef {{
  * parent_menu_id: number
  * product_category_id?: number,
- * product_id?: number
+ * general_product_id?: number
  * select_product_category?: SelectableCompData
+ * select_general_product?: SelectableCompData
  * } & BaseMenuData} MenuModalCompData
  *
  * @typedef {{
@@ -25,7 +26,7 @@
  *      delete_btn: PiepNode
  *      parent_menu: PiepNode
  *      case_product_category: PiepNode
- *      case_product: PiepNode
+ *      case_general_product: PiepNode
  *      case_url: PiepNode
  * }
  * _show?(options: ShowMenuModalOptions)
@@ -50,7 +51,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 			menu_id: -1,
 			parent_menu_id: -1,
 			product_category_id: -1,
-			product_id: -1,
+			general_product_id: -1,
 		};
 	}
 
@@ -83,6 +84,16 @@ function MenuModalComp(comp, parent, data = undefined) {
 		};
 	}
 
+	if (data.select_general_product === undefined) {
+		data.select_general_product = {
+			options: {
+				single: true,
+			},
+			dataset: general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })),
+			parent_variable: "general_product_id",
+		};
+	}
+
 	comp._show = (options = {}) => {
 		const data = comp._data;
 
@@ -107,7 +118,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 		data.url = options.cat.url;
 
 		data.product_category_id = data.link_what === "product_category" ? data.link_what_id : null;
-		data.product_id = data.link_what === "product" ? data.link_what_id : null;
+		data.general_product_id = data.link_what === "general_product" ? data.link_what_id : null;
 
 		comp._render();
 
@@ -142,8 +153,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		if (data.link_what === "product_category") {
 			data.link_what_id = data.product_category_id;
-		} else if (data.link_what === "product") {
-			data.link_what_id = data.product_id;
+		} else if (data.link_what === "general_product") {
+			data.link_what_id = data.general_product_id;
 		} else {
 			data.link_what_id = null;
 		}
@@ -175,7 +186,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 				comp._nodes.parent_menu._set_value(data.parent_menu_id, { quiet: true });
 
 				expand(comp._nodes.case_product_category, data.link_what === "product_category");
-				expand(comp._nodes.case_product, data.link_what === "product");
+				expand(comp._nodes.case_general_product, data.link_what === "general_product");
 				expand(comp._nodes.case_url, data.link_what === "url");
 			},
 		});
@@ -199,7 +210,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 						<span>Kategoria produktów</span>
 					</div>
 					<div class="checkbox_area">
-						<p-checkbox data-value="product"></p-checkbox>
+						<p-checkbox data-value="general_product"></p-checkbox>
 						<span>Produkt</span>
 					</div>
 					<div class="checkbox_area">
@@ -212,9 +223,9 @@ function MenuModalComp(comp, parent, data = undefined) {
 					<div class="label">Kategoria produktów</div>
 					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_product}}">
+				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
 					<div class="label">Produkt</div>
-					<input class="field number" data-bind="{${data.product_id}}" data-validate="" />
+					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_url}}">
 					<div class="label">Link</div>
@@ -238,17 +249,6 @@ function MenuModalComp(comp, parent, data = undefined) {
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				comp._delete();
 			});
-
-			// comp._child(".bind_product_category_id").addEventListener("change", () => {
-			// 	const data = comp._data;
-			// 	const selection = [];
-			// 	if (data.product_category_id !== undefined) {
-			// 		selection.push(data.product_category_id + "");
-			// 	}
-			// 	data.select_product_category.selection = selection;
-			// 	comp._render();
-			// });
-			// comp._child(".bind_select_product_category").addEventListener("change", () => {});
 		},
 	});
 }

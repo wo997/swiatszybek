@@ -94,7 +94,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 	comp._receive_selection = (value) => {
 		const data = comp._data;
-		const get = data.options.single ? (value !== undefined ? [value.toString()] : []) : value.map((e) => e.toString());
+		const get = data.options.single ? ([undefined, null].includes(value) ? [] : [value.toString()]) : value.map((e) => e.toString());
 		if (data.selection !== get) {
 			// propagate selection to ourselves
 			data.selection = get;

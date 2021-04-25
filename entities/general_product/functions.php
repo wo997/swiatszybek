@@ -287,3 +287,17 @@ function getGlobalProductsSearch($url, $options = [])
 
     return $products_data;
 }
+
+function getAllGeneralProducts()
+{
+    return DB::fetchArr("SELECT * FROM general_product");
+}
+
+function preloadGeneralProducts()
+{
+    $general_products = json_encode(getAllGeneralProducts());
+    return <<<JS
+    general_products = $general_products;
+    loadedGeneralProducts();
+JS;
+}

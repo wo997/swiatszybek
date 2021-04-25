@@ -8,6 +8,7 @@
 <script>
     <?= preloadMenus() ?>
     <?= preloadProductCategories() ?>
+    <?= preloadGeneralProducts() ?>
 </script>
 
 <?php startSection("header"); ?>

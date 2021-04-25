@@ -9,7 +9,7 @@
  *  gross_price: number
  *  stock: number
  *  is_necessary?: boolean
- * }} ProductData
+ * }} DtProductData
  *
  * @typedef {{
  *  general_product_id: number
@@ -158,7 +158,7 @@ function ProductComp(comp, parent, data = undefined) {
 		const all_variant_keys = data.variants.map((variant) => getVariantKeyFromId(variant.product_variant_id));
 
 		data.missing_products_variants.forEach((variants) => {
-			/** @type {ProductData} */
+			/** @type {DtProductData} */
 			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 1, active: 1, stock: 0 };
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
@@ -167,7 +167,7 @@ function ProductComp(comp, parent, data = undefined) {
 			}
 
 			if (params && params.options_existed) {
-				data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
+				data.products_dt.dataset.forEach((/** @type {DtProductData} */ other_product) => {
 					params.options_existed.forEach((option_id) => {
 						const variant = data.variants.find((v) => v.options.find((vo) => vo.product_variant_option_id === option_id));
 						if (!variant) {
@@ -183,7 +183,7 @@ function ProductComp(comp, parent, data = undefined) {
 			let copy_product = undefined;
 			let max_shared_variants_for_similar_products = 0;
 			let product_existed = false;
-			data.products_dt.dataset.forEach((/** @type {ProductData} */ other_product) => {
+			data.products_dt.dataset.forEach((/** @type {DtProductData} */ other_product) => {
 				let shared_variants = 0;
 				let shared_variants_for_similar_products = 0;
 
@@ -228,7 +228,7 @@ function ProductComp(comp, parent, data = undefined) {
 		// compare variants
 		const options_before = {};
 
-		data.products_dt.dataset.forEach((/** @type {ProductData} */ product) => {
+		data.products_dt.dataset.forEach((/** @type {DtProductData} */ product) => {
 			for (const [variant_key, option_id] of Object.entries(product)) {
 				const variant_id = getVariantIdFromKey(variant_key);
 				if (!variant_id) {
@@ -341,7 +341,7 @@ function ProductComp(comp, parent, data = undefined) {
 	comp._remove_missing_products = () => {
 		const data = comp._data;
 
-		data.products_dt.dataset = data.products_dt.dataset.filter((/** @type {ProductData} */ product) => {
+		data.products_dt.dataset = data.products_dt.dataset.filter((/** @type {DtProductData} */ product) => {
 			return product.is_necessary;
 		});
 
@@ -476,7 +476,7 @@ function ProductComp(comp, parent, data = undefined) {
 					// missing product variant columns
 					const missing_products_variants = [];
 
-					/** @type {ProductData[]} */
+					/** @type {DtProductData[]} */
 					const products = data.products_dt.dataset;
 					products.forEach((p) => {
 						p.is_necessary = false;
@@ -1043,7 +1043,7 @@ function ProductComp(comp, parent, data = undefined) {
 			comp._nodes.all_products.addEventListener("editable_change", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				/** @type {ProductData} */
+				/** @type {DtProductData} */
 				const row_data = detail.row_data;
 				const key = detail.key;
 				const vat = vats.find((e) => e.vat_id === row_data.vat_id);
