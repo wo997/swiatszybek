@@ -9,10 +9,9 @@ sub-menu-comp {
 	}
 	& .menu_wrapper {
 		& {
-			background: #eee;
 			display: inline-block;
 			padding: 5px;
-			border: 1px solid #999;
+			border: 1px solid #bbb;
 			position: relative;
 			cursor: grab;
 		}
@@ -62,9 +61,6 @@ sub-menu-comp {
 		}
 		& .menu_name {
 			font-weight: var(--semi_bold);
-		}
-		& .menu_wrapper {
-			background: #fafafa;
 		}
 		& list-comp {
 			& .menu_name {

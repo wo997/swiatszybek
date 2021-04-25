@@ -24,10 +24,9 @@ product-sub-category-comp {
 	}
 	& .category_wrapper {
 		& {
-			background: #eee;
 			display: inline-block;
 			padding: 5px;
-			border: 1px solid #999;
+			border: 1px solid #bbb;
 			position: relative;
 			cursor: grab;
 		}
@@ -77,9 +76,6 @@ product-sub-category-comp {
 		}
 		& .category_name {
 			font-weight: var(--semi_bold);
-		}
-		& .category_wrapper {
-			background: #fafafa;
 		}
 		& list-comp {
 			& .category_name {
