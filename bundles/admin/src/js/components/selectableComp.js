@@ -61,7 +61,12 @@ function SelectableComp(comp, parent, data = undefined) {
 			if (!match) {
 				continue;
 			}
-			suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">${datapart.label}</div>`;
+			suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">
+				${datapart.label} <i class="fas fa-plus mla"></i>
+			</div>`;
+		}
+		if (!suggestions_html) {
+			suggestions_html = html`<div class="case_empty">Brak wyników</div>`;
 		}
 		comp._nodes.suggestions._set_content(suggestions_html);
 	};

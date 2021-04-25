@@ -12,6 +12,11 @@ selectable-comp.comp {
 			display: none;
 		}
 	}
+
+	.suggestion,
+	.case_empty {
+		padding: 4px var(--field_padding_hor);
+	}
 	.node_suggestions {
 		& {
 			position: absolute;
@@ -32,11 +37,23 @@ selectable-comp.comp {
 			& {
 				padding: 4px var(--field_padding_hor);
 				cursor: pointer;
+				position: relative;
 			}
 			&.selected {
 				background: #f5f5f5;
 				box-shadow: 0 0 0 1px #0002;
 				z-index: 19;
+			}
+			.fa-plus {
+				position: absolute;
+				right: 5px;
+				top: 50%;
+				transform: translateY(-50%);
+				color: var(--clr_primary);
+				font-size: 0.9em;
+			}
+			&:not(.selected) .fa-plus {
+				visibility: hidden;
 			}
 		}
 		&:not(.visible) {
