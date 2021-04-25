@@ -72,7 +72,11 @@ function showInputErrors(input, errors) {
 			});
 		}
 	}
-	input.classList.toggle("invalid", wrong);
+	let input_target = input;
+	if (input.tagName === "SELECTABLE-COMP") {
+		input_target = input._child("input");
+	}
+	input_target.classList.toggle("invalid", wrong);
 	if (input.classList.contains("pretty_errors")) {
 		const pretty_errors = input._next();
 		const input_errors = pretty_errors._child(".input_errors");
@@ -121,7 +125,17 @@ function getInputValidationErrors(input) {
 		return [];
 	}
 	const errors = [];
-	const value = input._get_value({ plain: true });
+
+	let value;
+	/** @type {SelectableComp} */
+	let selectable_comp;
+	if (input.tagName === "SELECTABLE-COMP") {
+		// @ts-ignore
+		selectable_comp = input;
+		value = selectable_comp._data.options.single ? selectable_comp._data.selection[0] : selectable_comp._data.selection;
+	} else {
+		value = input._get_value({ plain: true });
+	}
 
 	const extras = validator.split("|");
 

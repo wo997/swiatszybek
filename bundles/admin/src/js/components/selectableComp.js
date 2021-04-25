@@ -14,6 +14,7 @@
  * options?: SelectableCompOptions
  * dataset: SelectableOptionData[]
  * selection?: string[]
+ * parent_variable?: string
  * }} SelectableCompData
  *
  * @typedef {{
@@ -24,6 +25,8 @@
  *  suggestions: PiepNode
  *  selection: PiepNode
  * }
+ * _receive_selection(value)
+ * _propagate_selection()
  * } & BaseComp} SelectableComp
  */
 
@@ -37,51 +40,36 @@ function SelectableComp(comp, parent, data = undefined) {
 	data.selection = def(data.selection, []);
 	data.options = def(data.options, {});
 
+	const refreshSuggestions = () => {
+		const data = comp._data;
+		/** @type {string} */
+		const search = comp._nodes.input
+			._get_value()
+			.trim()
+			.replace(/\s{2,}/g, "");
+		let suggestions_html = "";
+		for (const datapart of data.dataset) {
+			if (data.selection.includes(datapart.value)) {
+				continue;
+			}
+			let match = true;
+			for (const word of search.split(" ")) {
+				if (!datapart.label.toLowerCase().includes(word.toLowerCase())) {
+					match = false;
+				}
+			}
+			if (!match) {
+				continue;
+			}
+			suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">${datapart.label}</div>`;
+		}
+		comp._nodes.suggestions._set_content(suggestions_html);
+	};
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				comp.dataset.selection = data.selection.length + "";
-			},
-		});
-	};
-
-	createComp(comp, parent, data, {
-		template: html`
-			<div style="position:relative">
-				<input class="field" data-node="{${comp._nodes.input}}" />
-				<div data-node="{${comp._nodes.suggestions}}" class="scroll_panel"></div>
-			</div>
-			<div data-node="{${comp._nodes.selection}}"></div>
-		`,
-		ready: () => {
-			const refreshSuggestions = () => {
-				const data = comp._data;
-				/** @type {string} */
-				const search = comp._nodes.input
-					._get_value()
-					.trim()
-					.replace(/\s{2,}/g, "");
-				let suggestions_html = "";
-				for (const datapart of data.dataset) {
-					if (data.selection.includes(datapart.value)) {
-						continue;
-					}
-					let match = true;
-					for (const word of search.split(" ")) {
-						if (!datapart.label.toLowerCase().includes(word.toLowerCase())) {
-							match = false;
-						}
-					}
-					if (!match) {
-						continue;
-					}
-					suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">${datapart.label}</div>`;
-				}
-				comp._nodes.suggestions._set_content(suggestions_html);
-			};
-
-			const refreshSelection = () => {
 				const data = comp._data;
 				let selection_html = "";
 				for (const sel of data.selection) {
@@ -97,8 +85,67 @@ function SelectableComp(comp, parent, data = undefined) {
 					</div>`;
 				}
 				comp._nodes.selection._set_content(selection_html);
-			};
+				comp.dataset.selection = data.selection.length + "";
 
+				comp._propagate_selection();
+			},
+		});
+	};
+
+	comp._receive_selection = (value) => {
+		const data = comp._data;
+		const get = data.options.single ? (value !== undefined ? [value.toString()] : []) : value.map((e) => e.toString());
+		if (data.selection !== get) {
+			// propagate selection to ourselves
+			data.selection = get;
+			comp._render();
+		}
+	};
+
+	comp._propagate_selection = () => {
+		const data = comp._data;
+		const parent = comp._parent_comp;
+
+		if (parent) {
+			const parent_data = parent._data;
+			if (parent_data) {
+				const val = data.options.single ? data.selection[0] : data.selection;
+				if (parent_data[data.parent_variable] !== val) {
+					setTimeout(() => {
+						// propagate selection to the parent yay
+						parent._data[data.parent_variable] = val;
+						parent._render();
+					});
+				}
+			}
+		}
+	};
+
+	createComp(comp, parent, data, {
+		template: html`
+			<div style="position:relative">
+				<input class="field" data-node="{${comp._nodes.input}}" />
+				<div data-node="{${comp._nodes.suggestions}}" class="scroll_panel"></div>
+			</div>
+			<div data-node="{${comp._nodes.selection}}"></div>
+		`,
+		initialize: () => {
+			if (parent) {
+				parent._subscribers.push({
+					receiver: comp,
+					fetch: () => {
+						const parent_data = parent._data;
+						if (parent_data) {
+							setTimeout(() => {
+								comp._receive_selection(parent_data[data.parent_variable]);
+							});
+						}
+					},
+				});
+			}
+		},
+		ready: () => {
+			// mechanics
 			document.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				const data = comp._data;
@@ -116,14 +163,12 @@ function SelectableComp(comp, parent, data = undefined) {
 						}
 						data.selection.push(suggestion.dataset.value);
 						comp._render();
-						refreshSelection();
 						comp._nodes.input._set_value("");
 					}
 					const selection = target._parent(".selection");
 					if (selection && target._parent(".btn")) {
 						data.selection.splice(data.selection.indexOf(selection.dataset.value), 1);
 						comp._render();
-						refreshSelection();
 					}
 				}
 
@@ -206,8 +251,6 @@ function SelectableComp(comp, parent, data = undefined) {
 
 				scrollIntoView(select, { duration: 0 });
 			});
-
-			refreshSelection();
 		},
 	});
 }

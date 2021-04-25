@@ -79,6 +79,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 				single: true,
 			},
 			dataset: category_options,
+			parent_variable: "product_category_id",
 		};
 	}
 
@@ -208,9 +209,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
-					<div class="label">Kategoria Produkt</div>
-					<input class="field number hidden" data-bind="{${data.product_category_id}}" data-validate="" />
-					<selectable-comp data-bind="{${data.select_product_category}}"></selectable-comp>
+					<div class="label">Kategoria produktów</div>
+					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_product}}">
 					<div class="label">Produkt</div>
@@ -238,6 +238,17 @@ function MenuModalComp(comp, parent, data = undefined) {
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				comp._delete();
 			});
+
+			// comp._child(".bind_product_category_id").addEventListener("change", () => {
+			// 	const data = comp._data;
+			// 	const selection = [];
+			// 	if (data.product_category_id !== undefined) {
+			// 		selection.push(data.product_category_id + "");
+			// 	}
+			// 	data.select_product_category.selection = selection;
+			// 	comp._render();
+			// });
+			// comp._child(".bind_select_product_category").addEventListener("change", () => {});
 		},
 	});
 }
