@@ -74,11 +74,16 @@ function ProductSubCategoryComp(comp, parent, data = undefined) {
 			edit_btn.addEventListener("click", () => {
 				const data = comp._data;
 
+				/** @type {ProductSubCategoryComp()} */
+				// @ts-ignore
+				const maybe_parent_sub_category = parent._parent_comp;
+				const parent_product_category_id =
+					maybe_parent_sub_category.tagName === "PRODUCT-SUB-CATEGORY-COMP" ? maybe_parent_sub_category._data.product_category_id : -1;
+
 				/** @type {ProductCategoryModalCompData} */
 				const cat = {
 					name: data.name,
-					parent_product_category_id: product_categories.find((c) => c.product_category_id === data.product_category_id)
-						.parent_product_category_id,
+					parent_product_category_id,
 					product_category_id: data.product_category_id,
 				};
 				getProductCategoryModal()._show({
@@ -88,13 +93,10 @@ function ProductSubCategoryComp(comp, parent, data = undefined) {
 						data.name = cat.name;
 						comp._render();
 
-						const category_data = product_categories.find((c) => c.product_category_id === data.product_category_id);
-						if (category_data.parent_product_category_id !== cat.parent_product_category_id) {
+						if (parent_product_category_id !== cat.parent_product_category_id) {
 							/** @type {ProductCategoriesComp} */
 							// @ts-ignore
 							const categories_comp = comp._parent("product-categories-comp");
-
-							//const multi_master = comp._parent(".multi_master");
 
 							/** @type {ProductSubCategoryComp} */
 							// @ts-ignore

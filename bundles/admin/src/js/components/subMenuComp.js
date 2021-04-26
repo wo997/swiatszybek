@@ -52,7 +52,7 @@ function SubMenuComp(comp, parent, data = undefined) {
 			<div class="menu_wrapper">
 				<span class="menu_name">
 					<span html="{${data.name}}"></span>
-					<span data-node="{${comp._nodes.info}}" class="text_link semi_bold" data-tooltip_position="bottom"></span>
+					<span data-node="{${comp._nodes.info}}" class="text_link semi_bold" data-tooltip_position="center"></span>
 				</span>
 				<p-trait data-trait="expand_multi_list_btn"></p-trait>
 				<button class="btn subtle small multi_list_add_btn" data-tooltip="Dodaj menu podrzędne" data-node="{${comp._nodes.add_btn}}">
@@ -79,10 +79,15 @@ function SubMenuComp(comp, parent, data = undefined) {
 			edit_btn.addEventListener("click", () => {
 				const data = comp._data;
 
+				/** @type {SubMenuComp} */
+				// @ts-ignore
+				const maybe_parent_sub_menu = parent._parent_comp;
+				const parent_menu_id = maybe_parent_sub_menu.tagName === "SUB-MENU-COMP" ? maybe_parent_sub_menu._data.menu_id : -1;
+
 				/** @type {MenuModalCompData} */
 				const cat = {
 					name: data.name,
-					parent_menu_id: menus.find((c) => c.menu_id === data.menu_id).parent_menu_id,
+					parent_menu_id,
 					menu_id: data.menu_id,
 					link_what: data.link_what,
 					link_what_id: data.link_what_id,
@@ -98,13 +103,10 @@ function SubMenuComp(comp, parent, data = undefined) {
 						data.url = cat.url;
 						comp._render();
 
-						const menu_data = menus.find((c) => c.menu_id === data.menu_id);
-						if (menu_data.parent_menu_id !== cat.parent_menu_id) {
+						if (parent_menu_id !== cat.parent_menu_id) {
 							/** @type {MenusComp} */
 							// @ts-ignore
 							const menus_comp = comp._parent("menus-comp");
-
-							//const multi_master = comp._parent(".multi_master");
 
 							/** @type {SubMenuComp} */
 							// @ts-ignore
