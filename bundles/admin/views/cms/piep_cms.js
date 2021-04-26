@@ -702,6 +702,21 @@ class PiepCMS {
 				},
 			},
 			{
+				id: "columns",
+				label: html`<i class="fas fa-columns"></i> Kolumny`,
+				v_node: {
+					tag: "div",
+					id: -1,
+					text: undefined,
+					children: [],
+					styles: {},
+					classes: [],
+					attrs: {},
+					module_name: "columns",
+					module_attrs: {},
+				},
+			},
+			{
 				id: "img",
 				label: html`<i class="far fa-image"></i> Zdjęcie`,
 				v_node: {
@@ -720,7 +735,10 @@ class PiepCMS {
 			menu_html += html` <div class="btn transparent block_to_add" data-id="${block_to_add.id}">${block_to_add.label}</div> `;
 		}
 
-		menu_html += html` <div class="btn transparent mt2"><i class="fas fa-ellipsis-h"></i> Więcej</div> `;
+		// menu_html += html`
+		// 	<div style="width:100%"></div>
+		// 	<div class="btn transparent mt2"><i class="fas fa-ellipsis-h"></i> Więcej</div>
+		// `;
 
 		this.add_block_menu._set_content(menu_html);
 
@@ -903,6 +921,10 @@ class PiepCMS {
 				this.grabBlock({ type: "move" });
 			}
 
+			if (target._parent(".layout_btn")) {
+				this.editLayout();
+			}
+
 			if (target._parent(".remove_format_btn")) {
 				v_node.styles = {};
 				this.recreateDom();
@@ -926,8 +948,8 @@ class PiepCMS {
 			}
 
 			if (target._parent(this.container)) {
-				this.float_menu_active = true; // !!(content_active || target._parent(this.float_menu) || target._parent(".picker_wrapper"));
-				if (target._parent(".hide_menu_btn") || this.focus_node_vid === undefined || this.grabbed_block_vid !== undefined) {
+				this.float_menu_active = true;
+				if (target._parent(".hide_menu_btn") || this.focus_node_vid === undefined) {
 					this.float_menu_active = false;
 				}
 
@@ -1355,6 +1377,10 @@ class PiepCMS {
 		return JSON.stringify(this.v_dom);
 	}
 
+	/**
+	 *
+	 * @param {vDomNode[]} set_v_dom
+	 */
 	import(set_v_dom) {
 		this.v_dom = set_v_dom;
 		this.recreateDom();
@@ -1445,6 +1471,25 @@ class PiepCMS {
 
 			for (const v_node of v_nodes) {
 				let body = "";
+
+				// oh boy, here you need to warmup children, PROBABLY A LISTENER WOULD BE IDEAL
+
+				// if (v_node.module_name === "columns") {
+				// 	v_node.children = [];
+				// 	for (let column_id = 0; column_id < v_node.module_attrs.column_count; column_id++) {
+				// 		// I think it's possible to reuse most of the data from above,
+				// 		// ON THE OTHER HAND - THESE THINGS WONT EVEN BE STORED FUUUCK
+				// 		const column_v_node = { id: this.getNewBlcId(), attrs: {}, classes: [], styles: {}, tag: "div", children: [] };
+
+				// 		column_v_node.children = [];
+				// 		const inside = v_node.module_children[column_id];
+				// 		if (inside) column_v_node.children.push(inside);
+				// 		v_node.children.push(column_v_node);
+				// 		//v_node.module_children[]
+				// 	}
+
+				// 	//v_node.children = cloneObject();
+				// }
 
 				const children = v_node.children;
 				const text = v_node.text;
@@ -2028,21 +2073,31 @@ class PiepCMS {
 		});
 	}
 
+	editLayout() {
+		this.edit_layout_vid = this.focus_node_vid;
+
+		this.container.classList.add("editing_layout");
+		this.container.classList.add("disable_editing");
+	}
+
+	finishEditingLayout() {
+		this.edit_layout_vid = undefined;
+
+		this.container.classList.remove("editing_layout");
+		this.container.classList.remove("disable_editing");
+	}
+
 	/**
 	 *
 	 * @param {GrabBlockOptions} options
 	 */
 	grabBlock(options) {
-		this.grabb_block_options = options;
-
-		this.float_focus.classList.add("hidden");
-		this.float_menu.classList.add("hidden");
-		this.cursor.classList.add("hidden");
-		this.container.classList.add("grabbed_block");
-		this.container.classList.remove("has_insert_pos");
-		this.parent_float_focus.classList.add("hidden");
-
+		this.grab_block_options = options;
 		this.grabbed_block_vid = this.focus_node_vid;
+
+		this.container.classList.add("grabbed_block");
+		this.container.classList.add("disable_editing");
+		this.current_insert_blc = 123456789; // will warm up everything on grab
 
 		this.grabbed_block_wrapper._set_content(this.getFocusNode().outerHTML);
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
@@ -2413,6 +2468,7 @@ class PiepCMS {
 	releaseBlock() {
 		this.grabbed_block_wrapper.classList.remove("visible");
 		this.container.classList.remove("grabbed_block");
+		this.container.classList.remove("disable_editing");
 		this.container.classList.remove("has_insert_pos");
 		this.float_focus.classList.add("hidden");
 		this.float_multi_insert.classList.add("hidden");
@@ -2450,7 +2506,7 @@ class PiepCMS {
 			}
 		} else {
 			// temp block needs to be removed
-			if (this.grabb_block_options.type === "insert") {
+			if (this.grab_block_options.type === "insert") {
 				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom, this.grabbed_block_vid);
 				grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 			}
@@ -2571,7 +2627,7 @@ class PiepCMS {
 	 * @returns
 	 */
 	setFocusNode(vid) {
-		if (this.grabbed_block_vid !== undefined) {
+		if (this.grabbed_block_vid !== undefined || this.edit_layout_vid !== undefined) {
 			return;
 		}
 

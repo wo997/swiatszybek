@@ -1,5 +1,12 @@
 /**
  * @typedef {{
+ * child_name?: string
+ * } & vDomNode} vDomModuleNode
+ * TODO: naming might be important when creating more complex modules and when we would want to assign a node to some predefined section
+ */
+
+/**
+ * @typedef {{
  * id: number
  * tag: string
  * text?: string
@@ -8,6 +15,9 @@
  * attrs: object
  * classes: string[]
  * insert_on_release?: boolean
+ * module_name?: string
+ * module_attrs?: object
+ * module_children?: vDomModuleNode[]
  * }} vDomNode
  */
 

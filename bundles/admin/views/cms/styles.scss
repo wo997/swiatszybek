@@ -118,12 +118,21 @@
 		}
 	}
 
+	&.disable_editing {
+		.piep_editor_float_focus,
+		.piep_editor_float_menu,
+		.piep_editor_cursor {
+			display: none !important;
+		}
+
+		& .piep_editor_inspector {
+			display: none !important;
+		}
+	}
+
 	&.grabbed_block {
 		&:not(.has_insert_pos) .piep_editor_content {
 			opacity: 0.7;
-		}
-		& .piep_editor_inspector {
-			display: none !important;
 		}
 	}
 }
