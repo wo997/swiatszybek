@@ -2096,26 +2096,125 @@ class PiepCMS {
 
 		const focus_node_style = window.getComputedStyle(focus_node);
 
-		const orange = "#d809";
+		const orange = "#d806";
+		const green = "#3d56";
 		const mr_top = numberFromStr(focus_node_style.marginTop);
+		const mr_right = numberFromStr(focus_node_style.marginRight);
+		const mr_bottom = numberFromStr(focus_node_style.marginBottom);
+		const mr_left = numberFromStr(focus_node_style.marginLeft);
+		const pd_top = numberFromStr(focus_node_style.paddingTop);
+		const pd_right = numberFromStr(focus_node_style.paddingRight);
+		const pd_bottom = numberFromStr(focus_node_style.paddingBottom);
+		const pd_left = numberFromStr(focus_node_style.paddingLeft);
+
+		// margins
+		const display_margin = (left, top, width, height, background) => {
+			layout_html += html`<div
+				class="margin_display"
+				style="
+                left:${left}px;
+                top:${top + this.content_scroll.scrollTop}px;
+                width:${width}px;
+                height:${height}px;
+                background:${background}"
+			></div>`;
+		};
+
 		{
+			// top
 			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + this.content_scroll.scrollTop;
+			let top = focus_node_rect.top;
 			let width = focus_node_rect.width;
 			let height = Math.abs(mr_top);
 			let background = mr_top > 0 ? orange : orange;
 			if (mr_top > 0) {
-				top -= mr_top;
+				top -= height;
 			}
+			display_margin(left, top, width, height, background);
+		}
+		{
+			// bottom
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top + focus_node_rect.height;
+			let width = focus_node_rect.width;
+			let height = Math.abs(mr_bottom);
+			let background = mr_bottom > 0 ? orange : orange;
+			if (mr_bottom < 0) {
+				top -= height;
+			}
+			display_margin(left, top, width, height, background);
+		}
+		{
+			// left
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top;
+			let width = Math.abs(mr_left);
+			let height = focus_node_rect.height;
+			let background = mr_top > 0 ? orange : orange;
+			if (mr_left > 0) {
+				left -= width;
+			}
+			display_margin(left, top, width, height, background);
+		}
+		{
+			// right
+			let left = focus_node_rect.left + focus_node_rect.width;
+			let top = focus_node_rect.top;
+			let width = Math.abs(mr_right);
+			let height = focus_node_rect.height;
+			let background = mr_top > 0 ? orange : orange;
+			if (mr_right < 0) {
+				left -= width;
+			}
+			display_margin(left, top, width, height, background);
+		}
+
+		// paddings
+		const display_padding = (left, top, width, height) => {
 			layout_html += html`<div
-				class="margin_display"
+				class="padding_display"
 				style="
-                    left:${left}px;
-                    top:${top}px;
-                    width:${width}px;
-                    height:${height}px;
-                    background:${background}"
+                left:${left}px;
+                top:${top + this.content_scroll.scrollTop}px;
+                width:${width}px;
+                height:${height}px;
+                background:${green}"
 			></div>`;
+		};
+
+		{
+			// top
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top;
+			let width = focus_node_rect.width;
+			let height = Math.abs(pd_top);
+			display_padding(left, top, width, height);
+		}
+		{
+			// bottom
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top + focus_node_rect.height;
+			let width = focus_node_rect.width;
+			let height = Math.abs(pd_bottom);
+			top -= height;
+			display_padding(left, top, width, height);
+		}
+		{
+			// left
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top;
+			let width = Math.abs(pd_left);
+			let height = focus_node_rect.height;
+			display_padding(left, top, width, height);
+		}
+		{
+			// right
+			let left = focus_node_rect.left + focus_node_rect.width;
+			let top = focus_node_rect.top;
+			let width = Math.abs(pd_right);
+			let height = focus_node_rect.height;
+			left -= width;
+			display_padding(left, top, width, height);
 		}
 
 		// this.float_multi_insert._set_absolute_pos(
