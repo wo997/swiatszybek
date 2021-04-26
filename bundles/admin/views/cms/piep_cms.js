@@ -60,6 +60,12 @@ class PiepCMS {
 		this.parent_float_focus = node("piep_editor_parent_float_focus");
 		this.float_menu = node("piep_editor_float_menu");
 		this.add_block_menu = node("piep_editor_add_block_menu");
+		this.layout_controls = node("piep_editor_layout_controls");
+		this.alternative_scroll_panel.append(this.layout_controls);
+
+		// added straight to the layout_controls
+		//this.show_edit_node_layout = node("piep_editor_show_edit_node_layout");
+		//this.alternative_scroll_panel.append(this.show_edit_node_layout);
 
 		this.styles = styles("piep_editor_styles");
 
@@ -1597,6 +1603,8 @@ class PiepCMS {
 
 		lazyLoadImages({ duration: 0 });
 		registerForms();
+
+		this.setFocusNode(this.focus_node_vid);
 	}
 
 	/**
@@ -2076,8 +2084,86 @@ class PiepCMS {
 	editLayout() {
 		this.edit_layout_vid = this.focus_node_vid;
 
+		this.showFocusToNode(this.edit_layout_vid);
+
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
+
+		let layout_html = "";
+
+		const focus_node = this.getFocusNode();
+		const focus_node_rect = focus_node.getBoundingClientRect();
+
+		const focus_node_style = window.getComputedStyle(focus_node);
+
+		const orange = "#d809";
+		const mr_top = numberFromStr(focus_node_style.marginTop);
+		{
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top + this.content_scroll.scrollTop;
+			let width = focus_node_rect.width;
+			let height = Math.abs(mr_top);
+			let background = mr_top > 0 ? orange : orange;
+			if (mr_top > 0) {
+				top -= mr_top;
+			}
+			layout_html += html`<div
+				class="margin_display"
+				style="
+                    left:${left}px;
+                    top:${top}px;
+                    width:${width}px;
+                    height:${height}px;
+                    background:${background}"
+			></div>`;
+		}
+
+		// this.float_multi_insert._set_absolute_pos(
+		//     insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5,
+		//     insert_blc_rect.top +
+		//         (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 +
+		//         this.content_scroll.scrollTop
+		// );
+
+		/**
+		 * @type {{
+		 * name: string
+		 * }[]}
+		 */
+		const margins = [
+			{
+				name: "left",
+			},
+			{
+				name: "right",
+			},
+			{
+				name: "top",
+			},
+			{
+				name: "bottom",
+			},
+		];
+
+		for (const margin of margins) {
+			layout_html += html`<input class="field small margin_input margin_${margin.name}" />`;
+		}
+
+		this.layout_controls._set_content(layout_html);
+
+		//for )
+		// <input class="field small margin_input margin_left">
+		// <input class="field small margin_input margin_right">
+		// <input class="field small margin_input margin_top">
+		// <input class="field small margin_input margin_bottom">
+
+		// <input class="field small padding_input padding_left">
+		// <input class="field small padding_input padding_right">
+		// <input class="field small padding_input padding_top">
+		// <input class="field small padding_input padding_bottom">
+
+		// <input class="field small width_input">
+		// <!-- <input class="field small height_input"> -->
 	}
 
 	finishEditingLayout() {
@@ -2085,6 +2171,8 @@ class PiepCMS {
 
 		this.container.classList.remove("editing_layout");
 		this.container.classList.remove("disable_editing");
+
+		this.layout_controls._set_content("");
 	}
 
 	/**

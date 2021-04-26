@@ -4,6 +4,7 @@
 .blc {
 	min-width: 0;
 	min-height: 0;
+	border: 0 solid transparent; // we can actually change border width even if it's hidden
 }
 /****** THIS SHOULD BE GLOBAL ******/
 
@@ -120,8 +121,7 @@
 
 	&.disable_editing {
 		.piep_editor_float_focus,
-		.piep_editor_float_menu,
-		.piep_editor_cursor {
+		.piep_editor_float_menu {
 			display: none !important;
 		}
 
@@ -133,6 +133,10 @@
 	&.grabbed_block {
 		&:not(.has_insert_pos) .piep_editor_content {
 			opacity: 0.7;
+		}
+
+		.piep_editor_cursor {
+			display: none !important;
 		}
 	}
 }

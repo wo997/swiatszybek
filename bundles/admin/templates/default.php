@@ -25,7 +25,7 @@ endSection();
     </header>
 
     <header class="navbar_admin">
-        <div class="scroll_panel scroll_shadow hide_scrollbar">
+        <div class="scroll_panel scroll_shadow">
             <div>
                 <a href="/" class="home logo_wrapper">
                     <img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
