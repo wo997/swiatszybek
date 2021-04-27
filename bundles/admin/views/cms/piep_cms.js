@@ -2400,6 +2400,23 @@ class PiepCMS {
 
 			const blc_vid = +blc.dataset.vid;
 
+			const getFlowDirection = () => {
+				/** @type {FlowDirectionEnum} */
+				let flow_direction = "column";
+				const parent_v_node = near_v_node_data.parent_v_nodes[0];
+				if (parent_v_node) {
+					// const parent_display = parent_v_node.styles.display;
+					// if (parent_display === "flex") {
+					// 	wrap_with_a_flex = false;
+					// }
+
+					if (parent_v_node.classes.includes("module_columns")) {
+						flow_direction = "row"; // TODO: wont work always ofc
+					}
+				}
+				return flow_direction;
+			};
+
 			/**
 			 *
 			 * @param {-1 | 1} dir
@@ -2436,19 +2453,24 @@ class PiepCMS {
 
 				// actually here we should have block / inline-block checking, blocks can be wrapped,
 				// text not so, unless what we place nearby is also a block?
-				let wrap_with_a_flex = false;
-				if (near_v_node_data.v_node.text === undefined) {
-					wrap_with_a_flex = true;
-				}
-				const parent_v_node = near_v_node_data.parent_v_nodes[0];
-				if (parent_v_node) {
-					const parent_display = parent_v_node.styles.display;
-					if (parent_display === "flex") {
-						wrap_with_a_flex = false;
-					}
-				}
+				let suggest_wrapping_with_columns_module = false;
+				// if (near_v_node_data.v_node.text === undefined) {
+				// 	wrap_with_a_flex = true;
+				// }
+				const flow_direction = getFlowDirection();
 
-				if (wrap_with_a_flex) {
+				if (flow_direction === "column") {
+					suggest_wrapping_with_columns_module = true;
+				}
+				// const parent_v_node = near_v_node_data.parent_v_nodes[0];
+				// if (parent_v_node) {
+				// 	const parent_display = parent_v_node.styles.display;
+				// 	if (parent_display === "flex") {
+				// 		wrap_with_a_flex = false;
+				// 	}
+				// }
+
+				if (suggest_wrapping_with_columns_module) {
 					/** @type {vDomNode} */
 					const insert_container = {
 						tag: "div",
@@ -2513,6 +2535,8 @@ class PiepCMS {
 				}
 			};
 
+			const flow_direction = getFlowDirection();
+
 			// left
 			const insert_left_blc = getInsertBlc();
 			insert_left_blc._insert_action = () => {
@@ -2527,18 +2551,7 @@ class PiepCMS {
 			};
 			setInsertPos(insert_right_blc, "right");
 
-			let do_up_and_down = true;
-			if (near_v_node_data.v_node.text !== undefined) {
-				do_up_and_down = false;
-			}
-			const parent_v_node = near_v_node_data.parent_v_nodes[0];
-			if (parent_v_node) {
-				const parent_display = parent_v_node.styles.display;
-				if (parent_display === "flex") {
-					do_up_and_down = false;
-				}
-			}
-			if (do_up_and_down) {
+			if (flow_direction === "column") {
 				// top
 				const insert_top_blc = getInsertBlc();
 				insert_top_blc._insert_action = () => {

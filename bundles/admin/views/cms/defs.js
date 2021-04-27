@@ -77,3 +77,7 @@
  * type: ("move" | "insert")
  * }} GrabBlockOptions
  */
+
+/**
+ * @typedef {"column" | "row"} FlowDirectionEnum
+ */
