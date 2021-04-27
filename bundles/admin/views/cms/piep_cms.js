@@ -817,8 +817,8 @@ class PiepCMS {
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
 						// since the first one is the greatest so the other two will be
 						const bef_vid = this.getNewBlcId();
-						const mid_vid = this.getNewBlcId() + 1;
-						const aft_vid = this.getNewBlcId() + 2;
+						const mid_vid = bef_vid + 1;
+						const aft_vid = mid_vid + 1;
 
 						/** @type {vDomNode} */
 						const bef_child = {
@@ -2474,26 +2474,49 @@ class PiepCMS {
 				}
 
 				if (suggest_wrapping_with_columns_module) {
-					console.log(near_v_node.id, "<<<");
+					const columns_id = this.getNewBlcId();
+					const near_column_id = columns_id + 1;
+					const new_column_id = near_column_id + 1;
 
-					/** @type {vDomNode} */
-					const insert_container = {
+					const near_column = {
+						id: near_column_id,
 						tag: "div",
+						styles: { padding: "10px", border: "2px solid green" },
 						attrs: {},
-						children: [near_v_node],
 						classes: [],
-						id: this.getNewBlcId(),
-						styles: { display: "flex" },
+						children: [near_v_node],
 					};
-					// TODO: check if parent is a flex already
+
+					const new_column = {
+						id: new_column_id,
+						tag: "div",
+						styles: { padding: "10px", border: "1px solid green" },
+						attrs: {},
+						classes: [],
+						children: [grabbed_node_copy],
+					};
+
+					/** @type {vDomNode[]} */
+					const just_columns = [near_column];
 
 					if (dir === 1) {
-						insert_container.children.push(grabbed_node_copy);
+						just_columns.push(new_column);
 					} else {
-						insert_container.children.unshift(grabbed_node_copy);
+						just_columns.unshift(new_column);
 					}
 
-					near_v_node_data.v_nodes.splice(ind, 1, insert_container);
+					/** @type {vDomNode} */
+					const insert_columns = {
+						tag: "div",
+						attrs: {},
+						children: just_columns,
+						classes: [],
+						id: columns_id,
+						styles: { display: "flex" },
+						module_name: "columns",
+					};
+
+					near_v_node_data.v_nodes.splice(ind, 1, insert_columns);
 				} else {
 					if (dir === 1) {
 						ind++;
