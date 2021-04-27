@@ -2462,13 +2462,6 @@ class PiepCMS {
 				if (flow_direction === "column") {
 					suggest_wrapping_with_columns_module = true;
 				}
-				// const parent_v_node = near_v_node_data.parent_v_nodes[0];
-				// if (parent_v_node) {
-				// 	const parent_display = parent_v_node.styles.display;
-				// 	if (parent_display === "flex") {
-				// 		wrap_with_a_flex = false;
-				// 	}
-				// }
 
 				if (suggest_wrapping_with_columns_module) {
 					/** @type {vDomNode} */
