@@ -1,0 +1,8 @@
+/* css[global] */
+
+// IMPORTANT, the order in which we include files does matter, these are global styles that can be overriden
+.blc {
+	min-width: 0;
+	min-height: 0;
+	border: 0 solid transparent; // we can actually change border width even if it's hidden
+}

@@ -1,13 +1,5 @@
 /* css[view] */
 
-/****** THIS SHOULD BE GLOBAL ******/
-.blc {
-	min-width: 0;
-	min-height: 0;
-	border: 0 solid transparent; // we can actually change border width even if it's hidden
-}
-/****** THIS SHOULD BE GLOBAL ******/
-
 .piep_editor_float_focus,
 .piep_editor_parent_float_focus {
 	position: absolute;
@@ -70,6 +62,7 @@
 			flex-shrink: 0;
 			flex-grow: 1;
 			grid-area: 2 / 2 / 3 / 3;
+			align-items: stretch;
 		}
 		// ::selection {
 		// 	color: green;

@@ -27,22 +27,23 @@
 
 /**
  * @typedef {{
- * match: RegExp
+ * match_tag?: RegExp
+ * matcher?(v_node: vDomNode): boolean
  * priority?: number
- * }} TagGroup
+ * }} BlcGroup
  */
 
 /**
  * @typedef {{
  * selector: string
- * tag_groups?: TagGroup[]
+ * tag_groups?: BlcGroup[]
  * }} cmsFloatingEditableProp
  */
 
 /**
  * @typedef {{
  * selector: string
- * tag_groups?: TagGroup[]
+ * blc_groups?: BlcGroup[]
  * type_groups: cmsEditableGroupEnum[]
  * }} cmsEditableProp
  */

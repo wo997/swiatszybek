@@ -147,9 +147,27 @@ class PiepCMS {
 
 	initConsts() {
 		this.match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
-		this.match_media = /^(img|video|iframe)$/;
+		this.match_media_tags = /^(img|video|iframe)$/;
 
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
+		/**
+		 *
+		 * @param {vDomNode} v_node
+		 * @returns
+		 */
+		const inVerticalContainerMatcher = (v_node) => {
+			const parent_v_node = this.getVDomNodeDataById(this.v_dom, v_node.id).parent_v_nodes[0];
+			return !parent_v_node || parent_v_node.classes.includes("vertical_container");
+		};
+		/**
+		 *
+		 * @param {vDomNode} v_node
+		 * @returns
+		 */
+		const verticalContainerMatcher = (v_node) => {
+			return v_node.classes.includes("vertical_container");
+		};
 
 		/**
 		 * @type {cmsEditableProp[]}
@@ -158,37 +176,37 @@ class PiepCMS {
 			{
 				selector: ".prop_fontSize",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_fontWeight",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_textAlign",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_fontStyle",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_textDecoration",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_color",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_backgroundColor",
 				type_groups: ["appearance"],
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				blc_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_margin",
@@ -199,20 +217,47 @@ class PiepCMS {
 				type_groups: ["layout"],
 			},
 			{
+				selector: ".prop_alignSelfHorizontally",
+				blc_groups: [
+					{
+						matcher: inVerticalContainerMatcher,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
+				selector: ".prop_justifyContentVertically",
+				blc_groups: [
+					{
+						matcher: verticalContainerMatcher,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
+				selector: ".prop_alignItemsHorizontally",
+				blc_groups: [
+					{
+						matcher: verticalContainerMatcher,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
 				selector: ".prop_data-src",
-				tag_groups: [{ match: /^(img)$/ }],
+				blc_groups: [{ match_tag: /^(img)$/ }],
 				type_groups: ["appearance"],
 			},
 			{
 				selector: ".prop_alt",
-				tag_groups: [{ match: this.match_media }],
+				blc_groups: [{ match_tag: this.match_media_tags }],
 				type_groups: ["advanced"],
 			},
 			{
 				selector: ".prop_width",
-				tag_groups: [
-					{ match: this.match_media, priority: 1 },
-					{ match: /.*/, priority: 0 },
+				blc_groups: [
+					{ match_tag: this.match_media_tags, priority: 1 },
+					{ match_tag: /.*/, priority: 0 },
 				],
 				type_groups: ["layout"],
 			},
@@ -228,31 +273,31 @@ class PiepCMS {
 		this.float_editable_props = [
 			{
 				selector: ".prop_fontSize",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_fontWeight",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_textAlign",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_color",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".prop_backgroundColor",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".remove_format_btn",
-				tag_groups: [{ match: this.match_tags_containing_text }],
+				tag_groups: [{ match_tag: this.match_tags_containing_text }],
 			},
 			{
 				selector: ".choose_img_btn",
-				tag_groups: [{ match: /^(img)$/ }],
+				tag_groups: [{ match_tag: /^(img)$/ }],
 			},
 			// {
 			// 	selector: ".prop_alt",
@@ -1206,8 +1251,8 @@ class PiepCMS {
 
 					<div class="label normal">Inny rozmiar</div>
 					<div class="glue_children">
-						<input class="field small value_input" />
-						<select class="piep_editor_unit_input field inline small">
+						<input class="field value_input" />
+						<select class="piep_editor_unit_input field inline">
 							<option value="px">px</option>
 							<option value="em">em</option>
 							<option value="rem">rem</option>
@@ -1378,6 +1423,132 @@ class PiepCMS {
 				<div class="prop_height">
 					<div class="label">Wysokość</div>
 					<input class="field" data-blc_prop="style.height" />
+				</div>
+
+				<div class="prop_alignSelfHorizontally">
+					<div class="label">Wyrównaj blok poziomo</div>
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_align_self_horizontal_icon" style="align-items:flex-start"></div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_align_self_horizontal_icon" style="align-items:center"></div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
+						</div>
+						<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona szerokość">
+							<p-checkbox data-value="stretch"></p-checkbox>
+							<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="prop_alignItemsHorizontally">
+					<div class="label">Wyrównaj zawartość poziomo</div>
+					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.alignItems">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_align_items_horizontal_icon" style="align-items:flex-start">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_align_items_horizontal_icon" style="align-items:center">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_align_items_horizontal_icon" style="align-items:flex-end">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="stretch"></p-checkbox>
+							<div class="flex_align_items_horizontal_icon" style="justify-content:stretch">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="prop_justifyContentVertically">
+					<div class="label">Wyrównaj zawartość pionowo</div>
+					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:flex-start">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:center">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:flex-end">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-around"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:space-around">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-between"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:space-between">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-evenly"></p-checkbox>
+							<div class="flex_justify_content_vertical_icon" style="justify-content:space-evenly">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
 				</div>
 
 				<div class="prop_data-src">
@@ -2520,7 +2691,7 @@ class PiepCMS {
 					: {
 							id: new_vid,
 							tag: "div",
-							styles: { padding: "10px", border: "1px solid green" },
+							styles: {},
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [grabbed_node_copy],
@@ -2530,7 +2701,7 @@ class PiepCMS {
 					const near_column = {
 						id: new_vid + 1,
 						tag: "div",
-						styles: { padding: "10px", border: "2px solid green" },
+						styles: {},
 						attrs: {},
 						classes: ["vertical_container"],
 						children: [near_v_node],
@@ -3012,13 +3183,23 @@ class PiepCMS {
 
 					let visible = true;
 					let priority = -index * 0.001;
-					if (prop.tag_groups) {
+					if (prop.blc_groups) {
 						visible = false;
-						for (const tag_group of prop.tag_groups) {
-							const matches = !!v_node.tag.match(tag_group.match);
-							if (matches) {
+						for (const tag_group of prop.blc_groups) {
+							if (tag_group.matcher) {
+								const matches = tag_group.matcher(v_node);
+								if (matches) {
+									visible = true;
+								}
+							}
+							if (tag_group.match_tag) {
+								const matches = !!v_node.tag.match(tag_group.match_tag);
+								if (matches) {
+									visible = true;
+								}
+							}
+							if (visible) {
 								priority += def(tag_group.priority, 1);
-								visible = true;
 								break;
 							}
 						}
@@ -3053,7 +3234,7 @@ class PiepCMS {
 					if (prop.tag_groups) {
 						visible = false;
 						for (const tag_group of prop.tag_groups) {
-							const matches = !!v_node.tag.match(tag_group.match);
+							const matches = !!v_node.tag.match(tag_group.match_tag);
 							if (matches) {
 								priority += def(tag_group.priority, 1);
 								visible = true;
