@@ -16,59 +16,16 @@
 		width: 60px;
 	}
 
-	.margin_left {
-		top: 50%;
-		right: 100%;
-		transform: translateY(-50%);
-	}
-	.margin_right {
-		top: 50%;
-		left: 100%;
-		transform: translateY(-50%);
-	}
-	.margin_top {
-		left: 50%;
-		bottom: 100%;
-		transform: translateX(-50%);
-	}
-	.margin_bottom {
-		left: 50%;
-		top: 100%;
-		transform: translateX(-50%);
-	}
-
-	.padding_left {
-		top: 50%;
-		left: 0;
-		transform: translateY(-50%);
-	}
-	.padding_right {
-		top: 50%;
-		right: 0;
-		transform: translateY(-50%);
-	}
-	.padding_top {
-		left: 50%;
-		top: 0;
-		transform: translateX(-50%);
-	}
-	.padding_bottom {
-		left: 50%;
-		bottom: 0;
-		transform: translateX(-50%);
-	}
-
-	.width_input {
-		left: 50%;
-		top: calc(100% + 50px);
-		transform: translateX(-50%);
-	}
-
 	.margin_display {
 		position: absolute;
 		//background: #d809;
 	}
 	.padding_display {
+		position: absolute;
+	}
+
+	.width_control {
+		//width: 40px;
 		position: absolute;
 	}
 	//height_input

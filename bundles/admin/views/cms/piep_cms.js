@@ -2217,35 +2217,43 @@ class PiepCMS {
 			display_padding(left, top, width, height);
 		}
 
-		// this.float_multi_insert._set_absolute_pos(
-		//     insert_blc_rect.left + (insert_blc_rect.width - piep_editor_float_multi_insert_rect.width) * 0.5,
-		//     insert_blc_rect.top +
-		//         (insert_blc_rect.height - piep_editor_float_multi_insert_rect.height) * 0.5 +
-		//         this.content_scroll.scrollTop
-		// );
+		// /**
+		//  * @type {{
+		//  * name: string
+		//  * }[]}
+		//  */
+		// const margins = [
+		// 	{
+		// 		name: "left",
+		// 	},
+		// 	{
+		// 		name: "right",
+		// 	},
+		// 	{
+		// 		name: "top",
+		// 	},
+		// 	{
+		// 		name: "bottom",
+		// 	},
+		// ];
 
-		/**
-		 * @type {{
-		 * name: string
-		 * }[]}
-		 */
-		const margins = [
-			{
-				name: "left",
-			},
-			{
-				name: "right",
-			},
-			{
-				name: "top",
-			},
-			{
-				name: "bottom",
-			},
-		];
+		// for (const margin of margins) {
+		// 	layout_html += html`<input class="field small margin_input margin_${margin.name}" />`;
+		// }
 
-		for (const margin of margins) {
-			layout_html += html`<input class="field small margin_input margin_${margin.name}" />`;
+		{
+			// right
+			let left = focus_node_rect.left + focus_node_rect.width * 0.5;
+			let top = focus_node_rect.top + focus_node_rect.height + 50;
+			layout_html += html`<div
+				class="width_control btn primary small"
+				style="
+                left:${left}px;
+                top:${top + this.content_scroll.scrollTop}px;
+			"
+			>
+				<i class="fas fa-arrows-alt-h"></i>
+			</div>`;
 		}
 
 		this.layout_controls._set_content(layout_html);
