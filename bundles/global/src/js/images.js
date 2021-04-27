@@ -92,7 +92,7 @@ function setImageSize(img) {
 
 	if (!img.style.height) {
 		const suppose_height = Math.round((rect.width * data.h) / data.w);
-		img.style.height = `${suppose_height}px`;
+		img.style.height = `${suppose_height}px`; // TODO: better to use a css var I quess
 		img.classList.add("had_no_height");
 	}
 }
@@ -135,7 +135,7 @@ function onScrollImages(options = {}) {
 			const duration = def(options.duration, show_image_duration);
 			img.style.animation = `show ${duration}ms`;
 
-			setTimeout(() => {
+			quickTimeout(() => {
 				img.style.animation = "";
 			}, duration);
 		}

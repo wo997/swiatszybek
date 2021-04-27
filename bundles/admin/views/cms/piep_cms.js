@@ -57,7 +57,7 @@ class PiepCMS {
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
 		this.float_focus = node("piep_editor_float_focus");
-		this.parent_float_focus = node("piep_editor_parent_float_focus");
+		this.parent_float_focus = node("piep_editor_parent_float_focus"); // TODO: display more than just a parent? f.e. for columns
 		this.float_menu = node("piep_editor_float_menu");
 		this.add_block_menu = node("piep_editor_add_block_menu");
 		this.layout_controls = node("piep_editor_layout_controls");
@@ -383,7 +383,13 @@ class PiepCMS {
 
 			if (!middle_input.classList.contains("wrrgstrd")) {
 				middle_input.classList.add("wrrgstrd");
+
+				let middle_input_setting_val_user = false;
 				middle_input.addEventListener("value_set", () => {
+					if (middle_input_setting_val_user) {
+						return;
+					}
+
 					/** @type {string} */
 					const get_value = middle_input._get_value();
 					const on_the_list = !!font_sizes.find((f) => `var(--${f.name})` === get_value);
@@ -406,7 +412,9 @@ class PiepCMS {
 				});
 
 				const change = () => {
+					middle_input_setting_val_user = true;
 					middle_input._set_value(value_input._get_value() + unit_input._get_value());
+					middle_input_setting_val_user = false;
 				};
 				unit_input.addEventListener("change", change);
 				value_input.addEventListener("change", change);
@@ -2928,6 +2936,11 @@ class PiepCMS {
 	}
 
 	setBlcMenuFromFocusedNode() {
+		if (this.last_blc_menu_to_vid === this.focus_node_vid) {
+			return;
+		}
+		this.last_blc_menu_to_vid = this.focus_node_vid;
+
 		const v_node = this.findNodeInVDomById(this.v_dom, this.focus_node_vid);
 
 		if (!v_node) {
@@ -3110,7 +3123,7 @@ class PiepCMS {
 			left,
 			content_wrapper_rect.left + content_wrapper_rect.width - piep_editor_float_menu_rect.width - safe_off_x
 		);
-		// DUDE, the top should actually change by sum of heights
+		// TODO: hide sometimes? not always necessary when user scrolls
 		if (top < content_wrapper_rect.top + safe_off_y) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 		}
