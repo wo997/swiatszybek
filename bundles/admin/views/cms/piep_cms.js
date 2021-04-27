@@ -1478,6 +1478,17 @@ class PiepCMS {
 			for (const v_node of v_nodes) {
 				let body = "";
 
+				if (v_node.module_name) {
+					const module_class = `module_${v_node.module_name}`;
+					if (!v_node.classes.includes(module_class)) {
+						v_node.classes.push(module_class);
+					}
+
+					if (v_node.module_name === "columns") {
+						// fix widths if necessary? hard to work on it when something else than percentages are given though
+					}
+				}
+
 				// oh boy, here you need to warmup children, PROBABLY A LISTENER WOULD BE IDEAL
 
 				// if (v_node.module_name === "columns") {
