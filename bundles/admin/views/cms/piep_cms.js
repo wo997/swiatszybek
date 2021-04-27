@@ -2398,12 +2398,21 @@ class PiepCMS {
 				return;
 			}
 
+			const getGrabbedVNodeData = () => {
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid);
+				return grabbed_v_node_data;
+			};
+			const getNearVNodeData = () => {
+				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
+				return near_v_node_data;
+			};
+
 			const blc_vid = +blc.dataset.vid;
 
 			const getFlowDirection = () => {
 				/** @type {FlowDirectionEnum} */
 				let flow_direction = "column";
-				const parent_v_node = near_v_node_data.parent_v_nodes[0];
+				const parent_v_node = getNearVNodeData().parent_v_nodes[0];
 				if (parent_v_node) {
 					// const parent_display = parent_v_node.styles.display;
 					// if (parent_display === "flex") {
@@ -2442,8 +2451,9 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
-				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid);
-				const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
+				const grabbed_v_node_data = getGrabbedVNodeData();
+				const near_v_node_data = getNearVNodeData();
+				const near_v_node = near_v_node_data.v_node;
 
 				let ind = near_v_node_data.index;
 
@@ -2464,11 +2474,13 @@ class PiepCMS {
 				}
 
 				if (suggest_wrapping_with_columns_module) {
+					console.log(near_v_node.id, "<<<");
+
 					/** @type {vDomNode} */
 					const insert_container = {
 						tag: "div",
 						attrs: {},
-						children: [near_v_node_data.v_node],
+						children: [near_v_node],
 						classes: [],
 						id: this.getNewBlcId(),
 						styles: { display: "flex" },
@@ -2499,8 +2511,6 @@ class PiepCMS {
 				this.findNodeInVDomById(this.v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
 			};
 
-			const near_v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, blc_vid);
-
 			/**
 			 * @param {insertBlc} insert_blc
 			 * @param {insertPosEnum} pos_str
@@ -2529,20 +2539,29 @@ class PiepCMS {
 			};
 
 			const flow_direction = getFlowDirection();
+			const near_v_node_data = getNearVNodeData();
+			const near_v_node = near_v_node_data.v_node;
 
-			// left
-			const insert_left_blc = getInsertBlc();
-			insert_left_blc._insert_action = () => {
-				insertOnSides(-1);
-			};
-			setInsertPos(insert_left_blc, "left");
+			let on_sides = true;
+			if (near_v_node.classes.includes("module_columns")) {
+				on_sides = false;
+			}
 
-			// right
-			const insert_right_blc = getInsertBlc();
-			insert_right_blc._insert_action = () => {
-				insertOnSides(1);
-			};
-			setInsertPos(insert_right_blc, "right");
+			if (on_sides) {
+				// left
+				const insert_left_blc = getInsertBlc();
+				insert_left_blc._insert_action = () => {
+					insertOnSides(-1);
+				};
+				setInsertPos(insert_left_blc, "left");
+
+				// right
+				const insert_right_blc = getInsertBlc();
+				insert_right_blc._insert_action = () => {
+					insertOnSides(1);
+				};
+				setInsertPos(insert_right_blc, "right");
+			}
 
 			if (flow_direction === "column") {
 				// top

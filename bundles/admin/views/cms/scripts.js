@@ -107,7 +107,7 @@ domload(() => {
 					],
 				},
 			],
-			styles: { display: "flex" },
+			styles: { display: "flex", padding: "10px", border: "1px solid yellow" },
 			classes: [],
 			attrs: {},
 			module_name: "columns",
