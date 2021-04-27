@@ -11,6 +11,9 @@
 		flex-direction: column;
 		overflow: hidden;
 	}
+	.case_blc_menu_empty {
+		flex-grow: 1;
+	}
 	.filter_blc_menu {
 		& {
 			display: flex;

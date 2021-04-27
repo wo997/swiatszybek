@@ -703,8 +703,15 @@ class PiepCMS {
 				},
 			},
 			{
-				id: "container",
-				label: html`<i class="fas fa-border-all"></i> Kontener`,
+				id: "vertical_container",
+				label: html`
+					<i class="vertical_container_icon">
+						<div></div>
+						<div></div>
+						<div></div>
+					</i>
+					Kontener pionowy
+				`,
 				v_node: {
 					tag: "div",
 					id: -1,
@@ -716,18 +723,40 @@ class PiepCMS {
 				},
 			},
 			{
-				id: "columns",
-				label: html`<i class="fas fa-columns"></i> Kolumny`,
+				id: "columns_container",
+				label: html`
+					<i class="columns_container_icon">
+						<div></div>
+						<div></div>
+						<div></div>
+					</i>
+					Kontener z kolumnami
+				`,
 				v_node: {
 					tag: "div",
 					id: -1,
 					text: undefined,
-					children: [],
 					styles: {},
-					classes: [],
+					classes: ["columns_container"],
 					attrs: {},
-					module_name: "columns",
-					module_attrs: {},
+					children: [
+						{
+							id: -1,
+							tag: "div",
+							styles: {},
+							attrs: {},
+							classes: ["vertical_container"],
+							children: [],
+						},
+						{
+							id: -1,
+							tag: "div",
+							styles: {},
+							attrs: {},
+							classes: ["vertical_container"],
+							children: [],
+						},
+					],
 				},
 			},
 			{
@@ -765,6 +794,11 @@ class PiepCMS {
 					const block_to_add = blocks_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
 					const add_v_node = block_to_add.v_node;
 					add_v_node.id = this.getNewBlcId();
+					if (add_v_node.children) {
+						add_v_node.children.forEach((child, index) => {
+							child.id = add_v_node.id + 1 + index;
+						});
+					}
 					this.v_dom.push(add_v_node);
 					this.recreateDom();
 					this.setFocusNode(add_v_node.id);
@@ -1157,9 +1191,7 @@ class PiepCMS {
 				</div>
 			</div>
 
-			<div class="text_center flex align_center justify_center case_blc_menu_empty" style="flex-grow: 1;">
-				Nie zaznaczono<br />bloku do edycji
-			</div>
+			<div class="text_center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
 				<div class="prop_fontSize">
@@ -1492,7 +1524,7 @@ class PiepCMS {
 						v_node.classes.push(module_class);
 					}
 
-					if (v_node.module_name === "columns") {
+					if (v_node.classes.includes("columns_container")) {
 						// fix widths if necessary? hard to work on it when something else than percentages are given though
 					}
 				}
@@ -2427,7 +2459,7 @@ class PiepCMS {
 					// 	wrap_with_a_flex = false;
 					// }
 
-					if (parent_v_node.classes.includes("module_columns")) {
+					if (parent_v_node.classes.includes("columns_container")) {
 						flow_direction = "row"; // TODO: wont work always ofc
 					}
 				}
@@ -2481,65 +2513,56 @@ class PiepCMS {
 					suggest_wrapping_with_columns_module = true;
 				}
 
-				if (suggest_wrapping_with_columns_module) {
-					const columns_id = this.getNewBlcId();
-					const near_column_id = columns_id + 1;
-					const new_column_id = near_column_id + 1;
+				const new_vid = this.getNewBlcId();
 
+				const insert_column = grabbed_node_copy.classes.includes("vertical_container")
+					? grabbed_node_copy
+					: {
+							id: new_vid,
+							tag: "div",
+							styles: { padding: "10px", border: "1px solid green" },
+							attrs: {},
+							classes: ["vertical_container"],
+							children: [grabbed_node_copy],
+					  };
+
+				if (suggest_wrapping_with_columns_module) {
 					const near_column = {
-						id: near_column_id,
+						id: new_vid + 1,
 						tag: "div",
 						styles: { padding: "10px", border: "2px solid green" },
 						attrs: {},
-						classes: [],
+						classes: ["vertical_container"],
 						children: [near_v_node],
-					};
-
-					const new_column = {
-						id: new_column_id,
-						tag: "div",
-						styles: { padding: "10px", border: "1px solid green" },
-						attrs: {},
-						classes: [],
-						children: [grabbed_node_copy],
 					};
 
 					/** @type {vDomNode[]} */
 					const just_columns = [near_column];
 
 					if (dir === 1) {
-						just_columns.push(new_column);
+						just_columns.push(insert_column);
 					} else {
-						just_columns.unshift(new_column);
+						just_columns.unshift(insert_column);
 					}
 
 					/** @type {vDomNode} */
-					const insert_columns = {
+					const insert_columns_container = {
 						tag: "div",
 						attrs: {},
 						children: just_columns,
-						classes: [],
-						id: columns_id,
-						styles: { display: "flex" },
+						classes: ["columns_container"],
+						id: new_vid + 2,
+						styles: {},
 						module_name: "columns",
 					};
 
-					near_v_node_data.v_nodes.splice(ind, 1, insert_columns);
+					near_v_node_data.v_nodes.splice(ind, 1, insert_columns_container);
 				} else {
 					if (dir === 1) {
 						ind++;
 					}
 
-					const new_column = {
-						id: this.getNewBlcId(),
-						tag: "div",
-						styles: { padding: "10px", border: "1px solid purple" },
-						attrs: {},
-						classes: [],
-						children: [grabbed_node_copy],
-					};
-
-					near_v_node_data.v_nodes.splice(ind, 0, new_column);
+					near_v_node_data.v_nodes.splice(ind, 0, insert_column);
 				}
 			};
 
@@ -2583,7 +2606,7 @@ class PiepCMS {
 			const near_v_node = near_v_node_data.v_node;
 
 			let on_sides = true;
-			if (near_v_node.classes.includes("module_columns")) {
+			if (near_v_node.classes.includes("columns_container")) {
 				on_sides = false;
 			}
 

@@ -55,13 +55,16 @@ domload(() => {
 			tag: "div",
 			id: 1234,
 			text: undefined,
+			styles: { padding: "10px", border: "1px solid yellow" },
+			classes: ["columns_container"],
+			attrs: {},
 			children: [
 				{
 					id: 1238,
 					tag: "div",
 					styles: { padding: "10px", border: "1px solid red" },
 					attrs: {},
-					classes: [],
+					classes: ["vertical_container"],
 					children: [
 						{
 							id: 1235,
@@ -78,7 +81,7 @@ domload(() => {
 					tag: "div",
 					styles: { padding: "10px", border: "1px solid red" },
 					attrs: {},
-					classes: [],
+					classes: ["vertical_container"],
 					children: [],
 				},
 				{
@@ -86,7 +89,7 @@ domload(() => {
 					tag: "div",
 					styles: { padding: "10px", border: "1px solid red" },
 					attrs: {},
-					classes: [],
+					classes: ["vertical_container"],
 					children: [
 						{
 							id: 1233,
@@ -107,12 +110,6 @@ domload(() => {
 					],
 				},
 			],
-			styles: { display: "flex", padding: "10px", border: "1px solid yellow" },
-			classes: [],
-			attrs: {},
-			module_name: "columns",
-			module_attrs: {},
-			module_children: [],
 		},
 		{
 			id: 104,
