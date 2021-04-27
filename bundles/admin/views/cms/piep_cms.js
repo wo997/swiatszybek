@@ -2522,7 +2522,16 @@ class PiepCMS {
 						ind++;
 					}
 
-					near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
+					const new_column = {
+						id: this.getNewBlcId(),
+						tag: "div",
+						styles: { padding: "10px", border: "1px solid purple" },
+						attrs: {},
+						classes: [],
+						children: [grabbed_node_copy],
+					};
+
+					near_v_node_data.v_nodes.splice(ind, 0, new_column);
 				}
 			};
 
