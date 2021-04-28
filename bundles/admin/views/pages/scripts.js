@@ -25,7 +25,7 @@ domload(() => {
 		primary_key: "page_id",
 		empty_html: html`Brak stron`,
 		label: "Strony",
-		after_label: html`<a href="${STATIC_URLS["ADMIN"]}/edycja-strony" class="btn important"> Nowa strona <i class="fas fa-plus"></i> </a>`,
+		after_label: html`<a href="${STATIC_URLS["ADMIN"]}/strona" class="btn important"> Nowa strona <i class="fas fa-plus"></i> </a>`,
 		save_state_name: "admin_pages",
 	});
 });

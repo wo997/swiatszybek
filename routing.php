@@ -70,7 +70,7 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
         "sub" => [
             ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
-            ["url" => "/edycja-strony", "title" => '<i class="fas fa-heart"></i> Edycja Strony'],
+            ["url" => "/strona", "title" => '<i class="fas fa-heart"></i> Edycja Strony'],
             ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],

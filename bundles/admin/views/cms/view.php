@@ -1,4 +1,17 @@
-<?php //route[{ADMIN}/edycja-strony] 
+<?php //route[{ADMIN}/strona] 
+
+$page_id = intval(Request::urlParam(2, -1));
+
+if ($page_id !== -1) {
+    $page = EntityManager::getEntityById("page", $page_id);
+    if (!$page) {
+        Request::redirect(Request::$static_urls["ADMIN"] . "strona");
+    }
+
+    $page_data = $page->getAllProps();
+} else {
+    $page_data = null;
+}
 ?>
 
 <?php startSection("head_content"); ?>
@@ -7,6 +20,7 @@
 
 <script>
     <?= Theme::preloadThemeSettings() ?>
+    let page_data = <?= json_encode($page_data) ?>;
 </script>
 
 <?php startSection("body_content"); ?>

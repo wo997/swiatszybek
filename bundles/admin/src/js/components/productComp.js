@@ -1016,6 +1016,9 @@ function ProductComp(comp, parent, data = undefined) {
 
 						comp._data.general_product_id = res.general_product_id;
 						comp._render();
+
+						const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
+						history.replaceState(undefined, "", make_sure_url_is_cool);
 					},
 				});
 			});
