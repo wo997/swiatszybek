@@ -8,7 +8,7 @@ if ($page_id !== -1) {
         Request::redirect(Request::$static_urls["ADMIN"] . "strona");
     }
 
-    $page_data = $page->getAllProps();
+    $page_data = $page->getSimpleProps();
 } else {
     $page_data = null;
 }
