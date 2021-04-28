@@ -77,7 +77,7 @@ if ($page_id !== -1) {
             </button>
         </div>
 
-        <div class="tree scroll_panel scroll_shadow">Drzewko</div>
+        <div class="tree scroll_panel scroll_shadow"></div>
     </div>
 </div>
 

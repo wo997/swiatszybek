@@ -146,9 +146,22 @@ domload(() => {
 				const product_in_cart = user_cart.products.find((e) => e.product_id === product_id);
 				if (!product_in_cart || product_in_cart.qty !== request_qty) {
 					if (was_qty === product_in_cart.qty) {
-						showNotification(`Brak ${single_product.__name}`, { one_line: true, type: "error" });
+						showNotification(
+							html`<div class="header">Brak produktu</div>
+								${single_product.__name}`,
+							{ width: "min(80vw, 300px)" }
+						);
 					} else {
-						showNotification(`Dodano sztuk: ${product_in_cart.qty - was_qty}`, { one_line: true, type: "error" });
+						let display_add = "";
+						if (more_qty !== 1) {
+							display_add += more_qty + " × ";
+						}
+						display_add += single_product.__name;
+						showNotification(
+							html`<div class="header">Dodano do koszyka</div>
+								${display_add}`,
+							{ width: "min(80vw, 300px)" }
+						);
 					}
 				} else {
 					//showNotification(`Dodano ${single_product.__name} do koszyka`, { one_line: true, type: "success" });
