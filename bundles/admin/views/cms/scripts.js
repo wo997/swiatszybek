@@ -31,7 +31,7 @@ domload(() => {
 					type: "success",
 				});
 
-				page_data = res.page; // just dont be a null
+				page_data = res; // just dont be a null
 
 				const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"]}/strona/${res.page_id}`;
 				history.replaceState(undefined, "", make_sure_url_is_cool);
