@@ -241,6 +241,16 @@ class PiepCMS {
 				type_groups: ["layout"],
 			},
 			{
+				selector: ".prop_alignSelfVertically",
+				blc_groups: [
+					{
+						matcher: verticalContainerMatcher,
+						//priority: 1,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
 				selector: ".prop_justifyContentHorizontally",
 				blc_groups: [
 					{
@@ -1512,9 +1522,35 @@ class PiepCMS {
 					</div>
 				</div>
 
+				<div class="prop_alignSelfVertically">
+					<div class="label">Wyrównaj blok pionowo</div>
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_align_self_vertical_icon" style="align-items:flex-start"></div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_align_self_vertical_icon" style="align-items:center"></div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_align_self_vertical_icon" style="align-items:flex-end"></div>
+						</div>
+						<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona wysokość">
+							<p-checkbox data-value="stretch"></p-checkbox>
+							<div class="flex_align_self_vertical_icon" style="align-items:stretch"></div>
+						</div>
+					</div>
+				</div>
+
 				<div class="prop_alignItemsVertically">
-					<div class="label">Wyrównaj zawartość poziomo</div>
-					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.alignItems">
+					<div class="label">Wyrównaj block pionowo</div>
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
 						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>
@@ -1614,7 +1650,7 @@ class PiepCMS {
 
 				<div class="prop_alignItemsHorizontally">
 					<div class="label">Wyrównaj zawartość poziomo</div>
-					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.alignItems">
+					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
 						<div class="checkbox_area empty">
 							<p-checkbox data-value=""></p-checkbox>
 							<span>-</span>

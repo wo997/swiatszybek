@@ -26,10 +26,14 @@
 }
 
 .flex_align_self_horizontal_icon {
+	transform: rotate(-90deg);
+}
+
+.flex_align_self_vertical_icon,
+.flex_align_self_horizontal_icon {
 	& {
 		font-size: 2em;
 		display: flex;
-		flex-direction: column;
 		height: 1em;
 		width: 1em;
 		border: 1px solid #bbb;
@@ -37,8 +41,8 @@
 
 	&::before {
 		content: "";
-		min-width: 0.5em;
-		height: 1em;
+		min-height: 0.5em;
+		width: 1em;
 		border: 1px solid #03f7;
 		display: block;
 		background: #03f2;
@@ -46,13 +50,13 @@
 }
 
 .flex_align_items_horizontal_icon {
-	transform: rotate(90deg);
+	transform: rotate(-90deg);
 }
 
 .flex_align_items_horizontal_icon,
 .flex_align_items_vertical_icon {
 	& {
-		font-size: 3em;
+		font-size: 2.7em;
 		display: flex;
 		height: 1em;
 		width: 1em;
@@ -88,7 +92,7 @@
 .flex_justify_content_vertical_icon,
 .flex_justify_content_horizontal_icon {
 	& {
-		font-size: 3em;
+		font-size: 2.7em;
 		display: flex;
 		height: 1em;
 		width: 1em;
