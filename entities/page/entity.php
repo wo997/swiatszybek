@@ -8,5 +8,9 @@ EntityManager::register("page", [
         "version" => ["type" => "string"],
         "created_at" => ["type" => "string"],
         "modified_at" => ["type" => "string"],
+        "url" => ["type" => "string"],
+        "link_what" => ["type" => "string"],
+        "link_what_id" => ["type" => "number"],
+        "parent_page_id" => ["type" => "number"],
     ],
 ]);

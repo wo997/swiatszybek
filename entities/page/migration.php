@@ -10,5 +10,9 @@ DB::createTable(
         ["name" => "version", "type" => "INT"],
         ["name" => "created_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
         ["name" => "modified_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
+        ["name" => "url", "type" => "VARCHAR(255)", "index" => "index", "null" => true],
+        ["name" => "link_what", "type" => "VARCHAR(255)", "index" => "index", "null" => true],
+        ["name" => "link_what_id", "type" => "INT", "index" => "index", "null" => true],
+        ["name" => "parent_page_id", "type" => "INT", "index" => "index"],
     ]
 );
