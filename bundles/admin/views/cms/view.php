@@ -49,7 +49,7 @@ if ($page_id !== -1) {
     <div class="piep_editor_blc_menu"></div>
 
     <div class="piep_editor_content_wrapper">
-        <div class="piep_editor_content_scroll scroll_panel scroll_shadow light">
+        <div class="piep_editor_content_scroll scroll_panel">
             <div class="piep_editor_content global_root"></div>
         </div>
     </div>

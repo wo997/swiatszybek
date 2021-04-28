@@ -88,6 +88,8 @@ if (defined("ROUTE")) {
 
     <script>
         const user_roles = <?= json_encode(User::$user_roles) ?>;
+        const responsive_breakpoints = <?= json_encode(Theme::$responsive_breakpoints) ?>;
+        const responsive_preview_sizes = <?= json_encode(Theme::$responsive_preview_sizes) ?>;
     </script>
 <?php endif ?>
 

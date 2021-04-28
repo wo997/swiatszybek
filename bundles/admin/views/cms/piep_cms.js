@@ -145,7 +145,17 @@ class PiepCMS {
 
 	initSelectResolution() {
 		this.select_resolution = this.container._child(".select_resolution");
-		this.select_resolution._set_value("desktop", { quiet: true });
+
+		this.select_resolution.addEventListener("change", () => {
+			const selected_resolution = this.select_resolution._get_value();
+			if (selected_resolution) {
+				this.content_scroll.style.maxWidth = responsive_preview_sizes[selected_resolution] + 20 + "px"; // 20 for scrollbar
+			} else {
+				this.content_scroll.style.maxWidth = "";
+			}
+		});
+
+		this.select_resolution._set_value("");
 	}
 
 	initConsts() {
@@ -1766,15 +1776,19 @@ class PiepCMS {
 
 			<div class="pretty_radio semi_bold select_resolution mla mra">
 				<div class="checkbox_area" data-tooltip="Komputer">
-					<p-checkbox data-value="desktop"></p-checkbox>
+					<p-checkbox data-value=""></p-checkbox>
 					<span> <i class="fas fa-desktop"></i> </span>
 				</div>
-				<div class="checkbox_area" data-tooltip="Tablet">
-					<p-checkbox data-value="tablet"></p-checkbox>
-					<span> <i class="fas fa-tablet-alt"></i> </span>
+				<div class="checkbox_area" data-tooltip="Tablet poziomo">
+					<p-checkbox data-value="bg"></p-checkbox>
+					<span> <i class="fas fa-tablet-alt" style="transform:rotate(90deg) scale(0.9,1)"></i> </span>
+				</div>
+				<div class="checkbox_area" data-tooltip="Tablet pionowo">
+					<p-checkbox data-value="md"></p-checkbox>
+					<span> <i class="fas fa-tablet-alt" style="transform:scale(0.9,1)"></i> </span>
 				</div>
 				<div class="checkbox_area" data-tooltip="Telefon">
-					<p-checkbox data-value="mobile"></p-checkbox>
+					<p-checkbox data-value="sm"></p-checkbox>
 					<span> <i class="fas fa-mobile-alt"></i> </span>
 				</div>
 			</div>

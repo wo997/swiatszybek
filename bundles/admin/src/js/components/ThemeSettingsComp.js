@@ -79,8 +79,11 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 							Dodaj rozmiar czcionki <i class="fas fa-plus"></i>
 						</button>
 					</div>
-					<div style="display:flex;justify-content:space-around;max-width: 300px;margin-left: 7px;padding: 5px 0;">
-						<i class="fas fa-desktop"></i> <i class="fas fa-tablet-alt"></i> <i class="fas fa-mobile-alt"></i>
+					<div style="display:flex;justify-content:space-around;max-width: 400px;margin-left: 7px;padding: 5px 0;">
+						<i class="fas fa-desktop"></i>
+						<i class="fas fa-tablet-alt" style="transform:rotate(90deg) scale(0.9,1)"></i>
+						<i class="fas fa-tablet-alt" style="transform:scale(0.9,1)"></i>
+						<i class="fas fa-mobile-alt"></i>
 					</div>
 					<list-comp data-bind="{${data.font_sizes}}" class="wireframe space">
 						<theme-settings_font-size-comp></theme-settings_font-size-comp>
@@ -101,7 +104,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				const data = comp._data;
 				const next_id = Math.max(0, ...comp._data.font_sizes.map((c) => numberFromStr(c.name))) + 1;
 				const name = `size_${next_id}`;
-				data.font_sizes.push({ desktop_value: "", tablet_value: "", mobile_value: "", name });
+				data.font_sizes.push({ value: "", bg_value: "", md_value: "", sm_value: "", name });
 				comp._render();
 			});
 
@@ -110,15 +113,16 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				const save_colors_palette = data.colors.map((c) => ({ name: c.name, value: c.value }));
 				const save_font_sizes = data.font_sizes.map((c) => ({
 					name: c.name,
-					desktop_value: c.desktop_value,
-					tablet_value: c.tablet_value,
-					mobile_value: c.mobile_value,
+					value: c.value,
+					bg_value: c.bg_value,
+					md_value: c.md_value,
+					sm_value: c.sm_value,
 				}));
 
 				showLoader();
 				hideModal("ThemeSettings");
 
-				// TODO: save, build, and return in one go, cmon!
+				console.log(save_font_sizes);
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/theme/save_settings?no_build",
 					params: {

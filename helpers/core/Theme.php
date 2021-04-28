@@ -4,10 +4,18 @@ class Theme
 {
     public static $main_font_family;
 
-    public static $responsive_dimensions = [
-        "desktop" => 0,
-        "tablet" => 1100,
-        "mobile" => 600
+    public static $responsive_breakpoints = [
+        "" => 0,
+        "bg" => 1150,
+        "md" => 850,
+        "sm" => 550
+    ];
+
+    public static $responsive_preview_sizes = [
+        "" => 0,
+        "bg" => 1050,
+        "md" => 700,
+        "sm" => 375
     ];
 
     public static $fonts = [
@@ -217,18 +225,19 @@ CSS;
         }
 
         // font sizes
-        foreach (["desktop", "tablet", "mobile"] as $size_name) {
-            if ($size_name !== "desktop") {
-                $theme_scss .= "@media (max-width: " . (self::$responsive_dimensions[$size_name] - 1) . "px) {";
+        foreach (self::$responsive_breakpoints as $size_name => $width) {
+            if ($size_name !== "") {
+                $theme_scss .= "@media (max-width: " . ($width - 1) . "px) {";
             }
             foreach ($font_sizes as $font_size) {
                 $font_size_name = $font_size["name"];
-                $font_size_value = $font_size[$size_name . "_value"];
+                $size_val_name = $size_name ? ($size_name . "_value") : "value";
+                $font_size_value = $font_size[$size_val_name];
                 if ($font_size_value) {
                     $theme_scss .= "--$font_size_name: $font_size_value;";
                 }
             }
-            if ($size_name !== "desktop") {
+            if ($size_name !== "") {
                 $theme_scss .= "}";
             }
         }

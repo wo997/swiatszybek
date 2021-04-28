@@ -20,7 +20,7 @@
  */
 function ThemeSettings_FontSizeComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { desktop_value: "", tablet_value: "", mobile_value: "", name: "" };
+		data = { value: "", bg_value: "", md_value: "", sm_value: "", name: "" };
 	}
 
 	comp._set_data = (data, options = {}) => {
@@ -32,9 +32,10 @@ function ThemeSettings_FontSizeComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html` 
-        	<input class="field inline small trim" style="width: 95px" data-bind="{${data.desktop_value}}">
-            <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.tablet_value}}">
-            <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.mobile_value}}">
+        	<input class="field inline small trim" style="width: 95px" data-bind="{${data.value}}">
+            <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.bg_value}}">
+            <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.md_value}}">
+            <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.sm_value}}">
 			<input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.name}}" data-tooltip="<span class='text_error'>Nie zaleca się zmiany bez wiedzy technicznej</span>"></div>
 			<div class="mla">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>

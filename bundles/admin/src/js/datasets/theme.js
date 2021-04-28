@@ -19,9 +19,10 @@ let colors_palette = [];
 /**
  * @typedef {{
  * name: string
- * desktop_value: string
- * tablet_value: string
- * mobile_value: string
+ * value: string
+ * bg_value: string
+ * md_value: string
+ * sm_value: string
  * }} FontSizeData
  *
  */

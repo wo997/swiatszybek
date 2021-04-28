@@ -47,10 +47,11 @@
 		box-shadow: inset 0 1px 5px 0 #0003;
 		display: flex;
 		flex-direction: column;
+		padding: 15px;
 	}
 	.piep_editor_content_scroll {
-		margin: 20px;
 		box-shadow: 0 1px 5px 0 #0003;
+		margin: auto;
 	}
 	.piep_editor_content {
 		& {

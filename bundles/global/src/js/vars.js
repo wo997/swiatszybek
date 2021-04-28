@@ -21,6 +21,8 @@ let minify_extensions;
 let STATIC_URLS;
 
 let user_roles;
+let responsive_breakpoints;
+let responsive_preview_sizes;
 let feature_data_types;
 let physical_measures;
 let physical_measure_unit_map;
