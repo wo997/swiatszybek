@@ -161,6 +161,7 @@ class PiepCMS {
 			const parent_v_node = this.getVDomNodeDataById(this.v_dom, v_node.id).parent_v_nodes[0];
 			return !parent_v_node || parent_v_node.classes.includes("vertical_container");
 		};
+
 		/**
 		 *
 		 * @param {vDomNode} v_node
@@ -168,6 +169,15 @@ class PiepCMS {
 		 */
 		const verticalContainerMatcher = (v_node) => {
 			return v_node.classes.includes("vertical_container");
+		};
+
+		/**
+		 *
+		 * @param {vDomNode} v_node
+		 * @returns
+		 */
+		const columnsContainerMatcher = (v_node) => {
+			return v_node.classes.includes("columns_container");
 		};
 
 		/**
@@ -222,7 +232,27 @@ class PiepCMS {
 				blc_groups: [
 					{
 						matcher: inVerticalContainerMatcher,
-						priority: 1,
+						//priority: 1,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
+				selector: ".prop_justifyContentHorizontally",
+				blc_groups: [
+					{
+						matcher: columnsContainerMatcher,
+						//priority: 1,
+					},
+				],
+				type_groups: ["layout"],
+			},
+			{
+				selector: ".prop_alignItemsVertically",
+				blc_groups: [
+					{
+						matcher: columnsContainerMatcher,
+						//priority: 1,
 					},
 				],
 				type_groups: ["layout"],
@@ -232,7 +262,7 @@ class PiepCMS {
 				blc_groups: [
 					{
 						matcher: verticalContainerMatcher,
-						priority: 1,
+						//priority: 1,
 					},
 				],
 				type_groups: ["layout"],
@@ -242,7 +272,7 @@ class PiepCMS {
 				blc_groups: [
 					{
 						matcher: verticalContainerMatcher,
-						priority: 1,
+						//priority: 1,
 					},
 				],
 				type_groups: ["layout"],
@@ -1422,11 +1452,35 @@ class PiepCMS {
 				<div class="prop_width">
 					<div class="label">Szerokość</div>
 					<input class="field" data-blc_prop="style.width" />
+
+					<div class="glue_children">
+						<div class="mr2">
+							<div class="label">Minimalna szerokość</div>
+							<input class="field" data-blc_prop="style.minWidth" />
+						</div>
+
+						<div>
+							<div class="label">Maksymalna szerokość</div>
+							<input class="field" data-blc_prop="style.maxWidth" />
+						</div>
+					</div>
 				</div>
 
 				<div class="prop_height">
 					<div class="label">Wysokość</div>
 					<input class="field" data-blc_prop="style.height" />
+
+					<div class="glue_children">
+						<div class="mr2">
+							<div class="label">Minimalna wysokość</div>
+							<input class="field" data-blc_prop="style.minHeight" />
+						</div>
+
+						<div>
+							<div class="label">Maksymalna wysokość</div>
+							<input class="field" data-blc_prop="style.maxHeight" />
+						</div>
+					</div>
 				</div>
 
 				<div class="prop_alignSelfHorizontally">
@@ -1451,6 +1505,106 @@ class PiepCMS {
 						<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona szerokość">
 							<p-checkbox data-value="stretch"></p-checkbox>
 							<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="prop_alignItemsVertically">
+					<div class="label">Wyrównaj zawartość poziomo</div>
+					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.alignItems">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_align_items_vertical_icon" style="align-items:flex-start">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_align_items_vertical_icon" style="align-items:center">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_align_items_vertical_icon" style="align-items:flex-end">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="stretch"></p-checkbox>
+							<div class="flex_align_items_vertical_icon" style="justify-content:stretch">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="prop_justifyContentHorizontally">
+					<div class="label">Wyrównaj zawartość pionowo</div>
+					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
+						<div class="checkbox_area empty">
+							<p-checkbox data-value=""></p-checkbox>
+							<span>-</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-start"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:flex-start">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="center"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:center">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="flex-end"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:flex-end">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-around"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-around">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-between"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-between">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="space-evenly"></p-checkbox>
+							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-evenly">
+								<div></div>
+								<div></div>
+								<div></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -1986,6 +2140,9 @@ class PiepCMS {
 		}
 
 		const text = v_node.text;
+		if (text === undefined) {
+			return;
+		}
 
 		let begin_offset = focus_offset;
 		let end_offset = focus_offset;

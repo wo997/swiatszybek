@@ -46,10 +46,14 @@
 }
 
 .flex_align_items_horizontal_icon {
+	transform: rotate(90deg);
+}
+
+.flex_align_items_horizontal_icon,
+.flex_align_items_vertical_icon {
 	& {
 		font-size: 3em;
 		display: flex;
-		flex-direction: column;
 		height: 1em;
 		width: 1em;
 		border: 1px solid #bbb;
@@ -60,28 +64,32 @@
 			display: block;
 			border: 1px solid #03f7;
 			background: #03f2;
-			height: 0.333em;
+			width: 0.333em;
 		}
 		&:not(:first-child) {
-			margin-top: -1px;
+			margin-left: -1px;
 		}
 		&:nth-child(1) {
-			min-width: 0.5em;
+			min-height: 0.5em;
 		}
 		&:nth-child(2) {
-			min-width: 0.7em;
+			min-height: 0.7em;
 		}
 		&:nth-child(3) {
-			min-width: 0.3em;
+			min-height: 0.3em;
 		}
 	}
 }
 
 .flex_justify_content_vertical_icon {
+	transform: rotate(90deg);
+}
+
+.flex_justify_content_vertical_icon,
+.flex_justify_content_horizontal_icon {
 	& {
 		font-size: 3em;
 		display: flex;
-		flex-direction: column;
 		height: 1em;
 		width: 1em;
 		border: 1px solid #bbb;
@@ -92,10 +100,10 @@
 			display: block;
 			border: 1px solid #03f7;
 			background: #03f2;
-			min-height: 0.2em;
+			min-width: 0.2em;
 		}
 		&:not(:first-child) {
-			margin-top: -1px;
+			margin-left: -1px;
 		}
 	}
 }
