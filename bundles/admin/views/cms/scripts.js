@@ -39,6 +39,10 @@ domload(() => {
 		});
 	});
 
+	$(".piep_editor_header .preview").addEventListener("click", () => {
+		previewUrl(`/produkt/117/Rura-karbowana-(peszel)`);
+	});
+
 	if (page_data) {
 		piep_cms.import(JSON.parse(page_data.v_dom_json));
 	}

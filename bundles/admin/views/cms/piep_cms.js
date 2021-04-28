@@ -1029,6 +1029,11 @@ class PiepCMS {
 
 	initPaste() {
 		this.container.addEventListener("paste", (e) => {
+			if (validPiepInput($(document.activeElement))) {
+				// let people live
+				return;
+			}
+
 			e.preventDefault();
 			// "text/html" is cool but dont use it yet
 			const text = e.clipboardData.getData("text/plain");

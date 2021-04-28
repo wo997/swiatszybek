@@ -40,8 +40,10 @@ if ($page_id !== -1) {
         </span>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
+        <button class="btn primary preview" data-tooltip="Otwórz stronę w nowej karcie">
+            Podgląd <i class="fas fa-eye"></i>
+        </button>
         <button class="btn primary save"> Zapisz <i class="fas fa-save"></i> </button>
-        <!-- <button class="btn primary"> Edytuj produkt <i class="fas fa-cube"></i> </button> -->
     </div>
 
     <div class="piep_editor_blc_menu"></div>
