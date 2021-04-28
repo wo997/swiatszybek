@@ -61,7 +61,6 @@ class PiepCMS {
 		this.float_menu = node("piep_editor_float_menu");
 		this.add_block_menu = node("piep_editor_add_block_menu");
 		this.layout_controls = node("piep_editor_layout_controls");
-		this.alternative_scroll_panel.append(this.layout_controls);
 
 		// added straight to the layout_controls
 		//this.show_edit_node_layout = node("piep_editor_show_edit_node_layout");
@@ -72,7 +71,11 @@ class PiepCMS {
 		this.blc_menu = this.container._child(".piep_editor_blc_menu");
 
 		this.float_multi_insert = node("piep_editor_float_multi_insert");
+
 		this.alternative_scroll_panel.append(this.float_multi_insert);
+		this.alternative_scroll_panel.append(this.layout_controls);
+		this.alternative_scroll_panel.append(this.float_menu);
+		this.alternative_scroll_panel.append(this.float_focus);
 	}
 
 	initHistory() {
@@ -3456,7 +3459,7 @@ class PiepCMS {
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
 
-		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1);
+		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1 + this.content_scroll.scrollTop);
 
 		this.float_focus.style.width = focus_node_rect.width + 2 + "px";
 		this.float_focus.style.height = focus_node_rect.height + 2 + "px";
@@ -3482,8 +3485,6 @@ class PiepCMS {
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 		const piep_editor_float_menu_rect = this.float_menu.getBoundingClientRect();
 
-		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1);
-
 		let left = focus_node_rect.left + (focus_node_rect.width - piep_editor_float_menu_rect.width) / 2;
 		let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
 
@@ -3502,7 +3503,7 @@ class PiepCMS {
 			top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
 		}
 
-		this.float_menu._set_absolute_pos(left, top);
+		this.float_menu._set_absolute_pos(left, top + this.content_scroll.scrollTop);
 	}
 
 	/**
