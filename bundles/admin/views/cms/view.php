@@ -16,7 +16,7 @@ if ($page_id !== -1) {
 
 <?php startSection("head_content"); ?>
 
-<title>Strony</title>
+<title>Strona</title>
 
 <script>
     <?= Theme::preloadThemeSettings() ?>
@@ -28,17 +28,20 @@ if ($page_id !== -1) {
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
         <span class="title breadcrumbs mr0">
-            <a class="btn transparent crumb" href="/admin/produkty">
-                Powrót gdzieś
+            <a class="btn transparent crumb" href="/admin/strony">
+                Strony
             </a>
             <i class="fas fa-chevron-right"></i>
             <div class="crumb">
-                Edycja jakiejś strony
+                Strona xxx
             </div>
+            <a class="btn transparent crumb" href="<?= Request::$static_urls["ADMIN"] . "/produkt/117" ?>">(Peszel)</a>
+
         </span>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
         <button class="btn primary save"> Zapisz <i class="fas fa-save"></i> </button>
+        <!-- <button class="btn primary"> Edytuj produkt <i class="fas fa-cube"></i> </button> -->
     </div>
 
     <div class="piep_editor_blc_menu"></div>

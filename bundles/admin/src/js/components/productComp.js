@@ -43,6 +43,7 @@
  *      save_btn: PiepNode
  *      add_category_btn: PiepNode
  *      print_categories: PiepNode
+ *      edit_page_btn: PiepNode
  *      preview_btn: PiepNode
  *      open_btn: PiepNode
  *      add_image_btn: PiepNode
@@ -670,16 +671,18 @@ function ProductComp(comp, parent, data = undefined) {
 		});
 	};
 
+	//<button class="btn primary" disabled data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
+
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="injectable_header">
 				<p-trait data-trait="history"></p-trait>
 
-				<button class="btn primary" disabled data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otwórz produkt w nowej karcie">
 					Pokaż <i class="fas fa-external-link-square-alt"></i>
 				</button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
 			</div>
 
 			<div style="max-width:800px">
@@ -933,9 +936,14 @@ function ProductComp(comp, parent, data = undefined) {
 				window.open(`/produkt/${comp._data.general_product_id}`, "product_page");
 			});
 
-			comp._nodes.preview_btn.addEventListener("click", () => {
-				previewUrl(`/produkt/${comp._data.general_product_id}`);
+			comp._nodes.edit_page_btn.addEventListener("click", () => {
+				// TODO: dirty form warning, ass with history probably
+				window.location.href = STATIC_URLS["ADMIN"] + "/strona/1"; // TODO: some page_id should be here
 			});
+
+			// comp._nodes.preview_btn.addEventListener("click", () => {
+			// 	previewUrl(`/produkt/${comp._data.general_product_id}`);
+			// });
 
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				if (!confirm("Czy aby na pewno chcesz usunąć ten produkt?")) {
