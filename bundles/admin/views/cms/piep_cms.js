@@ -1930,7 +1930,6 @@ class PiepCMS {
 				break;
 			}
 		}
-		console.log(care_about_resolutions);
 
 		// order doesn't really matter so far
 		let styles_css = "";
@@ -2495,6 +2494,7 @@ class PiepCMS {
 		if (show_add_block_menu) {
 			if (!this.add_block_menu.classList.contains("visible")) {
 				this.add_block_menu.classList.add("visible");
+				this.add_block_menu._set_absolute_pos(0, 0);
 
 				const add_block_btn_rect = this.add_block_btn.getBoundingClientRect();
 				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
