@@ -2,7 +2,7 @@
 {
 	piep_cms_props_handler.registerProp({
 		name: "data-src",
-		blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
+		blc_groups: [{ match_tag: /^(img)$/, priority: 10 }],
 		type_groups: ["appearance"],
 		menu_html: html`
 			<div class="label">Zdjęcie</div>
@@ -12,7 +12,7 @@
 
 	piep_cms_props_handler.registerProp({
 		name: "alt",
-		blc_groups: [{ match_tag: this.match_media_tags, priority: 1 }],
+		blc_groups: [{ match_tag: this.match_media_tags, priority: 10 }],
 		type_groups: ["advanced"],
 		menu_html: html`
 			<div class="label">Opis zdjęcia (alt)</div>

@@ -5,13 +5,13 @@
 		blc_groups: [
 			{
 				has_classes: ["raw_html"],
-				priority: 1,
+				priority: 10,
 			},
 		],
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Kod HTML</div>
-			<textarea class="field" data-blc_prop="settings.raw_html" style="height:300px"></textarea>
+			<textarea class="field scroll_panel" data-blc_prop="settings.raw_html" style="height:200px"></textarea>
 		`,
 	});
 }

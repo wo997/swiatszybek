@@ -632,7 +632,7 @@ class PiepCMS {
 					classes: ["columns_container"],
 					attrs: {},
 					settings: {
-						only_percentages: 1,
+						layout_type: "basic",
 					},
 					children: [
 						{
@@ -761,8 +761,18 @@ class PiepCMS {
 							prop_str = prop_str.substring("style.".length);
 						}
 						if (prop_str.startsWith("attr.")) {
+							if (!prop_ref.attrs) {
+								prop_ref.attrs = {};
+							}
 							prop_ref = prop_ref.attrs;
 							prop_str = prop_str.substring("attr.".length);
+						}
+						if (prop_str.startsWith("setting.")) {
+							if (!prop_ref.settings) {
+								prop_ref.settings = {};
+							}
+							prop_ref = prop_ref.settings;
+							prop_str = prop_str.substring("setting.".length);
 						}
 
 						if (val === "") {
@@ -2338,7 +2348,7 @@ class PiepCMS {
 						styles: {},
 						module_name: "columns",
 						settings: {
-							only_percentages: 1,
+							layout_type: "basic",
 						},
 					};
 
@@ -2351,7 +2361,7 @@ class PiepCMS {
 					near_v_node_data.v_nodes.splice(ind, 0, insert_column);
 
 					const columns_container = near_v_node_data.parent_v_nodes[0];
-					if (columns_container && columns_container.settings && columns_container.settings.only_percentages) {
+					if (columns_container && columns_container.settings && columns_container.settings.layout_type === "basic") {
 						let percentage_sum = 0;
 						near_v_node_data.v_nodes.forEach((v_node) => {
 							const df = v_node.styles.df;
@@ -2359,7 +2369,7 @@ class PiepCMS {
 						});
 
 						// will be just below 1
-						let scale = ((100 / percentage_sum) * near_v_node_data.v_nodes.length) / (near_v_node_data.v_nodes.length + 1);
+						let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
 						near_v_node_data.v_nodes.forEach((v_node) => {
 							const df = v_node.styles.df;
 							v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
@@ -2787,9 +2797,17 @@ class PiepCMS {
 					prop_val = res_styles[prop_str.substring("style.".length)];
 				}
 			}
-
 			if (prop_str.startsWith("attr.")) {
+				if (!v_node.attrs) {
+					v_node.attrs = {};
+				}
 				prop_val = v_node.attrs[prop_str.substring("attr.".length)];
+			}
+			if (prop_str.startsWith("setting.")) {
+				if (!v_node.settings) {
+					v_node.settings = {};
+				}
+				prop_val = v_node.settings[prop_str.substring("setting.".length)];
 			}
 
 			let val = def(prop_val, "");
@@ -2833,7 +2851,7 @@ class PiepCMS {
 								}
 							}
 							if (blc_group.has_classes) {
-								let visible = true;
+								visible = true;
 								blc_group.has_classes.forEach((c) => {
 									if (!v_node.classes.includes(c)) {
 										visible = false;
