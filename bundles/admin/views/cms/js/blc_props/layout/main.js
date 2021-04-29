@@ -1,5 +1,7 @@
 /* js[piep_cms_dependencies] */
 {
+	const layout_priority = 10;
+
 	/**
 	 *
 	 * @param {vDomNodeData} v_node_data
@@ -31,7 +33,7 @@
 	piep_cms_props_handler.registerProp({
 		name: "width",
 		blc_groups: [
-			{ match_tag: this.match_media_tags, priority: 1 },
+			{ match_tag: this.match_media_tags, priority: layout_priority },
 			{ match_tag: /.*/, priority: 0 },
 		],
 		type_groups: ["layout"],
@@ -56,6 +58,7 @@
 	piep_cms_props_handler.registerProp({
 		name: "height",
 		type_groups: ["layout"],
+		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
 			<div class="label">Wysokość</div>
 			<input class="field" data-blc_prop="style.height" />
@@ -77,6 +80,7 @@
 	piep_cms_props_handler.registerProp({
 		name: "margin",
 		type_groups: ["layout"],
+		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html` <div class="label">Margines zewnętrzny</div>
 			<div class="flex align_center text_center text_center_fields">
 				<div>
@@ -99,6 +103,7 @@
 	piep_cms_props_handler.registerProp({
 		name: "padding",
 		type_groups: ["layout"],
+		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
 			<div class="label">Margines wewnętrzny (padding)</div>
 			<div class="flex align_center text_center text_center_fields">
@@ -125,7 +130,7 @@
 		blc_groups: [
 			{
 				matcher: inVerticalContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -161,7 +166,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -197,7 +202,7 @@
 		blc_groups: [
 			{
 				matcher: columnsContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -265,7 +270,7 @@
 		blc_groups: [
 			{
 				matcher: columnsContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -317,7 +322,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -385,7 +390,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				priority: 1,
+				priority: layout_priority,
 			},
 		],
 		type_groups: ["layout"],
