@@ -48,13 +48,14 @@ function traverseVDom($v_dom)
 
         //$content_html .= "</a>";
 
-        if (isset($v_node["styles"])) {
-            $node_styles = "";
-            foreach ($v_node["styles"] as $prop => $val) {
-                $node_styles .= camelToKebabCase($prop) . ": $val;";
-            }
-            $styles_css .= ".$base_class { $node_styles }";
-        }
+        // TODO: responsive
+        // if (isset($v_node["styles"])) {
+        //     $node_styles = "";
+        //     foreach ($v_node["styles"] as $prop => $val) {
+        //         $node_styles .= camelToKebabCase($prop) . ": $val;";
+        //     }
+        //     $styles_css .= ".$base_class { $node_styles }";
+        // }
     }
 
     return [

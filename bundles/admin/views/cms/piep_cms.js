@@ -154,6 +154,9 @@ class PiepCMS {
 			} else {
 				this.content_scroll.style.maxWidth = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
 			}
+
+			this.recreateDom();
+			this.setBlcMenuFromFocusedNode();
 		});
 
 		this.select_resolution._set_value("df");
@@ -941,7 +944,10 @@ class PiepCMS {
 						let prop_ref = edit_v_node;
 
 						if (prop_str.startsWith("style.")) {
-							prop_ref = prop_ref.styles;
+							if (prop_ref.styles[this.selected_resolution] === undefined) {
+								prop_ref.styles[this.selected_resolution] = {};
+							}
+							prop_ref = prop_ref.styles[this.selected_resolution];
 							prop_str = prop_str.substring("style.".length);
 						}
 						if (prop_str.startsWith("attr.")) {
@@ -1912,13 +1918,30 @@ class PiepCMS {
 			target_v_dom = this.v_dom;
 		}
 
+		/** @type {string[]} */
+		const care_about_resolutions = [];
+		for (const [key, width] of Object.entries(responsive_breakpoints).sort((a, b) => {
+			const comp_a = a[1] ? a[1] : 10000;
+			const comp_b = b[1] ? b[1] : 10000;
+			return Math.sign(comp_b - comp_a);
+		})) {
+			care_about_resolutions.push(key);
+			if (key === this.selected_resolution) {
+				break;
+			}
+		}
+		console.log(care_about_resolutions);
+
 		// order doesn't really matter so far
 		let styles_css = "";
 
 		/**
 		 *
 		 * @param {vDomNode[]} v_nodes
-		 * @returns
+		 * @returns {{
+		 * content_html:string
+		 * inspector_tree_html: string
+		 * }}
 		 */
 		const traverseVDom = (v_nodes, level = 0) => {
 			let content_html = "";
@@ -2041,28 +2064,24 @@ class PiepCMS {
 				}
 
 				if (v_node.styles) {
-					Object.entries(responsive_breakpoints)
-						.sort((a, b) => Math.sign(a[1] - b[1]))
-						.forEach(([name, width]) => {
-							const res_styles = v_node.styles[name];
-							if (!res_styles) {
-								return;
-							}
-							const styles = Object.entries(res_styles);
-							if (styles.length === 0) {
-								return;
-							}
-							let node_styles = "";
-							styles.forEach(([prop, val]) => {
-								node_styles += `${kebabCase(prop)}: ${val};`;
-							});
-
-							node_styles = `.${base_class} { ${node_styles} }`;
-							if (name !== "df") {
-								node_styles = `@media (min-width: ${width}px) { ${node_styles} }`;
-							}
-							styles_css += node_styles;
+					let node_styles = "";
+					for (const res_name of care_about_resolutions) {
+						const res_styles = v_node.styles[res_name];
+						if (!res_styles) {
+							continue;
+						}
+						const styles = Object.entries(res_styles);
+						if (styles.length === 0) {
+							continue;
+						}
+						styles.forEach(([prop, val]) => {
+							node_styles += `${kebabCase(prop)}: ${val};`;
 						});
+					}
+					if (node_styles) {
+						node_styles = `.${base_class} { ${node_styles} }`;
+						styles_css += node_styles;
+					}
 				}
 			}
 
@@ -3387,10 +3406,11 @@ class PiepCMS {
 	}
 
 	setBlcMenuFromFocusedNode() {
-		if (this.last_blc_menu_to_vid === this.focus_node_vid) {
+		if (this.last_blc_menu_to_vid === this.focus_node_vid && this.last_blc_menu_to_res === this.selected_resolution) {
 			return;
 		}
 		this.last_blc_menu_to_vid = this.focus_node_vid;
+		this.last_blc_menu_to_res = this.selected_resolution;
 
 		const v_node = this.findNodeInVDomById(this.v_dom, this.focus_node_vid);
 
@@ -3404,7 +3424,10 @@ class PiepCMS {
 			let prop_val;
 
 			if (prop_str.startsWith("style.")) {
-				prop_val = v_node.styles[prop_str.substring("style.".length)];
+				const res_styles = v_node.styles[this.selected_resolution];
+				if (res_styles) {
+					prop_val = res_styles[prop_str.substring("style.".length)];
+				}
 			}
 
 			if (prop_str.startsWith("attr.")) {
