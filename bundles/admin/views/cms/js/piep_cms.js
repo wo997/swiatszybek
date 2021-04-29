@@ -2301,7 +2301,7 @@ class PiepCMS {
 					: {
 							id: new_vid,
 							tag: "div",
-							styles: {},
+							styles: { df: {} },
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [grabbed_node_copy],
@@ -2311,7 +2311,7 @@ class PiepCMS {
 					const near_column = {
 						id: new_vid + 1,
 						tag: "div",
-						styles: {},
+						styles: { df: { width: "50%" } },
 						attrs: {},
 						classes: ["vertical_container"],
 						children: [near_v_node],
@@ -2319,6 +2319,8 @@ class PiepCMS {
 
 					/** @type {vDomNode[]} */
 					const just_columns = [near_column];
+
+					insert_column.styles.df.width = "50%";
 
 					if (dir === 1) {
 						just_columns.push(insert_column);
@@ -2344,6 +2346,12 @@ class PiepCMS {
 					}
 
 					near_v_node_data.v_nodes.splice(ind, 0, insert_column);
+
+					// TODO: OH BRO, u need to recalc others, lower them and put this guy?
+					//
+
+					// WORKS WELL ALREADY, look at the others now
+					insert_column.styles.df.width = (100 / near_v_node_data.v_nodes.length).toPrecision(6) + "%";
 				}
 			};
 
