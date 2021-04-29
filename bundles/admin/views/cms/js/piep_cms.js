@@ -163,227 +163,9 @@ class PiepCMS {
 	}
 
 	initConsts() {
-		this.match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
 		this.match_media_tags = /^(img|video|iframe)$/;
 
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
-		const tag_containing_text_priority = 0;
-
-		/**
-		 *
-		 * @param {vDomNode} v_node
-		 * @returns
-		 */
-		const inVerticalContainerMatcher = (v_node) => {
-			const parent_v_node = this.getVDomNodeDataById(this.v_dom, v_node.id).parent_v_nodes[0];
-			return !parent_v_node || parent_v_node.classes.includes("vertical_container");
-		};
-
-		/**
-		 *
-		 * @param {vDomNode} v_node
-		 * @returns
-		 */
-		const verticalContainerMatcher = (v_node) => {
-			return v_node.classes.includes("vertical_container");
-		};
-
-		/**
-		 *
-		 * @param {vDomNode} v_node
-		 * @returns
-		 */
-		const columnsContainerMatcher = (v_node) => {
-			return v_node.classes.includes("columns_container");
-		};
-
-		/**
-		 * @type {cmsEditableProp[]}
-		 */
-		this.editable_props = [
-			{
-				selector: ".prop_fontSize",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_fontWeight",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_textAlign",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_fontStyle",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_textDecoration",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_color",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_backgroundColor",
-				type_groups: ["appearance"],
-				blc_groups: [{ match_tag: this.match_tags_containing_text, priority: tag_containing_text_priority }],
-			},
-			{
-				selector: ".prop_margin",
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_padding",
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_alignSelfHorizontally",
-				blc_groups: [
-					{
-						matcher: inVerticalContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_alignSelfVertically",
-				blc_groups: [
-					{
-						matcher: verticalContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_justifyContentHorizontally",
-				blc_groups: [
-					{
-						matcher: columnsContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_alignItemsVertically",
-				blc_groups: [
-					{
-						matcher: columnsContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_justifyContentVertically",
-				blc_groups: [
-					{
-						matcher: verticalContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_alignItemsHorizontally",
-				blc_groups: [
-					{
-						matcher: verticalContainerMatcher,
-						//priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_data-src",
-				blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
-				type_groups: ["appearance"],
-			},
-			{
-				selector: ".prop_alt",
-				blc_groups: [{ match_tag: this.match_media_tags, priority: 1 }],
-				type_groups: ["advanced"],
-			},
-			{
-				selector: ".prop_width",
-				blc_groups: [
-					{ match_tag: this.match_media_tags, priority: 1 },
-					{ match_tag: /.*/, priority: 0 },
-				],
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_height",
-				type_groups: ["layout"],
-			},
-			{
-				selector: ".prop_rawHtml",
-				blc_groups: [
-					{
-						has_classes: ["raw_html"],
-						priority: 1,
-					},
-				],
-				type_groups: ["layout"],
-			},
-		];
-
-		/**
-		 * @type {cmsFloatingEditableProp[]}
-		 */
-		this.float_editable_props = [
-			{
-				selector: ".prop_fontSize",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".prop_fontWeight",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".prop_textAlign",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".prop_color",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".prop_backgroundColor",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".remove_format_btn",
-				tag_groups: [{ match_tag: this.match_tags_containing_text }],
-			},
-			{
-				selector: ".choose_img_btn",
-				tag_groups: [{ match_tag: /^(img)$/, priority: 1 }],
-			},
-			// {
-			// 	selector: ".prop_alt",
-			// 	tag_groups: [{ match: /^(img|video|iframe)$/ }],
-			// },
-			{
-				selector: ".layout_btn",
-			},
-			{
-				selector: ".move_btn",
-			},
-			{
-				selector: ".remove_btn",
-			},
-		];
 	}
 
 	initFloatMenu() {
@@ -1518,12 +1300,12 @@ class PiepCMS {
 
 					<div class="glue_children">
 						<div class="mr2">
-							<div class="label">Minimalna szerokość</div>
+							<div class="label normal">Minimalna</div>
 							<input class="field" data-blc_prop="style.minWidth" />
 						</div>
 
 						<div>
-							<div class="label">Maksymalna szerokość</div>
+							<div class="label normal">Maksymalna</div>
 							<input class="field" data-blc_prop="style.maxWidth" />
 						</div>
 					</div>
@@ -1535,12 +1317,12 @@ class PiepCMS {
 
 					<div class="glue_children">
 						<div class="mr2">
-							<div class="label">Minimalna wysokość</div>
+							<div class="label normal">Minimalna</div>
 							<input class="field" data-blc_prop="style.minHeight" />
 						</div>
 
 						<div>
-							<div class="label">Maksymalna wysokość</div>
+							<div class="label normal">Maksymalna</div>
 							<input class="field" data-blc_prop="style.maxHeight" />
 						</div>
 					</div>
@@ -3491,7 +3273,7 @@ class PiepCMS {
 			this.last_set_filter_menu_to_vid = this.focus_node_vid;
 			this.last_type_group = type_group;
 
-			this.editable_props
+			piep_cms_props_handler.blc_props
 				.map((prop, index) => {
 					const blc_prop_wrapper = this.blc_menu._child(prop.selector);
 					if (!blc_prop_wrapper) {
@@ -3510,16 +3292,12 @@ class PiepCMS {
 								}
 							}
 							if (blc_group.has_classes) {
-								let has_all = true;
+								let visible = true;
 								blc_group.has_classes.forEach((c) => {
 									if (!v_node.classes.includes(c)) {
-										has_all = false;
+										visible = false;
 									}
 								});
-
-								if (has_all) {
-									visible = true;
-								}
 							}
 							if (blc_group.match_tag) {
 								const matches = !!v_node.tag.match(blc_group.match_tag);
@@ -3554,7 +3332,7 @@ class PiepCMS {
 					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
 				});
 
-			this.float_editable_props
+			piep_cms_props_handler.blc_floating_props
 				.map((prop, index) => {
 					const blc_prop = this.float_menu._child(prop.selector);
 					if (!blc_prop) {
