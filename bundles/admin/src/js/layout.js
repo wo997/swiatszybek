@@ -1,7 +1,7 @@
 /* js[admin] */
 
 domload(() => {
-	document.body.id = "admin";
+	//document.body.id = "admin";
 
 	const navbar_admin = $(".navbar_admin");
 	const is_mobile = () => {

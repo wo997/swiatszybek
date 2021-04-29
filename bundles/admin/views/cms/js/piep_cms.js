@@ -171,7 +171,7 @@ class PiepCMS {
 	initFloatMenu() {
 		this.float_menu._set_content(html`
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid prop_fontSize"
+				class="field small inline pretty_blue center static_label grid prop_font_size"
 				data-blc_prop="style.fontSize"
 				data-tooltip="Rozmiar czcionki"
 			>
@@ -181,7 +181,7 @@ class PiepCMS {
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center grid prop_fontWeight"
+				class="field small inline pretty_blue center grid prop_font_weight"
 				data-blc_prop="style.fontWeight"
 				data-tooltip="Grubość czcionki"
 			>
@@ -192,7 +192,7 @@ class PiepCMS {
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center grid prop_textAlign"
+				class="field small inline pretty_blue center grid prop_text_align"
 				data-blc_prop="style.textAlign"
 				data-tooltip="Wyrównanie tekstu"
 			>
@@ -212,7 +212,7 @@ class PiepCMS {
 			</p-dropdown>
 
 			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root prop_backgroundColor"
+				class="field small inline pretty_blue center static_label grid global_root prop_background_color"
 				data-blc_prop="style.backgroundColor"
 				data-tooltip="Kolor tła"
 			>
@@ -397,7 +397,7 @@ class PiepCMS {
 
 		const themeSettingsChanged = () => {
 			updateFontSizeDropdown(this.float_menu._child(`[data-blc_prop="style.fontSize"]`));
-			updateFontSizeWrapper(this.blc_menu._child(`.prop_fontSize`));
+			updateFontSizeWrapper(this.blc_menu._child(`.prop_font_size`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -509,9 +509,9 @@ class PiepCMS {
 
 		const themeSettingsChanged = () => {
 			updateColorDropdown(this.float_menu._child(`.prop_color`));
-			updateColorDropdown(this.float_menu._child(`.prop_backgroundColor`));
+			updateColorDropdown(this.float_menu._child(`.prop_background_color`));
 			updateColorWrapper(this.blc_menu._child(`.prop_color`));
-			updateColorWrapper(this.blc_menu._child(`.prop_backgroundColor`));
+			updateColorWrapper(this.blc_menu._child(`.prop_background_color`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -1118,482 +1118,7 @@ class PiepCMS {
 			<div class="text_center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
-				<div class="prop_fontSize">
-					<div class="label">Rozmiar czcionki</div>
-					<input class="field hidden" data-blc_prop="style.fontSize" />
-
-					<div class="label normal">
-						<span class="case_palette">Rozmiar z listy</span>
-						<span class="edit_theme_btn normal link">Zarządzaj</span>
-					</div>
-					<div class="pretty_radio flex columns_6 global_root spiky"></div>
-
-					<div class="label normal">Inny rozmiar</div>
-					<div class="glue_children">
-						<input class="field value_input" />
-						<select class="piep_editor_unit_input field inline">
-							<option value="px">px</option>
-							<option value="em">em</option>
-							<option value="rem">rem</option>
-							<option value=""></option>
-						</select>
-					</div>
-				</div>
-
-				<div class="prop_fontWeight">
-					<div class="label">Grubość czcionki</div>
-					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.fontWeight">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="var(--normal)"></p-checkbox>
-							<span>B</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="var(--semi_bold)"></p-checkbox>
-							<span class="semi_bold">B</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="var(--bold)"></p-checkbox>
-							<span class="bold">B</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_textAlign">
-					<div class="label">Wyrównanie tekstu</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textAlign">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="left"></p-checkbox>
-							<i class="fas fa-align-left"></i>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<i class="fas fa-align-center"></i>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="right"></p-checkbox>
-							<i class="fas fa-align-right"></i>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="justify"></p-checkbox>
-							<i class="fas fa-align-justify"></i>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_fontStyle">
-					<div class="label">Kursywa (pochylenie czcionki)</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.fontStyle">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="normal"></p-checkbox>
-							<i class="fas fa-italic" style="transform: skewX(15deg);"></i>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="italic"></p-checkbox>
-							<i class="fas fa-italic"></i>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_textDecoration">
-					<div class="label">Zdobienie czcionki</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textDecoration">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="underline"></p-checkbox>
-							<i class="fas fa-underline"></i>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="line-through"></p-checkbox>
-							<i class="fas fa-strikethrough"></i>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_color">
-					<div class="label">Kolor czcionki</div>
-
-					<input class="field hidden" data-blc_prop="style.color" />
-
-					<div class="label normal">
-						<span class="case_palette">Kolor z palety</span>
-						<span class="edit_theme_btn normal link">Zarządzaj</span>
-					</div>
-					<div class="pretty_radio flex columns_6 global_root spiky"></div>
-
-					<div class="label normal">Inny kolor</div>
-					<color-picker class="inline"></color-picker>
-				</div>
-
-				<div class="prop_backgroundColor">
-					<div class="label">Kolor tła</div>
-
-					<input class="field hidden" data-blc_prop="style.backgroundColor" />
-
-					<div class="label normal">
-						<span class="case_palette">Kolor z palety</span>
-						<span class="edit_theme_btn normal link">Zarządzaj</span>
-					</div>
-					<div class="pretty_radio flex columns_6 global_root spiky"></div>
-
-					<div class="label normal">Inny kolor</div>
-					<color-picker class="inline"></color-picker>
-				</div>
-
-				<div class="prop_margin">
-					<div class="label">Margines zewnętrzny</div>
-					<div class="flex align_center text_center text_center_fields">
-						<div>
-							Lewy
-							<input class="field" data-blc_prop="style.marginLeft" />
-						</div>
-						<div class="ml2 mr2">
-							Górny
-							<input class="field mb3" data-blc_prop="style.marginTop" />
-							Dolny
-							<input class="field" data-blc_prop="style.marginBottom" />
-						</div>
-						<div>
-							Prawy
-							<input class="field" data-blc_prop="style.marginRight" />
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_padding">
-					<div class="label">Margines wewnętrzny (padding)</div>
-					<div class="flex align_center text_center text_center_fields">
-						<div>
-							Lewy
-							<input class="field" data-blc_prop="style.paddingLeft" />
-						</div>
-						<div class="ml2 mr2">
-							Górny
-							<input class="field mb3" data-blc_prop="style.paddingTop" />
-							Dolny
-							<input class="field" data-blc_prop="style.paddingBottom" />
-						</div>
-						<div>
-							Prawy
-							<input class="field" data-blc_prop="style.paddingRight" />
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_width">
-					<div class="label">Szerokość</div>
-					<input class="field" data-blc_prop="style.width" />
-
-					<div class="glue_children">
-						<div class="mr2">
-							<div class="label normal">Minimalna</div>
-							<input class="field" data-blc_prop="style.minWidth" />
-						</div>
-
-						<div>
-							<div class="label normal">Maksymalna</div>
-							<input class="field" data-blc_prop="style.maxWidth" />
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_height">
-					<div class="label">Wysokość</div>
-					<input class="field" data-blc_prop="style.height" />
-
-					<div class="glue_children">
-						<div class="mr2">
-							<div class="label normal">Minimalna</div>
-							<input class="field" data-blc_prop="style.minHeight" />
-						</div>
-
-						<div>
-							<div class="label normal">Maksymalna</div>
-							<input class="field" data-blc_prop="style.maxHeight" />
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_rawHtml">
-					<div class="label">Kod HTML</div>
-					<textarea class="field" data-blc_prop="settings.raw_html" style="height:300px"></textarea>
-				</div>
-
-				<div class="prop_alignSelfHorizontally">
-					<div class="label">Wyrównaj blok poziomo</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_align_self_horizontal_icon" style="align-items:flex-start"></div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_align_self_horizontal_icon" style="align-items:center"></div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
-						</div>
-						<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona szerokość">
-							<p-checkbox data-value="stretch"></p-checkbox>
-							<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_alignSelfVertically">
-					<div class="label">Wyrównaj blok pionowo</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_align_self_vertical_icon" style="align-items:flex-start"></div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_align_self_vertical_icon" style="align-items:center"></div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_align_self_vertical_icon" style="align-items:flex-end"></div>
-						</div>
-						<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona wysokość">
-							<p-checkbox data-value="stretch"></p-checkbox>
-							<div class="flex_align_self_vertical_icon" style="align-items:stretch"></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_alignItemsVertically">
-					<div class="label">Wyrównaj block pionowo</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_align_items_vertical_icon" style="align-items:flex-start">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_align_items_vertical_icon" style="align-items:center">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_align_items_vertical_icon" style="align-items:flex-end">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="stretch"></p-checkbox>
-							<div class="flex_align_items_vertical_icon" style="justify-content:stretch">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_justifyContentHorizontally">
-					<div class="label">Wyrównaj zawartość pionowo</div>
-					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:flex-start">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:center">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:flex-end">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-around"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-around">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-between"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-between">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-evenly"></p-checkbox>
-							<div class="flex_justify_content_horizontal_icon" style="justify-content:space-evenly">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_alignItemsHorizontally">
-					<div class="label">Wyrównaj zawartość poziomo</div>
-					<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_align_items_horizontal_icon" style="align-items:flex-start">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_align_items_horizontal_icon" style="align-items:center">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_align_items_horizontal_icon" style="align-items:flex-end">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="stretch"></p-checkbox>
-							<div class="flex_align_items_horizontal_icon" style="justify-content:stretch">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_justifyContentVertically">
-					<div class="label">Wyrównaj zawartość pionowo</div>
-					<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
-						<div class="checkbox_area empty">
-							<p-checkbox data-value=""></p-checkbox>
-							<span>-</span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-start"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:flex-start">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="center"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:center">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="flex-end"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:flex-end">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-around"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:space-around">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-between"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:space-between">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="space-evenly"></p-checkbox>
-							<div class="flex_justify_content_vertical_icon" style="justify-content:space-evenly">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="prop_data-src">
-					<div class="label">Zdjęcie</div>
-					<image-picker data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-picker>
-				</div>
-
-				<div class="prop_alt">
-					<div class="label">Opis zdjęcia (alt)</div>
-					<input class="field" data-blc_prop="attr.alt" />
-				</div>
+				<!-- place for blc props etc. -->
 			</div>
 
 			<div class="pretty_radio semi_bold select_resolution mla mra">
@@ -1618,6 +1143,12 @@ class PiepCMS {
 
 		this.blc_menu_scroll_panel = this.blc_menu._child(".blc_menu_scroll_panel");
 		this.case_blc_menu_empty = this.blc_menu._child(".case_blc_menu_empty");
+
+		let blc_props_menu_html = "";
+		piep_cms_props_handler.blc_props.forEach((blc_prop) => {
+			blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
+		});
+		this.blc_menu_scroll_panel._set_content(blc_props_menu_html);
 
 		registerForms();
 
@@ -1893,7 +1424,7 @@ class PiepCMS {
 						});
 					}
 					if (node_styles) {
-						node_styles = `.${base_class} { ${node_styles} }`;
+						node_styles = `#p .${base_class} { ${node_styles} }`;
 						styles_css += node_styles;
 					}
 				}
@@ -3275,10 +2806,7 @@ class PiepCMS {
 
 			piep_cms_props_handler.blc_props
 				.map((prop, index) => {
-					const blc_prop_wrapper = this.blc_menu._child(prop.selector);
-					if (!blc_prop_wrapper) {
-						console.error(prop.selector);
-					}
+					const blc_prop_wrapper = this.blc_menu._child(".prop_" + prop.name);
 
 					let visible = true;
 					let priority = -index * 0.001;
@@ -3335,9 +2863,6 @@ class PiepCMS {
 			piep_cms_props_handler.blc_floating_props
 				.map((prop, index) => {
 					const blc_prop = this.float_menu._child(prop.selector);
-					if (!blc_prop) {
-						console.error(prop.selector);
-					}
 
 					let visible = true;
 					let priority = -index * 0.001;

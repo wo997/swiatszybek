@@ -5,7 +5,11 @@ define("SINGLE_HTML_TAGS", ["area", "base", "br", "col", "embed", "hr", "img", "
 function traverseVDom($v_dom)
 {
     $content_html = "";
-    $styles_css = "";
+    $styles_css_responsive = [];
+    foreach (Theme::$responsive_breakpoints as $res_name => $width) {
+        // we will put concatenated styles in here yay
+        $styles_css_responsive[$res_name] = "";
+    }
 
     foreach ($v_dom as $v_node) {
         $body = "";
@@ -27,13 +31,14 @@ function traverseVDom($v_dom)
         } else if (isset($v_node["children"])) {
             $sub_data = traverseVDom($v_node["children"]);
             $body .= $sub_data["content_html"];
-            $styles_css .= $sub_data["styles_css"];
+
+            foreach (Theme::$responsive_breakpoints as $res_name => $width) {
+                // we will put styles in here yay
+                $styles_css_responsive[$res_name] .= " " . $sub_data["styles_css_responsive"][$res_name];
+            }
         }
 
         $classes_csv = join(" ", $classes);
-
-        // does not work!
-        //$content_html .= "<a>";
 
         $content_html .= "<$tag class=\"$classes_csv\"";
         foreach ($v_node["attrs"] as $key => $val) {
@@ -46,23 +51,41 @@ function traverseVDom($v_dom)
             $content_html .= ">" . $body . "</${tag}>";
         }
 
-        //$content_html .= "</a>";
+        if (isset($v_node["styles"])) {
+            foreach ($v_node["styles"] as $res_name => $styles) {
+                $node_styles = "";
+                foreach ($styles as $prop => $val) {
+                    $node_styles .= camelToKebabCase($prop) . ": $val;";
+                }
+                $node_styles = "#p .$base_class { $node_styles }";
 
-        // TODO: responsive
-        // if (isset($v_node["styles"])) {
-        //     $node_styles = "";
-        //     foreach ($v_node["styles"] as $prop => $val) {
-        //         $node_styles .= camelToKebabCase($prop) . ": $val;";
-        //     }
-        //     $styles_css .= ".$base_class { $node_styles }";
-        // }
+                $styles_css_responsive[$res_name] .= $node_styles;
+            }
+        }
     }
 
     return [
         "content_html" => $content_html,
-        "styles_css" => $styles_css
+        "styles_css_responsive" => $styles_css_responsive
     ];
 };
+
+function getPageCss($styles_css_responsive)
+{
+
+    $page_css = "";
+    foreach ($styles_css_responsive as $res_name => $styles_css) {
+        if ($res_name !== "df") {
+            $width = Theme::$responsive_breakpoints[$res_name];
+            $page_css .= "@media (max-width: " . ($width - 1) . "px) {";
+        }
+        $page_css .= $styles_css;
+        if ($res_name !== "df") {
+            $page_css .= "}";
+        }
+    }
+    return $page_css;
+}
 
 function buildPage($page_id)
 {
@@ -70,10 +93,12 @@ function buildPage($page_id)
     $v_dom = json_decode($page->getProp("v_dom_json"), true);
 
     $dom_data = traverseVDom($v_dom);
-    $styles_css = Assets::minifyCss($dom_data["styles_css"]);
-    // Files::save() !!!
-    //var_dump($dom_data["styles_css"]);
-    //var_dump();
+    $page_css = getPageCss($dom_data["styles_css_responsive"]);
+    $page_css_minified = Assets::minifyCss($page_css);
+    Files::save(BUILDS_PATH . "/pages/css/page_$page_id.css", $page_css_minified);
+
+    $page_js_minified = "";
+    Files::save(BUILDS_PATH . "/pages/js/page_$page_id.js", $page_js_minified);
 
     $page->setProp("version", $page->getProp("version") + 1);
 }

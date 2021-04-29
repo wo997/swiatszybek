@@ -13,7 +13,7 @@ endSection();
     <?= def($sections, "head_content", ""); ?>
 </head>
 
-<body class="freeze">
+<body class="freeze" id="p">
     <div class="main_wrapper">
         <?= def($sections, "body", ""); ?>
         <?php include "bundles/global/templates/parts/footer.php"; ?>

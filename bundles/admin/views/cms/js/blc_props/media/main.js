@@ -1,15 +1,23 @@
 /* js[piep_cms_dependencies] */
 {
 	piep_cms_props_handler.registerProp({
-		selector: ".prop_data-src",
+		name: "data-src",
 		blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
 		type_groups: ["appearance"],
+		menu_html: html`
+			<div class="label">Zdjęcie</div>
+			<image-picker data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-picker>
+		`,
 	});
 
 	piep_cms_props_handler.registerProp({
-		selector: ".prop_alt",
+		name: "alt",
 		blc_groups: [{ match_tag: this.match_media_tags, priority: 1 }],
 		type_groups: ["advanced"],
+		menu_html: html`
+			<div class="label">Opis zdjęcia (alt)</div>
+			<input class="field" data-blc_prop="attr.alt" />
+		`,
 	});
 
 	piep_cms_props_handler.registerFloatingProp({

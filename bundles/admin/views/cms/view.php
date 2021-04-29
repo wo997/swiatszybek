@@ -42,7 +42,6 @@ if ($page_id !== -1) {
                 Strona xxx
             </div>
             <a class="btn transparent crumb" href="<?= Request::$static_urls["ADMIN"] . "/produkt/117" ?>">(Peszel)</a>
-
         </span>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>

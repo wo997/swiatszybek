@@ -45,9 +45,10 @@
 
 /**
  * @typedef {{
- * selector: string
+ * name: string
  * blc_groups?: BlcGroup[]
  * type_groups: cmsEditableGroupEnum[]
+ * menu_html: string
  * }} cmsEditableProp
  */
 
