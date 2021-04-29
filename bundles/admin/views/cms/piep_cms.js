@@ -326,6 +326,16 @@ class PiepCMS {
 				selector: ".prop_height",
 				type_groups: ["layout"],
 			},
+			{
+				selector: ".prop_rawHtml",
+				blc_groups: [
+					{
+						has_classes: ["raw_html"],
+						priority: 1,
+					},
+				],
+				type_groups: ["layout"],
+			},
 		];
 
 		/**
@@ -763,7 +773,6 @@ class PiepCMS {
 					tag: "h1",
 					id: -1,
 					text: "Nagłówek",
-					children: undefined,
 					styles: {},
 					classes: [],
 					attrs: {},
@@ -776,7 +785,6 @@ class PiepCMS {
 					tag: "h2",
 					id: -1,
 					text: "Nagłówek",
-					children: undefined,
 					styles: {},
 					classes: [],
 					attrs: {},
@@ -789,7 +797,6 @@ class PiepCMS {
 					tag: "h3",
 					id: -1,
 					text: "Nagłówek",
-					children: undefined,
 					styles: {},
 					classes: [],
 					attrs: {},
@@ -802,7 +809,6 @@ class PiepCMS {
 					tag: "p",
 					id: -1,
 					text: "Lorem ipsum",
-					children: undefined,
 					styles: {},
 					classes: [],
 					attrs: {},
@@ -821,7 +827,6 @@ class PiepCMS {
 				v_node: {
 					tag: "div",
 					id: -1,
-					text: undefined,
 					children: [],
 					styles: {},
 					classes: [],
@@ -841,10 +846,12 @@ class PiepCMS {
 				v_node: {
 					tag: "div",
 					id: -1,
-					text: undefined,
 					styles: {},
 					classes: ["columns_container"],
 					attrs: {},
+					settings: {
+						"fixed width percentages bla bla bla": true,
+					},
 					children: [
 						{
 							id: -1,
@@ -871,11 +878,32 @@ class PiepCMS {
 				v_node: {
 					tag: "img",
 					id: -1,
-					text: undefined,
-					children: undefined,
 					styles: {},
 					classes: ["wo997_img"],
 					attrs: { "data-src": "/src/img/empty_img_147x94.svg" },
+				},
+			},
+			{
+				//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2316.685375328343!2d18.533917818907184!3d54.503773259192585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda0cc4256d643%3A0x465e190242c3fd05!2sSzperaczek!5e0!3m2!1spl!2spl!4v1619695875923!5m2!1spl!2spl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+				id: "google_map",
+				label: html`<i class="fas fa-map-marked-alt"></i> Mapa Google`,
+				v_node: {
+					tag: "iframe",
+					id: -1,
+					styles: {},
+					classes: ["google_map"],
+					attrs: {},
+				},
+			},
+			{
+				id: "html",
+				label: html`<i class="fas fa-code"></i> Kod HTML`,
+				v_node: {
+					tag: "div",
+					id: -1,
+					styles: { minHeight: "400px" },
+					classes: ["raw_html"],
+					attrs: {},
 				},
 			},
 		];
@@ -1516,6 +1544,11 @@ class PiepCMS {
 							<input class="field" data-blc_prop="style.maxHeight" />
 						</div>
 					</div>
+				</div>
+
+				<div class="prop_rawHtml">
+					<div class="label">Kod HTML</div>
+					<textarea class="field" data-blc_prop="settings.raw_html" style="height:300px"></textarea>
 				</div>
 
 				<div class="prop_alignSelfHorizontally">
@@ -3473,6 +3506,18 @@ class PiepCMS {
 							if (blc_group.matcher) {
 								const matches = blc_group.matcher(v_node);
 								if (matches) {
+									visible = true;
+								}
+							}
+							if (blc_group.has_classes) {
+								let has_all = true;
+								blc_group.has_classes.forEach((c) => {
+									if (!v_node.classes.includes(c)) {
+										has_all = false;
+									}
+								});
+
+								if (has_all) {
 									visible = true;
 								}
 							}

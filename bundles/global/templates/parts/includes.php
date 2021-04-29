@@ -137,8 +137,8 @@ if (defined("ROUTE")) {
 </style>
 
 <?php if ($has_js) { ?>
-    <script src="/<?= BUILDS_PATH . "views/" . ROUTE . ".js" ?>?v=<?= ASSETS_RELEASE ?>"></script>
+    <script src="/<?= BUILDS_PATH . "views" . ROUTE . ".js" ?>?v=<?= ASSETS_RELEASE ?>"></script>
 <?php } ?>
 <?php if ($has_css) { ?>
-    <link href="/<?= BUILDS_PATH . "views/" . ROUTE . ".css" ?>?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <link href="/<?= BUILDS_PATH . "views" . ROUTE . ".css" ?>?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
 <?php } ?>

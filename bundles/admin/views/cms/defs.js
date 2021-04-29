@@ -15,8 +15,8 @@
  * attrs: object
  * classes: string[]
  * insert_on_release?: boolean
+ * settings?: object
  * module_name?: string
- * module_attrs?: object
  * module_children?: vDomModuleNode[]
  * }} vDomNode
  *
@@ -30,6 +30,7 @@
 /**
  * @typedef {{
  * match_tag?: RegExp
+ * has_classes?: string[]
  * matcher?(v_node: vDomNode): boolean
  * priority?: number
  * }} BlcGroup
