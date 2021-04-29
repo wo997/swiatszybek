@@ -21,3 +21,8 @@ function round(num, decimalPlaces = 0) {
 	num = Math.round(+(num + "e" + decimalPlaces));
 	return Number(num + "e" + -decimalPlaces);
 }
+
+function floor(num, decimalPlaces = 0) {
+	num = Math.floor(+(num + "e" + decimalPlaces));
+	return Number(num + "e" + -decimalPlaces);
+}

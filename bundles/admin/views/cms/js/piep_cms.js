@@ -632,13 +632,13 @@ class PiepCMS {
 					classes: ["columns_container"],
 					attrs: {},
 					settings: {
-						"fixed width percentages bla bla bla": true,
+						only_percentages: 1,
 					},
 					children: [
 						{
 							id: -1,
 							tag: "div",
-							styles: {},
+							styles: { width: "50%" },
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [],
@@ -646,7 +646,7 @@ class PiepCMS {
 						{
 							id: -1,
 							tag: "div",
-							styles: {},
+							styles: { width: "50%" },
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [],
@@ -2329,7 +2329,7 @@ class PiepCMS {
 					}
 
 					/** @type {vDomNode} */
-					const insert_columns_container = {
+					const columns_container = {
 						tag: "div",
 						attrs: {},
 						children: just_columns,
@@ -2337,9 +2337,12 @@ class PiepCMS {
 						id: new_vid + 2,
 						styles: {},
 						module_name: "columns",
+						settings: {
+							only_percentages: 1,
+						},
 					};
 
-					near_v_node_data.v_nodes.splice(ind, 1, insert_columns_container);
+					near_v_node_data.v_nodes.splice(ind, 1, columns_container);
 				} else {
 					if (dir === 1) {
 						ind++;
@@ -2347,11 +2350,24 @@ class PiepCMS {
 
 					near_v_node_data.v_nodes.splice(ind, 0, insert_column);
 
-					// TODO: OH BRO, u need to recalc others, lower them and put this guy?
-					//
+					const columns_container = near_v_node_data.parent_v_nodes[0];
+					if (columns_container && columns_container.settings && columns_container.settings.only_percentages) {
+						let percentage_sum = 0;
+						near_v_node_data.v_nodes.forEach((v_node) => {
+							const df = v_node.styles.df;
+							percentage_sum += numberFromStr(df.width);
+						});
+
+						// will be just below 1
+						let scale = ((100 / percentage_sum) * near_v_node_data.v_nodes.length) / (near_v_node_data.v_nodes.length + 1);
+						near_v_node_data.v_nodes.forEach((v_node) => {
+							const df = v_node.styles.df;
+							v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
+						});
+					}
 
 					// WORKS WELL ALREADY, look at the others now
-					insert_column.styles.df.width = (100 / near_v_node_data.v_nodes.length).toPrecision(6) + "%";
+					insert_column.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
 				}
 			};
 
