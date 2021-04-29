@@ -23,6 +23,9 @@ if ($page_id !== -1) {
     let page_data = <?= json_encode($page_data) ?>;
 </script>
 
+<script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . ASSETS_RELEASE ?>"></script>
+<link href="/<?= BUILDS_PATH . "piep_cms.css?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
+
 <?php startSection("body_content"); ?>
 
 <div class="piep_editor">

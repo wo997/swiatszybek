@@ -1,4 +1,4 @@
-/* js[view] */
+/* js[piep_cms] */
 
 function setSelectionRange(range) {
 	const sel = window.getSelection();

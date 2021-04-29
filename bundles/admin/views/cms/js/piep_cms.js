@@ -1,4 +1,4 @@
-/* js[view] */
+/* js[piep_cms] */
 
 class PiepCMS {
 	/**
