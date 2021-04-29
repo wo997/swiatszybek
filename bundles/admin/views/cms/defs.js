@@ -50,8 +50,9 @@
 
 /**
  * @typedef {{
- * selector: string
- * tag_groups?: BlcGroup[]
+ * name: string
+ * blc_groups?: BlcGroup[]
+ * menu_html: string
  * }} cmsFloatingEditableProp
  */
 

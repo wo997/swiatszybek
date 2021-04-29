@@ -21,7 +21,12 @@
 	});
 
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".choose_img_btn",
-		tag_groups: [{ match_tag: /^(img)$/, priority: 1 }],
+		name: "choose_img_btn",
+		blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
+		menu_html: html`
+			<button class="btn transparent small choose_img_btn" data-tooltip="Wybierz zdjęcie">
+				<i class="fas fa-image"></i>
+			</button>
+		`,
 	});
 }

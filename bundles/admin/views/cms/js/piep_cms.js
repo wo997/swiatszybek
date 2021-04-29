@@ -169,80 +169,11 @@ class PiepCMS {
 	}
 
 	initFloatMenu() {
-		this.float_menu._set_content(html`
-			<p-dropdown
-				class="field small inline pretty_blue center static_label grid prop_font_size"
-				data-blc_prop="style.fontSize"
-				data-tooltip="Rozmiar czcionki"
-			>
-				<p-option data-value="">
-					<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
-				</p-option>
-			</p-dropdown>
-
-			<p-dropdown
-				class="field small inline pretty_blue center grid prop_font_weight"
-				data-blc_prop="style.fontWeight"
-				data-tooltip="Grubość czcionki"
-			>
-				<p-option data-value=""><span class="bold">B</span></p-option>
-				<p-option data-value="var(--normal)">B</p-option>
-				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
-				<p-option data-value="var(--bold)"><span class="bold">B</span></p-option>
-			</p-dropdown>
-
-			<p-dropdown
-				class="field small inline pretty_blue center grid prop_text_align"
-				data-blc_prop="style.textAlign"
-				data-tooltip="Wyrównanie tekstu"
-			>
-				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
-				<p-option data-value="left"> <i class="fas fa-align-left"></i> </p-option>
-				<p-option data-value="center"> <i class="fas fa-align-center"></i> </p-option>
-				<p-option data-value="right"> <i class="fas fa-align-right"></i> </p-option>
-				<p-option data-value="justify"> <i class="fas fa-align-justify"></i> </p-option>
-			</p-dropdown>
-
-			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root prop_color"
-				data-blc_prop="style.color"
-				data-tooltip="Kolor czcionki"
-			>
-				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
-			</p-dropdown>
-
-			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root prop_background_color"
-				data-blc_prop="style.backgroundColor"
-				data-tooltip="Kolor tła"
-			>
-				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
-			</p-dropdown>
-
-			<button class="btn transparent small choose_img_btn" data-tooltip="Wybierz zdjęcie">
-				<i class="fas fa-image"></i>
-			</button>
-
-			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
-				<i class="fas fa-remove-format"></i>
-			</button>
-
-			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary">
-				<i class="fas fa-ruler-combined filter_icon"></i>
-			</button>
-
-			<button class="btn transparent small move_btn" data-tooltip="Przemieść blok">
-				<i class="fas fa-arrows-alt"></i>
-			</button>
-
-			<button class="btn transparent small remove_btn" data-tooltip="Usuń blok">
-				<i class="fas fa-trash"></i>
-			</button>
-
-			<button class="btn transparent small hide_menu_btn" data-tooltip="Ukryj menu">
-				<i class="fas fa-times"></i>
-			</button>
-		`);
+		let floating_blc_props_menu_html = "";
+		piep_cms_props_handler.floating_blc_props.forEach((blc_prop) => {
+			floating_blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
+		});
+		this.float_menu._set_content(floating_blc_props_menu_html);
 	}
 
 	initEditingFontSize() {
@@ -638,7 +569,7 @@ class PiepCMS {
 						{
 							id: -1,
 							tag: "div",
-							styles: { width: "50%" },
+							styles: { df: { width: "50%" } },
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [],
@@ -646,7 +577,7 @@ class PiepCMS {
 						{
 							id: -1,
 							tag: "div",
-							styles: { width: "50%" },
+							styles: { df: { width: "50%" } },
 							attrs: {},
 							classes: ["vertical_container"],
 							children: [],
@@ -1125,7 +1056,7 @@ class PiepCMS {
 				</div>
 			</div>
 
-			<div class="pa2" style="border-bottom:1px solid #ccc">
+			<div class="pa1" style="border-bottom:1px solid #ccc">
 				<div class="float_icon">
 					<input class="field" placeholder="Filtruj opcje" />
 					<i class="fas fa-search"></i>
@@ -2898,29 +2829,48 @@ class PiepCMS {
 					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
 				});
 
-			piep_cms_props_handler.blc_floating_props
+			piep_cms_props_handler.floating_blc_props
 				.map((prop, index) => {
-					const blc_prop = this.float_menu._child(prop.selector);
+					const blc_prop_wrapper = this.float_menu._child(".prop_" + prop.name);
 
 					let visible = true;
 					let priority = -index * 0.001;
-					if (prop.tag_groups) {
+					if (prop.blc_groups) {
 						visible = false;
-						for (const tag_group of prop.tag_groups) {
-							const matches = !!v_node.tag.match(tag_group.match_tag);
-							if (matches) {
-								//priority += def(tag_group.priority, 1);
-								priority += def(tag_group.priority, 0);
+						for (const blc_group of prop.blc_groups) {
+							if (blc_group.matcher) {
+								const v_node_data = piep_cms.getVDomNodeDataById(piep_cms.v_dom, v_node.id);
+								const matches = blc_group.matcher(v_node_data);
+								if (matches) {
+									visible = true;
+								}
+							}
+							if (blc_group.has_classes) {
 								visible = true;
+								blc_group.has_classes.forEach((c) => {
+									if (!v_node.classes.includes(c)) {
+										visible = false;
+									}
+								});
+							}
+							if (blc_group.match_tag) {
+								const matches = !!v_node.tag.match(blc_group.match_tag);
+								if (matches) {
+									visible = true;
+								}
+							}
+							if (visible) {
+								//priority += def(blc_group.priority, 1);
+								priority += def(blc_group.priority, 0);
 								break;
 							}
 						}
 					}
 
-					blc_prop.classList.toggle("hidden", !visible);
+					blc_prop_wrapper.classList.toggle("hidden", !visible);
 
 					return {
-						blc_prop,
+						blc_prop: blc_prop_wrapper,
 						priority,
 					};
 				})

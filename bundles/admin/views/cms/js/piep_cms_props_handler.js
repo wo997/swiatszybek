@@ -6,7 +6,7 @@ class PiepCMSPropsHandler {
 		this.blc_props = [];
 
 		/** @type {cmsFloatingEditableProp[]} */
-		this.blc_floating_props = [];
+		this.floating_blc_props = [];
 	}
 
 	/**
@@ -19,10 +19,10 @@ class PiepCMSPropsHandler {
 
 	/**
 	 *
-	 * @param {cmsFloatingEditableProp} blc_prop
+	 * @param {cmsFloatingEditableProp} floating_blc_prop
 	 */
-	registerFloatingProp(blc_prop) {
-		this.blc_floating_props.push(blc_prop);
+	registerFloatingProp(floating_blc_prop) {
+		this.floating_blc_props.push(floating_blc_prop);
 	}
 }
 

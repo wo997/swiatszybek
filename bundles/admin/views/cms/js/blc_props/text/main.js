@@ -177,27 +177,83 @@
 	const floating_tag_containing_text_priority = 5;
 
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".prop_font_size",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "font_size",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<p-dropdown
+				class="field small inline pretty_blue center static_label grid"
+				data-blc_prop="style.fontSize"
+				data-tooltip="Rozmiar czcionki"
+			>
+				<p-option data-value="">
+					<span class="semi_bold"> A<span style="font-size:0.7em">A</span> </span>
+				</p-option>
+			</p-dropdown>
+		`,
 	});
+
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".prop_font_weight",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "font_weight",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
+				<p-option data-value=""><span class="bold">B</span></p-option>
+				<p-option data-value="var(--normal)">B</p-option>
+				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
+				<p-option data-value="var(--bold)"><span class="bold">B</span></p-option>
+			</p-dropdown>
+		`,
 	});
+
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".prop_text_align",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "text_align",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.textAlign" data-tooltip="Wyrównanie tekstu">
+				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
+				<p-option data-value="left"> <i class="fas fa-align-left"></i> </p-option>
+				<p-option data-value="center"> <i class="fas fa-align-center"></i> </p-option>
+				<p-option data-value="right"> <i class="fas fa-align-right"></i> </p-option>
+				<p-option data-value="justify"> <i class="fas fa-align-justify"></i> </p-option>
+			</p-dropdown>
+		`,
 	});
+
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".prop_color",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "color",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<p-dropdown
+				class="field small inline pretty_blue center static_label grid global_root"
+				data-blc_prop="style.color"
+				data-tooltip="Kolor czcionki"
+			>
+				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
+			</p-dropdown>
+		`,
 	});
+
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".prop_background_color",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "background_color",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<p-dropdown
+				class="field small inline pretty_blue center static_label grid global_root"
+				data-blc_prop="style.backgroundColor"
+				data-tooltip="Kolor tła"
+			>
+				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
+			</p-dropdown>
+		`,
 	});
+
 	piep_cms_props_handler.registerFloatingProp({
-		selector: ".remove_format_btn",
-		tag_groups: [{ match_tag: this.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		name: "remove_format_btn",
+		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		menu_html: html`
+			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
+				<i class="fas fa-remove-format"></i>
+			</button>
+		`,
 	});
 }

@@ -436,16 +436,4 @@
 			</div>
 		`,
 	});
-
-	piep_cms_props_handler.registerFloatingProp({
-		selector: ".layout_btn",
-	});
-
-	piep_cms_props_handler.registerFloatingProp({
-		selector: ".move_btn",
-	});
-
-	piep_cms_props_handler.registerFloatingProp({
-		selector: ".remove_btn",
-	});
 }
