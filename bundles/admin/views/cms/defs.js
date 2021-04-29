@@ -31,9 +31,21 @@
  * @typedef {{
  * match_tag?: RegExp
  * has_classes?: string[]
- * matcher?(v_node: vDomNode): boolean
+ * matcher?(v_node_data: vDomNodeData): boolean
  * priority?: number
  * }} BlcGroup
+ */
+
+/**
+ *
+ * @typedef {{
+ * v_node: vDomNode
+ * v_nodes: vDomNode[]
+ * index: number
+ * parent_v_nodes: vDomNode[]
+ * }} vDomNodeData
+ *
+ * parent_v_nodes are ordered so the closest one is the direct parent
  */
 
 /**

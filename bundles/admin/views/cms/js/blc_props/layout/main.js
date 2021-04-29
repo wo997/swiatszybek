@@ -2,30 +2,30 @@
 {
 	/**
 	 *
-	 * @param {vDomNode} v_node
+	 * @param {vDomNodeData} v_node_data
 	 * @returns
 	 */
-	const inVerticalContainerMatcher = (v_node) => {
-		const parent_v_node = piep_cms.getVDomNodeDataById(piep_cms.v_dom, v_node.id).parent_v_nodes[0];
+	const inVerticalContainerMatcher = (v_node_data) => {
+		const parent_v_node = v_node_data.parent_v_nodes[0];
 		return !parent_v_node || parent_v_node.classes.includes("vertical_container");
 	};
 
 	/**
 	 *
-	 * @param {vDomNode} v_node
+	 * @param {vDomNodeData} v_node_data
 	 * @returns
 	 */
-	const verticalContainerMatcher = (v_node) => {
-		return v_node.classes.includes("vertical_container");
+	const verticalContainerMatcher = (v_node_data) => {
+		return v_node_data.v_node.classes.includes("vertical_container");
 	};
 
 	/**
 	 *
-	 * @param {vDomNode} v_node
+	 * @param {vDomNodeData} v_node_data
 	 * @returns
 	 */
-	const columnsContainerMatcher = (v_node) => {
-		return v_node.classes.includes("columns_container");
+	const columnsContainerMatcher = (v_node_data) => {
+		return v_node_data.v_node.classes.includes("columns_container");
 	};
 
 	piep_cms_props_handler.registerProp({
@@ -125,7 +125,7 @@
 		blc_groups: [
 			{
 				matcher: inVerticalContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],
@@ -161,7 +161,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],
@@ -193,16 +193,16 @@
 	});
 
 	piep_cms_props_handler.registerProp({
-		name: "justify_content_vertically",
+		name: "justify_content_horizontally",
 		blc_groups: [
 			{
 				matcher: columnsContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],
 		menu_html: html`
-			<div class="label">Wyrównaj zawartość pionowo</div>
+			<div class="label">Wyrównaj zawartość poziomo</div>
 			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
@@ -265,7 +265,7 @@
 		blc_groups: [
 			{
 				matcher: columnsContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],
@@ -317,7 +317,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],
@@ -385,7 +385,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				//priority: 1,
+				priority: 1,
 			},
 		],
 		type_groups: ["layout"],

@@ -1356,7 +1356,7 @@ class PiepCMS {
 				let info = "";
 
 				if (text !== undefined) {
-					info = text ? text : "(pusty)";
+					info = text ? escapeHTML(text) : "(pusty)";
 				} else if (children !== undefined) {
 					info = `(${children.length})`;
 				}
@@ -1493,18 +1493,6 @@ class PiepCMS {
 
 		return this.getVDomNodeData(v_dom, (v_node) => v_node.id === vid, options);
 	}
-
-	/**
-	 *
-	 * @typedef {{
-	 * v_node: vDomNode
-	 * v_nodes: vDomNode[]
-	 * index: number
-	 * parent_v_nodes: vDomNode[]
-	 * }} vDomNodeData
-	 *
-	 * parent_v_nodes are ordered so the closest one is the direct parent
-	 */
 
 	/**
 	 *
@@ -2814,7 +2802,8 @@ class PiepCMS {
 						visible = false;
 						for (const blc_group of prop.blc_groups) {
 							if (blc_group.matcher) {
-								const matches = blc_group.matcher(v_node);
+								const v_node_data = piep_cms.getVDomNodeDataById(piep_cms.v_dom, v_node.id);
+								const matches = blc_group.matcher(v_node_data);
 								if (matches) {
 									visible = true;
 								}

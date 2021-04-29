@@ -54,8 +54,8 @@ function compTitleCase(str) {
 
 function escapeHTML(unsafeText) {
 	let div = document.createElement("div");
-	div.innerText = unsafeText;
-	return div.innerHTML;
+	div.innerHTML = unsafeText;
+	return div.innerText;
 }
 
 // function escapeCSS(prop, val) {

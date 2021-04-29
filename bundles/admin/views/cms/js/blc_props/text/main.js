@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	const tag_containing_text_priority = 1;
+	const tag_containing_text_priority = 5;
 	const match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
 
 	piep_cms_props_handler.registerProp({
@@ -174,7 +174,7 @@
 		`,
 	});
 
-	const floating_tag_containing_text_priority = 1;
+	const floating_tag_containing_text_priority = 5;
 
 	piep_cms_props_handler.registerFloatingProp({
 		selector: ".prop_font_size",
