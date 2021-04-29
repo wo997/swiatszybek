@@ -1125,6 +1125,13 @@ class PiepCMS {
 				</div>
 			</div>
 
+			<div class="pa2" style="border-bottom:1px solid #ccc">
+				<div class="float_icon">
+					<input class="field" placeholder="Filtruj opcje" />
+					<i class="fas fa-search"></i>
+				</div>
+			</div>
+
 			<div class="text_center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
