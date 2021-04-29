@@ -5,7 +5,7 @@ class Theme
     public static $main_font_family;
 
     public static $responsive_breakpoints = [
-        "" => 0,
+        "df" => 0,
         "bg" => 1150,
         "md" => 850,
         "sm" => 550
@@ -226,18 +226,17 @@ CSS;
 
         // font sizes
         foreach (self::$responsive_breakpoints as $size_name => $width) {
-            if ($size_name !== "") {
+            if ($size_name !== "df") {
                 $theme_scss .= "@media (max-width: " . ($width - 1) . "px) {";
             }
             foreach ($font_sizes as $font_size) {
                 $font_size_name = $font_size["name"];
-                $size_val_name = $size_name ? ($size_name . "_value") : "value";
-                $font_size_value = $font_size[$size_val_name];
+                $font_size_value = $font_size[$size_name . "_value"];
                 if ($font_size_value) {
                     $theme_scss .= "--$font_size_name: $font_size_value;";
                 }
             }
-            if ($size_name !== "") {
+            if ($size_name !== "df") {
                 $theme_scss .= "}";
             }
         }

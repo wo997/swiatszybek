@@ -20,7 +20,7 @@
  */
 function ThemeSettings_FontSizeComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { value: "", bg_value: "", md_value: "", sm_value: "", name: "" };
+		data = { df_value: "", bg_value: "", md_value: "", sm_value: "", name: "" };
 	}
 
 	comp._set_data = (data, options = {}) => {
@@ -32,7 +32,7 @@ function ThemeSettings_FontSizeComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html` 
-        	<input class="field inline small trim" style="width: 95px" data-bind="{${data.value}}">
+        	<input class="field inline small trim" style="width: 95px" data-bind="{${data.df_value}}">
             <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.bg_value}}">
             <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.md_value}}">
             <input class="field inline small ml1 trim" style="width: 95px" data-bind="{${data.sm_value}}">

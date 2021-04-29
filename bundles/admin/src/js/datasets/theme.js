@@ -19,7 +19,7 @@ let colors_palette = [];
 /**
  * @typedef {{
  * name: string
- * value: string
+ * df_value: string
  * bg_value: string
  * md_value: string
  * sm_value: string

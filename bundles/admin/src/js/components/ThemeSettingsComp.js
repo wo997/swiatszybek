@@ -104,7 +104,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				const data = comp._data;
 				const next_id = Math.max(0, ...comp._data.font_sizes.map((c) => numberFromStr(c.name))) + 1;
 				const name = `size_${next_id}`;
-				data.font_sizes.push({ value: "", bg_value: "", md_value: "", sm_value: "", name });
+				data.font_sizes.push({ df_value: "", bg_value: "", md_value: "", sm_value: "", name });
 				comp._render();
 			});
 
@@ -113,7 +113,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				const save_colors_palette = data.colors.map((c) => ({ name: c.name, value: c.value }));
 				const save_font_sizes = data.font_sizes.map((c) => ({
 					name: c.name,
-					value: c.value,
+					df_value: c.df_value,
 					bg_value: c.bg_value,
 					md_value: c.md_value,
 					sm_value: c.sm_value,
@@ -122,7 +122,6 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				showLoader();
 				hideModal("ThemeSettings");
 
-				console.log(save_font_sizes);
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/theme/save_settings?no_build",
 					params: {

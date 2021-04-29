@@ -147,15 +147,16 @@ class PiepCMS {
 		this.select_resolution = this.container._child(".select_resolution");
 
 		this.select_resolution.addEventListener("change", () => {
-			const selected_resolution = this.select_resolution._get_value();
-			if (selected_resolution) {
-				this.content_scroll.style.maxWidth = responsive_preview_sizes[selected_resolution] + 20 + "px"; // 20 for scrollbar
-			} else {
+			/** @type {string} */
+			this.selected_resolution = this.select_resolution._get_value();
+			if (this.selected_resolution === "df") {
 				this.content_scroll.style.maxWidth = "";
+			} else {
+				this.content_scroll.style.maxWidth = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
 			}
 		});
 
-		this.select_resolution._set_value("");
+		this.select_resolution._set_value("df");
 	}
 
 	initConsts() {
@@ -1776,7 +1777,7 @@ class PiepCMS {
 
 			<div class="pretty_radio semi_bold select_resolution mla mra">
 				<div class="checkbox_area" data-tooltip="Komputer">
-					<p-checkbox data-value=""></p-checkbox>
+					<p-checkbox data-value="df"></p-checkbox>
 					<span> <i class="fas fa-desktop"></i> </span>
 				</div>
 				<div class="checkbox_area" data-tooltip="Tablet poziomo">
@@ -1816,9 +1817,30 @@ class PiepCMS {
 	 */
 	import(set_v_dom) {
 		this.v_dom = set_v_dom;
+		this.fixMigrations();
 		this.recreateDom();
 		this.setFocusNode(undefined);
 		this.initHistory();
+	}
+
+	fixMigrations() {
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
+				const styles_keys = Object.keys(v_node.styles);
+				if (!styles_keys.includes("df")) {
+					v_node.styles = {
+						df: v_node.styles,
+					};
+				}
+				if (v_node.children) {
+					traverseVDom(v_node.children);
+				}
+			}
+		};
+		traverseVDom(this.v_dom);
 	}
 
 	initInspector() {
@@ -1891,7 +1913,7 @@ class PiepCMS {
 		}
 
 		// order doesn't really matter so far
-		let styles_html = "";
+		let styles_css = "";
 
 		/**
 		 *
@@ -2018,13 +2040,29 @@ class PiepCMS {
 					}
 				}
 
-				const styles = Object.entries(v_node.styles);
-				if (styles.length > 0) {
-					let node_styles = "";
-					styles.forEach(([prop, val]) => {
-						node_styles += `${kebabCase(prop)}: ${val};`;
-					});
-					styles_html += `.${base_class} { ${node_styles} }`;
+				if (v_node.styles) {
+					Object.entries(responsive_breakpoints)
+						.sort((a, b) => Math.sign(a[1] - b[1]))
+						.forEach(([name, width]) => {
+							const res_styles = v_node.styles[name];
+							if (!res_styles) {
+								return;
+							}
+							const styles = Object.entries(res_styles);
+							if (styles.length === 0) {
+								return;
+							}
+							let node_styles = "";
+							styles.forEach(([prop, val]) => {
+								node_styles += `${kebabCase(prop)}: ${val};`;
+							});
+
+							node_styles = `.${base_class} { ${node_styles} }`;
+							if (name !== "df") {
+								node_styles = `@media (min-width: ${width}px) { ${node_styles} }`;
+							}
+							styles_css += node_styles;
+						});
 				}
 			}
 
@@ -2035,7 +2073,7 @@ class PiepCMS {
 
 		this.content._set_content(content_html, { maintain_height: true });
 
-		this.styles._set_content(styles_html);
+		this.styles._set_content(styles_css);
 
 		this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
 

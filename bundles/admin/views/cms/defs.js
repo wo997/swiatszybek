@@ -10,7 +10,7 @@
  * id: number
  * tag: string
  * text?: string
- * styles: any
+ * styles: object
  * children?: vDomNode[]
  * attrs: object
  * classes: string[]
@@ -19,6 +19,8 @@
  * module_attrs?: object
  * module_children?: vDomModuleNode[]
  * }} vDomNode
+ *
+ * styles is an array "" "bg" "sm" ... and then another array of fontSize paddintTop ...
  */
 
 /**
