@@ -485,84 +485,59 @@ class PiepCMS {
 
 			const target = $(ev.target);
 
-			const width_control = target._parent(".width_control");
-			const mpbw_control = target._parent(".mpbw_control");
+			const layout_control = target._parent(".layout_control");
 
-			let did_grab = false;
+			if (layout_control) {
+				this.layout_control_prop = layout_control.dataset.layout_prop;
+				/** @type {DirectionEnum} */
+				// @ts-ignore
+				this.layout_control_dir = layout_control.dataset.layout_dir;
 
-			const focus_node = this.getFocusNode();
-			const focus_node_parent = focus_node._parent();
-			const focus_node_rect = focus_node.getBoundingClientRect();
-			const visible_width = focus_node_rect.width;
-			const visible_parent_width = focus_node_parent.getBoundingClientRect().width;
+				const focus_node = this.getFocusNode();
+				const focus_node_parent = focus_node._parent();
+				const focus_node_rect = focus_node.getBoundingClientRect();
+				const visible_width = focus_node_rect.width;
+				const visible_parent_width = focus_node_parent.getBoundingClientRect().width;
 
-			if (width_control) {
-				this.width_grabbed = true;
-				this.layout_control_grabbed_index = getNodeIndex(width_control);
-				width_control.classList.add("grabbed");
+				this.layout_control_grabbed_index = getNodeIndex(layout_control);
+				layout_control.classList.add("grabbed");
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
 				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
 				/** @type {string} */
-				let style_width = def(v_node_styles.df.width, "");
+				let prop_val_from_style = def(v_node_styles.df[this.layout_control_prop], "");
 				care_about_resolutions.forEach((res) => {
 					if (!v_node_styles[res]) {
 						return;
 					}
-					const w = v_node_styles[res].width;
+					const w = v_node_styles[res][this.layout_control_prop];
 					if (w) {
-						style_width = w;
+						prop_val_from_style = w;
 					}
 				});
 
-				this.width_grabbed_unit = style_width.match(/\d*px/) ? "px" : "%";
-				this.width_grabbed_percent = visible_parent_width * 0.01;
-				if (this.width_grabbed_unit === "px") {
-					this.width_grabbed_base_value = visible_width;
+				this.layout_control_unit = prop_val_from_style.match(/\d*px/) ? "px" : "%";
+				this.layout_control_percent = visible_parent_width * 0.01;
+
+				this.layout_control_base_value = 0;
+				if (this.layout_control_unit === "px") {
+					if (this.layout_control_prop === "width") {
+						this.layout_control_base_value = visible_width;
+					}
 				} else {
-					const wfroms = numberFromStr(style_width);
-					this.width_grabbed_base_value = wfroms ? wfroms : (visible_width / visible_parent_width) * 100;
+					const val_from_style_num = numberFromStr(prop_val_from_style);
+					if (val_from_style_num) {
+						this.layout_control_base_value = val_from_style_num;
+					} else {
+						if (this.layout_control_prop === "width") {
+							this.layout_control_base_value = (visible_width / visible_parent_width) * 100;
+						}
+					}
 				}
-				this.width_grabbed_direction = mouse.pos.x > focus_node_rect.left + focus_node_rect.width * 0.5 ? "right" : "left";
 
-				did_grab = true;
-			} else if (mpbw_control) {
-				this.mpbw_grabbed_prop = mpbw_control.dataset.mpbw_prop;
-
-				this.layout_control_grabbed_index = getNodeIndex(width_control);
-				mpbw_control.classList.add("grabbed");
-
-				const care_about_resolutions = this.getResolutionsWeCareAbout();
-				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
-				/** @type {string} */
-				let style_mpbw = def(v_node_styles.df[this.mpbw_grabbed_prop], "");
-				care_about_resolutions.forEach((res) => {
-					if (!v_node_styles[res]) {
-						return;
-					}
-					const w = v_node_styles[res][this.mpbw_grabbed_prop];
-					if (w) {
-						style_mpbw = w;
-					}
-				});
-
-				console.log(style_mpbw, this.mpbw_grabbed_prop);
-
-				// this.width_grabbed_unit = style_margin.match(/\d*px/) ? "px" : "%";
-				// this.width_grabbed_percent = visible_parent_width * 0.01;
-				// if (this.width_grabbed_unit === "px") {
-				// 	this.width_grabbed_base_value = visible_width;
-				// } else {
-				// 	const wfroms = numberFromStr(style_margin);
-				// 	this.width_grabbed_base_value = wfroms ? wfroms : (visible_width / visible_parent_width) * 100;
-				// }
-
-				did_grab = true;
-			}
-
-			if (did_grab) {
 				/** @type {Position} */
 				this.layout_control_grabbed_pos = cloneObject(mouse.pos);
+				this.layout_control_grabbed_scroll_top = this.content_scroll.scrollTop;
 
 				ev.preventDefault();
 			} else {
@@ -1918,8 +1893,13 @@ class PiepCMS {
 	}
 
 	layoutEditMove() {
-		if (this.width_grabbed && !mouse.down) {
-			this.width_grabbed = false;
+		if (this.layout_control_prop && !mouse.down) {
+			this.layout_control_prop = undefined;
+			this.layout_control_base_value = undefined;
+			this.layout_control_grabbed_index = undefined;
+			this.layout_control_unit = undefined;
+			this.layout_control_grabbed_pos = undefined;
+			this.layout_control_percent = undefined;
 			removeClasses(".layout_control.grabbed", ["grabbed"], this.container);
 		}
 
@@ -1928,39 +1908,59 @@ class PiepCMS {
 			removeClasses(".editing_now", ["editing_now"], this.container);
 		}
 
-		if (this.width_grabbed) {
+		if (this.layout_control_prop) {
 			const dx = mouse.pos.x - this.layout_control_grabbed_pos.x;
-			const ddx = dx * (this.width_grabbed_direction === "left" ? -1 : 1);
-
-			let set_width = "100%";
-			if (this.width_grabbed_unit === "%") {
-				let wid = Math.max(10, this.width_grabbed_base_value + ddx / this.width_grabbed_percent);
-				if (CTRL_DOWN) {
-					let lowest_dwid = 100;
-					let closest_wid = wid;
-					for (let percentage of this.pretty_percentages) {
-						const dwid = Math.abs(percentage - wid);
-						if (dwid < lowest_dwid) {
-							lowest_dwid = dwid;
-							closest_wid = percentage;
-						}
-					}
-					wid = closest_wid;
-				}
-				set_width = floor(wid, 4) + "%";
-			} else {
-				let wid = Math.max(50, this.width_grabbed_base_value + ddx);
-				if (CTRL_DOWN) {
-					wid = round(wid, -1);
-				}
-				set_width = floor(wid, 4) + "px";
+			const dy = mouse.pos.y - this.layout_control_grabbed_pos.y + this.content_scroll.scrollTop - this.layout_control_grabbed_scroll_top;
+			let dist = 0;
+			if (this.layout_control_dir === "left") {
+				dist -= dx;
+			} else if (this.layout_control_dir === "right") {
+				dist += dx;
+			} else if (this.layout_control_dir === "top") {
+				dist -= dy;
+			} else if (this.layout_control_dir === "bottom") {
+				dist += dy;
 			}
 
-			const width_input = this.blc_menu._child(`[data-blc_prop="style.width"]`);
-			const change = set_width !== width_input._get_value();
-			scrollIntoView(width_input);
-			width_input.classList.add("editing_now");
-			width_input._set_value(set_width);
+			let min_percent = 0;
+			let min_pixels = 0;
+			if (this.layout_control_prop === "width") {
+				min_percent = 10;
+				min_pixels = 50;
+			} else if (this.layout_control_prop.includes("margin")) {
+				min_percent = -1000;
+				min_pixels = -100000;
+			}
+
+			let set_val_pretty;
+			if (this.layout_control_unit === "%") {
+				let set_val = Math.max(min_percent, this.layout_control_base_value + dist / this.layout_control_percent);
+				if (CTRL_DOWN) {
+					let lowest_d_val = 100;
+					let closest_val = set_val;
+					for (let percentage of this.pretty_percentages) {
+						const dwid = Math.abs(percentage - set_val);
+						if (dwid < lowest_d_val) {
+							lowest_d_val = dwid;
+							closest_val = percentage;
+						}
+					}
+					set_val = closest_val;
+				}
+				set_val_pretty = floor(set_val, 4) + "%";
+			} else {
+				let set_val = Math.max(min_pixels, this.layout_control_base_value + dist);
+				if (CTRL_DOWN) {
+					set_val = round(set_val, -1);
+				}
+				set_val_pretty = floor(set_val, 4) + "px";
+			}
+
+			const prop_input = this.blc_menu._child(`[data-blc_prop="style.${this.layout_control_prop}"]`);
+			const change = set_val_pretty !== prop_input._get_value();
+			scrollIntoView(prop_input);
+			prop_input.classList.add("editing_now");
+			prop_input._set_value(set_val_pretty);
 
 			if (change) {
 				this.displayNodeLayout();
@@ -2180,79 +2180,81 @@ class PiepCMS {
 			display_padding(left, top, width, height);
 		}
 
-		const width_control_width = 15;
+		const layout_control_width = 15;
 
-		// width_controls
-		const display_width_control = (left, top) => {
+		// just controls
+		/**
+		 *
+		 * @param {number} left
+		 * @param {number} top
+		 * @param {string} gener_prop
+		 * @param {string} spec_prop
+		 * @param {DirectionEnum} dir
+		 */
+		const display_layout_control = (left, top, gener_prop, spec_prop, dir) => {
 			layout_html += html`<div
-				class="layout_control width_control"
+				class="layout_control ${gener_prop}_control"
+				data-layout_prop="${spec_prop}"
+				data-layout_dir="${dir}"
 				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
 			></div>`;
 		};
 		{
 			// left bottom
 			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
-			display_width_control(left, top);
+			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			display_layout_control(left, top, "width", "width", "left");
 		}
 		{
 			// right bottom
-			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
-			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
-			display_width_control(left, top);
+			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
+			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			display_layout_control(left, top, "width", "width", "right");
 		}
 		{
 			// left top
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top;
-			display_width_control(left, top);
+			display_layout_control(left, top, "width", "width", "left");
 		}
 		{
 			// right top
-			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
+			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top;
-			display_width_control(left, top);
+			display_layout_control(left, top, "width", "width", "right");
 		}
 
-		// mpbw - margin / padding / border width controls
-		const display_mpbw_control = (left, top, gener_prop, spec_prop) => {
-			layout_html += html`<div
-				class="layout_control mpbw_control ${gener_prop}_control"
-				data-mpbw_prop="${spec_prop}"
-				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
-			></div>`;
-		};
 		{
 			// top
-			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
+			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
 			let top = focus_node_rect.top;
-			display_mpbw_control(left, top - width_control_width, "margin", "marginTop");
-			display_mpbw_control(left, top, "borderWidth", "borderTopWidth");
-			display_mpbw_control(left, top + width_control_width, "padding", "paddingTop");
+			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top");
+			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top");
+			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "bottom");
 		}
 		{
 			// bottom
-			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
-			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
-			display_mpbw_control(left, top + width_control_width, "margin", "marginBottom");
-			display_mpbw_control(left, top, "borderWidth", "borderBottomWidth");
-			display_mpbw_control(left, top - width_control_width, "padding", "paddingBottom");
+			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
+			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom");
+			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom");
+			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "top");
 		}
 		{
 			// left
 			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
-			display_mpbw_control(left - width_control_width, top, "margin", "marginLeft");
-			display_mpbw_control(left, top, "borderWidth", "borderLeftWidth");
-			display_mpbw_control(left + width_control_width, top, "padding", "paddingLeft");
+			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
+			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left");
+			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left");
+			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "right");
 		}
 		{
 			// right
-			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
-			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
-			display_mpbw_control(left + width_control_width, top, "margin", "marginRight");
-			display_mpbw_control(left, top, "borderWidth", "borderRightWidth");
-			display_mpbw_control(left - width_control_width, top, "padding", "paddingRight");
+			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
+			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
+			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right");
+			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right");
+			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "left");
 		}
 
 		this.layout_controls._set_content(layout_html);

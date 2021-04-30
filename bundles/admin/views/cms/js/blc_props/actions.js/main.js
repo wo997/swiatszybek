@@ -3,7 +3,7 @@
 	piep_cms_props_handler.registerFloatingProp({
 		name: "layout_btn",
 		menu_html: html`
-			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary">
+			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary, marginesy, itd...">
 				<i class="fas fa-ruler-combined filter_icon"></i>
 			</button>
 		`,

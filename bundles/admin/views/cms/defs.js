@@ -80,6 +80,10 @@
  */
 
 /**
+ * @typedef {"left" | "right" | "top" | "bottom"} DirectionEnum
+ */
+
+/**
  * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
  */
 
