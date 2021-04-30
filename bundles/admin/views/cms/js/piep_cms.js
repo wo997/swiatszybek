@@ -478,6 +478,7 @@ class PiepCMS {
 			const width_control = target._parent(".width_control");
 			if (width_control) {
 				this.width_grabbed = true;
+				this.container.classList.add("width_grabbed");
 				this.width_grabbed_at_mouse_x = mouse.pos.x;
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
@@ -1865,6 +1866,7 @@ class PiepCMS {
 	layoutEditMove() {
 		if (this.width_grabbed && !mouse.down) {
 			this.width_grabbed = false;
+			this.container.classList.remove("width_grabbed");
 		}
 
 		if (this.width_grabbed) {
