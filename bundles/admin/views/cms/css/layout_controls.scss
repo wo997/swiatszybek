@@ -17,27 +17,43 @@
 	}
 
 	.width_control {
+		background: #139;
+	}
+	.margin_control {
+		background: #841;
+	}
+	.padding_control {
+		background: #273;
+	}
+	.border_control {
+		background: #555;
+	}
+
+	.layout_control {
 		& {
 			position: absolute;
 			width: 15px;
 			height: 15px;
 			border: 2px solid #000;
-			background: #139;
 			opacity: 0.3;
 			cursor: pointer;
 		}
-		&:hover {
+		&:hover,
+		&.grabbed {
 			opacity: 0.6;
+		}
+		&.grabbed {
+			pointer-events: none;
 		}
 	}
 }
 
-.piep_editor {
-	&.width_grabbed .width_control {
-		pointer-events: none;
-		opacity: 0.6;
-	}
-}
+// .piep_editor {
+// 	&.width_grabbed .width_control {
+// 		pointer-events: none;
+// 		opacity: 0.6;
+// 	}
+// }
 
 // basically copied from controls.scss
 .field.editing_now {

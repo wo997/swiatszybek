@@ -488,7 +488,8 @@ class PiepCMS {
 			const width_control = target._parent(".width_control");
 			if (width_control) {
 				this.width_grabbed = true;
-				this.container.classList.add("width_grabbed");
+				this.layout_control_grabbed_index = getNodeIndex(width_control);
+				width_control.classList.add("grabbed");
 				this.width_grabbed_at_mouse_x = mouse.pos.x;
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
@@ -1876,10 +1877,11 @@ class PiepCMS {
 	layoutEditMove() {
 		if (this.width_grabbed && !mouse.down) {
 			this.width_grabbed = false;
-			this.container.classList.remove("width_grabbed");
+			removeClasses(".layout_control.grabbed", ["grabbed"], this.container);
 		}
 
 		if (!mouse.down) {
+			this.layout_control_grabbed_index = undefined;
 			removeClasses(".editing_now", ["editing_now"], this.container);
 		}
 
@@ -2139,7 +2141,10 @@ class PiepCMS {
 
 		// width_controls
 		const display_width_control = (left, top) => {
-			layout_html += html`<div class="width_control" style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"></div>`;
+			layout_html += html`<div
+				class="layout_control width_control"
+				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+			></div>`;
 		};
 		{
 			// left bottom
@@ -2167,6 +2172,13 @@ class PiepCMS {
 		}
 
 		this.layout_controls._set_content(layout_html);
+
+		if (this.layout_control_grabbed_index !== undefined) {
+			const lc = this.layout_controls._direct_children()[this.layout_control_grabbed_index];
+			if (lc) {
+				lc.classList.add("grabbed");
+			}
+		}
 	}
 
 	finishEditingLayout() {

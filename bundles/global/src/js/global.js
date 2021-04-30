@@ -426,6 +426,20 @@ function findPrev(node, selector, options) {
 }
 
 /**
+ * Counts previous children
+ *
+ * @param {PiepNode} node
+ */
+function getNodeIndex(node) {
+	let i = -1;
+	while (node) {
+		i++;
+		node = node._prev();
+	}
+	return i;
+}
+
+/**
  * @param {PiepNode} node
  * @param {findNodeOptions} options
  */
@@ -467,12 +481,6 @@ function setContent(node, html = "", options = {}) {
 			node.style.height = "";
 		}
 	}, 0);
-}
-
-function addMissing_direct_children(parent, isMissingCallback, html, position = "beforeend") {
-	if (!$(parent)._direct_children().find(isMissingCallback)) {
-		parent.insertAdjacentHTML(position, html);
-	}
 }
 
 function swapNodes(a, b) {
