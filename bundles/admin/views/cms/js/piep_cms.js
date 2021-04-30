@@ -469,7 +469,7 @@ class PiepCMS {
 
 	initLayoutEdit() {
 		this.container.addEventListener("mousedown", (ev) => {
-			if (this.edit_layout_vid === undefined) {
+			if (!this.editing_layout) {
 				return;
 			}
 
@@ -510,9 +510,9 @@ class PiepCMS {
 				this.width_grabbed_direction = mouse.pos.x > focus_node_rect.left + focus_node_rect.width * 0.5 ? "right" : "left";
 
 				ev.preventDefault();
+			} else {
+				this.finishEditingLayout();
 			}
-
-			this.finishEditingLayout();
 		});
 	}
 
@@ -1873,13 +1873,18 @@ class PiepCMS {
 
 			let set_width = "100%";
 			if (this.width_grabbed_unit === "%") {
-				set_width = floor(this.width_grabbed_base_value + ddx / this.width_grabbed_percent, 4) + "%";
+				set_width = Math.max(10, floor(this.width_grabbed_base_value + ddx / this.width_grabbed_percent, 4)) + "%";
 			} else {
-				set_width = floor(this.width_grabbed_base_value + ddx, 4) + "px";
+				set_width = Math.max(50, floor(this.width_grabbed_base_value + ddx, 4)) + "px";
 			}
 
 			const width_input = this.blc_menu._child(`[data-blc_prop="style.width"]`);
+			const change = set_width !== width_input._get_value();
 			width_input._set_value(set_width);
+
+			if (change) {
+				this.displayNodeLayout();
+			}
 		}
 	}
 
@@ -1954,13 +1959,19 @@ class PiepCMS {
 	}
 
 	editLayout() {
-		this.edit_layout_vid = this.focus_node_vid;
+		this.editing_layout = true;
 
-		this.showFocusToNode(this.edit_layout_vid);
+		this.showFocusToNode(this.focus_node_vid);
 
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
 
+		this.filter_blc_menu._set_value("layout");
+
+		this.displayNodeLayout();
+	}
+
+	displayNodeLayout() {
 		let layout_html = "";
 
 		const focus_node = this.getFocusNode();
@@ -2124,7 +2135,7 @@ class PiepCMS {
 	}
 
 	finishEditingLayout() {
-		this.edit_layout_vid = undefined;
+		this.editing_layout = false;
 
 		this.container.classList.remove("editing_layout");
 		this.container.classList.remove("disable_editing");
@@ -2744,7 +2755,7 @@ class PiepCMS {
 	 * @returns
 	 */
 	setFocusNode(vid) {
-		if (this.grabbed_block_vid !== undefined || this.edit_layout_vid !== undefined) {
+		if (this.grabbed_block_vid !== undefined || this.editing_layout) {
 			return;
 		}
 
