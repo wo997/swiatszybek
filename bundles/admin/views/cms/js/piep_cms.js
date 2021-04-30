@@ -1904,11 +1904,11 @@ class PiepCMS {
 				}
 				set_width = floor(wid, 4) + "%";
 			} else {
-				let wid = Math.max(this.width_grabbed_base_value + ddx);
+				let wid = Math.max(50, this.width_grabbed_base_value + ddx);
 				if (CTRL_DOWN) {
 					wid = round(wid, -1);
 				}
-				set_width = Math.max(50, floor(this.width_grabbed_base_value + ddx, 4)) + "px";
+				set_width = floor(wid, 4) + "px";
 			}
 
 			const width_input = this.blc_menu._child(`[data-blc_prop="style.width"]`);
