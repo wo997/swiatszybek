@@ -81,7 +81,26 @@
 		name: "margin",
 		type_groups: ["layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
-		menu_html: html` <div class="label">Margines zewnętrzny</div>
+		menu_html: html` <div class="label">
+				<div class="layout_info_rect" style="background: var(--margin_control_clr);"></div>
+				Margines zewnętrzny
+			</div>
+
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="setting.bind_margins">
+				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Marginesy pionowe oraz poziome są tej samej długości">
+					<p-checkbox data-value="center"></p-checkbox>
+					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Każdy margines może mieć inną długość">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
+				</div>
+			</div>
+
 			<div class="flex align_center text_center text_center_fields">
 				<div>
 					Lewy
@@ -105,7 +124,10 @@
 		type_groups: ["layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
-			<div class="label">Margines wewnętrzny (padding)</div>
+			<div class="label">
+				<div class="layout_info_rect" style="background: var(--padding_control_clr);"></div>
+				Margines wewnętrzny (padding)
+			</div>
 			<div class="flex align_center text_center text_center_fields">
 				<div>
 					Lewy

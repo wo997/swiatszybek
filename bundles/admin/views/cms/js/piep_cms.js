@@ -2171,6 +2171,66 @@ class PiepCMS {
 			display_width_control(left, top);
 		}
 
+		// margin_controls
+		const display_margin_control = (left, top) => {
+			layout_html += html`<div
+				class="layout_control margin_control"
+				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+			></div>`;
+		};
+		const display_border_control = (left, top) => {
+			layout_html += html`<div
+				class="layout_control border_control"
+				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+			></div>`;
+		};
+		const display_padding_control = (left, top) => {
+			layout_html += html`<div
+				class="layout_control padding_control"
+				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+			></div>`;
+		};
+		{
+			// top
+			// let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
+			// let top = focus_node_rect.top - width_control_width * 0.5;
+			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
+			let top = focus_node_rect.top;
+			display_margin_control(left, top - width_control_width);
+			display_border_control(left, top);
+			display_padding_control(left, top + width_control_width);
+		}
+		{
+			// bottom
+			// let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
+			// let top = focus_node_rect.top + focus_node_rect.height - width_control_width * 0.5;
+			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
+			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
+			display_margin_control(left, top + width_control_width);
+			display_border_control(left, top);
+			display_padding_control(left, top - width_control_width);
+		}
+		{
+			// left
+			// let left = focus_node_rect.left - width_control_width * 0.5;
+			// let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
+			display_margin_control(left - width_control_width, top);
+			display_border_control(left, top);
+			display_padding_control(left + width_control_width, top);
+		}
+		{
+			// right
+			// let left = focus_node_rect.left + focus_node_rect.width - width_control_width * 0.5;
+			// let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
+			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
+			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
+			display_margin_control(left + width_control_width, top);
+			display_border_control(left, top);
+			display_padding_control(left - width_control_width, top);
+		}
+
 		this.layout_controls._set_content(layout_html);
 
 		if (this.layout_control_grabbed_index !== undefined) {
