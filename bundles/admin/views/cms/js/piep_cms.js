@@ -24,6 +24,7 @@ class PiepCMS {
 		this.initSelectResolution();
 		this.initRightMenu();
 		this.initAddBlockMenu();
+		this.initLayoutEdit();
 
 		this.initEditables();
 		this.initEditingColors();
@@ -466,6 +467,55 @@ class PiepCMS {
 		});
 	}
 
+	initLayoutEdit() {
+		this.container.addEventListener("mousedown", (ev) => {
+			if (this.edit_layout_vid === undefined) {
+				return;
+			}
+
+			const target = $(ev.target);
+
+			const width_control = target._parent(".width_control");
+			if (width_control) {
+				this.width_grabbed = true;
+				this.width_grabbed_at_mouse_x = mouse.pos.x;
+
+				const care_about_resolutions = this.getResolutionsWeCareAbout();
+				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
+				/** @type {string} */
+				let style_width = def(v_node_styles.df.width, "");
+				care_about_resolutions.forEach((res) => {
+					if (!v_node_styles[res]) {
+						return;
+					}
+					const w = v_node_styles[res].width;
+					if (w) {
+						style_width = w;
+					}
+				});
+
+				const focus_node = this.getFocusNode();
+				const focus_node_parent = focus_node._parent();
+				const focus_node_rect = focus_node.getBoundingClientRect();
+				const visible_width = focus_node_rect.width;
+				const visible_parent_width = focus_node_parent.getBoundingClientRect().width;
+				this.width_grabbed_unit = style_width.match(/\d*px/) ? "px" : "%";
+				this.width_grabbed_percent = visible_parent_width * 0.01;
+				if (this.width_grabbed_unit === "px") {
+					this.width_grabbed_base_value = visible_width;
+				} else {
+					const wfroms = numberFromStr(style_width);
+					this.width_grabbed_base_value = wfroms ? wfroms : (visible_width / visible_parent_width) * 100;
+				}
+				this.width_grabbed_direction = mouse.pos.x > focus_node_rect.left + focus_node_rect.width * 0.5 ? "right" : "left";
+
+				ev.preventDefault();
+			}
+
+			this.finishEditingLayout();
+		});
+	}
+
 	initAddBlockMenu() {
 		let menu_html = "";
 
@@ -677,6 +727,7 @@ class PiepCMS {
 
 					let prop_str = input.dataset.blc_prop;
 
+					let just_style = false;
 					/**
 					 *
 					 * @param {vDomNode} edit_v_node
@@ -690,6 +741,7 @@ class PiepCMS {
 							}
 							prop_ref = prop_ref.styles[this.selected_resolution];
 							prop_str = prop_str.substring("style.".length);
+							just_style = true;
 						}
 						if (prop_str.startsWith("attr.")) {
 							if (!prop_ref.attrs) {
@@ -763,7 +815,7 @@ class PiepCMS {
 						v_node.text = undefined;
 
 						setPropOfVNode(mid_child);
-						this.recreateDom();
+						this.recreateDom(this.v_dom, { just_style });
 
 						const node_ref = this.getNode(mid_vid);
 						if (node_ref) {
@@ -773,7 +825,7 @@ class PiepCMS {
 						}
 					} else {
 						setPropOfVNode(v_node);
-						this.recreateDom();
+						this.recreateDom(this.v_dom, { just_style });
 
 						const node_ref = this.getNode(v_node.id);
 						this.setFocusNode(v_node.id);
@@ -1205,13 +1257,10 @@ class PiepCMS {
 	}
 
 	/**
-	 * @param {vDomNode[]} target_v_dom
+	 *
+	 * @returns {string[]}
 	 */
-	recreateDom(target_v_dom = undefined) {
-		if (target_v_dom === undefined) {
-			target_v_dom = this.v_dom;
-		}
-
+	getResolutionsWeCareAbout() {
 		/** @type {string[]} */
 		const care_about_resolutions = [];
 		for (const [key, width] of Object.entries(responsive_breakpoints).sort((a, b) => {
@@ -1224,6 +1273,22 @@ class PiepCMS {
 				break;
 			}
 		}
+
+		return care_about_resolutions;
+	}
+
+	/**
+	 * @param {vDomNode[]} target_v_dom
+	 * @param {{
+	 * just_style?: boolean
+	 * }} [options]
+	 */
+	recreateDom(target_v_dom = undefined, options = {}) {
+		if (target_v_dom === undefined) {
+			target_v_dom = this.v_dom;
+		}
+
+		const care_about_resolutions = this.getResolutionsWeCareAbout();
 
 		// order doesn't really matter so far
 		let styles_css = "";
@@ -1383,11 +1448,15 @@ class PiepCMS {
 
 		const { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
 
-		this.content._set_content(content_html, { maintain_height: true });
+		if (!options.just_style) {
+			this.content._set_content(content_html, { maintain_height: true });
+		}
 
 		this.styles._set_content(styles_css);
 
-		this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+		if (!options.just_style) {
+			this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+		}
 
 		lazyLoadImages({ duration: 0 });
 		registerForms();
@@ -1793,6 +1862,27 @@ class PiepCMS {
 		this.add_block_btn.style.setProperty("--btn-background-clr", show_add_block_menu ? "#eee" : "");
 	}
 
+	layoutEditMove() {
+		if (this.width_grabbed && !mouse.down) {
+			this.width_grabbed = false;
+		}
+
+		if (this.width_grabbed) {
+			const dx = mouse.pos.x - this.width_grabbed_at_mouse_x;
+			const ddx = dx * (this.width_grabbed_direction === "left" ? -1 : 1);
+
+			let set_width = "100%";
+			if (this.width_grabbed_unit === "%") {
+				set_width = floor(this.width_grabbed_base_value + ddx / this.width_grabbed_percent, 4) + "%";
+			} else {
+				set_width = floor(this.width_grabbed_base_value + ddx, 4) + "px";
+			}
+
+			const width_input = this.blc_menu._child(`[data-blc_prop="style.width"]`);
+			width_input._set_value(set_width);
+		}
+	}
+
 	inspectorMove() {
 		if (this.inspector_grabbed && !mouse.down) {
 			this.inspector_grabbed = false;
@@ -1845,6 +1935,8 @@ class PiepCMS {
 		}
 
 		this.inspectorMove();
+
+		this.layoutEditMove();
 
 		this.addBtnMove();
 
@@ -1997,60 +2089,38 @@ class PiepCMS {
 			display_padding(left, top, width, height);
 		}
 
-		// /**
-		//  * @type {{
-		//  * name: string
-		//  * }[]}
-		//  */
-		// const margins = [
-		// 	{
-		// 		name: "left",
-		// 	},
-		// 	{
-		// 		name: "right",
-		// 	},
-		// 	{
-		// 		name: "top",
-		// 	},
-		// 	{
-		// 		name: "bottom",
-		// 	},
-		// ];
+		const width_control_width = 15;
 
-		// for (const margin of margins) {
-		// 	layout_html += html`<input class="field small margin_input margin_${margin.name}" />`;
-		// }
-
+		// width_controls
+		const display_width_control = (left, top) => {
+			layout_html += html`<div class="width_control" style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"></div>`;
+		};
 		{
-			// right
-			let left = focus_node_rect.left + focus_node_rect.width * 0.5;
-			let top = focus_node_rect.top + focus_node_rect.height + 50;
-			layout_html += html`<div
-				class="width_control btn primary small"
-				style="
-                left:${left}px;
-                top:${top + this.content_scroll.scrollTop}px;
-			"
-			>
-				<i class="fas fa-arrows-alt-h"></i>
-			</div>`;
+			// left bottom
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
+			display_width_control(left, top);
+		}
+		{
+			// right bottom
+			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
+			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
+			display_width_control(left, top);
+		}
+		{
+			// left top
+			let left = focus_node_rect.left;
+			let top = focus_node_rect.top;
+			display_width_control(left, top);
+		}
+		{
+			// right top
+			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
+			let top = focus_node_rect.top;
+			display_width_control(left, top);
 		}
 
 		this.layout_controls._set_content(layout_html);
-
-		//for )
-		// <input class="field small margin_input margin_left">
-		// <input class="field small margin_input margin_right">
-		// <input class="field small margin_input margin_top">
-		// <input class="field small margin_input margin_bottom">
-
-		// <input class="field small padding_input padding_left">
-		// <input class="field small padding_input padding_right">
-		// <input class="field small padding_input padding_top">
-		// <input class="field small padding_input padding_bottom">
-
-		// <input class="field small width_input">
-		// <!-- <input class="field small height_input"> -->
 	}
 
 	finishEditingLayout() {

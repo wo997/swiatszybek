@@ -114,6 +114,10 @@
 	}
 
 	&.disable_editing {
+		& {
+			user-select: none;
+		}
+
 		.piep_editor_float_menu {
 			display: none !important;
 		}

@@ -1,14 +1,6 @@
 /* css[piep_cms] */
 
 .piep_editor_layout_controls {
-	& {
-		// width: 500px;
-		// height: 300px;
-		// border: 2px solid red;
-		// position: absolute;
-		// left: 500px;
-		// top: 300px;
-	}
 	.margin_input,
 	.padding_input,
 	.width_input {
@@ -25,8 +17,17 @@
 	}
 
 	.width_control {
-		//width: 40px;
-		position: absolute;
+		& {
+			position: absolute;
+			width: 15px;
+			height: 15px;
+			border: 2px solid #000;
+			background: #139;
+			opacity: 0.4;
+			cursor: pointer;
+		}
+		&:hover {
+			opacity: 0.7;
+		}
 	}
-	//height_input
 }
