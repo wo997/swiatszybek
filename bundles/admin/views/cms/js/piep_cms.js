@@ -516,7 +516,11 @@ class PiepCMS {
 					}
 				});
 
-				this.layout_control_unit = prop_val_from_style.match(/\d*px/) ? "px" : "%";
+				if (this.layout_control_prop === "width") {
+					this.layout_control_unit = prop_val_from_style.match(/\d*px/) ? "px" : "%";
+				} else {
+					this.layout_control_unit = prop_val_from_style.match(/\d*%/) ? "%" : "px";
+				}
 				this.layout_control_percent = visible_parent_width * 0.01;
 
 				this.layout_control_base_value = 0;
@@ -1936,16 +1940,21 @@ class PiepCMS {
 			if (this.layout_control_unit === "%") {
 				let set_val = Math.max(min_percent, this.layout_control_base_value + dist / this.layout_control_percent);
 				if (CTRL_DOWN) {
-					let lowest_d_val = 100;
-					let closest_val = set_val;
-					for (let percentage of this.pretty_percentages) {
-						const dwid = Math.abs(percentage - set_val);
-						if (dwid < lowest_d_val) {
-							lowest_d_val = dwid;
-							closest_val = percentage;
+					if (this.layout_control_prop === "width") {
+						let lowest_d_val = 100;
+						let closest_val = set_val;
+						for (let percentage of this.pretty_percentages) {
+							const dwid = Math.abs(percentage - set_val);
+							if (dwid < lowest_d_val) {
+								lowest_d_val = dwid;
+								closest_val = percentage;
+							}
+							set_val = closest_val;
 						}
+					} else {
+						set_val = Math.round(set_val);
+						set_val_pretty = set_val + "%";
 					}
-					set_val = closest_val;
 				}
 				set_val_pretty = floor(set_val, 4) + "%";
 			} else {
@@ -1953,7 +1962,7 @@ class PiepCMS {
 				if (CTRL_DOWN) {
 					set_val = round(set_val, -1);
 				}
-				set_val_pretty = floor(set_val, 4) + "px";
+				set_val_pretty = floor(set_val) + "px";
 			}
 
 			const prop_input = this.blc_menu._child(`[data-blc_prop="style.${this.layout_control_prop}"]`);
@@ -2069,6 +2078,10 @@ class PiepCMS {
 		const pd_right = numberFromStr(focus_node_style.paddingRight);
 		const pd_bottom = numberFromStr(focus_node_style.paddingBottom);
 		const pd_left = numberFromStr(focus_node_style.paddingLeft);
+		const bw_top = numberFromStr(focus_node_style.borderTopWidth);
+		const bw_right = numberFromStr(focus_node_style.borderRightWidth);
+		const bw_bottom = numberFromStr(focus_node_style.borderBottomWidth);
+		const bw_left = numberFromStr(focus_node_style.borderRightWidth);
 
 		// margins
 		const display_margin = (left, top, width, height, background) => {
@@ -2147,35 +2160,35 @@ class PiepCMS {
 
 		{
 			// top
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top;
-			let width = focus_node_rect.width;
+			let left = focus_node_rect.left + bw_left;
+			let top = focus_node_rect.top + bw_top;
+			let width = focus_node_rect.width - bw_left - bw_right;
 			let height = Math.abs(pd_top);
 			display_padding(left, top, width, height);
 		}
 		{
 			// bottom
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height;
-			let width = focus_node_rect.width;
+			let left = focus_node_rect.left + bw_left;
+			let top = focus_node_rect.top + focus_node_rect.height - bw_bottom;
+			let width = focus_node_rect.width - bw_left - bw_right;
 			let height = Math.abs(pd_bottom);
 			top -= height;
 			display_padding(left, top, width, height);
 		}
 		{
 			// left
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top;
+			let left = focus_node_rect.left + bw_left;
+			let top = focus_node_rect.top + bw_top;
 			let width = Math.abs(pd_left);
-			let height = focus_node_rect.height;
+			let height = focus_node_rect.height - bw_top - bw_bottom;
 			display_padding(left, top, width, height);
 		}
 		{
 			// right
-			let left = focus_node_rect.left + focus_node_rect.width;
-			let top = focus_node_rect.top;
+			let left = focus_node_rect.left + focus_node_rect.width - bw_right;
+			let top = focus_node_rect.top + bw_top;
 			let width = Math.abs(pd_right);
-			let height = focus_node_rect.height;
+			let height = focus_node_rect.height - bw_top - bw_bottom;
 			left -= width;
 			display_padding(left, top, width, height);
 		}
