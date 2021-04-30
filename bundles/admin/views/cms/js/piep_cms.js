@@ -167,6 +167,16 @@ class PiepCMS {
 		this.match_media_tags = /^(img|video|iframe)$/;
 
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
+		/** @type {number[]} */
+		this.pretty_percentages = [100];
+		for (const w of [2, 3, 4, 5, 6]) {
+			for (let i = 1; i < w; i++) {
+				this.pretty_percentages.push((100 * i) / w);
+			}
+		}
+		this.pretty_percentages = this.pretty_percentages.filter(onlyUnique);
+		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 	}
 
 	initFloatMenu() {
@@ -1869,19 +1879,42 @@ class PiepCMS {
 			this.container.classList.remove("width_grabbed");
 		}
 
+		if (!mouse.down) {
+			removeClasses(".editing_now", ["editing_now"], this.container);
+		}
+
 		if (this.width_grabbed) {
 			const dx = mouse.pos.x - this.width_grabbed_at_mouse_x;
 			const ddx = dx * (this.width_grabbed_direction === "left" ? -1 : 1);
 
 			let set_width = "100%";
 			if (this.width_grabbed_unit === "%") {
-				set_width = Math.max(10, floor(this.width_grabbed_base_value + ddx / this.width_grabbed_percent, 4)) + "%";
+				let wid = Math.max(10, this.width_grabbed_base_value + ddx / this.width_grabbed_percent);
+				if (CTRL_DOWN) {
+					let lowest_dwid = 100;
+					let closest_wid = wid;
+					for (let percentage of this.pretty_percentages) {
+						const dwid = Math.abs(percentage - wid);
+						if (dwid < lowest_dwid) {
+							lowest_dwid = dwid;
+							closest_wid = percentage;
+						}
+					}
+					wid = closest_wid;
+				}
+				set_width = floor(wid, 4) + "%";
 			} else {
+				let wid = Math.max(this.width_grabbed_base_value + ddx);
+				if (CTRL_DOWN) {
+					wid = round(wid, -1);
+				}
 				set_width = Math.max(50, floor(this.width_grabbed_base_value + ddx, 4)) + "px";
 			}
 
 			const width_input = this.blc_menu._child(`[data-blc_prop="style.width"]`);
 			const change = set_width !== width_input._get_value();
+			scrollIntoView(width_input);
+			width_input.classList.add("editing_now");
 			width_input._set_value(set_width);
 
 			if (change) {

@@ -38,3 +38,11 @@
 		opacity: 0.6;
 	}
 }
+
+// basically copied from controls.scss
+.field.editing_now {
+	border-color: var(--focus-clr);
+	box-shadow: 0 0 0 1px var(--focus-clr);
+	background-color: #fff;
+	transition: 0s all;
+}
