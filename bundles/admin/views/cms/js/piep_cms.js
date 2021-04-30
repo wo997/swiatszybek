@@ -486,11 +486,20 @@ class PiepCMS {
 			const target = $(ev.target);
 
 			const width_control = target._parent(".width_control");
+			const mpbw_control = target._parent(".mpbw_control");
+
+			let did_grab = false;
+
+			const focus_node = this.getFocusNode();
+			const focus_node_parent = focus_node._parent();
+			const focus_node_rect = focus_node.getBoundingClientRect();
+			const visible_width = focus_node_rect.width;
+			const visible_parent_width = focus_node_parent.getBoundingClientRect().width;
+
 			if (width_control) {
 				this.width_grabbed = true;
 				this.layout_control_grabbed_index = getNodeIndex(width_control);
 				width_control.classList.add("grabbed");
-				this.width_grabbed_at_mouse_x = mouse.pos.x;
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
 				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
@@ -506,11 +515,6 @@ class PiepCMS {
 					}
 				});
 
-				const focus_node = this.getFocusNode();
-				const focus_node_parent = focus_node._parent();
-				const focus_node_rect = focus_node.getBoundingClientRect();
-				const visible_width = focus_node_rect.width;
-				const visible_parent_width = focus_node_parent.getBoundingClientRect().width;
 				this.width_grabbed_unit = style_width.match(/\d*px/) ? "px" : "%";
 				this.width_grabbed_percent = visible_parent_width * 0.01;
 				if (this.width_grabbed_unit === "px") {
@@ -520,6 +524,45 @@ class PiepCMS {
 					this.width_grabbed_base_value = wfroms ? wfroms : (visible_width / visible_parent_width) * 100;
 				}
 				this.width_grabbed_direction = mouse.pos.x > focus_node_rect.left + focus_node_rect.width * 0.5 ? "right" : "left";
+
+				did_grab = true;
+			} else if (mpbw_control) {
+				this.mpbw_grabbed_prop = mpbw_control.dataset.mpbw_prop;
+
+				this.layout_control_grabbed_index = getNodeIndex(width_control);
+				mpbw_control.classList.add("grabbed");
+
+				const care_about_resolutions = this.getResolutionsWeCareAbout();
+				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
+				/** @type {string} */
+				let style_mpbw = def(v_node_styles.df[this.mpbw_grabbed_prop], "");
+				care_about_resolutions.forEach((res) => {
+					if (!v_node_styles[res]) {
+						return;
+					}
+					const w = v_node_styles[res][this.mpbw_grabbed_prop];
+					if (w) {
+						style_mpbw = w;
+					}
+				});
+
+				console.log(style_mpbw, this.mpbw_grabbed_prop);
+
+				// this.width_grabbed_unit = style_margin.match(/\d*px/) ? "px" : "%";
+				// this.width_grabbed_percent = visible_parent_width * 0.01;
+				// if (this.width_grabbed_unit === "px") {
+				// 	this.width_grabbed_base_value = visible_width;
+				// } else {
+				// 	const wfroms = numberFromStr(style_margin);
+				// 	this.width_grabbed_base_value = wfroms ? wfroms : (visible_width / visible_parent_width) * 100;
+				// }
+
+				did_grab = true;
+			}
+
+			if (did_grab) {
+				/** @type {Position} */
+				this.layout_control_grabbed_pos = cloneObject(mouse.pos);
 
 				ev.preventDefault();
 			} else {
@@ -1886,7 +1929,7 @@ class PiepCMS {
 		}
 
 		if (this.width_grabbed) {
-			const dx = mouse.pos.x - this.width_grabbed_at_mouse_x;
+			const dx = mouse.pos.x - this.layout_control_grabbed_pos.x;
 			const ddx = dx * (this.width_grabbed_direction === "left" ? -1 : 1);
 
 			let set_width = "100%";
@@ -2171,64 +2214,45 @@ class PiepCMS {
 			display_width_control(left, top);
 		}
 
-		// margin_controls
-		const display_margin_control = (left, top) => {
+		// mpbw - margin / padding / border width controls
+		const display_mpbw_control = (left, top, gener_prop, spec_prop) => {
 			layout_html += html`<div
-				class="layout_control margin_control"
-				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
-			></div>`;
-		};
-		const display_border_control = (left, top) => {
-			layout_html += html`<div
-				class="layout_control border_control"
-				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
-			></div>`;
-		};
-		const display_padding_control = (left, top) => {
-			layout_html += html`<div
-				class="layout_control padding_control"
+				class="layout_control mpbw_control ${gener_prop}_control"
+				data-mpbw_prop="${spec_prop}"
 				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
 			></div>`;
 		};
 		{
 			// top
-			// let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
-			// let top = focus_node_rect.top - width_control_width * 0.5;
 			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
 			let top = focus_node_rect.top;
-			display_margin_control(left, top - width_control_width);
-			display_border_control(left, top);
-			display_padding_control(left, top + width_control_width);
+			display_mpbw_control(left, top - width_control_width, "margin", "marginTop");
+			display_mpbw_control(left, top, "borderWidth", "borderTopWidth");
+			display_mpbw_control(left, top + width_control_width, "padding", "paddingTop");
 		}
 		{
 			// bottom
-			// let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
-			// let top = focus_node_rect.top + focus_node_rect.height - width_control_width * 0.5;
 			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - width_control_width * 0.5;
 			let top = focus_node_rect.top + focus_node_rect.height - width_control_width;
-			display_margin_control(left, top + width_control_width);
-			display_border_control(left, top);
-			display_padding_control(left, top - width_control_width);
+			display_mpbw_control(left, top + width_control_width, "margin", "marginBottom");
+			display_mpbw_control(left, top, "borderWidth", "borderBottomWidth");
+			display_mpbw_control(left, top - width_control_width, "padding", "paddingBottom");
 		}
 		{
 			// left
-			// let left = focus_node_rect.left - width_control_width * 0.5;
-			// let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
-			display_margin_control(left - width_control_width, top);
-			display_border_control(left, top);
-			display_padding_control(left + width_control_width, top);
+			display_mpbw_control(left - width_control_width, top, "margin", "marginLeft");
+			display_mpbw_control(left, top, "borderWidth", "borderLeftWidth");
+			display_mpbw_control(left + width_control_width, top, "padding", "paddingLeft");
 		}
 		{
 			// right
-			// let left = focus_node_rect.left + focus_node_rect.width - width_control_width * 0.5;
-			// let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
 			let left = focus_node_rect.left + focus_node_rect.width - width_control_width;
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - width_control_width * 0.5;
-			display_margin_control(left + width_control_width, top);
-			display_border_control(left, top);
-			display_padding_control(left - width_control_width, top);
+			display_mpbw_control(left + width_control_width, top, "margin", "marginRight");
+			display_mpbw_control(left, top, "borderWidth", "borderRightWidth");
+			display_mpbw_control(left - width_control_width, top, "padding", "paddingRight");
 		}
 
 		this.layout_controls._set_content(layout_html);
@@ -2493,6 +2517,8 @@ class PiepCMS {
 							const df = v_node.styles.df;
 							percentage_sum += numberFromStr(df.width);
 						});
+						console.log(percentage_sum);
+						// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
 
 						// will be just below 1
 						let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
@@ -3138,9 +3164,10 @@ class PiepCMS {
 		// TODO: hide sometimes? not always necessary when user scrolls
 		if (top < content_wrapper_rect.top + safe_off_y) {
 			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
-		}
-		if (top > content_wrapper_rect.top + content_wrapper_rect.height - safe_off_y) {
-			top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
+
+			if (top > content_wrapper_rect.top + content_wrapper_rect.height - safe_off_y) {
+				top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
+			}
 		}
 
 		this.float_menu._set_absolute_pos(left, top + this.content_scroll.scrollTop);

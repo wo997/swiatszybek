@@ -103,18 +103,15 @@
 
 			<div class="flex align_center text_center text_center_fields">
 				<div>
-					Lewy
-					<input class="field" data-blc_prop="style.marginLeft" />
+					<input class="field" data-blc_prop="style.marginLeft" placeholder="Lewy" />
 				</div>
 				<div class="ml2 mr2">
-					Górny
-					<input class="field mb3" data-blc_prop="style.marginTop" />
-					Dolny
-					<input class="field" data-blc_prop="style.marginBottom" />
+					<input class="field mb4" data-blc_prop="style.marginTop" placeholder="Górny" />
+
+					<input class="field" data-blc_prop="style.marginBottom" placeholder="Dolny" />
 				</div>
 				<div>
-					Prawy
-					<input class="field" data-blc_prop="style.marginRight" />
+					<input class="field" data-blc_prop="style.marginRight" placeholder="Prawy" />
 				</div>
 			</div>`,
 	});
@@ -146,18 +143,87 @@
 
 			<div class="flex align_center text_center text_center_fields">
 				<div>
-					Lewy
-					<input class="field" data-blc_prop="style.paddingLeft" />
+					<input class="field" data-blc_prop="style.paddingLeft" placeholder="Lewy" />
 				</div>
 				<div class="ml2 mr2">
-					Górny
-					<input class="field mb3" data-blc_prop="style.paddingTop" />
-					Dolny
-					<input class="field" data-blc_prop="style.paddingBottom" />
+					<input class="field mb4" data-blc_prop="style.paddingTop" placeholder="Górny" />
+
+					<input class="field" data-blc_prop="style.paddingBottom" placeholder="Dolny" />
 				</div>
 				<div>
-					Prawy
-					<input class="field" data-blc_prop="style.paddingRight" />
+					<input class="field" data-blc_prop="style.paddingRight" placeholder="Prawy" />
+				</div>
+			</div>
+		`,
+	});
+
+	piep_cms_props_handler.registerProp({
+		name: "border",
+		type_groups: ["layout", "appearance"],
+		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		menu_html: html`
+			<div class="label">
+				<div class="layout_info_rect" style="background: var(--border_control_clr);"></div>
+				Krawędź / Obramowanie
+			</div>
+
+			<div class="label normal">Grubość</div>
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderWidths">
+				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome są tej samej długości">
+					<p-checkbox data-value="center"></p-checkbox>
+					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Każda krawędź może mieć inną długość">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
+				</div>
+			</div>
+
+			<div class="flex align_center text_center text_center_fields">
+				<div>
+					<input class="field" data-blc_prop="style.borderLeftWidth" placeholder="Lewy" />
+				</div>
+				<div class="ml2 mr2">
+					<input class="field mb4" data-blc_prop="style.borderTopWidth" placeholder="Górny" />
+
+					<input class="field" data-blc_prop="style.borderBottomWidth" placeholder="Dolny" />
+				</div>
+				<div>
+					<input class="field" data-blc_prop="style.borderRightWidth" placeholder="Prawy" />
+				</div>
+			</div>
+
+			<div class="label normal">Kolor</div>
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderColors">
+				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome tego samego koloru">
+					<p-checkbox data-value="center"></p-checkbox>
+					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Każdy krawędź może mieć inny kolor">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
+				</div>
+			</div>
+
+			<div class="flex align_center text_center text_center_fields">
+				<div>
+					<color-picker data-blc_prop="style.borderLeftColor"></color-picker>
+				</div>
+				<div class="ml2 mr2">
+					<color-picker class="mb4" data-blc_prop="style.borderTopColor"></color-picker>
+
+					<color-picker data-blc_prop="style.borderBottomColor"></color-picker>
+				</div>
+				<div>
+					<color-picker data-blc_prop="style.borderRightColor"></color-picker>
 				</div>
 			</div>
 		`,

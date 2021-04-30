@@ -141,6 +141,10 @@
 			display: none !important;
 		}
 	}
+
+	::placeholder {
+		color: #aaa;
+	}
 }
 
 @keyframes cursor_blink {
