@@ -524,20 +524,20 @@ class PiepCMS {
 				this.layout_control_percent = visible_parent_width * 0.01;
 
 				this.layout_control_base_value = 0;
-				if (this.layout_control_unit === "px") {
-					if (this.layout_control_prop === "width") {
-						this.layout_control_base_value = visible_width;
-					}
+				// if (this.layout_control_unit === "px") {
+				// 	if (this.layout_control_prop === "width") {
+				// 		this.layout_control_base_value = visible_width;
+				// 	}
+				// } else {
+				const val_from_style_num = numberFromStr(prop_val_from_style);
+				if (val_from_style_num) {
+					this.layout_control_base_value = val_from_style_num;
 				} else {
-					const val_from_style_num = numberFromStr(prop_val_from_style);
-					if (val_from_style_num) {
-						this.layout_control_base_value = val_from_style_num;
-					} else {
-						if (this.layout_control_prop === "width") {
-							this.layout_control_base_value = (visible_width / visible_parent_width) * 100;
-						}
+					if (this.layout_control_prop === "width") {
+						this.layout_control_base_value = (visible_width / visible_parent_width) * 100;
 					}
 				}
+				//}
 
 				/** @type {Position} */
 				this.layout_control_grabbed_pos = cloneObject(mouse.pos);
@@ -1938,19 +1938,21 @@ class PiepCMS {
 
 			let set_val_pretty;
 			if (this.layout_control_unit === "%") {
-				let set_val = Math.max(min_percent, this.layout_control_base_value + dist / this.layout_control_percent);
+				let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
+				set_val = Math.max(min_percent, set_val);
+
 				if (CTRL_DOWN) {
 					if (this.layout_control_prop === "width") {
-						let lowest_d_val = 100;
+						let lowest_diff_val = 100;
 						let closest_val = set_val;
 						for (let percentage of this.pretty_percentages) {
-							const dwid = Math.abs(percentage - set_val);
-							if (dwid < lowest_d_val) {
-								lowest_d_val = dwid;
+							const diff = Math.abs(percentage - set_val);
+							if (diff < lowest_diff_val) {
+								lowest_diff_val = diff;
 								closest_val = percentage;
 							}
-							set_val = closest_val;
 						}
+						set_val = closest_val;
 					} else {
 						set_val = Math.round(set_val);
 						set_val_pretty = set_val + "%";
@@ -1958,7 +1960,9 @@ class PiepCMS {
 				}
 				set_val_pretty = floor(set_val, 4) + "%";
 			} else {
-				let set_val = Math.max(min_pixels, this.layout_control_base_value + dist);
+				let set_val = this.layout_control_base_value + dist;
+				set_val = Math.max(min_pixels, set_val);
+
 				if (CTRL_DOWN) {
 					set_val = round(set_val, -1);
 				}
@@ -2081,7 +2085,7 @@ class PiepCMS {
 		const bw_top = numberFromStr(focus_node_style.borderTopWidth);
 		const bw_right = numberFromStr(focus_node_style.borderRightWidth);
 		const bw_bottom = numberFromStr(focus_node_style.borderBottomWidth);
-		const bw_left = numberFromStr(focus_node_style.borderRightWidth);
+		const bw_left = numberFromStr(focus_node_style.borderLeftWidth);
 
 		// margins
 		const display_margin = (left, top, width, height, background) => {
@@ -2243,7 +2247,7 @@ class PiepCMS {
 			let top = focus_node_rect.top;
 			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top");
 			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top");
-			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "bottom");
+			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top");
 		}
 		{
 			// bottom
@@ -2251,7 +2255,7 @@ class PiepCMS {
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
 			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom");
 			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom");
-			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "top");
+			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom");
 		}
 		{
 			// left
@@ -2259,7 +2263,7 @@ class PiepCMS {
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
 			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left");
 			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left");
-			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "right");
+			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left");
 		}
 		{
 			// right
@@ -2267,7 +2271,7 @@ class PiepCMS {
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
 			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right");
 			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right");
-			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "left");
+			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right");
 		}
 
 		this.layout_controls._set_content(layout_html);
