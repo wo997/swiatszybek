@@ -426,7 +426,7 @@ class PiepCMS {
 
 			registerForms(); // let the options_wrapper appear
 
-			const options_wrapper = color_wrapper._child(".options_wrapper");
+			const options_wrapper = color_dropdown._child(".options_wrapper");
 
 			let color_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
 			colors_palette.forEach((color) => {
