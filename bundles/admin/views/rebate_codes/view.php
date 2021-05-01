@@ -7,11 +7,11 @@
 
 <script>
     <?php if (isset($_GET["dodaj"])) { ?>
-        domload(() => {
-            setTimeout(() => {
-                $(".edit_rebate_code").click();
-            })
-        })
+        // domload(() => {
+        //     setTimeout(() => {
+        //         $(".edit_rebate_code").click();
+        //     })
+        // })
     <?php } ?>
 </script>
 

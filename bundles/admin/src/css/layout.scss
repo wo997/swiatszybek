@@ -42,7 +42,7 @@ footer {
 	height: 100%;
 }
 .menu_item.current {
-	background: #0001;
+	--menu_item_clr: #0001;
 }
 .admin_layout {
 	display: flex;
@@ -182,13 +182,15 @@ footer {
 }
 .navbar_admin .menu_item {
 	display: block;
-	margin: 1px 0;
+	// margin: 1px 0;
 	display: block;
 	cursor: default;
 	display: flex;
 	justify-content: space-between;
 	align-items: stretch;
 	transition: all 0.1s;
+	--menu_item_clr: #eee;
+	background: var(--menu_item_clr);
 }
 
 .navbar_admin .menu_item .expand_arrow {
@@ -206,7 +208,7 @@ footer {
 
 .navbar_admin .menu_item.current_route,
 .navbar_admin .menu_item:hover {
-	background: #cacaca;
+	--menu_item_clr: #cacaca;
 	color: black;
 }
 .navbar_admin .sub_menu,
@@ -269,4 +271,18 @@ footer {
 
 hr {
 	margin: 5px 10px;
+}
+
+.pages_icon_1 {
+	transform: translate(1px, -1px);
+}
+.pages_icon_2 {
+	background: var(--menu_item_clr);
+	border-top-right-radius: 4px;
+	margin-left: -20px;
+	transform: translate(1px, 2px);
+	padding-right: 1px;
+	padding-top: 1px;
+	margin-right: 6px;
+	width: auto !important;
 }

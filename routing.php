@@ -69,10 +69,11 @@ $admin_navigations_tree = [
     ["url" => "/wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
     ["url" => "/dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
     [
-        "title" => '<i class="fas fa-pencil-alt"></i> Zawartość / Wygląd',
+        "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
         "sub" => [
-            ["url" => "/strony", "title" => '<i class="fas fa-file-alt"></i> Strony'],
-            ["url" => "/strona", "title" => '<i class="fas fa-heart"></i> Edycja Strony'],
+            ["url" => "/strony", "title" => '<i class="fas fa-file-alt pages_icon_1"></i> <i class="fas fa-file-alt pages_icon_2"></i> Wszystkie strony'],
+            ["onclick" => "getAddPageModal()._show();return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj stronę'],
+            //["url" => "/strona", "title" => '<i class="fas fa-file-alt"></i> Strona'],
             ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],

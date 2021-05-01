@@ -16,7 +16,7 @@ try {
         if (!endsWith($product_feature->getProp("data_type"), "_value")) {
             return;
         }
-        $product_feature_option_data["just_general_product_id"] = $general_product_id;
+        $product_feature_option_data["just_general_product_id"] = $general_product_id; // it's not really necessary, but leave it here
         $product_feature_option->setProps($product_feature_option_data);
     }
     EntityManager::saveAll();
