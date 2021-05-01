@@ -108,10 +108,18 @@ class PiepCMS {
 
 		this.history_steps_back = 0;
 		this.v_dom_history = [];
-		this.pushHistory();
+		this.pushHistory("");
 	}
 
-	pushHistory() {
+	/**
+	 *
+	 * @param {string} name
+	 */
+	pushHistory(name) {
+		if (this.history_change_name && this.history_change_name === name && this.v_dom_history.length > 1) {
+			this.v_dom_history.splice(this.v_dom_history.length - 1, 1);
+		}
+
 		this.v_dom_history.splice(this.v_dom_history.length - this.history_steps_back, this.history_steps_back);
 		this.history_steps_back = 0;
 
@@ -122,6 +130,12 @@ class PiepCMS {
 		this.renderHistory();
 
 		this.filterMenu();
+
+		clearTimeout(this.forgetHistoryChangeName);
+		this.history_change_name = name;
+		this.forgetHistoryChangeName = setTimeout(() => {
+			this.history_change_name = "";
+		}, 2000);
 	}
 	redoHistory() {
 		this.history_steps_back = Math.max(0, this.history_steps_back - 1);
@@ -405,12 +419,14 @@ class PiepCMS {
 
 		/**
 		 *
-		 * @param {PiepNode} color_dropdown
+		 * @param {PiepNode} color_wrapper
 		 */
-		const updateColorDropdown = (color_dropdown) => {
+		const updateColorDropdown = (color_wrapper) => {
+			const color_dropdown = color_wrapper._child("p-dropdown");
+
 			registerForms(); // let the options_wrapper appear
 
-			const options_wrapper = color_dropdown._child(".options_wrapper");
+			const options_wrapper = color_wrapper._child(".options_wrapper");
 
 			let color_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
 			colors_palette.forEach((color) => {
@@ -876,7 +892,7 @@ class PiepCMS {
 						setSelectionByIndex(select_node, select_start, select_end);
 					}
 
-					this.pushHistory();
+					this.pushHistory(`set_blc_prop_${prop_str}`);
 				}
 			});
 		});
@@ -949,7 +965,6 @@ class PiepCMS {
 								let mvy = dy * mv_fac;
 								ba._set_absolute_pos(ba_rect.left + s * 0.5 + mvx, ba_rect.top + s * 0.5 + mvy + this.content_scroll.scrollTop);
 								bb._set_absolute_pos(bb_rect.left + s * 0.5 - mvx, bb_rect.top + s * 0.5 - mvy + this.content_scroll.scrollTop);
-								console.log("move");
 								fine = false;
 							}
 						}
@@ -1015,7 +1030,7 @@ class PiepCMS {
 				this.recreateDom();
 				this.setFocusNode(undefined);
 
-				this.pushHistory();
+				this.pushHistory(`remove_blc_${v_node_data.v_node.id}`);
 			}
 
 			if (target._parent(this.container)) {
@@ -2266,7 +2281,8 @@ class PiepCMS {
 		this.container.classList.add("disable_editing");
 		this.current_insert_blc = 123456789; // will warm up everything on grab
 
-		this.grabbed_block_wrapper._set_content(this.getFocusNode().outerHTML);
+		const focus_node = this.getFocusNode();
+		this.grabbed_block_wrapper._set_content(focus_node.outerHTML);
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
 		removeClasses(".wo997_img_waiting", ["wo997_img_waiting"], this.grabbed_block_wrapper);
 		lazyLoadImages({ duration: 0 });
@@ -2298,16 +2314,15 @@ class PiepCMS {
 
 		this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
 		deepAssign(this.v_dom_overlay, this.v_dom);
-		this.recreateDom(this.v_dom_overlay);
+		//this.recreateDom(this.v_dom_overlay); // remove manually instead for better performance
+		focus_node.remove();
 
-		setTimeout(() => {
-			this.displayInsertPositions();
-		});
+		// setTimeout(() => {
+		// });
+		this.displayInsertPositions();
 	}
 
 	displayInsertPositions() {
-		// prepare all possible places to drop the block yay
-
 		/**
 		 *
 		 * @returns {insertBlc}
@@ -2383,11 +2398,6 @@ class PiepCMS {
 				let flow_direction = "column";
 				const parent_v_node = getNearVNodeData().parent_v_nodes[0];
 				if (parent_v_node) {
-					// const parent_display = parent_v_node.styles.display;
-					// if (parent_display === "flex") {
-					// 	wrap_with_a_flex = false;
-					// }
-
 					if (parent_v_node.classes.includes("columns_container")) {
 						flow_direction = "row"; // TODO: wont work always ofc
 					}
@@ -2430,8 +2440,6 @@ class PiepCMS {
 				const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
 				grabbed_node_copy.insert_on_release = true;
 
-				// actually here we should have block / inline-block checking, blocks can be wrapped,
-				// text not so, unless what we place nearby is also a block?
 				let suggest_wrapping_with_columns_module = false;
 				// if (near_v_node_data.v_node.text === undefined) {
 				// 	wrap_with_a_flex = true;
@@ -2730,9 +2738,16 @@ class PiepCMS {
 			insert_blc.remove();
 		});
 
-		if (this.current_insert_blc) {
-			const grabbed_block_vid = this.grabbed_block_vid;
+		const grabbed_block_vid = this.grabbed_block_vid;
+		this.grabbed_block_vid = undefined;
 
+		const current_insert_blc = this.current_insert_blc;
+		this.current_insert_blc = undefined;
+
+		this.grabbed_block_wrapper_rect = undefined;
+		this.has_insert_pos = false;
+
+		if (current_insert_blc) {
 			// use whatever the user have seen already, smooth UX
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.v_dom_overlay);
@@ -2754,21 +2769,16 @@ class PiepCMS {
 			if (v_node_with_insert) {
 				v_node_with_insert.insert_on_release = false;
 			}
+
+			this.recreateDom();
+			this.pushHistory(`moved_blc_${grabbed_block_vid}`);
 		} else {
 			// temp block needs to be removed
 			if (this.grab_block_options.type === "insert") {
-				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom, this.grabbed_block_vid);
+				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom, grabbed_block_vid);
 				grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 			}
 		}
-
-		this.grabbed_block_vid = undefined;
-		this.grabbed_block_wrapper_rect = undefined;
-		this.current_insert_blc = undefined;
-		this.has_insert_pos = false;
-
-		this.recreateDom();
-		this.pushHistory();
 	}
 
 	/**
@@ -2791,7 +2801,7 @@ class PiepCMS {
 		this.cursor.classList.toggle("hidden", !this.cursor_active);
 	}
 	getFocusNode() {
-		const focus_node = this.content._child(".piep_focus");
+		const focus_node = this.getNode(this.focus_node_vid);
 		return focus_node;
 	}
 

@@ -3,7 +3,7 @@
 .any_picker_wrapper {
 	& {
 		position: absolute;
-		z-index: 450;
+		z-index: 1600;
 		transform-origin: 50% 0;
 	}
 	&:not(.visible) {
