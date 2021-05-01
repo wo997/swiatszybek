@@ -1,4 +1,4 @@
-/* js[view] */
+/* js[admin] */
 
 /**
  * @typedef {{
@@ -95,7 +95,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Kodu rabatowy</span>
+				<span class="title medium">Kod rabatowy</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>

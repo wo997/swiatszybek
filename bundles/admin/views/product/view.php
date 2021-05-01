@@ -1,5 +1,7 @@
 <?php //route[{ADMIN}/produkt]
 
+$general_product_data = null;
+
 $general_product_id = intval(Request::urlParam(2, -1));
 
 if ($general_product_id !== -1) {
@@ -22,21 +24,23 @@ if ($general_product_id !== -1) {
     // }
 
     $general_product = EntityManager::getEntityById("general_product", $general_product_id);
-    if (!$general_product) {
-        Request::redirect(Request::$static_urls["ADMIN"] . "produkt");
-    }
 
-    $general_product_data = $general_product->getAllProps();
+    if ($general_product) {
+        $general_product_data = $general_product->getAllProps();
 
-    /** @var Entity[] */
-    $products = $general_product->getProp("products");
-    $pd = [];
-    foreach ($products as $product) {
-        $pd[] = $product->getSimpleProps();
+        /** @var Entity[] */
+        $products = $general_product->getProp("products");
+        $pd = [];
+        foreach ($products as $product) {
+            $pd[] = $product->getSimpleProps();
+        }
+        $general_product_data["products"] = $pd;
     }
-    $general_product_data["products"] = $pd;
-} else {
-    $general_product_data = null;
+}
+
+// HEY! Now the id is required for basically simplicity, so no anonymous products are allowed
+if (!$general_product_data) {
+    Request::redirect(Request::$static_urls["ADMIN"] . "/produkty");
 }
 
 ?>

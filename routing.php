@@ -41,7 +41,7 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
             ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["url" => "/produkt", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
+            ["onclick" => "showAddProductModal();return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
         ],
@@ -60,7 +60,9 @@ $admin_navigations_tree = [
         "sub" => [
             //["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
             ["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tags"></i> Kody rabatowe'],
-            ["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
+            //["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
+            ["onclick" => "getRebateCodeModal()._show(-1);return false;", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
+
             //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'], // nah
         ]
     ],

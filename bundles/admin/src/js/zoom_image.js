@@ -25,7 +25,7 @@ function zoomImage(src, params = {}) {
 	place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
 	const wo997_img = place._child(".wo997_img");
 	wo997_img.style.width = "10000px";
-	lazyLoadImages({ animate: false });
+	lazyLoadImages({ duration: 0 });
 	wo997_img.style.width = "";
 
 	showModal("zoomImage", params);

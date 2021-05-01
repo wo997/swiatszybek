@@ -178,16 +178,15 @@ function getInputValidationErrors(input) {
 			}
 			if (what === "length") {
 				if (extra_val.match(/\{.*?\}/)) {
-					let [min, max] = extra_val.split(",");
-					// @ts-ignore
-					min = numberFromStr(min);
-					// @ts-ignore
-					max = numberFromStr(max);
+					let [min_str, max_str] = extra_val.replace(/[\{|\}]/g, "").split(",");
+					const min = numberFromStr(min_str);
+					const max = numberFromStr(max_str);
 
-					if (min !== "" && value.length < min) {
+					if (min_str !== "" && value.length < min) {
 						errors.push(`Podaj min. ${min} znaków`);
 					}
-					if (max !== "" && value.length > max) {
+
+					if (max_str !== "" && value.length > max) {
 						errors.push(`Podaj max. ${max} znaków`);
 					}
 				} else {

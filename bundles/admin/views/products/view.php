@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="btn primary"> Dodaj produkt <i class="fas fa-plus"></i> </a>
+    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="btn primary" onclick="showAddProductModal();return false;"> Dodaj produkt <i class="fas fa-plus"></i> </a>
 </div>
 
 <div class="products_view_header_under">

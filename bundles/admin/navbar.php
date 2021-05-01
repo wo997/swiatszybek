@@ -1,7 +1,7 @@
 <hr>
 <div class="admin_shortcuts">
     <div class="header">Szybki dostęp</div>
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="link">
+    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="link" onclick="showAddProductModal();return false;">
         Dodaj produkt
     </a>
     <a href="<?= Request::$static_urls["ADMIN"] ?>/kody-rabatowe?dodaj" class="link">
@@ -27,8 +27,10 @@ function renderPageItem($page)
         $hidden = "hidden";
     }
 
+    $onclick = isset($page["onclick"]) ? "onclick=\"$page[onclick]\"" : "";
+
     echo "<div class='menu_item $hidden'>
-            <a href='" . Request::$static_urls["ADMIN"] . def($page, "url") . "'>" . $title . " " . renderNotification(def($page, "notification_count", 0)) . "</a>
+            <a href='" . Request::$static_urls["ADMIN"] . def($page, "url", "") . "' $onclick>" . $title . " " . renderNotification(def($page, "notification_count", 0)) . "</a>
             $arrow_btn
         </div>";
 
