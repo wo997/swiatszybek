@@ -31,9 +31,11 @@
 	.margin_display {
 		position: absolute;
 		//background: #d809;
+		pointer-events: none;
 	}
 	.padding_display {
 		position: absolute;
+		pointer-events: none;
 	}
 
 	.width_control {

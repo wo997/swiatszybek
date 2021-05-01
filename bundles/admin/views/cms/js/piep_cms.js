@@ -163,13 +163,19 @@ class PiepCMS {
 		this.select_resolution = this.container._child(".select_resolution");
 
 		this.select_resolution.addEventListener("change", () => {
+			const r = this.select_resolution._get_value();
+			if (r === this.select_resolution) {
+				return;
+			}
 			/** @type {string} */
-			this.selected_resolution = this.select_resolution._get_value();
+			this.selected_resolution = r;
 			if (this.selected_resolution === "df") {
 				this.content_scroll.style.maxWidth = "";
 			} else {
 				this.content_scroll.style.maxWidth = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
 			}
+
+			this.finishEditingLayout();
 
 			this.recreateDom();
 			this.setBlcMenuFromFocusedNode();
@@ -562,7 +568,9 @@ class PiepCMS {
 
 				ev.preventDefault();
 			} else {
-				this.finishEditingLayout();
+				if (!target._parent(this.blc_menu)) {
+					this.finishEditingLayout();
+				}
 			}
 		});
 	}
@@ -758,11 +766,12 @@ class PiepCMS {
 
 	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
-			input.addEventListener("change", () => {
+			const setProp = () => {
 				const focus_node = this.getFocusNode();
+				//console.log(input, focus_node);
 				if (focus_node) {
 					const v_node_data = this.getVDomNodeDataById(this.v_dom, +focus_node.dataset.vid);
-					const v_node = v_node_data.v_node;
+					let v_node = v_node_data.v_node;
 					const anchor_offset = this.last_selection.anchorOffset;
 					const focus_offset = this.last_selection.focusOffset;
 
@@ -809,14 +818,71 @@ class PiepCMS {
 							prop_str = prop_str.substring("setting.".length);
 						}
 
-						if (val === "") {
-							delete prop_ref[prop_str];
-						} else {
-							prop_ref[prop_str] = val;
+						const bind_wrapper = input._parent(`[data-bind_wrapper]`);
+
+						const bind_dirs = [];
+						if (bind_wrapper) {
+							const bind_dir = input.dataset.bind_dir;
+							const bind_what = bind_wrapper.dataset.bind_wrapper;
+
+							if (v_node.settings) {
+								const bind_type = v_node.settings[`bind_${bind_what}`];
+
+								if (bind_dir === "left") {
+									if (bind_type === "opposite" || bind_type === "all") {
+										bind_dirs.push("right");
+									}
+									if (bind_type === "all") {
+										bind_dirs.push("top", "bottom");
+									}
+								}
+								if (bind_dir === "right") {
+									if (bind_type === "opposite" || bind_type === "all") {
+										bind_dirs.push("left");
+									}
+									if (bind_type === "all") {
+										bind_dirs.push("top", "bottom");
+									}
+								}
+								if (bind_dir === "top") {
+									if (bind_type === "opposite" || bind_type === "all") {
+										bind_dirs.push("bottom");
+									}
+									if (bind_type === "all") {
+										bind_dirs.push("left", "right");
+									}
+								}
+								if (bind_dir === "bottom") {
+									if (bind_type === "opposite" || bind_type === "all") {
+										bind_dirs.push("top");
+									}
+									if (bind_type === "all") {
+										bind_dirs.push("left", "right");
+									}
+								}
+							}
 						}
+
+						const all_props_to_set = [prop_str];
+						bind_dirs.forEach((bind_dir) => {
+							const bind_input = bind_wrapper._child(`[data-bind_dir="${bind_dir}"]`);
+							bind_input._set_value(val, { quiet: true });
+							const prop_to_set = bind_input.dataset.blc_prop.split(".")[1];
+							if (prop_to_set) {
+								all_props_to_set.push(prop_to_set);
+							}
+						});
+
+						all_props_to_set.forEach((all_prop_str) => {
+							if (val === "") {
+								delete prop_ref[all_prop_str];
+							} else {
+								prop_ref[all_prop_str] = val;
+							}
+						});
 					};
 
-					let select_node, select_start, select_end;
+					let select_start, select_end;
 
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
@@ -865,35 +931,43 @@ class PiepCMS {
 
 						v_node.text = undefined;
 
-						setPropOfVNode(mid_child);
-						this.recreateDom(this.v_dom, { just_style });
+						const v_node_data = this.getVDomNodeDataById(this.v_dom, +mid_vid);
+						v_node = v_node_data.v_node;
 
 						const node_ref = this.getNode(mid_vid);
 						if (node_ref) {
-							select_node = node_ref;
 							select_start = 0;
 							select_end = end_offset - begin_offset;
 						}
-					} else {
-						setPropOfVNode(v_node);
-						this.recreateDom(this.v_dom, { just_style });
+					}
 
-						const node_ref = this.getNode(v_node.id);
-						this.setFocusNode(v_node.id);
-						if (v_node.text === undefined) {
-						} else if (node_ref) {
-							select_node = node_ref;
+					setPropOfVNode(v_node);
+
+					this.recreateDom(this.v_dom, { just_style });
+
+					const node_ref = this.getNode(v_node.id);
+					this.setFocusNode(v_node.id);
+					if (node_ref && v_node.text !== undefined) {
+						if (select_start === undefined) {
 							select_start = begin_offset;
 							select_end = end_offset;
 						}
 					}
 
-					if (select_node && !validPiepInput($(document.activeElement))) {
-						setSelectionByIndex(select_node, select_start, select_end);
+					if (node_ref && !validPiepInput($(document.activeElement))) {
+						setSelectionByIndex(node_ref, select_start, select_end);
 					}
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
+					this.displayNodeLayout();
 				}
+			};
+
+			input.addEventListener("input", () => {
+				setProp();
+			});
+			input.addEventListener("change", () => {
+				setTimeout(setProp);
 			});
 		});
 	}
@@ -1398,6 +1472,43 @@ class PiepCMS {
 		return care_about_resolutions;
 	}
 
+	recalculateFromSettings(target_v_dom = undefined) {
+		if (target_v_dom === undefined) {
+			target_v_dom = this.v_dom;
+		}
+
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
+				if (!v_node.settings) {
+					continue;
+				}
+
+				if (!v_node.settings.bind_margins) {
+					v_node.settings.bind_margins = "none";
+				}
+				if (!v_node.settings.bind_paddings) {
+					v_node.settings.bind_paddings = "opposite";
+				}
+				if (!v_node.settings.bind_borderWidths) {
+					v_node.settings.bind_borderWidths = "all";
+				}
+				if (!v_node.settings.bind_borderColors) {
+					v_node.settings.bind_borderColors = "all";
+				}
+
+				const children = v_node.children;
+				if (children) {
+					traverseVDom(children);
+				}
+			}
+		};
+
+		traverseVDom(target_v_dom);
+	}
+
 	/**
 	 * @param {vDomNode[]} target_v_dom
 	 * @param {{
@@ -1408,6 +1519,8 @@ class PiepCMS {
 		if (target_v_dom === undefined) {
 			target_v_dom = this.v_dom;
 		}
+
+		this.recalculateFromSettings(target_v_dom);
 
 		const care_about_resolutions = this.getResolutionsWeCareAbout();
 
@@ -1949,9 +2062,9 @@ class PiepCMS {
 			const change = set_val_pretty !== prop_input._get_value();
 			scrollIntoView(prop_input);
 			prop_input.classList.add("editing_now");
-			prop_input._set_value(set_val_pretty);
 
 			if (change) {
+				prop_input._set_value(set_val_pretty);
 				this.displayNodeLayout();
 			}
 		}
@@ -2041,6 +2154,10 @@ class PiepCMS {
 	}
 
 	displayNodeLayout() {
+		if (!this.editing_layout) {
+			return;
+		}
+
 		let layout_html = "";
 
 		const focus_node = this.getFocusNode();
@@ -2261,6 +2378,9 @@ class PiepCMS {
 	}
 
 	finishEditingLayout() {
+		if (!this.editing_layout) {
+			return;
+		}
 		this.editing_layout = false;
 
 		this.container.classList.remove("editing_layout");
@@ -2778,6 +2898,7 @@ class PiepCMS {
 				const grabbed_v_node_data = this.getVDomNodeDataById(this.v_dom, grabbed_block_vid);
 				grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 			}
+			this.recreateDom();
 		}
 	}
 

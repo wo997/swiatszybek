@@ -88,30 +88,30 @@
 
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="setting.bind_margins">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
-					<p-checkbox data-value="flex-end"></p-checkbox>
+					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Marginesy pionowe oraz poziome są tej samej długości">
-					<p-checkbox data-value="center"></p-checkbox>
+					<p-checkbox data-value="opposite"></p-checkbox>
 					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Każdy margines może mieć inną długość">
-					<p-checkbox data-value="flex-start"></p-checkbox>
+					<p-checkbox data-value="none"></p-checkbox>
 					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields">
+			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="margins">
 				<div>
-					<input class="field" data-blc_prop="style.marginLeft" placeholder="Lewy" />
+					<input class="field" data-blc_prop="style.marginLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.marginTop" placeholder="Górny" />
+					<input class="field mb4" data-blc_prop="style.marginTop" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.marginBottom" placeholder="Dolny" />
+					<input class="field" data-blc_prop="style.marginBottom" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.marginRight" placeholder="Prawy" />
+					<input class="field" data-blc_prop="style.marginRight" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>`,
 	});
@@ -128,30 +128,30 @@
 
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="setting.bind_paddings">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
-					<p-checkbox data-value="flex-end"></p-checkbox>
+					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Marginesy pionowe oraz poziome są tej samej długości">
-					<p-checkbox data-value="center"></p-checkbox>
+					<p-checkbox data-value="opposite"></p-checkbox>
 					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Każdy margines może mieć inną długość">
-					<p-checkbox data-value="flex-start"></p-checkbox>
+					<p-checkbox data-value="none"></p-checkbox>
 					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields">
+			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="paddings">
 				<div>
-					<input class="field" data-blc_prop="style.paddingLeft" placeholder="Lewy" />
+					<input class="field" data-blc_prop="style.paddingLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.paddingTop" placeholder="Górny" />
+					<input class="field mb4" data-blc_prop="style.paddingTop" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.paddingBottom" placeholder="Dolny" />
+					<input class="field" data-blc_prop="style.paddingBottom" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.paddingRight" placeholder="Prawy" />
+					<input class="field" data-blc_prop="style.paddingRight" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>
 		`,
@@ -170,60 +170,60 @@
 			<div class="label normal">Grubość</div>
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderWidths">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
-					<p-checkbox data-value="flex-end"></p-checkbox>
+					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome są tej samej długości">
-					<p-checkbox data-value="center"></p-checkbox>
+					<p-checkbox data-value="opposite"></p-checkbox>
 					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Każda krawędź może mieć inną długość">
-					<p-checkbox data-value="flex-start"></p-checkbox>
+					<p-checkbox data-value="none"></p-checkbox>
 					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields">
+			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderWidths">
 				<div>
-					<input class="field" data-blc_prop="style.borderLeftWidth" placeholder="Lewy" />
+					<input class="field" data-blc_prop="style.borderLeftWidth" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.borderTopWidth" placeholder="Górny" />
+					<input class="field mb4" data-blc_prop="style.borderTopWidth" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.borderBottomWidth" placeholder="Dolny" />
+					<input class="field" data-blc_prop="style.borderBottomWidth" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.borderRightWidth" placeholder="Prawy" />
+					<input class="field" data-blc_prop="style.borderRightWidth" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>
 
 			<div class="label normal">Kolor</div>
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderColors">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
-					<p-checkbox data-value="flex-end"></p-checkbox>
+					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome tego samego koloru">
-					<p-checkbox data-value="center"></p-checkbox>
+					<p-checkbox data-value="opposite"></p-checkbox>
 					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
 				</div>
 				<div class="checkbox_area" data-tooltip="Każdy krawędź może mieć inny kolor">
-					<p-checkbox data-value="flex-start"></p-checkbox>
+					<p-checkbox data-value="none"></p-checkbox>
 					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields">
+			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderColors">
 				<div>
-					<color-picker data-blc_prop="style.borderLeftColor"></color-picker>
+					<color-picker data-blc_prop="style.borderLeftColor" data-bind_dir="left"></color-picker>
 				</div>
 				<div class="ml2 mr2">
-					<color-picker class="mb4" data-blc_prop="style.borderTopColor"></color-picker>
+					<color-picker class="mb4" data-blc_prop="style.borderTopColor" data-bind_dir="top"></color-picker>
 
-					<color-picker data-blc_prop="style.borderBottomColor"></color-picker>
+					<color-picker data-blc_prop="style.borderBottomColor" data-bind_dir="bottom"></color-picker>
 				</div>
 				<div>
-					<color-picker data-blc_prop="style.borderRightColor"></color-picker>
+					<color-picker data-blc_prop="style.borderRightColor" data-bind_dir="right"></color-picker>
 				</div>
 			</div>
 		`,
