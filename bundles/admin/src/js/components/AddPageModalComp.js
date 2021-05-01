@@ -2,9 +2,6 @@
 
 /**
  * @typedef {{
- * }} ShowAddPageModalOptions
- *
- * @typedef {{
  * parent_menu_id: number
  * product_category_id?: number,
  * general_product_id?: number
@@ -20,10 +17,9 @@
  * _nodes: {
  *  save_btn: PiepNode
  * }
- * _show?(options: ShowAddPageModalOptions)
+ * _show?(options?: ShowModalParams)
  * _save()
  * _delete()
- * _options: ShowAddPageModalOptions
  * } & BaseComp} AddPageModalComp
  */
 
@@ -114,7 +110,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 		comp._render();
 
 		showModal("AddPageModal", {
-			//source: options.source,
+			source: options.source,
 		});
 	};
 
@@ -157,7 +153,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					</div>
 				</div>
 
-				<div class="expand_y" data-node="{${comp._nodes.case_basic}}">
+				<div class="expand_y" data-node="{${comp._nodes.case_page}}">
 					<div class="label">Link</div>
 					<input class="field trim" data-bind="{${data.url}}" data-validate="" />
 				</div>

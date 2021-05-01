@@ -41,7 +41,7 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
             ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["onclick" => "showAddProductModal();return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
+            ["onclick" => "showAddProductModal({source:this});return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
         ],
@@ -61,7 +61,7 @@ $admin_navigations_tree = [
             //["url" => "/sprzedaz", "title" => '<i class="fas fa-chart-line"></i> Sprzedaż'],
             ["url" => "/kody-rabatowe", "title" => '<i class="fas fa-tags"></i> Kody rabatowe'],
             //["url" => "/kody-rabatowe?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
-            ["onclick" => "getRebateCodeModal()._show(-1);return false;", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
+            ["onclick" => "getRebateCodeModal()._show(-1,{source:this});return false;", "title" => '<i class="fas fa-plus-circle"></i> Utwórz kod rabatowy'],
 
             //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'], // nah
         ]
@@ -72,7 +72,7 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
         "sub" => [
             ["url" => "/strony", "title" => '<i class="fas fa-file-alt pages_icon_1"></i> <i class="fas fa-file-alt pages_icon_2"></i> Wszystkie strony'],
-            ["onclick" => "getAddPageModal()._show();return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj stronę'],
+            ["onclick" => "getAddPageModal()._show({source:this});return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj stronę'],
             //["url" => "/strona", "title" => '<i class="fas fa-file-alt"></i> Strona'],
             ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],

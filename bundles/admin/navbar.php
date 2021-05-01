@@ -1,10 +1,10 @@
 <hr>
 <div class="admin_shortcuts">
     <div class="header">Szybki dostęp</div>
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="link" onclick="showAddProductModal();return false;">
+    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="link" onclick="showAddProductModal({source:this});return false;">
         Dodaj produkt
     </a>
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/kody-rabatowe?dodaj" class="link" onclick="getRebateCodeModal()._show(-1);return false;">
+    <a href="<?= Request::$static_urls["ADMIN"] ?>/kody-rabatowe?dodaj" class="link" onclick="getRebateCodeModal()._show(-1, {source:this});return false;">
         Utwórz kod rabatowy
     </a>
 </div>

@@ -1,6 +1,10 @@
 /* js[admin] */
 
-function showAddProductModal() {
+/**
+ *
+ * @param {ShowModalParams} options
+ */
+function showAddProductModal(options = {}) {
 	const ex = $("#addProductModal");
 	if (!ex) {
 		registerModalContent(html`
@@ -20,7 +24,7 @@ function showAddProductModal() {
 			</div>
 		`);
 	}
-	showModal("addProductModal");
+	showModal("addProductModal", options);
 
 	$("#addProductModal .add_btn").addEventListener("click", () => {
 		const errors = validateInputs($$("#addProductModal [data-validate]"));
