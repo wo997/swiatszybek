@@ -1,42 +1,47 @@
 /* css[piep_cms] */
 
-.piep_editor_float_multi_insert {
-	& {
-		position: absolute;
-		z-index: 1200;
-	}
-	svg {
-		display: block;
-	}
-	.foreign_insert_btn {
+.piep_editor {
+	.insert_blc {
 		& {
-			pointer-events: none;
-		}
-		i {
+			--insert_blc_clr: var(--focus-clr);
+			position: absolute;
+			width: 24px;
+			height: 24px;
+			background: #fff7;
+			border-radius: 4px;
+			transform: translate(-50%, -50%);
+			cursor: pointer;
+			z-index: 1100;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			height: 100%;
-			width: 100%;
-			color: var(--focus-clr);
+			color: var(--insert_blc_clr);
+			border: 2px solid var(--insert_blc_clr);
+			font-weight: var(--bold);
+			box-shadow: 0 1px 3px 0 #0004;
 		}
-		&.foreign_hover i {
-			color: #fff;
+		&.over {
+			z-index: 1120;
 		}
-	}
-	.center_circle {
-		fill: #fff7;
-	}
-	.svg_insert_btn {
-		& {
-			stroke: var(--focus-clr);
-			stroke-width: 2px;
-			fill: none;
-			cursor: pointer;
-			fill: #fff7;
+		&.multiple {
+			font-size: 1.1em;
+			--insert_blc_clr: var(--important-clr);
 		}
 		&:hover {
-			fill: var(--focus-clr);
+			color: #fff;
+			background: var(--insert_blc_clr);
+			box-shadow: 0 1px 3px 0 #0006;
+		}
+	}
+
+	.piep_editor_float_multi_insert_bckg {
+		& {
+			position: absolute;
+			z-index: 1110;
+			background: #fff8;
+			box-shadow: 0 1px 3px 0 #0002;
+			border-radius: 150px;
+			transform: translate(-50%, -50%);
 		}
 	}
 }
