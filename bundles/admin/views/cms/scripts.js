@@ -40,12 +40,17 @@ domload(() => {
 		});
 	});
 
+	let breadcrumbs = "";
 	let preview_url = "/";
 
-	if (page_data.general_product) {
-		$(".piep_editor_header .breadcrumbs").insertAdjacentHTML(
-			"beforeend",
-			html`
+	if (page_data) {
+		breadcrumbs += html`
+			<a class="btn transparent crumb" href="${STATIC_URLS["ADMIN"]}/strony"> Strony </a>
+			<i class="fas fa-chevron-right"></i>
+		`;
+
+		if (page_data.general_product) {
+			breadcrumbs += html`
 				<div class="crumb">${page_data.general_product.name}</div>
 				<a
 					class="btn subtle ml1"
@@ -55,11 +60,24 @@ domload(() => {
 					Edytuj produkt
 					<i class="fas fa-cube"></i>
 				</a>
-			`
-		);
+			`;
 
-		preview_url = page_data.general_product.__url;
+			preview_url = page_data.general_product.__url;
+		}
 	}
+
+	if (template_data) {
+		breadcrumbs += html`
+			<a class="btn transparent crumb" href="${STATIC_URLS["ADMIN"]}/szablony"> Szablony </a>
+			<i class="fas fa-chevron-right"></i>
+		`;
+
+		breadcrumbs += html` <div class="crumb">${template_data.name}</div> `;
+
+		// preview_url = template_data.???;
+	}
+
+	$(".piep_editor_header .breadcrumbs")._set_content(breadcrumbs);
 
 	$(".piep_editor_header .preview").addEventListener("click", () => {
 		previewUrl(preview_url);

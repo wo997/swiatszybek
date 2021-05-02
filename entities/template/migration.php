@@ -10,5 +10,6 @@ DB::createTable(
         ["name" => "modified_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
         ["name" => "page_type", "type" => "VARCHAR(255)", "index" => "index", "null" => true],
         ["name" => "parent_template_id", "type" => "INT", "index" => "index"],
+        ["name" => "pos", "type" => "INT", "index" => "index"],
     ]
 );

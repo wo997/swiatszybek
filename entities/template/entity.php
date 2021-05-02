@@ -8,5 +8,6 @@ EntityManager::register("template", [
         "created_at" => ["type" => "string"],
         "modified_at" => ["type" => "string"],
         "parent_template_id" => ["type" => "number"],
+        "pos" => ["type" => "number"],
     ],
 ]);

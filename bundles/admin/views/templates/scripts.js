@@ -6,11 +6,12 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.templates");
 
 	DatatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "/template/search",
+		dataset: templates,
+		//search_url: STATIC_URLS["ADMIN"] + "/template/search",
 		columns: [
 			{ label: "Nazwa", key: "name", width: "1", searchable: "string" },
 			{ label: "Typ strony", key: "page_type", width: "1", searchable: "string" },
-			{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
+			{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date" },
 			{
 				label: "Akcja",
 				key: "",
@@ -22,12 +23,17 @@ domload(() => {
 				},
 			},
 		],
+		pagination_data: { row_count: 50 },
 		label: "Szablony",
 		after_label: html`<button class="btn primary" onclick="getAddTemplateModal()._show({source:this})">
 			Utwórz szablon <i class="fas fa-plus"></i>
 		</button> `,
 		primary_key: "template_id",
-		empty_html: html`Brak stron`,
-		save_state_name: "admin_templates",
+		empty_html: html`Brak szablonów`,
+		//save_state_name: "admin_templates",
+		sortable: true,
+		require_sort: { key: "pos", order: "asc" },
+		db_table: "template",
+		sort_on_backend: true,
 	});
 });

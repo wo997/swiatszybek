@@ -55,12 +55,7 @@ if (!$page_data && !$template_data) {
 
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
-        <span class="title breadcrumbs mr0">
-            <a class="btn transparent crumb" href="/admin/strony">
-                Strony
-            </a>
-            <i class="fas fa-chevron-right"></i>
-        </span>
+        <span class="title breadcrumbs mr0"></span>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
         <button class="btn primary preview" data-tooltip="Otwórz stronę w nowej karcie">

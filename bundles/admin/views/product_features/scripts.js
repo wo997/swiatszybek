@@ -39,9 +39,7 @@ domload(() => {
 		primary_key: "product_feature_id",
 		empty_html: html`Brak cech`,
 		label: "Cechy produktów",
-		after_label: html`<button class="add_feature_btn btn primary" data-tooltip="W przypadku gdy nie widzisz takiej cechy na liście">
-			Dodaj cechę <i class="fas fa-plus"></i>
-		</button> `,
+		after_label: html`<button class="add_feature_btn btn primary">Dodaj cechę <i class="fas fa-plus"></i></button> `,
 		sortable: true,
 		require_sort: { key: "pos", order: "asc" },
 		db_table: "product_feature",

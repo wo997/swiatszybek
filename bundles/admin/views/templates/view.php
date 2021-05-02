@@ -7,8 +7,7 @@
 <title>Szablony</title>
 
 <script>
-    <?= preloadProductCategories() ?>
-    <?= preloadGeneralProducts() ?>
+    <?= preloadTemplates() ?>
 </script>
 
 <?php startSection("body_content"); ?>

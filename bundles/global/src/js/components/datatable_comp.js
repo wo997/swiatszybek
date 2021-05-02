@@ -1121,7 +1121,7 @@ function DatatableComp(comp, parent, data) {
 
 					detail.res.moved = true;
 
-					const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
+					const filtered_row_ids = data.dataset_filtered ? data.dataset_filtered.map((e) => e._row_id) : data.rows.map((r) => r.row_id);
 
 					data.dataset
 						.filter((e) => filtered_row_ids.includes(e._row_id))

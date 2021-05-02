@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * name: string
  * page_type: string
  * parent_template_id: number
  * select_parent_template?: SelectableCompData
@@ -27,6 +28,7 @@
 function AddTemplateModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
+			name: "",
 			page_type: "",
 			parent_template_id: undefined,
 		};
@@ -37,7 +39,10 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 			options: {
 				single: true,
 			},
-			dataset: [],
+			dataset: [
+				{ value: "-1", label: "Brak - Pusta strona" },
+				...templates.map((t) => ({ value: t.template_id.toString(), label: t.name })),
+			],
 			parent_variable: "parent_template_id",
 		};
 	}
@@ -70,6 +75,9 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Typ strony</div>
+				<input class="field" data-bind="{${data.name}}" />
+
+				<div class="label">Typ strony</div>
 				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.page_type}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="page"></p-checkbox>
@@ -99,6 +107,7 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 
 				const template = {
 					template_id: -1,
+					name: data.name,
 					page_type: data.page_type,
 					parent_template_id: data.parent_template_id,
 				};
