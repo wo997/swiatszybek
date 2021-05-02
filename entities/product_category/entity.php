@@ -7,6 +7,7 @@ EntityManager::register("product_category", [
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
         "__category_path_json" => ["type" => "string"],
+        "__category_path_names_csv" => ["type" => "string"],
         "__product_count" => ["type" => "number"],
     ],
 ]);
@@ -24,11 +25,13 @@ EventListener::register("before_save_product_category_entity", function ($params
     $product_category = $params["obj"];
 
     $category_path = [];
+    $category_path_names = [];
 
     /** @var Entity ProductCategory */
     $parent_product_category = $product_category;
     while (true) {
         array_unshift($category_path, ["id" => $parent_product_category->getId(), "name" => $parent_product_category->getProp("name")]);
+        array_unshift($category_path_names, str_replace(",", "", $parent_product_category->getProp("name")));
 
         $parent_product_category_id = $parent_product_category->getProp("parent_product_category_id");
         if ($parent_product_category_id === -1) {
@@ -41,6 +44,7 @@ EventListener::register("before_save_product_category_entity", function ($params
     }
 
     $product_category->setProp("__category_path_json", json_encode($category_path));
+    $product_category->setProp("__category_path_names_csv", join(",", $category_path_names));
 });
 
 EventListener::register("after_save_product_category_entity", function ($params) {

@@ -39,8 +39,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			link_what: "",
 			link_what_id: undefined,
 			parent_page_id: -1,
-			product_category_id: null,
 			general_product_id: null,
+			product_category_id: null,
 		};
 	}
 
@@ -128,12 +128,12 @@ function AddPageModalComp(comp, parent, data = undefined) {
 						<span>Zwykła strona</span>
 					</div>
 					<div class="checkbox_area">
-						<p-checkbox data-value="product_category"></p-checkbox>
-						<span>Strona kategorii produktów</span>
+						<p-checkbox data-value="general_product"></p-checkbox>
+						<span>Produkt</span>
 					</div>
 					<div class="checkbox_area">
-						<p-checkbox data-value="general_product"></p-checkbox>
-						<span>Strona produktu</span>
+						<p-checkbox data-value="product_category"></p-checkbox>
+						<span>Kategoria produktów</span>
 					</div>
 				</div>
 
@@ -141,13 +141,13 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<div class="label">Link</div>
 					<input class="field trim" data-bind="{${data.url}}" data-validate="" />
 				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
-					<div class="label">Kategoria produktów</div>
-					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
-				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
 					<div class="label">Produkt</div>
 					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
+				</div>
+				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
+					<div class="label">Kategoria produktów</div>
+					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
 			</div>
 		`,

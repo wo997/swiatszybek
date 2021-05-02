@@ -6,9 +6,11 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.pages");
 
 	DatatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "/page/search",
+		search_url: STATIC_URLS["ADMIN"] + "/page/search_pages",
 		columns: [
-			{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
+			{ label: "Link", key: "url", width: "1", searchable: "string" },
+			{ label: "Strona", key: "seo_title", width: "1", searchable: "string" },
+			{ label: "Typ strony", key: "link_what", width: "1", searchable: "string", map_name: "link_what" },
 			{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 			{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
 			{
@@ -22,16 +24,20 @@ domload(() => {
 				},
 			},
 		],
+		maps: [
+			{
+				name: "link_what",
+				getMap: () => {
+					return [
+						{ val: "page", label: "Zwykła strona" },
+						{ val: "general_product", label: "Produkt" },
+						{ val: "product_category", label: "Kategoria produktu" },
+					];
+				},
+			},
+		],
 		primary_key: "page_id",
 		empty_html: html`Brak stron`,
-		label: "Strony",
-		after_label: html`<a
-			href="${STATIC_URLS["ADMIN"]}/strona"
-			class="btn important"
-			onclick="getAddPageModal()._show({source:this});return false;"
-		>
-			Nowa strona <i class="fas fa-plus"></i>
-		</a>`,
 		save_state_name: "admin_pages",
 	});
 });

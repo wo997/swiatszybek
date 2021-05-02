@@ -27,7 +27,7 @@ domload(() => {
 		primary_key: "rebate_code_id",
 		empty_html: html`Brak kodów rabatowych`,
 		label: "Kody rabatowe",
-		after_label: html`<button class="btn important edit_rebate_code" data-rebate_code_id="-1">
+		after_label: html`<button class="btn primary edit_rebate_code" data-rebate_code_id="-1">
 			Utwórz kod rabatowy <i class="fas fa-plus"></i>
 		</button> `,
 		save_state_name: "admin_rebate_codes",
