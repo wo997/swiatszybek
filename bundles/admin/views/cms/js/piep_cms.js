@@ -1348,7 +1348,9 @@ class PiepCMS {
 		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
-			if (this.filter_blc_menu._get_value() !== "layout") {
+			if (this.filter_blc_menu._get_value() === "layout") {
+				this.editLayout();
+			} else {
 				this.finishEditingLayout();
 			}
 
@@ -2150,7 +2152,9 @@ class PiepCMS {
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
 
-		this.filter_blc_menu._set_value("layout");
+		if (this.filter_blc_menu._get_value() !== "layout") {
+			this.filter_blc_menu._set_value("layout");
+		}
 
 		this.displayNodeLayout();
 	}
