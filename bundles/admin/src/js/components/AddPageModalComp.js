@@ -4,8 +4,9 @@
  * @typedef {{
  * parent_page_id: number
  * product_category_id?: string,
+ * template_name: string
  * url: string
- * link_what: string
+ * page_type: string
  * link_what_id: number
  * general_product_id?: string
  * select_product_category?: SelectableCompData
@@ -20,6 +21,7 @@
  *  case_page: PiepNode
  *  case_product_category: PiepNode
  *  case_general_product: PiepNode
+ *  case_template: PiepNode
  * }
  * _show?(options?: ShowModalParams)
  * _save()
@@ -35,8 +37,9 @@
 function AddPageModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
+			template_name: undefined,
 			url: undefined,
-			link_what: "",
+			page_type: "",
 			link_what_id: undefined,
 			parent_page_id: -1,
 			general_product_id: null,
@@ -83,8 +86,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 	comp._show = (options = {}) => {
 		const data = comp._data;
 
-		data.product_category_id = data.link_what === "product_category" ? data.link_what_id.toString() : null;
-		data.general_product_id = data.link_what === "general_product" ? data.link_what_id.toString() : null;
+		data.product_category_id = data.page_type === "product_category" ? data.link_what_id.toString() : null;
+		data.general_product_id = data.page_type === "general_product" ? data.link_what_id.toString() : null;
 
 		comp._render();
 
@@ -94,20 +97,23 @@ function AddPageModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
-		if (data.link_what === "product_category") {
+		if (data.page_type === "product_category") {
 			data.link_what_id = +data.product_category_id;
-		} else if (data.link_what === "general_product") {
+		} else if (data.page_type === "general_product") {
 			data.link_what_id = +data.general_product_id;
-		} else if (data.link_what === "page") {
+		}
+
+		if (["page", "template"].includes(data.page_type)) {
 			data.link_what_id = null;
 		}
 
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				expand(comp._nodes.case_page, data.link_what === "page");
-				expand(comp._nodes.case_product_category, data.link_what === "product_category");
-				expand(comp._nodes.case_general_product, data.link_what === "general_product");
+				expand(comp._nodes.case_page, data.page_type === "page");
+				expand(comp._nodes.case_product_category, data.page_type === "product_category");
+				expand(comp._nodes.case_general_product, data.page_type === "general_product");
+				expand(comp._nodes.case_template, data.page_type === "template");
 			},
 		});
 	};
@@ -121,7 +127,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Typ strony</div>
-				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.link_what}}" data-validate="">
+				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.page_type}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="page"></p-checkbox>
 						<span>Zwykła strona</span>
@@ -133,6 +139,10 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<div class="checkbox_area">
 						<p-checkbox data-value="product_category"></p-checkbox>
 						<span>Kategoria produktów</span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="template"></p-checkbox>
+						<span>Szablon</span>
 					</div>
 				</div>
 
@@ -148,6 +158,10 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<div class="label">Kategoria produktów</div>
 					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
+				<div class="expand_y" data-node="{${comp._nodes.case_template}}">
+					<div class="label">Nazwa szablonu</div>
+					<input class="field trim" data-bind="{${data.template_name}}" data-validate="" />
+				</div>
 			</div>
 		`,
 		ready: () => {
@@ -158,17 +172,25 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					return;
 				}
 
+				const page = {
+					page_id: -1,
+					active: 0,
+					page_type: data.page_type,
+				};
+
+				if (data.page_type === "page") {
+					page.url = data.url;
+				} else if (data.page_type === "template") {
+					page.template_name = data.template_name;
+				} else {
+					page.link_what_id = data.link_what_id;
+				}
+
 				showLoader();
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/page/save",
 					params: {
-						page: {
-							page_id: -1,
-							link_what: data.link_what,
-							link_what_id: data.link_what_id,
-							url: data.url,
-							active: 0,
-						},
+						page,
 					},
 					success: (res) => {
 						hideLoader();

@@ -76,7 +76,15 @@ domload(() => {
 			DatatableComp(product_categories_dt, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/page/search_product_categories",
 				columns: [
-					{ label: "Kategoria", key: "name", width: "1", searchable: "string" },
+					{
+						label: "Kategoria",
+						key: "__category_path_names_csv",
+						width: "1",
+						searchable: "string",
+						render: (data) => {
+							return data.__category_path_names_csv.replace(/,/g, " ― ");
+						},
+					},
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
 					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
@@ -99,6 +107,38 @@ domload(() => {
 		current_view == "product_categories" ? 0 : 400
 	);
 
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const templates_dt = $("datatable-comp.templates");
+
+	quickTimeout(
+		() => {
+			DatatableComp(templates_dt, undefined, {
+				search_url: STATIC_URLS["ADMIN"] + "/page/search_templates",
+				columns: [
+					{ label: "Szablon", key: "template_name", width: "1", searchable: "string" },
+					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
+					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
+					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
+					{
+						label: "Akcja",
+						key: "",
+						width: "100px",
+						render: (data) => {
+							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/strona/" + data.page_id}">
+								Edytuj <i class="fas fa-cog"></i>
+							</a>`;
+						},
+					},
+				],
+				primary_key: "page_id",
+				empty_html: html`Brak stron`,
+				save_state_name: "admin_pages_search_templates",
+			});
+		},
+		current_view == "templates" ? 0 : 400
+	);
+
 	const toggle_view = $(".pages_view_header .toggle_view");
 	toggle_view.addEventListener("change", () => {
 		current_view = toggle_view._get_value();
@@ -106,6 +146,7 @@ domload(() => {
 		pages_dt.classList.toggle("hidden", current_view !== "pages");
 		general_products_dt.classList.toggle("hidden", current_view !== "general_products");
 		product_categories_dt.classList.toggle("hidden", current_view !== "product_categories");
+		templates_dt.classList.toggle("hidden", current_view !== "templates");
 	});
 	toggle_view._set_value(current_view);
 });

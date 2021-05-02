@@ -2,7 +2,7 @@
 
 Request::jsonResponse(paginateData([
     "select" => "p.page_id, p.seo_title, p.seo_description, DATE_FORMAT(p.created_at, '%d-%m-%Y %H:%i') created_at, gp.name",
-    "from" => "page p INNER JOIN general_product gp ON p.link_what_id = gp.general_product_id AND p.link_what = 'general_product'",
+    "from" => "page p INNER JOIN general_product gp ON p.link_what_id = gp.general_product_id AND p.page_type = 'general_product'",
     "order" => "p.page_id ASC",
     "quick_search_fields" => ["p.seo_title", "p.seo_description", "gp.name"],
     "where" => "",

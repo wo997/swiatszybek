@@ -336,13 +336,13 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
         <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
             <div style="margin-bottom: 5px;">
-                <span class="label medium bold inline comments_label">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
+                <span class="label medium bold inline comments_label mr1">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
                 <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                    <button class="btn primary space_btn_left add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
+                    <button class="btn primary mr1 add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
                         Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
                     </button>
                 <?php endif ?>
-                <button class="btn subtle space_btn_left show_filters"> Filtruj wyniki <i class="fas fa-search"></i></button>
+                <button class="btn subtle show_filters"> Filtruj <i class="fas fa-search"></i></button>
             </div>
 
             <div class="comments_filters expand_y hidden animate_hidden">
