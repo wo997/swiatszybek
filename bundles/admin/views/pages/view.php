@@ -36,17 +36,10 @@
                 Kategorie produktów
             </span>
         </div>
-        <div class="checkbox_area">
-            <p-checkbox data-value="templates"></p-checkbox>
-            <span>
-                <i class="fas fa-pencil-ruler"></i>
-                Szablony
-            </span>
-        </div>
     </div>
 
     <a href="<?= Request::$static_urls["ADMIN"] ?>/strona" class="btn primary" onclick="getAddPageModal()._show({source:this});return false;">
-        Nowa strona <i class="fas fa-plus"></i>
+        Utwórz stronę <i class="fas fa-plus"></i>
     </a>
 </div>
 
@@ -55,7 +48,5 @@
 <datatable-comp class="general_products"></datatable-comp>
 
 <datatable-comp class="product_categories"></datatable-comp>
-
-<datatable-comp class="templates"></datatable-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>

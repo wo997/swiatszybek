@@ -72,7 +72,8 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
         "sub" => [
             ["url" => "/strony", "title" => '<i class="fas fa-file-alt pages_icon_1"></i> <i class="fas fa-file-alt pages_icon_2"></i> Wszystkie strony'],
-            ["onclick" => "getAddPageModal()._show({source:this});return false;", "title" => '<i class="fas fa-plus-circle"></i> Dodaj stronę'],
+            ["onclick" => "getAddPageModal()._show({source:this});return false;", "title" => '<i class="fas fa-plus-circle"></i> Utwórz stronę'],
+            ["url" => "/szablony", "title" => '<i class="fas fa-pencil-ruler"></i> Szablony'],
             //["url" => "/strona", "title" => '<i class="fas fa-file-alt"></i> Strona'],
             ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
             ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],

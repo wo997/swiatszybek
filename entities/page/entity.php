@@ -9,7 +9,6 @@ EntityManager::register("page", [
         "version" => ["type" => "string"],
         "created_at" => ["type" => "string"],
         "modified_at" => ["type" => "string"],
-        "template_name" => ["type" => "string"],
         "url" => ["type" => "string"],
         "page_type" => ["type" => "string"],
         "link_what_id" => ["type" => "number"],

@@ -1,12 +1,5 @@
 /**
  * @typedef {{
- * child_name?: string
- * } & vDomNode} vDomModuleNode
- * TODO: naming might be important when creating more complex modules and when we would want to assign a node to some predefined section
- */
-
-/**
- * @typedef {{
  * id: number
  * tag: string
  * text?: string
@@ -17,10 +10,12 @@
  * insert_on_release?: boolean
  * settings?: object
  * module_name?: string
- * module_children?: vDomModuleNode[]
+ * module_children?: vDomNode[]
+ * section_name?: string
  * }} vDomNode
  *
- * styles is an array "" "bg" "sm" ... and then another array of fontSize paddintTop ...
+ * styles is an array "df" "bg" "sm" ... and then another array of fontSize paddingTop ...
+ * section_name is used to place a v_node in a template or module
  */
 
 /**
