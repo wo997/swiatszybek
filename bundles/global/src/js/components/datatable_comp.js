@@ -538,7 +538,7 @@ function DatatableComp(comp, parent, data) {
 						cell_html += html`<span class="label">${column.label}</span>`;
 
 						if (data.require_sort && column.sortable) {
-							console.error("Table can't be sortable with required_sorting applied");
+							console.error("Column can't be sortable with required_sorting applied");
 						}
 
 						if (column.sortable || column.searchable || column.batch_edit) {

@@ -50,17 +50,20 @@ domload(() => {
 		`;
 
 		if (page_data.general_product) {
-			breadcrumbs += html`
-				<div class="crumb">${page_data.general_product.name}</div>
-				<a
-					class="btn subtle ml1"
-					style="font-size:1rem"
-					href="${STATIC_URLS["ADMIN"]}/produkt/${page_data.general_product.general_product_id}"
-				>
-					Edytuj produkt
-					<i class="fas fa-cube"></i>
-				</a>
-			`;
+			breadcrumbs += html` <div class="crumb">${page_data.general_product.name}</div> `;
+			$(".piep_editor_header").insertAdjacentHTML(
+				"beforeend",
+				html`
+					<a
+						class="btn subtle ml1"
+						style="font-size:1rem"
+						href="${STATIC_URLS["ADMIN"]}/produkt/${page_data.general_product.general_product_id}"
+					>
+						Edytuj produkt
+						<i class="fas fa-cube"></i>
+					</a>
+				`
+			);
 
 			preview_url = page_data.general_product.__url;
 		}
