@@ -181,7 +181,7 @@ p-checkbox.focus {
 }
 
 .radio_group.invalid .checkbox_area span {
-	text-decoration: underline red !important;
+	text-decoration: 2px underline red !important;
 }
 
 .radio_group.space_items > .checkbox_area:not(:first-child) {

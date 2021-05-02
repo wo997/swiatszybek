@@ -1015,6 +1015,7 @@ function ProductComp(comp, parent, data = undefined) {
 					success: (res) => {
 						if (!res.general_product_id) {
 							alert("Wystąpił błąd krytyczny");
+							return;
 						}
 
 						showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {

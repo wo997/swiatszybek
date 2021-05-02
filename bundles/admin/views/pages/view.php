@@ -6,6 +6,11 @@
 
 <title>Strony</title>
 
+<script>
+    <?= preloadProductCategories() ?>
+    <?= preloadGeneralProducts() ?>
+</script>
+
 <?php startSection("body_content"); ?>
 
 <datatable-comp class="pages"></datatable-comp>

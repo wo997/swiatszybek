@@ -92,15 +92,17 @@ function buildPage($page_id)
     $page = EntityManager::getEntityById("page", $page_id);
     $v_dom = json_decode($page->getProp("v_dom_json"), true);
 
-    $dom_data = traverseVDom($v_dom);
-    $page_css = getPageCss($dom_data["styles_css_responsive"]);
-    $page_css_minified = Assets::minifyCss($page_css);
-    Files::save(BUILDS_PATH . "/pages/css/page_$page_id.css", $page_css_minified);
+    if ($v_dom) {
+        $dom_data = traverseVDom($v_dom);
+        $page_css = getPageCss($dom_data["styles_css_responsive"]);
+        $page_css_minified = Assets::minifyCss($page_css);
+        Files::save(BUILDS_PATH . "/pages/css/page_$page_id.css", $page_css_minified);
 
-    $page_js_minified = "";
-    Files::save(BUILDS_PATH . "/pages/js/page_$page_id.js", $page_js_minified);
+        $page_js_minified = "";
+        Files::save(BUILDS_PATH . "/pages/js/page_$page_id.js", $page_js_minified);
 
-    $page->setProp("version", $page->getProp("version") + 1);
+        $page->setProp("version", $page->getProp("version") + 1);
+    }
 }
 
 function updatePageModificationTime($page_id)

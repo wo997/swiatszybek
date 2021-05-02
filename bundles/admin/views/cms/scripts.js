@@ -24,6 +24,7 @@ domload(() => {
 			success: (res) => {
 				if (!res.page_id) {
 					alert("Wystąpił błąd krytyczny");
+					return;
 				}
 
 				showNotification(!page_data ? "Dodano stronę" : "Zapisano stronę", {
@@ -44,7 +45,10 @@ domload(() => {
 	});
 
 	if (page_data) {
-		piep_cms.import(JSON.parse(page_data.v_dom_json));
+		try {
+			const v_dom = JSON.parse(page_data.v_dom_json);
+			piep_cms.import(v_dom);
+		} catch {}
 	}
 
 	return;

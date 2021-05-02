@@ -13,12 +13,11 @@ function showAddProductModal(options = {}) {
 					<div class="custom_toolbar">
 						<span class="title medium">Dodaj produkt</span>
 						<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+						<button class="btn primary add_btn">Dodaj <i class="fas fa-check"></i></button>
 					</div>
 					<div class="scroll_panel scroll_shadow panel_padding">
 						<span class="label first">Nazwa produktu</span>
 						<input class="field product_name pretty_errors" data-validate="length:{3,}" />
-
-						<button class="btn primary mtf add_btn">Dodaj <i class="fas fa-plus"></i></button>
 					</div>
 				</div>
 			</div>
@@ -32,6 +31,7 @@ function showAddProductModal(options = {}) {
 			return;
 		}
 
+		showLoader();
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "/general_product/save",
 			params: {
@@ -42,8 +42,10 @@ function showAddProductModal(options = {}) {
 				},
 			},
 			success: (res) => {
+				hideLoader();
 				if (!res.general_product_id) {
 					alert("Wystąpił błąd krytyczny");
+					return;
 				}
 
 				window.location.href = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;

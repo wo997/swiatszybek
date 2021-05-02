@@ -5,6 +5,7 @@ EntityManager::register("page", [
         "seo_title" => ["type" => "string"],
         "seo_description" => ["type" => "string"],
         "v_dom_json" => ["type" => "string"],
+        "active" => ["type" => "number"],
         "version" => ["type" => "string"],
         "created_at" => ["type" => "string"],
         "modified_at" => ["type" => "string"],

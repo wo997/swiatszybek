@@ -12,9 +12,9 @@
 /**
  * @typedef {{
  * parent_menu_id: number
- * product_category_id?: number,
- * general_product_id?: number
- * page_id?: number
+ * product_category_id?: string,
+ * general_product_id?: string
+ * page_id?: string
  * select_product_category?: SelectableCompData
  * select_general_product?: SelectableCompData
  * select_page?: SelectableCompData
@@ -53,9 +53,9 @@ function MenuModalComp(comp, parent, data = undefined) {
 			link_what_id: undefined,
 			menu_id: -1,
 			parent_menu_id: -1,
-			product_category_id: -1,
-			general_product_id: -1,
-			page_id: -1,
+			product_category_id: "-1",
+			general_product_id: "-1",
+			page_id: "-1",
 		};
 	}
 
@@ -129,9 +129,9 @@ function MenuModalComp(comp, parent, data = undefined) {
 		data.link_what_id = options.cat.link_what_id;
 		data.url = options.cat.url;
 
-		data.product_category_id = data.link_what === "product_category" ? data.link_what_id : null;
-		data.general_product_id = data.link_what === "general_product" ? data.link_what_id : null;
-		data.page_id = data.link_what === "page" ? data.link_what_id : null;
+		data.product_category_id = data.link_what === "product_category" ? data.link_what_id.toString() : null;
+		data.general_product_id = data.link_what === "general_product" ? data.link_what_id.toString() : null;
+		data.page_id = data.link_what === "page" ? data.link_what_id.toString() : null;
 
 		comp._render();
 
@@ -165,11 +165,11 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 	comp._set_data = (data, options = {}) => {
 		if (data.link_what === "product_category") {
-			data.link_what_id = data.product_category_id;
+			data.link_what_id = +data.product_category_id;
 		} else if (data.link_what === "general_product") {
-			data.link_what_id = data.general_product_id;
+			data.link_what_id = +data.general_product_id;
 		} else if (data.link_what === "page") {
-			data.link_what_id = data.page_id;
+			data.link_what_id = +data.page_id;
 		} else {
 			data.link_what_id = null;
 		}

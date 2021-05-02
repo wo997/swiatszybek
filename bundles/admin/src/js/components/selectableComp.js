@@ -48,6 +48,7 @@ function SelectableComp(comp, parent, data = undefined) {
 			.trim()
 			.replace(/\s{2,}/g, "");
 		let suggestions_html = "";
+		let count = 0;
 		for (const datapart of data.dataset) {
 			if (data.selection.includes(datapart.value)) {
 				continue;
@@ -60,6 +61,9 @@ function SelectableComp(comp, parent, data = undefined) {
 			}
 			if (!match) {
 				continue;
+			}
+			if (count++ > 100) {
+				break;
 			}
 			suggestions_html += html`<div class="suggestion" data-value="${escapeAttribute(datapart.value)}">
 				${datapart.label} <i class="fas fa-plus mla"></i>
@@ -114,7 +118,7 @@ function SelectableComp(comp, parent, data = undefined) {
 		if (parent) {
 			const parent_data = parent._data;
 			if (parent_data) {
-				const val = data.options.single ? data.selection[0] : data.selection;
+				const val = data.options.single ? def(data.selection[0], null) : data.selection;
 				if (parent_data[data.parent_variable] !== val) {
 					setTimeout(() => {
 						// propagate selection to the parent yay

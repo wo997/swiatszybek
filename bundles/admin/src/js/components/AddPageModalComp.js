@@ -2,20 +2,24 @@
 
 /**
  * @typedef {{
- * parent_menu_id: number
- * product_category_id?: number,
- * general_product_id?: number
- * page_id?: number
+ * parent_page_id: number
+ * product_category_id?: string,
+ * url: string
+ * link_what: string
+ * link_what_id: number
+ * general_product_id?: string
  * select_product_category?: SelectableCompData
  * select_general_product?: SelectableCompData
- * select_page?: SelectableCompData
- * } & BaseMenuData} AddPageModalCompData
+ * }} AddPageModalCompData
  *
  * @typedef {{
  * _data: AddPageModalCompData
  * _set_data(data?: AddPageModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  save_btn: PiepNode
+ *  case_page: PiepNode
+ *  case_product_category: PiepNode
+ *  case_general_product: PiepNode
  * }
  * _show?(options?: ShowModalParams)
  * _save()
@@ -31,15 +35,12 @@
 function AddPageModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
-			name: "",
 			url: undefined,
 			link_what: "",
 			link_what_id: undefined,
-			menu_id: -1,
-			parent_menu_id: -1,
-			product_category_id: -1,
-			general_product_id: -1,
-			page_id: -1,
+			parent_page_id: -1,
+			product_category_id: null,
+			general_product_id: null,
 		};
 	}
 
@@ -80,32 +81,11 @@ function AddPageModalComp(comp, parent, data = undefined) {
 		};
 	}
 
-	if (data.select_page === undefined) {
-		data.select_page = {
-			options: {
-				single: true,
-			},
-			dataset: [], //pages.map((p) => ({ value: p.page_id.toString(), label: p.seo_title })),
-			parent_variable: "page",
-		};
-	}
-
 	comp._show = (options = {}) => {
 		const data = comp._data;
 
-		comp._options = options;
-
-		data.name = "";
-		// data.name = options.cat.name;
-		// data.menu_id = options.cat.menu_id;
-		// data.parent_menu_id = options.cat.parent_menu_id;
-		// data.link_what = options.cat.link_what;
-		// data.link_what_id = options.cat.link_what_id;
-		// data.url = options.cat.url;
-
-		data.product_category_id = data.link_what === "product_category" ? data.link_what_id : null;
-		data.general_product_id = data.link_what === "general_product" ? data.link_what_id : null;
-		data.page_id = data.link_what === "page" ? data.link_what_id : null;
+		data.product_category_id = data.link_what === "product_category" ? data.link_what_id.toString() : null;
+		data.general_product_id = data.link_what === "general_product" ? data.link_what_id.toString() : null;
 
 		comp._render();
 
@@ -115,13 +95,20 @@ function AddPageModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		if (data.link_what === "product_category") {
+			data.link_what_id = +data.product_category_id;
+		} else if (data.link_what === "general_product") {
+			data.link_what_id = +data.general_product_id;
+		} else if (data.link_what === "page") {
+			data.link_what_id = null;
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
+				expand(comp._nodes.case_page, data.link_what === "page");
 				expand(comp._nodes.case_product_category, data.link_what === "product_category");
 				expand(comp._nodes.case_general_product, data.link_what === "general_product");
-				expand(comp._nodes.case_page, data.link_what === "page");
-				expand(comp._nodes.case_url, data.link_what === "url");
 			},
 		});
 	};
@@ -131,13 +118,10 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			<div class="custom_toolbar">
 				<span class="title medium">Utwórz stronę</span>
 				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>
+				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Nazwa menu</div>
-				<input class="field" data-bind="{${data.name}}" data-validate="" />
-
-				<div class="label">Typ strony</div>
+				<div class="label first">Typ strony</div>
 				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.link_what}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="page"></p-checkbox>
@@ -165,8 +149,6 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<div class="label">Produkt</div>
 					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
 				</div>
-
-				<button class="btn primary mtf add_btn">Dodaj <i class="fas fa-plus"></i></button>
 			</div>
 		`,
 		ready: () => {
@@ -177,18 +159,23 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					return;
 				}
 
+				showLoader();
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/page/save",
 					params: {
 						page: {
 							page_id: -1,
-							//name: $("#addProductModal .product_name")._get_value(),
+							link_what: data.link_what,
+							link_what_id: data.link_what_id,
+							url: data.url,
 							active: 0,
 						},
 					},
 					success: (res) => {
+						hideLoader();
 						if (!res.page_id) {
 							alert("Wystąpił błąd krytyczny");
+							return;
 						}
 
 						window.location.href = `${STATIC_URLS["ADMIN"] + "/strona/" + res.page_id}`;
