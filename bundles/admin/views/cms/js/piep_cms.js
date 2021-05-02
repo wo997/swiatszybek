@@ -175,8 +175,6 @@ class PiepCMS {
 				this.content_scroll.style.maxWidth = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
 			}
 
-			this.finishEditingLayout();
-
 			this.recreateDom();
 			this.setBlcMenuFromFocusedNode();
 		});
@@ -1350,6 +1348,10 @@ class PiepCMS {
 		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
+			if (this.filter_blc_menu._get_value() !== "layout") {
+				this.finishEditingLayout();
+			}
+
 			this.filterMenu({ scroll_to_top: true });
 		});
 	}
