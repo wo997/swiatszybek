@@ -938,7 +938,7 @@ function ProductComp(comp, parent, data = undefined) {
 
 			comp._nodes.edit_page_btn.addEventListener("click", () => {
 				// TODO: dirty form warning, ass with history probably
-				window.location.href = STATIC_URLS["ADMIN"] + "/strona/1"; // TODO: some page_id should be here
+				window.location.href = STATIC_URLS["ADMIN"] + "/strona?nr_strony=1"; // TODO: some page_id should be here
 			});
 
 			// comp._nodes.preview_btn.addEventListener("click", () => {

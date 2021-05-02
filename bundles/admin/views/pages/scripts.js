@@ -21,7 +21,7 @@ domload(() => {
 						key: "",
 						width: "100px",
 						render: (data) => {
-							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/strona/" + data.page_id}">
+							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}">
 								Edytuj <i class="fas fa-cog"></i>
 							</a>`;
 						},
@@ -53,7 +53,7 @@ domload(() => {
 						key: "",
 						width: "100px",
 						render: (data) => {
-							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/strona?nr_strony=" + data.page_id}">
+							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}">
 								Edytuj <i class="fas fa-cog"></i>
 							</a>`;
 						},
@@ -93,7 +93,7 @@ domload(() => {
 						key: "",
 						width: "100px",
 						render: (data) => {
-							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/strona/" + data.page_id}">
+							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}">
 								Edytuj <i class="fas fa-cog"></i>
 							</a>`;
 						},

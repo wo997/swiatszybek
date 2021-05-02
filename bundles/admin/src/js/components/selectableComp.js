@@ -76,6 +76,8 @@ function SelectableComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		data.selection = data.selection.filter((s) => data.dataset.map((d) => d.value).includes(s));
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -93,6 +95,7 @@ function SelectableComp(comp, parent, data = undefined) {
 						</button>
 					</div>`;
 				}
+
 				comp._nodes.selection._set_content(selection_html);
 				comp.dataset.selection = data.selection.length + "";
 

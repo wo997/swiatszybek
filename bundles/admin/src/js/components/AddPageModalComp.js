@@ -2,7 +2,7 @@
 
 /**
  * @typedef {{
- * parent_page_id: number
+ * template_id: number
  * product_category_id?: string,
  * url: string
  * page_type: string
@@ -38,7 +38,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			url: undefined,
 			page_type: "",
 			link_what_id: undefined,
-			parent_page_id: -1,
+			template_id: -1,
 			general_product_id: null,
 			product_category_id: null,
 		};
@@ -185,7 +185,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 							return;
 						}
 
-						window.location.href = `${STATIC_URLS["ADMIN"] + "/strona/" + res.page_id}`;
+						window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${res.page_id}`;
 					},
 				});
 			});
