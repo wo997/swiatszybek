@@ -79,7 +79,7 @@ $admin_navigations_tree = [
             ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
             //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
             ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
-            ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-cogs"></i> Ustawienia motywu'],
+            ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-paint-brush"></i> Ustawienia motywu'],
         ]
     ],
     ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
