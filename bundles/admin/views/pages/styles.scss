@@ -1,6 +1,9 @@
 /* css[view] */
 
 .pages_view_header {
+	& {
+		margin-bottom: 10px;
+	}
 	@media (min-width: 1000px) {
 		margin-bottom: -35px;
 	}

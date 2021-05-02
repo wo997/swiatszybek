@@ -180,20 +180,14 @@ function MenusComp(comp, parent, data = undefined) {
 								let categories_inside = [];
 								/**
 								 * @param {ProductCategoryBranch[]} category_branch
-								 * @param {number} level
 								 */
-								const traverse = (category_branch, level = 0, slug = "", inside = false) => {
+								const traverse = (category_branch, inside = false) => {
 									category_branch.forEach((category) => {
-										const cat_display = slug + (slug ? " ― " : "") + category.name;
+										const cat_display = category.__category_path_names_csv.replace(/,/g, " ― ");
 										if (inside) {
 											categories_inside.push("<br> ⋅ " + cat_display);
 										}
-										traverse(
-											category.sub_categories,
-											level + 1,
-											cat_display,
-											inside || category.product_category_id === com._data.link_what_id
-										);
+										traverse(category.sub_categories, inside || category.product_category_id === com._data.link_what_id);
 									});
 								};
 								traverse(product_categories_tree);

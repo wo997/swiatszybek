@@ -1,24 +1,22 @@
 /* js[!admin] */
 
 /**
+ *
  * @typedef {{
  * product_category_id: number
- * parent_product_category_id: number
+ * parent_product_category_id?: number
  * name: string
  * pos: number
- * __category_path_json: any
+ * __category_path_json?: any
+ * __category_path_names_csv?: string
  * __product_count: number
  * }} ProductCategoryData
  */
 
 /**
  * @typedef {{
- * product_category_id: number
- * name: string
- * pos: number
  * sub_categories: ProductCategoryBranch[]
- * __product_count: number
- * }} ProductCategoryBranch
+ * } & ProductCategoryData} ProductCategoryBranch
  */
 
 /** @type {ProductCategoryData[]} */
@@ -45,6 +43,7 @@ function loadedProductCategories() {
 					pos: cat.pos,
 					sub_categories: [],
 					__product_count: cat.__product_count,
+					__category_path_names_csv: cat.__category_path_names_csv,
 				};
 				list.push(sub_cat);
 				connectWithParent(sub_cat);

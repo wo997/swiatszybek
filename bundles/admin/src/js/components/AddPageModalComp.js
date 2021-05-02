@@ -51,13 +51,12 @@ function AddPageModalComp(comp, parent, data = undefined) {
 		/**
 		 *
 		 * @param {ProductCategoryBranch[]} category_branch
-		 * @param {number} level
 		 */
-		const traverse = (category_branch, level = 0, slug = "") => {
+		const traverse = (category_branch) => {
 			category_branch.forEach((category) => {
-				const cat_display = slug + (slug ? " ― " : "") + category.name;
+				const cat_display = category.__category_path_names_csv.replace(/,/g, " ― ");
 				category_options.push({ label: cat_display, value: category.product_category_id + "" });
-				traverse(category.sub_categories, level + 1, cat_display);
+				traverse(category.sub_categories);
 			});
 		};
 		traverse(product_categories_tree);

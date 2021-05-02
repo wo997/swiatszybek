@@ -91,17 +91,16 @@ function ProductCategoryModalComp(comp, parent, data = undefined) {
 				/**
 				 *
 				 * @param {ProductCategoryBranch[]} category_branch
-				 * @param {number} level
 				 */
-				const traverse = (category_branch, level = 0, slug = "") => {
+				const traverse = (category_branch, level = 0) => {
 					category_branch.forEach((category) => {
-						const cat_display = slug + (slug ? " ― " : "") + category.name;
+						const cat_display = category.__category_path_names_csv.replace(/,/g, " ― ");
 						if (category.product_category_id === data.product_category_id) {
 							return;
 						}
 						options += html`<option value="${category.product_category_id}">${cat_display}</option>`;
 						if (level < 1) {
-							traverse(category.sub_categories, level + 1, cat_display);
+							traverse(category.sub_categories, level + 1);
 						}
 					});
 				};
