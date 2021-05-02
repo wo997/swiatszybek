@@ -7,7 +7,7 @@ domload(() => {
 
 	/** @type {DatatableComp} */
 	// @ts-ignore
-	const general_products = $("datatable-comp.general_products");
+	const general_products_dt = $("datatable-comp.general_products");
 
 	const getCategoriesParam = () => {
 		let ignore_cat_ids = [];
@@ -33,7 +33,7 @@ domload(() => {
 
 	quickTimeout(
 		() => {
-			DatatableComp(general_products, undefined, {
+			DatatableComp(general_products_dt, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/general_product/search",
 				columns: [
 					{
@@ -62,7 +62,7 @@ domload(() => {
 								},
 								success: (res) => {
 									showNotification(`${data.name}: ${data.active ? "aktywny" : "nieaktywny"}`, { type: "success", one_line: true });
-									general_products._backend_search();
+									general_products_dt._backend_search();
 								},
 							});
 						},
@@ -93,11 +93,11 @@ domload(() => {
 
 	/** @type {DatatableComp} */
 	// @ts-ignore
-	const products = $("datatable-comp.products");
+	const products_dt = $("datatable-comp.products");
 
 	quickTimeout(
 		() => {
-			DatatableComp(products, undefined, {
+			DatatableComp(products_dt, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/product/search",
 				columns: [
 					{
@@ -126,7 +126,7 @@ domload(() => {
 								},
 								success: (res) => {
 									showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
-									products._backend_search();
+									products_dt._backend_search();
 								},
 							});
 						},
@@ -158,8 +158,8 @@ domload(() => {
 	toggle_view.addEventListener("change", () => {
 		current_view = toggle_view._get_value();
 		localStorage.setItem("search_products_view", current_view);
-		general_products.classList.toggle("hidden", current_view !== "general_products");
-		products.classList.toggle("hidden", current_view !== "products");
+		general_products_dt.classList.toggle("hidden", current_view !== "general_products");
+		products_dt.classList.toggle("hidden", current_view !== "products");
 	});
 	toggle_view._set_value(current_view);
 
@@ -180,13 +180,13 @@ domload(() => {
 			localStorage.setItem("search_products_categories", JSON.stringify(current_categories));
 			quickTimeout(
 				() => {
-					general_products._backend_search();
+					general_products_dt._backend_search();
 				},
 				current_view == "general_products" ? 0 : 400
 			);
 			quickTimeout(
 				() => {
-					products._backend_search();
+					products_dt._backend_search();
 				},
 				current_view == "products" ? 0 : 400
 			);
