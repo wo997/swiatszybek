@@ -38,7 +38,6 @@ if ($general_product_id !== -1) {
     }
 }
 
-// HEY! Now the id is required for basically simplicity, so no anonymous products are allowed
 if (!$general_product_data) {
     Request::redirect(Request::$static_urls["ADMIN"] . "/produkty");
 }

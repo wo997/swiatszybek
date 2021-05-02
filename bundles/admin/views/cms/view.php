@@ -1,17 +1,29 @@
 <?php //route[{ADMIN}/strona] 
 
-$page_id = intval(Request::urlParam(2, -1));
 
-if ($page_id !== -1) {
+$page_id = def($_GET, "nr_strony");
+$template_id = def($_GET, "nr_szablonu");
+
+$page_data = null;
+$template_data = null;
+if ($page_id) {
     $page = EntityManager::getEntityById("page", $page_id);
-    if (!$page) {
-        Request::redirect(Request::$static_urls["ADMIN"] . "strona");
+    if ($page) {
+        $page_data = $page->getSimpleProps();
     }
-
-    $page_data = $page->getSimpleProps();
-} else {
-    $page_data = null;
 }
+
+if ($template_id) {
+    $template = EntityManager::getEntityById("template", $template_id);
+    if ($template) {
+        $template_data = $template->getSimpleProps();
+    }
+}
+
+if (!$page_data && !$template_data) {
+    Request::redirect(Request::$static_urls["ADMIN"] . "/strony");
+}
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -21,6 +33,7 @@ if ($page_id !== -1) {
 <script>
     <?= Theme::preloadThemeSettings() ?>
     let page_data = <?= json_encode($page_data) ?>;
+    let template_data = <?= json_encode($template_data) ?>;
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>
