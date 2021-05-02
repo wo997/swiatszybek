@@ -40,13 +40,41 @@ domload(() => {
 		});
 	});
 
+	let preview_url = "/";
+
+	if (page_data.general_product) {
+		$(".piep_editor_header .breadcrumbs").insertAdjacentHTML(
+			"beforeend",
+			html`
+				<div class="crumb">${page_data.general_product.name}</div>
+				<a
+					class="btn subtle ml1"
+					style="font-size:1rem"
+					href="${STATIC_URLS["ADMIN"]}/produkt/${page_data.general_product.general_product_id}"
+				>
+					Edytuj produkt
+					<i class="fas fa-cube"></i>
+				</a>
+			`
+		);
+
+		preview_url = page_data.general_product.__url;
+	}
+
 	$(".piep_editor_header .preview").addEventListener("click", () => {
-		previewUrl(`/produkt/117/Rura-karbowana-(peszel)`);
+		previewUrl(preview_url);
 	});
 
 	if (page_data) {
 		try {
 			const v_dom = JSON.parse(page_data.v_dom_json);
+			piep_cms.import(v_dom);
+		} catch {}
+	}
+
+	if (template_data) {
+		try {
+			const v_dom = JSON.parse(template_data.v_dom_json);
 			piep_cms.import(v_dom);
 		} catch {}
 	}

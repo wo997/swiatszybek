@@ -10,6 +10,15 @@ if ($page_id) {
     $page = EntityManager::getEntityById("page", $page_id);
     if ($page) {
         $page_data = $page->getSimpleProps();
+
+        $page_type = $page->getProp("page_type");
+        $link_what_id = $page->getProp("link_what_id");
+        if ($page_type === "general_product") {
+            $general_product = EntityManager::getEntityById("general_product", $link_what_id);
+            if ($general_product) {
+                $page_data["general_product"] = $general_product->getSimpleProps();
+            }
+        }
     }
 }
 
@@ -51,10 +60,6 @@ if (!$page_data && !$template_data) {
                 Strony
             </a>
             <i class="fas fa-chevron-right"></i>
-            <div class="crumb">
-                Strona xxx
-            </div>
-            <a class="btn transparent crumb" href="<?= Request::$static_urls["ADMIN"] . "/produkt/117" ?>">(Peszel)</a>
         </span>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>

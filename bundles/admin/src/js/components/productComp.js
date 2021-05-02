@@ -682,7 +682,7 @@ function ProductComp(comp, parent, data = undefined) {
 					Pokaż <i class="fas fa-external-link-square-alt"></i>
 				</button>
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
+				<button class="btn subtle" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
 			</div>
 
 			<div style="max-width:800px">

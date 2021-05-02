@@ -90,10 +90,12 @@ p-option color-picker {
 	opacity: 0;
 }
 
-.select_resolution {
-	padding: 5px;
-	border-top: 1px solid #ccc;
-	width: 100%;
-	justify-content: center;
-	margin-top: 0;
+.piep_editor {
+	.select_resolution {
+		padding: 5px;
+		border-top: 1px solid #ccc;
+		width: 100%;
+		justify-content: center;
+		margin-top: 0;
+	}
 }
