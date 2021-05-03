@@ -808,79 +808,79 @@ function ProductComp(comp, parent, data = undefined) {
 						<product_variant-comp></product_variant-comp>
 					</list-comp>
 				</div>
+			</div>
 
-				<div class="label medium bold mt5">Pełna lista produktów</div>
+			<div class="label medium bold mt5">Pełna lista produktów</div>
 
-				<div>
-					<div class="user_info mb3">
-						<i class="fas fa-info-circle"></i> Kliknij przycisk "Dodaj brakujące produkty", a lista produktów uzupełni się automatycznie na
-						podstawie podanych powyżej wariantów. <br />
-						W pierwszej kolejności ustal, które produkty należą do oferty sklepu (zakładka "Aktywne"). Dalej uzupełnij ceny, stany
-						magazynowe itd. <br />
-						<div style="height:7px"></div>
-						Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
-						Poruszanie się po polach (pierwsze z nich musimy kliknąć):
-						<span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
-						Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+			<div>
+				<div class="user_info mb3">
+					<i class="fas fa-info-circle"></i> Kliknij przycisk "Dodaj brakujące produkty", a lista produktów uzupełni się automatycznie na
+					podstawie podanych powyżej wariantów. <br />
+					W pierwszej kolejności ustal, które produkty należą do oferty sklepu (zakładka "Aktywne"). Dalej uzupełnij ceny, stany magazynowe
+					itd. <br />
+					<div style="height:7px"></div>
+					Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
+					Poruszanie się po polach (pierwsze z nich musimy kliknąć):
+					<span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
+					Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+				</div>
+			</div>
+			<button
+				class="btn {${data.missing_products_variants.length > 0}?important:subtle} mr1"
+				data-node="{${comp._nodes.add_products_btn}}"
+				data-tooltip="{${data.missing_products_variants.length > 0
+					? "Zalecane po uzupełnieniu wszystkich wariantów produktu"
+					: "Wszystko się zgadza!"}}"
+			>
+				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)</button
+			><button
+				class="btn error_light mr1"
+				data-node="{${comp._nodes.remove_products_btn}}"
+				disabled="{${data.missing_products_variants.length > 0}}"
+				data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
+			>
+				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)</button
+			><button
+				class="btn error_light"
+				data-node="{${comp._nodes.remove_all_products_btn}}"
+				disabled="{${data.products_dt.dataset.length === 0}}"
+			>
+				Usuń wszystkie produkty (<span html="{${data.products_dt.dataset.length}}"></span>)
+			</button>
+
+			<br />
+
+			<div data-node="{${comp._nodes.products_dt_wrapper}}" data-tooltip_position="over">
+				<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
+					<div class="checkbox_area">
+						<p-checkbox data-value="active"></p-checkbox>
+						<span> <i class="fas fa-check"></i> Aktywne </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="price"></p-checkbox>
+						<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="stock"></p-checkbox>
+						<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="discount"></p-checkbox>
+						<span> <i class="fas fa-percentage"></i> Zniżki </span>
+					</div>
+					<div class="checkbox_area">
+						<p-checkbox data-value="weight_dimensions"></p-checkbox>
+						<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
 					</div>
 				</div>
-				<button
-					class="btn {${data.missing_products_variants.length > 0}?important:subtle} mr1"
-					data-node="{${comp._nodes.add_products_btn}}"
-					data-tooltip="{${data.missing_products_variants.length > 0
-						? "Zalecane po uzupełnieniu wszystkich wariantów produktu"
-						: "Wszystko się zgadza!"}}"
-				>
-					Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)</button
-				><button
-					class="btn error_light mr1"
-					data-node="{${comp._nodes.remove_products_btn}}"
-					disabled="{${data.missing_products_variants.length > 0}}"
-					data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
-				>
-					Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)</button
-				><button
-					class="btn error_light"
-					data-node="{${comp._nodes.remove_all_products_btn}}"
-					disabled="{${data.products_dt.dataset.length === 0}}"
-				>
-					Usuń wszystkie produkty (<span html="{${data.products_dt.dataset.length}}"></span>)
-				</button>
 
-				<br />
+				<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
+			</div>
 
-				<div data-node="{${comp._nodes.products_dt_wrapper}}" data-tooltip_position="over">
-					<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
-						<div class="checkbox_area">
-							<p-checkbox data-value="active"></p-checkbox>
-							<span> <i class="fas fa-check"></i> Aktywne </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="price"></p-checkbox>
-							<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="stock"></p-checkbox>
-							<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="discount"></p-checkbox>
-							<span> <i class="fas fa-percentage"></i> Zniżki </span>
-						</div>
-						<div class="checkbox_area">
-							<p-checkbox data-value="weight_dimensions"></p-checkbox>
-							<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
-						</div>
-					</div>
+			<div style="height:100px"></div>
 
-					<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
-				</div>
-
-				<div style="height:100px"></div>
-
-				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
-				</div>
+			<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+				<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
 			</div>
 		`,
 		ready: () => {
