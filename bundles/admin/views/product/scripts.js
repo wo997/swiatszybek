@@ -9,6 +9,14 @@ domload(() => {
 	ProductComp(product_comp, undefined);
 	product_comp.style.display = "none";
 
+	const main_header_height = $(".main_header").offsetHeight;
+	const sticky_subheaders = product_comp._children(".sticky_subheader");
+	$(".main_admin_scroll").addEventListener("scroll", () => {
+		sticky_subheaders.forEach((sticky_subheader) => {
+			sticky_subheader.classList.toggle("sticking", sticky_subheader.getBoundingClientRect().top < main_header_height + 3);
+		});
+	});
+
 	$(".main_header .inject_header_nodes").appendChild(product_comp._child(".injectable_header"));
 
 	const nameChange = () => {

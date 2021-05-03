@@ -60,6 +60,24 @@ product-comp {
 			pointer-events: none;
 		}
 	}
+
+	.sticky_subheader {
+		& {
+			transition: 0.2s all;
+			position: sticky;
+			top: -1px;
+			background: #fff;
+			padding: 8px 15px;
+			margin: 0 -15px;
+			z-index: 1200;
+			width: 100vw;
+			border-bottom: 1px solid transparent;
+		}
+		&.sticking {
+			border-color: #ccc;
+			box-shadow: 0 0 8px 0 #0002;
+		}
+	}
 }
 
 .injectable_header {
