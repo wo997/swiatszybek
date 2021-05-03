@@ -4,7 +4,7 @@
  * @typedef {{
  * product_img_id
  * img_url: string
- * product_feature_options: number[]
+ * selected_product_feature_options: number[]
  * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_ImgCompData
  *
@@ -26,29 +26,35 @@
  * @param {*} parent
  * @param {Product_ImgCompData} data
  */
-function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "", product_feature_options: [] }) {
+function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "", selected_product_feature_options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
 				let options_html = html`<option value="0">―</option>`;
-				data.features.forEach((feature) => {
-					const fea = product_features.find((f) => f.product_feature_id === feature.product_feature_id);
-					options_html += feature.options
-						.filter((op) => !data.product_feature_options.includes(op.product_feature_option_id))
-						.map((option) => {
-							return html`<option value="${option.product_feature_option_id}">${fea.name}: ${option.value}</option>`;
-						});
-				});
+				const product_feature_option_ids = data.features.map((pf) => pf.options.map((opt) => opt.product_feature_option_id)).flat(1);
+				product_feature_options
+					.filter(
+						(pfo) =>
+							product_feature_option_ids.includes(pfo.product_feature_option_id) &&
+							!data.selected_product_feature_options.includes(pfo.product_feature_option_id)
+					)
 
-				const selected_options_html = html`${data.product_feature_options
+					.forEach((pfo) => {
+						const pf = product_features.find((pf) => pf.product_feature_id === pfo.product_feature_id);
+						if (pf) {
+							options_html += html`<option value="${pfo.product_feature_option_id}">${pf.name}: ${pfo.value}</option>`;
+						}
+					});
+
+				const selected_options_html = html`${data.selected_product_feature_options
 					.map((option_id) => {
-						const option = product_feature_options.find((op) => op.product_feature_option_id === option_id);
-						if (option) {
-							const fea = product_features.find((f) => f.product_feature_id === option.product_feature_id);
+						const pfo = product_feature_options.find((pfo) => pfo.product_feature_option_id === option_id);
+						if (pfo) {
+							const pf = product_features.find((pf) => pf.product_feature_id === pfo.product_feature_id);
 							return html`
-								<span class="semi_bold">${fea.name}:</span>
-								<span style="margin-left: 5px">${option.value}</span>
+								<span class="semi_bold">${pf.name}:</span>
+								<span style="margin-left: 5px">${pfo.value}</span>
 								<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
 									<i class="fas fa-times"></i>
 								</button>
@@ -85,7 +91,7 @@ function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 			so.addEventListener("change", () => {
 				const option_id = +so._get_value();
 				if (option_id) {
-					comp._data.product_feature_options.push(option_id);
+					comp._data.selected_product_feature_options.push(option_id);
 					comp._render();
 				}
 			});
@@ -99,9 +105,9 @@ function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 
 				const remove_option = target._parent(".remove_option");
 				if (remove_option) {
-					const ind = comp._data.product_feature_options.indexOf(+remove_option.dataset.option_id);
+					const ind = comp._data.selected_product_feature_options.indexOf(+remove_option.dataset.option_id);
 					if (ind !== -1) {
-						comp._data.product_feature_options.splice(ind, 1);
+						comp._data.selected_product_feature_options.splice(ind, 1);
 					}
 					comp._render();
 				}

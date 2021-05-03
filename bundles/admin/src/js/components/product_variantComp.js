@@ -31,7 +31,10 @@ let currently_filling_product_variant_com;
 function Product_VariantComp(comp, parent, data = { product_variant_id: -1, general_product_id: -1, name: "", options: [] }) {
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
-			pass_list_data: [{ what: "features", where: "options" }],
+			pass_list_data: [
+				{ what: "features", where: "options" },
+				{ what: "product_feature_option_ids", where: "options" },
+			],
 			...options,
 			render: () => {},
 		});
@@ -75,7 +78,7 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 							product_variant_option_id: product_variant_option.product_variant_option_id,
 							product_variant_id: product_variant_option.product_variant_id,
 							name: product_variant_option.name,
-							product_feature_options: [],
+							selected_product_feature_options: [],
 						});
 						comp._render();
 						hideLoader();
@@ -121,7 +124,7 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 									product_variant_option_id: product_variant_option.product_variant_option_id,
 									product_variant_id: product_variant_option.product_variant_id,
 									name: product_variant_option.name,
-									product_feature_options: [],
+									selected_product_feature_options: [],
 								});
 							});
 
@@ -132,8 +135,8 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 								if (!warm_option) {
 									return;
 								}
-								if (fill_all || option.product_feature_options.length === 0) {
-									option.product_feature_options = [warm_option.product_feature_option_id];
+								if (fill_all || option.selected_product_feature_options.length === 0) {
+									option.selected_product_feature_options = [warm_option.product_feature_option_id];
 								}
 								if (fill_all || option.name.trim() === "") {
 									option.name = warm_option.value;

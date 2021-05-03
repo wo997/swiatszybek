@@ -40,7 +40,7 @@ domload(() => {
 		data.variants = general_product_data.variants
 			.map((v) => {
 				v.options.forEach((e) => {
-					e.product_feature_options = e.product_feature_options.map((op) => op.product_feature_option_id);
+					e.selected_product_feature_options = e.product_feature_options.map((op) => op.product_feature_option_id);
 				});
 				return v;
 			})
@@ -96,7 +96,7 @@ domload(() => {
 		data.images = general_product_data.images
 			.sort((a, b) => Math.sign(a.pos - b.pos))
 			.map((e) => {
-				return { ...e, product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
+				return { ...e, selected_product_feature_options: e.product_feature_options.map((op) => op.product_feature_option_id) };
 			});
 
 		// data.general_product_variant_ids = [];
