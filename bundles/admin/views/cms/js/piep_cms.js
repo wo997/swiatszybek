@@ -1011,7 +1011,7 @@ class PiepCMS {
 			// "text/html" is cool but dont use it yet
 			const text = e.clipboardData.getData("text/plain");
 			// this text can contain html cool
-			this.insertPiepText(text);
+			this.insertText(text);
 		});
 	}
 
@@ -1165,7 +1165,7 @@ class PiepCMS {
 					ev.preventDefault();
 
 					if (focus_node && focus_node.classList.contains("textable")) {
-						this.insertPiepText(ev.key);
+						this.insertText(ev.key);
 					}
 				}
 			}
@@ -1173,32 +1173,36 @@ class PiepCMS {
 			if (ev.key === "Backspace" && v_node_data) {
 				ev.preventDefault();
 
-				const text = v_node.text;
-				if (focus_offset <= 0) {
-					const prev_index = v_node_data.index - 1;
-					if (prev_index >= 0) {
-						const prev_v_node = v_node_data.v_nodes[prev_index];
+				let chars_removed = this.removeTextSelection();
 
-						if (prev_v_node.text !== undefined) {
-							const prev_vid = prev_v_node.id;
-							const prev_v_node_text_before = prev_v_node.text;
-							prev_v_node.text = prev_v_node_text_before + v_node.text;
-							v_node_data.v_nodes.splice(v_node_data.index, 1);
-							this.recreateDom();
+				if (chars_removed === 0) {
+					const text = v_node.text;
+					if (focus_offset <= 0) {
+						const prev_index = v_node_data.index - 1;
+						if (prev_index >= 0) {
+							const prev_v_node = v_node_data.v_nodes[prev_index];
 
-							const prev_node_ref = this.getNode(prev_vid);
-							if (prev_node_ref) {
-								setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
+							if (prev_v_node.text !== undefined) {
+								const prev_vid = prev_v_node.id;
+								const prev_v_node_text_before = prev_v_node.text;
+								prev_v_node.text = prev_v_node_text_before + v_node.text;
+								v_node_data.v_nodes.splice(v_node_data.index, 1);
+								this.recreateDom();
+
+								const prev_node_ref = this.getNode(prev_vid);
+								if (prev_node_ref) {
+									setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
+								}
 							}
 						}
-					}
-				} else {
-					v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
-					this.recreateDom();
+					} else {
+						v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
+						this.recreateDom();
 
-					const node_ref = this.getNode(vid);
-					if (node_ref) {
-						setSelectionByIndex(node_ref, focus_offset - 1);
+						const node_ref = this.getNode(vid);
+						if (node_ref) {
+							setSelectionByIndex(node_ref, focus_offset - 1);
+						}
 					}
 				}
 			}
@@ -1206,32 +1210,36 @@ class PiepCMS {
 			if (ev.key === "Delete" && v_node_data) {
 				ev.preventDefault();
 
-				const text = v_node.text;
-				if (focus_offset >= v_node.text.length) {
-					const next_index = v_node_data.index + 1;
-					if (next_index < v_node_data.v_nodes.length) {
-						const next_v_node = v_node_data.v_nodes[next_index];
+				let chars_removed = this.removeTextSelection();
 
-						if (next_v_node.text !== undefined) {
-							const node_vid = v_node.id;
-							const v_node_text_before = v_node.text;
-							v_node.text = v_node_text_before + next_v_node.text;
-							v_node_data.v_nodes.splice(next_index, 1);
-							this.recreateDom();
+				if (chars_removed === 0) {
+					const text = v_node.text;
+					if (focus_offset >= v_node.text.length) {
+						const next_index = v_node_data.index + 1;
+						if (next_index < v_node_data.v_nodes.length) {
+							const next_v_node = v_node_data.v_nodes[next_index];
 
-							const node_ref = this.getNode(node_vid);
-							if (node_ref) {
-								setSelectionByIndex(node_ref, v_node_text_before.length);
+							if (next_v_node.text !== undefined) {
+								const node_vid = v_node.id;
+								const v_node_text_before = v_node.text;
+								v_node.text = v_node_text_before + next_v_node.text;
+								v_node_data.v_nodes.splice(next_index, 1);
+								this.recreateDom();
+
+								const node_ref = this.getNode(node_vid);
+								if (node_ref) {
+									setSelectionByIndex(node_ref, v_node_text_before.length);
+								}
 							}
 						}
-					}
-				} else {
-					v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
-					this.recreateDom();
+					} else {
+						v_node.text = text.substr(0, focus_offset) + text.substr(focus_offset + 1);
+						this.recreateDom();
 
-					const node_ref = this.getNode(vid);
-					if (node_ref) {
-						setSelectionByIndex(node_ref, focus_offset);
+						const node_ref = this.getNode(vid);
+						if (node_ref) {
+							setSelectionByIndex(node_ref, focus_offset);
+						}
 					}
 				}
 			}
@@ -1899,17 +1907,15 @@ class PiepCMS {
 		return undefined;
 	}
 
-	/**
-	 *
-	 * @param {string} insert_text
-	 * @returns
-	 */
-	insertPiepText(insert_text) {
+	removeTextSelection() {
 		const sel = window.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
 		const focus_node = this.getFocusNode();
-		const vid = focus_node ? +focus_node.dataset.vid : 0;
+		if (!focus_node) {
+			return;
+		}
+		const vid = +focus_node.dataset.vid;
 		const v_node = this.findNodeInVDomById(this.v_dom, vid);
 		if (!v_node) {
 			return;
@@ -1922,18 +1928,53 @@ class PiepCMS {
 
 		let begin_offset = focus_offset;
 		let end_offset = focus_offset;
-		if (anchor_offset === focus_offset) {
-			v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
-		} else {
+		let chars_removed = 0;
+		if (anchor_offset !== focus_offset) {
 			begin_offset = Math.min(anchor_offset, focus_offset);
 			end_offset = Math.max(anchor_offset, focus_offset);
-			v_node.text = text.substr(0, begin_offset) + insert_text + text.substr(end_offset);
+			chars_removed = end_offset - begin_offset;
+			v_node.text = text.substr(0, begin_offset) + text.substr(end_offset);
 		}
+
 		this.recreateDom();
 
 		const node_ref = this.getNode(vid);
 		if (node_ref) {
-			setSelectionByIndex(node_ref, begin_offset + insert_text.length);
+			setSelectionByIndex(node_ref, begin_offset);
+		}
+
+		return chars_removed;
+	}
+
+	/**
+	 *
+	 * @param {string} insert_text
+	 * @returns
+	 */
+	insertText(insert_text) {
+		this.removeTextSelection();
+
+		const sel = window.getSelection();
+		const focus_offset = sel.focusOffset;
+		const focus_node = this.getFocusNode();
+		const vid = focus_node ? +focus_node.dataset.vid : 0;
+		const v_node = this.findNodeInVDomById(this.v_dom, vid);
+		if (!v_node) {
+			return;
+		}
+
+		const text = v_node.text;
+		if (text === undefined) {
+			return;
+		}
+
+		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
+
+		this.recreateDom();
+
+		const node_ref = this.getNode(vid);
+		if (node_ref) {
+			setSelectionByIndex(node_ref, focus_offset + insert_text.length);
 		}
 	}
 
