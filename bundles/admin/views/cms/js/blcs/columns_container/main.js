@@ -11,7 +11,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Typ układu</div>
-			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="setting.layout_type">
+			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="settings.layout_type">
 				<div class="checkbox_area" data-tooltip="Typ zalecany.<br>Szerokości kolumn wyrażone procentowo.">
 					<p-checkbox data-value="basic"></p-checkbox>
 					Podstawowy

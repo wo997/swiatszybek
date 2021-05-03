@@ -13,31 +13,43 @@ domload(() => {
 		// 	return;
 		// }
 
-		xhr({
-			url: STATIC_URLS["ADMIN"] + "/page/save",
-			params: {
-				page: {
-					page_id: page_data ? page_data.page_id : -1,
-					v_dom_json: JSON.stringify(piep_cms.v_dom),
+		if (page_data) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/page/save",
+				params: {
+					page: {
+						page_id: page_data.page_id,
+						v_dom_json: JSON.stringify(piep_cms.v_dom),
+					},
 				},
-			},
-			success: (res) => {
-				if (!res.page_id) {
-					alert("Wystąpił błąd krytyczny");
-					return;
-				}
+				success: (res) => {
+					page_data = res;
 
-				showNotification(!page_data ? "Dodano stronę" : "Zapisano stronę", {
-					one_line: true,
-					type: "success",
-				});
+					showNotification("Zapisano stronę", {
+						one_line: true,
+						type: "success",
+					});
+				},
+			});
+		} else if (template_data) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/template/save",
+				params: {
+					template: {
+						template_id: template_data.template_id,
+						v_dom_json: JSON.stringify(piep_cms.v_dom),
+					},
+				},
+				success: (res) => {
+					template_data = res;
 
-				page_data = res; // just dont be a null
-
-				const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"]}/strona/${res.page_id}`;
-				history.replaceState(undefined, "", make_sure_url_is_cool);
-			},
-		});
+					showNotification("Zapisano szablon", {
+						one_line: true,
+						type: "success",
+					});
+				},
+			});
+		}
 	});
 
 	let breadcrumbs = "";

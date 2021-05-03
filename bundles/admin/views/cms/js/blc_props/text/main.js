@@ -9,7 +9,7 @@
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Rozmiar czcionki</div>
-			<input class="field hidden" data-blc_prop="style.fontSize" />
+			<input class="field hidden" data-blc_prop="styles.fontSize" />
 
 			<div class="label normal">
 				<span class="case_palette">Rozmiar z listy</span>
@@ -36,7 +36,7 @@
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
-			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.fontWeight">
+			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="styles.fontWeight">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -63,7 +63,7 @@
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textAlign">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textAlign">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -94,7 +94,7 @@
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Kursywa (pochylenie czcionki)</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.fontStyle">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.fontStyle">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -117,7 +117,7 @@
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Zdobienie czcionki</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.textDecoration">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textDecoration">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -141,7 +141,7 @@
 		menu_html: html`
 			<div class="label">Kolor czcionki</div>
 
-			<input class="field hidden" data-blc_prop="style.color" />
+			<input class="field hidden" data-blc_prop="styles.color" />
 
 			<div class="label normal">
 				<span class="case_palette">Kolor z palety</span>
@@ -161,7 +161,7 @@
 		menu_html: html`
 			<div class="label">Kolor tła</div>
 
-			<input class="field hidden" data-blc_prop="style.backgroundColor" />
+			<input class="field hidden" data-blc_prop="styles.backgroundColor" />
 
 			<div class="label normal">
 				<span class="case_palette">Kolor z palety</span>
@@ -182,7 +182,7 @@
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
-				data-blc_prop="style.fontSize"
+				data-blc_prop="styles.fontSize"
 				data-tooltip="Rozmiar czcionki"
 			>
 				<p-option data-value="">
@@ -196,7 +196,7 @@
 		name: "font_weight",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.fontWeight" data-tooltip="Grubość czcionki">
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.fontWeight" data-tooltip="Grubość czcionki">
 				<p-option data-value=""><span class="bold">B</span></p-option>
 				<p-option data-value="var(--normal)">B</p-option>
 				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
@@ -209,7 +209,7 @@
 		name: "text_align",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="style.textAlign" data-tooltip="Wyrównanie tekstu">
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
 				<p-option data-value="left"> <i class="fas fa-align-left"></i> </p-option>
 				<p-option data-value="center"> <i class="fas fa-align-center"></i> </p-option>
@@ -225,7 +225,7 @@
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid global_root"
-				data-blc_prop="style.color"
+				data-blc_prop="styles.color"
 				data-tooltip="Kolor czcionki"
 			>
 				<p-option data-value=""> <i class="fas fa-paint-brush"></i> </p-option>
@@ -239,7 +239,7 @@
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid global_root"
-				data-blc_prop="style.backgroundColor"
+				data-blc_prop="styles.backgroundColor"
 				data-tooltip="Kolor tła"
 			>
 				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>

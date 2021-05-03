@@ -6,7 +6,7 @@
 		type_groups: ["appearance"],
 		menu_html: html`
 			<div class="label">Zdjęcie</div>
-			<image-picker data-blc_prop="attr.data-src" style="width:150px;height:150px"></image-picker>
+			<image-picker data-blc_prop="attrs.data-src" style="width:150px;height:150px"></image-picker>
 		`,
 	});
 
@@ -16,7 +16,7 @@
 		type_groups: ["advanced"],
 		menu_html: html`
 			<div class="label">Opis zdjęcia (alt)</div>
-			<input class="field" data-blc_prop="attr.alt" />
+			<input class="field" data-blc_prop="attrs.alt" />
 		`,
 	});
 

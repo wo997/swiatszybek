@@ -39,17 +39,17 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Szerokość</div>
-			<input class="field" data-blc_prop="style.width" />
+			<input class="field" data-blc_prop="styles.width" />
 
 			<div class="glue_children">
 				<div class="mr2">
 					<div class="label normal">Minimalna</div>
-					<input class="field" data-blc_prop="style.minWidth" />
+					<input class="field" data-blc_prop="styles.minWidth" />
 				</div>
 
 				<div>
 					<div class="label normal">Maksymalna</div>
-					<input class="field" data-blc_prop="style.maxWidth" />
+					<input class="field" data-blc_prop="styles.maxWidth" />
 				</div>
 			</div>
 		`,
@@ -61,17 +61,17 @@
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
 			<div class="label">Wysokość</div>
-			<input class="field" data-blc_prop="style.height" />
+			<input class="field" data-blc_prop="styles.height" />
 
 			<div class="glue_children">
 				<div class="mr2">
 					<div class="label normal">Minimalna</div>
-					<input class="field" data-blc_prop="style.minHeight" />
+					<input class="field" data-blc_prop="styles.minHeight" />
 				</div>
 
 				<div>
 					<div class="label normal">Maksymalna</div>
-					<input class="field" data-blc_prop="style.maxHeight" />
+					<input class="field" data-blc_prop="styles.maxHeight" />
 				</div>
 			</div>
 		`,
@@ -86,7 +86,7 @@
 				Margines zewnętrzny
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="setting.bind_margins">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_margins">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -103,15 +103,15 @@
 
 			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="margins">
 				<div>
-					<input class="field" data-blc_prop="style.marginLeft" placeholder="Lewy" data-bind_dir="left" />
+					<input class="field" data-blc_prop="styles.marginLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.marginTop" placeholder="Górny" data-bind_dir="top" />
+					<input class="field mb4" data-blc_prop="styles.marginTop" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.marginBottom" placeholder="Dolny" data-bind_dir="bottom" />
+					<input class="field" data-blc_prop="styles.marginBottom" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.marginRight" placeholder="Prawy" data-bind_dir="right" />
+					<input class="field" data-blc_prop="styles.marginRight" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>`,
 	});
@@ -126,7 +126,7 @@
 				Margines wewnętrzny (padding)
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="setting.bind_paddings">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_paddings">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -143,15 +143,15 @@
 
 			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="paddings">
 				<div>
-					<input class="field" data-blc_prop="style.paddingLeft" placeholder="Lewy" data-bind_dir="left" />
+					<input class="field" data-blc_prop="styles.paddingLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.paddingTop" placeholder="Górny" data-bind_dir="top" />
+					<input class="field mb4" data-blc_prop="styles.paddingTop" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.paddingBottom" placeholder="Dolny" data-bind_dir="bottom" />
+					<input class="field" data-blc_prop="styles.paddingBottom" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.paddingRight" placeholder="Prawy" data-bind_dir="right" />
+					<input class="field" data-blc_prop="styles.paddingRight" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>
 		`,
@@ -168,7 +168,7 @@
 			</div>
 
 			<div class="label normal">Grubość</div>
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderWidths">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderWidths">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -185,20 +185,20 @@
 
 			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderWidths">
 				<div>
-					<input class="field" data-blc_prop="style.borderLeftWidth" placeholder="Lewy" data-bind_dir="left" />
+					<input class="field" data-blc_prop="styles.borderLeftWidth" placeholder="Lewy" data-bind_dir="left" />
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="style.borderTopWidth" placeholder="Górny" data-bind_dir="top" />
+					<input class="field mb4" data-blc_prop="styles.borderTopWidth" placeholder="Górny" data-bind_dir="top" />
 
-					<input class="field" data-blc_prop="style.borderBottomWidth" placeholder="Dolny" data-bind_dir="bottom" />
+					<input class="field" data-blc_prop="styles.borderBottomWidth" placeholder="Dolny" data-bind_dir="bottom" />
 				</div>
 				<div>
-					<input class="field" data-blc_prop="style.borderRightWidth" placeholder="Prawy" data-bind_dir="right" />
+					<input class="field" data-blc_prop="styles.borderRightWidth" placeholder="Prawy" data-bind_dir="right" />
 				</div>
 			</div>
 
 			<div class="label normal">Kolor</div>
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="setting.bind_borderColors">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderColors">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -215,15 +215,15 @@
 
 			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderColors">
 				<div>
-					<color-picker data-blc_prop="style.borderLeftColor" data-bind_dir="left"></color-picker>
+					<color-picker data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
 				</div>
 				<div class="ml2 mr2">
-					<color-picker class="mb4" data-blc_prop="style.borderTopColor" data-bind_dir="top"></color-picker>
+					<color-picker class="mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
 
-					<color-picker data-blc_prop="style.borderBottomColor" data-bind_dir="bottom"></color-picker>
+					<color-picker data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
 				</div>
 				<div>
-					<color-picker data-blc_prop="style.borderRightColor" data-bind_dir="right"></color-picker>
+					<color-picker data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
 				</div>
 			</div>
 		`,
@@ -240,7 +240,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj blok poziomo</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.alignSelf">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -276,7 +276,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj blok pionowo</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignSelf">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.alignSelf">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -312,7 +312,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość poziomo</div>
-			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
+			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="styles.justifyContent">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -380,7 +380,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość pionowo</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.alignItems">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -432,7 +432,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość pionowo</div>
-			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="style.justifyContent">
+			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="styles.justifyContent">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -500,7 +500,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość poziomo</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="style.alignItems">
+			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.alignItems">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>

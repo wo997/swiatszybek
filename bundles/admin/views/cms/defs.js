@@ -11,11 +11,11 @@
  * settings?: object
  * module_name?: string
  * module_children?: vDomNode[]
- * section_name?: string
+ * hook_name?: string
  * }} vDomNode
  *
  * styles is an array "df" "bg" "sm" ... and then another array of fontSize paddingTop ...
- * section_name is used to place a v_node in a template or module
+ * hook_name is used to place a v_node in a template or module
  */
 
 /**
@@ -26,6 +26,7 @@
  * @typedef {{
  * match_tag?: RegExp
  * has_classes?: string[]
+ * module_names?: string[]
  * matcher?(v_node_data: vDomNodeData): boolean
  * priority?: number
  * }} BlcGroup
@@ -105,5 +106,6 @@
  * label: string
  * icon: string
  * v_node: vDomNode
+ * single_usage?: boolean
  * }} BlockToAdd
  */
