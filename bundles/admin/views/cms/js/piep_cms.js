@@ -979,10 +979,10 @@ class PiepCMS {
 							select_start = begin_offset;
 							select_end = end_offset;
 						}
-					}
 
-					if (node_ref && !validPiepInput($(document.activeElement))) {
-						setSelectionByIndex(node_ref, select_start, select_end);
+						if (!validPiepInput($(document.activeElement))) {
+							setSelectionByIndex(node_ref, select_start, select_end);
+						}
 					}
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
