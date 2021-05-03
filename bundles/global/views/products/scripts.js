@@ -9,17 +9,15 @@ let pp_selected_option_groups;
 let product_list_ready = false;
 
 /** @type {PiepNode} */
-let sticky_results_info;
+let results_info;
+/** @type {PiepNode} */
+let results_info_mobile;
 /** @type {PiepNode} */
 let products_category_name;
 /** @type {PiepNode} */
 let products_all;
 /** @type {PiepNode} */
 let product_list;
-/** @type {PiepNode} */
-let results_info_count;
-/** @type {PiepNode} */
-let results_info_count_spinner_wrapper;
 /** @type {PiepNode} */
 let search_phrase;
 /** @type {PiepNode} */
@@ -39,10 +37,9 @@ let current_url_search;
 domload(() => {
 	products_all = $(".products_all");
 	product_list = $(".product_list");
-	results_info_count = $(".results_info .products_total_rows");
-	results_info_count_spinner_wrapper = $(".results_info .spinner_wrapper");
 
-	sticky_results_info = $(".results_info");
+	results_info = $(".results_info");
+	results_info_mobile = $(".results_info_mobile");
 	products_category_name = $(".category_name");
 
 	products_all.classList.add("ready");
@@ -648,7 +645,13 @@ function mainSearchProducts(force = false) {
 	// workaround here
 	//document.title = full_name;
 
-	results_info_count_spinner_wrapper.classList.add("spinning");
+	const setSpinners = (spinning) => {
+		$$(".product_list_wrapper .spinner_wrapper").forEach((w) => {
+			w.classList.toggle("spinning", spinning);
+		});
+	};
+
+	setSpinners(true);
 	product_list.style.opacity = "0.7";
 
 	if (search_product_list_xhr) {
@@ -663,7 +666,7 @@ function mainSearchProducts(force = false) {
 		success: (res = {}) => {
 			search_product_list_xhr = undefined;
 
-			results_info_count_spinner_wrapper.classList.remove("spinning");
+			setSpinners(false);
 			product_list.style.opacity = "1";
 
 			products_all.style.height = products_all.offsetHeight + "px";
@@ -676,7 +679,9 @@ function mainSearchProducts(force = false) {
 				}
 			}
 			if (res.total_rows !== undefined) {
-				results_info_count._set_content(res.total_rows);
+				$$(".product_list_wrapper .products_total_rows").forEach((t) => {
+					t._set_content(res.total_products);
+				});
 				product_list_pagination_comp._data.total_rows = res.total_rows;
 				product_list_pagination_comp._render();
 			}
@@ -725,7 +730,7 @@ domload(() => {
 		if (mobile) {
 			const r = products_category_name.getBoundingClientRect();
 			const visible = r.top > window.innerHeight;
-			sticky_results_info.classList.toggle("visible", visible);
+			results_info_mobile.classList.toggle("visible", visible);
 		}
 
 		$(".searching_wrapper > .scroll_panel").classList.toggle("separate_scroll", !mobile);
@@ -734,7 +739,10 @@ domload(() => {
 	window.addEventListener("resize", scrclb);
 	scrclb();
 
-	$(".results_info .btn").addEventListener("click", () => {
-		smoothScroll(products_category_name.getBoundingClientRect().top - 100);
-	});
+	const getTop = () => products_category_name.getBoundingClientRect().top - 100;
+	const scrttop = () => {
+		smoothScroll(getTop());
+	};
+	results_info_mobile._child(".btn").addEventListener("click", scrttop);
+	window.scrollBy(0, getTop());
 });

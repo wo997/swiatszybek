@@ -434,9 +434,17 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 }
             }
             ?></h1>
-        <p class="filters_description"></p>
+        <!-- <p class="filters_description"></p> -->
 
         <div class="results_info">
+            Znaleziono wyników:
+            <div class="spinner_wrapper inline" style="margin-left:1px">
+                <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
+                <div class="spinner overlay"></div>
+            </div>
+        </div>
+
+        <div class="results_info_mobile">
             <span>
                 Znaleziono wyników:
                 <div class="spinner_wrapper inline" style="margin-left:1px">
