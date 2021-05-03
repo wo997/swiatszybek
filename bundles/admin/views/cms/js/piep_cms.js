@@ -720,7 +720,7 @@ class PiepCMS {
 				v_node: {
 					tag: "div",
 					id: -1,
-					styles: { df: { minHeight: "400px" } },
+					styles: {},
 					classes: [],
 					attrs: {},
 					module_name: "raw_html",
@@ -734,23 +734,23 @@ class PiepCMS {
 				v_node: {
 					tag: "div",
 					id: -1,
-					styles: { df: { minHeight: "200px" } },
+					styles: {},
 					classes: [],
 					attrs: {},
 					module_name: "main_menu",
 				},
 			},
 			{
-				id: "hook",
+				id: "template_hook",
 				icon: html`<i class="fas fa-anchor"></i>`,
 				label: html`Sekcja szablonu`,
 				v_node: {
 					tag: "div",
 					id: -1,
-					styles: { df: { minHeight: "400px" } },
+					styles: {},
 					classes: [],
 					attrs: {},
-					module_name: "hook",
+					module_name: "template_hook",
 				},
 			},
 		];
@@ -1674,19 +1674,34 @@ class PiepCMS {
 					inspector_tree_html += sub_inspector_tree_html;
 				}
 				if (v_node.module_name === "raw_html") {
-					body = v_node.settings.html_code;
+					body = html`<div class="empty_module">Pusty blok HTML</div>`;
+					if (v_node.settings && v_node.settings.html_code) {
+						body = v_node.settings.html_code;
+					}
 				}
 				if (v_node.module_name === "google_map") {
-					body = html`<div class="pa2" style="background:#fafafa">Brak mapy, uzupełnij dane</div>`;
+					body = html`<div class="empty_module"">Mapa google</div>`;
 
-					/** @type {string} */
-					const google_map_embed_code = v_node.settings.google_map_embed_code;
+					if (v_node.settings && v_node.settings.google_map_embed_code) {
+						/** @type {string} */
+						const google_map_embed_code = v_node.settings.google_map_embed_code;
 
-					const match_src = google_map_embed_code.match(/src=".*?"/);
-					if (match_src) {
-						const src = match_src[0];
-						body = html`<iframe ${src} allowfullscreen="" loading="lazy"></iframe>`;
+						const match_src = google_map_embed_code.match(/src=".*?"/);
+						if (match_src) {
+							const src = match_src[0];
+							body = html`<iframe ${src} allowfullscreen="" loading="lazy"></iframe>`;
+						}
 					}
+				}
+				if (v_node.module_name === "main_menu") {
+					body = html`<div class="empty_module">LOGO Menu Menu Menu Menu Menu Menu Menu Menu</div>`;
+				}
+				if (v_node.module_name === "template_hook") {
+					let template_hook_name = "BRAK NAZWY";
+					if (v_node.settings && v_node.settings.template_hook_name) {
+						template_hook_name = v_node.settings.template_hook_name;
+					}
+					body = html`<div class="empty_module">Sekcja szablonu: ${template_hook_name}</div>`;
 				}
 
 				let add_to_body = true;

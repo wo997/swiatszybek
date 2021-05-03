@@ -5,7 +5,7 @@
 		blc_groups: [
 			{
 				module_names: ["google_map"],
-				priority: 10,
+				priority: 100,
 			},
 		],
 		type_groups: ["advanced"],

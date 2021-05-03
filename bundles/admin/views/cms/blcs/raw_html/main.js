@@ -5,7 +5,7 @@
 		blc_groups: [
 			{
 				module_names: ["raw_html"],
-				priority: 10,
+				priority: 100,
 			},
 		],
 		type_groups: ["advanced"],
