@@ -98,3 +98,12 @@
 /**
  * @typedef {"column" | "row"} FlowDirectionEnum
  */
+
+/**
+ * @typedef {{
+ * id: string
+ * label: string
+ * icon: string
+ * v_node: vDomNode
+ * }} BlockToAdd
+ */

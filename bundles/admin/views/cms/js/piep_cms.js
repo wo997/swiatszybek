@@ -525,6 +525,9 @@ class PiepCMS {
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
 				const v_node_styles = this.findNodeInVDomById(this.v_dom, this.focus_node_vid).styles;
+				if (!v_node_styles.df) {
+					v_node_styles.df = {};
+				}
 				/** @type {string} */
 				let prop_val_from_style = def(v_node_styles.df[this.layout_control_prop], "");
 				care_about_resolutions.forEach((res) => {
@@ -576,19 +579,12 @@ class PiepCMS {
 	initAddBlockMenu() {
 		let menu_html = "";
 
-		/**
-		 * @typedef {{
-		 * id: string
-		 * label: string
-		 * v_node: vDomNode
-		 * }} BlockToAdd
-		 */
-
 		/** @type {BlockToAdd[]} */
-		const blocks_to_add = [
+		this.blcs_to_add = [
 			{
 				id: "h1",
-				label: html`<span class="bold">H1</span> Nagłówek`,
+				icon: html`<span class="bold">H1</span>`,
+				label: html`Nagłówek`,
 				v_node: {
 					tag: "h1",
 					id: -1,
@@ -600,7 +596,8 @@ class PiepCMS {
 			},
 			{
 				id: "h2",
-				label: html`<span class="bold">H2</span> Nagłówek`,
+				icon: html`<span class="bold">H2</span>`,
+				label: html`Nagłówek`,
 				v_node: {
 					tag: "h2",
 					id: -1,
@@ -612,7 +609,8 @@ class PiepCMS {
 			},
 			{
 				id: "h3",
-				label: html`<span class="bold">H3</span> Nagłówek`,
+				icon: html`<span class="bold">H3</span>"></i>`,
+				label: html`Nagłówek`,
 				v_node: {
 					tag: "h3",
 					id: -1,
@@ -624,7 +622,8 @@ class PiepCMS {
 			},
 			{
 				id: "p",
-				label: html`<i class="fas fa-align-center"></i> Paragraf / Tekst`,
+				icon: html`<i class="fas fa-align-center"></i>`,
+				label: html`Paragraf / Tekst`,
 				v_node: {
 					tag: "p",
 					id: -1,
@@ -636,14 +635,12 @@ class PiepCMS {
 			},
 			{
 				id: "vertical_container",
-				label: html`
-					<i class="vertical_container_icon">
-						<div></div>
-						<div></div>
-						<div></div>
-					</i>
-					Kontener pionowy
-				`,
+				icon: html`<i class="vertical_container_icon">
+					<div></div>
+					<div></div>
+					<div></div>
+				</i>`,
+				label: html`Kontener pionowy`,
 				v_node: {
 					tag: "div",
 					id: -1,
@@ -655,14 +652,12 @@ class PiepCMS {
 			},
 			{
 				id: "columns_container",
-				label: html`
-					<i class="columns_container_icon">
-						<div></div>
-						<div></div>
-						<div></div>
-					</i>
-					Kontener z kolumnami
-				`,
+				icon: html`<i class="columns_container_icon">
+					<div></div>
+					<div></div>
+					<div></div>
+				</i>`,
+				label: html`Kontener z kolumnami`,
 				v_node: {
 					tag: "div",
 					id: -1,
@@ -694,7 +689,8 @@ class PiepCMS {
 			},
 			{
 				id: "img",
-				label: html`<i class="far fa-image"></i> Zdjęcie`,
+				icon: html`<i class="far fa-image"></i>`,
+				label: html`Zdjęcie`,
 				v_node: {
 					tag: "img",
 					id: -1,
@@ -706,30 +702,36 @@ class PiepCMS {
 			{
 				//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2316.685375328343!2d18.533917818907184!3d54.503773259192585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda0cc4256d643%3A0x465e190242c3fd05!2sSzperaczek!5e0!3m2!1spl!2spl!4v1619695875923!5m2!1spl!2spl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
 				id: "google_map",
-				label: html`<i class="fas fa-map-marked-alt"></i> Mapa Google`,
+				icon: html`<i class="fas fa-map-marked-alt"></i>`,
+				label: html`Mapa Google`,
 				v_node: {
 					tag: "iframe",
 					id: -1,
 					styles: {},
 					classes: ["google_map"],
 					attrs: {},
+					module_name: "google_map",
 				},
 			},
 			{
-				id: "html",
-				label: html`<i class="fas fa-code"></i> Kod HTML`,
+				id: "raw_html",
+				icon: html`<i class="fas fa-code"></i>`,
+				label: html`Kod HTML`,
 				v_node: {
 					tag: "div",
 					id: -1,
 					styles: { minHeight: "400px" },
 					classes: ["raw_html"],
 					attrs: {},
+					module_name: "raw_html",
 				},
 			},
 		];
 
-		for (const block_to_add of blocks_to_add) {
-			menu_html += html` <div class="btn transparent block_to_add" data-id="${block_to_add.id}">${block_to_add.label}</div> `;
+		for (const block_to_add of this.blcs_to_add) {
+			menu_html += html`
+				<div class="btn transparent block_to_add" data-id="${block_to_add.id}">${block_to_add.icon} ${block_to_add.label}</div>
+			`;
 		}
 
 		// menu_html += html`
@@ -745,7 +747,7 @@ class PiepCMS {
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
 				setTimeout(() => {
-					const block_to_add = blocks_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
+					const block_to_add = this.blcs_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
 					const add_v_node = block_to_add.v_node;
 					add_v_node.id = this.getNewBlcId();
 					if (add_v_node.children) {
@@ -1602,7 +1604,16 @@ class PiepCMS {
 					img: "Zdjęcie",
 				};
 
-				const display_name = def(map_tag_display_name[tag], "");
+				let display_name = "";
+
+				if (v_node.module_name) {
+					const blc_to_add = this.blcs_to_add.find((b) => b.id === v_node.module_name);
+					if (blc_to_add) {
+						display_name = blc_to_add.label;
+					}
+				} else if (map_tag_display_name[tag]) {
+					display_name = map_tag_display_name[tag];
+				}
 
 				let info = "";
 
@@ -2443,8 +2454,6 @@ class PiepCMS {
 		//this.recreateDom(this.v_dom_overlay); // remove manually instead for better performance
 		focus_node.remove();
 
-		// setTimeout(() => {
-		// });
 		this.displayInsertPositions();
 	}
 
@@ -2473,23 +2482,25 @@ class PiepCMS {
 			let left, top;
 
 			const off = 10;
+			const off_x = blc_rect.width > 50 ? off : 0;
+			const off_y = blc_rect.height > 50 ? off : 0;
 
 			switch (pos) {
 				case "left":
-					left = blc_rect.left + off;
+					left = blc_rect.left + off_x;
 					top = blc_rect.top + blc_rect.height * 0.5;
 					break;
 				case "right":
-					left = blc_rect.left + blc_rect.width - off;
+					left = blc_rect.left + blc_rect.width - off_x;
 					top = blc_rect.top + blc_rect.height * 0.5;
 					break;
 				case "top":
 					left = blc_rect.left + blc_rect.width * 0.5;
-					top = blc_rect.top + off;
+					top = blc_rect.top + off_y;
 					break;
 				case "bottom":
 					left = blc_rect.left + blc_rect.width * 0.5;
-					top = blc_rect.top + blc_rect.height - off;
+					top = blc_rect.top + blc_rect.height - off_y;
 					break;
 				case "center":
 					left = blc_rect.left + blc_rect.width * 0.5;
@@ -2502,7 +2513,23 @@ class PiepCMS {
 			return { left, top };
 		};
 
-		this.content._children(".blc").forEach((blc) => {
+		const blcs = this.content._children(".blc");
+
+		if (blcs.length === 0) {
+			// left
+			const insert_blc = getInsertBlc();
+			const content_wrapper_rect = piep_cms.content_wrapper.getBoundingClientRect();
+			insert_blc._set_absolute_pos(content_wrapper_rect.left + content_wrapper_rect.width * 0.5, content_wrapper_rect.top + 30);
+			insert_blc._insert_action = () => {
+				/** @type {vDomNode} */
+				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.grabbed_block_vid));
+				grabbed_node_copy.insert_on_release = true;
+
+				this.v_dom_overlay.push(grabbed_node_copy);
+			};
+		}
+
+		blcs.forEach((blc) => {
 			if (blc._parent(this.getNodeSelector(this.grabbed_block_vid))) {
 				// just no baby
 				return;
