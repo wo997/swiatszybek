@@ -57,7 +57,8 @@ class PiepCMS {
 		this.cursor = node("piep_editor_cursor");
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
-		this.float_focus = node("piep_editor_float_focus");
+		//this.float_focus = node("piep_editor_float_focus");
+		this.float_focuses = node("piep_editor_float_focuses");
 		this.parent_float_focus = node("piep_editor_parent_float_focus"); // TODO: display more than just a parent? f.e. for columns
 		this.float_menu = node("piep_editor_float_menu");
 		this.add_block_menu = node("piep_editor_add_block_menu");
@@ -77,7 +78,7 @@ class PiepCMS {
 		this.alternative_scroll_panel.append(this.float_multi_insert_bckg);
 		this.alternative_scroll_panel.append(this.layout_controls);
 		this.alternative_scroll_panel.append(this.float_menu);
-		this.alternative_scroll_panel.append(this.float_focus);
+		this.alternative_scroll_panel.append(this.float_focuses);
 	}
 
 	initHistory() {
@@ -1982,7 +1983,7 @@ class PiepCMS {
 				insert_blc._insert_action();
 				this.recreateDom(this.v_dom_overlay);
 				setTimeout(() => {
-					this.showFocusToNode(this.grabbed_block_vid);
+					this.showFocusToNodes([this.grabbed_block_vid]);
 				});
 
 				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
@@ -1992,7 +1993,7 @@ class PiepCMS {
 				}
 			} else {
 				this.recreateDom(this.v_dom_overlay);
-				this.float_focus.classList.add("hidden");
+				this.float_focuses._empty();
 			}
 
 			this.parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
@@ -2020,7 +2021,7 @@ class PiepCMS {
 			show_focus_node_vid = +v_node_label.dataset.vid;
 		}
 
-		this.showFocusToNode(show_focus_node_vid);
+		this.showFocusToNodes([show_focus_node_vid]);
 		let show_float_menu = this.float_menu_active;
 		if (show_focus_node_vid !== this.focus_node_vid) {
 			show_float_menu = false;
@@ -2220,7 +2221,7 @@ class PiepCMS {
 	editLayout() {
 		this.editing_layout = true;
 
-		this.showFocusToNode(this.focus_node_vid);
+		this.showFocusToNodes([this.focus_node_vid]);
 
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
@@ -2943,7 +2944,7 @@ class PiepCMS {
 		this.container.classList.remove("grabbed_block");
 		this.container.classList.remove("disable_editing");
 		this.container.classList.remove("has_insert_pos");
-		this.float_focus.classList.add("hidden");
+		this.float_focuses._empty();
 		this.float_multi_insert_bckg.classList.add("hidden");
 		this.parent_float_focus.classList.add("hidden");
 
@@ -3325,28 +3326,30 @@ class PiepCMS {
 
 	/**
 	 *
-	 * @param {number} vid
+	 * @param {number[]} vids
 	 * @returns
 	 */
-	showFocusToNode(vid) {
-		if (vid === undefined) {
-			this.float_focus.classList.add("hidden");
-			return;
+	showFocusToNodes(vids) {
+		let float_focuses_html = "";
+
+		for (const vid of vids) {
+			if (!vid) {
+				continue;
+			}
+			const focus_node = this.getNode(vid);
+			const focus_node_rect = focus_node.getBoundingClientRect();
+			float_focuses_html += html`<div
+				class="focus_rect"
+				style="
+                left:${focus_node_rect.left - 1}px;
+                top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
+                width:${focus_node_rect.width + 2}px;
+                height:${focus_node_rect.height + 2}px;
+            "
+			></div>`;
 		}
 
-		this.float_focus.classList.remove("hidden");
-
-		const focus_node = this.getNode(vid);
-		if (focus_node === undefined) {
-			this.float_focus.classList.add("hidden");
-			return;
-		}
-		const focus_node_rect = focus_node.getBoundingClientRect();
-
-		this.float_focus._set_absolute_pos(focus_node_rect.left - 1, focus_node_rect.top - 1 + this.content_scroll.scrollTop);
-
-		this.float_focus.style.width = focus_node_rect.width + 2 + "px";
-		this.float_focus.style.height = focus_node_rect.height + 2 + "px";
+		this.float_focuses._set_content(float_focuses_html);
 	}
 
 	/**
