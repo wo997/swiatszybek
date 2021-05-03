@@ -985,6 +985,8 @@ function ProductComp(comp, parent, data = undefined) {
 					variant.pos = index + 1;
 					variant.options.forEach((option, index) => {
 						option.pos = index + 1;
+						// @ts-ignore
+						option.product_feature_options = option.selected_product_feature_options;
 					});
 				});
 
