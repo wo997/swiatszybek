@@ -2015,17 +2015,32 @@ class PiepCMS {
 	notGrabbedBlock() {
 		// not grabbed
 		const show_vids = [this.focus_node_vid];
-		const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
 
 		let show_float_menu = this.float_menu_active;
-		if (v_node_label) {
-			show_float_menu = false;
-			show_vids.push(+v_node_label.dataset.vid);
 
-			any_picker.hide();
-			this.float_menu._children("p-dropdown.dropped").forEach((d) => {
-				d.click();
-			});
+		if (!this.layout_control_prop) {
+			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc") : undefined;
+			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
+
+			if (v_node_label) {
+				show_float_menu = false;
+				const label_vid = +v_node_label.dataset.vid;
+				if (label_vid !== this.focus_node_vid) {
+					show_vids.push(label_vid);
+				}
+
+				any_picker.hide();
+				this.float_menu._children("p-dropdown.dropped").forEach((d) => {
+					d.click();
+				});
+			}
+
+			if (blc) {
+				const blc_vid = +blc.dataset.vid;
+				if (blc_vid) {
+					show_vids.push(blc_vid);
+				}
+			}
 		}
 
 		this.showFocusToNodes(show_vids);
@@ -3339,6 +3354,9 @@ class PiepCMS {
 				continue;
 			}
 			const focus_node = this.getNode(vid);
+			if (!focus_node) {
+				continue;
+			}
 			const focus_node_rect = focus_node.getBoundingClientRect();
 			float_focuses_html += html`<div
 				class="focus_rect"
