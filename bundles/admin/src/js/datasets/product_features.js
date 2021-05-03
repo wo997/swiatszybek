@@ -17,7 +17,7 @@
 /**
  * @type {ProductFeatureData[]}
  */
-let product_features = [];
+let product_features;
 
 /**
  * @typedef {{
@@ -43,7 +43,7 @@ let product_features = [];
 /**
  * @type {ProductFeatureOptionData[]}
  */
-let product_feature_options = [];
+let product_feature_options;
 
 function loadedProductFeatures() {
 	product_features.forEach((feature) => {

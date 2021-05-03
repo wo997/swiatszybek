@@ -13,6 +13,6 @@
  */
 
 /** @type {TemplateData[]} */
-let templates = [];
+let templates;
 
 function loadedTemplates() {}

@@ -18,6 +18,6 @@
  */
 
 /** @type {GeneralProductData[]} */
-let general_products = [];
+let general_products;
 
 function loadedGeneralProducts() {}

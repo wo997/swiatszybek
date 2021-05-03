@@ -20,10 +20,10 @@
  */
 
 /** @type {ProductCategoryData[]} */
-let product_categories = [];
+let product_categories;
 
 /** @type {ProductCategoryBranch[]} */
-let product_categories_tree = [];
+let product_categories_tree;
 
 function loadedProductCategories() {
 	product_categories_tree = [];

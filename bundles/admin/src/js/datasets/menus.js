@@ -25,10 +25,10 @@
  */
 
 /** @type {MenuData[]} */
-let menus = [];
+let menus;
 
 /** @type {MenusBranch[]} */
-let menu_tree = [];
+let menu_tree;
 
 function loadedMenu() {
 	menu_tree = [];

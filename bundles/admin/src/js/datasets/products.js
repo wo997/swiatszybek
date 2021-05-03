@@ -22,6 +22,6 @@
  */
 
 /** @type {ProductData[]} */
-let products = [];
+let products;
 
 function loadedProducts() {}

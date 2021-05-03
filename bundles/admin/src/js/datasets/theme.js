@@ -14,7 +14,7 @@ let main_font_family = "";
 /**
  * @type {PaletteColorData[]}
  */
-let colors_palette = [];
+let colors_palette;
 
 /**
  * @typedef {{
@@ -30,7 +30,7 @@ let colors_palette = [];
 /**
  * @type {FontSizeData[]}
  */
-let font_sizes = [];
+let font_sizes;
 
 function loadedThemeSettings() {
 	window.dispatchEvent(new CustomEvent("theme_settings_changed"));
