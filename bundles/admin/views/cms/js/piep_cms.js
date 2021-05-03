@@ -2014,24 +2014,26 @@ class PiepCMS {
 
 	notGrabbedBlock() {
 		// not grabbed
-		let show_focus_node_vid = this.focus_node_vid;
-
+		const show_vids = [this.focus_node_vid];
 		const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
-		if (v_node_label) {
-			show_focus_node_vid = +v_node_label.dataset.vid;
-		}
 
-		this.showFocusToNodes([show_focus_node_vid]);
 		let show_float_menu = this.float_menu_active;
-		if (show_focus_node_vid !== this.focus_node_vid) {
+		if (v_node_label) {
 			show_float_menu = false;
+			show_vids.push(+v_node_label.dataset.vid);
+
 			any_picker.hide();
 			this.float_menu._children("p-dropdown.dropped").forEach((d) => {
 				d.click();
 			});
 		}
+
+		this.showFocusToNodes(show_vids);
+
 		this.float_menu.classList.toggle("hidden", !show_float_menu);
-		this.showFloatMenuToNode(show_focus_node_vid);
+		if (show_float_menu) {
+			this.showFloatMenuToNode(this.focus_node_vid);
+		}
 	}
 
 	addBtnMove() {
