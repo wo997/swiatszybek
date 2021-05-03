@@ -8,7 +8,7 @@
 				priority: 10,
 			},
 		],
-		type_groups: ["layout"],
+		type_groups: ["advanced"],
 		menu_html: html`
 			<div class="label">Kod HTML</div>
 			<textarea class="field scroll_panel" data-blc_prop="settings.html_code" style="height:200px"></textarea>

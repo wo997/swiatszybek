@@ -100,8 +100,8 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
-					<div style="text-align: center;">lub</div>
-					<div class="g-signin2" data-onsuccess="onSignIn"></div>
+					<!-- <div style="text-align: center;">lub</div> -->
+					<!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
 				</div>
 			</div>
 		`,

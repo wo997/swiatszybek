@@ -90,17 +90,20 @@ if (!$page_data && !$template_data) {
     </div>
 
     <div class="piep_editor_inspector">
-        <div class="flex align_center header">
-            <div class="medium mra">Drzewko elementów</div>
-            <button class="btn transparent grab_inspector_btn small" style="width:29px" data-tooltip="Przemieść">
-                <i class="fas fa-arrows-alt"></i>
-            </button>
-            <button class="btn transparent hide_inspector_btn small" style="width:29px" data-tooltip="Ukryj">
-                <i class="fas fa-times" style="font-size:1.1em"></i>
-            </button>
-        </div>
+        <div class="container">
+            <div class="flex align_center header">
+                <div class="medium mra">Drzewko elementów</div>
+                <button class="btn transparent grab_inspector_btn small" style="width:29px" data-tooltip="Przemieść">
+                    <i class="fas fa-arrows-alt"></i>
+                </button>
+                <button class="btn transparent hide_inspector_btn small" style="width:29px" data-tooltip="Ukryj">
+                    <i class="fas fa-times" style="font-size:1.1em"></i>
+                </button>
+            </div>
 
-        <div class="tree scroll_panel scroll_shadow"></div>
+
+            <div class="tree scroll_panel scroll_shadow"></div>
+        </div>
     </div>
 </div>
 

@@ -5,21 +5,28 @@
 		position: absolute;
 		right: 40px;
 		width: 310px;
-		background: #fff;
-		border: 1px solid #ccc;
-		box-shadow: 0 2px 5px #0002;
-		border-radius: 4px;
 		left: 0;
 		top: 0;
 		z-index: 1600;
 		transition: all 0.15s;
 		--scale: 1;
-		transform: translate(var(--x), var(--y)) scale(var(--scale));
+		transform: translate(var(--x), var(--y));
+	}
+	.container {
+		background: #fff;
+		border: 1px solid #ccc;
+		box-shadow: 0 2px 5px #0002;
+		border-radius: 4px;
+		transition: all 0.15s;
 	}
 	&:not(.open) {
-		--scale: 0.9;
-		opacity: 0;
-		pointer-events: none;
+		& {
+			opacity: 0;
+			pointer-events: none;
+		}
+		.container {
+			transform: scale(0.9);
+		}
 	}
 	.header {
 		padding: 4px 4px 4px 8px;

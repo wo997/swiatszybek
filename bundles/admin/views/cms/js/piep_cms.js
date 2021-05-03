@@ -705,7 +705,7 @@ class PiepCMS {
 				icon: html`<i class="fas fa-map-marked-alt"></i>`,
 				label: html`Mapa Google`,
 				v_node: {
-					tag: "iframe",
+					tag: "div",
 					id: -1,
 					styles: {},
 					classes: [],
@@ -1676,6 +1676,18 @@ class PiepCMS {
 				if (v_node.module_name === "raw_html") {
 					body = v_node.settings.html_code;
 				}
+				if (v_node.module_name === "google_map") {
+					body = html`<div class="pa2" style="background:#fafafa">Brak mapy, uzupełnij dane</div>`;
+
+					/** @type {string} */
+					const google_map_embed_code = v_node.settings.google_map_embed_code;
+
+					const match_src = google_map_embed_code.match(/src=".*?"/);
+					if (match_src) {
+						const src = match_src[0];
+						body = html`<iframe ${src} allowfullscreen="" loading="lazy"></iframe>`;
+					}
+				}
 
 				let add_to_body = true;
 				if (v_node.id === this.grabbed_block_vid) {
@@ -2127,10 +2139,11 @@ class PiepCMS {
 
 		const safe_off = 5;
 
+		//const inspector_rect = this.inspector.getBoundingClientRect();
 		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 
-		const inspector_width = 310;
-		const inspector_height = 390;
+		const inspector_width = this.inspector.offsetWidth;
+		const inspector_height = this.inspector.offsetHeight;
 		const inspector_grab_btn_offset = 47;
 
 		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
