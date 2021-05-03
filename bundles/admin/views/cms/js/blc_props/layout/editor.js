@@ -215,15 +215,15 @@
 
 			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderColors">
 				<div>
-					<color-picker data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
+					<color-picker class="alpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
 				</div>
 				<div class="ml2 mr2">
-					<color-picker class="mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
+					<color-picker class="alpha mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
 
-					<color-picker data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
+					<color-picker class="alpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
 				</div>
 				<div>
-					<color-picker data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
+					<color-picker class="alpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
 				</div>
 			</div>
 		`,

@@ -6,6 +6,7 @@ $template_id = def($_GET, "nr_szablonu");
 
 $page_data = null;
 $template_data = null;
+$parent_template_id = -1;
 if ($page_id) {
     $page = EntityManager::getEntityById("page", $page_id);
     if ($page) {
@@ -19,6 +20,8 @@ if ($page_id) {
                 $page_data["general_product"] = $general_product->getSimpleProps();
             }
         }
+
+        $parent_template_id = $page->getProp("template_id");
     }
 }
 
@@ -26,6 +29,19 @@ if ($template_id) {
     $template = EntityManager::getEntityById("template", $template_id);
     if ($template) {
         $template_data = $template->getSimpleProps();
+
+        $parent_template_id = $template->getProp("parent_template_id");
+    }
+}
+
+$parent_templates = [];
+while ($parent_template_id > 0) {
+    $parent_template_data = DB::fetchRow("SELECT template_id, v_dom_json, parent_template_id FROM template WHERE template_id = $parent_template_id");
+    if ($parent_template_data) {
+        $parent_templates[] = $parent_template_data;
+        $parent_template_id = $parent_template_data["parent_template_id"];
+    } else {
+        $parent_template_id = -1;
     }
 }
 
@@ -43,6 +59,7 @@ if (!$page_data && !$template_data) {
     <?= Theme::preloadThemeSettings() ?>
     let page_data = <?= json_encode($page_data) ?>;
     let template_data = <?= json_encode($template_data) ?>;
+    let parent_templates = <?= json_encode($parent_templates) ?>;
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>

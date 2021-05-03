@@ -12,6 +12,6 @@ EntityManager::register("page", [
         "url" => ["type" => "string"],
         "page_type" => ["type" => "string"],
         "link_what_id" => ["type" => "number"],
-        "parent_page_id" => ["type" => "number"],
+        "template_id" => ["type" => "number"],
     ],
 ]);

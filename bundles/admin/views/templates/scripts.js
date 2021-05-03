@@ -7,9 +7,9 @@ domload(() => {
 
 	DatatableComp(datatable_comp, undefined, {
 		dataset: templates,
-		//search_url: STATIC_URLS["ADMIN"] + "/template/search",
 		columns: [
 			{ label: "Nazwa", key: "name", width: "1", searchable: "string" },
+			{ label: "Szablon nadrzędny", key: "parent_template_id", width: "1", searchable: "string", map_name: "template" },
 			{ label: "Typ strony", key: "page_type", width: "1", searchable: "select", map_name: "page_type" },
 			{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date" },
 			{
@@ -34,6 +34,12 @@ domload(() => {
 					];
 				},
 			},
+			{
+				name: "template",
+				getMap: () => {
+					return [{ val: "-1", label: "Brak - Pusta strona" }, ...templates.map((t) => ({ val: t.template_id, label: t.name }))];
+				},
+			},
 		],
 		pagination_data: { row_count: 50 },
 		label: "Szablony",
@@ -42,7 +48,6 @@ domload(() => {
 		</button> `,
 		primary_key: "template_id",
 		empty_html: html`Brak szablonów`,
-		//save_state_name: "admin_templates",
 		sortable: true,
 		require_sort: { key: "pos", order: "asc" },
 		db_table: "template",

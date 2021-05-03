@@ -92,7 +92,7 @@ color-picker {
 	-webkit-box-align: stretch;
 	align-items: stretch;
 	font-size: 10px;
-	width: 25em;
+	width: 25.5em;
 	padding: 0.5em;
 }
 .layout_default.picker_wrapper > * {
@@ -123,9 +123,15 @@ color-picker {
 	padding-bottom: 100%;
 }
 .layout_default .picker_editor {
-	-webkit-box-ordinal-group: 2;
-	order: 1;
-	width: 5.25rem;
+	& {
+		-webkit-box-ordinal-group: 2;
+		order: 1;
+		width: 6rem;
+	}
+	& input {
+		--field_padding_hor: 0;
+		text-align: center;
+	}
 }
 .layout_default .picker_sample {
 	-webkit-box-ordinal-group: 2;

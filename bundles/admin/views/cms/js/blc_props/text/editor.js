@@ -150,7 +150,7 @@
 			<div class="pretty_radio flex columns_6 global_root spiky"></div>
 
 			<div class="label normal">Inny kolor</div>
-			<color-picker class="inline"></color-picker>
+			<color-picker class="inline alpha"></color-picker>
 		`,
 	});
 
@@ -170,7 +170,7 @@
 			<div class="pretty_radio flex columns_6 global_root spiky"></div>
 
 			<div class="label normal">Inny kolor</div>
-			<color-picker class="inline"></color-picker>
+			<color-picker class="inline alpha"></color-picker>
 		`,
 	});
 

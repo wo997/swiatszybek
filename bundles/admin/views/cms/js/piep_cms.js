@@ -443,7 +443,7 @@ class PiepCMS {
 
 			color_options_html += html`
 				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
-					<i class="fas fa-eye-dropper"></i> <color-picker></color-picker>
+					<i class="fas fa-eye-dropper"></i> <color-picker class="alpha"></color-picker>
 				</p-option>
 				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			`;
