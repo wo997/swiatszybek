@@ -7,6 +7,13 @@ domload(() => {
 	// @ts-ignore
 	const pages_dt = $("datatable-comp.pages");
 
+	const templates_map = {
+		name: "template",
+		getMap: () => {
+			return [{ val: -1, label: "Brak - Pusta strona" }, ...templates.map((t) => ({ val: t.template_id, label: t.name }))];
+		},
+	};
+
 	quickTimeout(
 		() => {
 			DatatableComp(pages_dt, undefined, {
@@ -16,6 +23,7 @@ domload(() => {
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
 					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
@@ -27,6 +35,7 @@ domload(() => {
 						},
 					},
 				],
+				maps: [templates_map],
 				primary_key: "page_id",
 				empty_html: html`Brak stron`,
 				save_state_name: "admin_pages_search_pages",
@@ -48,6 +57,7 @@ domload(() => {
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
 					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
@@ -59,6 +69,7 @@ domload(() => {
 						},
 					},
 				],
+				maps: [templates_map],
 				primary_key: "page_id",
 				empty_html: html`Brak stron`,
 				save_state_name: "admin_pages_search_general_products",
@@ -88,6 +99,7 @@ domload(() => {
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
 					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
@@ -99,6 +111,7 @@ domload(() => {
 						},
 					},
 				],
+				maps: [templates_map],
 				primary_key: "page_id",
 				empty_html: html`Brak stron`,
 				save_state_name: "admin_pages_search_product_categories",

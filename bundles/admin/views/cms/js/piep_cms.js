@@ -2181,7 +2181,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
 				set_val = Math.max(min_percent, set_val);
 
-				if (CTRL_DOWN) {
+				if (ALT_DOWN) {
 					if (this.layout_control_prop === "width") {
 						let lowest_diff_val = 100;
 						let closest_val = set_val;
@@ -2203,7 +2203,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist;
 				set_val = Math.max(min_pixels, set_val);
 
-				if (CTRL_DOWN) {
+				if (ALT_DOWN) {
 					set_val = round(set_val, -1);
 				}
 				set_val_pretty = floor(set_val) + "px";
@@ -2469,25 +2469,25 @@ class PiepCMS {
 			// left bottom
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "left", "Zmień szerokość");
+			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
 		}
 		{
 			// right bottom
 			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "right", "Zmień szerokość");
+			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
 		}
 		{
 			// left top
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top;
-			display_layout_control(left, top, "width", "width", "left", "Zmień szerokość");
+			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
 		}
 		{
 			// right top
 			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top;
-			display_layout_control(left, top, "width", "width", "right", "Zmień szerokość");
+			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
 		}
 
 		{
