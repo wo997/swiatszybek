@@ -2861,19 +2861,36 @@ class PiepCMS {
 			const near_v_node = near_v_node_data.v_node;
 
 			let on_sides = true;
+			let above_or_below = true;
+			let inside = true;
 			if (near_v_node.classes.includes("columns_container")) {
 				on_sides = false;
 			}
 
+			if (flow_direction !== "column") {
+				above_or_below = false;
+			}
+
+			if (!isEquivalent(near_v_node_data.v_node.children, [])) {
+				inside = false;
+			}
+
+			if (inside && near_v_node.template_hook_id === undefined) {
+				inside = false;
+			}
+
+			if (blc.classList.contains("editor_disabled")) {
+				on_sides = false;
+				above_or_below = false;
+			}
+
 			if (on_sides) {
-				// left
 				const insert_left_blc = getInsertBlc();
 				insert_left_blc._insert_action = () => {
 					insertOnSides(-1);
 				};
 				setInsertPos(insert_left_blc, "left");
 
-				// right
 				const insert_right_blc = getInsertBlc();
 				insert_right_blc._insert_action = () => {
 					insertOnSides(1);
@@ -2881,15 +2898,13 @@ class PiepCMS {
 				setInsertPos(insert_right_blc, "right");
 			}
 
-			if (flow_direction === "column") {
-				// top
+			if (above_or_below) {
 				const insert_top_blc = getInsertBlc();
 				insert_top_blc._insert_action = () => {
 					insertAboveOrBelow(-1);
 				};
 				setInsertPos(insert_top_blc, "top");
 
-				// bottom
 				const insert_bottom_blc = getInsertBlc();
 				insert_bottom_blc._insert_action = () => {
 					insertAboveOrBelow(1);
@@ -2897,8 +2912,7 @@ class PiepCMS {
 				setInsertPos(insert_bottom_blc, "bottom");
 			}
 
-			if (isEquivalent(near_v_node_data.v_node.children, [])) {
-				// center
+			if (inside) {
 				const insert_center_blc = getInsertBlc();
 				insert_center_blc._insert_action = () => {
 					insertInside();

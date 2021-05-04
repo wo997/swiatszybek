@@ -134,13 +134,14 @@ domload(() => {
 		const base_v_dom = all_v_doms[i];
 		const append_v_dom = all_v_doms[i + 1];
 
+		const is_top_layer = i == all_v_doms.length - 2;
+
 		/**
 		 * @param {vDomNode[]} base_v_nodes
 		 */
 		const traverseVDom = (base_v_nodes) => {
 			for (const base_v_node of base_v_nodes) {
 				if (base_v_node.module_name === "template_hook" && base_v_node.settings && base_v_node.settings.template_hook_id) {
-					base_v_node.template_hook_id = base_v_node.settings.template_hook_id;
 					delete base_v_node.module_name;
 					base_v_node.classes.push("vertical_container", "template_hook_root");
 					// just remove a class
@@ -149,9 +150,9 @@ domload(() => {
 						base_v_node.classes.splice(module_template_hook_index, 1);
 					}
 
-					// now glue these
+					// now glue these, but as u can see the template_hook_id isn't passed by default, just for the last layer
 					const append_v_node = append_v_dom.find((append_v_node) => {
-						append_v_node.template_hook_id === base_v_node.template_hook_id;
+						append_v_node.template_hook_id === base_v_node.settings.template_hook_id;
 					});
 
 					if (append_v_node) {
@@ -159,6 +160,11 @@ domload(() => {
 						base_v_node.children = append_v_node.children;
 					} else {
 						base_v_node.children = [];
+					}
+
+					// make sure that we export only the last layer
+					if (is_top_layer) {
+						base_v_node.template_hook_id = base_v_node.settings.template_hook_id;
 					}
 				}
 				if (base_v_node.children) {
