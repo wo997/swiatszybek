@@ -12,7 +12,13 @@
     <?= preloadTemplates() ?>
     <?php if (isset($_GET["utworz"])) { ?>
         domload(() => {
-            getAddPageModal()._show();
+            add_page_modal = getAddPageModal();
+            <?php if (isset($_GET["general_product_id"])) { ?>
+                add_page_modal._data.page_type = "general_product";
+                add_page_modal._data.general_product_id = <?= intval($_GET["general_product_id"]) ?>;
+            <?php } ?>
+            add_page_modal._render();
+            add_page_modal._show();
         })
     <?php } ?>
 </script>

@@ -9,6 +9,10 @@
  *  gross_price: number
  *  stock: number
  *  is_necessary?: boolean
+ *  weight: number
+ *  length: number
+ *  width: number
+ *  height: number
  * }} DtProductData
  *
  * @typedef {{
@@ -44,7 +48,6 @@
  *      add_category_btn: PiepNode
  *      print_categories: PiepNode
  *      edit_page_btn: PiepNode
- *      preview_btn: PiepNode
  *      open_btn: PiepNode
  *      add_image_btn: PiepNode
  *      add_variant_btn: PiepNode
@@ -56,7 +59,7 @@
  * } & BaseComp} ProductComp
  */
 
-const product_copy_keys = ["net_price", "vat", "gross_price", "active"];
+const product_copy_keys = ["net_price", "vat", "gross_price", "active", ""];
 
 /**
  *
@@ -160,7 +163,18 @@ function ProductComp(comp, parent, data = undefined) {
 
 		data.missing_products_variants.forEach((variants) => {
 			/** @type {DtProductData} */
-			const product_data = { gross_price: 0, net_price: 0, product_id: -1, vat_id: 1, active: 1, stock: 0 };
+			const product_data = {
+				gross_price: 0,
+				net_price: 0,
+				product_id: -1,
+				vat_id: 1,
+				active: 1,
+				stock: 0,
+				height: 0,
+				length: 0,
+				weight: 0,
+				width: 0,
+			};
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
 				const key = getVariantKeyFromId(+variant_id);
@@ -671,8 +685,6 @@ function ProductComp(comp, parent, data = undefined) {
 		});
 	};
 
-	//<button class="btn primary" disabled data-node="{${comp._nodes.preview_btn}}">Podgląd <i class="fas fa-eye"></i></button>
-
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="injectable_header">
@@ -745,8 +757,7 @@ function ProductComp(comp, parent, data = undefined) {
 					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
 						<div class="info_hover ml1">
-							Cechy są szczególnie pomocne przy wyszukiwaniu produktów. Uzupełniając każdą z nich (np. producenta, kolor, rozmiar) masz
-							pewność, że klient sprawniej odnajdzie poszukiwany produkt.
+							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
 						</div>
 						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
 							Dodaj cechy <i class="fas fa-plus"></i>
@@ -762,9 +773,9 @@ function ProductComp(comp, parent, data = undefined) {
 					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Zdjęcia (<span html="{${data.images.length}}"></span>) </span>
 						<div class="info_hover ml1">
-							Wybierz zdjęcia produktu i ustaw je w odpowiedniej kolejności zaczynając od zdjęcia głównego. Dodatkowo możesz powiązać każde
-							z nich z cechami. Dzięki temu, klient który przegląda produkty i zaznaczył filtr "Kolor: czerwony" zobaczy interesujące go
-							zdjęcia. Pozostałe będą widoczne po najechaniu w postaci galerii.
+							Dodaj zdjęcia produktu i ustaw je w kolejności zaczynając od zdjęcia głównego. Dodatkowo możesz powiązać każde z nich z
+							cechami. Dzięki temu, klient który przegląda produkty i zaznaczył filtr "Kolor: czerwony" zobaczy czerwony wariant produktu, a
+							pozostałe zdjęcia będą widoczne po najechaniu np. kursorem.
 						</div>
 						<button data-node="{${comp._nodes.add_image_btn}}" class="btn primary small ml1">
 							Dodaj zdjęcie <i class="fas fa-plus"></i>
@@ -950,13 +961,21 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.edit_page_btn.addEventListener("click", () => {
-				// TODO: dirty form warning, ass with history probably
-				window.location.href = STATIC_URLS["ADMIN"] + "/strona?nr_strony=1"; // TODO: some page_id should be here
+				const general_product_id = comp._data.general_product_id;
+				xhr({
+					url: `${STATIC_URLS["ADMIN"]}/page/get`,
+					params: {
+						general_product_id,
+					},
+					success: (res) => {
+						if (res.page) {
+							window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${res.page.page_id}`;
+						} else {
+							window.location.href = `${STATIC_URLS["ADMIN"]}/strony?utworz&general_product_id=${general_product_id}`;
+						}
+					},
+				});
 			});
-
-			// comp._nodes.preview_btn.addEventListener("click", () => {
-			// 	previewUrl(`/produkt/${comp._data.general_product_id}`);
-			// });
 
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				if (!confirm("Czy aby na pewno chcesz usunąć ten produkt?")) {
@@ -964,7 +983,7 @@ function ProductComp(comp, parent, data = undefined) {
 				}
 
 				xhr({
-					url: STATIC_URLS["ADMIN"] + "/general_product/delete/" + comp._data.general_product_id,
+					url: `${STATIC_URLS["ADMIN"]}/general_product/delete/${comp._data.general_product_id}`,
 					success: (res) => {
 						window.location.href = STATIC_URLS["ADMIN"] + "/produkty";
 					},
