@@ -2,7 +2,7 @@
 
 .info_hover {
 	& {
-		background: #6ad;
+		background: #5ac;
 		color: #fff;
 		height: 1.5em;
 		width: 1.5em;
@@ -11,13 +11,13 @@
 		align-items: center;
 		border-radius: 100px;
 		cursor: help;
-		box-shadow: inset 0 0 0 1px #0001;
+		box-shadow: inset 0 0 0 1px #0003;
 		font-weight: var(--bold);
 		vertical-align: middle;
 		transform: translateY(-2px);
 	}
 	svg {
-		width: 0.45em;
+		width: 0.4em;
 		filter: invert(1);
 	}
 }

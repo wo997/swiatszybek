@@ -99,7 +99,7 @@ function ProductFeatureComp(comp, parent, data) {
 		if (option_id === 0) {
 			comp._data.datatable.filters = [];
 		} else {
-			comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", val: option_id } }];
+			comp._data.datatable.filters = [{ key: "parent_product_feature_option_id", data: { type: "exact", value: option_id } }];
 		}
 		comp._render();
 	};
@@ -233,27 +233,27 @@ function ProductFeatureComp(comp, parent, data) {
 				const is_double_value = data.data_type === "double_value";
 				expand(comp._nodes.physical_measures_wrapper, is_double_value);
 
-				if (!is_list) {
+				if (is_list) {
 					const getCount = (option_id) => {
 						return data.datatable.dataset.filter((e) => e.parent_product_feature_option_id === option_id).length;
 					};
 
 					const want_groups = data.datatable.dataset.map((e) => e.parent_product_feature_option_id).filter(onlyUnique);
 
-					if (!want_groups.includes(comp._data.current_group_id)) {
-						want_groups.push(comp._data.current_group_id);
+					if (!want_groups.includes(data.current_group_id)) {
+						want_groups.push(data.current_group_id);
 					}
 					want_groups.forEach((option_id) => {
-						if (!comp._data.groups.includes(option_id)) {
-							comp._data.groups.push(option_id);
+						if (!data.groups.includes(option_id)) {
+							data.groups.push(option_id);
 						}
 					});
 
 					let group_btns = [];
 
-					const map = data.datatable.maps.find((e) => e.name === "product_feature_option");
+					const map = comp._nodes.datatable._data.maps.find((e) => e.name === "product_feature_option");
 					if (map && map.map) {
-						comp._data.groups.forEach((option_id) => {
+						data.groups.forEach((option_id) => {
 							const map_option = map.map.find((map_option) => map_option.val === option_id);
 							if (map_option) {
 								group_btns.push(html`<button
@@ -351,23 +351,16 @@ function ProductFeatureComp(comp, parent, data) {
 				</select>
 
 				<div>
-					<div class="label" style="font-size: 1.2em;">Grupy opcji</div>
-
-					<div>
-						<p class="user_info" style="margin:5px 0 20px">
-							<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
-							klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
-							<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego
-							producenta. <br />W razie potrzeby mozna wprowadzić podział np. Producent <i class="fas fa-chevron-right"></i> Seria
-							<i class="fas fa-chevron-right"></i> Model.
-						</p>
+					<div class="label inline medium">Grupy opcji</div>
+					<div class="info_hover">
+						<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
+						klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
+						<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego
+						producenta. <br />W razie potrzeby mozna wprowadzić podział np. Producent <i class="fas fa-chevron-right"></i> Seria
+						<i class="fas fa-chevron-right"></i> Model.
 					</div>
 
-					<span
-						data-node="{${comp._nodes.groups}}"
-						class="glue_children"
-						style="display: inline-flex;flex-wrap: wrap;padding-bottom:10px"
-					></span>
+					<div data-node="{${comp._nodes.groups}}" class="glue_children pd2" style="flex-wrap: wrap;"></div>
 				</div>
 
 				<div class="adv_controls">
@@ -417,7 +410,6 @@ function ProductFeatureComp(comp, parent, data) {
 				comp._render();
 				setTimeout(() => {
 					const input = comp._nodes.datatable._child(`.list_row:first-child input[data-bind="value"]`);
-					console.log(comp._nodes.datatable, input);
 					if (input) {
 						input.focus();
 					}

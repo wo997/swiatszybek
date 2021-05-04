@@ -2438,71 +2438,73 @@ class PiepCMS {
 		 * @param {string} gener_prop
 		 * @param {string} spec_prop
 		 * @param {DirectionEnum} dir
+		 * @param {string} tooltip
 		 */
-		const display_layout_control = (left, top, gener_prop, spec_prop, dir) => {
+		const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
 			layout_html += html`<div
 				class="layout_control ${gener_prop}_control"
 				data-layout_prop="${spec_prop}"
 				data-layout_dir="${dir}"
 				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+				data-tooltip="${tooltip}"
 			></div>`;
 		};
 		{
 			// left bottom
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "left");
+			display_layout_control(left, top, "width", "width", "left", "Zmień szerokość");
 		}
 		{
 			// right bottom
 			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "right");
+			display_layout_control(left, top, "width", "width", "right", "Zmień szerokość");
 		}
 		{
 			// left top
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top;
-			display_layout_control(left, top, "width", "width", "left");
+			display_layout_control(left, top, "width", "width", "left", "Zmień szerokość");
 		}
 		{
 			// right top
 			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top;
-			display_layout_control(left, top, "width", "width", "right");
+			display_layout_control(left, top, "width", "width", "right", "Zmień szerokość");
 		}
 
 		{
 			// top
 			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
 			let top = focus_node_rect.top;
-			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top");
-			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top");
-			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top");
+			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top", "Margines zewnętrzny górny");
+			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top", "Grubość górnej krawędzi");
+			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top", "Margines wewnętrzny górny");
 		}
 		{
 			// bottom
 			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
 			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
-			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom");
-			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom");
-			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom");
+			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom", "Margines zewnętrzny dolny");
+			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom", "Grubość dolnej krawędzi");
+			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom", "Margines wewnętrzny dolny");
 		}
 		{
 			// left
 			let left = focus_node_rect.left;
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
-			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left");
-			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left");
-			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left");
+			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left", "Margines zewnętrzny lewy");
+			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left", "Grubość lewej krawędzi");
+			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left", "Margines wewnętrzny lewy");
 		}
 		{
 			// right
 			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
 			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
-			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right");
-			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right");
-			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right");
+			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right", "Margines zewnętrzny prawy");
+			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right", "Grubość prawej krawędzi");
+			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right", "Margines wewnętrzny prawy");
 		}
 
 		this.layout_controls._set_content(layout_html);
