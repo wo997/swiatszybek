@@ -1626,6 +1626,10 @@ class PiepCMS {
 				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
 				let classes = ["blc", base_class, ...v_node.classes];
 
+				if (v_node.disabled) {
+					classes.push("editor_disabled");
+				}
+
 				const map_tag_display_name = {
 					a: "Link",
 					h1: "Nagłówek",
@@ -1665,7 +1669,13 @@ class PiepCMS {
 					info = html`<span class="info"> - ${info}</span>`;
 				}
 
-				inspector_tree_html += html`<div class="v_node_label tblc_${v_node.id}" style="--level:${level}" data-vid="${v_node.id}">
+				const disabled = v_node.disabled ? "disabled" : "";
+
+				inspector_tree_html += html`<div
+					class="v_node_label tblc_${v_node.id} ${disabled}"
+					style="--level:${level}"
+					data-vid="${v_node.id}"
+				>
 					<span class="name">${display_name}</span>
 					${info}
 				</div>`;
@@ -2066,7 +2076,7 @@ class PiepCMS {
 		let show_float_menu = this.float_menu_active;
 
 		if (!this.layout_control_prop) {
-			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc") : undefined;
+			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
 			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
 
 			if (v_node_label) {
@@ -3100,7 +3110,7 @@ class PiepCMS {
 				if (click_blc) {
 					const click_blc_vid = +click_blc.dataset.vid;
 					const click_v_node = this.findNodeInVDomById(this.v_dom, click_blc_vid);
-					if (click_v_node && click_v_node.text === undefined) {
+					if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
 						this.setFocusNode(click_blc_vid);
 						this.removeEditorSelection();
 					}
@@ -3117,7 +3127,7 @@ class PiepCMS {
 		const range = document.createRange();
 		const focus_node = csel ? $(csel.focusNode) : undefined;
 
-		const focus_textable = focus_node ? focus_node._parent(`.textable`) : undefined;
+		const focus_textable = focus_node ? focus_node._parent(`.textable:not(.editor_disabled)`) : undefined;
 
 		if (focus_textable) {
 			let cursor_top, cursor_left, cursor_width, cursor_height;
