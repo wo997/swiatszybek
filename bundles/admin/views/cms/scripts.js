@@ -109,43 +109,70 @@ domload(() => {
 	}
 
 	/** @type {vDomNode[]} */
-	let v_dom = [];
+	let v_dom;
 	try {
 		v_dom = JSON.parse(v_dom_json);
-	} catch {}
-	let full_v_dom = v_dom;
+	} catch {
+		v_dom = [];
+	}
+
+	let all_v_doms = [];
 
 	parent_templates.forEach((parent_template) => {
 		/** @type {vDomNode[]} */
 		let parent_template_v_dom = [];
 		try {
 			parent_template_v_dom = JSON.parse(parent_template.v_dom_json);
+			all_v_doms.push(parent_template_v_dom);
 		} catch {}
+	});
+
+	all_v_doms.push(v_dom);
+
+	// glue v_doms from the smallest pieces to the biggest
+	for (let i = all_v_doms.length - 2; i >= 0; i--) {
+		const base_v_dom = all_v_doms[i];
+		const append_v_dom = all_v_doms[i + 1];
 
 		/**
-		 * @param {vDomNode[]} v_nodes
+		 * @param {vDomNode[]} base_v_nodes
 		 */
-		const traverseVDom = (v_nodes) => {
-			for (const v_node of v_nodes) {
-				if (v_node.module_name === "template_hook" && v_node.settings && v_node.settings.template_hook_id) {
-					v_node.template_hook_id = v_node.settings.template_hook_id;
-					delete v_node.module_name;
-					v_node.classes.push("vertical_container", "template_hook_root");
-					v_node.children = [];
-					const module_template_hook_index = v_node.classes.indexOf("module_template_hook");
+		const traverseVDom = (base_v_nodes) => {
+			for (const base_v_node of base_v_nodes) {
+				if (base_v_node.module_name === "template_hook" && base_v_node.settings && base_v_node.settings.template_hook_id) {
+					base_v_node.template_hook_id = base_v_node.settings.template_hook_id;
+					delete base_v_node.module_name;
+					base_v_node.classes.push("vertical_container", "template_hook_root");
+					// just remove a class
+					const module_template_hook_index = base_v_node.classes.indexOf("module_template_hook");
 					if (module_template_hook_index !== -1) {
-						v_node.classes.splice(module_template_hook_index, 1);
+						base_v_node.classes.splice(module_template_hook_index, 1);
+					}
+
+					// now glue these
+					const append_v_node = append_v_dom.find((append_v_node) => {
+						append_v_node.template_hook_id === base_v_node.template_hook_id;
+					});
+
+					if (append_v_node) {
+						// copy just the children, styling (like padding) etc is allowed only in the base template
+						base_v_node.children = append_v_node.children;
+					} else {
+						base_v_node.children = [];
 					}
 				}
-				if (v_node.children) {
-					traverseVDom(v_node.children);
+				if (base_v_node.children) {
+					traverseVDom(base_v_node.children);
 				}
+
+				base_v_node.disabled = true;
 			}
 		};
-		traverseVDom(parent_template_v_dom);
 
-		full_v_dom = parent_template_v_dom;
-	});
+		traverseVDom(base_v_dom);
+	}
+
+	const full_v_dom = all_v_doms[0];
 
 	piep_cms.import(full_v_dom);
 });

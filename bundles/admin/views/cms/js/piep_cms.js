@@ -3049,7 +3049,7 @@ class PiepCMS {
 
 			const v_node_with_insert = this.findNodeInVDom(this.v_dom, (v_node) => v_node.insert_on_release);
 			if (v_node_with_insert) {
-				v_node_with_insert.insert_on_release = false;
+				delete v_node_with_insert.insert_on_release;
 			}
 
 			this.recreateDom();

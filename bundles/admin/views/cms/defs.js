@@ -12,6 +12,7 @@
  * module_name?: string
  * module_children?: vDomNode[]
  * template_hook_id?: string
+ * disabled?: boolean
  * }} vDomNode
  *
  * styles is an array "df" "bg" "sm" ... and then another array of fontSize paddingTop ...

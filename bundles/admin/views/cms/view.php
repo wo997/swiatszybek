@@ -38,7 +38,7 @@ $parent_templates = [];
 while ($parent_template_id > 0) {
     $parent_template_data = DB::fetchRow("SELECT template_id, v_dom_json, parent_template_id FROM template WHERE template_id = $parent_template_id");
     if ($parent_template_data) {
-        $parent_templates[] = $parent_template_data;
+        array_unshift($parent_templates, $parent_template_data);
         $parent_template_id = $parent_template_data["parent_template_id"];
     } else {
         $parent_template_id = -1;
