@@ -49,7 +49,13 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 					Dodaj opcję <i class="fas fa-plus"></i>
 				</button>
 
-				<button data-node="{${comp._nodes.fill_options_btn}}" class="btn subtle small ml2">Uzupełnij <i class="fas fa-pen"></i></button>
+				<button
+					data-node="{${comp._nodes.fill_options_btn}}"
+					class="btn important small ml2 {${data.options.length}?hidden}"
+					data-tooltip="Automatycznie uzupełnij opcje wariantu na podstawie wyżej zdefiniowanych cech"
+				>
+					Uzupełnij <i class="fas fa-pen"></i>
+				</button>
 
 				<div style="margin-left:auto">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
@@ -170,11 +176,12 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 								</div>
 								<div class="scroll_panel scroll_shadow panel_padding">
 									<div class="label first">Na podstawie cechy</div>
-									<div class="radio_group hide_checks choose_feature boxes columns_1 number"></div>
+									<div class="radio_group hide_checks choose_feature boxes columns_2 number"></div>
 
 									<div style="display:flex;margin-top: auto;padding-top: 10px;text-align: right;">
-										<button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button>
-										<button class="btn primary fill fill_empty">Uzupełnij puste</button>
+										<!-- <button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button> -->
+										<!-- <button class="btn primary fill fill_empty">Uzupełnij puste</button> -->
+										<button class="btn primary fill fill_all">Uzupełnij</button>
 									</div>
 								</div>
 							</div>
@@ -185,16 +192,17 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 						fill(true);
 					});
 
-					$("#fillVariantOptionsModal .fill_empty").addEventListener("click", () => {
-						fill(false);
-					});
+					// $("#fillVariantOptionsModal .fill_empty").addEventListener("click", () => {
+					// 	fill(false);
+					// });
 				}
 				let fill_options_html = "";
 				comp._data.features.forEach((fea) => {
 					const feature = product_features.find((f) => f.product_feature_id === fea.product_feature_id);
+					const options = product_feature_options.filter((p) => p.product_feature_id === fea.product_feature_id);
 					if (feature) {
 						fill_options_html += html`
-							<div class="checkbox_area">
+							<div class="checkbox_area" data-tooltip="${options.map((opt) => opt.value).join(", ")}">
 								<p-checkbox data-value="${feature.product_feature_id}"></p-checkbox>
 								<span>${feature.name}</span>
 							</div>

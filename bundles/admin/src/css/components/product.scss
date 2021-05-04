@@ -16,9 +16,15 @@ product-comp {
 		margin-top: 5px;
 	}
 
+	.node_selected_options {
+		margin-left: 10px;
+	}
+
 	.select_options_wrapper {
 		& {
 			position: relative;
+			width: 28px;
+			display: inline-block;
 		}
 		& .btn {
 			position: absolute;
@@ -78,6 +84,19 @@ product-comp {
 			box-shadow: 0 0 8px 0 #0002;
 		}
 	}
+
+	// body.no_touch & product_variant-comp:not(:hover) {
+	// 	.btn {
+	// 		opacity: 0.2;
+	// 	}
+	// 	.node_select_options {
+	// 		opacity: 0;
+	// 	}
+	// 	.field {
+	// 		background-color: transparent;
+	// 		border-color: transparent;
+	// 	}
+	// }
 }
 
 .injectable_header {
