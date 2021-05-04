@@ -713,7 +713,7 @@ function ProductComp(comp, parent, data = undefined) {
 							<span class="semi_bold">Produkt standardowy</span>
 						</div>
 					</div>
-					<div class="checkbox_area" data-tooltip="Usługa, rezerwacja, do pobrania">
+					<div class="checkbox_area" data-tooltip="Np. usługa, rezerwacja, plik do pobrania">
 						<div>
 							<p-checkbox data-value="virtual"></p-checkbox>
 							<span class="semi_bold">Produkt wirtualny</span>
@@ -834,14 +834,14 @@ function ProductComp(comp, parent, data = undefined) {
 			>
 				Dodaj brakujące produkty (<span html="{${data.missing_products_variants.length}}"></span>)</button
 			><button
-				class="btn error_light mr1"
+				class="btn {${data.unnecessary_product_ids.length > 0}?error_light:subtle} mr1"
 				data-node="{${comp._nodes.remove_products_btn}}"
 				disabled="{${data.missing_products_variants.length > 0}}"
 				data-tooltip="{${data.unnecessary_product_ids.length === 0 ? "Wszystko się zgadza!" : "Pamiętaj o przepisaniu istotnych danych"}}"
 			>
 				Usuń niepotrzebne produkty (<span html="{${data.unnecessary_product_ids.length}}"></span>)</button
 			><button
-				class="btn error_light"
+				class="btn subtle"
 				data-node="{${comp._nodes.remove_all_products_btn}}"
 				disabled="{${data.products_dt.dataset.length === 0}}"
 			>

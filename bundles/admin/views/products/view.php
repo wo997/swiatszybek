@@ -7,6 +7,11 @@
 
 <script>
     <?= preloadProductCategories() ?>
+    <?php if (isset($_GET["dodaj"])) { ?>
+        domload(() => {
+            showAddProductModal();
+        })
+    <?php } ?>
 </script>
 
 <?php startSection("body_content"); ?>
@@ -29,7 +34,7 @@
         </div>
     </div>
 
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt" class="btn primary" onclick="showAddProductModal({source:this});return false;"> Dodaj produkt <i class="fas fa-plus"></i> </a>
+    <button class="btn primary" onclick="showAddProductModal({source:this});"> Dodaj produkt <i class="fas fa-plus"></i> </button>
 </div>
 
 <div class="products_view_header_under">

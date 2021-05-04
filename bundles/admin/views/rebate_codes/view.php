@@ -6,12 +6,10 @@
 <title>Kody rabatowe</title>
 
 <script>
-    <?php if (isset($_GET["dodaj"])) { ?>
-        // domload(() => {
-        //     setTimeout(() => {
-        //         $(".edit_rebate_code").click();
-        //     })
-        // })
+    <?php if (isset($_GET["utworz"])) { ?>
+        domload(() => {
+            getRebateCodeModal()._show(-1);
+        })
     <?php } ?>
 </script>
 

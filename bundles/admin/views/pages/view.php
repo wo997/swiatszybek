@@ -9,6 +9,11 @@
 <script>
     <?= preloadProductCategories() ?>
     <?= preloadGeneralProducts() ?>
+    <?php if (isset($_GET["utworz"])) { ?>
+        domload(() => {
+            getAddPageModal()._show();
+        })
+    <?php } ?>
 </script>
 
 <?php startSection("body_content"); ?>
