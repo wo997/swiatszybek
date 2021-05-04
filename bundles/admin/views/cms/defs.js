@@ -11,11 +11,11 @@
  * settings?: object
  * module_name?: string
  * module_children?: vDomNode[]
- * template_hook_name?: string
+ * template_hook_id?: string
  * }} vDomNode
  *
  * styles is an array "df" "bg" "sm" ... and then another array of fontSize paddingTop ...
- * template_hook_name is used to place a v_node in a template or module
+ * template_hook_id is used to place a v_node in a template or module
  */
 
 /**

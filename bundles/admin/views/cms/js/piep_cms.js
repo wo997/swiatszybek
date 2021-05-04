@@ -746,7 +746,7 @@ class PiepCMS {
 				icon: html`<i class="fas fa-anchor"></i>`,
 				label: html`Sekcja szablonu`,
 				v_node: {
-					tag: "div",
+					tag: "section",
 					id: -1,
 					styles: {},
 					classes: [],
@@ -1642,7 +1642,9 @@ class PiepCMS {
 
 				let display_name = "";
 
-				if (v_node.module_name) {
+				if (v_node.template_hook_id !== undefined) {
+					display_name = `Sekcja: ${v_node.template_hook_id}`;
+				} else if (v_node.module_name) {
 					const blc_to_add = this.blcs_to_add.find((b) => b.id === v_node.module_name);
 					if (blc_to_add) {
 						display_name = blc_to_add.label;
@@ -1682,16 +1684,21 @@ class PiepCMS {
 					body += sub_content_html;
 					inspector_tree_html += sub_inspector_tree_html;
 				}
+
+				if (!v_node.settings) {
+					v_node.settings = {};
+				}
+
 				if (v_node.module_name === "raw_html") {
 					body = html`<div class="empty_module">Pusty blok HTML</div>`;
-					if (v_node.settings && v_node.settings.html_code) {
+					if (v_node.settings.html_code) {
 						body = v_node.settings.html_code;
 					}
 				}
 				if (v_node.module_name === "google_map") {
 					body = html`<div class="empty_module"">Mapa google</div>`;
 
-					if (v_node.settings && v_node.settings.google_map_embed_code) {
+					if (v_node.settings.google_map_embed_code) {
 						/** @type {string} */
 						const google_map_embed_code = v_node.settings.google_map_embed_code;
 
@@ -1706,11 +1713,10 @@ class PiepCMS {
 					body = html`<div class="empty_module">LOGO Menu Menu Menu Menu Menu Menu Menu Menu</div>`;
 				}
 				if (v_node.module_name === "template_hook") {
-					let template_hook_name = "BRAK NAZWY";
-					if (v_node.settings && v_node.settings.template_hook_name) {
-						template_hook_name = v_node.settings.template_hook_name;
-					}
-					body = html`<div class="empty_module">Sekcja szablonu: ${template_hook_name}</div>`;
+					let template_hook_html = "";
+					template_hook_html += "Sekcja szablonu: " + def(v_node.settings.template_hook_name, "BRAK NAZWY");
+					template_hook_html += "<br>id: " + def(v_node.settings.template_hook_id, "BRAK KLUCZA");
+					body = html`<div class="empty_module">${template_hook_html}</div>`;
 				}
 
 				let add_to_body = true;

@@ -127,8 +127,15 @@ domload(() => {
 		 */
 		const traverseVDom = (v_nodes) => {
 			for (const v_node of v_nodes) {
-				if (v_node.module_name === "template_hook" && v_node.settings && v_node.settings.template_hook_name) {
-					console.log(v_node.settings.template_hook_name);
+				if (v_node.module_name === "template_hook" && v_node.settings && v_node.settings.template_hook_id) {
+					v_node.template_hook_id = v_node.settings.template_hook_id;
+					delete v_node.module_name;
+					v_node.classes.push("vertical_container", "template_hook_root");
+					v_node.children = [];
+					const module_template_hook_index = v_node.classes.indexOf("module_template_hook");
+					if (module_template_hook_index !== -1) {
+						v_node.classes.splice(module_template_hook_index, 1);
+					}
 				}
 				if (v_node.children) {
 					traverseVDom(v_node.children);
