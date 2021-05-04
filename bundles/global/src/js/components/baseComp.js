@@ -205,6 +205,9 @@ function createComp(node, parent_comp, data, options) {
 		// reactive classes and maybe even more
 		directCompNodes(node).forEach((child) => {
 			let out = child.className;
+			if (!out.match) {
+				return;
+			}
 			const matches_c = out.match(/\{\{.*?\}\?.*?\}/gm);
 			if (matches_c) {
 				for (const match of matches_c) {

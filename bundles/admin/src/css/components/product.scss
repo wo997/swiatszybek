@@ -85,6 +85,10 @@ product-comp {
 		}
 	}
 
+	.bind_images > .list_row {
+		background: #fafafa;
+	}
+
 	// body.no_touch & product_variant-comp:not(:hover) {
 	// 	.btn {
 	// 		opacity: 0.2;

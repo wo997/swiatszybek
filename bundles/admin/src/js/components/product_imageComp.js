@@ -74,15 +74,13 @@ function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 		template: html`
 			<image-picker data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-picker>
 
-			<div style="margin: 0 10px">
-				<div class="select_options_wrapper" style="width: 80px;">
-					<select class="field small" data-node="{${comp._nodes.select_options}}"></select>
-					<button class="btn primary small">Cechy <i class="fas fa-plus"></i></button>
-				</div>
-			</div>
 			<div data-node="{${comp._nodes.selected_options}}"></div>
 
-			<div style="margin-left:auto">
+			<div style="margin-left:auto;flex-shrink: 0;">
+				<div class="select_options_wrapper" data-tooltip="Powiąż zdjęcie z cechami, by klient zobaczył dokładnie to czego szuka">
+					<select class="field small blank" data-node="{${comp._nodes.select_options}}"></select>
+					<button class="btn primary small"><i class="fas fa-plus"></i></button>
+				</div>
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 		`,

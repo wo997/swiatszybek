@@ -101,7 +101,7 @@ function Product_VariantOptionComp(
 
 			<div data-node="{${comp._nodes.selected_options}}"></div>
 
-			<div style="margin-left:auto">
+			<div style="margin-left:auto;flex-shrink: 0;">
 				<div
 					class="select_options_wrapper"
 					data-tooltip="Powiąż wariant z cechami, by umożliwić klientom dokładniejsze wyszukiwanie produktów"

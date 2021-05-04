@@ -34,11 +34,7 @@
 	width: 179px;
 }
 
-table img {
-	display: block;
-}
-
-.user_info {
+/* .user_info {
 	background: #fafafa;
 	padding: 10px;
 	border-radius: 4px;
@@ -46,4 +42,4 @@ table img {
 	box-shadow: 0 1px 4px 0 #0003;
 	font-weight: var(--semi_bold);
 	display: inline-block;
-}
+} */
