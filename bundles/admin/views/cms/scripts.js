@@ -106,7 +106,6 @@ domload(() => {
 					}
 
 					// now glue these, but as u can see the template_hook_id isn't passed by default, just for the last layer
-					//console
 					const append_v_node = append_v_dom.find(
 						(append_v_node) => append_v_node.template_hook_id === base_v_node.settings.template_hook_id
 					);
