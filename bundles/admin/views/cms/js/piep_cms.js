@@ -2875,7 +2875,7 @@ class PiepCMS {
 				inside = false;
 			}
 
-			if (inside && near_v_node.template_hook_id === undefined) {
+			if (inside && near_v_node.module_name === "template_hook") {
 				inside = false;
 			}
 

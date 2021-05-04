@@ -180,6 +180,8 @@ function ListComp(comp, parent, data = []) {
 						directComps(child).forEach((dc) => {
 							const constructor = compTitleCase(dc.tagName.toLocaleLowerCase());
 							if (window[constructor]) {
+								// TODO: add pass_list_data to row_data XD,
+								// then Product_VariantOptionComp will work better without unnecessary checks
 								// @ts-ignore
 								window[constructor](dc, comp, row_data);
 							} else {

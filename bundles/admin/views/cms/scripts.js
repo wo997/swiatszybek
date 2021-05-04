@@ -6,52 +6,6 @@ let piep_cms;
 domload(() => {
 	piep_cms = new PiepCMS($(".piep_editor"));
 
-	$(".piep_editor_header .save").addEventListener("click", () => {
-		// const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
-
-		// if (errors.length > 0) {
-		// 	return;
-		// }
-
-		if (page_data) {
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "/page/save",
-				params: {
-					page: {
-						page_id: page_data.page_id,
-						v_dom_json: JSON.stringify(piep_cms.v_dom),
-					},
-				},
-				success: (res) => {
-					page_data = res;
-
-					showNotification("Zapisano stronę", {
-						one_line: true,
-						type: "success",
-					});
-				},
-			});
-		} else if (template_data) {
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "/template/save",
-				params: {
-					template: {
-						template_id: template_data.template_id,
-						v_dom_json: JSON.stringify(piep_cms.v_dom),
-					},
-				},
-				success: (res) => {
-					template_data = res;
-
-					showNotification("Zapisano szablon", {
-						one_line: true,
-						type: "success",
-					});
-				},
-			});
-		}
-	});
-
 	let breadcrumbs = "";
 	let preview_url = "/";
 
@@ -98,6 +52,7 @@ domload(() => {
 		previewUrl(preview_url);
 	});
 
+	// IMPORT
 	let v_dom_json;
 
 	if (page_data) {
@@ -151,9 +106,10 @@ domload(() => {
 					}
 
 					// now glue these, but as u can see the template_hook_id isn't passed by default, just for the last layer
-					const append_v_node = append_v_dom.find((append_v_node) => {
-						append_v_node.template_hook_id === base_v_node.settings.template_hook_id;
-					});
+					//console
+					const append_v_node = append_v_dom.find(
+						(append_v_node) => append_v_node.template_hook_id === base_v_node.settings.template_hook_id
+					);
 
 					if (append_v_node) {
 						// copy just the children, styling (like padding) etc is allowed only in the base template
@@ -166,8 +122,7 @@ domload(() => {
 					if (is_top_layer) {
 						base_v_node.template_hook_id = base_v_node.settings.template_hook_id;
 					}
-				}
-				if (base_v_node.children) {
+				} else if (base_v_node.children) {
 					traverseVDom(base_v_node.children);
 				}
 
@@ -181,4 +136,77 @@ domload(() => {
 	const full_v_dom = all_v_doms[0];
 
 	piep_cms.import(full_v_dom);
+
+	$(".piep_editor_header .save").addEventListener("click", () => {
+		// const errors = validateInputs(directCompNodes(comp, "[data-validate]"));
+
+		// if (errors.length > 0) {
+		// 	return;
+		// }
+
+		let save_v_dom;
+
+		if (all_v_doms.length > 1) {
+			// a template has been used
+			save_v_dom = [];
+
+			/**
+			 * @param {vDomNode[]} v_nodes
+			 */
+			const traverseVDom = (v_nodes) => {
+				for (const v_node of v_nodes) {
+					if (v_node.template_hook_id) {
+						save_v_dom.push(v_node);
+					} else if (v_node.children) {
+						traverseVDom(v_node.children);
+					}
+				}
+			};
+
+			traverseVDom(piep_cms.v_dom);
+		} else {
+			// plain page / template
+			save_v_dom = piep_cms.v_dom;
+		}
+
+		const save_v_dom_json = JSON.stringify(save_v_dom);
+
+		if (page_data) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/page/save",
+				params: {
+					page: {
+						page_id: page_data.page_id,
+						v_dom_json: save_v_dom_json,
+					},
+				},
+				success: (res) => {
+					page_data = res;
+
+					showNotification("Zapisano stronę", {
+						one_line: true,
+						type: "success",
+					});
+				},
+			});
+		} else if (template_data) {
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/template/save",
+				params: {
+					template: {
+						template_id: template_data.template_id,
+						v_dom_json: save_v_dom_json,
+					},
+				},
+				success: (res) => {
+					template_data = res;
+
+					showNotification("Zapisano szablon", {
+						one_line: true,
+						type: "success",
+					});
+				},
+			});
+		}
+	});
 });

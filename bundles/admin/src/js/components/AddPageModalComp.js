@@ -10,6 +10,7 @@
  * general_product_id?: string
  * select_product_category?: SelectableCompData
  * select_general_product?: SelectableCompData
+ * select_template?: SelectableCompData
  * }} AddPageModalCompData
  *
  * @typedef {{
@@ -79,6 +80,19 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			},
 			dataset: general_products ? general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })) : [],
 			parent_variable: "general_product_id",
+		};
+	}
+
+	if (data.select_template === undefined) {
+		data.select_template = {
+			options: {
+				single: true,
+			},
+			dataset: [
+				{ value: "-1", label: "Brak - Pusta strona" },
+				...templates.map((t) => ({ value: t.template_id.toString(), label: t.name })),
+			],
+			parent_variable: "template_id",
 		};
 	}
 
@@ -152,6 +166,9 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<div class="label">Kategoria produktów</div>
 					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
+
+				<div class="label">Szablon nadrzędny</div>
+				<selectable-comp data-bind="{${data.select_template}}" data-validate=""></selectable-comp>
 			</div>
 		`,
 		ready: () => {
@@ -173,6 +190,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 				} else {
 					page.link_what_id = data.link_what_id;
 				}
+
+				page.template_id = data.template_id;
 
 				showLoader();
 				xhr({

@@ -74,7 +74,7 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Typ strony</div>
+				<div class="label first">Nazwa szablonu</div>
 				<input class="field" data-bind="{${data.name}}" />
 
 				<div class="label">Typ strony</div>

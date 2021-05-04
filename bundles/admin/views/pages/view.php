@@ -9,6 +9,7 @@
 <script>
     <?= preloadProductCategories() ?>
     <?= preloadGeneralProducts() ?>
+    <?= preloadTemplates() ?>
     <?php if (isset($_GET["utworz"])) { ?>
         domload(() => {
             getAddPageModal()._show();
