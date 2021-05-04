@@ -64,7 +64,12 @@ class Files
 
         $name_counter = 0;
 
-        $base_path = $file_type == "image" ? UPLOADS_PLAIN_PATH : UPLOADS_VIDEOS_PATH;
+        $base_path = ""; // $file_type == "image" ? UPLOADS_PLAIN_PATH : UPLOADS_VIDEOS_PATH;
+        if ($file_type == "image") {
+            $base_path = UPLOADS_PLAIN_PATH;
+        } else if ($file_type == "video") {
+            $base_path = UPLOADS_VIDEOS_PATH;
+        }
 
         $name_counter = DB::fetchVal("SELECT MAX(name_counter) FROM file WHERE name = ?", [$name]);
         $name_counter = $name_counter ? $name_counter + 1 : 1;
@@ -83,7 +88,7 @@ class Files
         ]);
 
         //if ($file_type == "image") {
-        if (in_array(self::$minify_extensions, $file_ext)) {
+        if (in_array($file_ext, self::$minify_extensions)) {
             self::processImage($file_path);
         }
 
