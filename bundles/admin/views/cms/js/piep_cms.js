@@ -15,6 +15,8 @@ class PiepCMS {
 		/** @type {vDomNode[][]} */
 		this.v_dom_history = [];
 
+		this.max_vid_inside = 0;
+
 		this.initNodes();
 		this.initConsts();
 
@@ -1507,12 +1509,10 @@ class PiepCMS {
 	}
 
 	getNewBlcId() {
-		let max = 0;
+		let max = this.max_vid_inside;
 		const traversePiepHtml = (nodes) => {
 			for (const node of nodes) {
-				if (node.id > max) {
-					max = node.id;
-				}
+				max = Math.max(max, node.id);
 				if (node.children) {
 					traversePiepHtml(node.children);
 				}

@@ -61,6 +61,8 @@ domload(() => {
 
 	if (template_data) {
 		v_dom_json = template_data.v_dom_json;
+
+		piep_cms.max_vid_inside = template_data.max_vid_inside;
 	}
 
 	/** @type {vDomNode[]} */

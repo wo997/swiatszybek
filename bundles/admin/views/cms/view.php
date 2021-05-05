@@ -45,6 +45,22 @@ while ($parent_template_id > 0) {
     }
 }
 
+if ($template_data) {
+    $max_vid_inside = 0;
+    $travTemplates = function ($template_id) use (&$travTemplates, &$max_vid_inside) {
+        $max_vid_from_pages = DB::fetchVal("SELECT MAX(max_vid) FROM page WHERE template_id = $template_id");
+        $max_vid_inside = max($max_vid_inside, $max_vid_from_pages);
+
+        $child_templates_data = DB::fetchArr("SELECT template_id, max_vid FROM template WHERE parent_template_id = $template_id");
+        foreach ($child_templates_data as $child_template_data) {
+            $max_vid_inside = max($max_vid_inside, $child_template_data["max_vid"]);
+            $travTemplates($child_template_data["template_id"]);
+        }
+    };
+    $travTemplates($template_id);
+    $template_data["max_vid_inside"] = $max_vid_inside;
+}
+
 if (!$page_data && !$template_data) {
     Request::redirect(Request::$static_urls["ADMIN"] . "/strony");
 }
