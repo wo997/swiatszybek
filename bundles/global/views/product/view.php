@@ -194,7 +194,7 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
 
     <div class="sticky_product">
         <span class="clamp_lines clamp_2 full_product_name"><?= $full_product_name ?></span>
-        <div class="square_img_wrapper">
+        <div class="img_wrapper">
             <img class="product_img wo997_img">
         </div>
     </div>
