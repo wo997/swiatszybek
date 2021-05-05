@@ -38,6 +38,9 @@ domload(() => {
 
 	const tacz = (ev) => {
 		const target = $(ev.target);
+		if (!target) {
+			return;
+		}
 		const product_img_wrapper = target._parent(".product_img_wrapper");
 		const was_focused_product_img_wrapper = curr_focused_product_img_wrapper;
 		if (product_img_wrapper && product_img_wrapper.offsetWidth > 100) {
@@ -65,8 +68,11 @@ domload(() => {
 
 						image_id = (image_id + 1) % images.length;
 
-						overlay.style.opacity = "1";
+						setTimeout(() => {
+							overlay.style.opacity = "1";
+						});
 						setResponsiveImageUrl(overlay, images[image_id]);
+						lazyLoadImages({ duration: 0 });
 						setTimeout(() => {
 							setResponsiveImageUrl(base_img, images[image_id]);
 							lazyLoadImages({ duration: 0 });
@@ -94,6 +100,7 @@ domload(() => {
 			if (overlay && images.length > 1) {
 				overlay.style.opacity = "1";
 				setResponsiveImageUrl(overlay, images[0]);
+				lazyLoadImages({ duration: 0 });
 				setTimeout(() => {
 					setResponsiveImageUrl(base_img, images[0]);
 					lazyLoadImages({ duration: 0 });
@@ -109,17 +116,21 @@ domload(() => {
 
 	window.addEventListener("mousemove", tacz);
 	window.addEventListener("touchstart", tacz);
+
+	setInterval(() => {
+		tacz({ target: mouse.target });
+	}, 1000);
 });
 
-/**
- *
- * @param {number[]} unit_factors
- * @param {number} double_value
- * @returns
- */
-function getSafeUnitValue(unit_factors, double_value) {
-	const accuracy = 100000;
-	const unit_factor = def(getLast(unit_factors.filter((e) => e < double_value + 0.000001)), unit_factors[0]);
-	const value = Math.round((accuracy * double_value) / unit_factor) / accuracy;
-	return { unit_factor, value };
-}
+// /**
+//  *
+//  * @param {number[]} unit_factors
+//  * @param {number} double_value
+//  * @returns
+//  */
+// function getSafeUnitValue(unit_factors, double_value) {
+// 	const accuracy = 100000;
+// 	const unit_factor = def(getLast(unit_factors.filter((e) => e < double_value + 0.000001)), unit_factors[0]);
+// 	const value = Math.round((accuracy * double_value) / unit_factor) / accuracy;
+// 	return { unit_factor, value };
+// }

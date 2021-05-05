@@ -269,6 +269,8 @@ function getGlobalProductsSearch($url, $options = [])
         }
         $images_json_safe = htmlspecialchars($images_json);
 
+        $features_wrapper = $features_html ? "<div class=\"list smooth_scrollbar\">$features_html</div>" : "";
+
         $html .= "<div class=\"product_block\">
             <a href=\"$link\">
                 <div class=\"product_img_wrapper\" data-images=\"$images_json_safe\">
@@ -286,9 +288,7 @@ function getGlobalProductsSearch($url, $options = [])
                         <span>$product_count</span>
                         <i class=\"fas fa-list-ul\"></i>
                     </div>
-                    <div class=\"list smooth_scrollbar\">
-                        $features_html
-                    </div>
+                    $features_wrapper
                 </div>
             </div>
         </div>";

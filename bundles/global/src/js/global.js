@@ -254,6 +254,7 @@ function setValue(input, value = null, options = {}) {
 		} else if (input.tagName == "IMG") {
 			if (input.classList.contains("wo997_img")) {
 				setResponsiveImageUrl(input, value);
+				delay("lazyLoadImages", 0);
 			} else {
 				// @ts-ignore
 				input.src = value;
