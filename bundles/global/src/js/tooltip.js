@@ -99,7 +99,9 @@ domload(() => {
 
 			tltp.style.left = left + "px";
 			tltp.style.top = top + "px";
-		} else tltp.style.display = "none";
+		} else {
+			tltp.style.display = "none";
+		}
 
 		tooltip.last_target = e;
 	};

@@ -4,6 +4,8 @@ define("SINGLE_HTML_TAGS", ["area", "base", "br", "col", "embed", "hr", "img", "
 
 function traverseVDom($v_dom)
 {
+    global $sections;
+
     $content_html = "";
     $styles_css_responsive = [];
     foreach (Theme::$responsive_breakpoints as $res_name => $width) {
@@ -38,6 +40,19 @@ function traverseVDom($v_dom)
             }
         }
 
+        $module_name = def($v_node, ["module_name"]);
+        if ($module_name === "view_product_images_variants_buy") {
+            $body = $sections["view_product_images_variants_buy"];
+        }
+        if ($module_name === "view_product_comments") {
+            $body = $sections["view_product_comments"];
+        }
+        if ($module_name === "main_menu") {
+            ob_start();
+            include "bundles/global/templates/parts/header/header.php";
+            $body = ob_get_clean();
+        }
+
         $classes_csv = join(" ", $classes);
 
         $content_html .= "<$tag class=\"$classes_csv\"";
@@ -48,7 +63,7 @@ function traverseVDom($v_dom)
         if (in_array($tag, SINGLE_HTML_TAGS)) {
             $content_html .= "/>";
         } else {
-            $content_html .= ">" . $body . "</${tag}>";
+            $content_html .= ">$body</$tag>";
         }
 
         if (isset($v_node["styles"])) {
@@ -109,4 +124,112 @@ function updatePageModificationTime($page_id)
 {
     $page = EntityManager::getEntityById("page", $page_id);
     $page->setProp("modified_at", date("Y-m-d H:i:s"));
+}
+
+function renderPage($page_id, $data = [])
+{
+    global $current_page_data, $sections;
+
+    $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
+
+    $page_release = $page_data["version"];
+
+    $v_dom_json = $page_data["v_dom_json"];
+    $v_dom = def(json_decode($v_dom_json, true), []);
+
+    $parent_template_id = $page_data["template_id"];
+
+    $parent_templates = [];
+    while ($parent_template_id > 0) {
+        $parent_template_data = DB::fetchRow("SELECT template_id, v_dom_json, parent_template_id FROM template WHERE template_id = $parent_template_id");
+        if ($parent_template_data) {
+            array_unshift($parent_templates, $parent_template_data);
+            $parent_template_id = $parent_template_data["parent_template_id"];
+        } else {
+            $parent_template_id = -1;
+        }
+    }
+
+    $all_v_doms = [];
+
+    foreach ($parent_templates as $parent_template) {
+        $parent_template_v_dom = json_decode($parent_template["v_dom_json"], true);
+        $all_v_doms[] = def($parent_template_v_dom, []);
+    }
+
+    $all_v_doms[] = $v_dom;
+
+
+    // glue v_doms from the smallest pieces to the biggest
+    for ($i = count($all_v_doms) - 2; $i >= 0; $i--) {
+        $base_v_dom = &$all_v_doms[$i];
+        $append_v_dom = &$all_v_doms[$i + 1];
+
+        $glueVDom = function (&$base_v_nodes) use (&$glueVDom, &$append_v_dom) {
+            foreach ($base_v_nodes as &$base_v_node) {
+                $template_hook_id = def($base_v_node, ["settings", "template_hook_id"]);
+                if (def($base_v_node, ["module_name"]) === "template_hook" && $template_hook_id) {
+                    unset($base_v_node["module_name"]);
+                    $base_v_node["classes"][] = "vertical_container";
+                    // just remove a class
+                    $module_template_hook_index = array_search("module_template_hook", $base_v_node["classes"]);
+                    if ($module_template_hook_index !== false) {
+                        array_splice($base_v_node["classes"], $module_template_hook_index, 1);
+                    }
+
+                    $avn = null;
+                    // now glue these, but as u can see the template_hook_id isn't passed by default, just for the last layer
+                    foreach ($append_v_dom as $append_v_node) {
+                        if ($append_v_node["template_hook_id"] === $template_hook_id) {
+                            //var_dump($template_hook_id, "<<");
+                            $avn = $append_v_node;
+                            break;
+                        }
+                    }
+
+                    if ($avn) {
+                        // copy just the children, styling (like padding) etc is allowed only in the base template
+                        $base_v_node["children"] = $avn["children"];
+                    } else {
+                        $base_v_node["children"] = [];
+                    }
+                } else if (isset($base_v_node["children"])) {
+                    $children = &$base_v_node["children"];
+                    if ($children) {
+                        $glueVDom($children);
+                    }
+                    unset($children);
+                }
+            }
+            unset($base_v_node);
+        };
+
+        $glueVDom($base_v_dom);
+
+        unset($base_v_dom);
+        unset($append_v_dom);
+    };
+
+    $full_v_dom = $all_v_doms[0];
+
+    $dom_data = traverseVDom($full_v_dom);
+
+?>
+
+    <?php startSection("head_content"); ?>
+
+    <title>Strony test</title>
+
+    <link href="/<?= BUILDS_PATH . "/pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
+
+    <?= def($sections, "head_of_page", ""); ?>
+
+    <?php startSection("body"); ?>
+    <div>
+        <?= $dom_data["content_html"] ?>
+    </div>
+
+    <script src="/<?= BUILDS_PATH . "/pages/js/page_$page_id.js?v=$page_release" ?>"></script>
+
+<?php include "bundles/global/templates/blank.php";
 }

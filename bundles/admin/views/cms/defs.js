@@ -108,5 +108,6 @@
  * icon: string
  * v_node: vDomNode
  * single_usage?: boolean
+ * tooltip?: string
  * }} BlockToAdd
  */

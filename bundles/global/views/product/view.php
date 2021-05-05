@@ -128,7 +128,7 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php startSection("head_of_page"); ?>
 
 <title><?= $full_product_name ?> - LSIT.pl</title>
 
@@ -491,6 +491,9 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 <?php endSection(); ?>
 
+<?php startSection("forget_it"); ?>
+
+
 <?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
     <!-- <div class="right_side_menu">
         <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
@@ -550,9 +553,14 @@ $user_email = $user_data ? $user_data["email"] : "";
     </script> -->
 <?php endif ?>
 
+<?php endSection(); ?>
 <?php //include "bundles/global/templates/default.php"; 
 
 
-var_dump(array_keys($sections));
+$page_data = DB::fetchRow("SELECT page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
+
+renderPage($page_data["page_id"]);
+
+//var_dump(array_keys($sections));
 
 ?>

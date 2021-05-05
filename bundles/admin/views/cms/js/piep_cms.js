@@ -742,6 +742,35 @@ class PiepCMS {
 				},
 			},
 			{
+				id: "view_product_images_variants_buy",
+				icon: html`<i class="fas fa-cube"></i>`,
+				label: html`Produkt`,
+				single_usage: true,
+				tooltip: "(Zdjęcia, wybór wariantów, kup teraz)",
+				v_node: {
+					tag: "div",
+					id: -1,
+					styles: {},
+					classes: [],
+					attrs: {},
+					module_name: "view_product_images_variants_buy",
+				},
+			},
+			{
+				id: "view_product_comments",
+				icon: html`<i class="fas fa-comments"></i>`,
+				label: html`Komentarze produktu`,
+				single_usage: true,
+				v_node: {
+					tag: "div",
+					id: -1,
+					styles: {},
+					classes: [],
+					attrs: {},
+					module_name: "view_product_comments",
+				},
+			},
+			{
 				id: "template_hook",
 				icon: html`<i class="fas fa-anchor"></i>`,
 				label: html`Sekcja szablonu`,
@@ -757,8 +786,9 @@ class PiepCMS {
 		];
 
 		for (const block_to_add of this.blcs_to_add) {
+			const tooltip = block_to_add.tooltip ? `data-tooltip="${block_to_add.tooltip}"` : "";
 			menu_html += html`
-				<div class="btn transparent block_to_add" data-id="${block_to_add.id}">${block_to_add.icon} ${block_to_add.label}</div>
+				<div class="btn transparent block_to_add" data-id="${block_to_add.id}" ${tooltip}>${block_to_add.icon} ${block_to_add.label}</div>
 			`;
 		}
 
@@ -1720,7 +1750,13 @@ class PiepCMS {
 					}
 				}
 				if (v_node.module_name === "main_menu") {
-					body = html`<div class="empty_module">LOGO Menu Menu Menu Menu Menu Menu Menu Menu</div>`;
+					body = html`<div class="empty_module">LOGO, Menu, Wyszukajka itd.</div>`;
+				}
+				if (v_node.module_name === "view_product_images_variants_buy") {
+					body = html`<div class="empty_module">Tutaj będzie produkt ziomuś</div>`;
+				}
+				if (v_node.module_name === "view_product_comments") {
+					body = html`<div class="empty_module">A tutaj komentarze</div>`;
 				}
 				if (v_node.module_name === "template_hook") {
 					let template_hook_html = "";
