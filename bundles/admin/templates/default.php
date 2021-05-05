@@ -66,7 +66,7 @@ endSection();
             <div class="panel_padding actual_content">
                 <?= def($sections, "body_content", ""); ?>
             </div>
-            <div class="footer">Piepsklep <?= date("Y") ?></div>
+            <footer>Piepsklep <?= date("Y") ?></footer>
         </div>
     </div>
 </div>

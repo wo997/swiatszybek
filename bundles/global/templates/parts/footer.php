@@ -1,4 +1,4 @@
-<footer style="padding:10px;text-align:center;background:#111;color:#fff">
+<!-- <footer style="padding:10px;text-align:center;background:#111;color:#fff">
     <?php
     // if (isset($preview_params) && isset($preview_params["page_footer"])) {
     //     $page_footer = $preview_params["page_footer"];
@@ -8,7 +8,7 @@
     // echo getCMSPageHTML($page_footer);
     ?>
     Stopka
-</footer>
+</footer> -->
 
 <div class="offline"><i class="fas fa-exclamation-circle"></i> Brak połączenia z internetem!</div>
 <?php if (DEBUG_MODE) : ?>
@@ -31,7 +31,6 @@ if (isset($JS_files)) {
 }
 
 ?>
-
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <?php

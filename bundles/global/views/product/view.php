@@ -186,256 +186,144 @@ $user_email = $user_data ? $user_data["email"] : "";
     </script>
 <?php endif ?>
 
-<?php startSection("body_content"); ?>
+<?php startSection("view_product_images_variants_buy"); ?>
 
-<?php
-if (true) : /* if ($general_product_data["published"] || User::getCurrent()->priveleges["backend_access"] || $preview_params) :*/
-?>
-
-    <div class="sticky_product">
-        <span class="clamp_lines clamp_2 full_product_name"><?= $full_product_name ?></span>
-        <div class="img_wrapper">
-            <img class="product_img wo997_img">
-        </div>
+<div class="sticky_product">
+    <span class="clamp_lines clamp_2 full_product_name"><?= $full_product_name ?></span>
+    <div class="img_wrapper">
+        <img class="product_img wo997_img">
     </div>
+</div>
 
-    <div class="product_wrapper">
-        <div class="product_imgs">
-            <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
-                <div class="wo997_slides_container">
-                    <div class="wo997_slides_wrapper">
-                        <?php
-                        foreach ($general_product_imgs as $image) {
-                        ?>
-                            <div class="wo997_slide">
-                                <div class="square_img_wrapper">
-                                    <img data-src="<?= $image["img_url"] ?>" class="product_img wo997_img">
-                                </div>
+<div class="product_wrapper">
+    <div class="product_imgs">
+        <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
+            <div class="wo997_slides_container">
+                <div class="wo997_slides_wrapper">
+                    <?php
+                    foreach ($general_product_imgs as $image) {
+                    ?>
+                        <div class="wo997_slide">
+                            <div class="square_img_wrapper">
+                                <img data-src="<?= $image["img_url"] ?>" class="product_img wo997_img">
                             </div>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
-            <div data-slide_width="100px" data-show_next_mobile data-nav_out_from="1000px"></div>
-        </div>
-        <div class="product_offer">
-            <h1 class="h1"><?= $general_product_data["name"] ?></h1>
-
-            <div style="display:none">
-                <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-                <div class="vdo radio_group columns_1">
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="1"></p-checkbox>
-                        Subtelny napis
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="2"></p-checkbox>
-                        Czerwony prostokąt
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="3"></p-checkbox>
-                        Szary prostokąt
-                    </div>
-                    <div class="checkbox_area">
-                        <p-checkbox data-value="4"></p-checkbox>
-                        Brak
-                    </div>
-                </div>
-            </div>
-
-            <div class="variants_container">
-                <?php
-                foreach ($general_product_variants as $general_product_variant) {
-                ?>
-                    <span class="label"><?= $general_product_variant["name"] ?></span>
-                    <div class="variants radio_group boxes number big_boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>">
-                        <?php
-                        foreach ($general_product_variant["options"] as $variant_option) {
-                        ?>
-                            <div class="checkbox_area variant_option">
-                                <div>
-                                    <div class="price_diff_before"></div>
-                                    <div>
-                                        <p-checkbox data-value="<?= $variant_option["product_variant_option_id"] ?>"></p-checkbox>
-                                        <?php
-                                        $color = def($variant_option, ["extra", "color"], "");
-                                        if ($color) {
-                                        ?>
-                                            <div class="color_circle" style="background-color:<?= $color ?>"></div>
-                                        <?php
-                                        }
-                                        ?>
-                                        <?= $variant_option["name"] ?>
-                                    </div>
-                                    <div class="price_diff"></div>
-                                </div>
-                            </div>
-                        <?php
-                        }
-                        ?>
-                    </div>
-                <?php } ?>
-            </div>
-
-            <p style="font-size: 1.6em;" class="label">
-                <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
-            </p>
-
-            <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
-
-            <div class="expand_y hidden animate_hidden case_notify_available">
-                <div style="padding-top:7px">
-                    <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                    <div class="semi_bold selected_product_queue_pretty" style="margin-top:7px"></div>
-                </div>
-            </div>
-
-            <div class="case_can_buy_product" data-tooltip_position="center">
-                <div class="label">Ilość:</div>
-                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
-                    <button class="btn subtle sub_qty">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <div class="spinner_wrapper inline">
-                        <input class="field inline val_qty number" value="1" inputmode="numeric">
-                    </div>
-                    <button class="btn subtle add_qty">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-                <br>
-                <button class="btn fill medium buy_btn main_buy_btn">
-                    Dodaj do koszyka
-                    <div style="display:inline-block;" class="spinner_wrapper inline">
-                        <i class="fas fa-plus"></i>
-                        <div class="spinner overlay white"></div>
-                    </div>
-                </button>
-            </div>
-
-            <div class="case_has_products expand_y hidden animate_hidden">
-                <div>
-                    <div class="label inyourbasket">W Twoim koszyku:</div>
-                    <cart-products-comp class="has_products"></cart-products-comp>
-                    <a class="btn fill medium primary" href="/kup-teraz">
-                        Kup teraz
-                        <i class="fas fa-chevron-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-        <h2>MIEJSCE NA OPIS PRODUKTU</h2>
-
-        <div>
-            <h2>Podobne produkty</h2>
-        </div>
-
-        <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
-            <div style="margin-bottom: 5px;">
-                <span class="label medium bold inline comments_label mr1">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
-                <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                    <button class="btn primary mr1 add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
-                        Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
-                    </button>
-                <?php endif ?>
-                <button class="btn subtle show_filters"> Filtruj <i class="fas fa-search"></i></button>
-            </div>
-
-            <div class="comments_filters expand_y hidden animate_hidden">
-                <div class="coms_container">
-                    <div class="label first">Wyszukaj w komentarzu:</div>
-                    <input class="field inline phrase">
-
-                    <div class="variants_container">
-                        <?= $variants_less_html ?>
-                    </div>
-
-                    <div class="mtf"></div>
-                    <button class="btn primary search_btn">
-                        Pokaż wyniki
-                        <div class="spinner_wrapper inline">
-                            <i class="fas fa-search"></i>
-                            <div class="spinner overlay white"></div>
                         </div>
-                    </button>
-                    <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
+                    <?php
+                    }
+                    ?>
                 </div>
             </div>
+        </div>
+        <div data-slide_width="100px" data-show_next_mobile data-nav_out_from="1000px"></div>
+    </div>
+    <div class="product_offer">
+        <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
-            <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
+        <div style="display:none">
+            <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
+            <div class="vdo radio_group columns_1">
+                <div class="checkbox_area">
+                    <p-checkbox data-value="1"></p-checkbox>
+                    Subtelny napis
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="2"></p-checkbox>
+                    Czerwony prostokąt
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="3"></p-checkbox>
+                    Szary prostokąt
+                </div>
+                <div class="checkbox_area">
+                    <p-checkbox data-value="4"></p-checkbox>
+                    Brak
+                </div>
+            </div>
+        </div>
+
+        <div class="variants_container">
+            <?php
+            foreach ($general_product_variants as $general_product_variant) {
             ?>
-            <list-comp class="comments striped" data-primary="comment_id">
-                <comment-comp></comment-comp>
-            </list-comp>
-            <pagination-comp class="comments"></pagination-comp>
-
-            <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                <div class="label medium">Podziel się swoją opinią</div>
-                <button class="btn primary" onclick="showModal(`addComment`,{source:this});">
-                    Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
-                </button>
-            <?php else : ?>
-                <div class="label medium">Aby móc dodać komentarz musisz się zalogować</div>
-                <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
-                    Zaloguj się <i class="fas fa-user"></i>
-                </button>
-            <?php endif ?>
-        </div>
-    </div>
-
-<?php else : ?>
-
-    <div style="text-align:center">
-        <h2>Produkt jest niedostępny!</h2>
-        <p style="font-size:18px">Wróć na <a href="/" class="primary-link">stronę główną</a></p>
-    </div>
-
-<?php endif ?>
-
-<?php if (User::getCurrent()->isLoggedIn()) : ?>
-    <div id="addComment" data-modal data-dismissable>
-        <div class="modal_body" style="width: 600px;">
-            <button class="close_modal_btn"><i class="fas fa-times"></i></button>
-
-            <h3 class="modal_header">
-                <span class="desktop">Napisz komentarz</span>
-                <span class="mobile">Komentarz</span>
-            </h3>
-
-            <div class="scroll_panel scroll_shadow panel_padding">
-                <div>
-                    <div class="variants_container">
-                        <?= $variants_less_html ?>
-                    </div>
-
-                    <div class="label">
-                        Ocena
-                    </div>
-
-                    <div class="rating_picker"></div>
-
-                    <label>
-                        <div class="label">Pseudonim</div>
-                        <input class="field nickname" value="<?= htmlspecialchars($user_nickname) ?>">
-                    </label>
-
-                    <label>
-                        <div class="label">Komentarz</div>
-                        <textarea class="field comment scroll_panel" style="height:150px;min-height:80px;"></textarea>
-                    </label>
-
-                    <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>
-
+                <span class="label"><?= $general_product_variant["name"] ?></span>
+                <div class="variants radio_group boxes number big_boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>' data-product_feature_id="<?= $general_product_variant["product_feature_id"] ?>">
+                    <?php
+                    foreach ($general_product_variant["options"] as $variant_option) {
+                    ?>
+                        <div class="checkbox_area variant_option">
+                            <div>
+                                <div class="price_diff_before"></div>
+                                <div>
+                                    <p-checkbox data-value="<?= $variant_option["product_variant_option_id"] ?>"></p-checkbox>
+                                    <?php
+                                    $color = def($variant_option, ["extra", "color"], "");
+                                    if ($color) {
+                                    ?>
+                                        <div class="color_circle" style="background-color:<?= $color ?>"></div>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?= $variant_option["name"] ?>
+                                </div>
+                                <div class="price_diff"></div>
+                            </div>
+                        </div>
+                    <?php
+                    }
+                    ?>
                 </div>
+            <?php } ?>
+        </div>
+
+        <p style="font-size: 1.6em;" class="label">
+            <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
+        </p>
+
+        <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
+
+        <div class="expand_y hidden animate_hidden case_notify_available">
+            <div style="padding-top:7px">
+                <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
+                <div class="semi_bold selected_product_queue_pretty" style="margin-top:7px"></div>
+            </div>
+        </div>
+
+        <div class="case_can_buy_product" data-tooltip_position="center">
+            <div class="label">Ilość:</div>
+            <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
+                <button class="btn subtle sub_qty">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <div class="spinner_wrapper inline">
+                    <input class="field inline val_qty number" value="1" inputmode="numeric">
+                </div>
+                <button class="btn subtle add_qty">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <br>
+            <button class="btn fill medium buy_btn main_buy_btn">
+                Dodaj do koszyka
+                <div style="display:inline-block;" class="spinner_wrapper inline">
+                    <i class="fas fa-plus"></i>
+                    <div class="spinner overlay white"></div>
+                </div>
+            </button>
+        </div>
+
+        <div class="case_has_products expand_y hidden animate_hidden">
+            <div>
+                <div class="label inyourbasket">W Twoim koszyku:</div>
+                <cart-products-comp class="has_products"></cart-products-comp>
+                <a class="btn fill medium primary" href="/kup-teraz">
+                    Kup teraz
+                    <i class="fas fa-chevron-right"></i>
+                </a>
             </div>
         </div>
     </div>
-<?php endif ?>
+</div>
+
 
 <div id="notifyProductAvailable" data-modal data-dismissable>
     <div class="modal_body" style="width: 480px;">
@@ -496,9 +384,115 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
     </div>
 </div>
 
+<?php //startSection("view_product_similar_products"); 
+?>
+
+<!-- <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
+    <div>
+        <h2>Podobne produkty</h2>
+    </div>
+</div> -->
+
+<?php startSection("view_product_comments"); ?>
+
+<div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
+    <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
+        <div style="margin-bottom: 5px;">
+            <span class="label medium bold inline comments_label mr1">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
+            <?php if (User::getCurrent()->isLoggedIn()) : ?>
+                <button class="btn primary mr1 add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
+                    Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+                </button>
+            <?php endif ?>
+            <button class="btn subtle show_filters"> Filtruj <i class="fas fa-search"></i></button>
+        </div>
+
+        <div class="comments_filters expand_y hidden animate_hidden">
+            <div class="coms_container">
+                <div class="label first">Wyszukaj w komentarzu:</div>
+                <input class="field inline phrase">
+
+                <div class="variants_container">
+                    <?= $variants_less_html ?>
+                </div>
+
+                <div class="mtf"></div>
+                <button class="btn primary search_btn">
+                    Pokaż wyniki
+                    <div class="spinner_wrapper inline">
+                        <i class="fas fa-search"></i>
+                        <div class="spinner overlay white"></div>
+                    </div>
+                </button>
+                <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
+            </div>
+        </div>
+
+        <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
+        ?>
+        <list-comp class="comments striped" data-primary="comment_id">
+            <comment-comp></comment-comp>
+        </list-comp>
+        <pagination-comp class="comments"></pagination-comp>
+
+        <?php if (User::getCurrent()->isLoggedIn()) : ?>
+            <div class="label medium">Podziel się swoją opinią</div>
+            <button class="btn primary" onclick="showModal(`addComment`,{source:this});">
+                Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+            </button>
+        <?php else : ?>
+            <div class="label medium">Aby móc dodać komentarz musisz się zalogować</div>
+            <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
+                Zaloguj się <i class="fas fa-user"></i>
+            </button>
+        <?php endif ?>
+    </div>
+</div>
+
+<?php if (User::getCurrent()->isLoggedIn()) : ?>
+    <div id="addComment" data-modal data-dismissable>
+        <div class="modal_body" style="width: 600px;">
+            <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+            <h3 class="modal_header">
+                <span class="desktop">Napisz komentarz</span>
+                <span class="mobile">Komentarz</span>
+            </h3>
+
+            <div class="scroll_panel scroll_shadow panel_padding">
+                <div>
+                    <div class="variants_container">
+                        <?= $variants_less_html ?>
+                    </div>
+
+                    <div class="label">
+                        Ocena
+                    </div>
+
+                    <div class="rating_picker"></div>
+
+                    <label>
+                        <div class="label">Pseudonim</div>
+                        <input class="field nickname" value="<?= htmlspecialchars($user_nickname) ?>">
+                    </label>
+
+                    <label>
+                        <div class="label">Komentarz</div>
+                        <textarea class="field comment scroll_panel" style="height:150px;min-height:80px;"></textarea>
+                    </label>
+
+                    <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif ?>
+
+<?php endSection(); ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
-    <div class="right_side_menu">
+    <!-- <div class="right_side_menu">
         <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
             <i class="fas fa-chevron-right"></i>
             <i class="fas fa-cog"></i>
@@ -553,7 +547,12 @@ if (true) : /* if ($general_product_data["published"] || User::getCurrent()->pri
                 toggleRightSideMenu();
             })
         <?php endif ?>
-    </script>
+    </script> -->
 <?php endif ?>
 
-<?php include "bundles/global/templates/default.php"; ?>
+<?php //include "bundles/global/templates/default.php"; 
+
+
+var_dump(array_keys($sections));
+
+?>
