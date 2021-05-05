@@ -125,7 +125,7 @@ function getPageSeoDataModal() {
 					<div class="custom_toolbar">
 						<span class="title">
 							<span class="medium"> Dane SEO strony </span>
-							<div class="info_hover">
+							<div class="hover_info">
 								Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google). Na podstawie tych danych klient podejmie
 								decyzję czy chce odwiedzić stronę sklepu czy przejść dalej.
 							</div>

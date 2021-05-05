@@ -688,13 +688,11 @@ function ProductComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="injectable_header">
-				<p-trait data-trait="history"></p-trait>
-
-				<button class="btn primary" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otwórz produkt w nowej karcie">
-					Pokaż <i class="fas fa-external-link-square-alt"></i>
-				</button>
-				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
-				<button class="btn subtle" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
+				<p-trait data-trait="history"></p-trait
+				><button class="btn primary ml1" data-node="{${comp._nodes.open_btn}}" data-tooltip="Otwórz produkt w nowej karcie">
+					Pokaż <i class="fas fa-external-link-square-alt"></i></button
+				><button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button
+				><button class="btn subtle ml1" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
 			</div>
 
 			<div style="max-width:700px">
