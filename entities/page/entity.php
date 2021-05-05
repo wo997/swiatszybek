@@ -13,5 +13,11 @@ EntityManager::register("page", [
         "page_type" => ["type" => "string"],
         "link_what_id" => ["type" => "number"],
         "template_id" => ["type" => "number"],
+        //"v_dom_ids_csv" => ["type" => "string"],
+        "max_vid" => ["type" => "string"],
     ],
 ]);
+
+EventListener::register("before_save_page_entity", function ($params) {
+    updatePageableMetadata("page", $params["obj"]->getId());
+});

@@ -11,5 +11,7 @@ DB::createTable(
         ["name" => "page_type", "type" => "VARCHAR(255)", "index" => "index", "null" => true],
         ["name" => "parent_template_id", "type" => "INT", "index" => "index"],
         ["name" => "pos", "type" => "INT", "index" => "index"],
+        //["name" => "v_dom_ids_csv", "type" => "TEXT"],
+        ["name" => "max_vid", "type" => "TEXT"],
     ]
 );

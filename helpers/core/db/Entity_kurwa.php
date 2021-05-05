@@ -383,6 +383,10 @@ class Entity
 
     public function setProps($arr, $only_new = false)
     {
+        if (!is_array($arr)) {
+            // something silly just happened
+            return;
+        }
         foreach ($arr as $prop_name => $val) {
             // if ($this->getProp($prop_name !== $val) {
             //     var_dump();

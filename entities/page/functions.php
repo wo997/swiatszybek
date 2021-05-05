@@ -120,16 +120,53 @@ function buildPage($page_id)
     }
 }
 
-function updatePageModificationTime($page_id)
+function updatePageableModificationTime($entity_name, $id)
 {
-    $page = EntityManager::getEntityById("page", $page_id);
+    $page = EntityManager::getEntity($entity_name, $id);
     $page->setProp("modified_at", date("Y-m-d H:i:s"));
 }
+
+function updatePageableMetadata($entity_name, $id)
+{
+    $page = EntityManager::getEntityById($entity_name, $id);
+    $v_dom_json = $page->getProp("v_dom_json");
+    $v_dom = json_decode($v_dom_json, true);
+
+    //$v_dom_ids = [];
+    $max_vid = 0;
+
+    $travVDom = function (&$base_v_nodes) use (&$travVDom, &$max_vid) {
+        foreach ($base_v_nodes as &$base_v_node) {
+            $vid = def($base_v_node, ["id"]);
+            //$v_dom_ids[] = $vid;
+            if ($vid > $max_vid) {
+                $max_vid = $vid;
+            }
+            if (isset($base_v_node["children"])) {
+                $children = &$base_v_node["children"];
+                if ($children) {
+                    $travVDom($children);
+                }
+                unset($children);
+            }
+        }
+        unset($base_v_node);
+    };
+
+    if ($v_dom) {
+        $travVDom($v_dom);
+    }
+
+    //$page->setProp("v_dom_ids_csv", join(",", $v_dom_ids));
+    $page->setProp("max_vid", $max_vid);
+}
+
 
 function renderPage($page_id, $data = [])
 {
     global $current_page_data, $sections;
 
+    // current_page_data will come from page ;)
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
     $page_release = $page_data["version"];

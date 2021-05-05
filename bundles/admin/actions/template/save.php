@@ -4,7 +4,7 @@ try {
     DB::beginTransaction();
     $template = EntityManager::getEntity("template", json_decode($_POST["template"], true));
     $template_id = $template->getId();
-    updateTemplateModificationTime($template_id);
+    updatePageableModificationTime("template", $template_id);
     EntityManager::saveAll();
     DB::commitTransaction();
     Request::jsonResponse($template->getSimpleProps());

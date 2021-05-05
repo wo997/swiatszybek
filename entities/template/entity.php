@@ -9,5 +9,11 @@ EntityManager::register("template", [
         "modified_at" => ["type" => "string"],
         "parent_template_id" => ["type" => "number"],
         "pos" => ["type" => "number"],
+        //"v_dom_ids_csv" => ["type" => "string"],
+        "max_vid" => ["type" => "string"],
     ],
 ]);
+
+EventListener::register("before_save_template_entity", function ($params) {
+    updatePageableMetadata("template", $params["obj"]->getId());
+});
