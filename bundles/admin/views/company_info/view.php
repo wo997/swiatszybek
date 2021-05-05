@@ -18,7 +18,7 @@
             Dane firmy
         </div>
     </span>
-    <div>
+    <div class="mla">
         <button class="btn primary save_company_info_btn">Zapisz <i class="fas fa-save"></i></button>
     </div>
 </div>

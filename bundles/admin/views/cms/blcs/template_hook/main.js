@@ -12,7 +12,7 @@
 		menu_html: html`
 			<div class="label">
 				Nazwa sekcji
-				<div class="info_hover">Opisz co pojawi się w sekcji, np.: Opis produktu</div>
+				<div class="hover_info">Opisz co pojawi się w sekcji, np.: Opis produktu</div>
 			</div>
 			<input class="field" data-blc_prop="settings.template_hook_name" />
 		`,
@@ -30,7 +30,7 @@
 		menu_html: html`
 			<div class="label">
 				ID sekcji
-				<div class="info_hover">Unikalny identyfikator, np.: product_description</div>
+				<div class="hover_info">Unikalny identyfikator, np.: product_description</div>
 			</div>
 			<input class="field" data-blc_prop="settings.template_hook_id" />
 		`,

@@ -352,7 +352,7 @@ function ProductFeatureComp(comp, parent, data) {
 
 				<div>
 					<div class="label inline medium">Grupy opcji</div>
-					<div class="info_hover">
+					<div class="hover_info">
 						<i class="fas fa-info-circle"></i> Czym są grupy opcji? Jest to sposób na uporządkowanie danych w systemie dla sprzedawcy oraz
 						klienta. <br />Zamiast tworzyć listę np. 100 modeli telefonów, można podzielić je na grupy - producent A, producent B itd.
 						<br />Klient nie zobaczy już listy 100 modeli, tylko wybierze jednego z 10 producentów, a potem jeden z 10 modeli od wybranego

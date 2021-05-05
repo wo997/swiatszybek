@@ -86,7 +86,7 @@ function FileManagerComp(comp, parent, data = undefined) {
 					let display = "";
 
 					if (image.asset_type == "video") {
-						display = html`<video src="/${image.file_path}" class="ql-video" controls="true" style="width:100%;height:250px;"></video>`;
+						display = html`<video src="/${image.file_path}" style="width:100%;height:250px;"></video>`;
 					} else {
 						display = html`
 							<div class="square_img_wrapper">
@@ -139,12 +139,10 @@ function FileManagerComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title"
-					><span class="medium">Pliki / Zdjęcia</span>
-					<button class="btn primary ml1" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button
-				></span>
+				<span class="title medium">Pliki / Zdjęcia </span>
+				<button class="btn primary ml1" data-node="{${comp._nodes.upload_btn}}">Prześlij pliki <i class="fas fa-plus"></i></button>
 
-				<div class="float_icon">
+				<div class="float_icon mla">
 					<input placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" />
 					<i class="fas fa-search"></i>
 				</div>

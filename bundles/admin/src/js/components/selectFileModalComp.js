@@ -56,7 +56,7 @@ function SelectFileModalComp(comp, parent, data = undefined) {
 				._child(".toolbar_wrapper .custom_toolbar")
 				.insertAdjacentHTML(
 					"beforeend",
-					html` <button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `
+					html` <button class="btn subtle ml1" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button> `
 				);
 		},
 	});

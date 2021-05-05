@@ -45,11 +45,11 @@ function ProductCategoriesModalComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="custom_toolbar">
 				<span class="title medium">Edycja kategorii produktów</span>
-				<div class="history_btns_wrapper"></div>
-				<button class="btn subtle" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
+				<div class="history_btns_wrapper mla"></div>
+				<button class="btn subtle ml1" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
 					Zamknij <i class="fas fa-times"></i>
 				</button>
-				<div class="save_btn_wrapper"></div>
+				<div class="save_btn_wrapper ml1"></div>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<product-categories-comp data-node="{${comp._nodes.categories}}" data-bind="{${data.categories}}"></product-categories-comp>

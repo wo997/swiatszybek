@@ -18,13 +18,13 @@
             Ustawienia zaawansowane
         </div>
     </span>
-    <button class="btn primary save_advanced_settings_btn">Zapisz <i class="fas fa-save"></i></button>
+    <button class="btn primary save_advanced_settings_btn mla">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
 <?php startSection("body_content"); ?>
 
 <div id="advancedSettingsForm">
-    <span class="label">Certyfikat SSL</span>
+    <span class="label first">Certyfikat SSL</span>
     <p-checkbox data-name="ssl"></p-checkbox>
     <span class="label">Tryb developmentu</span>
     <p-checkbox data-name="dev_mode"></p-checkbox>

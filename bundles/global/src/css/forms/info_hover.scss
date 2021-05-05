@@ -1,6 +1,6 @@
 /* css[global] */
 
-.info_hover {
+.hover_info {
 	& {
 		background: #5ac;
 		color: #fff;
@@ -15,6 +15,7 @@
 		font-weight: var(--bold);
 		vertical-align: middle;
 		transform: translateY(-2px);
+		margin-bottom: -2px;
 	}
 	svg {
 		width: 0.4em;

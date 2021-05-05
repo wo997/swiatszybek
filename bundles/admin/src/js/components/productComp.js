@@ -756,7 +756,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
-						<div class="info_hover ml1">
+						<div class="hover_info">
 							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
 						</div>
 						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
@@ -772,7 +772,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Zdjęcia (<span html="{${data.images.length}}"></span>) </span>
-						<div class="info_hover ml1">
+						<div class="hover_info">
 							Dodaj zdjęcia produktu i ustaw je w kolejności zaczynając od zdjęcia głównego. Dodatkowo możesz powiązać każde z nich z
 							cechami. Dzięki temu, klient który przegląda produkty i zaznaczył filtr "Kolor: czerwony" zobaczy czerwony wariant produktu, a
 							pozostałe zdjęcia będą widoczne po najechaniu np. kursorem.
@@ -790,7 +790,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Pola wyboru / Warianty (<span html="{${data.variants.length}}"></span>) </span>
-						<div class="info_hover ml1">
+						<div class="hover_info">
 							Określ wszystkie warianty produktu.
 							<div style="height:7px"></div>
 							<span class="bold">Przykład</span><br />
@@ -825,7 +825,7 @@ function ProductComp(comp, parent, data = undefined) {
 			<div class="mt5 mb2">
 				<div class="sticky_subheader">
 					<div class="medium bold inline">Pełna lista produktów</div>
-					<div class="info_hover ml1">
+					<div class="hover_info">
 						Kliknij przycisk "Dodaj brakujące produkty", a lista produktów uzupełni się automatycznie na podstawie podanych powyżej
 						wariantów.
 						<br />

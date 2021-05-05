@@ -12,12 +12,12 @@
 }
 
 .custom_toolbar .title {
-	margin-right: auto;
+	// margin-right: auto;
 	display: block;
 	padding: 2px 5px;
 	font-weight: var(--bold);
 }
 
-.custom_toolbar > *:not(.title) {
-	margin-left: 5px;
-}
+// .custom_toolbar > *:not(.title) {
+// 	margin-left: 5px;
+// }

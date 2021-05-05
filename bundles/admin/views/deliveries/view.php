@@ -20,7 +20,7 @@
             Wysyłki
         </div>
     </span>
-    <div>
+    <div class="mla">
         <button class="btn primary save_btn">Zapisz <i class="fas fa-save"></i></button>
     </div>
 </div>

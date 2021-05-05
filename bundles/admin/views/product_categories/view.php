@@ -17,8 +17,8 @@
             Kategorie produktów
         </div>
     </span>
-    <div class="history_btns_wrapper"></div>
-    <div class="save_btn_wrapper"></div>
+    <div class="history_btns_wrapper mla"></div>
+    <div class="save_btn_wrapper ml1"></div>
 </div>
 
 <?php startSection("body_content"); ?>

@@ -46,7 +46,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
+			<button class="btn primary mla" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>

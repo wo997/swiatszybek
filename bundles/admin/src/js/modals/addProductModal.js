@@ -12,8 +12,8 @@ function showAddProductModal(options = {}) {
 				<div class="modal_body" style="max-width:400px;height: auto;">
 					<div class="custom_toolbar">
 						<span class="title medium">Dodaj produkt</span>
-						<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-						<button class="btn primary add_btn">Dodaj <i class="fas fa-check"></i></button>
+						<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+						<button class="btn primary add_btn ml1">Dodaj <i class="fas fa-check"></i></button>
 					</div>
 					<div class="scroll_panel scroll_shadow panel_padding">
 						<span class="label first">Nazwa produktu</span>

@@ -87,11 +87,6 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
-					<div class="user_info mb3">
-						<i class="fas fa-info-circle"></i> Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google).<br />
-						Na podstawie tych danych klient podejmie decyzję czy chce odwiedzić stronę sklepu czy przejść dalej.<br />
-					</div>
-
 					<div class="label first">
 						<span>Tytuł strony (title)</span>
 						<span class="is_ok" data-node="{${comp._nodes.title_ok}}"></span>
@@ -128,7 +123,13 @@ function getPageSeoDataModal() {
 			<div id="PageSeoData" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: 1000px;max-height: calc(75% + 100px);">
 					<div class="custom_toolbar">
-						<span class="title medium">Dane SEO strony <span class="product_name"></span></span>
+						<span class="title">
+							<span class="medium"> Dane SEO strony </span>
+							<div class="info_hover">
+								Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google). Na podstawie tych danych klient podejmie
+								decyzję czy chce odwiedzić stronę sklepu czy przejść dalej.
+							</div>
+						</span>
 						<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>
 					<page-seo-data-comp class="flex_stretch"></page-seo-data-comp>

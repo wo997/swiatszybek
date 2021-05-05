@@ -79,7 +79,7 @@ if (!$general_product_data) {
             <span class="product_name"></span>
         </div>
     </span>
-    <div class="inject_header_nodes"></div>
+    <div class="inject_header_nodes mla"></div>
 </div>
 
 <?php startSection("body_content"); ?>
