@@ -1,9 +1,10 @@
 /* css[global] */
 
 last-viewed-products-comp.comp {
-	.product_img {
-		max-width: 130px;
+	.square_img_wrapper {
+		width: 60%;
 		margin: auto;
+		padding-top: 60%;
 	}
 	.product_name {
 		& {

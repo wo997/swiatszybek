@@ -176,9 +176,9 @@ function showModal(name = null, params = {}) {
 							modal_copy_content._children(".lazy").forEach((e) => {
 								e.classList.remove("lazy");
 							});
-							modal_copy_content._children("[data-height]").forEach((e) => {
-								e.removeAttribute("data-height");
-							});
+							// modal_copy_content._children("[data-height]").forEach((e) => {
+							// 	e.removeAttribute("data-height");
+							// });
 						}, 0);
 					});
 					observer.observe(modal, {
@@ -208,7 +208,7 @@ function showModal(name = null, params = {}) {
 						callback: () => {
 							basic_callback();
 							modal_content.classList.remove("showing_modal");
-							setCustomHeights();
+							//setCustomHeights();
 						},
 					});
 				}

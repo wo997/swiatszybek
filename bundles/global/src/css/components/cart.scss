@@ -33,7 +33,7 @@ cart-products-comp.comp {
 		align-items: center;
 		grid-gap: 5px 12px;
 	}
-	.product_img {
+	.square_img_wrapper {
 		width: 84px;
 		grid-area: 1 / 1 / 3 / 2;
 	}
@@ -81,7 +81,7 @@ cart-products-comp.comp {
 		cart-products_product-comp {
 			grid-gap: 5px 10px;
 		}
-		.product_img {
+		.square_img_wrapper {
 			width: 64px;
 			grid-area: 1 / 1 / 2 / 2;
 		}

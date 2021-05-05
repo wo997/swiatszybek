@@ -8,9 +8,5 @@ if ($_POST["general_product_id"]) {
 }
 
 $page_data = DB::fetchRow("SELECT * FROM page p WHERE $where");
-$res = [];
-if ($page_data) {
-    $res["page"] = $page_data;
-}
 
-Request::jsonResponse($res);
+Request::jsonResponse($page_data);

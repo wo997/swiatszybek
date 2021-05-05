@@ -105,6 +105,7 @@
 			height: calc(100% - 2 * var(--slide_padding));
 			border: 1px solid #ccc;
 			border-radius: 4px;
+			z-index: 10;
 		}
 		&.selected_slide::before {
 			border: 2px solid var(--clr_primary);

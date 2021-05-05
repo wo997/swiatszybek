@@ -86,16 +86,11 @@
 	}
 }
 
-.product_img {
-	width: 100%;
-	object-fit: contain;
-	display: block;
-}
-
 .product_img_wrapper {
 	& {
 		position: relative;
 		overflow: hidden;
+		padding-top: 100%;
 	}
 	.overlay {
 		position: absolute;
@@ -108,6 +103,15 @@
 		opacity: 0;
 		pointer-events: none;
 		background-color: #fff;
+	}
+	.product_img {
+		width: 100%;
+		object-fit: contain;
+		display: block;
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
 	}
 }
 

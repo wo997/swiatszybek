@@ -88,7 +88,11 @@ function FileManagerComp(comp, parent, data = undefined) {
 					if (image.asset_type == "video") {
 						display = html`<video src="/${image.file_path}" class="ql-video" controls="true" style="width:100%;height:250px;"></video>`;
 					} else {
-						display = html`<img style="width:100%;object-fit:contain" data-height="1w" class="wo997_img" data-src="/${image.file_path}" />`;
+						display = html`
+							<div class="square_img_wrapper">
+								<img class="wo997_img" data-src="/${image.file_path}" />
+							</div>
+						`;
 					}
 					out += html`
 						<div class="file_wrapper">

@@ -31,7 +31,7 @@ function LastViewedProducts_ProductComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html` <a href="${data.url}">
-			<img data-src="{${data.img_url}}" class="wo997_img product_img" data-height="1w" />
+			<div class="square_img_wrapper"><img data-src="{${data.img_url}}" class="wo997_img product_img" /></div>
 			<span html="{${data.name}}" class="product_name"></span>
 		</a>`,
 		initialize: () => {},

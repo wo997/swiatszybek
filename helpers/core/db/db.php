@@ -65,7 +65,7 @@ class DB
             $sql .= " LIMIT 1";
         }
         $res = DB::fetchArr($sql, $params);
-        return isset($res[0]) ? $res[0] : [];
+        return isset($res[0]) ? $res[0] : null;
     }
 
     /**

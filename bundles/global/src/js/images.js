@@ -16,7 +16,7 @@ const show_image_duration = 300;
  */
 function lazyLoadImages(options = {}) {
 	onScrollImages(options);
-	setCustomHeights();
+	//setCustomHeights();
 }
 
 /**
@@ -90,11 +90,11 @@ function setImageSize(img) {
 		img.style.width = `${data.w}px`;
 	}
 
-	if (!img.style.height) {
-		const suppose_height = Math.round((rect.width * data.h) / data.w);
-		img.style.height = `${suppose_height}px`; // TODO: better to use a css var I quess
-		img.classList.add("had_no_height");
-	}
+	// if (!img.style.height) {
+	// 	const suppose_height = Math.round((rect.width * data.h) / data.w);
+	// 	img.style.height = `${suppose_height}px`; // TODO: better to use a css var I quess
+	// 	img.classList.add("had_no_height");
+	// }
 }
 
 /**

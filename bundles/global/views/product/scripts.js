@@ -18,7 +18,9 @@ function productImagesChange() {
 	const slides_html = imgs_copy
 		.map(
 			(img) => html`<div class="wo997_slide">
-				<img data-src="${img.img_url}" data-height="1w" class="product_img wo997_img" />
+				<div class="square_img_wrapper">
+					<img data-src="${img.img_url}" class="product_img wo997_img" />
+				</div>
 			</div>`
 		)
 		.join("");
@@ -416,6 +418,8 @@ domload(() => {
 			ev.detail.res.other_header_visible = true;
 		}
 	});
+
+	window.addEventListener("resize", productImagesChange);
 });
 
 // comments

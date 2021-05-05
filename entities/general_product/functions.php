@@ -272,7 +272,7 @@ function getGlobalProductsSearch($url, $options = [])
         $html .= "<div class=\"product_block\">
             <a href=\"$link\">
                 <div class=\"product_img_wrapper\" data-images=\"$images_json_safe\">
-                    <img data-src=\"$img_url\" data-height=\"1w\" class=\"product_img wo997_img\" alt=\"\">
+                    <img data-src=\"$img_url\" class=\"product_img wo997_img\" alt=\"\">
                 </div>
                 <h3 class=\"product_name check_tooltip\">$name</h3>
             </a>

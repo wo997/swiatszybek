@@ -52,13 +52,15 @@ function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 						const pfo = product_feature_options.find((pfo) => pfo.product_feature_option_id === option_id);
 						if (pfo) {
 							const pf = product_features.find((pf) => pf.product_feature_id === pfo.product_feature_id);
-							return html`
-								<span class="semi_bold">${pf.name}:</span>
-								<span style="margin-left: 5px">${pfo.value}</span>
-								<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
-									<i class="fas fa-times"></i>
-								</button>
-							`;
+							if (pf) {
+								return html`
+									<span class="semi_bold">${pf.name}:</span>
+									<span style="margin-left: 5px">${pfo.value}</span>
+									<button class="btn transparent small remove_option" data-option_id="${option_id}" style="margin-left: 2px">
+										<i class="fas fa-times"></i>
+									</button>
+								`;
+							}
 						}
 						return "";
 					})

@@ -725,8 +725,9 @@ function displayNoProducts() {
 }
 
 domload(() => {
+	const getmob = () => window.innerWidth < 850;
 	const scrclb = () => {
-		const mobile = window.innerWidth < 850;
+		const mobile = getmob();
 		if (mobile) {
 			const r = products_category_name.getBoundingClientRect();
 			const visible = r.top > window.innerHeight;
@@ -741,8 +742,12 @@ domload(() => {
 
 	const getTop = () => products_category_name.getBoundingClientRect().top - 100;
 	const scrttop = () => {
-		smoothScroll(getTop());
+		if (getmob()) {
+			smoothScroll(getTop());
+		}
 	};
 	results_info_mobile._child(".btn").addEventListener("click", scrttop);
-	window.scrollBy(0, getTop());
+	if (getmob()) {
+		window.scrollBy(0, getTop());
+	}
 });
