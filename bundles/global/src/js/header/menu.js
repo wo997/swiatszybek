@@ -24,32 +24,32 @@ domload(() => {
 			if (!float_menu.classList.contains("created_columns")) {
 				const aspect_ratio = float_menu.offsetHeight / float_menu.offsetWidth;
 				const column_count = Math.round(Math.sqrt(aspect_ratio) * 1.618);
-				if (column_count > 1) {
-					float_menu.classList.add("created_columns");
-					let sum_height = 0;
+				//if (column_count > 1) {
+				float_menu.classList.add("created_columns");
+				let sum_height = 0;
 
-					const items = float_menu._direct_children();
-					for (const item of items) {
-						sum_height += item.offsetHeight;
-					}
-					let total_height = sum_height;
-
-					/** @type {PiepNode[]} */
-					const menu_columns = [];
-					for (let i = 0; i < column_count; i++) {
-						const menu_column = $(document.createElement("DIV"));
-						menu_columns.push(menu_column);
-					}
-
-					sum_height = 0;
-					for (const item of items) {
-						const column_id = Math.floor((column_count * sum_height) / total_height);
-						sum_height += item.offsetHeight;
-						menu_columns[column_id].append(item);
-					}
-
-					float_menu.append(...menu_columns);
+				const items = float_menu._direct_children();
+				for (const item of items) {
+					sum_height += item.offsetHeight;
 				}
+				let total_height = sum_height;
+
+				/** @type {PiepNode[]} */
+				const menu_columns = [];
+				for (let i = 0; i < column_count; i++) {
+					const menu_column = $(document.createElement("DIV"));
+					menu_columns.push(menu_column);
+				}
+
+				sum_height = 0;
+				for (const item of items) {
+					const column_id = Math.floor((column_count * sum_height) / total_height);
+					sum_height += item.offsetHeight;
+					menu_columns[column_id].append(item);
+				}
+
+				float_menu.append(...menu_columns);
+				//}
 			}
 
 			const max_left = main_header.offsetWidth - float_menu.offsetWidth;

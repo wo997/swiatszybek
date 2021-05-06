@@ -13,7 +13,7 @@ endSection();
 <?php startSection("body"); ?>
 
 <div class="admin_layout admin_root">
-    <header class="mobile">
+    <div class="navbar_admin_mobile">
         <a href="/" class="logo_wrapper">
             <img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
         </a>
@@ -22,9 +22,9 @@ endSection();
             <span class="close"></span>
 
         </div>
-    </header>
+    </div>
 
-    <header class="navbar_admin">
+    <div class="navbar_admin">
         <div class="scroll_panel scroll_shadow hide_scrollbar">
             <div>
                 <a href="/" class="home logo_wrapper">
@@ -46,7 +46,8 @@ endSection();
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+
     <div class="content">
         <div class="main_header">
             <?= def($sections, "header", ""); ?>

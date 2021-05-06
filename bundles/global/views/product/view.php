@@ -3,11 +3,18 @@
 global $GENERAL_PRODUCT_ID;
 
 $general_product_id = Request::urlParam(1);
+
 if ($general_product_id) {
     $general_product_id = intval($general_product_id);
     $GENERAL_PRODUCT_ID = $general_product_id;
     $general_product_data = DB::fetchRow("SELECT * FROM general_product WHERE general_product_id = $general_product_id");
 } else {
+    Request::redirect("/");
+}
+
+$page_data = DB::fetchRow("SELECT page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
+
+if (!$page_data) {
     Request::redirect("/");
 }
 
@@ -555,9 +562,6 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 <?php endSection(); ?>
 <?php //include "bundles/global/templates/default.php"; 
-
-
-$page_data = DB::fetchRow("SELECT page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
 
 renderPage($page_data["page_id"]);
 

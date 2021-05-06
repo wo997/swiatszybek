@@ -6,6 +6,8 @@ let piep_cms;
 domload(() => {
 	piep_cms = new PiepCMS($(".piep_editor"));
 
+	document.body.classList.add("just_desktop");
+
 	let breadcrumbs = "";
 	let preview_url = "/";
 

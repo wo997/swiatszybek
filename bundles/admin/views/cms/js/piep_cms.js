@@ -1654,7 +1654,11 @@ class PiepCMS {
 				Object.assign(attrs, v_node.attrs);
 
 				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
-				let classes = ["blc", base_class, ...v_node.classes];
+				let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
+
+				if (v_node.module_name) {
+					classes.push("any_module");
+				}
 
 				if (v_node.disabled) {
 					classes.push("editor_disabled");
@@ -1750,7 +1754,10 @@ class PiepCMS {
 					}
 				}
 				if (v_node.module_name === "main_menu") {
-					body = html`<div class="empty_module">LOGO, Menu, Wyszukajka itd.</div>`;
+					body = def(
+						modules_html.main_menu_html,
+						html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukajka itd.</div>`
+					);
 				}
 				if (v_node.module_name === "view_product_images_variants_buy") {
 					body = html`<div class="empty_module">Tutaj będzie produkt ziomuś</div>`;
@@ -1759,10 +1766,15 @@ class PiepCMS {
 					body = html`<div class="empty_module">A tutaj komentarze</div>`;
 				}
 				if (v_node.module_name === "template_hook") {
-					let template_hook_html = "";
-					template_hook_html += "Sekcja szablonu: " + def(v_node.settings.template_hook_name, "BRAK NAZWY");
-					template_hook_html += "<br>id: " + def(v_node.settings.template_hook_id, "BRAK KLUCZA");
-					body = html`<div class="empty_module">${template_hook_html}</div>`;
+					body = html`
+						<div class="empty_module">
+							<i class="fas fa-anchor"></i> Sekcja szablonu
+							<p class="hover_info">Tutaj pojawią się treści dodane w podrzędnej stronie (np. produktu) lub szablonie</p>
+							<br />
+							Nazwa: ${def(v_node.settings.template_hook_name, "BRAK")} <br />
+							ID: ${def(v_node.settings.template_hook_id, "BRAK")}
+						</div>
+					`;
 				}
 
 				let add_to_body = true;

@@ -6,3 +6,7 @@
 	text-align: center;
 	margin: 5px;
 }
+
+.any_module > * {
+	pointer-events: none;
+}

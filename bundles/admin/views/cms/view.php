@@ -65,6 +65,11 @@ if (!$page_data && !$template_data) {
     Request::redirect(Request::$static_urls["ADMIN"] . "/strony");
 }
 
+ob_start();
+
+include "bundles/global/templates/parts/header/header.php";
+$modules_html["main_menu_html"] = ob_get_clean();
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -76,6 +81,7 @@ if (!$page_data && !$template_data) {
     let page_data = <?= json_encode($page_data) ?>;
     let template_data = <?= json_encode($template_data) ?>;
     let parent_templates = <?= json_encode($parent_templates) ?>;
+    let modules_html = <?= json_encode($modules_html) ?>;
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>
