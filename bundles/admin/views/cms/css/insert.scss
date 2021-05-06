@@ -52,6 +52,7 @@
 		z-index: 1300;
 		pointer-events: none;
 		transform-origin: 0 0;
+		overflow: hidden;
 	}
 	&:not(.visible) {
 		display: none;
