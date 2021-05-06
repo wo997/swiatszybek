@@ -59,7 +59,9 @@ function Product_FeatureComp(
 				</button>
 
 				<div style="margin-left:auto">
-					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small">Edytuj cechę <i class="fas fa-cog"></i></button>
+					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small" data-tooltip="Edytuj cechę produktu">
+						<i class="fas fa-cog"></i>
+					</button>
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>

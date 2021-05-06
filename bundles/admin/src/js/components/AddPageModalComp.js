@@ -134,8 +134,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="custom_toolbar">
 				<span class="title medium">Utwórz stronę</span>
-				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
+				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Typ strony</div>

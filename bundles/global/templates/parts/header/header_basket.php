@@ -1,7 +1,7 @@
 <div class="cart_wrapper headerbtn gray_hover">
     <div class="basket_icon_wrapper">
         <img class="basket_icon" src="/src/img/basket_icon.svg">
-        <div class="cart_product_count"></div>
+        <div class="cart_product_count">0</div>
     </div>
     <div class="cart_menu headerbtn_menu">
         <p class="menu_header">Twój koszyk</p>

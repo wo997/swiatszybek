@@ -29,7 +29,7 @@ function previewUrl(url, params) {
 								</div>
 							</div>
 						</span>
-						<button class="btn primary" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
+						<button class="btn primary mla" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
 					</div>
 					<div class="flex_stretch">
 						<iframe name="preview_iframe"></iframe>
