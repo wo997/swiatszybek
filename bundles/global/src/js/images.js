@@ -109,7 +109,7 @@ function onScrollImages(options = {}) {
 		return false;
 	};
 
-	let lazy_off = WINDOW_LOADED ? window.innerWidth * 0.5 : -10;
+	let lazy_off = LAZY_MORE ? window.innerWidth * 0.5 : -10;
 
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((img) => {
 		if (exclude(img)) {

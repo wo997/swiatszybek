@@ -133,8 +133,10 @@ function animate(node, keyframes, duration, options = {}) {
 	});
 }
 
-let WINDOW_LOADED = false;
+let LAZY_MORE = false;
 windowload(() => {
 	document.body.classList.remove("freeze");
-	WINDOW_LOADED = true;
+	setTimeout(() => {
+		LAZY_MORE = true;
+	}, 1000);
 });
