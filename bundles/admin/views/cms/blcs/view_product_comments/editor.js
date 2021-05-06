@@ -15,5 +15,12 @@
 			attrs: {},
 			module_name: "view_product_comments",
 		},
+		render: (v_node) => {
+			let body = def(
+				modules_html.view_product_comments,
+				html`<div class="empty_module" data-container_queries="">Komentarze produktu</div>`
+			);
+			return body;
+		},
 	});
 }

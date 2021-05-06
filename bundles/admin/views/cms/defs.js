@@ -112,5 +112,6 @@
  * page_type?: string
  * nonclickable?: boolean
  * priority?: number
+ * render?(v_node?: vDomNode): string
  * }} BlockSchema
  */

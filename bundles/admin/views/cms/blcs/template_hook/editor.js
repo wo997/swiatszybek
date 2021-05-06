@@ -50,5 +50,17 @@
 			attrs: {},
 			module_name: "template_hook",
 		},
+		render: (v_node) => {
+			let body = html`
+				<div class="empty_module">
+					<i class="fas fa-anchor"></i> Sekcja szablonu
+					<p class="hover_info">Tutaj pojawią się treści dodane w podrzędnej stronie (np. produktu) lub szablonie</p>
+					<br />
+					Nazwa: ${def(v_node.settings.template_hook_name, "BRAK")} <br />
+					ID: ${def(v_node.settings.template_hook_id, "BRAK")}
+				</div>
+			`;
+			return body;
+		},
 	});
 }

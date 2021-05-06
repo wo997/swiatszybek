@@ -1540,48 +1540,8 @@ class PiepCMS {
 					v_node.settings = {};
 				}
 
-				if (v_node.module_name === "raw_html") {
-					body = html`<div class="empty_module">Pusty blok HTML</div>`;
-					if (v_node.settings.html_code) {
-						body = v_node.settings.html_code;
-					}
-				}
-				if (v_node.module_name === "google_map") {
-					body = html`<div class="empty_module"">Mapa google</div>`;
-
-					if (v_node.settings.google_map_embed_code) {
-						/** @type {string} */
-						const google_map_embed_code = v_node.settings.google_map_embed_code;
-
-						const match_src = google_map_embed_code.match(/src=".*?"/);
-						if (match_src) {
-							const src = match_src[0];
-							body = html`<iframe ${src} allowfullscreen="" loading="lazy"></iframe>`;
-						}
-					}
-				}
-				if (v_node.module_name === "main_menu") {
-					body = def(
-						modules_html.main_menu_html,
-						html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukajka itd.</div>`
-					);
-				}
-				if (v_node.module_name === "view_product_images_variants_buy") {
-					body = html`<div class="empty_module">Tutaj będzie produkt ziomuś</div>`;
-				}
-				if (v_node.module_name === "view_product_comments") {
-					body = html`<div class="empty_module">A tutaj komentarze</div>`;
-				}
-				if (v_node.module_name === "template_hook") {
-					body = html`
-						<div class="empty_module">
-							<i class="fas fa-anchor"></i> Sekcja szablonu
-							<p class="hover_info">Tutaj pojawią się treści dodane w podrzędnej stronie (np. produktu) lub szablonie</p>
-							<br />
-							Nazwa: ${def(v_node.settings.template_hook_name, "BRAK")} <br />
-							ID: ${def(v_node.settings.template_hook_id, "BRAK")}
-						</div>
-					`;
+				if (v_node.module_name && blc_schema.render) {
+					body = blc_schema.render(v_node);
 				}
 
 				let add_to_body = true;
