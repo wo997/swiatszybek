@@ -38,7 +38,7 @@
 }
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "template_hook",
 		icon: html`<i class="fas fa-anchor"></i>`,
 		label: html`Sekcja szablonu`,

@@ -17,10 +17,11 @@
 }
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "google_map",
 		icon: html`<i class="fas fa-map-marked-alt"></i>`,
 		label: html`Mapa Google`,
+		nonclickable: true,
 		v_node: {
 			tag: "div",
 			id: -1,

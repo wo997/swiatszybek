@@ -154,3 +154,7 @@
 	right: 0;
 	z-index: 1500;
 }
+
+.blc.nonclickable > * {
+	pointer-events: none;
+}

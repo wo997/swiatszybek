@@ -543,7 +543,7 @@
 }
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "vertical_container",
 		icon: html`<i class="vertical_container_icon">
 			<div></div>
@@ -561,7 +561,7 @@
 		},
 	});
 
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "columns_container",
 		icon: html`<i class="columns_container_icon">
 			<div></div>

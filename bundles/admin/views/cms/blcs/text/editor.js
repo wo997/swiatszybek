@@ -259,7 +259,7 @@
 }
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "h1",
 		icon: html`<span class="bold">H1</span>`,
 		label: html`Nagłówek`,
@@ -273,7 +273,7 @@
 		},
 	});
 
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "h2",
 		icon: html`<span class="bold">H2</span>`,
 		label: html`Nagłówek`,
@@ -287,7 +287,7 @@
 		},
 	});
 
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "h3",
 		icon: html`<span class="bold">H3</span>`,
 		label: html`Nagłówek`,
@@ -301,7 +301,7 @@
 		},
 	});
 
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "p",
 		icon: html`<i class="fas fa-align-center"></i>`,
 		label: html`Paragraf / Tekst`,

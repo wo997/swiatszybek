@@ -109,5 +109,7 @@
  * v_node: vDomNode
  * single_usage?: boolean
  * tooltip?: string
- * }} BlockToAdd
+ * page_type?: string
+ * nonclickable?: boolean
+ * }} BlockSchema
  */

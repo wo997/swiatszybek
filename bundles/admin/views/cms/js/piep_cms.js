@@ -582,10 +582,10 @@ class PiepCMS {
 	initAddBlockMenu() {
 		let menu_html = "";
 
-		for (const block_to_add of piep_cms_manager.blcs_to_add) {
-			const tooltip = block_to_add.tooltip ? `data-tooltip="${block_to_add.tooltip}"` : "";
+		for (const blc_schema of piep_cms_manager.blcs_schema) {
+			const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
 			menu_html += html`
-				<div class="btn transparent block_to_add" data-id="${block_to_add.id}" ${tooltip}>${block_to_add.icon} ${block_to_add.label}</div>
+				<div class="btn transparent block_to_add" data-id="${blc_schema.id}" ${tooltip}>${blc_schema.icon} ${blc_schema.label}</div>
 			`;
 		}
 
@@ -602,8 +602,8 @@ class PiepCMS {
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
 				setTimeout(() => {
-					const block_to_add = piep_cms_manager.blcs_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
-					const add_v_node = block_to_add.v_node;
+					const blc_schema = piep_cms_manager.blcs_schema.find((e) => e.id === block_to_add_btn.dataset.id);
+					const add_v_node = blc_schema.v_node;
 					add_v_node.id = this.getNewBlcId();
 					if (add_v_node.children) {
 						add_v_node.children.forEach((child, index) => {
@@ -1445,6 +1445,8 @@ class PiepCMS {
 				const tag = v_node.tag;
 				const textable = text !== undefined;
 
+				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+
 				let attrs = { "data-vid": v_node.id };
 				Object.assign(attrs, v_node.attrs);
 
@@ -1453,6 +1455,12 @@ class PiepCMS {
 
 				if (v_node.module_name) {
 					classes.push("any_module");
+				}
+
+				if (blc_schema) {
+					if (blc_schema.nonclickable) {
+						classes.push("nonclickable");
+					}
 				}
 
 				if (v_node.disabled) {
@@ -1478,9 +1486,8 @@ class PiepCMS {
 				if (v_node.template_hook_id !== undefined) {
 					display_name = `Sekcja: ${v_node.template_hook_id}`;
 				} else if (v_node.module_name) {
-					const blc_to_add = piep_cms_manager.blcs_to_add.find((b) => b.id === v_node.module_name);
-					if (blc_to_add) {
-						display_name = blc_to_add.label;
+					if (blc_schema) {
+						display_name = blc_schema.label;
 					}
 				} else if (map_tag_display_name[tag]) {
 					display_name = map_tag_display_name[tag];

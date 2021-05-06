@@ -1,7 +1,7 @@
 /* js[piep_cms_dependencies] */
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "img",
 		icon: html`<i class="far fa-image"></i>`,
 		label: html`Zdjęcie`,

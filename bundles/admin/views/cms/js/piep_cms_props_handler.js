@@ -8,8 +8,8 @@ class PiepCMSManager {
 		/** @type {cmsFloatingEditableProp[]} */
 		this.floating_blc_props = [];
 
-		/** @type {BlockToAdd[]} */
-		this.blcs_to_add = [];
+		/** @type {BlockSchema[]} */
+		this.blcs_schema = [];
 	}
 
 	/**
@@ -30,10 +30,10 @@ class PiepCMSManager {
 
 	/**
 	 *
-	 * @param {BlockToAdd} blc_to_add
+	 * @param {BlockSchema} blc_schema
 	 */
-	registerBlcToAdd(blc_to_add) {
-		this.blcs_to_add.push(blc_to_add);
+	registerBlcSchema(blc_schema) {
+		this.blcs_schema.push(blc_schema);
 	}
 }
 

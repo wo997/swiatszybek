@@ -17,10 +17,11 @@
 }
 
 {
-	piep_cms_manager.registerBlcToAdd({
+	piep_cms_manager.registerBlcSchema({
 		id: "raw_html",
 		icon: html`<i class="fas fa-code"></i>`,
 		label: html`Kod HTML`,
+		nonclickable: true,
 		v_node: {
 			tag: "div",
 			id: -1,
