@@ -1540,7 +1540,7 @@ class PiepCMS {
 					v_node.settings = {};
 				}
 
-				if (v_node.module_name && blc_schema.render) {
+				if (blc_schema && blc_schema.render) {
 					body = blc_schema.render(v_node);
 				}
 
@@ -1561,9 +1561,9 @@ class PiepCMS {
 						.join(" ");
 
 					if (this.single_tags.includes(tag)) {
-						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv} />`;
+						content_html += `<${tag} class="${classes_csv}" ${attrs_csv} />`;
 					} else {
-						content_html += html`<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
+						content_html += `<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
 					}
 				}
 
