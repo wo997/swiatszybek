@@ -5,6 +5,7 @@
 		id: "img",
 		icon: html`<i class="far fa-image"></i>`,
 		label: html`Zdjęcie`,
+		priority: 90,
 		v_node: {
 			tag: "img",
 			id: -1,

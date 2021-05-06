@@ -111,5 +111,6 @@
  * tooltip?: string
  * page_type?: string
  * nonclickable?: boolean
+ * priority?: number
  * }} BlockSchema
  */

@@ -551,6 +551,7 @@
 			<div></div>
 		</i>`,
 		label: html`Kontener pionowy`,
+		priority: 80,
 		v_node: {
 			tag: "div",
 			id: -1,
@@ -569,6 +570,7 @@
 			<div></div>
 		</i>`,
 		label: html`Kontener z kolumnami`,
+		priority: 80,
 		v_node: {
 			tag: "div",
 			id: -1,

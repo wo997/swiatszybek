@@ -582,6 +582,11 @@ class PiepCMS {
 	initAddBlockMenu() {
 		let menu_html = "";
 
+		piep_cms_manager.blcs_schema.forEach((e, index) => {
+			e.priority = def(e.priority, 0) - index * 0.001;
+		});
+		piep_cms_manager.blcs_schema.sort((a, b) => Math.sign(b.priority - a.priority));
+
 		for (const blc_schema of piep_cms_manager.blcs_schema) {
 			const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
 			menu_html += html`

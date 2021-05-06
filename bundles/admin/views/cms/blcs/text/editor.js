@@ -263,6 +263,7 @@
 		id: "h1",
 		icon: html`<span class="bold">H1</span>`,
 		label: html`Nagłówek`,
+		priority: 100,
 		v_node: {
 			tag: "h1",
 			id: -1,
@@ -273,38 +274,41 @@
 		},
 	});
 
-	piep_cms_manager.registerBlcSchema({
-		id: "h2",
-		icon: html`<span class="bold">H2</span>`,
-		label: html`Nagłówek`,
-		v_node: {
-			tag: "h2",
-			id: -1,
-			text: "Nagłówek",
-			styles: {},
-			classes: [],
-			attrs: {},
-		},
-	});
+	// piep_cms_manager.registerBlcSchema({
+	// 	id: "h2",
+	// 	icon: html`<span class="bold">H2</span>`,
+	// 	label: html`Nagłówek`,
+	// 	priority: 100,
+	// 	v_node: {
+	// 		tag: "h2",
+	// 		id: -1,
+	// 		text: "Nagłówek",
+	// 		styles: {},
+	// 		classes: [],
+	// 		attrs: {},
+	// 	},
+	// });
 
-	piep_cms_manager.registerBlcSchema({
-		id: "h3",
-		icon: html`<span class="bold">H3</span>`,
-		label: html`Nagłówek`,
-		v_node: {
-			tag: "h3",
-			id: -1,
-			text: "Nagłówek",
-			styles: {},
-			classes: [],
-			attrs: {},
-		},
-	});
+	// piep_cms_manager.registerBlcSchema({
+	// 	id: "h3",
+	// 	icon: html`<span class="bold">H3</span>`,
+	// 	label: html`Nagłówek`,
+	// 	priority: 100,
+	// 	v_node: {
+	// 		tag: "h3",
+	// 		id: -1,
+	// 		text: "Nagłówek",
+	// 		styles: {},
+	// 		classes: [],
+	// 		attrs: {},
+	// 	},
+	// });
 
 	piep_cms_manager.registerBlcSchema({
 		id: "p",
 		icon: html`<i class="fas fa-align-center"></i>`,
 		label: html`Paragraf / Tekst`,
+		priority: 100,
 		v_node: {
 			tag: "p",
 			id: -1,
