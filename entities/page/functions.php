@@ -259,6 +259,16 @@ function renderPage($page_id, $data = [])
 
     <link href="/<?= BUILDS_PATH . "/pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
 
+
+    <!-- <link href="/bundles/global/src/css/modules.css?v=1" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=2" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=3" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=4" rel="stylesheet"> -->
+    <!-- <link href="/bundles/global/src/css/modules.css?v=5" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=6" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=7" rel="stylesheet">
+    <link href="/bundles/global/src/css/modules.css?v=8" rel="stylesheet"> -->
+
     <?= def($sections, "head_of_page", ""); ?>
 
     <?php startSection("body"); ?>
@@ -267,6 +277,5 @@ function renderPage($page_id, $data = [])
     </div>
 
     <script src="/<?= BUILDS_PATH . "/pages/js/page_$page_id.js?v=$page_release" ?>"></script>
-
 <?php include "bundles/global/templates/blank.php";
 }

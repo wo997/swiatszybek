@@ -692,26 +692,30 @@ function createNodeFromHtml(html) {
 /**
  *
  * @param {PiepNode} node
- * @param {number} offset
+ * @param {number} off_y
  */
-function isNodeOnScreen(node, offset = -10) {
-	const parent = node._parent(".overflow_hidden");
+function isNodeOnScreen(node, off_y = -10, off_x = -10) {
+	if (isHidden(node)) {
+		return false;
+	}
+	const parent = node._parent(".overflow_hidden", { skip: 1 });
 
-	let px0 = 0;
-	let py0 = 0;
-	let px1 = window.innerWidth;
-	let py1 = window.innerHeight;
 	const r = node.getBoundingClientRect();
 	if (parent) {
 		const pr = parent.getBoundingClientRect();
-		px0 = pr.left;
-		py0 = pr.top;
-		px1 = pr.left + pr.width;
-		py1 = pr.top + pr.height;
+		if (
+			r.y > pr.top + pr.height + off_y ||
+			r.y + r.height < pr.top - off_y ||
+			r.x > pr.left + pr.width + off_x ||
+			r.x + r.width < pr.left - off_x
+		) {
+			return false;
+		}
 	}
-	if (r.y > py1 + offset || r.y + r.height < py0 - offset || r.x > px1 + offset || r.x + r.width < px0 - offset) {
+	if (r.y > window.innerHeight + off_y || r.y + r.height < -off_y || r.x > window.innerWidth + off_x || r.x + r.width < -off_x) {
 		return false;
 	}
+
 	return r;
 }
 

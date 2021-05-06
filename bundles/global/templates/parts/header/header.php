@@ -66,7 +66,7 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
         if (User::getCurrent()->isLoggedIn()) {
             include "bundles/global/templates/parts/header/header_logged_in.php";
         } else {
-            include "bundles/global/templates/parts/header/header_quest.php";
+            include "bundles/global/templates/parts/header/header_guest.php";
         }
         ?>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>

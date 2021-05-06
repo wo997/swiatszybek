@@ -17,22 +17,22 @@
 // 	},
 // };
 
-var wo997_anm_counter = 0;
+let wo997_anm_cnt = 0;
 function createAnimation(keyframes, duration) {
-	wo997_anm_counter++;
-	const animation_name = `wo997_anm_${wo997_anm_counter}`;
+	wo997_anm_cnt++;
+	const anm_nm = `wo997_anm_${wo997_anm_cnt}`;
 	document.body.insertAdjacentHTML(
 		"beforeend",
-		html`<style id="${animation_name}">
-			@keyframes ${animation_name} {
+		html`<style id="${anm_nm}">
+			@keyframes ${anm_nm} {
 			    ${keyframes}
 			}
-			.${animation_name} {
-			  animation: ${animation_name} ${duration}ms cubic-bezier(.46,0,.56,1) forwards !important;
+			.${anm_nm} {
+			  animation: ${anm_nm} ${duration}ms cubic-bezier(.46,0,.56,1) forwards !important;
 			}
 		</style> `
 	);
-	return animation_name;
+	return anm_nm;
 }
 
 function removeAnimation(animation_name) {
@@ -133,8 +133,8 @@ function animate(node, keyframes, duration, options = {}) {
 	});
 }
 
-domload(() => {
-	setTimeout(() => {
-		document.body.classList.remove("freeze");
-	}, 100);
+let WINDOW_LOADED = false;
+windowload(() => {
+	document.body.classList.remove("freeze");
+	WINDOW_LOADED = true;
 });

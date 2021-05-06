@@ -202,6 +202,18 @@ $user_email = $user_data ? $user_data["email"] : "";
     </div>
 </div>
 
+<?php
+$main_img = def($general_product_imgs, 0);
+if ($main_img) {
+    $image_data = Files::getResponsiveImageData($main_img["img_url"]);
+    $preload_src = "/" . UPLOADS_PATH . "md" . "/" . $image_data["file_name"] . (WEBP_SUPPORT ? ".webp" : ".jpg");
+?>
+    <img src="<?= $preload_src ?>" class="hidden">
+<?php
+}
+?>
+
+
 <div class="product_wrapper">
     <div class="product_imgs">
         <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">

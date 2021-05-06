@@ -1,6 +1,5 @@
 /* js[global] */
 
-const lazyLoadOffset = 700;
 const show_image_duration = 300;
 
 /**
@@ -79,7 +78,8 @@ function setImageSize(img) {
 	if (!data) {
 		const duration = show_image_duration;
 		img.style.animation = `show ${duration}ms`;
-		img.setAttribute("src", src);
+		// @ts-ignore
+		img.src = src;
 		setTimeout(() => {
 			img.style.animation = "";
 		}, duration);
@@ -109,11 +109,13 @@ function onScrollImages(options = {}) {
 		return false;
 	};
 
+	let lazy_off = WINDOW_LOADED ? window.innerWidth * 0.5 : -10;
+
 	$$(".wo997_img:not(.wo997_img_waiting):not(.wo997_img_shown)").forEach((img) => {
 		if (exclude(img)) {
 			return;
 		}
-		if (isNodeOnScreen(img, lazyLoadOffset) && img.dataset.src) {
+		if (isNodeOnScreen(img, lazy_off, lazy_off) && img.dataset.src) {
 			const src = getResponsiveImageRealUrl(img);
 			if (src) {
 				// @ts-ignore
@@ -203,7 +205,8 @@ setInterval(() => {
 		if (image_dimension > img._last_dimension + 25) {
 			// @ts-ignore
 			img._last_dimension = image_dimension;
-			img.setAttribute("src", getResponsiveImageRealUrl(img));
+			// @ts-ignore
+			img.src = getResponsiveImageRealUrl(img);
 		}
 	});
 }, 150);
