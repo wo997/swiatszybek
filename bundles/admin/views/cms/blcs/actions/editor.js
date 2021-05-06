@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "layout_btn",
 		menu_html: html`
 			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary, marginesy, itd...">
@@ -9,7 +9,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "move_btn",
 		menu_html: html`
 			<button class="btn transparent small move_btn" data-tooltip="Przemieść blok">
@@ -18,7 +18,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "remove_btn",
 		menu_html: html`
 			<button class="btn transparent small remove_btn" data-tooltip="Usuń blok">
@@ -27,7 +27,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "hide_menu_btn",
 		menu_html: html`
 			<button class="btn transparent small hide_menu_btn" data-tooltip="Ukryj menu">

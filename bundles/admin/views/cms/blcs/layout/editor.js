@@ -30,7 +30,7 @@
 		return v_node_data.v_node.classes.includes("columns_container");
 	};
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "width",
 		blc_groups: [
 			{ match_tag: this.match_media_tags, priority: layout_priority },
@@ -55,7 +55,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "height",
 		type_groups: ["layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
@@ -77,7 +77,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "margin",
 		type_groups: ["layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
@@ -116,7 +116,7 @@
 			</div>`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "padding",
 		type_groups: ["layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
@@ -157,7 +157,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "border",
 		type_groups: ["layout", "appearance"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
@@ -229,7 +229,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "align_self_horizontally",
 		blc_groups: [
 			{
@@ -265,7 +265,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "align_self_vertically",
 		blc_groups: [
 			{
@@ -301,7 +301,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "justify_content_horizontally",
 		blc_groups: [
 			{
@@ -369,7 +369,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "align_items_vertically",
 		blc_groups: [
 			{
@@ -421,7 +421,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "justify_content_vertically",
 		blc_groups: [
 			{
@@ -489,7 +489,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "align_items_horizontally",
 		blc_groups: [
 			{
@@ -539,5 +539,63 @@
 				</div>
 			</div>
 		`,
+	});
+}
+
+{
+	piep_cms_manager.registerBlcToAdd({
+		id: "vertical_container",
+		icon: html`<i class="vertical_container_icon">
+			<div></div>
+			<div></div>
+			<div></div>
+		</i>`,
+		label: html`Kontener pionowy`,
+		v_node: {
+			tag: "div",
+			id: -1,
+			children: [],
+			styles: {},
+			classes: [],
+			attrs: {},
+		},
+	});
+
+	piep_cms_manager.registerBlcToAdd({
+		id: "columns_container",
+		icon: html`<i class="columns_container_icon">
+			<div></div>
+			<div></div>
+			<div></div>
+		</i>`,
+		label: html`Kontener z kolumnami`,
+		v_node: {
+			tag: "div",
+			id: -1,
+			styles: {},
+			classes: ["columns_container"],
+			attrs: {},
+			settings: {
+				layout_type: "basic",
+			},
+			children: [
+				{
+					id: -1,
+					tag: "div",
+					styles: { df: { width: "50%" } },
+					attrs: {},
+					classes: ["vertical_container"],
+					children: [],
+				},
+				{
+					id: -1,
+					tag: "div",
+					styles: { df: { width: "50%" } },
+					attrs: {},
+					classes: ["vertical_container"],
+					children: [],
+				},
+			],
+		},
 	});
 }

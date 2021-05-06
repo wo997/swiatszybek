@@ -1,12 +1,15 @@
 /* js[!piep_cms_dependencies] */
 
-class PiepCMSPropsHandler {
+class PiepCMSManager {
 	constructor() {
 		/** @type {cmsEditableProp[]} */
 		this.blc_props = [];
 
 		/** @type {cmsFloatingEditableProp[]} */
 		this.floating_blc_props = [];
+
+		/** @type {BlockToAdd[]} */
+		this.blcs_to_add = [];
 	}
 
 	/**
@@ -24,6 +27,14 @@ class PiepCMSPropsHandler {
 	registerFloatingProp(floating_blc_prop) {
 		this.floating_blc_props.push(floating_blc_prop);
 	}
+
+	/**
+	 *
+	 * @param {BlockToAdd} blc_to_add
+	 */
+	registerBlcToAdd(blc_to_add) {
+		this.blcs_to_add.push(blc_to_add);
+	}
 }
 
-const piep_cms_props_handler = new PiepCMSPropsHandler();
+const piep_cms_manager = new PiepCMSManager();

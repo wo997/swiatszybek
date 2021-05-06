@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "html_code",
 		blc_groups: [
 			{
@@ -13,5 +13,21 @@
 			<div class="label">Kod HTML</div>
 			<textarea class="field scroll_panel" data-blc_prop="settings.html_code" style="height:200px"></textarea>
 		`,
+	});
+}
+
+{
+	piep_cms_manager.registerBlcToAdd({
+		id: "raw_html",
+		icon: html`<i class="fas fa-code"></i>`,
+		label: html`Kod HTML`,
+		v_node: {
+			tag: "div",
+			id: -1,
+			styles: {},
+			classes: [],
+			attrs: {},
+			module_name: "raw_html",
+		},
 	});
 }

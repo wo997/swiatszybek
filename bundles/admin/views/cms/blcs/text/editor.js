@@ -3,7 +3,7 @@
 	const tag_containing_text_priority = 5;
 	const match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "font_size",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -30,7 +30,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "font_weight",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -57,7 +57,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "text_align",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -88,7 +88,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "font_style",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -111,7 +111,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "text_decoration",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -134,7 +134,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "color",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -154,7 +154,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "background_color",
 		type_groups: ["appearance"],
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
@@ -176,7 +176,7 @@
 
 	const floating_tag_containing_text_priority = 5;
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "font_size",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -192,7 +192,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "font_weight",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -205,7 +205,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -219,7 +219,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "color",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -233,7 +233,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "background_color",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -247,7 +247,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",
 		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
@@ -255,5 +255,63 @@
 				<i class="fas fa-remove-format"></i>
 			</button>
 		`,
+	});
+}
+
+{
+	piep_cms_manager.registerBlcToAdd({
+		id: "h1",
+		icon: html`<span class="bold">H1</span>`,
+		label: html`Nagłówek`,
+		v_node: {
+			tag: "h1",
+			id: -1,
+			text: "Nagłówek",
+			styles: {},
+			classes: [],
+			attrs: {},
+		},
+	});
+
+	piep_cms_manager.registerBlcToAdd({
+		id: "h2",
+		icon: html`<span class="bold">H2</span>`,
+		label: html`Nagłówek`,
+		v_node: {
+			tag: "h2",
+			id: -1,
+			text: "Nagłówek",
+			styles: {},
+			classes: [],
+			attrs: {},
+		},
+	});
+
+	piep_cms_manager.registerBlcToAdd({
+		id: "h3",
+		icon: html`<span class="bold">H3</span>`,
+		label: html`Nagłówek`,
+		v_node: {
+			tag: "h3",
+			id: -1,
+			text: "Nagłówek",
+			styles: {},
+			classes: [],
+			attrs: {},
+		},
+	});
+
+	piep_cms_manager.registerBlcToAdd({
+		id: "p",
+		icon: html`<i class="fas fa-align-center"></i>`,
+		label: html`Paragraf / Tekst`,
+		v_node: {
+			tag: "p",
+			id: -1,
+			text: "Lorem ipsum",
+			styles: {},
+			classes: [],
+			attrs: {},
+		},
 	});
 }

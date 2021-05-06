@@ -203,7 +203,7 @@ class PiepCMS {
 
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
-		piep_cms_props_handler.floating_blc_props.forEach((blc_prop) => {
+		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
 			floating_blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
@@ -582,212 +582,7 @@ class PiepCMS {
 	initAddBlockMenu() {
 		let menu_html = "";
 
-		/** @type {BlockToAdd[]} */
-		this.blcs_to_add = [
-			{
-				id: "h1",
-				icon: html`<span class="bold">H1</span>`,
-				label: html`Nagłówek`,
-				v_node: {
-					tag: "h1",
-					id: -1,
-					text: "Nagłówek",
-					styles: {},
-					classes: [],
-					attrs: {},
-				},
-			},
-			{
-				id: "h2",
-				icon: html`<span class="bold">H2</span>`,
-				label: html`Nagłówek`,
-				v_node: {
-					tag: "h2",
-					id: -1,
-					text: "Nagłówek",
-					styles: {},
-					classes: [],
-					attrs: {},
-				},
-			},
-			{
-				id: "h3",
-				icon: html`<span class="bold">H3</span>`,
-				label: html`Nagłówek`,
-				v_node: {
-					tag: "h3",
-					id: -1,
-					text: "Nagłówek",
-					styles: {},
-					classes: [],
-					attrs: {},
-				},
-			},
-			{
-				id: "p",
-				icon: html`<i class="fas fa-align-center"></i>`,
-				label: html`Paragraf / Tekst`,
-				v_node: {
-					tag: "p",
-					id: -1,
-					text: "Lorem ipsum",
-					styles: {},
-					classes: [],
-					attrs: {},
-				},
-			},
-			{
-				id: "vertical_container",
-				icon: html`<i class="vertical_container_icon">
-					<div></div>
-					<div></div>
-					<div></div>
-				</i>`,
-				label: html`Kontener pionowy`,
-				v_node: {
-					tag: "div",
-					id: -1,
-					children: [],
-					styles: {},
-					classes: [],
-					attrs: {},
-				},
-			},
-			{
-				id: "columns_container",
-				icon: html`<i class="columns_container_icon">
-					<div></div>
-					<div></div>
-					<div></div>
-				</i>`,
-				label: html`Kontener z kolumnami`,
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: ["columns_container"],
-					attrs: {},
-					settings: {
-						layout_type: "basic",
-					},
-					children: [
-						{
-							id: -1,
-							tag: "div",
-							styles: { df: { width: "50%" } },
-							attrs: {},
-							classes: ["vertical_container"],
-							children: [],
-						},
-						{
-							id: -1,
-							tag: "div",
-							styles: { df: { width: "50%" } },
-							attrs: {},
-							classes: ["vertical_container"],
-							children: [],
-						},
-					],
-				},
-			},
-			{
-				id: "img",
-				icon: html`<i class="far fa-image"></i>`,
-				label: html`Zdjęcie`,
-				v_node: {
-					tag: "img",
-					id: -1,
-					styles: {},
-					classes: ["wo997_img"],
-					attrs: { "data-src": "/src/img/empty_img_147x94.svg" },
-				},
-			},
-			{
-				//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2316.685375328343!2d18.533917818907184!3d54.503773259192585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46fda0cc4256d643%3A0x465e190242c3fd05!2sSzperaczek!5e0!3m2!1spl!2spl!4v1619695875923!5m2!1spl!2spl" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-				id: "google_map",
-				icon: html`<i class="fas fa-map-marked-alt"></i>`,
-				label: html`Mapa Google`,
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "google_map",
-				},
-			},
-			{
-				id: "raw_html",
-				icon: html`<i class="fas fa-code"></i>`,
-				label: html`Kod HTML`,
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "raw_html",
-				},
-			},
-			{
-				id: "main_menu",
-				icon: html`<i class="fas fa-bars"></i>`,
-				label: html`Menu główne`,
-				single_usage: true,
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "main_menu",
-				},
-			},
-			{
-				id: "view_product_images_variants_buy",
-				icon: html`<i class="fas fa-cube"></i>`,
-				label: html`Produkt`,
-				single_usage: true,
-				tooltip: "(Zdjęcia, wybór wariantów, kup teraz)",
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "view_product_images_variants_buy",
-				},
-			},
-			{
-				id: "view_product_comments",
-				icon: html`<i class="fas fa-comments"></i>`,
-				label: html`Komentarze produktu`,
-				single_usage: true,
-				v_node: {
-					tag: "div",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "view_product_comments",
-				},
-			},
-			{
-				id: "template_hook",
-				icon: html`<i class="fas fa-anchor"></i>`,
-				label: html`Sekcja szablonu`,
-				v_node: {
-					tag: "section",
-					id: -1,
-					styles: {},
-					classes: [],
-					attrs: {},
-					module_name: "template_hook",
-				},
-			},
-		];
-
-		for (const block_to_add of this.blcs_to_add) {
+		for (const block_to_add of piep_cms_manager.blcs_to_add) {
 			const tooltip = block_to_add.tooltip ? `data-tooltip="${block_to_add.tooltip}"` : "";
 			menu_html += html`
 				<div class="btn transparent block_to_add" data-id="${block_to_add.id}" ${tooltip}>${block_to_add.icon} ${block_to_add.label}</div>
@@ -807,7 +602,7 @@ class PiepCMS {
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
 				setTimeout(() => {
-					const block_to_add = this.blcs_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
+					const block_to_add = piep_cms_manager.blcs_to_add.find((e) => e.id === block_to_add_btn.dataset.id);
 					const add_v_node = block_to_add.v_node;
 					add_v_node.id = this.getNewBlcId();
 					if (add_v_node.children) {
@@ -1408,7 +1203,7 @@ class PiepCMS {
 		this.case_blc_menu_empty = this.blc_menu._child(".case_blc_menu_empty");
 
 		let blc_props_menu_html = "";
-		piep_cms_props_handler.blc_props.forEach((blc_prop) => {
+		piep_cms_manager.blc_props.forEach((blc_prop) => {
 			blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.blc_menu_scroll_panel._set_content(blc_props_menu_html);
@@ -1683,7 +1478,7 @@ class PiepCMS {
 				if (v_node.template_hook_id !== undefined) {
 					display_name = `Sekcja: ${v_node.template_hook_id}`;
 				} else if (v_node.module_name) {
-					const blc_to_add = this.blcs_to_add.find((b) => b.id === v_node.module_name);
+					const blc_to_add = piep_cms_manager.blcs_to_add.find((b) => b.id === v_node.module_name);
 					if (blc_to_add) {
 						display_name = blc_to_add.label;
 					}
@@ -3340,7 +3135,7 @@ class PiepCMS {
 			this.last_set_filter_menu_to_vid = this.focus_node_vid;
 			this.last_type_group = type_group;
 
-			piep_cms_props_handler.blc_props
+			piep_cms_manager.blc_props
 				.map((prop, index) => {
 					const blc_prop_wrapper = this.blc_menu._child(".prop_" + prop.name);
 
@@ -3400,7 +3195,7 @@ class PiepCMS {
 					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
 				});
 
-			piep_cms_props_handler.floating_blc_props
+			piep_cms_manager.floating_blc_props
 				.map((prop, index) => {
 					const blc_prop_wrapper = this.float_menu._child(".prop_" + prop.name);
 

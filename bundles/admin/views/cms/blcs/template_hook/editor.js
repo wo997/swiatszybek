@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "template_hook_name",
 		blc_groups: [
 			{
@@ -18,7 +18,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "template_hook_id",
 		blc_groups: [
 			{
@@ -34,5 +34,21 @@
 			</div>
 			<input class="field" data-blc_prop="settings.template_hook_id" />
 		`,
+	});
+}
+
+{
+	piep_cms_manager.registerBlcToAdd({
+		id: "template_hook",
+		icon: html`<i class="fas fa-anchor"></i>`,
+		label: html`Sekcja szablonu`,
+		v_node: {
+			tag: "section",
+			id: -1,
+			styles: {},
+			classes: [],
+			attrs: {},
+			module_name: "template_hook",
+		},
 	});
 }

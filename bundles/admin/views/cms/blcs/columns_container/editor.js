@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "columns_container_layout_type",
 		blc_groups: [
 			{

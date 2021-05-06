@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "google_map_embed_code",
 		blc_groups: [
 			{
@@ -13,5 +13,21 @@
 			<div class="label">Kod umieszczania mapy google</div>
 			<textarea class="field scroll_panel" data-blc_prop="settings.google_map_embed_code" style="height:100px"></textarea>
 		`,
+	});
+}
+
+{
+	piep_cms_manager.registerBlcToAdd({
+		id: "google_map",
+		icon: html`<i class="fas fa-map-marked-alt"></i>`,
+		label: html`Mapa Google`,
+		v_node: {
+			tag: "div",
+			id: -1,
+			styles: {},
+			classes: [],
+			attrs: {},
+			module_name: "google_map",
+		},
 	});
 }

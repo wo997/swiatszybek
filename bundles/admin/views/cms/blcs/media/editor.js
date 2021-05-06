@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "data-src",
 		blc_groups: [{ match_tag: /^(img)$/, priority: 10 }],
 		type_groups: ["appearance"],
@@ -10,7 +10,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerProp({
+	piep_cms_manager.registerProp({
 		name: "alt",
 		blc_groups: [{ match_tag: this.match_media_tags, priority: 10 }],
 		type_groups: ["advanced"],
@@ -20,7 +20,7 @@
 		`,
 	});
 
-	piep_cms_props_handler.registerFloatingProp({
+	piep_cms_manager.registerFloatingProp({
 		name: "choose_img_btn",
 		blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
 		menu_html: html`
