@@ -119,11 +119,11 @@ class User
 
         // if the user seems to be new
         if ($this->entity->getProp("type") !== "regular") {
-            if (!validateEmail($data["email"])) {
+            if (!Security::validateEmail($data["email"])) {
                 $res["errors"][] = "Wpisz poprawny email";
                 return $res;
             }
-            if (!validatePassword($data["password"])) {
+            if (!Security::validatePassword($data["password"])) {
                 $res["errors"][] = "Wpisz poprawne hasło";
                 return $res;
             }

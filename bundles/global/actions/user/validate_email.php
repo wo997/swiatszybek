@@ -13,6 +13,6 @@ if ($user_data) {
     ]);
 } else {
     Request::jsonResponse([
-        "status" => validateEmail($_POST["email"]) ? "valid" : "invalid"
+        "status" => Security::validateEmail($_POST["email"]) ? "valid" : "invalid"
     ]);
 }

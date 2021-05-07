@@ -25,8 +25,6 @@ ini_set('max_execution_time', '5');
 
 include "scripts/set_time_zone.php";
 
-//include "helpers/simple_html_dom.php";
-
 // ssl redirect
 if (getSetting(["general", "advanced", "ssl"]) == 1 && def($_SERVER, "HTTPS", "on") == 'off') {
     Request::redirect(strReplaceFirst("http://", "https://", SITE_URL, 1));

@@ -29,6 +29,17 @@ class Security
         }
     }
 
+    public static function validateEmail($val)
+    {
+        return filter_var($val, FILTER_VALIDATE_EMAIL);
+    }
+
+    public static function validatePassword($val)
+    {
+        return strlen($val) >= 8;
+    }
+
+
     public static function verifyPassword($password, $password_hash)
     {
         return password_verify($password, $password_hash);
