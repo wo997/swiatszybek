@@ -132,7 +132,7 @@ class Theme
         $case_desktop_width_max = max(799, $inner_responsive_width_max);
 
         $header_build_css = <<<CSS
-/* css[global] */
+/* css[modules/main_menu] */
 
 @media (max-width: {$outer_responsive_width_max}px) and (hover: hover) {
 	header.main .main_menu {
