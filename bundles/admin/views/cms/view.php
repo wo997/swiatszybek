@@ -70,6 +70,8 @@ ob_start();
 include "bundles/global/templates/parts/header/header.php";
 $modules_html["main_menu_html"] = ob_get_clean();
 
+$piep_cms_modules = PiepCMSManager::$modules;
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -82,6 +84,16 @@ $modules_html["main_menu_html"] = ob_get_clean();
     let template_data = <?= json_encode($template_data) ?>;
     let parent_templates = <?= json_encode($parent_templates) ?>;
     let modules_html = <?= json_encode($modules_html) ?>;
+    let piep_cms_modules = <?= json_encode($piep_cms_modules) ?>;
+
+    Object.entries(piep_cms_modules).forEach(([module_name, data]) => {
+        if (data.css) {
+            loadStylesheet(`/${data.css}?v=<?= ASSETS_RELEASE ?>`);
+        }
+        if (data.js) {
+            loadScript(`/${data.js}?v=<?= ASSETS_RELEASE ?>`);
+        }
+    })
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>
