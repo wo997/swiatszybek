@@ -603,7 +603,7 @@ function getAnnotationRoute($line)
 
 function getAnnotation($type, $line)
 {
-    if (preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
+    if (preg_match('/\*.*\*/', $line) && preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
         return $match[0];
     }
     return null;

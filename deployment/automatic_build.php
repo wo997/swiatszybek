@@ -11,17 +11,33 @@ $mod_time_assets = 0;
 $mod_time_modules = 0;
 $mod_time_settings = 0;
 
+$modified_packages = [];
+
 scanDirectories(
     [
         "exclude_paths" => ["vendor", "uploads", "modules", "settings", "builds"], // , "deployment"
-        //"get_first_line" => true,
+        "get_first_line" => true,
     ],
-    function ($path) use (&$mod_time_php, &$mod_time_assets) {
+    function ($path, $first_line) use (&$mod_time_php, &$mod_time_assets, &$modified_packages) {
         $mtime = filemtime($path);
         if (strpos($path, ".php")) {
             $mod_time_php += $mtime;
-        } else if (in_array(Files::getFileExtension($path), ["css", "scss", "js", "html"])) {
-            $mod_time_assets += $mtime;
+        } else {
+            $ext = Files::getFileExtension($path);
+            if (in_array($ext, ["css", "scss", "js", "html"])) {
+                $modified_package = getAnnotation("css", $first_line);
+                if (!$modified_package) {
+                    $modified_package = getAnnotation("js", $first_line);
+                }
+                if ($modified_package) {
+                    $modified_package = str_replace("!", "", $modified_package);
+                    if (!in_array($modified_package, $modified_packages)) {
+                        $modified_packages[] = $modified_package;
+                    }
+                }
+
+                $mod_time_assets += $mtime;
+            }
         }
     }
 );
