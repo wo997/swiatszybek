@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[modules/main_menu] */
 
 domload(() => {
 	$$("header .main_menu > .level_0 > li").forEach((e) => {

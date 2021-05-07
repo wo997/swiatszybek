@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[modules/main_menu] */
 
 function requestHeaderModals() {
 	// user

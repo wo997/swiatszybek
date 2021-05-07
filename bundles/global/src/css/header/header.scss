@@ -1,4 +1,4 @@
-/* css[global] */
+/* css[modules/main_menu] */
 
 header.main {
 	& {
@@ -177,13 +177,6 @@ header.main {
 	.headerbtn_menu hr.indent {
 		margin: 5px;
 	}
-}
-
-.logo_default {
-	width: max(85px, min(10vw, 120px));
-	height: max(38px, min(4.5vw, 54px));
-	display: block;
-	object-fit: contain;
 }
 
 :root {

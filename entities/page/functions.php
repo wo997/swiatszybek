@@ -8,6 +8,8 @@ function traverseVDom($v_dom)
 
     $content_html = "";
     $styles_css_responsive = [];
+    $other_styles_css = "";
+    $other_scripts_js = "";
     foreach (Theme::$responsive_breakpoints as $res_name => $width) {
         // we will put concatenated styles in here yay
         $styles_css_responsive[$res_name] = "";
@@ -44,7 +46,13 @@ function traverseVDom($v_dom)
         if ($module_name) {
             $res = EventListener::dispatch("render_module_$module_name", ["v_node" => $v_node]);
             if ($res) {
-                $body = $res[0];
+                $body = $res[0]["html"];
+                if (isset($res[0]["css"]) && file_exists($res[0]["css"])) {
+                    $other_styles_css .= file_get_contents($res[0]["css"]);
+                }
+                if (isset($res[0]["js"]) && file_exists($res[0]["js"])) {
+                    $other_scripts_js .= file_get_contents($res[0]["js"]);
+                }
             }
         }
 
@@ -69,14 +77,16 @@ function traverseVDom($v_dom)
                 }
                 $node_styles = "#p .$base_class { $node_styles }";
 
-                $styles_css_responsive[$res_name] .= $node_styles;
+                $styles_css_responsive[$res_name] .= " " . $node_styles;
             }
         }
     }
 
     return [
         "content_html" => $content_html,
-        "styles_css_responsive" => $styles_css_responsive
+        "styles_css_responsive" => $styles_css_responsive,
+        "other_styles_css" => $other_styles_css,
+        "other_scripts_js" => $other_scripts_js,
     ];
 };
 
@@ -104,11 +114,14 @@ function buildPageable($entity_name, $id)
 
     if ($v_dom) {
         $dom_data = traverseVDom($v_dom);
-        $page_css = getPageCss($dom_data["styles_css_responsive"]);
+
+        $page_css = $dom_data["other_styles_css"];
+        $page_css .= getPageCss($dom_data["styles_css_responsive"]);
         $page_css_minified = Assets::minifyCss($page_css);
         Files::save(BUILDS_PATH . "/{$entity_name}s/css/{$entity_name}_$id.css", $page_css_minified);
 
-        $page_js_minified = "";
+        $page_js = $dom_data["other_scripts_js"];
+        $page_js_minified = Assets::minifyJs($page_js);
         Files::save(BUILDS_PATH . "/{$entity_name}s/js/{$entity_name}_$id.js", $page_js_minified);
 
         $page->setProp("version", $page->getProp("version") + 1);

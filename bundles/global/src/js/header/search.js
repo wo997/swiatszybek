@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[modules/main_menu] */
 
 function searchAllProducts() {
 	const search = $(".main_search_wrapper input")._get_value().trim();
