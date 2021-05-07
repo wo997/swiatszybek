@@ -285,9 +285,8 @@ function renderPage($page_id, $data = [])
     <?= def($sections, "head_of_page", ""); ?>
 
     <?php startSection("body"); ?>
-    <div>
-        <?= $dom_data["content_html"] ?>
-    </div>
+
+    <?= $dom_data["content_html"] ?>
 
     <?php foreach ($parent_templates as $parent_template) {
         $template_release = $parent_template["version"];

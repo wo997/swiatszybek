@@ -948,6 +948,7 @@ class PiepCMS {
 			if (target._parent(".remove_format_btn")) {
 				v_node.styles = {};
 				this.recreateDom();
+				this.pushHistory(`remove_format_${v_node_data.v_node.id}`);
 			}
 
 			const choose_img_btn = target._parent(".choose_img_btn");

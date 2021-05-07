@@ -17,7 +17,9 @@ domload(() => {
 			<i class="fas fa-chevron-right"></i>
 		`;
 
-		if (page_data.general_product) {
+		const page_type = page_data.page_type;
+
+		if (page_type === "general_product") {
 			breadcrumbs += html` <div class="crumb">${page_data.general_product.name}</div> `;
 			$(".piep_editor_header").insertAdjacentHTML(
 				"beforeend",
@@ -34,6 +36,8 @@ domload(() => {
 			);
 
 			preview_url = page_data.general_product.__url;
+		} else if (page_type === "page") {
+			preview_url = page_data.url;
 		}
 	}
 

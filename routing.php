@@ -207,20 +207,32 @@ if ($pageName) {
     include $pageName;
     die;
 } else {
+    $canSee = "1"; // User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
+    //$current_page_data = []; //DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
 
-    $canSee = User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
-    $current_page_data = []; //DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
+    $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [Request::$url]);
 
-    if (isset($_POST["content"])) {
-        $current_page_data["content"] = $_POST["content"];
-    }
-
-    if ($current_page_data) {
-        include "bundles/global/cms_page.php";
+    if ($page_data) {
+        renderPage($page_data["page_id"]);
         die;
     }
+
+    // // if (isset($_POST["v_dom"])) {
+    // //     $current_page_data["v_dom"] = $_POST["v_dom"];
+    // // }
+
+    // if ($current_page_data) {
+    //     $page_id = intval(Request::urlParam(1, -1));
+
+    //     renderPage($page_id);
+
+
+    //     // include "bundles/global/cms_page.php";
+    //     // die;
+    // }
 }
 if (Request::$url == "/") {
+    // TODO: WRONG
     $current_page_data["content"] = "Pusta strona";
     include "bundles/global/cms_page.php";
     die;
