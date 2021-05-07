@@ -15,7 +15,7 @@ endSection();
 <div class="admin_layout admin_root">
     <div class="navbar_admin_mobile">
         <a href="/" class="logo_wrapper">
-            <img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
+            <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
         </a>
         <div class="menu_btn">
             <img class="menu_icon" src="/src/img/menu_icon.svg">
@@ -27,8 +27,8 @@ endSection();
     <div class="navbar_admin">
         <div class="scroll_panel scroll_shadow hide_scrollbar">
             <div>
-                <a href="/" class="home logo_wrapper">
-                    <img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
+                <a href="/" class="home logo_wrapper link">
+                    <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
                     Strona główna
                 </a>
                 <hr>

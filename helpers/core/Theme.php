@@ -176,7 +176,7 @@ class Theme
 }
 
 @media (max-width: {$case_desktop_width_max}px) {
-    .case_desktop {
+    header.main .case_desktop {
         display: none !important;
     }
 }

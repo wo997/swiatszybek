@@ -40,7 +40,7 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
 
 <!-- <header class="main"> -->
 <a href="/" class="logo_wrapper">
-    <img class="logo logo_default" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
+    <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
 </a>
 
 <nav class="main_menu">

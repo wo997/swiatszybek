@@ -17,8 +17,12 @@ domload(() => {
 				key: "",
 				width: "100px",
 				render: (data) => {
-					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_szablonu=${data.template_id}">
-						Edytuj <i class="fas fa-cog"></i>
+					return html`<a
+						class="btn subtle small"
+						href="${STATIC_URLS["ADMIN"]}/strona?nr_szablonu=${data.template_id}"
+						data-tooltip="Edytuj"
+					>
+						<i class="fas fa-cog"></i>
 					</a>`;
 				},
 			},

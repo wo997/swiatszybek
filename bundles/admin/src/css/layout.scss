@@ -162,8 +162,10 @@ footer {
 	.navbar_admin_mobile {
 		display: none;
 	}
-	.navbar_admin .logo_default {
+	.navbar_admin .logo {
 		margin: 10px auto;
+		width: 50%;
+		display: block;
 	}
 }
 

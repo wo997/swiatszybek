@@ -24,10 +24,18 @@ header.main {
 		transform: translateY(-110%);
 	}
 
+	img.logo {
+		height: 35px;
+		display: block;
+	}
+
 	@media only screen and (min-width: 1200px) {
 		& {
 			--header_padding_vertical: 10px;
 			--header_padding_horizontal: 20px;
+		}
+		img.logo {
+			height: 45px;
 		}
 	}
 	@media only screen and (max-width: 400px) {

@@ -163,7 +163,7 @@ function FileManagerComp(comp, parent, data = undefined) {
 					<div class="modal_body">
 						<div class="custom_toolbar">
 							<span class="title medium upload_file_label"></span>
-							<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+							<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
 						<div class="scroll_panel scroll_shadow panel_padding">
 							<form class="drop_files" action="">
