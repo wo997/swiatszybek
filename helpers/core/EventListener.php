@@ -23,7 +23,7 @@ class EventListener
      * @param  array $params
      * @return array
      */
-    public static function dispatch($name, $params)
+    public static function dispatch($name, $params = null)
     {
         $res = [];
         if (isset(self::$events[$name])) {

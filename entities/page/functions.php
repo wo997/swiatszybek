@@ -41,16 +41,11 @@ function traverseVDom($v_dom)
         }
 
         $module_name = def($v_node, ["module_name"]);
-        if ($module_name === "view_product_images_variants_buy") {
-            $body = $sections["view_product_images_variants_buy"];
-        }
-        if ($module_name === "view_product_comments") {
-            $body = $sections["view_product_comments"];
-        }
-        if ($module_name === "main_menu") {
-            ob_start();
-            include "bundles/global/templates/parts/header/header.php";
-            $body = ob_get_clean();
+        if ($module_name) {
+            $res = EventListener::dispatch("render_module_$module_name", ["v_node" => $v_node]);
+            if ($res) {
+                $body = $res[0];
+            }
         }
 
         $classes_csv = join(" ", $classes);
