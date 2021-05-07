@@ -20,6 +20,11 @@ class Entity
 
     public function __construct($name, &$props)
     {
+        if (!is_array($props)) {
+            // something silly just happened
+            return;
+        }
+
         $this->name = $name;
         $this->id_column = $this->getIdColumn();
 

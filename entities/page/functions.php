@@ -97,19 +97,19 @@ function getPageCss($styles_css_responsive)
     return $page_css;
 }
 
-function buildPage($page_id)
+function buildPageable($entity_name, $id)
 {
-    $page = EntityManager::getEntityById("page", $page_id);
+    $page = EntityManager::getEntityById($entity_name, $id);
     $v_dom = json_decode($page->getProp("v_dom_json"), true);
 
     if ($v_dom) {
         $dom_data = traverseVDom($v_dom);
         $page_css = getPageCss($dom_data["styles_css_responsive"]);
         $page_css_minified = Assets::minifyCss($page_css);
-        Files::save(BUILDS_PATH . "/pages/css/page_$page_id.css", $page_css_minified);
+        Files::save(BUILDS_PATH . "/{$entity_name}s/css/{$entity_name}_$id.css", $page_css_minified);
 
         $page_js_minified = "";
-        Files::save(BUILDS_PATH . "/pages/js/page_$page_id.js", $page_js_minified);
+        Files::save(BUILDS_PATH . "/{$entity_name}s/js/{$entity_name}_$id.js", $page_js_minified);
 
         $page->setProp("version", $page->getProp("version") + 1);
     }
@@ -117,7 +117,7 @@ function buildPage($page_id)
 
 function updatePageableModificationTime($entity_name, $id)
 {
-    $page = EntityManager::getEntity($entity_name, $id);
+    $page = EntityManager::getEntityById($entity_name, $id);
     $page->setProp("modified_at", date("Y-m-d H:i:s"));
 }
 
@@ -173,7 +173,7 @@ function renderPage($page_id, $data = [])
 
     $parent_templates = [];
     while ($parent_template_id > 0) {
-        $parent_template_data = DB::fetchRow("SELECT template_id, v_dom_json, parent_template_id FROM template WHERE template_id = $parent_template_id");
+        $parent_template_data = DB::fetchRow("SELECT template_id, v_dom_json, parent_template_id, version FROM template WHERE template_id = $parent_template_id");
         if ($parent_template_data) {
             array_unshift($parent_templates, $parent_template_data);
             $parent_template_id = $parent_template_data["parent_template_id"];
@@ -184,6 +184,7 @@ function renderPage($page_id, $data = [])
 
     $all_v_doms = [];
 
+
     foreach ($parent_templates as $parent_template) {
         $parent_template_v_dom = json_decode($parent_template["v_dom_json"], true);
         $all_v_doms[] = def($parent_template_v_dom, []);
@@ -191,9 +192,10 @@ function renderPage($page_id, $data = [])
 
     $all_v_doms[] = $v_dom;
 
+    $count_all_v_doms = count($all_v_doms);
 
     // glue v_doms from the smallest pieces to the biggest
-    for ($i = count($all_v_doms) - 2; $i >= 0; $i--) {
+    for ($i = $count_all_v_doms - 2; $i >= 0; $i--) {
         $base_v_dom = &$all_v_doms[$i];
         $append_v_dom = &$all_v_doms[$i + 1];
 
@@ -252,17 +254,17 @@ function renderPage($page_id, $data = [])
 
     <title>Strony test</title>
 
-    <link href="/<?= BUILDS_PATH . "/pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
 
+    <?php foreach ($parent_templates as $parent_template) {
+        $template_release = $parent_template["version"];
+        $template_id = $parent_template["template_id"];
+    ?>
+        <link href="/<?= BUILDS_PATH . "templates/css/template_$template_id.css?v=$template_release" ?>" rel="stylesheet">
+    <?php
+    }
+    ?>
 
-    <!-- <link href="/bundles/global/src/css/modules.css?v=1" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=2" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=3" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=4" rel="stylesheet"> -->
-    <!-- <link href="/bundles/global/src/css/modules.css?v=5" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=6" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=7" rel="stylesheet">
-    <link href="/bundles/global/src/css/modules.css?v=8" rel="stylesheet"> -->
+    <link href="/<?= BUILDS_PATH . "pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
 
     <?= def($sections, "head_of_page", ""); ?>
 
@@ -271,6 +273,16 @@ function renderPage($page_id, $data = [])
         <?= $dom_data["content_html"] ?>
     </div>
 
-    <script src="/<?= BUILDS_PATH . "/pages/js/page_$page_id.js?v=$page_release" ?>"></script>
+    <?php foreach ($parent_templates as $parent_template) {
+        $template_release = $parent_template["version"];
+        $template_id = $parent_template["template_id"];
+    ?>
+        <script src="/<?= BUILDS_PATH . "templates/js/template_$template_id.js?v=$template_release" ?>"></script>
+    <?php
+    }
+    ?>
+
+    <script src="/<?= BUILDS_PATH . "pages/js/page_$page_id.js?v=$page_release" ?>"></script>
+
 <?php include "bundles/global/templates/blank.php";
 }
