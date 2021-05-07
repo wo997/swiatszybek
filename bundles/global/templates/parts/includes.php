@@ -1,8 +1,4 @@
 <?php
-// TODO: no
-if (!def($current_page_data, "seo_image", "")) {
-    $current_page_data["seo_image"] = SHARE_IMG_PATH_PUBLIC_SM;
-}
 
 if (defined("ROUTE")) {
     $js_schema = Assets::getJsSchema();
@@ -109,22 +105,6 @@ if (defined("ROUTE")) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
-
-<?php if (isset($current_page_data["seo_description"])) : ?>
-    <meta name="description" content="<?= $current_page_data["seo_description"] ?>">
-    <meta property="og:description" content="<?= $current_page_data["seo_description"] ?>" />
-    <meta name="twitter:description" content="<?= $current_page_data["seo_description"] ?>" />
-    <title><?= $current_page_data["seo_title"] ?></title>
-    <meta property="og:title" content="<?= $current_page_data["seo_title"] ?>" />
-    <meta name="twitter:title" content="<?= $current_page_data["seo_title"] ?>" />
-    <meta name="image" content="<?= $current_page_data["seo_image"] ?>">
-    <meta property="og:image" content="<?= $current_page_data["seo_image"] ?>">
-    <meta property="og:image:type" content="image/png">
-    <meta property="og:site_name" content="<?= getSetting(["general", "company", "shop_name"], "") ?>" />
-    <meta name="twitter:card" content="summary" />
-    <meta property="og:locale" content="pl_PL" />
-    <meta property="og:type" content="website" />
-<?php endif ?>
 
 <meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
 

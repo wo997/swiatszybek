@@ -175,9 +175,9 @@ function updatePageableMetadata($entity_name, $id)
 
 function renderPage($page_id, $data = [])
 {
-    global $current_page_data, $sections;
+    global $sections;
 
-    // current_page_data will come from page ;)
+    // page_data will come from page ;)
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
     $page_release = $page_data["version"];
@@ -264,12 +264,29 @@ function renderPage($page_id, $data = [])
 
     $dom_data = traverseVDom($full_v_dom);
 
+    $shop_name = getSetting(["general", "company", "shop_name"], "");
+    $seo_title = $page_data["seo_title"] ? $page_data["seo_title"] : $shop_name;
+    $seo_description = $page_data["seo_description"];
+
+    $page_data["seo_image"] = "";
+    $seo_image = $page_data["seo_image"];
 ?>
 
     <?php startSection("head_content"); ?>
 
-    <title>Strony test</title>
-
+    <title><?= $seo_title ?></title>
+    <meta name="description" content="<?= $seo_description ?>">
+    <meta property="og:description" content="<?= $seo_description ?>" />
+    <meta name="twitter:description" content="<?= $seo_description ?>" />
+    <meta property="og:title" content="<?= $seo_title ?>" />
+    <meta name="twitter:title" content="<?= $seo_title ?>" />
+    <meta name="image" content="<?= $seo_image ?>">
+    <meta property="og:image" content="<?= $seo_image ?>">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:site_name" content="<?= $shop_name ?>" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:type" content="website" />
 
     <?php foreach ($parent_templates as $parent_template) {
         $template_release = $parent_template["version"];
@@ -282,7 +299,7 @@ function renderPage($page_id, $data = [])
 
     <link href="/<?= BUILDS_PATH . "pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
 
-    <?= def($sections, "head_of_page", ""); ?>
+    <?= def($sections, "page_type_specific_head", ""); ?>
 
     <?php startSection("body"); ?>
 

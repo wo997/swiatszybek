@@ -135,7 +135,7 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 ?>
 
-<?php startSection("head_of_page"); ?>
+<?php startSection("page_type_specific_head"); ?>
 
 <title><?= $full_product_name ?> - LSIT.pl</title>
 
