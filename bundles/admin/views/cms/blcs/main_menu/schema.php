@@ -1,11 +1,12 @@
-<?php //hook[event]
+<?php //hook[register]
 
-EventListener::register("render_module_main_menu", function () {
-    ob_start();
-    include "bundles/global/templates/parts/header/header.php";
-    return [
-        "html" => ob_get_clean(),
-        "js" => BUILDS_PATH . "modules/main_menu.js",
-        "css" => BUILDS_PATH . "modules/main_menu.css",
-    ];
-});
+PiepCMSManager::registerModule([
+    "name" => "main_menu",
+    "render" => function () {
+        ob_start();
+        include "bundles/global/templates/parts/header/header.php";
+        return ob_get_clean();
+    },
+    "js" => BUILDS_PATH . "modules/main_menu.js",
+    "css" => BUILDS_PATH . "modules/main_menu.css",
+]);

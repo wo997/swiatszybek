@@ -2,7 +2,7 @@
 
 /**
  * 
-                                                                                         * @typedef CartProduct {
+ * @typedef CartProduct {
  * product_id: number
  * qty: number
  * }

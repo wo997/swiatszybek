@@ -4,7 +4,7 @@
 		name: "html_code",
 		blc_groups: [
 			{
-				module_names: ["raw_html"],
+				module_names: ["html_code"],
 				priority: 100,
 			},
 		],
@@ -18,7 +18,7 @@
 
 {
 	piep_cms_manager.registerBlcSchema({
-		id: "raw_html",
+		id: "html_code",
 		icon: html`<i class="fas fa-code"></i>`,
 		label: html`Kod HTML`,
 		nonclickable: true,
@@ -28,7 +28,7 @@
 			styles: {},
 			classes: [],
 			attrs: {},
-			module_name: "raw_html",
+			module_name: "html_code",
 		},
 		render: (v_node) => {
 			let body = html`<div class="empty_module">Pusty blok HTML</div>`;

@@ -1,8 +1,9 @@
 <?php //hook[event]
 
-EventListener::register("render_module_view_product_comments", function () {
-    global $sections;
-    return [
-        "html" => $sections["view_product_comments"]
-    ];
-});
+PiepCMSManager::registerModule([
+    "name" => "view_product_comments",
+    "render" => function () {
+        global $sections;
+        return $sections["view_product_comments"];
+    },
+]);

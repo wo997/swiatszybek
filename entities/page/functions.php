@@ -4,12 +4,10 @@ define("SINGLE_HTML_TAGS", ["area", "base", "br", "col", "embed", "hr", "img", "
 
 function traverseVDom($v_dom)
 {
-    global $sections;
-
     $content_html = "";
     $styles_css_responsive = [];
-    $other_styles_css = "";
-    $other_scripts_js = "";
+    $styles_css = "";
+    $scripts_js = "";
     foreach (Theme::$responsive_breakpoints as $res_name => $width) {
         // we will put concatenated styles in here yay
         $styles_css_responsive[$res_name] = "";
@@ -44,14 +42,19 @@ function traverseVDom($v_dom)
 
         $module_name = def($v_node, ["module_name"]);
         if ($module_name) {
-            $res = EventListener::dispatch("render_module_$module_name", ["v_node" => $v_node]);
-            if ($res) {
-                $body = $res[0]["html"];
-                if (isset($res[0]["css"]) && file_exists($res[0]["css"])) {
-                    $other_styles_css .= file_get_contents($res[0]["css"]);
+            $module = def(PiepCMSManager::$modules, $module_name);
+            if ($module) {
+                $render = def($module, "render");
+                $css = def($module, "css");
+                $js = def($module, "js");
+                if ($render) {
+                    $body = $render(["v_node" => $v_node]);
                 }
-                if (isset($res[0]["js"]) && file_exists($res[0]["js"])) {
-                    $other_scripts_js .= file_get_contents($res[0]["js"]);
+                if ($js) {
+                    $scripts_js .= file_get_contents($js);
+                }
+                if ($css) {
+                    $styles_css .= file_get_contents($css);
                 }
             }
         }
@@ -85,8 +88,8 @@ function traverseVDom($v_dom)
     return [
         "content_html" => $content_html,
         "styles_css_responsive" => $styles_css_responsive,
-        "other_styles_css" => $other_styles_css,
-        "other_scripts_js" => $other_scripts_js,
+        "styles_css" => $styles_css,
+        "scripts_js" => $scripts_js,
     ];
 };
 
@@ -115,12 +118,12 @@ function buildPageable($entity_name, $id)
     if ($v_dom) {
         $dom_data = traverseVDom($v_dom);
 
-        $page_css = $dom_data["other_styles_css"];
+        $page_css = $dom_data["styles_css"];
         $page_css .= getPageCss($dom_data["styles_css_responsive"]);
         $page_css_minified = Assets::minifyCss($page_css);
         Files::save(BUILDS_PATH . "/{$entity_name}s/css/{$entity_name}_$id.css", $page_css_minified);
 
-        $page_js = $dom_data["other_scripts_js"];
+        $page_js = $dom_data["scripts_js"];
         $page_js_minified = Assets::minifyJs($page_js);
         Files::save(BUILDS_PATH . "/{$entity_name}s/js/{$entity_name}_$id.js", $page_js_minified);
 

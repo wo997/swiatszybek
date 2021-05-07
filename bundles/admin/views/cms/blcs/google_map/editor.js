@@ -32,10 +32,10 @@
 		},
 		render: (v_node) => {
 			let body = html`<div class="empty_module">Mapa google</div>`;
-			if (v_node.settings.google_map_embed_code) {
-				/** @type {string} */
-				const google_map_embed_code = v_node.settings.google_map_embed_code;
 
+			/** @type {string} */
+			const google_map_embed_code = v_node.settings.google_map_embed_code;
+			if (google_map_embed_code) {
 				const match_src = google_map_embed_code.match(/src=".*?"/);
 				if (match_src) {
 					const src = match_src[0];

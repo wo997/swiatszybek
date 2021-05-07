@@ -31,7 +31,7 @@ include_once "helpers/core/deployment.php";
 include_once "helpers/core/links.php";
 
 include_once "helpers/core/Theme.php";
-include_once "helpers/core/layout/cms.php";
-include_once "helpers/core/layout/templates.php";
+include_once "helpers/core/Templates.php";
+include_once "helpers/core/PiepCMSManager.php";
 
 include_once "helpers/core/packaging/packaging.php";

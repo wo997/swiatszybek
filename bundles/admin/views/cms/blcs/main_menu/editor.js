@@ -8,10 +8,10 @@
 		single_usage: true,
 		nonclickable: true,
 		v_node: {
-			tag: "div",
+			tag: "header",
 			id: -1,
 			styles: {},
-			classes: [],
+			classes: ["main"],
 			attrs: {},
 			module_name: "main_menu",
 		},

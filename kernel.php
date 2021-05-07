@@ -49,6 +49,7 @@ if (DEV_MODE) {
 include "scripts/entities.php";
 @include BUILDS_PATH . "hooks/helper.php";
 @include BUILDS_PATH . "hooks/event.php";
+@include BUILDS_PATH . "hooks/register.php";
 
 include "scripts/images.php";
 include "scripts/previews.php";

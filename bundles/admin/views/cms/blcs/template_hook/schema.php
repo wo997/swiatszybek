@@ -1,5 +1,5 @@
-<?php //hook[event]
+<?php //hook[register]
 
-// dont 
-// EventListener::register("render_module_template_hook", function () {
-// });
+PiepCMSManager::registerModule([
+    "name" => "template_hook"
+]);
