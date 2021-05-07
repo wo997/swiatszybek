@@ -340,10 +340,7 @@ HTML;
 
 $products_search_data = getGlobalProductsSearch(Request::$full_url);
 
-$products_search_data_0 = getGlobalProductsSearch(
-    getProductCategoryLink($category_path),
-    ["return_all_ids" => true]
-);
+$products_search_data_0 = getGlobalProductsSearch(getProductCategoryLink($category_path));
 
 // it's important to split it cause when the where query gets thicc (fe. extended phrase search) we shouldnt repeat it but focus on already known ids
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);

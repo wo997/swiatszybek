@@ -1,6 +1,6 @@
 <?php //hook[helper]
 
-function getGlobalProductsSearch($url, $options = [])
+function getGlobalProductsSearch($url)
 {
     // setup search vars
 

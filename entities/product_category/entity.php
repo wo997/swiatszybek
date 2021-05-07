@@ -6,6 +6,7 @@ EntityManager::register("product_category", [
         "parent_product_category_id" => ["type" => "number"],
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
+        "__url" => ["type" => "string"],
         "__category_path_json" => ["type" => "string"],
         "__category_path_names_csv" => ["type" => "string"],
         "__product_count" => ["type" => "number"],
@@ -43,6 +44,8 @@ EventListener::register("before_save_product_category_entity", function ($params
         }
     }
 
+    $product_category_link = getProductCategoryLink($category_path);
+    $product_category->setProp("__url", $product_category_link);
     $product_category->setProp("__category_path_json", json_encode($category_path));
     $product_category->setProp("__category_path_names_csv", join(",", $category_path_names));
 });
