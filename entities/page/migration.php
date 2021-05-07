@@ -16,6 +16,7 @@ DB::createTable(
         ["name" => "link_what_id", "type" => "INT", "index" => "index", "null" => true],
         ["name" => "template_id", "type" => "INT", "index" => "index"],
         //["name" => "v_dom_ids_csv", "type" => "TEXT"],
-        ["name" => "max_vid", "type" => "TEXT"],
+        ["name" => "max_vid", "type" => "INT"],
+        ["name" => "used_modules_csv", "type" => "TEXT"],
     ]
 );

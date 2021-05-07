@@ -145,20 +145,25 @@ function updatePageableMetadata($entity_name, $id)
 
     //$v_dom_ids = [];
     $max_vid = 0;
+    $used_modules = [];
 
-    $travVDom = function (&$base_v_nodes) use (&$travVDom, &$max_vid) {
+    $travVDom = function (&$base_v_nodes) use (&$travVDom, &$max_vid, &$used_modules) {
         foreach ($base_v_nodes as &$base_v_node) {
             $vid = def($base_v_node, ["id"]);
             //$v_dom_ids[] = $vid;
             if ($vid > $max_vid) {
                 $max_vid = $vid;
             }
-            if (isset($base_v_node["children"])) {
-                $children = &$base_v_node["children"];
-                if ($children) {
-                    $travVDom($children);
-                }
+
+            $children = def($base_v_node, ["children"]);
+            if ($children) {
+                $travVDom($children);
                 unset($children);
+            }
+
+            $module_name = def($base_v_node, ["module_name"]);
+            if ($module_name && !in_array($module_name, $used_modules)) {
+                $used_modules[] = $module_name;
             }
         }
         unset($base_v_node);
@@ -170,6 +175,7 @@ function updatePageableMetadata($entity_name, $id)
 
     //$page->setProp("v_dom_ids_csv", join(",", $v_dom_ids));
     $page->setProp("max_vid", $max_vid);
+    $page->setProp("used_modules_csv", join(",", $used_modules));
 }
 
 

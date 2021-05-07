@@ -13,6 +13,7 @@ DB::createTable(
         ["name" => "parent_template_id", "type" => "INT", "index" => "index"],
         ["name" => "pos", "type" => "INT", "index" => "index"],
         //["name" => "v_dom_ids_csv", "type" => "TEXT"],
-        ["name" => "max_vid", "type" => "TEXT"],
+        ["name" => "max_vid", "type" => "INT"],
+        ["name" => "used_modules_csv", "type" => "TEXT"],
     ]
 );

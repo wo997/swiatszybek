@@ -15,6 +15,7 @@ EntityManager::register("page", [
         "template_id" => ["type" => "number"],
         //"v_dom_ids_csv" => ["type" => "string"],
         "max_vid" => ["type" => "string"],
+        "used_modules_csv" => ["type" => "string"],
     ],
 ]);
 
