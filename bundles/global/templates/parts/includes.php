@@ -46,11 +46,6 @@ if (defined("ROUTE")) {
     last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
     loadedLastViewedProducts();
 
-    <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-        <?php if (isset($preview_params) && isset($preview_params["js_visible"])) : ?>
-            //const preview_params = <?= json_encode($preview_params["js_visible"]) ?>;
-        <?php endif ?>
-    <?php endif ?>
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
             showNotification(

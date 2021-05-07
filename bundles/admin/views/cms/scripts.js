@@ -8,6 +8,35 @@ domload(() => {
 
 	document.body.classList.add("just_desktop");
 
+	const getSaveVDOMJson = () => {
+		let save_v_dom;
+
+		if (all_v_doms.length > 1) {
+			// a template has been used
+			save_v_dom = [];
+
+			/**
+			 * @param {vDomNode[]} v_nodes
+			 */
+			const traverseVDom = (v_nodes) => {
+				for (const v_node of v_nodes) {
+					if (v_node.template_hook_id) {
+						save_v_dom.push(v_node);
+					} else if (v_node.children) {
+						traverseVDom(v_node.children);
+					}
+				}
+			};
+
+			traverseVDom(piep_cms.v_dom);
+		} else {
+			// plain page / template
+			save_v_dom = piep_cms.v_dom;
+		}
+
+		return JSON.stringify(save_v_dom);
+	};
+
 	let breadcrumbs = "";
 	let preview_url = "/";
 
@@ -55,7 +84,7 @@ domload(() => {
 	$(".piep_editor_header .breadcrumbs")._set_content(breadcrumbs);
 
 	$(".piep_editor_header .preview").addEventListener("click", () => {
-		previewUrl(preview_url);
+		previewUrl(preview_url, { v_dom_json: getSaveVDOMJson() });
 	});
 
 	// IMPORT
@@ -151,32 +180,7 @@ domload(() => {
 		// 	return;
 		// }
 
-		let save_v_dom;
-
-		if (all_v_doms.length > 1) {
-			// a template has been used
-			save_v_dom = [];
-
-			/**
-			 * @param {vDomNode[]} v_nodes
-			 */
-			const traverseVDom = (v_nodes) => {
-				for (const v_node of v_nodes) {
-					if (v_node.template_hook_id) {
-						save_v_dom.push(v_node);
-					} else if (v_node.children) {
-						traverseVDom(v_node.children);
-					}
-				}
-			};
-
-			traverseVDom(piep_cms.v_dom);
-		} else {
-			// plain page / template
-			save_v_dom = piep_cms.v_dom;
-		}
-
-		const save_v_dom_json = JSON.stringify(save_v_dom);
+		const save_v_dom_json = getSaveVDOMJson();
 
 		if (page_data) {
 			xhr({

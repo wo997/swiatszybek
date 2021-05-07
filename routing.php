@@ -213,7 +213,11 @@ if ($pageName) {
     $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [Request::$url]);
 
     if ($page_data) {
-        renderPage($page_data["page_id"]);
+        $data = [];
+        if (isset($preview_params) && $preview_params) {
+            $data["preview_params"] = $preview_params;
+        }
+        renderPage($page_data["page_id"], $data);
         die;
     }
 

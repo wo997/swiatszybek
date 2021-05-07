@@ -177,12 +177,16 @@ function renderPage($page_id, $data = [])
 {
     global $sections;
 
-    // page_data will come from page ;)
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
-    $page_release = $page_data["version"];
-
     $v_dom_json = $page_data["v_dom_json"];
+
+    $preview_v_dom_json = def($data, ["preview_params", "v_dom_json"]);
+
+    if ($preview_v_dom_json) {
+        $v_dom_json = $preview_v_dom_json;
+    }
+
     $v_dom = def(json_decode($v_dom_json, true), []);
 
     $parent_template_id = $page_data["template_id"];
@@ -270,6 +274,8 @@ function renderPage($page_id, $data = [])
 
     $page_data["seo_image"] = "";
     $seo_image = $page_data["seo_image"];
+
+    $page_release = $page_data["version"];
 ?>
 
     <?php startSection("head_content"); ?>
