@@ -8,10 +8,10 @@ PiepCMSManager::registerModule([
         echo renderGeneralProductsList([
             "general_product_ids" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 79, 175, 95],
             "page_id" => 0,
-            "row_count" => 3,
+            "row_count" => 20,
             "search_order" => "ceny-rosnaco"
         ])["html"];
-        return ob_get_clean();
+        return "<div class=\"product_list\">" . ob_get_clean() . "</div>";
     },
     "js_path" => BUILDS_PATH . "modules/product_list.js",
     "css_path" => BUILDS_PATH . "modules/product_list.css",
