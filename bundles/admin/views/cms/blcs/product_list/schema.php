@@ -9,6 +9,6 @@ PiepCMSManager::registerModule([
         //include "bundles/global/templates/parts/header/header.php";
         return ob_get_clean();
     },
-    "js" => BUILDS_PATH . "modules/product_list.js",
-    "css" => BUILDS_PATH . "modules/product_list.css",
+    "js_path" => BUILDS_PATH . "modules/product_list.js",
+    "css_path" => BUILDS_PATH . "modules/product_list.css",
 ]);

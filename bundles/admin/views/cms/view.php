@@ -74,11 +74,11 @@ $piep_cms_modules = PiepCMSManager::$modules;
 
 $modules_css = [];
 foreach ($piep_cms_modules as $module_name => $data) {
-    $css = def($data, "css");
-    if (!$css) {
+    $css_path = def($data, "css_path");
+    if (!$css_path) {
         continue;
     }
-    $modules_css[$module_name] = @file_get_contents($css);
+    $modules_css[$module_name] = @file_get_contents($css_path);
 }
 
 ?>

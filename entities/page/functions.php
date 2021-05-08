@@ -47,18 +47,18 @@ function traverseVDom($v_dom, $options = [])
             $module = def(PiepCMSManager::$modules, $module_name);
             if ($module) {
                 $render = def($module, "render");
+                if ($render) {
+                    $body = $render(["v_node" => $v_node]);
+                }
 
                 if (!$html_only) {
-                    $css = def($module, "css");
-                    $js = def($module, "js");
-                    if ($render) {
-                        $body = $render(["v_node" => $v_node]);
+                    $css_path = def($module, "css_path");
+                    $js_path = def($module, "js_path");
+                    if ($js_path) {
+                        $scripts_js .= @file_get_contents($js_path);
                     }
-                    if ($js) {
-                        $scripts_js .= @file_get_contents($js);
-                    }
-                    if ($css) {
-                        $styles_css .= @file_get_contents($css);
+                    if ($css_path) {
+                        $styles_css .= @file_get_contents($css_path);
                     }
                 }
             }

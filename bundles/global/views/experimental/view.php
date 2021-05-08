@@ -16,8 +16,8 @@ global $modified_packages;
     <?= $main_menu["render"]() ?>
 </header>
 
-<link href="/<?= $main_menu["css"] . "?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
-<script src="/<?= $main_menu["js"] . "?v=" . ASSETS_RELEASE ?>"></script>
+<link href="/<?= $main_menu["css_path"] . "?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
+<script src="/<?= $main_menu["js_path"] . "?v=" . ASSETS_RELEASE ?>"></script>
 
 <?= join(",", $modified_packages) ?>
 
