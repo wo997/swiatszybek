@@ -1,4 +1,4 @@
-/* js[global] */
+/* js[modules/main_menu] */
 
 domload(() => {
 	/** @type {CartProductsComp} */
@@ -12,29 +12,6 @@ domload(() => {
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products;
 		cart_products_comp._render();
-		const empty = user_cart.products.length === 0;
-		$$(".case_cart_not_empty").forEach((ne) => {
-			expand(ne, !empty);
-		});
-		$$(".case_cart_empty").forEach((e) => {
-			expand(e, empty);
-		});
-
-		$$(".cart_product_count").forEach((e) => {
-			e._set_content(user_cart.products.length);
-		});
-		$$(".cart_products_price").forEach((e) => {
-			e._set_content(user_cart.products_price + " zł");
-		});
-		$$(".cart_delivery_price").forEach((e) => {
-			e._set_content(user_cart.delivery_price + " zł");
-		});
-		$$(".cart_total_price").forEach((e) => {
-			e._set_content(user_cart.total_price + " zł");
-		});
-		$$(".cod_fee").forEach((e) => {
-			e._set_content(user_cart.cod_fee + " zł");
-		});
 	};
 
 	window.addEventListener("user_cart_changed", loadCart);

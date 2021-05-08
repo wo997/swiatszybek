@@ -143,7 +143,10 @@ domload(() => {
 				adding_product_from_cart = false;
 				spinner_wrapper.classList.remove("spinning");
 
-				scrollIntoView(cart_products_comp, { offset });
+				const last = cart_products_comp._child(".bind_products > .list_row:last-child");
+				if (last) {
+					scrollIntoView(last, { offset });
+				}
 
 				const product_in_cart = user_cart.products.find((e) => e.product_id === product_id);
 				if (!product_in_cart || product_in_cart.qty !== request_qty) {
