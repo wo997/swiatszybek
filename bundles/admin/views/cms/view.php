@@ -78,7 +78,7 @@ foreach ($piep_cms_modules as $module_name => $data) {
     if (!$css) {
         continue;
     }
-    $modules_css[$module_name] = file_get_contents($css);
+    $modules_css[$module_name] = @file_get_contents($css);
 }
 
 ?>

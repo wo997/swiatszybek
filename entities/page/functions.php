@@ -2,8 +2,10 @@
 
 define("SINGLE_HTML_TAGS", ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
 
-function traverseVDom($v_dom)
+function traverseVDom($v_dom, $options = [])
 {
+    $html_only = def($options, ["html_only"], false);
+
     $content_html = "";
     $styles_css_responsive = [];
     $styles_css = "";
@@ -31,7 +33,7 @@ function traverseVDom($v_dom)
                 $body .= "<br>";
             }
         } else if (isset($v_node["children"])) {
-            $sub_data = traverseVDom($v_node["children"]);
+            $sub_data = traverseVDom($v_node["children"], $options);
             $body .= $sub_data["content_html"];
 
             foreach (Theme::$responsive_breakpoints as $res_name => $width) {
@@ -45,16 +47,19 @@ function traverseVDom($v_dom)
             $module = def(PiepCMSManager::$modules, $module_name);
             if ($module) {
                 $render = def($module, "render");
-                $css = def($module, "css");
-                $js = def($module, "js");
-                if ($render) {
-                    $body = $render(["v_node" => $v_node]);
-                }
-                if ($js) {
-                    $scripts_js .= file_get_contents($js);
-                }
-                if ($css) {
-                    $styles_css .= file_get_contents($css);
+
+                if (!$html_only) {
+                    $css = def($module, "css");
+                    $js = def($module, "js");
+                    if ($render) {
+                        $body = $render(["v_node" => $v_node]);
+                    }
+                    if ($js) {
+                        $scripts_js .= @file_get_contents($js);
+                    }
+                    if ($css) {
+                        $styles_css .= @file_get_contents($css);
+                    }
                 }
             }
         }
@@ -72,7 +77,7 @@ function traverseVDom($v_dom)
             $content_html .= ">$body</$tag>";
         }
 
-        if (isset($v_node["styles"])) {
+        if (!$html_only && isset($v_node["styles"])) {
             foreach ($v_node["styles"] as $res_name => $styles) {
                 $node_styles = "";
                 foreach ($styles as $prop => $val) {
@@ -274,7 +279,7 @@ function renderPage($page_id, $data = [])
 
     $full_v_dom = $all_v_doms[0];
 
-    $dom_data = traverseVDom($full_v_dom);
+    $dom_data = traverseVDom($full_v_dom, ["html_only" => true]);
 
     $shop_name = getSetting(["general", "company", "shop_name"], "");
     $seo_title = $page_data["seo_title"] ? $page_data["seo_title"] : $shop_name;

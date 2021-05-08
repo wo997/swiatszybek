@@ -28,10 +28,10 @@ domload(() => {
 							return `${location.host}${data.url ? "/" : ""}${data.url}`;
 						},
 					},
-					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
-					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
-					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
-					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
+					{ label: "Tytuł", key: "seo_title", width: "0.8", searchable: "string" },
+					{ label: "Opis", key: "seo_description", width: "0.8", searchable: "string" },
+					{ label: "Data utworzenia", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "0.6", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
@@ -67,10 +67,10 @@ domload(() => {
 				search_url: STATIC_URLS["ADMIN"] + "/page/search_general_products",
 				columns: [
 					{ label: "Produkt", key: "name", width: "1", searchable: "string" },
-					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
-					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
-					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
-					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
+					{ label: "Tytuł", key: "seo_title", width: "0.8", searchable: "string" },
+					{ label: "Opis", key: "seo_description", width: "0.8", searchable: "string" },
+					{ label: "Data utworzenia", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "0.6", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
@@ -114,10 +114,10 @@ domload(() => {
 							return data.__category_path_names_csv.replace(/,/g, " ― ");
 						},
 					},
-					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
-					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
-					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
-					{ label: "Szablon", key: "template_id", width: "1", searchable: "select", map_name: "template" },
+					{ label: "Tytuł", key: "seo_title", width: "0.8", searchable: "string" },
+					{ label: "Opis", key: "seo_description", width: "0.8", searchable: "string" },
+					{ label: "Data utworzenia", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+					{ label: "Szablon", key: "template_id", width: "0.6", searchable: "select", map_name: "template" },
 					{
 						label: "Akcja",
 						key: "",
