@@ -495,11 +495,6 @@ class PiepCMS {
 			if (edit_theme_btn) {
 				getThemeSettingsModal()._show({ source: edit_theme_btn });
 			}
-
-			const edit_seo_btn = target._parent(".edit_seo_btn");
-			if (edit_seo_btn) {
-				getPageSeoDataModal()._show({ source: edit_seo_btn });
-			}
 		});
 	}
 

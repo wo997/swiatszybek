@@ -85,8 +85,8 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 		template: html`
 			<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
-			<div class="scroll_panel scroll_shadow panel_padding">
-				<div style="min-width: 618px;">
+			<div class="scroll_panel scroll_shadow panel_padding" style="overflow:auto">
+				<div style="width: 628px;">
 					<div class="label first">
 						<span>Tytuł strony (title)</span>
 						<span class="is_ok" data-node="{${comp._nodes.title_ok}}"></span>
@@ -105,13 +105,7 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 				</div>
 			</div>
 		`,
-		initialize: () => {
-			// comp._nodes.save_btn.addEventListener("click", () => {
-			// 	const data = comp._data;
-			// 	showLoader();
-			// 	hideModal("PageSeoData");
-			// });
-		},
+		initialize: () => {},
 		ready: () => {},
 	});
 }
@@ -125,8 +119,8 @@ function getPageSeoDataModal() {
 					<div class="custom_toolbar">
 						<span class="title medium"> Dane SEO strony </span>
 						<div class="hover_info">
-							Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google). Na podstawie tych danych klient podejmie
-							decyzję czy chce odwiedzić stronę sklepu czy przejść dalej.
+							Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google). Na podstawie tych informacji klient
+							podejmie decyzję czy chce odwiedzić stronę sklepu czy przejdzie dalej.
 						</div>
 						<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>

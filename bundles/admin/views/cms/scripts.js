@@ -88,6 +88,71 @@ domload(() => {
 		previewUrl(preview_url, { v_dom_json: getSaveVDOMJson() });
 	});
 
+	const edit_seo_btn = $(".edit_seo_btn");
+	const seo_state_icon = edit_seo_btn._child(".seo_state_icon");
+	const page_seo_data_modal = getPageSeoDataModal();
+
+	edit_seo_btn.addEventListener("click", () => {
+		page_seo_data_modal._show({ source: edit_seo_btn });
+	});
+
+	const updateSEOState = () => {
+		if (!page_data) {
+			edit_seo_btn.classList.add("hidden");
+			return;
+		}
+
+		page_seo_data_modal._nodes.save_btn.addEventListener("click", () => {
+			const data = page_seo_data_modal._data;
+			showLoader();
+			hideModal("PageSeoData");
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/page/save",
+				params: {
+					page: {
+						page_id: page_data.page_id,
+						seo_title: data.seo_title,
+						seo_description: data.seo_description,
+					},
+				},
+				success: (res) => {
+					page_data = res;
+					updateSEOState();
+
+					showNotification("Zapisano dane SEO strony", {
+						one_line: true,
+						type: "success",
+					});
+					hideLoader();
+				},
+			});
+		});
+
+		page_seo_data_modal._data.seo_title = page_data.seo_title;
+		page_seo_data_modal._data.seo_description = page_data.seo_description;
+		page_seo_data_modal._render();
+
+		const is_seo_ok = page_data.seo_title && page_data.seo_description;
+		edit_seo_btn.classList.toggle("text_success", is_seo_ok);
+		edit_seo_btn.classList.toggle("text_error", !is_seo_ok);
+		seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-times"></i>`);
+
+		let tooltip = html`
+			<div class="semi_bold">Tytuł strony:</div>
+			<div>${page_data.seo_title ? page_data.seo_title : "BRAK"}</div>
+			<div class="semi_bold">Opis strony:</div>
+			<div>${page_data.seo_description ? page_data.seo_description : "BRAK"}</div>
+		`;
+
+		if (!is_seo_ok) {
+			tooltip += html`<br />Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google)`;
+		}
+
+		edit_seo_btn.dataset.tooltip = tooltip;
+	};
+
+	updateSEOState();
+
 	// IMPORT
 	let v_dom_json;
 
