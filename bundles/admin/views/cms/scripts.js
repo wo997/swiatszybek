@@ -53,11 +53,7 @@ domload(() => {
 			$(".piep_editor_header").insertAdjacentHTML(
 				"beforeend",
 				html`
-					<a
-						class="btn subtle ml1"
-						style="font-size:1rem"
-						href="${STATIC_URLS["ADMIN"]}/produkt/${page_data.general_product.general_product_id}"
-					>
+					<a class="btn subtle ml1" href="${STATIC_URLS["ADMIN"]}/produkt/${page_data.general_product.general_product_id}">
 						Edytuj produkt
 						<i class="fas fa-cube"></i>
 					</a>
@@ -66,6 +62,11 @@ domload(() => {
 
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
+			let dis = page_data.url;
+			if (page_data.url === "/") {
+				dis += " (STRONA GŁÓWNA)";
+			}
+			breadcrumbs += html` <div class="crumb">${dis}</div> `;
 			preview_url = page_data.url;
 		}
 	}

@@ -108,6 +108,13 @@ foreach ($piep_cms_modules as $module_name => $data) {
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
         <span class="title breadcrumbs mr0"></span>
+        <button class="btn transparent edit_seo_btn small medium text_success" data-tooltip="Edytuj tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google)">
+            SEO
+            <span class="is_seo_ok">
+                <i class="fas fa-check"></i>
+                <!-- <i class="fas fa-times"></i> -->
+            </span>
+        </button>
         <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo ml1" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
         <button class="btn primary preview ml1" data-tooltip="Otwórz stronę w nowej karcie">
@@ -135,9 +142,6 @@ foreach ($piep_cms_modules as $module_name => $data) {
         </button>
         <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
             <i class="fas fa-cogs"></i>
-        </button>
-        <button class="btn transparent edit_seo_btn bold" data-tooltip_position="left" data-tooltip="Optymalizacja pod wyszukiwanie strony">
-            SEO
         </button>
     </div>
 

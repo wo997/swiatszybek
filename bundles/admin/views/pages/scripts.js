@@ -19,7 +19,19 @@ domload(() => {
 			DatatableComp(pages_dt, undefined, {
 				search_url: STATIC_URLS["ADMIN"] + "/page/search_pages",
 				columns: [
-					{ label: "Link", key: "url", width: "1", searchable: "string" },
+					{
+						label: "Link",
+						key: "url",
+						width: "1",
+						searchable: "string",
+						render: (data) => {
+							let dis = data.url;
+							if (data.url === "/") {
+								dis += " (STRONA GŁÓWNA)";
+							}
+							return dis;
+						},
+					},
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
 					{ label: "Opis", key: "seo_description", width: "1", searchable: "string" },
 					{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date", sortable: true },
