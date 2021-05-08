@@ -29,7 +29,7 @@ endSection();
             <div>
                 <a href="/" class="home logo_wrapper link">
                     <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
-                    Strona główna
+                    Przejdź do sklepu
                 </a>
                 <hr>
 

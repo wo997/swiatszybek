@@ -62,11 +62,7 @@ domload(() => {
 
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
-			let dis = page_data.url;
-			if (page_data.url === "/") {
-				dis += " (STRONA GŁÓWNA)";
-			}
-			breadcrumbs += html` <div class="crumb">${dis}</div> `;
+			breadcrumbs += html` <div class="crumb">${location.host}${page_data.url ? "/" : ""}${page_data.url}</div> `;
 			preview_url = page_data.url;
 		}
 	}

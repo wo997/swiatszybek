@@ -210,7 +210,7 @@ if ($pageName) {
     $canSee = "1"; // User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
     //$current_page_data = []; //DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
 
-    $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [Request::$url]);
+    $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [ltrim(Request::$url, "/")]);
 
     if ($page_data) {
         $data = [];

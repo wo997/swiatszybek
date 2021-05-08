@@ -157,17 +157,12 @@ function AddPageModalComp(comp, parent, data = undefined) {
 				<div class="expand_y" data-node="{${comp._nodes.case_page}}">
 					<div class="label">
 						Link
-						<div class="hover_info">
-							<span class="semi_bold">Przykłady linków:</span>
-							<br />
-							"/" - strona główna
-							<br />
-							"/regulamin"
-							<br />
-							Każdy link powinien zaczynać się od "/"
-						</div>
+						<div class="hover_info">Pozostaw pusty dla strony głównej</div>
 					</div>
-					<input class="field trim" data-bind="{${data.url}}" data-validate="" />
+					<div class="glue_children">
+						<span class="field_desc">${location.host}/</span>
+						<input class="field trim" data-bind="{${data.url}}" />
+					</div>
 				</div>
 				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
 					<div class="label">Produkt</div>

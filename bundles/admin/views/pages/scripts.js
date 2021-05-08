@@ -25,11 +25,7 @@ domload(() => {
 						width: "1",
 						searchable: "string",
 						render: (data) => {
-							let dis = data.url;
-							if (data.url === "/") {
-								dis += " (STRONA GŁÓWNA)";
-							}
-							return dis;
+							return `${location.host}${data.url ? "/" : ""}${data.url}`;
 						},
 					},
 					{ label: "Tytuł", key: "seo_title", width: "1", searchable: "string" },
@@ -45,7 +41,7 @@ domload(() => {
 								<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}" data-tooltip="Edytuj">
 									<i class="fas fa-cog"></i>
 								</a>
-								<a class="btn subtle small" href="${data.url}" target="_blank" data-tooltip="Otwórz">
+								<a class="btn subtle small" href="/${data.url}" target="_blank" data-tooltip="Otwórz">
 									<i class="fas fa-external-link-alt"></i>
 								</a>
 							`;
