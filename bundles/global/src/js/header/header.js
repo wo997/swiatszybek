@@ -5,12 +5,9 @@ let main_header;
 /** @type {PiepNode} */
 let main_header_buttons;
 /** @type {PiepNode} */
-let main_header_height;
-/** @type {PiepNode} */
 let main_header_nav;
 let header_modals_only = false;
 let header_use_modals = false;
-let header_height = 0;
 
 function headerResizeCallback() {
 	if (!main_header) {
@@ -18,7 +15,6 @@ function headerResizeCallback() {
 	}
 
 	header_height = main_header.offsetHeight;
-	document.documentElement.style.setProperty("--header_height", `${header_height}px`);
 
 	const main_search_wrapper = $(".main_search_wrapper");
 	const r = main_search_wrapper.getBoundingClientRect();
@@ -32,7 +28,6 @@ domload(() => {
 	if (!main_header) {
 		return;
 	}
-	main_header_height = $(".header_height");
 	main_header_buttons = main_header._child(".header_buttons");
 	main_header_nav = main_header._child("nav");
 

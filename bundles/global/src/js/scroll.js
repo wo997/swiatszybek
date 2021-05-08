@@ -142,7 +142,7 @@ function scrollIntoView(elem, params = {}) {
 	const elem_r = elem.getBoundingClientRect();
 	const parent_r =
 		scroll_parent === document.documentElement
-			? { width: window.innerWidth, height: window.innerHeight, top: main_header_height ? header_height : 0, left: 0 }
+			? { width: window.innerWidth, height: window.innerHeight, top: header_height, left: 0 }
 			: scroll_parent.getBoundingClientRect();
 
 	let top = elem_r.top - parent_r.top - offset;

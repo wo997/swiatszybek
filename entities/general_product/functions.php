@@ -190,7 +190,7 @@ function getGlobalProductsSearch($url)
 
     $products_data = paginateData($pagination_params);
 
-    $html = "";
+    ob_start();
 
     // it should be a template to use anywhere tho, well, not rly? sliders will be different by a lot anyway
     foreach ($products_data["rows"] as $product) {
@@ -267,34 +267,35 @@ function getGlobalProductsSearch($url)
         } else {
             $images_json = "[]";
         }
-        $images_json_safe = htmlspecialchars($images_json);
 
-        $features_wrapper = $features_html ? "<div class=\"list smooth_scrollbar\">$features_html</div>" : "";
-
-        $html .= "<div class=\"product_block\">
-            <a href=\"$link\">
-                <div class=\"product_img_wrapper\" data-images=\"$images_json_safe\">
-                    <img data-src=\"$img_url\" class=\"product_img wo997_img\" alt=\"\">
+?>
+        <div class="product_block">
+            <a href="$link">
+                <div class="product_img_wrapper" data-images="<?= htmlspecialchars($images_json) ?>">
+                    <img data-src="<?= $img_url ?>" class="product_img wo997_img" alt="">
                 </div>
-                <h3 class=\"product_name check_tooltip\">$name</h3>
+                <h3 class="product_name check_tooltip"><?= $name ?></h3>
             </a>
-            <div class=\"product_row\">
-                <span class=\"product_price pln\">$display_price</span>
-                <span class=\"product_rating rating\"><span class=\"stars\">$avg_rating</span> ($rating_count)</span>
-                <div style=\"width:100%\"></div>
-                <span class=\"product_stock $stock_class\"></span>
-                <div class=\"product_variants\">
-                    <div class=\"header\"> 
-                        <span>$product_count</span>
-                        <i class=\"fas fa-list-ul\"></i>
+            <div class="product_row">
+                <span class="product_price pln"><?= $display_price ?></span>
+                <span class="product_rating rating"><span class="stars"><?= $avg_rating ?></span> (<?= $rating_count ?>)</span>
+                <div style="width:100%"></div>
+                <span class="product_stock <?= $stock_class ?>"></span>
+                <div class="product_variants">
+                    <div class="header">
+                        <span><?= $product_count ?></span>
+                        <i class="fas fa-list-ul"></i>
                     </div>
-                    $features_wrapper
+                    <?php if ($features_html) : ?>
+                        <div class="list smooth_scrollbar"><?= $features_html ?></div>
+                    <?php endif ?>
                 </div>
             </div>
-        </div>";
+        </div>
+<?php
     }
 
-    $products_data["html"] = $html;
+    $products_data["html"] = ob_get_clean();
 
     $products_data["total_products"] = count($product_ids);
     $products_data["all_ids"] = $product_ids;
