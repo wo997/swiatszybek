@@ -50,7 +50,7 @@ class Assets
                 $view_path = $parent_dir . "view.php";
                 if (file_exists($view_path)) {
                     $first_line = def(file($view_path), 0, "");
-                    if ($url = getAnnotationRoute($first_line)) {
+                    if ($url = Files::getAnnotationRoute($first_line)) {
                         $group = "views" . $url;
                     }
                 }
@@ -199,18 +199,18 @@ class Assets
         $css_file_groups = [];
         $js_file_groups = [];
 
-        scanDirectories(
+        Files::scanDirectories(
             [
                 "get_first_line" => true,
                 "exclude_paths" => ["vendor", "uploads", "builds"],
             ],
             function ($path, $first_line, $parent_dir) use (&$css_file_groups, &$js_file_groups) {
                 if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
-                    if ($css_group = getAnnotation("css", $first_line)) {
+                    if ($css_group = Files::getAnnotation("css", $first_line)) {
                         self::appendGroup($css_file_groups, $css_group, $path, $parent_dir);
                     }
                 } else if (strpos($path, ".js") !== false) {
-                    if ($js_group = getAnnotation("js", $first_line)) {
+                    if ($js_group = Files::getAnnotation("js", $first_line)) {
                         self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
                     }
                 }

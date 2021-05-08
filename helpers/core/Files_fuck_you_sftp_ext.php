@@ -530,81 +530,81 @@ class Files
         }
         mkdir($dir);
     }
-}
 
-/**
- * @typedef scanDirectoriesOptions {
- * get_first_line?: boolean
- * exclude_paths?: array
- * include_paths?: array
- * }
- */
+    /**
+     * @typedef scanDirectoriesOptions {
+     * get_first_line?: boolean
+     * exclude_paths?: array
+     * include_paths?: array
+     * }
+     */
 
-/**
- * @param scanDirectoriesOptions $options
- */
-function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
-{
-    foreach (scandir(APP_PATH . $parent_dir) as $file) {
-        $path = $parent_dir . $file;
-        if (str_replace(".", "", $file) == "") {
-            continue;
-        }
-        if ($level === 0) {
-            if (isset($options["exclude_paths"]) && in_array($file, $options["exclude_paths"])) {
+    /**
+     * @param scanDirectoriesOptions $options
+     */
+    public static function scanDirectories($options = [], $callback, $parent_dir = "", $level = 0)
+    {
+        foreach (scandir(APP_PATH . $parent_dir) as $file) {
+            $path = $parent_dir . $file;
+            if (str_replace(".", "", $file) == "") {
                 continue;
             }
-            if (isset($options["include_paths"]) && !in_array($file, $options["include_paths"])) {
+            if ($level === 0) {
+                if (isset($options["exclude_paths"]) && in_array($file, $options["exclude_paths"])) {
+                    continue;
+                }
+                if (isset($options["include_paths"]) && !in_array($file, $options["include_paths"])) {
+                    continue;
+                }
+            }
+            if (is_dir($path)) {
+                self::scanDirectories($options, $callback, $path . "/", $level + 1);
                 continue;
             }
+            if (isset($options["get_first_line"])) {
+                $first_line = def(file($path), 0, "");
+            } else {
+                $first_line = "";
+            }
+
+            $callback($path, $first_line, $parent_dir);
         }
-        if (is_dir($path)) {
-            scanDirectories($options, $callback, $path . "/", $level + 1);
-            continue;
+    }
+
+    public static function getAnnotationPHP($type, $line)
+    {
+        if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
+            return substr($match[0], strlen("<?php //" . $type . "["), -1);
         }
-        if (isset($options["get_first_line"])) {
-            $first_line = def(file($path), 0, "");
+    }
+
+    public static function getAnnotationRoute($line)
+    {
+        $type = "route";
+
+        $url = "";
+        if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
+            $url = substr($match[0], strlen("<?php //" . $type . "["), -1);
         } else {
-            $first_line = "";
+            return $url;
         }
 
-        $callback($path, $first_line, $parent_dir);
-    }
-}
+        if (preg_match("/\{.*\}/", $url, $matches)) {
+            $static_url_width_curly_braces = $matches[0];
+            $static_url = substr($static_url_width_curly_braces, 1, -1);
+            if (isset(Request::$static_urls[$static_url])) {
+                $url = str_replace($static_url_width_curly_braces, Request::$static_urls[$static_url], $url);
+            }
+        }
 
-function getAnnotationPHP($type, $line)
-{
-    if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
-        return substr($match[0], strlen("<?php //" . $type . "["), -1);
-    }
-}
-
-function getAnnotationRoute($line)
-{
-    $type = "route";
-
-    $url = "";
-    if (preg_match("/<\?php \/\/$type\[.*\]/", $line, $match)) {
-        $url = substr($match[0], strlen("<?php //" . $type . "["), -1);
-    } else {
         return $url;
     }
 
-    if (preg_match("/\{.*\}/", $url, $matches)) {
-        $static_url_width_curly_braces = $matches[0];
-        $static_url = substr($static_url_width_curly_braces, 1, -1);
-        if (isset(Request::$static_urls[$static_url])) {
-            $url = str_replace($static_url_width_curly_braces, Request::$static_urls[$static_url], $url);
+    public static function getAnnotation($type, $line)
+    {
+        if (preg_match('/\*.*\*/', $line) && preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
+            return $match[0];
         }
+        return null;
     }
-
-    return $url;
-}
-
-function getAnnotation($type, $line)
-{
-    if (preg_match('/\*.*\*/', $line) && preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
-        return $match[0];
-    }
-    return null;
 }

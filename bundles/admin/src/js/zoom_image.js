@@ -13,20 +13,17 @@ function zoomImage(src, params = {}) {
 				<div class="modal_body">
 					<div class="custom_toolbar">
 						<span class="title medium">Podgląd zdjęcia</span>
-						<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+						<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 					</div>
-					<div class="place flex_stretch" style="justify-content: center;align-items: center;"></div>
+					<div class="place flex_stretch align_center justify_center"></div>
 				</div>
 			</div>
 		`);
 	}
 
 	const place = $("#zoomImage .place");
-	place._set_content(html`<img class="wo997_img" data-src="${src}" />`);
-	const wo997_img = place._child(".wo997_img");
-	wo997_img.style.width = "10000px";
+	place._set_content(html`<img class="wo997_img" data-src="${src}" data-resolution="df" />`);
 	lazyLoadImages({ duration: 0 });
-	wo997_img.style.width = "";
 
 	showModal("zoomImage", params);
 }

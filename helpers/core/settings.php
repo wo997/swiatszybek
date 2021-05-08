@@ -96,7 +96,7 @@ function buildSettings()
 {
     $_settings = [];
 
-    scanDirectories(
+    Files::scanDirectories(
         [
             "include_paths" => ["settings"],
         ],

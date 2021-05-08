@@ -4,8 +4,6 @@ if (isset($_GET["no_build"])) {
     return;
 }
 
-$base_path = str_replace("\\", "/", getcwd()) . "/";
-
 $mod_time_php = 0;
 $mod_time_assets = 0;
 $mod_time_modules = 0;
@@ -13,7 +11,7 @@ $mod_time_settings = 0;
 
 $modified_packages = [];
 
-scanDirectories(
+Files::scanDirectories(
     [
         "exclude_paths" => ["vendor", "uploads", "modules", "settings", "builds"], // , "deployment"
         "get_first_line" => true,
@@ -25,9 +23,9 @@ scanDirectories(
         } else {
             $ext = Files::getFileExtension($path);
             if (in_array($ext, ["css", "scss", "js"])) {
-                $modified_package = getAnnotation("css", $first_line);
+                $modified_package = Files::getAnnotation("css", $first_line);
                 if (!$modified_package) {
-                    $modified_package = getAnnotation("js", $first_line);
+                    $modified_package = Files::getAnnotation("js", $first_line);
                 }
                 if ($modified_package) {
                     $modified_package = str_replace("!", "", $modified_package);
@@ -42,7 +40,7 @@ scanDirectories(
     }
 );
 
-scanDirectories(
+Files::scanDirectories(
     [
         "include_paths" => ["settings"],
         //"get_first_line" => true,

@@ -73,7 +73,6 @@ function setImageSize(img) {
 		return;
 	}
 	const data = getResponsiveImageData(src);
-	let rect = img.getBoundingClientRect();
 
 	if (!data) {
 		const duration = show_image_duration;
@@ -86,15 +85,9 @@ function setImageSize(img) {
 		return;
 	}
 
-	if (!rect.width && !isHidden(img)) {
+	if (!img.offsetWidth && !isHidden(img)) {
 		img.style.width = `${data.w}px`;
 	}
-
-	// if (!img.style.height) {
-	// 	const suppose_height = Math.round((rect.width * data.h) / data.w);
-	// 	img.style.height = `${suppose_height}px`; // TODO: better to use a css var I quess
-	// 	img.classList.add("had_no_height");
-	// }
 }
 
 /**
@@ -146,29 +139,32 @@ function onScrollImages(options = {}) {
 
 /**
  * @param {PiepNode} img
- * @param {string} base_url
+ * @param {{
+ * base_url?: string
+ * image_dimension?: number
+ * }} options
  */
-function getResponsiveImageRealUrl(img, base_url = undefined) {
-	base_url = def(base_url, img.dataset.src);
+function getResponsiveImageRealUrl(img, options = {}) {
+	const base_url = def(options.base_url, img.dataset.src);
 	const img_data = getResponsiveImageData(base_url);
+	const fixed_resolution = img.dataset.resolution;
 
 	if (!img_data || !img_data.responsive) {
 		return base_url;
 	}
 
-	const rect = img.getBoundingClientRect();
-	const image_dimension = Math.max(rect.width, rect.height);
+	const image_dimension = def(options.image_dimension, Math.max(img.offsetWidth, img.offsetHeight));
 	// @ts-ignore
 	img._last_dimension = image_dimension;
 
-	if (!image_dimension) {
+	if (!image_dimension && !fixed_resolution) {
 		return;
 	}
 
 	const natural_image_dimension = Math.max(img_data.w, img_data.h);
-	let target_size_name = "df";
+	let target_size_name = def(fixed_resolution, "df");
 
-	if (image_dimension < natural_image_dimension + 1) {
+	if (!fixed_resolution && image_dimension < natural_image_dimension + 1) {
 		const pixelDensityFactor = window.devicePixelRatio * 0.3 + 0.7; // compromise quality and performance
 		Object.entries(image_fixed_dimensions).forEach(([size_name, size_dimension]) => {
 			if (size_name == "df") {
@@ -235,7 +231,7 @@ function preloadImage(url) {
  */
 function preloadWo997Image(base_url, img) {
 	// @ts-ignore
-	const url = getResponsiveImageRealUrl(img, base_url);
+	const url = getResponsiveImageRealUrl(img, { base_url });
 	return preloadImage(url);
 }
 

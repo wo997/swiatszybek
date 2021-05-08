@@ -16,7 +16,7 @@ if (isset($_GET["vendor"])) {
 $zip = new ZipArchive();
 $zip->open('piepsklep.zip', ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
 
-scanDirectories(
+Files::scanDirectories(
     [
         "include_paths" => $include_paths,
         "exclude_paths" => $exclude_paths,

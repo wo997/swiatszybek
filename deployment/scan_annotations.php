@@ -8,7 +8,7 @@ $_link_hooks_paths = [];
 
 echo "<br><h3>Scanning annotations:</h3>";
 
-scanDirectories(
+Files::scanDirectories(
     [
         "get_first_line" => true,
         "exclude_paths" => ["vendor", "uploads", "builds"],
@@ -20,7 +20,7 @@ scanDirectories(
             return;
         }
 
-        if ($url = getAnnotationRoute($first_line)) {
+        if ($url = Files::getAnnotationRoute($first_line)) {
             if (isset($_link_route_path[$url])) {
                 /*// remove old route if existed on server, might cause data loss, pls dont do that
                 if (filemtime($_link_route_path[$url]) < filemtime($path)) {
@@ -35,9 +35,9 @@ scanDirectories(
             } else {
                 $_link_route_path[$url] = $path;
             }
-        } else if ($event = getAnnotationPHP("event", $first_line)) {
+        } else if ($event = Files::getAnnotationPHP("event", $first_line)) {
             $_link_event_paths[$event][] = "  '$path'";
-        } else if ($hook = getAnnotationPHP("hook", $first_line)) {
+        } else if ($hook = Files::getAnnotationPHP("hook", $first_line)) {
             $_link_hooks_paths[$hook][] = "include_once \"$path\";";
         }
     }
