@@ -57,9 +57,9 @@
 	&:not(.visible) {
 		display: none;
 	}
-	& .blc {
+	& > .blc {
 		opacity: 0.7;
-		width: 100%;
+		width: 100% !important;
 	}
 	[data-src="/src/img/empty_img_147x94.svg"] {
 		width: 100px;
