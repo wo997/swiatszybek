@@ -239,11 +239,13 @@ function renderPage($page_id, $data = [])
 
                     $avn = null;
                     // now glue these, but as u can see the template_hook_id isn't passed by default, just for the last layer
-                    foreach ($append_v_dom as $append_v_node) {
-                        if ($append_v_node["template_hook_id"] === $template_hook_id) {
-                            //var_dump($template_hook_id, "<<");
-                            $avn = $append_v_node;
-                            break;
+                    if ($append_v_dom) {
+                        foreach ($append_v_dom as $append_v_node) {
+                            if ($append_v_node["template_hook_id"] === $template_hook_id) {
+                                //var_dump($template_hook_id, "<<");
+                                $avn = $append_v_node;
+                                break;
+                            }
                         }
                     }
 

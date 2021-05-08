@@ -108,7 +108,7 @@ foreach ($piep_cms_modules as $module_name => $data) {
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
         <span class="title breadcrumbs mr0"></span>
-        <button class="btn transparent edit_seo_btn small semi_medium">
+        <button class="btn transparent edit_seo_btn small semi_medium bold">
             SEO
             <span class="seo_state_icon"></span>
         </button>

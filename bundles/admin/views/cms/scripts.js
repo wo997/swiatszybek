@@ -134,8 +134,9 @@ domload(() => {
 
 		const is_seo_ok = page_data.seo_title && page_data.seo_description;
 		edit_seo_btn.classList.toggle("text_success", is_seo_ok);
-		edit_seo_btn.classList.toggle("text_error", !is_seo_ok);
-		seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-times"></i>`);
+		edit_seo_btn.classList.toggle("text_warning", !is_seo_ok);
+		// seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-times"></i>`);
+		seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-exclamation-triangle"></i>`);
 
 		let tooltip = html`
 			<div class="semi_bold">Tytuł strony:</div>
