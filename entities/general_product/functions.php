@@ -146,14 +146,35 @@ function getGlobalProductsSearch($url)
             GROUP BY product_id");
     }
 
-    // do the actual search / pagination for everything
-
-    /** @var DatatableParams */
-    $datatable_params = ["page_id" => $page_id, "row_count" => $row_count, "filters" => []];
-
-    $product_ids_csv = $product_ids ? join(",", $product_ids) : "-1";
-
     $search_order = def($get_vars, "sortuj", "bestsellery");
+
+    $products_data = renderGeneralProductsList([
+        "product_ids" => $product_ids,
+        "page_id" => $page_id,
+        "row_count" => $row_count,
+        "search_order" => $search_order,
+    ]);
+    $products_data["total_products"] = count($product_ids);
+    $products_data["all_ids"] = $product_ids;
+
+    return $products_data;
+}
+
+function renderGeneralProductsList($params)
+{
+    /** @var DatatableParams */
+    $datatable_params = ["page_id" => $params["page_id"], "row_count" => $params["row_count"], "filters" => []];
+
+    $product_ids = def($params, "product_ids", null);
+    $general_product_ids = def($params, "general_product_ids", null);
+
+    if ($product_ids !== null) {
+        $where = "p.product_id IN (" . ($product_ids ? join(",", $product_ids) : "-1") . ")";
+    } else if ($general_product_ids !== null) {
+        $where = "gp.general_product_id IN (" . ($general_product_ids ? join(",", $general_product_ids) : "-1") . ")";
+    }
+
+    $search_order = def($params, "search_order", "bestsellery");
 
     $actual_order = "general_product_id DESC";
     if ($search_order === "bestsellery") {
@@ -169,20 +190,20 @@ function getGlobalProductsSearch($url)
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
-            gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
-            MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
-            GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
-            GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
-            COUNT(DISTINCT p.product_id) as product_count,
-            __avg_rating, __rating_count
-        ",
+        gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
+        MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
+        GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
+        GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
+        COUNT(DISTINCT p.product_id) as product_count,
+        __avg_rating, __rating_count
+    ",
         "from" => "general_product gp
-            INNER JOIN product p USING (general_product_id)
-            LEFT JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
-            LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
+        INNER JOIN product p USING (general_product_id)
+        LEFT JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
+        LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
         "group" => "general_product_id",
         "order" => $actual_order,
-        "where" => "p.product_id IN ($product_ids_csv)",
+        "where" => $where,
         "datatable_params" => json_encode($datatable_params),
         "search_type" => "extended",
         "quick_search_fields" => ["gp.__search"],
@@ -270,7 +291,7 @@ function getGlobalProductsSearch($url)
 
 ?>
         <div class="product_block">
-            <a href="$link">
+            <a href="<?= $link ?>">
                 <div class="product_img_wrapper" data-images="<?= htmlspecialchars($images_json) ?>">
                     <img data-src="<?= $img_url ?>" class="product_img wo997_img" alt="">
                 </div>
@@ -296,9 +317,6 @@ function getGlobalProductsSearch($url)
     }
 
     $products_data["html"] = ob_get_clean();
-
-    $products_data["total_products"] = count($product_ids);
-    $products_data["all_ids"] = $product_ids;
 
     return $products_data;
 }
