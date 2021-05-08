@@ -72,6 +72,15 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 $piep_cms_modules = PiepCMSManager::$modules;
 
+$modules_css = [];
+foreach ($piep_cms_modules as $module_name => $data) {
+    $css = def($data, "css");
+    if (!$css) {
+        continue;
+    }
+    $modules_css[$module_name] = file_get_contents($css);
+}
+
 ?>
 
 <?php startSection("head_content"); ?>
@@ -85,15 +94,7 @@ $piep_cms_modules = PiepCMSManager::$modules;
     let parent_templates = <?= json_encode($parent_templates) ?>;
     let modules_html = <?= json_encode($modules_html) ?>;
     let piep_cms_modules = <?= json_encode($piep_cms_modules) ?>;
-
-    Object.entries(piep_cms_modules).forEach(([module_name, data]) => {
-        if (data.css) {
-            loadStylesheet(`/${data.css}?v=<?= ASSETS_RELEASE ?>`);
-        }
-        if (data.js) {
-            loadScript(`/${data.js}?v=<?= ASSETS_RELEASE ?>`);
-        }
-    })
+    let modules_css = <?= json_encode($modules_css) ?>;
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>

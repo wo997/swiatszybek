@@ -24,7 +24,7 @@ scanDirectories(
             $mod_time_php += $mtime;
         } else {
             $ext = Files::getFileExtension($path);
-            if (in_array($ext, ["css", "scss", "js", "html"])) {
+            if (in_array($ext, ["css", "scss", "js"])) {
                 $modified_package = getAnnotation("css", $first_line);
                 if (!$modified_package) {
                     $modified_package = getAnnotation("js", $first_line);

@@ -127,13 +127,13 @@ class Assets
         // $js_content = implode(PHP_EOL, $js_content_arr);
 
         //@include(admin/tools/newCms/template.html)
-        if (preg_match_all("/(?<=\@include\().*?(?=\))/", $js_full, $matches)) {
-            foreach ($matches[0] as $file_to_include) {
-                if (file_exists($file_to_include)) {
-                    $js_full = str_replace(["// @include($file_to_include)", "//@include($file_to_include)", "@include($file_to_include)"], file_get_contents($file_to_include), $js_full);
-                }
-            }
-        }
+        // if (preg_match_all("/(?<=\@include\().*?(?=\))/", $js_full, $matches)) {
+        //     foreach ($matches[0] as $file_to_include) {
+        //         if (file_exists($file_to_include)) {
+        //             $js_full = str_replace(["// @include($file_to_include)", "//@include($file_to_include)", "@include($file_to_include)"], file_get_contents($file_to_include), $js_full);
+        //         }
+        //     }
+        // }
 
         // minify first, then you are safe to say that all variables are in a single line, ok, strings are not ;) but .* does the trick
         $js_full = (new Minify\JS($js_full))->minify();

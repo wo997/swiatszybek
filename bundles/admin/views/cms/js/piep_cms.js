@@ -39,6 +39,8 @@ class PiepCMS {
 		this.initHistory();
 
 		this.mainLoop();
+
+		this.cheat_responsive_css = new PiepCMSCheatReasponsiveCSS(this);
 	}
 
 	initNodes() {
