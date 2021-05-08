@@ -93,13 +93,13 @@
 	--slide_padding: 3px;
 }
 
-@media only screen and (max-width: 650px) {
+@media (max-width: 650px) {
 	.comments_label {
 		width: 100%;
 	}
 }
 
-@media only screen and (min-width: 850px) {
+@media (min-width: 850px) {
 	.product_wrapper {
 		display: flex;
 		max-width: 1350px;
@@ -126,7 +126,7 @@
 	}
 }
 
-@media only screen and (max-width: 849px) {
+@media (max-width: 849px) {
 	.product_imgs > .wo997_slider:first-child {
 		height: 100vw; // boost UX & SEO
 	}
@@ -211,7 +211,7 @@ cart-products-comp.has_products {
 		display: block;
 		margin-top: 10px;
 	}
-	@media only screen and (max-width: 699px) {
+	@media (max-width: 699px) {
 		.submit_btn {
 			width: 100%;
 		}
@@ -228,12 +228,12 @@ cart-products-comp.has_products {
 .addComment,
 .notifyProductAvailable,
 .notifyProductSuccess {
-	@media only screen and (max-width: 499px) {
+	@media (max-width: 499px) {
 		.desktop {
 			display: none;
 		}
 	}
-	@media only screen and (min-width: 500px) {
+	@media (min-width: 500px) {
 		.mobile {
 			display: none;
 		}
@@ -302,7 +302,7 @@ comment-comp.comp {
 		font-weight: var(--semi_bold);
 	}
 
-	@media only screen and (max-width: 600px) {
+	@media (max-width: 600px) {
 		.options {
 			display: block;
 		}
@@ -328,7 +328,7 @@ comment-comp.comp {
 	.variants_container {
 		margin-bottom: 3px;
 	}
-	@media only screen and (max-width: 600px) {
+	@media (max-width: 600px) {
 		.field.inline {
 			max-width: none;
 		}

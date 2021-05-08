@@ -42,12 +42,12 @@ file-manager-comp {
 				transform: translateY(100%);
 				opacity: 0;
 			}
-			@media only screen and (min-width: 1000px) {
+			@media (min-width: 1000px) {
 				& {
 					width: calc(25% - 10px);
 				}
 			}
-			@media only screen and (min-width: 1400px) {
+			@media (min-width: 1400px) {
 				& {
 					width: calc(16.666% - 10px);
 				}

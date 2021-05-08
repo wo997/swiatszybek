@@ -146,7 +146,7 @@
 	}
 }
 
-@media only screen and (min-width: 850px) {
+@media (min-width: 850px) {
 	.products_all {
 		display: flex;
 		flex-shrink: 1;
@@ -235,7 +235,7 @@
 	}
 }
 
-@media only screen and (max-width: 849px) {
+@media (max-width: 849px) {
 	.product_list_wrapper,
 	.searching_wrapper > .scroll_panel {
 		padding: 15px;
@@ -301,7 +301,7 @@
 		padding-top: 60%;
 	}
 }
-@media only screen and (min-width: 340px) {
+@media (min-width: 340px) {
 	.results_info_mobile .btn {
 		min-width: 100px;
 	}

@@ -23,13 +23,13 @@ $page_width = "1500px";
             ";
     }
 
-    ?>@media only screen and (max-width: 800px) {
+    ?>@media (max-width: 800px) {
         .col-sm-0 {
             display: none;
         }
     }
 
-    @media only screen and (max-width: <?= intval($page_width) + 40 ?>px) {
+    @media (max-width: <?= intval($page_width) + 40 ?>px) {
         /*.page_wrapper {
             padding: 0 20px;
         }
@@ -41,7 +41,7 @@ $page_width = "1500px";
         }*/
     }
 
-    @media only screen and (max-width: 800px) {
+    @media (max-width: 800px) {
         .page_wrapper {
             padding: 0;
         }

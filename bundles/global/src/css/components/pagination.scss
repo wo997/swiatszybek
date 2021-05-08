@@ -27,7 +27,7 @@ pagination-comp {
 		margin-right: auto;
 	}
 
-	@media only screen and (max-width: 799px) {
+	@media (max-width: 799px) {
 		.pages {
 			display: none;
 		}

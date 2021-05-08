@@ -11,12 +11,12 @@
 }
 
 .InpostParcelLockerPicker .modal_header {
-	@media only screen and (max-width: 499px) {
+	@media (max-width: 499px) {
 		.desktop {
 			display: none;
 		}
 	}
-	@media only screen and (min-width: 500px) {
+	@media (min-width: 500px) {
 		.mobile {
 			display: none;
 		}
@@ -97,7 +97,7 @@
 	}
 }
 
-@media only screen and (max-width: 999px), (max-height: 599px) {
+@media (max-width: 999px), (max-height: 599px) {
 	.buy_now_container {
 		& {
 			max-width: 600px;
@@ -122,7 +122,7 @@
 	}
 }
 
-@media only screen and (min-width: 1000px) and (min-height: 600px) {
+@media (min-width: 1000px) and (min-height: 600px) {
 	.buy_products_wrapper {
 		position: fixed;
 		left: 50%;
@@ -176,7 +176,7 @@
 	}
 }
 
-@media only screen and (min-width: 1100px) and (min-height: 600px) {
+@media (min-width: 1100px) and (min-height: 600px) {
 	.buy_products_wrapper {
 		margin-left: 30px;
 	}

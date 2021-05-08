@@ -24,7 +24,7 @@ button {
 	& {
 		font-size: var(--base_font_size);
 	}
-	@media only screen and (max-width: 340px) {
+	@media (max-width: 340px) {
 		& {
 			--base_font_size: 13px;
 		}

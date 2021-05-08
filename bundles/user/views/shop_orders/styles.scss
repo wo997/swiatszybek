@@ -9,7 +9,7 @@
 	width: 100%;
 }
 
-@media only screen and (max-width: 999px) {
+@media (max-width: 999px) {
 	.table_header * {
 		display: none !important;
 	}

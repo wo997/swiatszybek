@@ -597,11 +597,11 @@ function DatatableComp(comp, parent, data) {
 						styles_html += `.${comp._dom_class} .dt_cell:nth-child(${column_index + 1}) { ${cell_style} }`;
 
 						if (column.mobile_label_before) {
-							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
+							styles_html += `@media (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
 								column_index + 1
 							}) .cell_wrapper::before { content: "${column.mobile_label_before} ";font-weight:var(--semi_bold); } }`;
 						} else if (column.mobile_label_above) {
-							styles_html += `@media only screen and (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
+							styles_html += `@media (max-width: 999px) { .${comp._dom_class} .dt_cell:nth-child(${
 								column_index + 1
 							}) .cell_wrapper::before { display:block;content:"${column.mobile_label_above} ";font-weight:var(--semi_bold); } }`;
 						}
