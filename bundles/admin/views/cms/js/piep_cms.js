@@ -1551,7 +1551,9 @@ class PiepCMS {
 					v_node.settings = {};
 				}
 
-				if (blc_schema && blc_schema.render) {
+				if (v_node.rendered_body !== undefined) {
+					body = v_node.rendered_body;
+				} else if (blc_schema && blc_schema.render) {
 					body = blc_schema.render(v_node);
 				}
 

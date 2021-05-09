@@ -11,7 +11,7 @@ class PiepCMSManager {
 		/** @type {BlockSchema[]} */
 		this.blcs_schema = [];
 
-		/** @type {renderedVDomNode[]} */
+		/** @type {vDomNode[]} */
 		this.rendered_nodes = [];
 	}
 
@@ -84,11 +84,13 @@ class PiepCMSManager {
 				if (v_node.module_name) {
 					const rendered_v_node = this.rendered_nodes.find((rendered_v_node) => rendered_v_node.id === v_node.id);
 					if (rendered_v_node) {
-						const node = this.piep_cms.getNode(rendered_v_node.id);
-						if (node) {
-							node._set_content(rendered_v_node.body);
-							full_css += rendered_v_node.css_content;
-						}
+						v_node.rendered_body = rendered_v_node.rendered_body;
+						//v_node.rendered_css_content = rendered_v_node.rendered_css_content;
+						// const node = this.piep_cms.getNode(rendered_v_node.id);
+						// if (node) {
+						// 	node._set_content(rendered_v_node.body);
+						// }
+						full_css += rendered_v_node.rendered_css_content;
 					}
 				}
 				if (v_node.children) {
@@ -101,6 +103,10 @@ class PiepCMSManager {
 		this.full_css = full_css;
 
 		this.recalculateCss();
+
+		this.piep_cms.recreateDom();
+
+		window.dispatchEvent(new Event("resize"));
 	}
 
 	/**
@@ -147,8 +153,6 @@ class PiepCMSManager {
 		}
 
 		this.modules_css_node._set_content(full_css_cheat);
-
-		window.dispatchEvent(new Event("resize"));
 	}
 }
 
