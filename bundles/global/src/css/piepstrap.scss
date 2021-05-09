@@ -295,8 +295,20 @@
 	justify-content: center;
 }
 
-.text_center,
-.text_center_fields .field {
+.flex_stretch {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.center,
+.center_fields .field {
 	text-align: center;
 }
 

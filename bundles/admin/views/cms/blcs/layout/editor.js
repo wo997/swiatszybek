@@ -101,7 +101,7 @@
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="margins">
+			<div class="flex align_center center center_fields" data-bind_wrapper="margins">
 				<div>
 					<input class="field" data-blc_prop="styles.marginLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
@@ -141,7 +141,7 @@
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="paddings">
+			<div class="flex align_center center center_fields" data-bind_wrapper="paddings">
 				<div>
 					<input class="field" data-blc_prop="styles.paddingLeft" placeholder="Lewy" data-bind_dir="left" />
 				</div>
@@ -183,7 +183,7 @@
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderWidths">
+			<div class="flex align_center center center_fields" data-bind_wrapper="borderWidths">
 				<div>
 					<input class="field" data-blc_prop="styles.borderLeftWidth" placeholder="Lewy" data-bind_dir="left" />
 				</div>
@@ -213,7 +213,7 @@
 				</div>
 			</div>
 
-			<div class="flex align_center text_center text_center_fields" data-bind_wrapper="borderColors">
+			<div class="flex align_center center center_fields" data-bind_wrapper="borderColors">
 				<div>
 					<color-picker class="alpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
 				</div>

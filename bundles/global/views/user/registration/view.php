@@ -19,7 +19,7 @@ if (Request::getSingleUsageSessionVar("just_logged_in")) {
 <?php startSection("body_content"); ?>
 
 <form id="registerForm" style="margin: auto auto 0;padding:20px 10px 80px;width:100%;max-width:500px" onsubmit="return false;">
-    <h1 class="h1 center" style="margin-bottom:10px;">Rejestracja</h1>
+    <h1 class="h1 center mb2">Rejestracja</h1>
     <div class="center">
         <span class="link" onclick="showModal('loginForm',{source:this});">Zaloguj się</span>
         <span class="link" style="pointer-events:none">/</span>

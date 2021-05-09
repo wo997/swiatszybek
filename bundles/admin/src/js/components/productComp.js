@@ -293,7 +293,7 @@ function ProductComp(comp, parent, data = undefined) {
 						questions.push({
 							type: "copy",
 							copy_option_id: option_after_id,
-							label: `Które dane chcesz skopiować dla opcji <span style="text-decoration:underline">${option_name}</span> (${variant_name})?`,
+							label: `Które dane chcesz skopiować dla opcji <span class="underline">${option_name}</span> (${variant_name})?`,
 							options,
 						});
 					}
@@ -832,8 +832,8 @@ function ProductComp(comp, parent, data = undefined) {
 						<div style="height:7px"></div>
 						Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
 						Poruszanie się po polach (pierwsze z nich musimy kliknąć):
-						<span style="text-decoration:underline;white-space:nowrap">CRTL + Strzałki</span>.<br />
-						Otwieranie pola wyboru / zmiana wartości: <span style="text-decoration:underline;white-space:nowrap">ENTER</span>
+						<span class="underline inline">CRTL + Strzałki</span>.<br />
+						Otwieranie pola wyboru / zmiana wartości: <span class="underline inline">ENTER</span>
 					</div>
 				</div>
 

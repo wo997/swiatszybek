@@ -1187,7 +1187,7 @@ class PiepCMS {
 				</div>
 			</div>
 
-			<div class="text_center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
+			<div class="center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
 
 			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
 				<!-- place for blc props etc. -->
@@ -1460,7 +1460,7 @@ class PiepCMS {
 		let { inspector_tree_html } = traverseVDom(target_v_dom);
 
 		if (!inspector_tree_html) {
-			inspector_tree_html = html`<div class="pa2 text_center">Brak elementów</div>`;
+			inspector_tree_html = html`<div class="pa2 center">Brak elementów</div>`;
 		}
 		this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
 	}

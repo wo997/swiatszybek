@@ -28,14 +28,14 @@
         <i class="fas fa-info-circle"></i> Warto ograniczyć ilośc kategorii i skorzystać z cech produktu żeby zachować przejrzystość sklepu.
         <br>
         Przykładowo zamiast utworzyć kategorie
-        <span style="text-decoration: underline;">
+        <span class="underline">
             Smartfony
             <i class="fas fa-chevron-right"></i>
             Lista producentów
             <i class="fas fa-chevron-right"></i>
             Modele</span>
 
-        zalecamy<br>utworzyć tylko kategorię <span style="text-decoration: underline;">Smartfony</span>
+        zalecamy<br>utworzyć tylko kategorię <span class="underline">Smartfony</span>
         i oprócz tego cechy produktu taką jak Producent, Model itd.
     </p>
 </div>
