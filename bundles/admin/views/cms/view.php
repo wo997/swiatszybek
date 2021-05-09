@@ -97,11 +97,11 @@ foreach ($piep_cms_modules as $module_name => $data) {
     let modules_css = <?= json_encode($modules_css) ?>;
 </script>
 
-<script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . ASSETS_RELEASE ?>"></script>
-<link href="/<?= BUILDS_PATH . "piep_cms_dependencies.css?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
+<script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . version("piep_cms_dependencies") ?>"></script>
+<link href="/<?= BUILDS_PATH . "piep_cms_dependencies.css?v=" . version("piep_cms_dependencies") ?>" rel="stylesheet">
 
-<script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . ASSETS_RELEASE ?>"></script>
-<link href="/<?= BUILDS_PATH . "piep_cms.css?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
+<script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . version("piep_cms") ?>"></script>
+<link href="/<?= BUILDS_PATH . "piep_cms.css?v=" . version("piep_cms") ?>" rel="stylesheet">
 
 <?php startSection("body_content"); ?>
 

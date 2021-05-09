@@ -620,3 +620,15 @@ function version($scope)
     global $build_info;
     return def($build_info, ["scopes", $scope, "version"], 0);
 }
+
+function getScopesVersions()
+{
+    global $build_info;
+
+    $versions = [];
+    foreach ($build_info["scopes"] as $scope_name => $data) {
+        $versions[$scope_name] = $data["version"];
+    }
+
+    return $versions;
+}

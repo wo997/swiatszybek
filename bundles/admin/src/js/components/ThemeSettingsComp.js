@@ -134,7 +134,8 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 						main_font_family = res.font_family;
 						font_sizes = res.font_sizes;
 						loadedThemeSettings();
-						$("#main_stylesheet").href = `/builds/global.css?v=${res.ASSETS_RELEASE}`;
+						VERSIONS.global++;
+						$("#main_stylesheet").href = `/builds/global.css?v=${VERSIONS.global}x`; // x just in case :*
 						$("#main_font").href = fonts[main_font_family].link;
 
 						showNotification("Zapisano zmiany motywu", { type: "success", one_line: true });

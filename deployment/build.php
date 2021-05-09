@@ -20,7 +20,3 @@ if (isset($_SERVER["HTTP_HOST"]) && !getSetting(["general", "advanced", "domain"
 Assets::build();
 
 ob_clean();
-
-if (!isset($dont_return)) {
-    Request::jsonResponse(["ASSETS_RELEASE" => ASSETS_RELEASE]);
-}

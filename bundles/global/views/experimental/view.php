@@ -2,8 +2,6 @@
 
 $main_menu = def(PiepCMSManager::$modules, ["main_menu"]);
 
-global $modified_packages;
-
 ?>
 
 <?php startSection("head_content"); ?>
@@ -16,9 +14,7 @@ global $modified_packages;
     <?= $main_menu["render"]() ?>
 </header>
 
-<link href="/<?= $main_menu["css_path"] . "?v=" . ASSETS_RELEASE ?>" rel="stylesheet">
-<script src="/<?= $main_menu["js_path"] . "?v=" . ASSETS_RELEASE ?>"></script>
-
-<?= join(",", $modified_packages) ?>
+<link href="/<?= $main_menu["css_path"] . "?v=" . version("modules/main_menu") ?>" rel="stylesheet">
+<script src="/<?= $main_menu["js_path"] . "?v=" . version("modules/main_menu") ?>"></script>
 
 <?php include "bundles/global/templates/blank.php"; ?>

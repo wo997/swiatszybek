@@ -25,12 +25,15 @@ if (Request::$is_admin_url) {
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
 
 <?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
-    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= version("global") ?>"></script>
-    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= version("global") ?>">
-    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= version("global") ?>"></script>
+    <?php
+    $miscellaneous_version = 1;
+    // tbh these could also build, but chill
+    ?>
+    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= $miscellaneous_version ?>"></script>
+    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= $miscellaneous_version ?>">
+    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= $miscellaneous_version ?>"></script>
 
-    <!-- <script src="/bundles/admin/src/js/jscolor.js?v=<?= version("global") ?>"></script> -->
-    <script src="/bundles/admin/src/js/vanilla-picker.min.js?v=<?= version("global") ?>"></script>
+    <script src="/bundles/admin/src/js/vanilla-picker.min.js?v=<?= $miscellaneous_version ?>"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>

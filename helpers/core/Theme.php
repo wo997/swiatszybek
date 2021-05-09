@@ -254,14 +254,13 @@ CSS;
 
         Files::save(PREBUILDS_PATH . "theme.scss", $theme_scss);
 
-        $build_res = file_get_contents(SITE_URL . "/deployment/build"); // a token might be necessary for safety purpose
+        //$build_res = file_get_contents(SITE_URL . "/deployment/build"); // a token might be necessary for safety purpose
 
         $res = [
             "colors_palette" => $colors_palette,
             "font_family" => $font_family,
             "font_sizes" => $font_sizes,
         ];
-        $res = array_merge($res, json_decode($build_res, true));
 
         return $res;
     }

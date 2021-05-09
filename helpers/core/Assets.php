@@ -101,68 +101,68 @@ class Assets
         return $js_full;
     }
 
-    public static function build()
-    {
-        $css_file_groups = [];
-        $js_file_groups = [];
+    // public static function build()
+    // {
+    //     $css_file_groups = [];
+    //     $js_file_groups = [];
 
-        Files::scanDirectories(
-            [
-                "exclude_paths" => ["vendor", "uploads", "builds"],
-            ],
-            function ($path, $first_line, $parent_dir) use (&$css_file_groups, &$js_file_groups) {
-                if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
-                    if ($css_group = Files::getAnnotation("css", $first_line, $parent_dir)) {
-                        self::appendGroup($css_file_groups, $css_group, $path, $parent_dir);
-                    }
-                } else if (strpos($path, ".js") !== false) {
-                    if ($js_group = Files::getAnnotation("js", $first_line, $parent_dir)) {
-                        self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
-                    }
-                }
-            }
-        );
+    //     Files::scanDirectories(
+    //         [
+    //             "exclude_paths" => ["vendor", "uploads", "builds"],
+    //         ],
+    //         function ($path, $first_line, $parent_dir) use (&$css_file_groups, &$js_file_groups) {
+    //             if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
+    //                 if ($css_group = Files::getAnnotation("css", $first_line, $parent_dir)) {
+    //                     self::appendGroup($css_file_groups, $css_group, $path, $parent_dir);
+    //                 }
+    //             } else if (strpos($path, ".js") !== false) {
+    //                 if ($js_group = Files::getAnnotation("js", $first_line, $parent_dir)) {
+    //                     self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
+    //                 }
+    //             }
+    //         }
+    //     );
 
-        // CSS
-        foreach ($css_file_groups as $cssGroup => $files) {
-            $css_full = "";
-            foreach ($files as $file) {
-                $css_full .= " " . file_get_contents($file);
-            }
-            $css_full = self::minifyCss($css_full);
-            Files::save(BUILDS_PATH . "$cssGroup.css", $css_full);
-        }
+    //     // CSS
+    //     foreach ($css_file_groups as $cssGroup => $files) {
+    //         $css_full = "";
+    //         foreach ($files as $file) {
+    //             $css_full .= " " . file_get_contents($file);
+    //         }
+    //         $css_full = self::minifyCss($css_full);
+    //         Files::save(BUILDS_PATH . "$cssGroup.css", $css_full);
+    //     }
 
-        // JS
-        foreach ($js_file_groups as $jsGroup => $files) {
-            $js_full = "";
-            foreach ($files as $file) {
-                $js_full .= " " . file_get_contents($file);
-            }
-            $js_full = self::minifyJs($js_full);
-            Files::save(BUILDS_PATH . "$jsGroup.js", $js_full);
-        }
+    //     // JS
+    //     foreach ($js_file_groups as $jsGroup => $files) {
+    //         $js_full = "";
+    //         foreach ($files as $file) {
+    //             $js_full .= " " . file_get_contents($file);
+    //         }
+    //         $js_full = self::minifyJs($js_full);
+    //         Files::save(BUILDS_PATH . "$jsGroup.js", $js_full);
+    //     }
 
-        // CSS
-        $out = "<?php return [\n";
-        $out .= "\"files_groups\" => [\n";
-        foreach ($css_file_groups as $group => $file_path) {
-            $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
-        }
-        $out .= "],\n";
-        $out .= "];";
+    //     // CSS
+    //     $out = "<?php return [\n";
+    //     $out .= "\"files_groups\" => [\n";
+    //     foreach ($css_file_groups as $group => $file_path) {
+    //         $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+    //     }
+    //     $out .= "],\n";
+    //     $out .= "];";
 
-        Files::save(BUILDS_PATH . "css_schema.php", $out);
+    //     Files::save(BUILDS_PATH . "css_schema.php", $out);
 
-        // JS
-        $out = "<?php return [\n";
-        $out .= "\"files_groups\" => [\n";
-        foreach ($js_file_groups as $group => $file_path) {
-            $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
-        }
-        $out .= "],\n";
-        $out .= "];";
+    //     // JS
+    //     $out = "<?php return [\n";
+    //     $out .= "\"files_groups\" => [\n";
+    //     foreach ($js_file_groups as $group => $file_path) {
+    //         $out .= " \"$group\" => [\n  \"" . implode("\",\n  \"", $file_path) . "\"\n ],\n";
+    //     }
+    //     $out .= "],\n";
+    //     $out .= "];";
 
-        Files::save(BUILDS_PATH . "js_schema.php", $out);
-    }
+    //     Files::save(BUILDS_PATH . "js_schema.php", $out);
+    // }
 }

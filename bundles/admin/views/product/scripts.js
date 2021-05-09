@@ -7,7 +7,7 @@ domload(() => {
 	// @ts-ignore
 	const product_comp = $("product-comp");
 	ProductComp(product_comp, undefined);
-	product_comp.style.display = "none";
+	product_comp.style.visibility = "hidden";
 
 	const main_header_height = $(".main_header").offsetHeight;
 	const sticky_subheaders = product_comp._children(".sticky_subheader");
@@ -127,5 +127,5 @@ domload(() => {
 	product_comp._render();
 
 	finishComponentsOptimization();
-	product_comp.style.display = "";
+	product_comp.style.visibility = "";
 });
