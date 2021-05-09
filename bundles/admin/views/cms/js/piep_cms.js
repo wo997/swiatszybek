@@ -1624,6 +1624,8 @@ class PiepCMS {
 		lazyLoadImages({ duration: 0 });
 		registerForms();
 
+		window.dispatchEvent(new Event("resize"));
+
 		this.setFocusNode(this.focus_node_vid);
 	}
 

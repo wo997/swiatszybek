@@ -105,8 +105,6 @@ class PiepCMSManager {
 		this.recalculateCss();
 
 		this.piep_cms.recreateDom();
-
-		window.dispatchEvent(new Event("resize"));
 	}
 
 	/**
