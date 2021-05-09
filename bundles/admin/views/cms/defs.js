@@ -7,7 +7,6 @@
  * children?: vDomNode[]
  * attrs: object
  * classes: string[]
- * insert_on_release?: boolean
  * settings?: object
  * module_name?: string
  * module_children?: vDomNode[]

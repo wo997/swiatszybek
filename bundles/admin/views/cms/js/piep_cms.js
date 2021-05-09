@@ -650,7 +650,6 @@ class PiepCMS {
 
 					let prop_str = input.dataset.blc_prop;
 
-					let just_style = false;
 					/**
 					 *
 					 * @param {vDomNode} edit_v_node
@@ -664,7 +663,6 @@ class PiepCMS {
 							}
 							prop_ref = prop_ref.styles[this.selected_resolution];
 							prop_str = prop_str.substring("styles.".length);
-							just_style = true;
 						}
 						if (prop_str.startsWith("attrs.")) {
 							if (!prop_ref.attrs) {
@@ -806,7 +804,7 @@ class PiepCMS {
 
 					setPropOfVNode(v_node);
 
-					this.recreateDom(this.v_dom, { just_style });
+					this.recreateDom(this.v_dom);
 
 					const node_ref = this.getNode(v_node.id);
 					this.setFocusNode(v_node.id);
@@ -1366,7 +1364,7 @@ class PiepCMS {
 		const traverseVDom = (v_nodes) => {
 			for (const v_node of v_nodes) {
 				if (!v_node.settings) {
-					continue;
+					v_node.settings = {};
 				}
 
 				if (!v_node.settings.bind_margins) {
@@ -1392,96 +1390,22 @@ class PiepCMS {
 		traverseVDom(target_v_dom);
 	}
 
-	/**
-	 * @param {vDomNode[]} target_v_dom
-	 * @param {{
-	 * just_style?: boolean
-	 * }} [options]
-	 */
-	recreateDom(target_v_dom = undefined, options = {}) {
+	displayInspectorTree(target_v_dom = undefined) {
 		if (target_v_dom === undefined) {
 			target_v_dom = this.v_dom;
 		}
 
-		this.recalculateFromSettings(target_v_dom);
-
-		const care_about_resolutions = this.getResolutionsWeCareAbout();
-
-		// order doesn't really matter so far
-		let styles_css = "";
-
 		/**
-		 *
 		 * @param {vDomNode[]} v_nodes
-		 * @returns {{
-		 * content_html:string
-		 * inspector_tree_html: string
-		 * }}
 		 */
 		const traverseVDom = (v_nodes, level = 0) => {
-			let content_html = "";
 			let inspector_tree_html = "";
 
 			for (const v_node of v_nodes) {
-				let body = "";
-
-				if (v_node.module_name) {
-					const module_class = `module_${v_node.module_name}`;
-					if (!v_node.classes.includes(module_class)) {
-						v_node.classes.push(module_class);
-					}
-
-					if (v_node.classes.includes("columns_container")) {
-						// fix widths if necessary? hard to work on it when something else than percentages are given though
-					}
-				}
-
-				// oh boy, here you need to warmup children, PROBABLY A LISTENER WOULD BE IDEAL
-
-				// if (v_node.module_name === "columns") {
-				// 	v_node.children = [];
-				// 	for (let column_id = 0; column_id < v_node.module_attrs.column_count; column_id++) {
-				// 		// I think it's possible to reuse most of the data from above,
-				// 		// ON THE OTHER HAND - THESE THINGS WONT EVEN BE STORED FUUUCK
-				// 		const column_v_node = { id: this.getNewBlcId(), attrs: {}, classes: [], styles: {}, tag: "div", children: [] };
-
-				// 		column_v_node.children = [];
-				// 		const inside = v_node.module_children[column_id];
-				// 		if (inside) column_v_node.children.push(inside);
-				// 		v_node.children.push(column_v_node);
-				// 		//v_node.module_children[]
-				// 	}
-
-				// 	//v_node.children = cloneObject();
-				// }
-
-				const children = v_node.children;
-				const text = v_node.text;
-
-				const tag = v_node.tag;
-				const textable = text !== undefined;
-
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
-
-				let attrs = { "data-vid": v_node.id };
-				Object.assign(attrs, v_node.attrs);
-
-				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
-				let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
-
-				if (v_node.module_name) {
-					classes.push("any_module");
-				}
-
-				if (blc_schema) {
-					if (blc_schema.nonclickable) {
-						classes.push("nonclickable");
-					}
-				}
-
-				if (v_node.disabled) {
-					classes.push("editor_disabled");
-				}
+				const text = v_node.text;
+				const children = v_node.children;
+				const tag = v_node.tag;
 
 				const map_tag_display_name = {
 					a: "Link",
@@ -1496,9 +1420,7 @@ class PiepCMS {
 					span: "Tekst",
 					img: "Zdjęcie",
 				};
-
 				let display_name = "";
-
 				if (v_node.template_hook_id !== undefined) {
 					display_name = `Sekcja: ${v_node.template_hook_id}`;
 				} else if (v_node.module_name) {
@@ -1508,7 +1430,6 @@ class PiepCMS {
 				} else if (map_tag_display_name[tag]) {
 					display_name = map_tag_display_name[tag];
 				}
-
 				let info = "";
 
 				if (text !== undefined) {
@@ -1516,70 +1437,49 @@ class PiepCMS {
 				} else if (children !== undefined) {
 					info = `(${children.length})`;
 				}
-
 				if (info) {
 					info = html`<span class="info"> - ${info}</span>`;
 				}
-
 				const disabled = v_node.disabled ? "disabled" : "";
+				inspector_tree_html += html`
+					<div class="v_node_label tblc_${v_node.id} ${disabled}" style="--level:${level}" data-vid="${v_node.id}">
+						<span class="name">${display_name}</span>
+						${info}
+					</div>
+				`;
 
-				inspector_tree_html += html`<div
-					class="v_node_label tblc_${v_node.id} ${disabled}"
-					style="--level:${level}"
-					data-vid="${v_node.id}"
-				>
-					<span class="name">${display_name}</span>
-					${info}
-				</div>`;
-
-				if (textable) {
-					classes.push("textable");
-					if (text) {
-						body += text;
-					} else {
-						body += `<br>`;
-					}
-				} else if (children !== undefined) {
-					// traverse for styles but not contents ;)
-					const { content_html: sub_content_html, inspector_tree_html: sub_inspector_tree_html } = traverseVDom(children, level + 1);
-
-					body += sub_content_html;
+				if (children) {
+					const { inspector_tree_html: sub_inspector_tree_html } = traverseVDom(children, level + 1);
 					inspector_tree_html += sub_inspector_tree_html;
 				}
+			}
 
-				if (!v_node.settings) {
-					v_node.settings = {};
-				}
+			return { inspector_tree_html };
+		};
 
-				if (v_node.rendered_body !== undefined) {
-					body = v_node.rendered_body;
-				} else if (blc_schema && blc_schema.render) {
-					body = blc_schema.render(v_node);
-				}
+		let { inspector_tree_html } = traverseVDom(target_v_dom);
 
-				let add_to_body = true;
-				if (v_node.id === this.grabbed_block_vid) {
-					if (!this.current_insert_blc || !v_node.insert_on_release) {
-						add_to_body = false;
-					}
-				}
+		if (!inspector_tree_html) {
+			inspector_tree_html = html`<div class="pa2 text_center">Brak elementów</div>`;
+		}
+		this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+	}
 
-				if (add_to_body) {
-					const classes_csv = classes.join(" ");
+	recalculateStyles(target_v_dom = undefined) {
+		if (target_v_dom === undefined) {
+			target_v_dom = this.v_dom;
+		}
 
-					const attrs_csv = Object.entries(attrs)
-						.map(([key, val]) => {
-							return `${key}="${escapeAttribute(val)}"`;
-						})
-						.join(" ");
+		// order doesn't really matter so far
+		let styles_css = "";
 
-					if (this.single_tags.includes(tag)) {
-						content_html += `<${tag} class="${classes_csv}" ${attrs_csv} />`;
-					} else {
-						content_html += `<${tag} class="${classes_csv}" ${attrs_csv}>${body}</${tag}>`;
-					}
-				}
+		const care_about_resolutions = this.getResolutionsWeCareAbout();
 
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
 				if (v_node.styles) {
 					let node_styles = "";
 					for (const res_name of care_about_resolutions) {
@@ -1597,29 +1497,136 @@ class PiepCMS {
 					}
 					if (node_styles) {
 						// #p is stroner than just a class
-						node_styles = `#p .${base_class} { ${node_styles} }`;
+						node_styles = `#p ${this.getNodeSelector(v_node.id)} { ${node_styles} }`;
 						styles_css += node_styles;
 					}
 				}
-			}
 
-			return { content_html, inspector_tree_html };
+				const children = v_node.children;
+				if (children) {
+					traverseVDom(children);
+				}
+			}
 		};
 
-		let { content_html, inspector_tree_html } = traverseVDom(target_v_dom);
-
-		if (!options.just_style) {
-			this.content._set_content(content_html, { maintain_height: true });
-		}
+		traverseVDom(target_v_dom);
 
 		this.styles._set_content(styles_css);
+	}
 
-		if (!options.just_style) {
-			if (!inspector_tree_html) {
-				inspector_tree_html = html`<div class="pa2 text_center">Brak elementów</div>`;
-			}
-			this.inspector_tree._set_content(inspector_tree_html, { maintain_height: true });
+	/**
+	 * @param {vDomNode[]} target_v_dom
+	 */
+	recreateDom(target_v_dom = undefined) {
+		if (target_v_dom === undefined) {
+			target_v_dom = this.v_dom;
 		}
+
+		this.recalculateFromSettings(target_v_dom);
+
+		/** @type {number[]} */
+		let included_vids = [];
+
+		/**
+		 *
+		 * @param {PiepNode} put_in_node
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (put_in_node, v_nodes, level = 0) => {
+			v_nodes.forEach((v_node, index) => {
+				const vid = v_node.id;
+				included_vids.push(vid);
+				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+
+				let node = this.getNode(vid);
+
+				if (node && node.tagName !== v_node.tag) {
+					node.remove();
+					node = undefined;
+				}
+
+				if (!node) {
+					node = $(document.createElement(v_node.tag));
+					const before_node = put_in_node._direct_children()[index];
+					if (node._parent() !== put_in_node || node._next() !== before_node) {
+						put_in_node.insertBefore(node, before_node);
+					}
+				}
+
+				// classes
+				if (v_node.module_name) {
+					const module_class = `module_${v_node.module_name}`;
+					if (!v_node.classes.includes(module_class)) {
+						v_node.classes.push(module_class);
+					}
+				}
+
+				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
+				let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
+
+				const text = v_node.text;
+				if (text !== undefined) {
+					node._set_content(text === "" ? "<br>" : text);
+					classes.push("textable");
+				}
+
+				if (v_node.module_name) {
+					classes.push("any_module");
+				}
+				if (blc_schema) {
+					if (blc_schema.nonclickable) {
+						classes.push("nonclickable");
+					}
+				}
+				if (v_node.disabled) {
+					classes.push("editor_disabled");
+				}
+
+				classes.forEach((c) => {
+					node.classList.add(c);
+				});
+				node.classList.forEach((c) => {
+					if (!classes.includes(c)) {
+						node.classList.remove(c);
+					}
+				});
+
+				// attrs
+				const attrs = { "data-vid": v_node.id + "" };
+				Object.assign(attrs, v_node.attrs);
+
+				Object.entries(attrs).map(([key, val]) => {
+					node.setAttribute(key, val);
+				});
+				const attr_names = Object.keys(attrs);
+				for (const attr of node.attributes) {
+					if (attr.name === "class") {
+						continue;
+					}
+					if (!attr_names.includes(attr.name)) {
+						node.removeAttribute(attr.name);
+					}
+				}
+
+				if (v_node.rendered_body) {
+					node._set_content(v_node.rendered_body);
+				} else if (blc_schema && blc_schema.render) {
+					node._set_content(blc_schema.render(v_node));
+				}
+
+				const children = v_node.children;
+				if (children) {
+					traverseVDom(node, children, level + 1);
+				}
+			});
+		};
+
+		traverseVDom(this.content, target_v_dom);
+
+		const select_bls_to_remove = ".blc" + included_vids.map((e) => `:not(.blc_${e})`).join("");
+		this.content._children(select_bls_to_remove).forEach((r) => {
+			r.remove();
+		});
 
 		lazyLoadImages({ duration: 0 });
 		registerForms();
@@ -1693,14 +1700,6 @@ class PiepCMS {
 			let index = -1;
 			for (const v_node of v_nodes) {
 				index++;
-
-				if (options.ignore_insert === true) {
-					if (v_node.id === this.grabbed_block_vid) {
-						if (!this.current_insert_blc || !v_node.insert_on_release) {
-							continue;
-						}
-					}
-				}
 
 				if (test(v_node)) {
 					return {
@@ -1873,7 +1872,7 @@ class PiepCMS {
 					this.showFocusToNodes([this.grabbed_block_vid]);
 				});
 
-				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid, { ignore_insert: true });
+				const v_node_data = this.getVDomNodeDataById(this.v_dom_overlay, this.grabbed_block_vid);
 				if (v_node_data.parent_v_nodes[0]) {
 					const parent_vid = v_node_data.parent_v_nodes[0].id;
 					pretty_focus_parent = this.getNode(parent_vid);
@@ -2420,7 +2419,7 @@ class PiepCMS {
 
 		this.v_dom_overlay.splice(0, this.v_dom_overlay.length);
 		deepAssign(this.v_dom_overlay, this.v_dom);
-		//this.recreateDom(this.v_dom_overlay); // remove manually instead for better performance
+		//this.recreateDom(this.v_dom_overlay); // remove manually instead for better performance, FR DUDE, it should work great now :P
 		focus_node.remove();
 
 		this.displayInsertPositions();
@@ -2492,8 +2491,6 @@ class PiepCMS {
 			insert_blc._insert_action = () => {
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.grabbed_block_vid));
-				grabbed_node_copy.insert_on_release = true;
-
 				this.v_dom_overlay.push(grabbed_node_copy);
 			};
 		}
@@ -2542,8 +2539,6 @@ class PiepCMS {
 
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
-				grabbed_node_copy.insert_on_release = true;
-
 				near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
 			};
 
@@ -2560,8 +2555,6 @@ class PiepCMS {
 
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
-				grabbed_node_copy.insert_on_release = true;
-
 				let suggest_wrapping_with_columns_module = false;
 				// if (near_v_node_data.v_node.text === undefined) {
 				// 	wrap_with_a_flex = true;
@@ -2654,8 +2647,6 @@ class PiepCMS {
 			const insertInside = () => {
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.v_dom_overlay, this.grabbed_block_vid));
-				grabbed_node_copy.insert_on_release = true;
-
 				this.findNodeInVDomById(this.v_dom_overlay, blc_vid).children.push(grabbed_node_copy);
 			};
 
@@ -2889,10 +2880,7 @@ class PiepCMS {
 			deepAssign(this.v_dom, this.v_dom_overlay);
 
 			// remove grabbed block that was just hidden so far
-			const grabbed_v_node_data = this.getVDomNodeData(
-				this.v_dom,
-				(v_node) => !v_node.insert_on_release && v_node.id === grabbed_block_vid
-			);
+			const grabbed_v_node_data = this.getVDomNodeData(this.v_dom, (v_node) => v_node.id === grabbed_block_vid);
 			grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
 			setTimeout(() => {
@@ -2900,11 +2888,6 @@ class PiepCMS {
 				this.float_menu_active = true;
 				this.setFocusNode(grabbed_block_vid);
 			});
-
-			const v_node_with_insert = this.findNodeInVDom(this.v_dom, (v_node) => v_node.insert_on_release);
-			if (v_node_with_insert) {
-				delete v_node_with_insert.insert_on_release;
-			}
 
 			this.recreateDom();
 			this.pushHistory(`moved_blc_${grabbed_block_vid}`);
