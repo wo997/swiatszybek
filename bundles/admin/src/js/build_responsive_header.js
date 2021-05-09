@@ -69,6 +69,8 @@ window.addEventListener(
 			}
 		}
 
+		iframe.style.width = "";
+
 		/** @type {HTMLElement} */
 		const main_menu = iframe.contentWindow.document.querySelector("nav.main_menu");
 		const inner_responsive_width = main_menu.offsetWidth + 10; // 10 is just a tiny margin
