@@ -188,6 +188,8 @@ CSS;
 
     public static function saveSettings($post = [])
     {
+        global $build_info;
+
         $colors_palette_json = def($post, "colors_palette", "");
         if ($colors_palette_json) {
             $colors_palette = json_decode($colors_palette_json, true);
@@ -254,7 +256,8 @@ CSS;
 
         Files::save(PREBUILDS_PATH . "theme.scss", $theme_scss);
 
-        //$build_res = file_get_contents(SITE_URL . "/deployment/build"); // a token might be necessary for safety purpose
+        // niice
+        include "deployment/automatic_build.php";
 
         $res = [
             "colors_palette" => $colors_palette,

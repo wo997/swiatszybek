@@ -1,11 +1,6 @@
 <?php
 
 // TODO: remember about dependencies
-
-if (isset($_GET["no_build"])) {
-    return;
-}
-
 $new_build_info = [
     "scopes" => [], // anything with versions
     "routes" => [],
@@ -83,12 +78,15 @@ Files::scanDirectories(
     }
 );
 
-if ($build_info != $new_build_info || true || true || true || true) {
+if ($build_info != $new_build_info) {
     foreach ($new_build_info["scopes"] as $name => $scope) {
         $version = def($build_info, ["scopes", $name, "version"], 0);
         $change = $scope["mod_time"] != def($build_info, ["scopes", $name, "mod_time"], 0);
 
         if ($change) {
+
+            //sendEmail("wojtekwo997@gmail.com", "siema", "hej: $name");
+
             $version++;
 
             if ($name === "migration") {
@@ -116,6 +114,10 @@ if ($build_info != $new_build_info || true || true || true || true) {
                 if ($js_full) {
                     Files::save(BUILDS_PATH . "$name.js", Assets::minifyJs($js_full));
                 }
+            }
+
+            if ($name === "settings") {
+                buildSettings();
             }
         }
 

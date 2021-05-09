@@ -35,7 +35,9 @@ include "scripts/db_connect.php";
 
 $build_info = json_decode(@file_get_contents(BUILD_INFO_PATH), true);
 if (!$build_info || def($_SESSION, "backend_access", false)) { // so a dev can work
-    include "deployment/automatic_build.php";
+    if (!isset($_GET["no_build"])) {
+        include "deployment/automatic_build.php";
+    }
 }
 
 
