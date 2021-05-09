@@ -16,10 +16,11 @@
 			module_name: "main_menu",
 		},
 		render: (v_node) => {
-			let body = def(
-				modules_html.main_menu_html,
-				html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukajka itd.</div>`
-			);
+			// let body = def(
+			// 	modules_html.main_menu_html,
+			// 	html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukajka itd.</div>`
+			// );
+			let body = html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukiwarka</div>`;
 			return body;
 		},
 	});

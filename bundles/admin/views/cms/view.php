@@ -70,17 +70,6 @@ ob_start();
 include "bundles/global/templates/parts/header/header.php";
 $modules_html["main_menu_html"] = ob_get_clean();
 
-$piep_cms_modules = PiepCMSManager::$modules;
-
-$modules_css = [];
-foreach ($piep_cms_modules as $module_name => $data) {
-    $css_path = def($data, "css_path");
-    if (!$css_path) {
-        continue;
-    }
-    $modules_css[$module_name] = @file_get_contents($css_path);
-}
-
 ?>
 
 <?php startSection("head_content"); ?>
@@ -92,9 +81,6 @@ foreach ($piep_cms_modules as $module_name => $data) {
     let page_data = <?= json_encode($page_data) ?>;
     let template_data = <?= json_encode($template_data) ?>;
     let parent_templates = <?= json_encode($parent_templates) ?>;
-    let modules_html = <?= json_encode($modules_html) ?>;
-    let piep_cms_modules = <?= json_encode($piep_cms_modules) ?>;
-    let modules_css = <?= json_encode($modules_css) ?>;
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . version("piep_cms_dependencies") ?>"></script>

@@ -15,6 +15,11 @@
  * disabled?: boolean
  * }} vDomNode
  *
+ * @typedef {{
+ * body: string
+ * css_content?: string
+ * } & vDomNode} renderedVDomNode
+ *
  * styles is an array "df" "bg" "sm" ... and then another array of fontSize paddingTop ...
  * template_hook_id is used to place a v_node in a template or module
  */

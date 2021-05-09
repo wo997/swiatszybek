@@ -20,6 +20,8 @@ class PiepCMS {
 		this.initNodes();
 		this.initConsts();
 
+		piep_cms_manager.setPiepCms(this);
+
 		this.initInspector();
 		this.initBlcMenu();
 		this.initFloatMenu();
@@ -40,7 +42,7 @@ class PiepCMS {
 
 		this.mainLoop();
 
-		this.cheat_responsive_css = new PiepCMSCheatReasponsiveCSS(this);
+		piep_cms_manager.editorReady();
 	}
 
 	initNodes() {
@@ -141,6 +143,10 @@ class PiepCMS {
 		this.forgetHistoryChangeName = setTimeout(() => {
 			this.history_change_name = "";
 		}, 2000);
+
+		if (this.v_dom.length > 0) {
+			piep_cms_manager.updateModules();
+		}
 	}
 	redoHistory() {
 		this.history_steps_back = Math.max(0, this.history_steps_back - 1);

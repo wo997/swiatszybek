@@ -17,10 +17,13 @@
 			module_name: "view_product_images_variants_buy",
 		},
 		render: (v_node) => {
-			let body = def(
-				modules_html.view_product_images_variants_buy,
-				html`<div class="empty_module" data-container_queries="">Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"</div>`
-			);
+			// let body = def(
+			// 	modules_html.view_product_images_variants_buy,
+			// 	html`<div class="empty_module" data-container_queries="">Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"</div>`
+			// );
+			let body = html`<div class="empty_module" data-container_queries="">
+				Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"
+			</div>`;
 			return body;
 		},
 	});
