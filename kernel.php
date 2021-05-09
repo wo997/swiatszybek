@@ -1,5 +1,8 @@
 <?php
 
+//ini_set('max_execution_time', '1000');
+ini_set('max_execution_time', '5');
+
 // in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
 define("DISPLAY_EMAIL", false);
 
@@ -14,14 +17,10 @@ include "scripts/define_paths.php";
 include "scripts/settings.php";
 include "scripts/server_settings.php";
 
-include "scripts/use_builds.php";
-if (def($_SESSION, "backend_access", false)) {
+$build_info = json_decode(@file_get_contents(BUILD_INFO_PATH), true);
+if (!$build_info || def($_SESSION, "backend_access", false)) { // so a dev can work
     include "deployment/automatic_build.php";
 }
-define("ASSETS_RELEASE", $version_assets);
-
-//ini_set('max_execution_time', '1000');
-ini_set('max_execution_time', '5');
 
 include "scripts/set_time_zone.php";
 
@@ -43,20 +42,14 @@ include "scripts/db_connect.php";
 if (DEV_MODE) {
     include "scripts/errors.php";
 }
-@include BUILDS_PATH . "hooks/entity.php"; // must be here cause the entity def is necessary run some migrations
+
+// entity must be first cause the entity def is necessary run some migrations
+foreach (["entity", "helper", "event", "register"] as $hook_name) {
+    foreach (def($build_info, ["hooks", $hook_name], []) as $path) {
+        @include $path;
+    }
+}
 include "scripts/entities.php";
-@include BUILDS_PATH . "hooks/helper.php";
-@include BUILDS_PATH . "hooks/event.php";
-@include BUILDS_PATH . "hooks/register.php";
 
 include "scripts/images.php";
 include "scripts/previews.php";
-
-// TODO: move to a module / can trigger an event here
-// if (isset($_SESSION["p24_back_url"]) && strpos($_GET["url"], "oplacono") !== 0) {
-//     header("Location: /oplacono");
-//     die;
-// }
-
-// TODO: move to the FB module instead
-//include 'helpers/facebook_register.php';

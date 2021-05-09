@@ -1,4 +1,4 @@
-let ASSETS_RELEASE;
+let VERSIONS;
 
 let IS_LOGGED;
 let IS_ADMIN;

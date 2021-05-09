@@ -165,36 +165,17 @@ foreach ($deployment_routes as $route) {
     $routes[] = $route;
 }
 
-$pageName = "";
-
-$found = false;
-
-$pageName = checkUrl(Request::$url);
-
-function checkUrl($url)
+foreach (def($build_info, "routes") as $route => $file) // new routing
 {
-    global $routes, $link_route_path;
-
-    foreach ($link_route_path as $route => $file) // new routing
-    {
-        if (strpos($url . "/", $route . "/") === 0 || $url == $route) {
-            Request::$route = $route;
-            define("ROUTE", $route);
-            return $file;
-        }
+    if (strpos(Request::$url . "/", $route . "/") === 0 || Request::$url == $route) {
+        Request::$route = $route;
+        define("ROUTE", $route);
+        $route_file = $file;
+        break;
     }
-
-    foreach ($routes as $page) // deprecated
-    {
-        if (strpos($url . "/", $page . "/") === 0 || $url == $page) {
-            return ltrim($page, "/") . ".php";
-        }
-    }
-
-    return null;
 }
 
-if ($pageName) {
+if (isset($route_file)) {
     // hardcoded page example - will be removed in the future
     if (!Request::$is_deployment_url) {
         $current_page_data = [];
@@ -204,7 +185,7 @@ if ($pageName) {
         // );
     }
 
-    include $pageName;
+    include $route_file;
     die;
 } else {
     $canSee = "1"; // User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";

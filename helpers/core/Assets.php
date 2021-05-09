@@ -5,69 +5,6 @@ use ScssPhp\ScssPhp\Compiler;
 
 class Assets
 {
-    public static $js_schema;
-    public static $css_schema;
-
-    /**
-     * @typedef AssetSchema {
-     * files_groups?: array
-     * }
-     */
-
-    public static function setJsSchema($js_schema)
-    {
-        self::$js_schema = $js_schema;
-    }
-
-    public static function setCssSchema($css_schema)
-    {
-        self::$css_schema = $css_schema;
-    }
-
-    /**
-     * @return AssetSchema
-     */
-    public static function getJsSchema()
-    {
-        return self::$js_schema;
-    }
-
-    /**
-     * @return AssetSchema
-     */
-    public static function getCssSchema()
-    {
-        return self::$css_schema;
-    }
-
-    private static function appendGroup(&$file_groups, $groups, $path, $parent_dir)
-    {
-        foreach (explode("|", $groups) as $group) {
-            $important = strpos($group, "!") !== false;
-            $group = str_replace("!", "", $group);
-
-            if ($group === "view") {
-                $view_path = $parent_dir . "view.php";
-                if (file_exists($view_path)) {
-                    $first_line = def(file($view_path), 0, "");
-                    if ($url = Files::getAnnotationRoute($first_line)) {
-                        $group = "views" . $url;
-                    }
-                }
-            }
-
-            if (!isset($file_groups[$group])) {
-                $file_groups[$group] = [];
-            }
-
-            if ($important) {
-                array_unshift($file_groups[$group], $path);
-            } else {
-                $file_groups[$group][] = $path;
-            }
-        }
-    }
-
     public static function minifyCss($css_full)
     {
         // that's sad
@@ -106,36 +43,6 @@ class Assets
 
     public static function minifyJs($js_full)
     {
-        // IT'S NOT EVEN USED LOL
-        // $js_content_arr = explode(PHP_EOL, $js_full);
-
-        // $exclude_start_line = null;
-
-        // foreach ($js_content_arr as $line_id => $js_content_line) {
-        //     if (preg_match("/\/\/.*exclude start/", $js_content_line, $matches, PREG_OFFSET_CAPTURE)) {
-        //         $exclude_start_line = $line_id;
-        //     } else if ($exclude_start_line !== null) {
-        //         if (preg_match("/\/\/.*exclude end/", $js_content_line, $matches, PREG_OFFSET_CAPTURE)) {
-        //             for ($i = $exclude_start_line; $i <= $line_id; $i++) {
-        //                 unset($js_content_arr[$i]);
-        //             }
-        //             $exclude_start_line = null;
-        //         }
-        //     }
-        // }
-
-        // $js_content = implode(PHP_EOL, $js_content_arr);
-
-        //@include(admin/tools/newCms/template.html)
-        // if (preg_match_all("/(?<=\@include\().*?(?=\))/", $js_full, $matches)) {
-        //     foreach ($matches[0] as $file_to_include) {
-        //         if (file_exists($file_to_include)) {
-        //             $js_full = str_replace(["// @include($file_to_include)", "//@include($file_to_include)", "@include($file_to_include)"], file_get_contents($file_to_include), $js_full);
-        //         }
-        //     }
-        // }
-
-        // minify first, then you are safe to say that all variables are in a single line, ok, strings are not ;) but .* does the trick
         $js_full = (new Minify\JS($js_full))->minify();
 
         // fake lit-html lol
@@ -201,16 +108,15 @@ class Assets
 
         Files::scanDirectories(
             [
-                "get_first_line" => true,
                 "exclude_paths" => ["vendor", "uploads", "builds"],
             ],
             function ($path, $first_line, $parent_dir) use (&$css_file_groups, &$js_file_groups) {
                 if (strpos($path, ".css") !== false || strpos($path, ".scss") !== false) {
-                    if ($css_group = Files::getAnnotation("css", $first_line)) {
+                    if ($css_group = Files::getAnnotation("css", $first_line, $parent_dir)) {
                         self::appendGroup($css_file_groups, $css_group, $path, $parent_dir);
                     }
                 } else if (strpos($path, ".js") !== false) {
-                    if ($js_group = Files::getAnnotation("js", $first_line)) {
+                    if ($js_group = Files::getAnnotation("js", $first_line, $parent_dir)) {
                         self::appendGroup($js_file_groups, $js_group, $path, $parent_dir);
                     }
                 }

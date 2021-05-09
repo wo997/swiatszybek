@@ -3,7 +3,6 @@
 function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 {
     if (DISPLAY_EMAIL) {
-
         debug([$title, $message]);
     }
 

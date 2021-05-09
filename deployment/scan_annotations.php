@@ -10,7 +10,6 @@ echo "<br><h3>Scanning annotations:</h3>";
 
 Files::scanDirectories(
     [
-        "get_first_line" => true,
         "exclude_paths" => ["vendor", "uploads", "builds"],
     ],
     function ($path, $first_line) {
@@ -22,15 +21,7 @@ Files::scanDirectories(
 
         if ($url = Files::getAnnotationRoute($first_line)) {
             if (isset($_link_route_path[$url])) {
-                /*// remove old route if existed on server, might cause data loss, pls dont do that
-                if (filemtime($_link_route_path[$url]) < filemtime($path)) {
-                    unlink($_link_route_path[$url]);
-                    $_link_route_path[$url] = $path;
-                } else {
-                    unlink($path);
-                }*/
                 echo "⚠️ Routes conflict: <b>$url</b> found in <b>" . $_link_route_path[$url] . "</b> and <b>" . $path . "</b><br>";
-
                 // TODO: developer tab with these errors?
             } else {
                 $_link_route_path[$url] = $path;

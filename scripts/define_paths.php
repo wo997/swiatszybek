@@ -11,6 +11,6 @@ define("MODULE_SETTINGS_PATH", SETTINGS_PATH . "modules/");
 define("THEME_SETTINGS_PATH", SETTINGS_PATH . "theme/");
 define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 
-define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.php");
+define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.json");
 
 define("PREBUILDS_PATH", "prebuilds/");

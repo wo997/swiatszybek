@@ -533,7 +533,6 @@ class Files
 
     /**
      * @typedef scanDirectoriesOptions {
-     * get_first_line?: boolean
      * exclude_paths?: array
      * include_paths?: array
      * }
@@ -561,11 +560,7 @@ class Files
                 self::scanDirectories($options, $callback, $path . "/", $level + 1);
                 continue;
             }
-            if (isset($options["get_first_line"])) {
-                $first_line = def(file($path), 0, "");
-            } else {
-                $first_line = "";
-            }
+            $first_line = def(file($path), 0, "");
 
             $callback($path, $first_line, $parent_dir);
         }
@@ -600,11 +595,28 @@ class Files
         return $url;
     }
 
-    public static function getAnnotation($type, $line)
+    public static function getAnnotation($type, $line, $parent_dir)
     {
         if (preg_match('/\*.*\*/', $line) && preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
-            return $match[0];
+            $scope = $match[0];
+            if ($scope === "view") {
+                $view_path = $parent_dir . "view.php";
+                if (file_exists($view_path)) {
+                    $first_line = def(file($view_path), 0, "");
+                    if ($url = Files::getAnnotationRoute($first_line)) {
+                        $scope = "views" . $url;
+                    }
+                }
+            }
+
+            return $scope;
         }
         return null;
     }
+}
+
+function version($scope)
+{
+    global $build_info;
+    return def($build_info, ["scopes", $scope, "version"], 0);
 }

@@ -1,25 +1,22 @@
 <?php
 
 if (defined("ROUTE")) {
-    $js_schema = Assets::getJsSchema();
-    $groups = def($js_schema, "files_groups", []);
-    $has_js = isset($groups["views" . ROUTE]);
-
-    $css_schema = Assets::getCssSchema();
-    $groups = def($css_schema, "files_groups", []);
-    $has_css = isset($groups["views" . ROUTE]);
+    // TODO: you know what ;)
+    $has_js = true;
+    $has_css = true;
 } else {
     $has_css = false;
     $has_js = false;
 }
 
+
 ?>
 
-<link id="main_stylesheet" href="/builds/global.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-<script src="/builds/global.js?v=<?= ASSETS_RELEASE ?>"></script>
+<link id="main_stylesheet" href="/builds/global.css?v=<?= version("global") ?>" rel="stylesheet">
+<script src="/builds/global.js?v=<?= version("global") ?>"></script>
 
 <script>
-    const ASSETS_RELEASE = <?= ASSETS_RELEASE ?>;
+    const VERSIONS = <?= json_encode(getScopesVersions()) ?>;
 
     const IS_LOGGED = <?= User::getCurrent()->isLoggedIn() ? "true" : "false" ?>;
     const USER_ID = <?= User::getCurrent()->getId() ?>;
@@ -69,13 +66,13 @@ if (defined("ROUTE")) {
 
 
 <?php if (Request::$is_user_url) : ?>
-    <link href="/builds/user.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/user.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <link href="/builds/user.css?v=<?= version("user") ?>" rel="stylesheet">
+    <script src="/builds/user.js?v=<?= version("user") ?>"></script>
 <?php endif ?>
 
 <?php if (Request::$is_admin_url) : ?>
-    <link href="/builds/admin.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <link href="/builds/admin.css?v=<?= version("admin")  ?>" rel="stylesheet">
+    <script src="/builds/admin.js?v=<?= version("admin")  ?>"></script>
 
     <script>
         const user_roles = <?= json_encode(User::$user_roles) ?>;
@@ -93,8 +90,8 @@ if (defined("ROUTE")) {
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-    <link href="/builds/admin_front.css?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
-    <script src="/builds/admin_front.js?v=<?= ASSETS_RELEASE ?>"></script>
+    <link href="/builds/admin_front.css?v=<?= version("admin_front") ?>" rel="stylesheet">
+    <script src="/builds/admin_front.js?v=<?= version("admin_front") ?>"></script>
 <?php endif ?>
 
 <meta charset="utf-8">
@@ -112,8 +109,8 @@ if (defined("ROUTE")) {
 </style>
 
 <?php if ($has_js) { ?>
-    <script src="/<?= BUILDS_PATH . "views" . ROUTE . ".js" ?>?v=<?= ASSETS_RELEASE ?>"></script>
+    <script src="/<?= BUILDS_PATH . "views" . ROUTE . ".js" ?>?v=<?= version("views" . ROUTE) ?>"></script>
 <?php } ?>
 <?php if ($has_css) { ?>
-    <link href="/<?= BUILDS_PATH . "views" . ROUTE . ".css" ?>?v=<?= ASSETS_RELEASE ?>" rel="stylesheet">
+    <link href="/<?= BUILDS_PATH . "views" . ROUTE . ".css" ?>?v=<?= version("views" . ROUTE) ?>" rel="stylesheet">
 <?php } ?>
