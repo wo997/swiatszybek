@@ -1002,6 +1002,7 @@ class PiepCMS {
 
 					if (focus_node && focus_node.classList.contains("textable")) {
 						this.insertText(ev.key);
+						this.pushHistory("insert_text");
 					}
 				}
 			}
@@ -1041,6 +1042,8 @@ class PiepCMS {
 						}
 					}
 				}
+
+				this.pushHistory("delete_text");
 			}
 
 			if (ev.key === "Delete" && v_node_data) {
@@ -1078,6 +1081,8 @@ class PiepCMS {
 						}
 					}
 				}
+
+				this.pushHistory("delete_text");
 			}
 
 			if (ev.key === "ArrowLeft") {
@@ -1135,6 +1140,8 @@ class PiepCMS {
 						setSelectionByIndex(insert_node_ref, 0);
 					}
 				}
+
+				this.pushHistory("insert_text");
 			}
 		});
 	}
