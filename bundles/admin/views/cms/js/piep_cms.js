@@ -1669,27 +1669,26 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {number} vid
-	 * @param {findVDomOptions} [options]
 	 * @returns
 	 */
-	getVDomNodeDataById(vid, options = {}) {
+	getVDomNodeDataById(vid) {
 		if (!vid) {
 			return undefined;
 		}
 
-		return this.getVDomNodeData((v_node) => v_node.id === vid, options);
+		return this.getVDomNodeData((v_node) => v_node.id === vid);
 	}
 
 	/**
 	 *
 	 * @param {{(v_node: vDomNode): boolean}} test
-	 * @param {findVDomOptions} [options]
 	 * @returns {vDomNodeData}
 	 */
-	getVDomNodeData(test, options = {}) {
+	getVDomNodeData(test) {
 		/**
 		 *
 		 * @param {vDomNode[]} v_nodes
+		 * @param {vDomNode[]} parent_v_nodes
 		 * @returns
 		 */
 		const traverseVDom = (v_nodes, parent_v_nodes) => {
@@ -1717,7 +1716,7 @@ class PiepCMS {
 			return undefined;
 		};
 
-		return traverseVDom([]);
+		return traverseVDom(this.v_dom, []);
 	}
 
 	/**
@@ -3185,7 +3184,6 @@ class PiepCMS {
 								}
 							}
 							if (visible) {
-								//priority += def(blc_group.priority, 1);
 								priority += def(blc_group.priority, 0);
 								break;
 							}

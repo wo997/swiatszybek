@@ -64,13 +64,6 @@
  */
 
 /**
- *
- * @typedef {{
- * ignore_insert?: boolean
- * }} findVDomOptions
- */
-
-/**
  * @typedef {{
  * _insert_action()
  * _popup_blcs: insertBlc[]
