@@ -1628,6 +1628,13 @@ class PiepCMS {
 
 				const children = v_node.children;
 				if (children) {
+					// clean up text nodes if any existed
+					node.childNodes.forEach((c) => {
+						if (c.nodeType === Node.TEXT_NODE) {
+							c.remove();
+						}
+					});
+
 					traverseVDom(node, children, level + 1);
 				}
 			});
@@ -3240,7 +3247,7 @@ class PiepCMS {
 	showFocusToNodes(vids) {
 		let float_focuses_html = "";
 
-		for (const vid of vids) {
+		for (const vid of vids.filter(onlyUnique)) {
 			if (!vid) {
 				continue;
 			}

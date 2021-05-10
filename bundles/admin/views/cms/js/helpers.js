@@ -15,7 +15,7 @@ function setSelectionRange(range) {
  */
 function getTextNode(node) {
 	let text_node = node;
-	while (text_node && text_node.nodeType === 1) {
+	while (text_node && text_node.nodeType === Node.TEXT_NODE) {
 		const t = text_node.childNodes[0];
 		if (!t) {
 			break;
@@ -40,8 +40,13 @@ function getRangeByIndex(node, pos, end = undefined) {
 		range.setStart(node, 0);
 		range.setEnd(node, 0);
 	} else {
-		range.setStart(text_node, pos);
-		range.setEnd(text_node, def(end, pos));
+		try {
+			range.setStart(text_node, pos);
+			range.setEnd(text_node, def(end, pos));
+		} catch (e) {
+			range.setStart(node, 0);
+			range.setEnd(node, 0);
+		}
 	}
 	return range;
 }
