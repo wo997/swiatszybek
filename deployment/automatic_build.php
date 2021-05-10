@@ -15,12 +15,14 @@ Files::scanDirectories(
     function ($path, $first_line, $parent_dir) use (&$new_build_info) {
         $ext = Files::getFileExtension($path);
 
-        $add_scope = function ($scope, $path) use (&$new_build_info) {
+        $add_scope = function ($scopes_str, $path) use (&$new_build_info) {
             $mod_time = filemtime($path);
 
-            $scope_names = explode(" ", str_replace("!", "", $scope)); // load important things first, eeeezy
+            $scopes = explode(" ", $scopes_str); // load important things first, eeeezy
 
-            foreach ($scope_names as $scope_name) {
+            foreach ($scopes as $scope) {
+                $scope_name = str_replace("!", "", $scope);
+
                 if (!in_array($scope_name, array_keys($new_build_info["scopes"]))) {
                     $new_build_info["scopes"][$scope_name] = [
                         "mod_time" => 0,
