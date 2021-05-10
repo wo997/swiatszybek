@@ -61,16 +61,11 @@ class PiepCMS {
 		this.cursor = node("piep_editor_cursor");
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
-		//this.float_focus = node("piep_editor_float_focus");
 		this.float_focuses = node("piep_editor_float_focuses");
 		this.parent_float_focus = node("piep_editor_parent_float_focus"); // TODO: display more than just a parent? f.e. for columns
 		this.float_menu = node("piep_editor_float_menu");
 		this.add_block_menu = node("piep_editor_add_block_menu");
 		this.layout_controls = node("piep_editor_layout_controls");
-
-		// added straight to the layout_controls
-		//this.show_edit_node_layout = node("piep_editor_show_edit_node_layout");
-		//this.alternative_scroll_panel.append(this.show_edit_node_layout);
 
 		this.styles = styles("piep_editor_styles");
 
@@ -2656,7 +2651,7 @@ class PiepCMS {
 
 			const insertInside = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.grabbed_block_vid));
+				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 				this.findNodeInVDomById(blc_vid).children.push(grabbed_node_copy);
 			};
 
