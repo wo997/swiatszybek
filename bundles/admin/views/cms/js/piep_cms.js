@@ -1312,20 +1312,23 @@ class PiepCMS {
 
 	getNewBlcId() {
 		let max = this.max_vid_inside;
-		const traversePiepHtml = (nodes) => {
-			for (const node of nodes) {
-				max = Math.max(max, node.id);
-				if (node.children) {
-					traversePiepHtml(node.children);
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
+				max = Math.max(max, v_node.id);
+				if (v_node.children) {
+					traverseVDom(v_node.children);
 				}
 			}
 		};
 
+		traverseVDom(this.v_dom);
 		if (this.grabbed_v_node) {
-			max = Math.max(max, this.grabbed_block_vid);
+			traverseVDom([this.grabbed_v_node]);
 		}
 
-		traversePiepHtml(this.v_dom);
 		return max + 1;
 	}
 
