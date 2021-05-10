@@ -2549,7 +2549,7 @@ class PiepCMS {
 
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-				near_v_node_data.v_nodes.splice(ind, 0, this.grabbed_v_node);
+				near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
 			};
 
 			/**
@@ -2638,14 +2638,18 @@ class PiepCMS {
 							percentage_sum += numberFromStr(df.width);
 						});
 						console.log(percentage_sum);
-						// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
 
-						// will be just below 1
-						let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
-						near_v_node_data.v_nodes.forEach((v_node) => {
-							const df = v_node.styles.df;
-							v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
-						});
+						// TODO: TEMPORARY solution here, assuming 1 row
+						if (Math.abs(percentage_sum - 100) < 2) {
+							// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
+
+							// will be just below 1
+							let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
+							near_v_node_data.v_nodes.forEach((v_node) => {
+								const df = v_node.styles.df;
+								v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
+							});
+						}
 					}
 
 					// WORKS WELL ALREADY, look at the others now
@@ -2887,11 +2891,6 @@ class PiepCMS {
 		delete this.has_insert_pos;
 
 		if (current_insert_blc) {
-			// TODO: think
-			// remove grabbed block that was just hidden so far
-			const grabbed_v_node_data = this.getVDomNodeData((v_node) => v_node.id === grabbed_block_vid);
-			grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
-
 			this.update({ all: true });
 
 			this.pushHistory(`moved_blc_${grabbed_block_vid}`);
@@ -2899,9 +2898,15 @@ class PiepCMS {
 			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
 		} else {
+			//TODO: think
 			// temp block needs to be removed
-			if (this.grab_block_options.type === "insert") {
-			}
+			// console.log(this.grab_block_options.type);
+			// if (this.grab_block_options.type === "insert") {
+
+			// }
+
+			this.v_dom.splice(0, this.v_dom.length);
+			deepAssign(this.v_dom, this.before_grab_v_dom);
 
 			this.update({ all: true });
 		}
