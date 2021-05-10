@@ -611,8 +611,8 @@ class PiepCMS {
 							child.id = add_v_node.id + 1 + index;
 						});
 					}
-					this.v_dom.push(add_v_node);
-					this.update({ all: true });
+					this.v_dom.push(add_v_node); // hidden at the end ;) removed right when grab is triggered
+					this.update({ all: true }); // creates the node to grab
 					this.setFocusNode(add_v_node.id);
 					this.grabBlock({ type: "insert" });
 				});
@@ -919,7 +919,7 @@ class PiepCMS {
 				const size = Math.sqrt(max_ds) * 2 + 45 + "px";
 				this.float_multi_insert_bckg.style.width = size;
 				this.float_multi_insert_bckg.style.height = size;
-			} else if (this.grabbed_block_vid !== undefined) {
+			} else if (this.grabbed_v_node) {
 				this.releaseBlock();
 			}
 
@@ -1320,6 +1320,10 @@ class PiepCMS {
 				}
 			}
 		};
+
+		if (this.grabbed_v_node) {
+			max = Math.max(max, this.grabbed_block_vid);
+		}
 
 		traversePiepHtml(this.v_dom);
 		return max + 1;
@@ -1938,7 +1942,7 @@ class PiepCMS {
 		let show_add_block_menu = false;
 
 		if (mouse.target) {
-			if (this.grabbed_block_vid === undefined) {
+			if (!this.grabbed_v_node) {
 				show_add_block_menu = !!(mouse.target._parent(this.add_block_btn_wrapper) || mouse.target._parent(this.add_block_menu));
 			}
 		}
@@ -2093,7 +2097,7 @@ class PiepCMS {
 		updateMouseTarget();
 		this.updateCursorPosition();
 
-		if (this.grabbed_block_vid !== undefined) {
+		if (this.grabbed_v_node) {
 			this.grabbedBlock();
 		} else {
 			this.notGrabbedBlock();
@@ -2493,7 +2497,7 @@ class PiepCMS {
 			insert_blc._set_absolute_pos(content_wrapper_rect.left + content_wrapper_rect.width * 0.5, content_wrapper_rect.top + 30);
 			insert_blc._insert_action = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.findNodeInVDomById(this.grabbed_block_vid));
+				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 				this.v_dom.push(grabbed_node_copy);
 			};
 		}
@@ -2557,9 +2561,7 @@ class PiepCMS {
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 				let suggest_wrapping_with_columns_module = false;
-				// if (near_v_node_data.v_node.text === undefined) {
-				// 	wrap_with_a_flex = true;
-				// }
+
 				const flow_direction = getFlowDirection();
 
 				if (flow_direction === "column") {
@@ -3010,7 +3012,7 @@ class PiepCMS {
 	 * @returns
 	 */
 	setFocusNode(vid) {
-		if (this.grabbed_block_vid !== undefined || this.editing_layout) {
+		if (this.grabbed_v_node || this.editing_layout) {
 			return;
 		}
 
