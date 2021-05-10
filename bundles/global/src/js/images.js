@@ -143,6 +143,7 @@ function onScrollImages(options = {}) {
  * base_url?: string
  * image_dimension?: number
  * }} options
+ * @returns {string}
  */
 function getResponsiveImageRealUrl(img, options = {}) {
 	const base_url = def(options.base_url, img.dataset.src);
@@ -239,11 +240,12 @@ function preloadWo997Image(base_url, img) {
  *
  * @param {PiepNode} img
  */
-function setResponsiveImageUrl(img, url) {
+function setResponsiveImageUrl(img, data_src) {
 	img.classList.remove("wo997_img_waiting", "wo997_img_shown");
-	const data_src = getResponsiveImageRealUrl(img, url);
-	if (!data_src) {
-		return;
-	}
 	img.dataset.src = data_src;
+	const src = getResponsiveImageRealUrl(img);
+	if (src) {
+		// @ts-ignore
+		img.src = src;
+	}
 }

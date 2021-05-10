@@ -1540,14 +1540,17 @@ class PiepCMS {
 		 * @param {vDomNode[]} v_nodes
 		 */
 		const traverseVDom = (put_in_node, v_nodes, level = 0) => {
+			//const len = v_nodes.length;
 			v_nodes.forEach((v_node, index) => {
+				//for (let index = len - 1; index >= 0; index--) {
+				//const v_node = v_nodes[index];
 				const vid = v_node.id;
 				included_vids.push(vid);
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
 
 				let node = this.getNode(vid);
 
-				if (node && node.tagName !== v_node.tag) {
+				if (node && node.tagName.toLocaleLowerCase() !== v_node.tag.toLocaleLowerCase()) {
 					node.remove();
 					node = undefined;
 				}
@@ -1557,6 +1560,7 @@ class PiepCMS {
 					const before_node = put_in_node._direct_children()[index];
 					if (node._parent() !== put_in_node || node._next() !== before_node) {
 						put_in_node.insertBefore(node, before_node);
+						//console.log("insertBefore", node, before_node);
 					}
 				}
 
@@ -1575,6 +1579,7 @@ class PiepCMS {
 				if (text !== undefined) {
 					node._set_content(text === "" ? "<br>" : text);
 					classes.push("textable");
+					//console.log("textable", node, text);
 				}
 
 				if (v_node.module_name) {
@@ -1625,6 +1630,7 @@ class PiepCMS {
 				if (children) {
 					traverseVDom(node, children, level + 1);
 				}
+				//}
 			});
 		};
 
@@ -1632,6 +1638,7 @@ class PiepCMS {
 
 		const select_bls_to_remove = ".blc" + included_vids.map((e) => `:not(.blc_${e})`).join("");
 		this.content._children(select_bls_to_remove).forEach((r) => {
+			//console.log("REMOVE", r);
 			r.remove();
 		});
 	}
