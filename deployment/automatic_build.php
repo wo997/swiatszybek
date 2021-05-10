@@ -6,7 +6,7 @@ $new_build_info = [
     "hooks" => []
 ];
 
-$app_paths = ["bundles", "entities", "helpers", "prebuilds", "settings"];
+$app_paths = ["bundles", "entities", "helpers", "prebuilds", "settings", "xxx"];
 
 Files::scanDirectories(
     [
