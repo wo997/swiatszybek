@@ -595,18 +595,24 @@ class Files
         return $url;
     }
 
+    public static function getViewScope($parent_dir)
+    {
+        $view_path = $parent_dir . "view.php";
+        if (file_exists($view_path)) {
+            $first_line = def(file($view_path), 0, "");
+            if ($url = Files::getAnnotationRoute($first_line)) {
+                return "views" . $url;
+            }
+        }
+        return null;
+    }
+
     public static function getAnnotation($type, $line, $parent_dir)
     {
         if (preg_match('/\*.*\*/', $line) && preg_match("/(?<=$type\[).*(?=\])/", $line, $match)) {
             $scope = $match[0];
             if ($scope === "view") {
-                $view_path = $parent_dir . "view.php";
-                if (file_exists($view_path)) {
-                    $first_line = def(file($view_path), 0, "");
-                    if ($url = Files::getAnnotationRoute($first_line)) {
-                        $scope = "views" . $url;
-                    }
-                }
+                return self::getViewScope($parent_dir);
             }
 
             return $scope;

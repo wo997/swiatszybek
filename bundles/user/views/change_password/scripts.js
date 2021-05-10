@@ -1,7 +1,5 @@
 /* js[view] */
 
-//@include(bundles/global/src/js/traits/password.js)
-
 domload(() => {
 	const changePasswordForm = $("#changePasswordForm");
 	changePasswordForm._child(".submit_btn").addEventListener("click", () => {

@@ -1,41 +1,44 @@
 <?php
 
-// TODO: remember about dependencies
 $new_build_info = [
     "scopes" => [], // anything with versions
     "routes" => [],
     "hooks" => []
 ];
 
+$app_paths = ["bundles", "entities", "helpers", "prebuilds", "settings"];
+
 Files::scanDirectories(
     [
-        "include_paths" => ["bundles", "entities", "helpers", "prebuilds", "settings"],
+        "include_paths" => $app_paths,
     ],
     function ($path, $first_line, $parent_dir) use (&$new_build_info) {
-        $mod_time = filemtime($path);
         $ext = Files::getFileExtension($path);
 
-        $add_scope = function ($scope) use (&$new_build_info, &$mod_time, &$path) {
-            $scope_name = str_replace("!", "", $scope); // load important things first, eeeezy
+        $add_scope = function ($scope, $path) use (&$new_build_info) {
+            $mod_time = filemtime($path);
 
-            //echo $scope_name;
-            if (!in_array($scope_name, array_keys($new_build_info["scopes"]))) {
-                $new_build_info["scopes"][$scope_name] = [
-                    "mod_time" => 0,
-                    "paths" => []
-                ];
-            }
-            $new_build_info["scopes"][$scope_name]["mod_time"] += $mod_time;
+            $scope_names = explode(" ", str_replace("!", "", $scope)); // load important things first, eeeezy
 
-            if (strpos($scope, "!") !== false) {
-                array_unshift($new_build_info["scopes"][$scope_name]["paths"], $path);
-            } else {
-                $new_build_info["scopes"][$scope_name]["paths"][] = $path;
+            foreach ($scope_names as $scope_name) {
+                if (!in_array($scope_name, array_keys($new_build_info["scopes"]))) {
+                    $new_build_info["scopes"][$scope_name] = [
+                        "mod_time" => 0,
+                        "paths" => []
+                    ];
+                }
+                $new_build_info["scopes"][$scope_name]["mod_time"] += $mod_time;
+
+                if (strpos($scope, "!") !== false) {
+                    array_unshift($new_build_info["scopes"][$scope_name]["paths"], $path);
+                } else {
+                    $new_build_info["scopes"][$scope_name]["paths"][] = $path;
+                }
             }
         };
 
         if (in_array($ext, ["php"])) {
-            $add_scope("php");
+            $add_scope("php", $path);
 
             if ($url = Files::getAnnotationRoute($first_line)) {
                 if (isset($new_build_info["routes"][$url])) {
@@ -43,37 +46,52 @@ Files::scanDirectories(
                     // TODO: developer tab with these errors?
                 } else {
                     $new_build_info["routes"][$url] = $path;
-                    $add_scope("routes");
+                    $add_scope("routes", $path);
                 }
             } else if ($hook = Files::getAnnotationPHP("hook", $first_line)) {
                 $new_build_info["hooks"][$hook][] = $path;
-                $add_scope($hook);
+                $add_scope($hook, $path);
             }
 
             return;
         }
         if (in_array($ext, ["css", "scss"])) {
-            $add_scope("css");
+            $add_scope("css", $path);
 
             $scope = Files::getAnnotation("css", $first_line, $parent_dir);
             if ($scope) {
-                $add_scope($scope);
+                $add_scope($scope, $path);
             }
 
             return;
         }
         if (in_array($ext, ["js"])) {
-            $add_scope("js");
+            $add_scope("js", $path);
 
             $scope = Files::getAnnotation("js", $first_line, $parent_dir);
             if ($scope) {
-                $add_scope($scope);
+                $add_scope($scope, $path);
             }
 
             return;
         }
         if (strpos($path, "settings/") === 0) {
-            $add_scope("settings");
+            $add_scope("settings", $path);
+
+            return;
+        }
+        if (endsWith($path, "/build.json")) {
+            $scope = Files::getViewScope($parent_dir);
+            if ($scope) {
+                $build_schema = json_decode(file_get_contents($path), true);
+                foreach (def($build_schema, ["include", "js"], []) as $path) {
+                    $add_scope($scope, $path);
+                }
+                foreach (def($build_schema, ["include", "css"], []) as $path) {
+                    $add_scope($scope, $path);
+                }
+            }
+            return;
         }
     }
 );
@@ -84,9 +102,6 @@ if ($build_info != $new_build_info) {
         $change = $scope["mod_time"] != def($build_info, ["scopes", $name, "mod_time"], 0);
 
         if ($change) {
-
-            //sendEmail("wojtekwo997@gmail.com", "siema", "hej: $name");
-
             $version++;
 
             if ($name === "migration") {

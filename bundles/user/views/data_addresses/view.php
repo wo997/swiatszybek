@@ -8,5 +8,4 @@
 
 <?php startSection("body_content"); ?>
 
-
 <?php include "bundles/user/templates/default.php"; ?>

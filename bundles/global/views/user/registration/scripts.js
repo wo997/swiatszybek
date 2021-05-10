@@ -1,7 +1,5 @@
 /* js[view] */
 
-//@include(bundles/global/src/js/traits/password.js)
-
 function accountExists(src) {
 	$(`#loginForm .node_email`)._set_value($(`#registerForm .email`)._get_value());
 	showModal("loginForm", { source: src });
