@@ -2447,6 +2447,14 @@ class PiepCMS {
 		this.displayInsertPositions();
 	}
 
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 */
+	isTextContainer(v_node) {
+		return ["h1", "h2", "h3", "h4", "h5", "h6", "p"].includes(v_node.tag);
+	}
+
 	displayInsertPositions() {
 		/**
 		 *
@@ -2534,16 +2542,20 @@ class PiepCMS {
 
 			const blc_vid = +blc.dataset.vid;
 
+			/**
+			 *
+			 * @returns {FlowDirectionEnum}
+			 */
 			const getFlowDirection = () => {
-				/** @type {FlowDirectionEnum} */
-				let flow_direction = "column";
 				const parent_v_node = getNearVNodeData().parent_v_nodes[0];
 				if (parent_v_node) {
-					if (parent_v_node.classes.includes("columns_container")) {
-						flow_direction = "row"; // TODO: wont work always ofc
+					if (this.isTextContainer(parent_v_node)) {
+						return "inline";
+					} else if (parent_v_node.classes.includes("columns_container")) {
+						return "row";
 					}
 				}
-				return flow_direction;
+				return "column";
 			};
 
 			/**
@@ -2585,16 +2597,18 @@ class PiepCMS {
 
 				const new_vid = this.getNewBlcId();
 
-				const insert_column = grabbed_node_copy.classes.includes("vertical_container")
-					? grabbed_node_copy
-					: {
-							id: new_vid,
-							tag: "div",
-							styles: { df: {} },
-							attrs: {},
-							classes: ["vertical_container"],
-							children: [grabbed_node_copy],
-					  };
+				let insert_v_node = grabbed_node_copy;
+
+				if (suggest_wrapping_with_columns_module && !grabbed_node_copy.classes.includes("vertical_container")) {
+					insert_v_node = {
+						id: new_vid,
+						tag: "div",
+						styles: { df: {} },
+						attrs: {},
+						classes: ["vertical_container"],
+						children: [grabbed_node_copy],
+					};
+				}
 
 				if (suggest_wrapping_with_columns_module) {
 					const near_column = {
@@ -2609,12 +2623,12 @@ class PiepCMS {
 					/** @type {vDomNode[]} */
 					const just_columns = [near_column];
 
-					insert_column.styles.df.width = "50%";
+					insert_v_node.styles.df.width = "50%";
 
 					if (dir === 1) {
-						just_columns.push(insert_column);
+						just_columns.push(insert_v_node);
 					} else {
-						just_columns.unshift(insert_column);
+						just_columns.unshift(insert_v_node);
 					}
 
 					/** @type {vDomNode} */
@@ -2637,7 +2651,7 @@ class PiepCMS {
 						ind++;
 					}
 
-					near_v_node_data.v_nodes.splice(ind, 0, insert_column);
+					near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
 
 					const columns_container = near_v_node_data.parent_v_nodes[0];
 					if (columns_container && columns_container.settings && columns_container.settings.layout_type === "basic") {
@@ -2662,7 +2676,7 @@ class PiepCMS {
 					}
 
 					// WORKS WELL ALREADY, look at the others now
-					insert_column.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
+					insert_v_node.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
 				}
 			};
 

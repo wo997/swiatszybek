@@ -92,7 +92,7 @@
  */
 
 /**
- * @typedef {"column" | "row"} FlowDirectionEnum
+ * @typedef {"column" | "row" | "inline"} FlowDirectionEnum
  */
 
 /**
