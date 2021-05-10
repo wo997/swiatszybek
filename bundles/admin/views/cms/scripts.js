@@ -134,18 +134,12 @@ domload(() => {
 		// seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-times"></i>`);
 		seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-exclamation-triangle"></i>`);
 
-		let tooltip = html`
+		edit_seo_btn.dataset.tooltip = html`
 			<div class="semi_bold">Tytuł strony:</div>
 			<div>${page_data.seo_title ? page_data.seo_title : "BRAK"}</div>
 			<div class="semi_bold">Opis strony:</div>
 			<div>${page_data.seo_description ? page_data.seo_description : "BRAK"}</div>
 		`;
-
-		if (!is_seo_ok) {
-			tooltip += html`<br />Uzupełnij tytuł oraz opis strony, które będą widoczne w wyszukiwarce (np. Google)`;
-		}
-
-		edit_seo_btn.dataset.tooltip = tooltip;
 	};
 
 	updateSEOState();
