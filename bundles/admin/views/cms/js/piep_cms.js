@@ -2418,13 +2418,21 @@ class PiepCMS {
 		this.grabbed_block_wrapper_rect = this.grabbed_block_wrapper.getBoundingClientRect();
 
 		// actually remove it from v_dom
-		this.before_grab_v_dom = cloneObject(this.v_dom);
+		const setBeforeGrabState = () => {
+			this.before_grab_v_dom = cloneObject(this.v_dom);
+		};
+		if (options.type === "move") {
+			setBeforeGrabState();
+		}
 
 		const grabbed_v_node_data = this.getVDomNodeDataById(this.grabbed_block_vid);
 		/** @type {vDomNode} */
 		this.grabbed_v_node = cloneObject(grabbed_v_node_data.v_node);
 		grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 
+		if (options.type === "insert") {
+			setBeforeGrabState();
+		}
 		this.after_grab_v_dom = cloneObject(this.v_dom);
 
 		this.update({ dom: true, styles: true });
@@ -2892,13 +2900,6 @@ class PiepCMS {
 			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
 		} else {
-			//TODO: think
-			// temp block needs to be removed
-			// console.log(this.grab_block_options.type);
-			// if (this.grab_block_options.type === "insert") {
-
-			// }
-
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.before_grab_v_dom);
 
