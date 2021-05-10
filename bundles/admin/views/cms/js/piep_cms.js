@@ -1524,6 +1524,9 @@ class PiepCMS {
 		};
 
 		traverseVDom(this.v_dom);
+		if (this.grabbed_v_node) {
+			traverseVDom([this.grabbed_v_node]);
+		}
 
 		this.styles._set_content(styles_css);
 	}
@@ -1865,7 +1868,7 @@ class PiepCMS {
 			let pretty_focus_parent;
 
 			this.v_dom.splice(0, this.v_dom.length);
-			deepAssign(this.v_dom, this.before_grab_v_dom);
+			deepAssign(this.v_dom, this.after_grab_v_dom);
 
 			if (insert_blc && insert_blc._insert_action) {
 				insert_blc._insert_action();
@@ -2386,6 +2389,7 @@ class PiepCMS {
 
 		this.container.classList.add("grabbed_block");
 		this.container.classList.add("disable_editing");
+		// TODO: think if necessary ugh
 		this.current_insert_blc = 123456789; // will warm up everything on grab
 
 		const focus_node = this.getFocusNode();
@@ -2417,8 +2421,16 @@ class PiepCMS {
 
 		this.grabbed_block_wrapper_rect = this.grabbed_block_wrapper.getBoundingClientRect();
 
-		// TODO: actually remove the node?
+		// actually remove it from v_dom
 		this.before_grab_v_dom = cloneObject(this.v_dom);
+
+		const grabbed_v_node_data = this.getVDomNodeDataById(this.grabbed_block_vid);
+		/** @type {vDomNode} */
+		this.grabbed_v_node = cloneObject(grabbed_v_node_data.v_node);
+		grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
+
+		this.after_grab_v_dom = cloneObject(this.v_dom);
+
 		this.update({ dom: true, styles: true });
 
 		this.displayInsertPositions();
@@ -2528,7 +2540,6 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertAboveOrBelow = (dir) => {
-				const grabbed_v_node_data = this.getVDomNodeDataById(this.grabbed_block_vid);
 				const near_v_node_data = this.getVDomNodeDataById(blc_vid);
 
 				let ind = near_v_node_data.index;
@@ -2537,8 +2548,8 @@ class PiepCMS {
 				}
 
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
-				near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
+				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
+				near_v_node_data.v_nodes.splice(ind, 0, this.grabbed_v_node);
 			};
 
 			/**
@@ -2546,14 +2557,13 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
-				const grabbed_v_node_data = getGrabbedVNodeData();
 				const near_v_node_data = getNearVNodeData();
 				const near_v_node = near_v_node_data.v_node;
 
 				let ind = near_v_node_data.index;
 
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(grabbed_v_node_data.v_node);
+				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 				let suggest_wrapping_with_columns_module = false;
 				// if (near_v_node_data.v_node.text === undefined) {
 				// 	wrap_with_a_flex = true;
@@ -2865,13 +2875,16 @@ class PiepCMS {
 		});
 
 		const grabbed_block_vid = this.grabbed_block_vid;
-		this.grabbed_block_vid = undefined;
+		delete this.grabbed_block_vid;
+
+		const grabbed_v_node = this.grabbed_v_node;
+		delete this.grabbed_v_node;
 
 		const current_insert_blc = this.current_insert_blc;
-		this.current_insert_blc = undefined;
+		delete this.current_insert_blc;
 
 		this.grabbed_block_wrapper_rect = undefined;
-		this.has_insert_pos = false;
+		delete this.has_insert_pos;
 
 		if (current_insert_blc) {
 			// TODO: think
@@ -2888,8 +2901,6 @@ class PiepCMS {
 		} else {
 			// temp block needs to be removed
 			if (this.grab_block_options.type === "insert") {
-				const grabbed_v_node_data = this.getVDomNodeDataById(grabbed_block_vid);
-				grabbed_v_node_data.v_nodes.splice(grabbed_v_node_data.index, 1);
 			}
 
 			this.update({ all: true });
