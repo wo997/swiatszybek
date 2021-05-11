@@ -1434,8 +1434,7 @@ class PiepCMS {
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 
 			if (v_node_data) {
-				v_node_data.parent_v_nodes.reverse();
-				v_node_data.parent_v_nodes.forEach((parent_v_node) => {
+				v_node_data.parent_v_nodes.reverse().forEach((parent_v_node) => {
 					selection_breadcrumbs_html += html`<span class="v_node_label" data-vid="${parent_v_node.id}"
 							>${this.getVNodeDisplayName(parent_v_node)}</span
 						>
@@ -1967,13 +1966,32 @@ class PiepCMS {
 
 	notGrabbedBlock() {
 		// not grabbed
-		const show_vids = [this.focus_node_vid];
+		const show_vids = [];
+
+		if (this.focus_node_vid !== undefined) {
+			show_vids.push(this.focus_node_vid);
+		}
 
 		let show_float_menu = this.float_menu_active;
 
 		if (!this.layout_control_prop) {
 			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
 			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
+
+			if (blc) {
+				const blc_vid = +blc.dataset.vid;
+				if (blc_vid) {
+					show_vids.push(blc_vid);
+
+					const v_node_data = this.getVNodeDataById(blc_vid);
+
+					if (v_node_data && v_node_data.parent_v_nodes.length > 0) {
+						// maybe just a single parent, otherwise it's bloated af
+						show_vids.push(v_node_data.parent_v_nodes[0].id);
+						//show_vids.push(...v_node_data.parent_v_nodes.map((p) => p.id));
+					}
+				}
+			}
 
 			if (v_node_label) {
 				show_float_menu = false;
@@ -1986,13 +2004,6 @@ class PiepCMS {
 				this.float_menu._children("p-dropdown.dropped").forEach((d) => {
 					d.click();
 				});
-			}
-
-			if (blc) {
-				const blc_vid = +blc.dataset.vid;
-				if (blc_vid) {
-					show_vids.push(blc_vid);
-				}
 			}
 		}
 
