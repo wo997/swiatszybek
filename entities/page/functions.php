@@ -46,6 +46,14 @@ function traverseVDom($v_dom, $options = [])
 
         $module_name = def($v_node, ["module_name"]);
         if ($module_name) {
+            if ($module_name === "template_hook") {
+                $template_hook_id = def($v_node, ["settings", "template_hook_id"]);
+                $hook_contents = def($options, ["hooks", $template_hook_id]);
+                if ($hook_contents) {
+                    $body = $hook_contents;
+                }
+            }
+
             $module = def(PiepCMSManager::$modules, $module_name);
             if ($module) {
                 $render = def($module, "render");
