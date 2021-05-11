@@ -1438,7 +1438,6 @@ class PiepCMS {
 					div: "Kontener",
 					p: "Paragraf",
 					span: "Tekst",
-					img: "Zdjęcie",
 				};
 				let display_name = "";
 				if (v_node.template_hook_id !== undefined) {
@@ -1583,6 +1582,9 @@ class PiepCMS {
 					node._set_content(text === "" ? "<br>" : text);
 					classes.push("textable");
 					//console.log("textable", node, text);
+				}
+				if (this.isTextContainer(v_node)) {
+					classes.push("text_container");
 				}
 
 				if (v_node.module_name) {
@@ -2583,6 +2585,12 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
+				const flow_direction = getFlowDirection();
+
+				if (flow_direction === "inline") {
+					return insertAboveOrBelow(dir);
+				}
+
 				const near_v_node_data = getNearVNodeData();
 				const near_v_node = near_v_node_data.v_node;
 
@@ -2591,8 +2599,6 @@ class PiepCMS {
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 				let suggest_wrapping_with_columns_module = false;
-
-				const flow_direction = getFlowDirection();
 
 				if (flow_direction === "column") {
 					suggest_wrapping_with_columns_module = true;
@@ -2660,6 +2666,9 @@ class PiepCMS {
 					if (columns_container && columns_container.settings && columns_container.settings.layout_type === "basic") {
 						let percentage_sum = 0;
 						near_v_node_data.v_nodes.forEach((v_node) => {
+							if (!v_node.styles.df) {
+								v_node.styles.df = {};
+							}
 							const df = v_node.styles.df;
 							percentage_sum += numberFromStr(df.width);
 						});
@@ -2679,6 +2688,9 @@ class PiepCMS {
 					}
 
 					// WORKS WELL ALREADY, look at the others now
+					if (!insert_v_node.styles.df) {
+						insert_v_node.styles.df = {};
+					}
 					insert_v_node.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
 				}
 			};

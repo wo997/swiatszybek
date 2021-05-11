@@ -32,3 +32,12 @@
 	min-height: 50px;
 	flex-wrap: wrap;
 }
+
+.text_container > * {
+	display: inline-block;
+}
+
+.module_img > img {
+	display: block;
+	width: 100%;
+}
