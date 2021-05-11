@@ -198,26 +198,24 @@ class PiepCMS {
 	}
 
 	initEditingTextType() {
-		/**
-		 *
-		 * @param {PiepNode} text_type_wrapper
-		 */
-		const updateTextTypeWrapper = (text_type_wrapper) => {
-			text_type_wrapper.addEventListener("change", () => {});
-			const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
-			if (text_container_vid) {
-				//this.findNodeInVDomById(text_container_vid).tag =
-			}
-		};
-
-		/**
-		 *
-		 * @param {PiepNode} text_type_dropdown
-		 */
-		const updateTextTypeDropdown = (text_type_dropdown) => {};
-
-		updateTextTypeDropdown(this.float_menu._child(`.prop_tag_name`));
-		updateTextTypeWrapper(this.blc_menu._child(`.prop_tag_name`));
+		// /**
+		//  *
+		//  * @param {PiepNode} text_type_wrapper
+		//  */
+		// const updateTextTypeWrapper = (text_type_wrapper) => {
+		// 	text_type_wrapper.addEventListener("change", () => {});
+		// 	const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
+		// 	if (text_container_vid) {
+		// 		//this.findNodeInVDomById(text_container_vid).tag =
+		// 	}
+		// };
+		// /**
+		//  *
+		//  * @param {PiepNode} text_type_dropdown
+		//  */
+		// const updateTextTypeDropdown = (text_type_dropdown) => {};
+		// updateTextTypeDropdown(this.float_menu._child(`.prop_tag_name`));
+		// updateTextTypeWrapper(this.blc_menu._child(`.prop_tag_name`));
 	}
 
 	initEditingFontSize() {
@@ -1460,7 +1458,7 @@ class PiepCMS {
 					display_name = map_tag_display_name[tag];
 				}
 
-				if (v_node.settings.link) {
+				if (v_node.settings && v_node.settings.link) {
 					display_name += html` <i class="fas fa-link"></i>`;
 				}
 
