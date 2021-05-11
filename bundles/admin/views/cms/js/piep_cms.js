@@ -1435,6 +1435,11 @@ class PiepCMS {
 				} else if (map_tag_display_name[tag]) {
 					display_name = map_tag_display_name[tag];
 				}
+
+				if (v_node.settings.link) {
+					display_name += html` <i class="fas fa-link"></i>`;
+				}
+
 				let info = "";
 
 				if (text !== undefined) {

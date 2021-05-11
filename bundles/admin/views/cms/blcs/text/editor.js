@@ -1,12 +1,11 @@
 /* js[piep_cms_dependencies] */
 {
 	const tag_containing_text_priority = 5;
-	const match_tags_containing_text = /^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
 
 	piep_cms_manager.registerProp({
 		name: "font_size",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Rozmiar czcionki</div>
 			<input class="field hidden" data-blc_prop="styles.fontSize" />
@@ -33,7 +32,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_weight",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
 			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="styles.fontWeight">
@@ -60,7 +59,7 @@
 	piep_cms_manager.registerProp({
 		name: "text_align",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
 			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textAlign">
@@ -91,7 +90,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_style",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Kursywa (pochylenie czcionki)</div>
 			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.fontStyle">
@@ -114,7 +113,7 @@
 	piep_cms_manager.registerProp({
 		name: "text_decoration",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Zdobienie czcionki</div>
 			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textDecoration">
@@ -137,7 +136,7 @@
 	piep_cms_manager.registerProp({
 		name: "color",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Kolor czcionki</div>
 
@@ -157,7 +156,7 @@
 	piep_cms_manager.registerProp({
 		name: "background_color",
 		type_groups: ["appearance"],
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: tag_containing_text_priority }],
 		menu_html: html`
 			<div class="label">Kolor tła</div>
 
@@ -178,7 +177,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "font_size",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
@@ -194,7 +193,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "font_weight",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.fontWeight" data-tooltip="Grubość czcionki">
 				<p-option data-value=""><span class="bold">B</span></p-option>
@@ -207,7 +206,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
@@ -221,7 +220,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "color",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid global_root"
@@ -235,7 +234,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "background_color",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid global_root"
@@ -249,7 +248,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",
-		blc_groups: [{ match_tag: match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
 		menu_html: html`
 			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
 				<i class="fas fa-remove-format"></i>

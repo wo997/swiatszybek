@@ -16,7 +16,12 @@ class PiepCMSManager {
 
 		this.match_media_tags = /^(img|video|iframe)$/;
 
+		this.match_tags_containing_text =
+			/^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
+
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
+		this.match_linkables = new RegExp(`^(?!${this.single_tags.map((e) => e + "$").join("|")})`);
 
 		/** @type {number[]} */
 		this.pretty_percentages = [100];

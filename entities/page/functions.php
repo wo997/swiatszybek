@@ -18,7 +18,9 @@ function traverseVDom($v_dom, $options = [])
     foreach ($v_dom as $v_node) {
         $body = "";
 
-        $tag = $v_node["tag"];
+        $link = def($v_node, ["settings", "link"]);
+
+        $tag = $link ? "a" : $v_node["tag"];
 
         $base_class = "blc_" . $v_node["id"];
         $classes = $v_node["classes"];
@@ -67,7 +69,12 @@ function traverseVDom($v_dom, $options = [])
         $classes_csv = join(" ", $classes);
 
         $content_html .= "<$tag class=\"$classes_csv\"";
-        foreach ($v_node["attrs"] as $key => $val) {
+
+        $attrs = $v_node["attrs"];
+        if ($link) {
+            $attrs["href"] = $link;
+        }
+        foreach ($attrs as $key => $val) {
             $content_html .= " $key=\"" . htmlspecialchars($val) . "\"";
         }
 
