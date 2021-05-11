@@ -33,7 +33,7 @@
 	piep_cms_manager.registerProp({
 		name: "width",
 		blc_groups: [
-			{ match_tag: this.match_media_tags, priority: layout_priority },
+			{ match_tag: piep_cms_manager.match_media_tags, priority: layout_priority },
 			{ match_tag: /.*/, priority: 0 },
 		],
 		type_groups: ["layout"],

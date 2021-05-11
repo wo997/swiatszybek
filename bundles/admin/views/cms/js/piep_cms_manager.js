@@ -13,6 +13,20 @@ class PiepCMSManager {
 
 		/** @type {vDomNode[]} */
 		this.rendered_nodes = [];
+
+		this.match_media_tags = /^(img|video|iframe)$/;
+
+		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
+
+		/** @type {number[]} */
+		this.pretty_percentages = [100];
+		for (const w of [2, 3, 4, 5, 6]) {
+			for (let i = 1; i < w; i++) {
+				this.pretty_percentages.push((100 * i) / w);
+			}
+		}
+		this.pretty_percentages = this.pretty_percentages.filter(onlyUnique);
+		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 	}
 
 	/**

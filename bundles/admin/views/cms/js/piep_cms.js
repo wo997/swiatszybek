@@ -186,21 +186,7 @@ class PiepCMS {
 		this.select_resolution._set_value("df");
 	}
 
-	initConsts() {
-		this.match_media_tags = /^(img|video|iframe)$/;
-
-		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
-
-		/** @type {number[]} */
-		this.pretty_percentages = [100];
-		for (const w of [2, 3, 4, 5, 6]) {
-			for (let i = 1; i < w; i++) {
-				this.pretty_percentages.push((100 * i) / w);
-			}
-		}
-		this.pretty_percentages = this.pretty_percentages.filter(onlyUnique);
-		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
-	}
+	initConsts() {}
 
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
@@ -2027,7 +2013,7 @@ class PiepCMS {
 					if (this.layout_control_prop === "width") {
 						let lowest_diff_val = 100;
 						let closest_val = set_val;
-						for (let percentage of this.pretty_percentages) {
+						for (let percentage of piep_cms_manager.pretty_percentages) {
 							const diff = Math.abs(percentage - set_val);
 							if (diff < lowest_diff_val) {
 								lowest_diff_val = diff;
