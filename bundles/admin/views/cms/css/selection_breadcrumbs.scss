@@ -6,6 +6,13 @@
 		font-weight: var(--semi_bold);
 		padding: 5px 10px;
 		z-index: 1600;
+		user-select: none;
+		// background: #fff;
+		// font-weight: var(--bold);
+		// padding: 5px 10px;
+		// z-index: 1600;
+		// user-select: none;
+		// color: #33e;
 	}
 	.v_node_label {
 		& {
@@ -14,7 +21,8 @@
 			margin: -3px 0;
 			display: inline-block;
 		}
-		&:hover {
+		&:hover,
+		&:last-child {
 			text-decoration: underline;
 		}
 	}

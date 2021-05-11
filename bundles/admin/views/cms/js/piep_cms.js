@@ -1437,13 +1437,15 @@ class PiepCMS {
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 
 			if (v_node_data) {
-				v_node_data.parent_v_nodes.reverse().forEach((parent_v_node) => {
-					selection_breadcrumbs_html += html`<span class="v_node_label" data-vid="${parent_v_node.id}"
-							>${this.getVNodeDisplayName(parent_v_node)}</span
-						>
-						<i class="fas fa-chevron-right"></i> `;
-				});
-				selection_breadcrumbs_html += this.getVNodeDisplayName(v_node_data.v_node);
+				selection_breadcrumbs_html =
+					html`<i class="fas fa-home"></i> ` +
+					[v_node_data.v_node, ...v_node_data.parent_v_nodes]
+						.reverse()
+						.map((parent_v_node) => {
+							return html` <i class="fas fa-chevron-right"></i>
+								<span class="v_node_label" data-vid="${parent_v_node.id}">${this.getVNodeDisplayName(parent_v_node)}</span>`;
+						})
+						.join("");
 			}
 		}
 
