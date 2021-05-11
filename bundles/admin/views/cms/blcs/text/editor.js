@@ -1,6 +1,47 @@
 /* js[piep_cms_dependencies] */
 {
-	const tag_containing_text_priority = 5;
+	const tag_containing_text_priority = 15;
+
+	/**
+	 *
+	 * @param {vDomNodeData} v_node_data
+	 * @returns
+	 */
+	const matchTextContainer = (v_node_data) => {
+		return piep_cms.getParentTextContainerId(v_node_data.v_node.id) !== undefined;
+	};
+
+	piep_cms_manager.registerProp({
+		name: "text_type",
+		type_groups: ["appearance"],
+		blc_groups: [
+			{
+				matcher: matchTextContainer,
+				priority: tag_containing_text_priority,
+			},
+		],
+		menu_html: html`
+			<div class="label">Typ tekstu</div>
+			<div class="pretty_radio flex columns_1 global_root spiky box_align_left">
+				<div class="checkbox_area">
+					<p-checkbox data-value="h1"></p-checkbox>
+					<div style="font-size:var(--size_h1);line-height: 1;">Nagłówek H1</div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="h2"></p-checkbox>
+					<div style="font-size:var(--size_h2);line-height: 1;">Nagłówek H2</div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="h3"></p-checkbox>
+					<div style="font-size:var(--size_h3);line-height: 1;">Nagłówek H3</div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="p"></p-checkbox>
+					<div style="font-size:1em;line-height: 1;">Paragraf</div>
+				</div>
+			</div>
+		`,
+	});
 
 	piep_cms_manager.registerProp({
 		name: "font_size",

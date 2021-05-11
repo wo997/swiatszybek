@@ -92,6 +92,10 @@
 		}
 	}
 
+	&.box_align_left > * {
+		justify-content: flex-start;
+	}
+
 	&.columns_1,
 	&.columns_2,
 	&.columns_3,

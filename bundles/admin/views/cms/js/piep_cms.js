@@ -31,6 +31,7 @@ class PiepCMS {
 		this.initEditables();
 		this.initEditingColors();
 		this.initEditingFontSize();
+        this.initEditingTextType();
 
 		this.initPaste();
 		this.initClick();
@@ -194,6 +195,33 @@ class PiepCMS {
 			floating_blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
+	}
+
+    initEditingTextType() {
+		/**
+		 *
+		 * @param {PiepNode} text_type_wrapper
+		 */
+		const updateTextTypeWrapper = (text_type_wrapper) => {
+            text_type_wrapper.addEventListener("change", ()=>{
+                
+            });
+            const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
+            if (text_container_vid) {
+                this.findNodeInVDomById(text_container_vid).tag = 
+            }
+		};
+
+		/**
+		 *
+		 * @param {PiepNode} text_type_dropdown
+		 */
+		const updateTextTypeDropdown = (text_type_dropdown) => {
+
+		};
+
+        updateTextTypeDropdown(this.float_menu._child(`.prop_tag_name`));
+		updateTextTypeWrapper(this.blc_menu._child(`.prop_tag_name`));
 	}
 
 	initEditingFontSize() {
@@ -2451,6 +2479,37 @@ class PiepCMS {
 		return ["h1", "h2", "h3", "h4", "h5", "h6", "p"].includes(v_node.tag);
 	}
 
+	getParentTextContainerId(vid) {
+		const v_node_data = this.getVDomNodeDataById(vid);
+		const v_node = v_node_data.v_node;
+		if (this.isTextContainer(v_node)) {
+			return v_node.id;
+		}
+		const parent_v_node = v_node_data.parent_v_nodes[0];
+		if (parent_v_node) {
+			if (this.isTextContainer(parent_v_node)) {
+				return parent_v_node.id;
+			}
+		}
+		return undefined;
+	}
+
+	/**
+	 * @param {number} vid
+	 * @returns {FlowDirectionEnum}
+	 */
+	getFlowDirection = (vid) => {
+		const parent_v_node = this.getVDomNodeDataById(vid).parent_v_nodes[0];
+		if (parent_v_node) {
+			if (this.isTextContainer(parent_v_node)) {
+				return "inline";
+			} else if (parent_v_node.classes.includes("columns_container")) {
+				return "row";
+			}
+		}
+		return "column";
+	};
+
 	displayInsertPositions() {
 		/**
 		 *
@@ -2540,22 +2599,6 @@ class PiepCMS {
 
 			/**
 			 *
-			 * @returns {FlowDirectionEnum}
-			 */
-			const getFlowDirection = () => {
-				const parent_v_node = getNearVNodeData().parent_v_nodes[0];
-				if (parent_v_node) {
-					if (this.isTextContainer(parent_v_node)) {
-						return "inline";
-					} else if (parent_v_node.classes.includes("columns_container")) {
-						return "row";
-					}
-				}
-				return "column";
-			};
-
-			/**
-			 *
 			 * @param {-1 | 1} dir
 			 */
 			const insertAboveOrBelow = (dir) => {
@@ -2576,8 +2619,6 @@ class PiepCMS {
 			 * @param {-1 | 1} dir
 			 */
 			const insertOnSides = (dir) => {
-				const flow_direction = getFlowDirection();
-
 				if (flow_direction === "inline") {
 					return insertAboveOrBelow(dir);
 				}
@@ -2719,7 +2760,7 @@ class PiepCMS {
 				}
 			};
 
-			const flow_direction = getFlowDirection();
+			const flow_direction = this.getFlowDirection(blc_vid);
 			const near_v_node_data = getNearVNodeData();
 			const near_v_node = near_v_node_data.v_node;
 
