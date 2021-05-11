@@ -16,7 +16,7 @@ function registerImageInputs(parent) {
 		input.insertAdjacentHTML(
 			"afterbegin",
 			html`
-				<img class="wo997_img" />
+				<img class="wo997_img freeze" />
 				<div class="controls">
 					<button class="btn subtle change_btn" data-tooltip="Zmień"><i class="fas fa-cog"></i></button>
 					<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>

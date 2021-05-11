@@ -1,7 +1,6 @@
 /* css[global] */
 
-.freeze:not(.wo997_img),
-.freeze *:not(.wo997_img),
+.freeze,
 .freeze *::before,
 .freeze *::after {
 	transition: 0s all !important;
