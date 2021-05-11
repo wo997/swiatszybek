@@ -51,12 +51,20 @@
 		cursor: grab;
 	}
 
+	.piep_editor_center_column {
+		display: flex;
+		flex-direction: column;
+		grid-area: 2 / 2 / 3 / 3;
+		overflow: hidden;
+	}
 	.piep_editor_content_wrapper {
 		overflow: hidden;
 		box-shadow: inset 0 1px 5px 0 #0003;
 		display: flex;
 		flex-direction: column;
 		padding: 15px;
+		grid-area: 2 / 2 / 3 / 3;
+		flex-grow: 1;
 	}
 	.piep_editor_content_scroll {
 		box-shadow: 0 1px 5px 0 #0003;

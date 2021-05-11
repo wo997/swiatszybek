@@ -3,7 +3,7 @@
 {
 	piep_cms_manager.registerProp({
 		name: "img_src",
-		blc_groups: [{ match_tag: /^(img)$/, priority: 10 }],
+		blc_groups: [{ module_names: ["img"], priority: 100 }],
 		type_groups: ["appearance"],
 		menu_html: html`
 			<div class="label">Zdjęcie</div>
@@ -13,7 +13,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "choose_img_btn",
-		blc_groups: [{ match_tag: /^(img)$/, priority: 1 }],
+		blc_groups: [{ module_names: ["img"], priority: 100 }],
 		menu_html: html`
 			<button class="btn transparent small choose_img_btn" data-tooltip="Wybierz zdjęcie">
 				<i class="fas fa-image"></i>

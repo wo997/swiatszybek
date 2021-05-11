@@ -108,9 +108,12 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
     <div class="piep_editor_blc_menu"></div>
 
-    <div class="piep_editor_content_wrapper">
-        <div class="piep_editor_content_scroll scroll_panel">
-            <div class="piep_editor_content global_root"></div>
+    <div class="piep_editor_center_column">
+        <div class="piep_editor_selection_breadcrumbs"></div>
+        <div class="piep_editor_content_wrapper">
+            <div class="piep_editor_content_scroll scroll_panel">
+                <div class="piep_editor_content global_root"></div>
+            </div>
         </div>
     </div>
 

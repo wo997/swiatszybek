@@ -1,0 +1,17 @@
+/* css[piep_cms] */
+
+.piep_editor_selection_breadcrumbs {
+	& {
+		background: #fff;
+		font-weight: var(--semi_bold);
+		padding: 5px 10px;
+	}
+	.v_node_label {
+		& {
+			cursor: pointer;
+		}
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
