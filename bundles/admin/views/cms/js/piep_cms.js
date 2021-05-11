@@ -1847,12 +1847,14 @@ class PiepCMS {
 		let begin_offset = focus_offset;
 		let end_offset = focus_offset;
 		let chars_removed = 0;
-		if (anchor_offset !== focus_offset) {
-			begin_offset = Math.min(anchor_offset, focus_offset);
-			end_offset = Math.max(anchor_offset, focus_offset);
-			chars_removed = end_offset - begin_offset;
-			v_node.text = text.substr(0, begin_offset) + text.substr(end_offset);
+		if (anchor_offset === focus_offset) {
+			return;
 		}
+
+		begin_offset = Math.min(anchor_offset, focus_offset);
+		end_offset = Math.max(anchor_offset, focus_offset);
+		chars_removed = end_offset - begin_offset;
+		v_node.text = text.substr(0, begin_offset) + text.substr(end_offset);
 
 		this.update({ dom: true, selection: true });
 
@@ -1877,6 +1879,7 @@ class PiepCMS {
 		const focus_node = this.getFocusNode();
 		const vid = focus_node ? +focus_node.dataset.vid : 0;
 		const v_node = this.getVNodeById(vid);
+
 		if (!v_node) {
 			return;
 		}

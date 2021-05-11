@@ -15,7 +15,7 @@ function setSelectionRange(range) {
  */
 function getTextNode(node) {
 	let text_node = node;
-	while (text_node && text_node.nodeType === Node.TEXT_NODE) {
+	while (text_node && text_node.nodeType !== Node.TEXT_NODE) {
 		const t = text_node.childNodes[0];
 		if (!t) {
 			break;
@@ -34,7 +34,7 @@ function getTextNode(node) {
  * @returns
  */
 function getRangeByIndex(node, pos, end = undefined) {
-	const text_node = this.getTextNode(node);
+	const text_node = getTextNode(node);
 	const range = document.createRange();
 	if (!text_node) {
 		range.setStart(node, 0);
@@ -45,8 +45,8 @@ function getRangeByIndex(node, pos, end = undefined) {
 			range.setEnd(text_node, def(end, pos));
 		} catch (e) {
 			console.error(e, node);
-			range.setStart(node, 0);
-			range.setEnd(node, 0);
+			range.setStart(text_node, 0);
+			range.setEnd(text_node, 0);
 		}
 	}
 	return range;
@@ -60,7 +60,7 @@ function getRangeByIndex(node, pos, end = undefined) {
  */
 function setSelectionByIndex(node, pos, end = undefined) {
 	const sel = window.getSelection();
-	const range = this.getRangeByIndex(node, pos, end);
+	const range = getRangeByIndex(node, pos, end);
 	sel.removeAllRanges();
 	sel.addRange(range);
 }

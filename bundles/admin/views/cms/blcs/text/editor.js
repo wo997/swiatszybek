@@ -25,19 +25,19 @@
 			<div class="pretty_radio flex columns_1 global_root spiky box_align_left">
 				<div class="checkbox_area">
 					<p-checkbox data-value="h1"></p-checkbox>
-					<div style="font-size:var(--size_h1);line-height: 1;">Nagłówek H1</div>
+					<div style="font-size:var(--size_h1);line-height: 1.2;">Nagłówek H1</div>
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="h2"></p-checkbox>
-					<div style="font-size:var(--size_h2);line-height: 1;">Nagłówek H2</div>
+					<div style="font-size:var(--size_h2);line-height: 1.2;">Nagłówek H2</div>
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="h3"></p-checkbox>
-					<div style="font-size:var(--size_h3);line-height: 1;">Nagłówek H3</div>
+					<div style="font-size:var(--size_h3);line-height: 1.2;">Nagłówek H3</div>
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="p"></p-checkbox>
-					<div style="font-size:1em;line-height: 1;">Paragraf</div>
+					<div style="font-size:1em;line-height: 1.2;">Paragraf</div>
 				</div>
 			</div>
 		`,
