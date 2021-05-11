@@ -124,11 +124,13 @@ domload(() => {
 		const spinner_wrapper = main_buy_btn._child(".spinner_wrapper");
 		spinner_wrapper.classList.add("spinning");
 
-		let offset = 220;
-		if (!user_cart.products.find((p) => p.product_id === product_id)) {
-			// new
-			offset += 140; // probably enough to contain a row
-		}
+		let offset = 290;
+
+		// HEY - seems like it does not need to be considered
+		// if (!user_cart.products.find((p) => p.product_id === product_id)) {
+		// 	// new
+		// 	offset += 140; // probably enough to contain a row
+		// }
 
 		xhr({
 			url: "/cart/add-product",

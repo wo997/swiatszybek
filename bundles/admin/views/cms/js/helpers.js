@@ -44,6 +44,7 @@ function getRangeByIndex(node, pos, end = undefined) {
 			range.setStart(text_node, pos);
 			range.setEnd(text_node, def(end, pos));
 		} catch (e) {
+			console.error(e, node);
 			range.setStart(node, 0);
 			range.setEnd(node, 0);
 		}

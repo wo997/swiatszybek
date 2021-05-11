@@ -199,24 +199,27 @@ class PiepCMS {
 	}
 
 	initEditingTextType() {
-		// /**
-		//  *
-		//  * @param {PiepNode} text_type_wrapper
-		//  */
-		// const updateTextTypeWrapper = (text_type_wrapper) => {
-		// 	text_type_wrapper.addEventListener("change", () => {});
-		// 	const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
-		// 	if (text_container_vid) {
-		// 		//this.findNodeInVDomById(text_container_vid).tag =
-		// 	}
-		// };
-		// /**
-		//  *
-		//  * @param {PiepNode} text_type_dropdown
-		//  */
-		// const updateTextTypeDropdown = (text_type_dropdown) => {};
-		// updateTextTypeDropdown(this.float_menu._child(`.prop_tag_name`));
-		// updateTextTypeWrapper(this.blc_menu._child(`.prop_tag_name`));
+		/**
+		 *
+		 * @param {PiepNode} text_type_wrapper
+		 */
+		const updateTextTypeWrapper = (text_type_wrapper) => {
+			const radio_group = text_type_wrapper._child(".radio_group");
+			radio_group.addEventListener("change", () => {
+				const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
+				if (text_container_vid) {
+					this.getVNodeById(text_container_vid).tag = radio_group._get_value();
+					this.update({ all: true });
+				}
+			});
+		};
+		/**
+		 *
+		 * @param {PiepNode} text_type_dropdown
+		 */
+		const updateTextTypeDropdown = (text_type_dropdown) => {};
+		//updateTextTypeDropdown(this.float_menu._child(`.prop_text_type`));
+		updateTextTypeWrapper(this.blc_menu._child(`.prop_text_type`));
 	}
 
 	initEditingFontSize() {
@@ -1678,9 +1681,11 @@ class PiepCMS {
 					}
 				}
 
-				if (v_node.rendered_body) {
-					node._set_content(v_node.rendered_body);
-				} else if (blc_schema && blc_schema.render) {
+				// TODO: render the module and set the contents immediately
+				// if (v_node.rendered_body) {
+				// 	node._set_content(v_node.rendered_body);
+				// } else
+				if (blc_schema && blc_schema.render) {
 					node._set_content(blc_schema.render(v_node));
 				}
 

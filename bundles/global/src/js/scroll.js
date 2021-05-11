@@ -151,7 +151,7 @@ function scrollIntoView(elem, params = {}) {
 
 	let diff = 0;
 	if (top < 0 && bottom > 0) {
-		diff = top < -bottom ? top : bottom;
+		//diff = top < -bottom ? top : bottom;
 	} else if (top < 0) {
 		diff = top;
 	} else if (bottom > 0) {
