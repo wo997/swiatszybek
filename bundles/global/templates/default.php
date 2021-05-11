@@ -24,5 +24,6 @@ endSection();
 </div>
 
 <link href="/<?= BUILDS_PATH . "templates/css/template_$template_id.css?v=$template_release" ?>" rel="stylesheet">
+<script src="/<?= BUILDS_PATH . "templates/js/template_$template_id.js?v=$template_release" ?>"></script>
 
 <?php include "bundles/global/templates/blank.php"; ?>
