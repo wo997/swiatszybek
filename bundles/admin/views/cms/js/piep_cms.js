@@ -1427,6 +1427,8 @@ class PiepCMS {
 	 * }} options
 	 */
 	update(options = {}) {
+		this.content.style.minHeight = this.content.offsetHeight + "px";
+
 		if (options.all || options.selection) {
 			this.displayInspectorTree();
 		}
@@ -1437,12 +1439,14 @@ class PiepCMS {
 			this.recreateDom();
 		}
 
-		lazyLoadImages({ duration: 0 });
 		registerForms();
+		lazyLoadImages({ duration: 0 });
 
 		window.dispatchEvent(new Event("resize"));
 
 		this.setFocusNode(this.focus_node_vid);
+
+		this.content.style.minHeight = "";
 	}
 
 	displaySelectionBreadcrumbs() {
