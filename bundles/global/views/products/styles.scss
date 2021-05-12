@@ -150,7 +150,6 @@
 	.products_all {
 		display: flex;
 		flex-shrink: 1;
-		overflow: hidden;
 	}
 
 	.searching_wrapper .mobile_search_btn {
@@ -167,9 +166,11 @@
 
 	.searching_wrapper {
 		& {
-			position: fixed;
+			position: sticky;
+			transform: translateX(calc(-1 * var(--searching_wrapper_width)));
+			margin-right: calc(-1 * var(--searching_wrapper_width));
+			top: 0;
 			left: 0;
-			top: var(--header_height);
 			width: var(--searching_wrapper_width);
 			flex-shrink: 0;
 			height: calc(100vh - var(--header_height));
@@ -177,7 +178,13 @@
 			background: #fff;
 			border-right: 1px solid #ccc;
 			box-shadow: 0 6px 8px 0 #0002;
-			z-index: 700;
+		}
+		body:not(.freeze) & {
+			position: fixed;
+			top: var(--header_height);
+			width: var(--searching_wrapper_width);
+			transform: none;
+			margin-right: 0;
 		}
 		& > .scroll_panel {
 			padding: 20px;
@@ -197,6 +204,11 @@
 	header.main {
 		margin-left: calc(-1 * var(--searching_wrapper_width));
 		width: calc(100% + var(--searching_wrapper_width)) !important;
+		box-shadow: var(--searching_wrapper_width) 0 8px 0 #0002 !important;
+	}
+
+	:root {
+		--header_box_shadow_off_x: var(--searching_wrapper_width) !important;
 	}
 
 	.results_info_mobile {

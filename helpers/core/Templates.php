@@ -16,7 +16,7 @@ function endSection()
 {
     global $current_section_name, $sections;
     if (!$current_section_name) return;
-    $sections[$current_section_name] = ob_get_clean();
+    $sections[$current_section_name] = def($sections, [$current_section_name], "") . ob_get_clean();
     $current_section_name = null;
 }
 

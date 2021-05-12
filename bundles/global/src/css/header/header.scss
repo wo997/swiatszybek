@@ -1,5 +1,9 @@
 /* css[modules/main_menu] */
 
+:root {
+	--header_box_shadow_off_x: 0;
+}
+
 header.main {
 	& {
 		position: sticky;
@@ -10,7 +14,7 @@ header.main {
 		z-index: 600;
 		background: #fff;
 		border-bottom: 1px solid #ccc;
-		box-shadow: 0 0px 8px 0 #0002;
+		box-shadow: var(--header_box_shadow_off_x) 0px 8px 0 #0002;
 		--header_padding_vertical: 5px;
 		--header_padding_horizontal: 15px;
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);

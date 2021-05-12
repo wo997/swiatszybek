@@ -1,7 +1,7 @@
 <?php
 
 if (defined("ROUTE")) {
-    // TODO: you know what ;)
+    // TODO: read from bulds info, but doesnt matter rly
     $has_js = true;
     $has_css = true;
 } else {
