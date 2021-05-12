@@ -119,17 +119,25 @@ if ($build_info != $new_build_info) {
                     $ext = Files::getFileExtension($path);
 
                     if (in_array($ext, ["css", "scss"])) {
-                        $css_full .= file_get_contents($path);
+                        $content = file_get_contents($path);
+                        if ($content) {
+                            $css_full .= "/*path:$path*/\n"; // custom minifier changes it into a comment
+                            $css_full .= Assets::minifyCss($content);
+                        }
                     }
                     if (in_array($ext, ["js"])) {
-                        $js_full .= file_get_contents($path);
+                        $content = file_get_contents($path);
+                        if ($content) {
+                            $js_full .= "/*path:$path*/\n"; // nice debugging option
+                            $js_full .=  Assets::minifyJs($content);
+                        }
                     }
                 }
                 if ($css_full) {
-                    Files::save(BUILDS_PATH . "$name.css", Assets::minifyCss($css_full));
+                    Files::save(BUILDS_PATH . "$name.css", $css_full);
                 }
                 if ($js_full) {
-                    Files::save(BUILDS_PATH . "$name.js", Assets::minifyJs($js_full));
+                    Files::save(BUILDS_PATH . "$name.js", $js_full);
                 }
             }
 

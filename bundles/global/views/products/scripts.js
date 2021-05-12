@@ -42,8 +42,6 @@ domload(() => {
 	results_info_mobile = $(".results_info_mobile");
 	products_category_name = $(".category_name");
 
-	products_all.classList.add("ready");
-
 	initRangeFilters();
 	initProductFeatures();
 	initProductCategories();

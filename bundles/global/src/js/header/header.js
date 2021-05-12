@@ -15,6 +15,7 @@ function headerResizeCallback() {
 	}
 
 	header_height = main_header.offsetHeight;
+	document.documentElement.style.setProperty("--header_height", `${header_height}px`);
 
 	const main_search_wrapper = $(".main_search_wrapper");
 	const r = main_search_wrapper.getBoundingClientRect();
