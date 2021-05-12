@@ -6,17 +6,33 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.templates");
 
 	DatatableComp(datatable_comp, undefined, {
-		dataset: templates,
+		search_url: STATIC_URLS["ADMIN"] + "/template/search",
+		//dataset: templates,
 		columns: [
 			{ label: "Nazwa", key: "name", width: "1", searchable: "string" },
 			{
 				key: "is_global",
-				label: "Czy główna?",
+				label: "Czy główny?",
 				width: "140px",
 				searchable: "boolean",
 				editable: "checkbox",
 				editable_callback: (data) => {
-					console.log(data);
+					xhr({
+						url: STATIC_URLS["ADMIN"] + "/template/save",
+						params: {
+							template: {
+								template_id: data.template_id,
+								is_global: data.is_global,
+							},
+						},
+						success: (res) => {
+							showNotification(
+								html`<div class="header">Szablon ${data.name}</div>
+									<div class="center">Czy główny? ${data.is_global ? "TAK" : "NIE"}</div>`
+							);
+							datatable_comp._backend_search();
+						},
+					});
 				},
 			},
 			{ label: "Szablon nadrzędny", key: "parent_template_id", width: "1", searchable: "select", map_name: "template" },

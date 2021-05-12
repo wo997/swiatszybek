@@ -17,6 +17,26 @@ EntityManager::register("template", [
     ],
 ]);
 
+EventListener::register("set_template_entity_is_global", function ($params) {
+    /** @var Entity Template  */
+    $template = $params["obj"];
+    $template_id = $template->getId();
+    $val = $params["val"];
+
+    if ($template->ready && $val) {
+        $other_global_template_id = DB::fetchVal("SELECT template_id FROM template WHERE is_global AND template_id <> $template_id");
+        if ($other_global_template_id) {
+            $other_global_template = EntityManager::getEntityById("template", $other_global_template_id);
+            if ($other_global_template) {
+                $other_global_template->setProp("is_global", 0);
+            }
+        }
+    }
+});
+
 EventListener::register("before_save_template_entity", function ($params) {
-    updatePageableMetadata("template", $params["obj"]->getId());
+    /** @var Entity Template  */
+    $template = $params["obj"];
+
+    updatePageableMetadata("template", $template->getId());
 });

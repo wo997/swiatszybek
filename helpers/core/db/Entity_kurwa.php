@@ -14,6 +14,7 @@ class Entity
     private $will_unlink_from_entities = [];
     private $meta = []; // used for many to many relations
     public $is_new;
+    public $ready; // data has been fetched from db, before setting it from the user tho
     private $curr_meta = []; // same as curr_props
     /** @var Entity[] */
     public $children_about_to_join = [];
@@ -83,6 +84,7 @@ class Entity
             $this->is_new = false;
         }
 
+        $this->ready = true;
         $this->setProps($props);
     }
 
