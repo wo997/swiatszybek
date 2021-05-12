@@ -32,7 +32,20 @@ if ($general_product_id !== -1) {
         $products = $general_product->getProp("products");
         $pd = [];
         foreach ($products as $product) {
-            $pd[] = $product->getSimpleProps();
+            $pd[] = filterArrayKeys($product->getSimpleProps(), [
+                "general_product_id",
+                "net_price",
+                "gross_price",
+                "vat_id",
+                "active",
+                "stock",
+                "weight",
+                "length",
+                "width",
+                "height",
+                "product_id",
+                "variant_options",
+            ]);
         }
         $general_product_data["products"] = $pd;
     }

@@ -1056,18 +1056,19 @@ function DatatableComp(comp, parent, data) {
 						data.dataset = data.dataset.sort((a, b) => Math.sign(a[key] - b[key]));
 					}
 
-					if (comp._data.sort_on_backend) {
-						const filtered_row_ids = data.dataset_filtered.map((e) => e._row_id);
-
-						const positions = data.dataset.filter((e) => filtered_row_ids.includes(e._row_id)).map((e) => e[data.primary_key]);
+					if (data.sort_on_backend) {
+						const filtered_row_ids = data.dataset_filtered ? data.dataset_filtered.map((e) => e._row_id) : data.rows.map((r) => r.row_id);
+						const positions = data.dataset
+							.filter((e) => filtered_row_ids.includes(def(e._row_id, e[data.primary_key])))
+							.map((e) => e[data.primary_key]);
 
 						xhr({
 							url: STATIC_URLS["ADMIN"] + "/datatable/sort",
 							params: {
-								table: comp._data.db_table,
+								table: data.db_table,
 								order_key: "pos",
 								positions,
-								// offset: comp._data.pagination_data.row_count * comp._data.pagination_data.page_id
+								// offset: _data.pagination_data.row_count * data.pagination_data.page_id
 								// might be good to use for backend search if u ever do it but pls don't
 							},
 							success: (res) => {
@@ -1119,12 +1120,14 @@ function DatatableComp(comp, parent, data) {
 					let from_pos = detail.from + 1 + ind_offset;
 					let to_pos = detail.to + 1 + ind_offset;
 
-					detail.res.moved = true;
+					if (!data.search_url) {
+						detail.res.moved = true;
+					}
 
 					const filtered_row_ids = data.dataset_filtered ? data.dataset_filtered.map((e) => e._row_id) : data.rows.map((r) => r.row_id);
 
 					data.dataset
-						.filter((e) => filtered_row_ids.includes(e._row_id))
+						.filter((e) => filtered_row_ids.includes(def(e._row_id, e[data.primary_key])))
 						.forEach((e) => {
 							if (e.pos === from_pos) {
 								e.pos = to_pos;

@@ -60,14 +60,6 @@ foreach ($general_product_products as &$product) {
 }
 unset($product);
 
-// if (isset($preview_params) && isset($preview_params["products"])) {
-//     $products = json_decode($preview_params["products"], true);
-// }
-
-// $page_data["seo_description"] = $general_product_data["seo_description"];
-// $page_data["seo_title"] = $general_product_data["seo_title"];
-// $page_data["seo_image"] = "/uploads/sm" . Files::getUploadedFileName($general_product_data["cache_thumbnail"]) . ".jpg";
-
 $stockSchema = true ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
 User::getCurrent()->last_viewed_products->add([$general_product_id]);

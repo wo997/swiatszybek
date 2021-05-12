@@ -468,6 +468,7 @@ function ListComp(comp, parent, data = []) {
 						},
 					})
 				);
+
 				if (!res.moved) {
 					const data = comp._data;
 					from = clamp(0, from, data.length - 1);
