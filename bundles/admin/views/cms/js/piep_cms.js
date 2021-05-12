@@ -651,15 +651,89 @@ class PiepCMS {
 					const begin_offset = Math.min(anchor_offset, focus_offset);
 					const end_offset = Math.max(anchor_offset, focus_offset);
 
-					let val = input._get_value();
-
 					let prop_str = input.dataset.blc_prop;
+
+					/** @type {number} */
+					let select_start;
+					/** @type {number} */
+					let select_end;
+					/** @type {number} */
+					let select_vid;
+					/** @type {vDomNode} */
+					let set_prop_of_v_node;
+
+					// the selection is something but not everything in the v_node
+					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
+						// since the first one is the greatest so the other two will be
+						const bef_vid = this.getNewBlcId();
+						const mid_vid = bef_vid + 1;
+						const aft_vid = mid_vid + 1;
+
+						/** @type {vDomNode} */
+						const bef_child = {
+							id: bef_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(0, begin_offset),
+							attrs: {},
+							classes: [],
+						};
+						/** @type {vDomNode} */
+						const mid_child = {
+							id: mid_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(begin_offset, end_offset),
+							attrs: {},
+							classes: [],
+						};
+						/** @type {vDomNode} */
+						const aft_child = {
+							id: aft_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(end_offset),
+							attrs: {},
+							classes: [],
+						};
+
+						const put_v_nodes = [];
+						if (begin_offset > 0) {
+							put_v_nodes.push(bef_child);
+						}
+						put_v_nodes.push(mid_child);
+						if (end_offset < v_node.text.length) {
+							put_v_nodes.push(aft_child);
+						}
+
+						if (this.isTextContainer(v_node)) {
+							v_node.children = put_v_nodes;
+							v_node.text = undefined;
+						} else {
+							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+						}
+
+						const min_v_node_data = this.getVNodeDataById(+mid_vid);
+
+						set_prop_of_v_node = min_v_node_data.v_node;
+						select_vid = mid_vid;
+						select_start = 0;
+						select_end = end_offset - begin_offset;
+					} else {
+						set_prop_of_v_node = v_node;
+						select_vid = v_node.id;
+						if (v_node.text !== undefined) {
+							select_start = begin_offset;
+							select_end = end_offset;
+						}
+					}
 
 					/**
 					 *
 					 * @param {vDomNode} edit_v_node
 					 */
 					const setPropOfVNode = (edit_v_node) => {
+						let val = input._get_value();
 						let prop_ref = edit_v_node;
 
 						if (prop_str.startsWith("styles.")) {
@@ -748,83 +822,13 @@ class PiepCMS {
 						});
 					};
 
-					/** @type {number} */
-					let select_start;
-					/** @type {number} */
-					let select_end;
-					/** @type {number} */
-					let select_vid;
+					setPropOfVNode(set_prop_of_v_node);
 
-					// the selection is something but not everything in the v_node
-					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
-						// since the first one is the greatest so the other two will be
-						const bef_vid = this.getNewBlcId();
-						const mid_vid = bef_vid + 1;
-						const aft_vid = mid_vid + 1;
-
-						/** @type {vDomNode} */
-						const bef_child = {
-							id: bef_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(0, begin_offset),
-							attrs: {},
-							classes: [],
-						};
-						/** @type {vDomNode} */
-						const mid_child = {
-							id: mid_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(begin_offset, end_offset),
-							attrs: {},
-							classes: [],
-						};
-						/** @type {vDomNode} */
-						const aft_child = {
-							id: aft_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(end_offset),
-							attrs: {},
-							classes: [],
-						};
-
-						v_node.children = [];
-
-						// remember about edge cases
-						if (begin_offset > 0) {
-							v_node.children.push(bef_child);
-						}
-						v_node.children.push(mid_child);
-						if (end_offset < v_node.text.length) {
-							v_node.children.push(aft_child);
-						}
-
-						v_node.text = undefined;
-
-						const v_node_data = this.getVNodeDataById(+mid_vid);
-						v_node = v_node_data.v_node;
-
-						select_start = 0;
-						select_end = end_offset - begin_offset;
-						select_vid = mid_vid;
-					} else {
-						select_vid = v_node.id;
-						if (v_node.text !== undefined) {
-							select_start = begin_offset;
-							select_end = end_offset;
-						}
-					}
-
-					setPropOfVNode(v_node);
-
-					this.update({ styles: true, dom: true });
+					this.update({ all: true });
 
 					const node_ref = this.getNode(select_vid);
 					this.setFocusNode(select_vid);
 					if (node_ref || !validPiepInput($(document.activeElement))) {
-						console.log(node_ref, select_start, select_end);
 						setSelectionByIndex(node_ref, select_start, select_end);
 					}
 
