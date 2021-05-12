@@ -135,7 +135,9 @@ function animate(node, keyframes, duration, options = {}) {
 
 let LAZY_MORE = false;
 windowload(() => {
-	document.body.classList.remove("freeze");
+	setTimeout(() => {
+		document.body.classList.remove("freeze");
+	}, 250);
 	setTimeout(() => {
 		LAZY_MORE = true;
 	}, 1000);

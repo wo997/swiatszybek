@@ -1,6 +1,6 @@
 /* js[global] */
 
-const show_image_duration = 300;
+const show_image_duration = 300; // TODO: this might be unnecessary, animations can be a part of page builder dude
 
 /**
  *
