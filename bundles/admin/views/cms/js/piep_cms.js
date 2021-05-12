@@ -707,9 +707,16 @@ class PiepCMS {
 						}
 
 						if (this.isTextContainer(v_node)) {
+							// split inside
 							v_node.children = put_v_nodes;
 							v_node.text = undefined;
 						} else {
+							// do the split and spread options
+							put_v_nodes.forEach((put_v_node) => {
+								deepAssign(put_v_node.styles, v_node.styles);
+								deepAssign(put_v_node.attrs, v_node.attrs);
+								deepAssign(put_v_node.settings, v_node.settings);
+							});
 							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
 						}
 
@@ -1322,7 +1329,7 @@ class PiepCMS {
 			const target = $(ev.target);
 			const v_node_label = target._parent(".v_node_label");
 
-			if (v_node_label) {
+			if (v_node_label && !v_node_label.classList.contains("disabled")) {
 				const vid = +v_node_label.dataset.vid;
 
 				setSelectionRange(undefined);
@@ -1450,8 +1457,13 @@ class PiepCMS {
 					[v_node_data.v_node, ...v_node_data.parent_v_nodes]
 						.reverse()
 						.map((parent_v_node) => {
+							const disabled = parent_v_node.disabled ? "disabled" : "";
+							const tooltip = disabled ? `data-tooltip="Część szablonu"` : "";
+
 							return html` <i class="fas fa-chevron-right"></i>
-								<span class="v_node_label" data-vid="${parent_v_node.id}">${this.getVNodeDisplayName(parent_v_node)}</span>`;
+								<span class="v_node_label ${disabled}" data-vid="${parent_v_node.id}" ${tooltip}
+									>${this.getVNodeDisplayName(parent_v_node)}</span
+								>`;
 						})
 						.join("");
 			}
@@ -1526,8 +1538,9 @@ class PiepCMS {
 					info = html`<span class="info"> - ${info}</span>`;
 				}
 				const disabled = v_node.disabled ? "disabled" : "";
+				const tooltip = disabled ? `data-tooltip="Część szablonu"` : "";
 				inspector_tree_html += html`
-					<div class="v_node_label tblc_${v_node.id} ${disabled}" style="--level:${level}" data-vid="${v_node.id}">
+					<div class="v_node_label tblc_${v_node.id} ${disabled}" style="--level:${level}" data-vid="${v_node.id}" ${tooltip}>
 						<span class="name">${display_name}</span>
 						${info}
 					</div>

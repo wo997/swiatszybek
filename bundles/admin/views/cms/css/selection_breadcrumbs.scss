@@ -21,9 +21,13 @@
 			margin: -3px 0;
 			display: inline-block;
 		}
-		&:hover,
+		&:hover:not(.disabled),
 		&:last-child {
 			text-decoration: underline;
+		}
+		&.disabled {
+			color: #777;
+			cursor: not-allowed;
 		}
 	}
 }
