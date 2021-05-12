@@ -48,6 +48,7 @@ function traverseVDom($v_dom, $options = [])
         if ($module_name) {
             if ($module_name === "template_hook") {
                 $template_hook_id = def($v_node, ["settings", "template_hook_id"]);
+                $classes[] = $template_hook_id;
                 $hook_contents = def($options, ["hooks", $template_hook_id]);
                 if ($hook_contents) {
                     $body = $hook_contents;
@@ -337,18 +338,19 @@ function renderPage($page_id, $data = [])
 
     <?php startSection("body"); ?>
 
-    <?= $dom_data["content_html"] ?>
+    <div class="main_wrapper global_root">
+        <?= $dom_data["content_html"] ?>
 
-    <?php foreach ($parent_templates as $parent_template) {
-        $template_release = $parent_template["version"];
-        $template_id = $parent_template["template_id"];
-    ?>
-        <script src="/<?= BUILDS_PATH . "templates/js/template_$template_id.js?v=$template_release" ?>"></script>
-    <?php
-    }
-    ?>
+        <?php foreach ($parent_templates as $parent_template) {
+            $template_release = $parent_template["version"];
+            $template_id = $parent_template["template_id"];
+        ?>
+            <script src="/<?= BUILDS_PATH . "templates/js/template_$template_id.js?v=$template_release" ?>"></script>
+        <?php
+        }
+        ?>
 
-    <script src="/<?= BUILDS_PATH . "pages/js/page_$page_id.js?v=$page_release" ?>"></script>
-
+        <script src="/<?= BUILDS_PATH . "pages/js/page_$page_id.js?v=$page_release" ?>"></script>
+    </div>
 <?php include "bundles/global/templates/blank.php";
 }

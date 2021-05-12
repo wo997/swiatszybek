@@ -3,7 +3,6 @@
 endSection();
 
 ?>
-
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -14,10 +13,9 @@ endSection();
 </head>
 
 <body class="freeze" id="p">
-    <div class="main_wrapper">
-        <?= def($sections, "body", ""); ?>
-        <?php include "bundles/global/templates/parts/footer.php"; ?>
-    </div>
+    <?= def($sections, "body", ""); ?>
+    <?php include "bundles/global/templates/parts/footer.php"; // not layout tho 
+    ?>
 </body>
 
 </html>

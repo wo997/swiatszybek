@@ -56,8 +56,8 @@ $requires_payment = $shop_order->getProp("status")->getId() === 1;
 $carrier = $shop_order->getProp("carrier");
 
 /** @var Entity DeliveryType */
-$delivery_type = $carrier->getProp("delivery_type");
-$delivery_type_id = $delivery_type->getProp("delivery_type_id");
+$delivery_type = $carrier ? $carrier->getProp("delivery_type") : null;
+$delivery_type_id = $delivery_type ? $delivery_type->getProp("delivery_type_id") : null;
 
 $payment_time = $shop_order->getProp("payment_time");
 $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);

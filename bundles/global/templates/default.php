@@ -6,7 +6,7 @@ endSection();
 
 <?php startSection("body"); ?>
 
-<div class="global_layout_root global_root">
+<div class="main_wrapper global_root">
     <?php
     $template_id = 3;
     $template_data = DB::fetchRow("SELECT * FROM template WHERE template_id = $template_id");

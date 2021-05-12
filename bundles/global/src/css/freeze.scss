@@ -1,6 +1,7 @@
 /* css[global] */
 
 .freeze,
+.freeze *,
 .freeze *::before,
 .freeze *::after {
 	transition: 0s all !important;
