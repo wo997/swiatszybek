@@ -748,7 +748,12 @@ class PiepCMS {
 						});
 					};
 
-					let select_start, select_end;
+					/** @type {number} */
+					let select_start;
+					/** @type {number} */
+					let select_end;
+					/** @type {number} */
+					let select_vid;
 
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
@@ -787,6 +792,7 @@ class PiepCMS {
 
 						v_node.children = [];
 
+						// remember about edge cases
 						if (begin_offset > 0) {
 							v_node.children.push(bef_child);
 						}
@@ -800,10 +806,14 @@ class PiepCMS {
 						const v_node_data = this.getVNodeDataById(+mid_vid);
 						v_node = v_node_data.v_node;
 
-						const node_ref = this.getNode(mid_vid);
-						if (node_ref) {
-							select_start = 0;
-							select_end = end_offset - begin_offset;
+						select_start = 0;
+						select_end = end_offset - begin_offset;
+						select_vid = mid_vid;
+					} else {
+						select_vid = v_node.id;
+						if (v_node.text !== undefined) {
+							select_start = begin_offset;
+							select_end = end_offset;
 						}
 					}
 
@@ -811,17 +821,11 @@ class PiepCMS {
 
 					this.update({ styles: true, dom: true });
 
-					const node_ref = this.getNode(v_node.id);
-					this.setFocusNode(v_node.id);
-					if (node_ref && v_node.text !== undefined) {
-						if (select_start === undefined) {
-							select_start = begin_offset;
-							select_end = end_offset;
-						}
-
-						if (!validPiepInput($(document.activeElement))) {
-							setSelectionByIndex(node_ref, select_start, select_end);
-						}
+					const node_ref = this.getNode(select_vid);
+					this.setFocusNode(select_vid);
+					if (node_ref || !validPiepInput($(document.activeElement))) {
+						console.log(node_ref, select_start, select_end);
+						setSelectionByIndex(node_ref, select_start, select_end);
 					}
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
