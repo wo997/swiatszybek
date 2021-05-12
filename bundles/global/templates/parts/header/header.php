@@ -38,7 +38,6 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
 };
 ?>
 
-<!-- <header class="main"> -->
 <a href="/" class="logo_wrapper">
     <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
 </a>
@@ -81,5 +80,3 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
         <img class="menu_icon" src="/src/img/menu_icon.svg">
     </div>
 </div>
-
-<!-- </header> -->

@@ -3,6 +3,7 @@
 EntityManager::register("template", [
     "props" => [
         "name" => ["type" => "string"],
+        "is_global" => ["type" => "number"],
         "page_type" => ["type" => "string"],
         "v_dom_json" => ["type" => "string"],
         "version" => ["type" => "string"],

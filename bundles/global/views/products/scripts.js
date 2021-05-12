@@ -748,4 +748,6 @@ domload(() => {
 	if (getmob()) {
 		window.scrollBy(0, getTop());
 	}
+
+	products_all.classList.add("ready");
 });
