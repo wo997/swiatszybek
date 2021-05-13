@@ -186,13 +186,16 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 				<deliveries-config_carrier-comp></deliveries-config_carrier-comp>
 			</list-comp>
 
-			<div class="label medium bold">Sposób wyznaczenia ceny wysyłki zamówienia</div>
-			<div class="user_info mb3">
-				<i class="fas fa-info-circle"></i> W przypadku sprzedaży produktów niskomarżowych warto rozważyć opcję - Cena na podstawie wymiarów
-				oraz wagi. Umożliwi to utrzymanie stosunkowo niskich cen względem konkurencji, bez obaw, że stracimy na którymkolwiek z zamówień.
-				Zaletą opcji - cena stała / Cena zależna od wartości produktów - jest to, że nie musimy uzupełniać wszystkich wymiarów oraz wag
-				produktów, co jest czasochłonnym zadaniem.
+			<div class="label medium bold">
+				Sposób wyznaczenia ceny wysyłki zamówienia
+				<div class="hover_info">
+					W przypadku sprzedaży produktów niskomarżowych warto rozważyć opcję - Cena na podstawie wymiarów oraz wagi. Umożliwi to utrzymanie
+					stosunkowo niskich cen względem konkurencji, bez obaw, że stracimy na którymkolwiek z zamówień. Zaletą opcji - cena stała / Cena
+					zależna od wartości produktów - jest to, że nie musimy uzupełniać wszystkich wymiarów oraz wag produktów, co jest czasochłonnym
+					zadaniem.
+				</div>
 			</div>
+
 			<div
 				class="radio_group boxes hide_checks columns_2 number semi_bold"
 				style="max-width:400px"
