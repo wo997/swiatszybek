@@ -134,23 +134,20 @@ class Theme
         $header_build_css = <<<CSS
 /* css[modules/main_menu] */
 
+@media (min-width: {$outer_responsive_width_min}px) {
+	header.main:not(.stiff) {
+		--header_padding_vertical: 10px;
+	}
+}
 @media (max-width: {$outer_responsive_width_max}px) and (hover: hover) {
 	header.main:not(.stiff) .main_menu {
-		order: 2;
-		margin: calc(-1 * var(--header_padding_vertical)) calc(-1 * var(--header_padding_horizontal));
-		margin-top: var(--header_padding_vertical);
-		min-width: 100%;
-		flex-grow: 1;
-		/*border-top: 1px solid #ccc;*/
+        order: 2;
+        margin: 0 calc(-1 * var(--header_padding_horizontal));
+        margin-top: 1px;
+        min-width: 100%;
+        flex-grow: 1;
 	}
 }
-@media (max-width: {$outer_responsive_width_max}px) {
-	header.main:not(.stiff) .main_menu a {
-		border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-	}
-}
-
 @media (max-width: {$inner_responsive_width_max}px), (hover: none) {
 	header.main:not(.stiff) {
 		& {
