@@ -109,3 +109,10 @@
  * render?(v_node?: vDomNode): string
  * }} BlockSchema
  */
+
+/**
+ * @typedef {{
+ * vid: number
+ * opacity: number
+ * }} ShowFocusToNodeData
+ */

@@ -28,9 +28,9 @@
 	});
 
 	piep_cms_manager.registerFloatingProp({
-		name: "hide_menu_btn",
+		name: "unselect_everything",
 		menu_html: html`
-			<button class="btn transparent small hide_menu_btn" data-tooltip="Ukryj menu">
+			<button class="btn transparent small unselect_everything" data-tooltip="Odznacz element">
 				<i class="fas fa-times"></i>
 			</button>
 		`,

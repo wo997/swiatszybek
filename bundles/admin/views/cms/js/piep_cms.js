@@ -62,6 +62,8 @@ class PiepCMS {
 
 		this.cursor = node("piep_editor_cursor");
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
+		this.grabbed_block_wrapper.classList.add("focus_rect");
+
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
 		this.float_focuses = node("piep_editor_float_focuses");
 		this.parent_float_focus = node("piep_editor_parent_float_focus"); // TODO: display more than just a parent? f.e. for columns
@@ -488,7 +490,7 @@ class PiepCMS {
 
 		const themeSettingsChanged = () => {
 			updateColorDropdown(this.float_menu._child(`.prop_color`));
-			updateColorDropdown(this.float_menu._child(`.prop_background_color`));
+			//updateColorDropdown(this.float_menu._child(`.prop_background_color`));
 			updateColorWrapper(this.blc_menu._child(`.prop_color`));
 			updateColorWrapper(this.blc_menu._child(`.prop_background_color`));
 		};
@@ -991,7 +993,7 @@ class PiepCMS {
 
 			if (target._parent(this.container)) {
 				this.float_menu_active = true;
-				if (target._parent(".hide_menu_btn") || this.focus_node_vid === undefined) {
+				if (target._parent(".unselect_everything") || this.focus_node_vid === undefined) {
 					this.float_menu_active = false;
 				}
 
@@ -1295,6 +1297,15 @@ class PiepCMS {
 
 	initSelectionBreadcrumbs() {
 		this.selection_breadcrumbs = this.container._child(".piep_editor_selection_breadcrumbs");
+
+		this.container.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+
+			const unselect_everything = target._parent(".unselect_everything");
+			if (unselect_everything) {
+				this.setFocusNode(undefined);
+			}
+		});
 	}
 
 	initInspector() {
@@ -1469,7 +1480,10 @@ class PiepCMS {
 									>${this.getVNodeDisplayName(parent_v_node)}</span
 								>`;
 						})
-						.join("");
+						.join("") +
+					html` <button class="btn small transparent unselect_everything" style="margin:-4px 0">
+						<i class="fas fa-times"></i>
+					</button>`;
 			}
 		}
 
@@ -1969,9 +1983,6 @@ class PiepCMS {
 			if (insert_blc && insert_blc._insert_action) {
 				insert_blc._insert_action();
 				this.update({ dom: true, styles: true });
-				setTimeout(() => {
-					this.showFocusToNodes([this.grabbed_block_vid]);
-				});
 
 				const v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
 				if (v_node_data.parent_v_nodes[0]) {
@@ -2001,10 +2012,11 @@ class PiepCMS {
 
 	notGrabbedBlock() {
 		// not grabbed
+		/** @type {ShowFocusToNodeData[]} */
 		const show_vids = [];
 
 		if (this.focus_node_vid !== undefined) {
-			show_vids.push(this.focus_node_vid);
+			show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
 		}
 
 		let show_float_menu = this.float_menu_active;
@@ -2016,14 +2028,12 @@ class PiepCMS {
 			if (blc) {
 				const blc_vid = +blc.dataset.vid;
 				if (blc_vid) {
-					show_vids.push(blc_vid);
+					show_vids.push({ vid: blc_vid, opacity: 1 });
 
 					const v_node_data = this.getVNodeDataById(blc_vid);
 
 					if (v_node_data && v_node_data.parent_v_nodes.length > 0) {
-						// maybe just a single parent, otherwise it's bloated af
-						show_vids.push(v_node_data.parent_v_nodes[0].id);
-						//show_vids.push(...v_node_data.parent_v_nodes.map((p) => p.id));
+						show_vids.push(...v_node_data.parent_v_nodes.map((p, index) => ({ vid: p.id, opacity: Math.pow(0.5, index + 1) })));
 					}
 				}
 			}
@@ -2032,7 +2042,7 @@ class PiepCMS {
 				show_float_menu = false;
 				const label_vid = +v_node_label.dataset.vid;
 				if (label_vid !== this.focus_node_vid) {
-					show_vids.push(label_vid);
+					show_vids.push({ vid: label_vid, opacity: 0.5 });
 				}
 
 				any_picker.hide();
@@ -2236,8 +2246,6 @@ class PiepCMS {
 
 	editLayout() {
 		this.editing_layout = true;
-
-		this.showFocusToNodes([this.focus_node_vid]);
 
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
@@ -3376,7 +3384,7 @@ class PiepCMS {
 				.forEach((x) => {
 					this.float_menu.append(x.blc_prop);
 				});
-			this.float_menu.append(this.float_menu._child(".hide_menu_btn"));
+			this.float_menu.append(this.float_menu._child(".unselect_everything"));
 		}
 
 		this.blc_menu_scroll_panel.classList.toggle("hidden", !has_selection);
@@ -3391,17 +3399,14 @@ class PiepCMS {
 
 	/**
 	 *
-	 * @param {number[]} vids
+	 * @param {ShowFocusToNodeData[]} show_nodes
 	 * @returns
 	 */
-	showFocusToNodes(vids) {
+	showFocusToNodes(show_nodes) {
 		let float_focuses_html = "";
 
-		for (const vid of vids.filter(onlyUnique)) {
-			if (!vid) {
-				continue;
-			}
-			const focus_node = this.getNode(vid);
+		for (const show_node of show_nodes.filter((e, index) => show_nodes.findIndex((z) => z.vid === e.vid) === index)) {
+			const focus_node = this.getNode(show_node.vid);
 			if (!focus_node) {
 				continue;
 			}
@@ -3413,6 +3418,7 @@ class PiepCMS {
                 top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
                 width:${focus_node_rect.width + 2}px;
                 height:${focus_node_rect.height + 2}px;
+                opacity:${show_node.opacity};
             "
 			></div>`;
 		}

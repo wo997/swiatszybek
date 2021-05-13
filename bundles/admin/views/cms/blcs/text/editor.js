@@ -273,19 +273,20 @@
 		`,
 	});
 
-	piep_cms_manager.registerFloatingProp({
-		name: "background_color",
-		blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
-		menu_html: html`
-			<p-dropdown
-				class="field small inline pretty_blue center static_label grid global_root"
-				data-blc_prop="styles.backgroundColor"
-				data-tooltip="Kolor tła"
-			>
-				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
-			</p-dropdown>
-		`,
-	});
+	// bloated
+	// piep_cms_manager.registerFloatingProp({
+	// 	name: "background_color",
+	// 	blc_groups: [{ match_tag: piep_cms_manager.match_tags_containing_text, priority: floating_tag_containing_text_priority }],
+	// 	menu_html: html`
+	// 		<p-dropdown
+	// 			class="field small inline pretty_blue center static_label grid global_root"
+	// 			data-blc_prop="styles.backgroundColor"
+	// 			data-tooltip="Kolor tła"
+	// 		>
+	// 			<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
+	// 		</p-dropdown>
+	// 	`,
+	// });
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",
