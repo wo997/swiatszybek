@@ -46,8 +46,8 @@ domload(() => {
 			if (bottom < 0) {
 				margin_top = bottom;
 			}
-			margin_top -= header_height;
-			buy_products_wrapper.style.setProperty("--margin_top", `${margin_top}px`);
+			//margin_top += header_height;
+			buy_products_wrapper.style.setProperty("--top", `${margin_top}px`);
 		}
 	};
 

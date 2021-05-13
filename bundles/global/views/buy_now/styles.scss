@@ -132,8 +132,9 @@
 		height: calc(100vh - var(--header_height));
 		overflow: hidden;
 		width: 500px;
-		--margin_top: -4px;
-		margin-top: var(--margin_top);
+		--top: 100px;
+		//margin-top: var(--top);
+		transform: translateY(var(--top));
 	}
 
 	.buy_now_container {
