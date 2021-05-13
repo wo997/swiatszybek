@@ -8,11 +8,13 @@ if (!$shop_order || $shop_order->getProp("reference") !== $reference) {
     Request::redirect("/");
 }
 
+
+$pay_url = "/payment/przelewy24/shop_order/pay/$shop_order_id";
+
 $force_payment = Request::getSingleUsageSessionVar("force_payment");
 if ($force_payment) {
-    // basically click with js buddy
+    Request::redirect($pay_url);
 }
-
 
 ?>
 
@@ -23,17 +25,12 @@ if ($force_payment) {
 <?php startSection("body_content"); ?>
 
 <?php
-// $user = $shop_order->getParent("user");
-// if ($user) {
-//     echo json_encode($user->getSimpleProps(), JSON_PRETTY_PRINT) . "<br><br>";
-// }
+//oplacono
 
 ?>
 
 
 <?php
-//$shop_order_data = $shop_order->getAllProps() ;
-//$shop_order_data["courier"]
 
 /** @var Entity Address */
 $main_address = $shop_order->getProp("main_address");
@@ -90,7 +87,7 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
 
                 <div class="label big">Opłać zamówienie (<?= $shop_order->getProp("total_price"); ?> zł)</div>
                 <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0;">
-                <a class="btn fill medium pay_btn" href="/przelewy24/pay">Płacę</a>
+                <a class="btn fill medium pay_btn" href="<?= $pay_url ?>">Płacę</a>
             <?php endif ?>
 
 
