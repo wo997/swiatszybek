@@ -60,6 +60,7 @@ header .main_menu {
 			font-weight: var(--semi_bold);
 			font-size: 1.05em;
 			text-align: center;
+			border-radius: var(--header_btn_radius);
 		}
 		&:hover > a {
 			background: #0001;

@@ -19,7 +19,7 @@ header.main {
 		--header_padding_horizontal: 15px;
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
-		--header-btn-radius: 4px;
+		--header_btn_radius: 4px;
 		transition: 0.2s transform;
 		flex-flow: row wrap;
 	}
@@ -73,7 +73,7 @@ header.main {
 			position: relative;
 			min-width: 50px;
 			height: 50px;
-			border-radius: var(--header-btn-radius);
+			border-radius: var(--header_btn_radius);
 			display: flex;
 			align-items: center;
 			justify-content: center;

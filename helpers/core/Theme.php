@@ -144,9 +144,10 @@ class Theme
 		/*border-top: 1px solid #ccc;*/
 	}
 }
-@media (min-width: {$outer_responsive_width_min}px) {
+@media (max-width: {$outer_responsive_width_max}px) {
 	header.main:not(.stiff) .main_menu a {
-		border-radius: var(--header-btn-radius);
+		border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
 	}
 }
 
