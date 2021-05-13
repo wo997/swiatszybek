@@ -100,7 +100,7 @@ domload(() => {
 
 		const was_h = carrier_input.scrollHeight;
 		carrier_input._set_content(carrier_html);
-		carrier_input.dataset.value = "";
+		carrier_input.dataset.value = ""; // just do it to avoid issues ;)
 		const now_h = carrier_input.scrollHeight;
 		if (Math.abs(was_h - now_h) > 10) {
 			animate(carrier_input, `0%{height:${was_h}px;overflow:hidden} 100%{height:${now_h}px;overflow:hidden}`, 250);
@@ -112,8 +112,11 @@ domload(() => {
 
 		carrier_input._set_value(user_cart.carrier_id, { quiet: true });
 
-		if (now_carriers.length === 1 && carrier_input._get_value() !== now_carriers[0].carrier_id) {
-			carrier_input._set_value(now_carriers[0].carrier_id);
+		if (now_carriers.length === 1) {
+			const single_carrier_id = now_carriers[0].carrier_id;
+			if (carrier_input._get_value() !== single_carrier_id) {
+				carrier_input._set_value(single_carrier_id);
+			}
 		}
 	};
 
@@ -254,7 +257,9 @@ domload(() => {
 
 		const carrier = user_cart.available_carriers.find((c) => c.carrier_id === carrier_id);
 
-		in_person_map_wrapper._set_content(carrier.google_maps_embed_code);
+		if (carrier && carrier.google_maps_embed_code) {
+			in_person_map_wrapper._set_content(carrier.google_maps_embed_code);
+		}
 		// const map_iframe = in_person_map_wrapper._child("iframe");
 		// if (map_iframe) {
 		// 	map_iframe.removeAttribute("loading");
@@ -280,9 +285,13 @@ domload(() => {
 		const delivery_type = delivery_input._get_value();
 		if (delivery_type <= 0) {
 			showNotification(`Wybierz formę dostawy`, { type: "error", one_line: true });
-			return;
 		}
 		data.delivery_type = delivery_type.delivery_type_id;
+
+		const errors = validateInputs([delivery_input, carrier_input]);
+		if (errors.length > 0) {
+			valid = false;
+		}
 
 		if (delivery_type === 1) {
 			const courier_address_different = courier_address_different_input._get_value();

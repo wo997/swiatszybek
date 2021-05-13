@@ -18,9 +18,18 @@ document.addEventListener("mouseup", () => {
  * @param {PiepNode} radio_group
  */
 function onRadioGroupValueSet(radio_group) {
+	let any_match = false;
 	radio_group._children("p-checkbox").forEach((ch) => {
-		ch._set_value(ch.dataset.value === radio_group.dataset.value ? 1 : 0, { quiet: true });
+		const match = ch.dataset.value === radio_group.dataset.value;
+		if (match) {
+			any_match = true;
+		}
+		ch._set_value(match ? 1 : 0, { quiet: true });
 	});
+
+	if (!any_match) {
+		radio_group.dataset.value = "";
+	}
 }
 
 /**

@@ -89,7 +89,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>
-            <div class="radio_group boxes big_boxes columns_3 hide_checks delivery number">
+            <div class="radio_group boxes big_boxes columns_3 hide_checks delivery number" data-validate="">
                 <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="1"></p-checkbox>
@@ -134,7 +134,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 </div>
             </div>
 
-            <div class="radio_group carrier number mtf"></div>
+            <div class="radio_group carrier number mtf" data-validate=""></div>
 
             <div class="expand_y animate_hidden hidden case_courier">
                 <div>
