@@ -5,7 +5,7 @@
 		--auto-grid-min-size: calc(150px + 0.12 * min(50%, 900px));
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
-		gap: calc(20px + 2%) calc(10px + 1%);
+		gap: calc(20px + 2vw) calc(10px + 1vw);
 	}
 	// .product_block {
 	// 	width: var(--product_width);

@@ -60,6 +60,7 @@
  * blc_groups?: BlcGroup[]
  * type_groups: cmsEditableGroupEnum[]
  * menu_html: string
+ * init?(piep_cms: PiepCMS)
  * }} cmsEditableProp
  */
 

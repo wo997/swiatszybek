@@ -168,10 +168,12 @@ function renderGeneralProductsList($params)
     $product_ids = def($params, "product_ids", null);
     $general_product_ids = def($params, "general_product_ids", null);
 
+    $where = "p.active AND gp.active"; // repeats but leave it like this ;)
+
     if ($product_ids !== null) {
-        $where = "p.product_id IN (" . ($product_ids ? join(",", $product_ids) : "-1") . ")";
+        $where .= " AND p.product_id IN (" . ($product_ids ? join(",", $product_ids) : "-1") . ")";
     } else if ($general_product_ids !== null) {
-        $where = "gp.general_product_id IN (" . ($general_product_ids ? join(",", $general_product_ids) : "-1") . ")";
+        $where .= " AND gp.general_product_id IN (" . ($general_product_ids ? join(",", $general_product_ids) : "-1") . ")";
     }
 
     $search_order = def($params, "search_order", "bestsellery");

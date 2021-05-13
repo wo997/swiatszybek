@@ -642,10 +642,10 @@ class PiepCMS {
 				if (focus_node) {
 					const v_node_data = this.getVNodeDataById(+focus_node.dataset.vid);
 					let v_node = v_node_data.v_node;
-					const anchor_offset = this.last_selection.anchorOffset;
-					const focus_offset = this.last_selection.focusOffset;
+					const anchor_offset = this.last_selection ? this.last_selection.anchorOffset : 0;
+					const focus_offset = this.last_selection ? this.last_selection.focusOffset : 0;
 
-					if (this.last_selection.focusNode !== this.last_selection.anchorNode) {
+					if (this.last_selection && this.last_selection.focusNode !== this.last_selection.anchorNode) {
 						alert("Currently only single line editing is available");
 						return;
 					}

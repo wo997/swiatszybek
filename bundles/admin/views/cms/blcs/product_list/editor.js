@@ -24,4 +24,19 @@
 			return body;
 		},
 	});
+
+	piep_cms_manager.registerProp({
+		name: "product_list_sort",
+		type_groups: ["advanced"],
+		blc_groups: [{ module_names: ["product_list"], priority: 100 }],
+		menu_html: html`
+			<div class="label"><span>Sortuj listę produktów</span></div>
+			<select class="field" data-blc_prop="settings.product_list_sort">
+				<option value="bestsellery">Bestsellery</option>
+				<option value="najnowsze">Najnowsze</option>
+				<option value="ceny-rosnaco">Ceny rosnąco</option>
+				<option value="ceny-malejaco">Ceny malejąco</option>
+			</select>
+		`,
+	});
 }
