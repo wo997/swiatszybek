@@ -76,7 +76,7 @@ window.addEventListener(
 		const inner_responsive_width = main_menu.offsetWidth + 10; // 10 is just a tiny margin
 		const outer_responsive_width = out_x + 100; // 100 is a width that can differ for non logged in user, there is for example zaloguj się label, it's 75px wider or so
 
-		console.log(main_menu.offsetWidth, out_x);
+		//console.log(main_menu.offsetWidth, out_x);
 
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "/theme/build_header",
