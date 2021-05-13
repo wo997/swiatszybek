@@ -990,15 +990,6 @@ class PiepCMS {
 
 				this.pushHistory(`remove_blc_${v_node_data.v_node.id}`);
 			}
-
-			if (target._parent(this.container)) {
-				this.float_menu_active = true;
-				if (target._parent(".unselect_everything") || this.focus_node_vid === undefined) {
-					this.float_menu_active = false;
-				}
-
-				this.float_menu.classList.toggle("hidden", !this.float_menu_active);
-			}
 		});
 	}
 
@@ -1481,7 +1472,7 @@ class PiepCMS {
 								>`;
 						})
 						.join("") +
-					html` <button class="btn small transparent unselect_everything" style="margin:-4px 0">
+					html` <button class="btn small transparent unselect_everything" style="margin:-4px 0" data-tooltip="Odznacz element">
 						<i class="fas fa-times"></i>
 					</button>`;
 			}
@@ -2015,11 +2006,11 @@ class PiepCMS {
 		/** @type {ShowFocusToNodeData[]} */
 		const show_vids = [];
 
+		let show_float_menu = false;
 		if (this.focus_node_vid !== undefined) {
+			show_float_menu = true;
 			show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
 		}
-
-		let show_float_menu = this.float_menu_active;
 
 		if (!this.layout_control_prop) {
 			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
@@ -3433,13 +3424,11 @@ class PiepCMS {
 	 */
 	showFloatMenuToNode(vid) {
 		if (vid === undefined) {
-			this.float_menu.classList.add("hidden");
 			return;
 		}
 
 		const focus_node = this.getNode(vid);
 		if (focus_node === undefined) {
-			this.float_menu.classList.add("hidden");
 			return;
 		}
 		const focus_node_rect = focus_node.getBoundingClientRect();
