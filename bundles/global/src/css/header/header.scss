@@ -13,8 +13,8 @@ header.main {
 		align-items: center;
 		z-index: 600;
 		background: #fff;
-		border-bottom: 1px solid #ccc;
-		box-shadow: var(--header_box_shadow_off_x) 0px 8px 0 #0002;
+		// border-bottom: 1px solid #ccc;
+		box-shadow: var(--header_box_shadow_off_x) -5px 15px 0 #0003;
 		--header_padding_vertical: 5px;
 		--header_padding_horizontal: 15px;
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);

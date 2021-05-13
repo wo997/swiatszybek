@@ -135,23 +135,23 @@ class Theme
 /* css[modules/main_menu] */
 
 @media (max-width: {$outer_responsive_width_max}px) and (hover: hover) {
-	header.main .main_menu {
+	header.main:not(.stiff) .main_menu {
 		order: 2;
 		margin: calc(-1 * var(--header_padding_vertical)) calc(-1 * var(--header_padding_horizontal));
 		margin-top: var(--header_padding_vertical);
 		min-width: 100%;
 		flex-grow: 1;
-		border-top: 1px solid #ccc;
+		/*border-top: 1px solid #ccc;*/
 	}
 }
 @media (min-width: {$outer_responsive_width_min}px) {
-	header.main .main_menu a {
+	header.main:not(.stiff) .main_menu a {
 		border-radius: var(--header-btn-radius);
 	}
 }
 
 @media (max-width: {$inner_responsive_width_max}px), (hover: none) {
-	header.main {
+	header.main:not(.stiff) {
 		& {
 			justify-content: space-between;
 		}
@@ -167,7 +167,7 @@ class Theme
 }
 
 @media (hover: hover) and (min-width: {$inner_responsive_width_min}px) {
-	header.main {
+	header.main:not(.stiff) {
 		.mobile_menu_btn,
 		.mobile_search_btn {
 			display: none !important;
@@ -176,7 +176,7 @@ class Theme
 }
 
 @media (max-width: {$case_desktop_width_max}px) {
-    header.main .case_desktop {
+    header.main:not(.stiff) .case_desktop {
         display: none !important;
     }
 }
