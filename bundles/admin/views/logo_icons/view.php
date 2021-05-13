@@ -16,7 +16,7 @@
     </span>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div class="label mb2 first">
     <span class="medium">Logo sklepu</span>

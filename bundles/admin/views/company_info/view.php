@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div id="companyInfoForm" class="desktop_row space_columns">
     <div>

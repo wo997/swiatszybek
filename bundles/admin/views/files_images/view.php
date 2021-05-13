@@ -10,7 +10,7 @@
 
 
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <file-manager-comp class="files"></file-manager-comp>
 

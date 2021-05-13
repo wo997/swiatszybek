@@ -20,7 +20,7 @@
     </span>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <theme-settings-comp class="main"></theme-settings-comp>
 

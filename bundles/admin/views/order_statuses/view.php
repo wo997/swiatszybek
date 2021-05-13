@@ -6,7 +6,7 @@
 <title>Statusy</title>
 
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <h1>Statusy</h1>
 

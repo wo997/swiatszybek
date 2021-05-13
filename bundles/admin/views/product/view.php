@@ -95,7 +95,7 @@ if (!$general_product_data) {
     <div class="inject_header_nodes mla"></div>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <product-comp></product-comp>
 

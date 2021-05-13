@@ -6,7 +6,7 @@
 
 <title>Użytkownicy</title>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <datatable-comp class="users"></datatable-comp>
 

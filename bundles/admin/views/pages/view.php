@@ -23,7 +23,7 @@
     <?php } ?>
 </script>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div class="pages_view_header">
     <div class="pretty_radio semi_bold toggle_view">

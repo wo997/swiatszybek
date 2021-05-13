@@ -4,12 +4,6 @@ endSection();
 
 ?>
 
-<?php
-
-endSection();
-
-?>
-
 <?php startSection("body"); ?>
 
 <div class="admin_layout admin_root">
@@ -65,7 +59,7 @@ endSection();
         ?>
         <div class="scroll_panel scroll_shadow main_admin_scroll">
             <div class="panel_padding actual_content">
-                <?= def($sections, "body_content", ""); ?>
+                <?= def($sections, "admin_page_body", ""); ?>
             </div>
             <footer>Piepsklep <?= date("Y") ?></footer>
         </div>

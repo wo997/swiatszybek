@@ -10,7 +10,7 @@
     ?>
 </script>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div style="max-width: 1000px;margin: auto">
     <div class="label big">Statystyki sprzedaży</div>

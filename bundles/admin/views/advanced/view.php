@@ -21,7 +21,7 @@
     <button class="btn primary save_advanced_settings_btn mla">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div id="advancedSettingsForm">
     <span class="label first">Certyfikat SSL</span>

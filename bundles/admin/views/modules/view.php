@@ -6,7 +6,7 @@
 
 <title>Moduły</title>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <h1>Moduły</h1>
 

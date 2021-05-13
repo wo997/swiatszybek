@@ -15,9 +15,8 @@ endSection();
     <a class="gray_hover" href="<?= Request::$static_urls["USER"] ?>/zmien-haslo"> <i class="fas fa-unlock-alt"></i> Zmień hasło </a>
     <a class="gray_hover" onclick="return logout()"> <i class="fa fa-sign-out-alt"></i> Wyloguj się </a>
 </div>
-
-<div class="body_content scroll_panel">
-    <?= def($sections, "body_content", ""); ?>
+<div class="user_page_body">
+    <?= def($sections, "user_page_body", ""); ?>
 </div>
 
 <?php include "bundles/global/templates/default.php"; ?>

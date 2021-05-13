@@ -21,7 +21,7 @@
     <div class="save_btn_wrapper ml1"></div>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <div>
     <p class="user_info" style="margin-bottom:20px">

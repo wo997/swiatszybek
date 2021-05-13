@@ -9,7 +9,7 @@
 
 <title>Moje zamówienia</title>
 
-<?php startSection("body_content"); ?>
+<?php startSection("user_page_body"); ?>
 
 <datatable-comp class="shop_orders"></datatable-comp>
 

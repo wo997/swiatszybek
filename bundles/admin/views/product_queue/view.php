@@ -6,7 +6,7 @@
 
 <title>Oczekujący na produkty</title>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <datatable-comp class="product_queue"></datatable-comp>
 

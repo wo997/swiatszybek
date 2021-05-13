@@ -11,7 +11,7 @@
     <?= preloadCarriers() ?>
 </script>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <datatable-comp class="shop_orders"></datatable-comp>
 

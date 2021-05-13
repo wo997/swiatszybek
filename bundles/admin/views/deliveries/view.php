@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<?php startSection("body_content"); ?>
+<?php startSection("admin_page_body"); ?>
 
 <deliveries-config-comp class="main"></deliveries-config-comp>
 
