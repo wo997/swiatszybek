@@ -79,6 +79,8 @@ window.addEventListener(
 		xhr({
 			url: STATIC_URLS["ADMIN"] + "/theme/build_header",
 			params: {
+				// inner_responsive_width: 1000, // ugh, fix it
+				// outer_responsive_width: 1500,
 				inner_responsive_width,
 				outer_responsive_width,
 			},

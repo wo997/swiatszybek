@@ -13,7 +13,7 @@
 <?php startSection("header"); ?>
 
 <div class="custom_toolbar">
-    <span class="title breadcrumbs">
+    <span class="title breadcrumbs mra">
         <div class="crumb">
             Ustawienia motywu
         </div>
