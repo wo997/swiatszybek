@@ -659,6 +659,8 @@ class PiepCMS {
 					let select_vid;
 					/** @type {vDomNode} */
 					let set_prop_of_v_node;
+					/** @type {vDomNodeData} */
+					let set_prop_of_v_node_data;
 
 					// the selection is something but not everything in the v_node
 					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
@@ -720,10 +722,12 @@ class PiepCMS {
 
 						const min_v_node_data = this.getVNodeDataById(+mid_vid);
 
-						set_prop_of_v_node = min_v_node_data.v_node;
+						set_prop_of_v_node_data = min_v_node_data;
+						set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 						select_vid = mid_vid;
 					} else {
-						set_prop_of_v_node = v_node;
+						set_prop_of_v_node_data = v_node_data;
+						set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 						select_vid = v_node.id;
 					}
 
@@ -820,6 +824,13 @@ class PiepCMS {
 							}
 						});
 					};
+
+					if (piep_cms_manager.text_block_props.includes(prop_str) && set_prop_of_v_node.tag.match(piep_cms_manager.match_inline_tag)) {
+						const parent = set_prop_of_v_node_data.parent_v_nodes[0];
+						if (parent && this.isTextContainer(parent)) {
+							set_prop_of_v_node = parent;
+						}
+					}
 
 					setPropOfVNode(set_prop_of_v_node);
 
@@ -3198,7 +3209,8 @@ class PiepCMS {
 		this.last_blc_menu_to_vid = this.focus_node_vid;
 		this.last_blc_menu_to_res = this.selected_resolution;
 
-		const v_node = this.getVNodeById(this.focus_node_vid);
+		let v_node_data = this.getVNodeDataById(this.focus_node_vid);
+		let v_node = v_node_data ? v_node_data.v_node : undefined;
 
 		if (!v_node) {
 			return;
@@ -3208,24 +3220,32 @@ class PiepCMS {
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			const prop_str = input.dataset.blc_prop;
 			let prop_val;
+			let v_node_ref = v_node; // we cant change it below dude
+
+			if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_inline_tag)) {
+				const parent = v_node_data.parent_v_nodes[0];
+				if (parent && this.isTextContainer(parent)) {
+					v_node_ref = parent;
+				}
+			}
 
 			if (prop_str.startsWith("styles.")) {
-				const res_styles = v_node.styles[this.selected_resolution];
+				const res_styles = v_node_ref.styles[this.selected_resolution];
 				if (res_styles) {
 					prop_val = res_styles[prop_str.substring("styles.".length)];
 				}
 			}
 			if (prop_str.startsWith("attrs.")) {
-				if (!v_node.attrs) {
-					v_node.attrs = {};
+				if (!v_node_ref.attrs) {
+					v_node_ref.attrs = {};
 				}
-				prop_val = v_node.attrs[prop_str.substring("attrs.".length)];
+				prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
 			}
 			if (prop_str.startsWith("settings.")) {
-				if (!v_node.settings) {
-					v_node.settings = {};
+				if (!v_node_ref.settings) {
+					v_node_ref.settings = {};
 				}
-				prop_val = v_node.settings[prop_str.substring("settings.".length)];
+				prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
 			}
 
 			let val = def(prop_val, "");
