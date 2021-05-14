@@ -318,63 +318,34 @@
 }
 
 {
-	piep_cms_manager.registerBlcSchema({
-		id: "h1",
-		icon: html`<span class="bold">H1</span>`,
-		label: html`Nagłówek`,
-		priority: 100,
-		v_node: {
-			tag: "h1",
-			id: -1,
-			text: "Nagłówek",
-			styles: {},
-			classes: [],
-			attrs: {},
-		},
-	});
-
-	// piep_cms_manager.registerBlcSchema({
-	// 	id: "h2",
-	// 	icon: html`<span class="bold">H2</span>`,
-	// 	label: html`Nagłówek`,
-	// 	priority: 100,
-	// 	v_node: {
-	// 		tag: "h2",
-	// 		id: -1,
-	// 		text: "Nagłówek",
-	// 		styles: {},
-	// 		classes: [],
-	// 		attrs: {},
-	// 	},
-	// });
-
-	// piep_cms_manager.registerBlcSchema({
-	// 	id: "h3",
-	// 	icon: html`<span class="bold">H3</span>`,
-	// 	label: html`Nagłówek`,
-	// 	priority: 100,
-	// 	v_node: {
-	// 		tag: "h3",
-	// 		id: -1,
-	// 		text: "Nagłówek",
-	// 		styles: {},
-	// 		classes: [],
-	// 		attrs: {},
-	// 	},
-	// });
-
-	piep_cms_manager.registerBlcSchema({
-		id: "p",
-		icon: html`<i class="fas fa-align-center"></i>`,
-		label: html`Paragraf / Tekst`,
-		priority: 100,
-		v_node: {
-			tag: "p",
-			id: -1,
-			text: "Lorem ipsum",
-			styles: {},
-			classes: [],
-			attrs: {},
-		},
+	[
+		{ tag: "h1", label: "Nagłówek", icon: html`<span class="bold">H1</span>` },
+		{ tag: "h2", label: "Nagłówek", icon: html`<span class="bold">H2</span>` },
+		{ tag: "h3", label: "Nagłówek", icon: html`<span class="bold">H3</span>` },
+		{ tag: "p", label: "Paragraf", icon: html`<i class="fas fa-align-center"></i>` },
+	].forEach((data) => {
+		piep_cms_manager.registerBlcSchema({
+			id: data.tag,
+			icon: data.icon,
+			label: data.label,
+			priority: 100,
+			v_node: {
+				tag: data.tag,
+				id: -1,
+				styles: {},
+				classes: [],
+				attrs: {},
+				children: [
+					{
+						id: -1,
+						tag: "span",
+						text: data.label,
+						attrs: {},
+						classes: [],
+						styles: {},
+					},
+				],
+			},
+		});
 	});
 }
