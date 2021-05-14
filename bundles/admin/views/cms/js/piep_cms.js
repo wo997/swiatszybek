@@ -1102,7 +1102,7 @@ class PiepCMS {
 								v_node_data.v_nodes.length - v_node_data.index
 							);
 
-							// place it below the text container
+							// place it below the text container, including the v_node
 							const new_vid = this.getNewBlcId();
 							parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
 								tag: "p",
@@ -1114,6 +1114,7 @@ class PiepCMS {
 							});
 
 							/** @type {vDomNode} */
+							// the one that stays on top where v_node has been previously
 							const new_old_v_node = cloneObject(v_node);
 							new_old_v_node.id = new_vid + 1;
 
