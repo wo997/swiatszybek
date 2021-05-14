@@ -12,7 +12,7 @@
 	};
 
 	piep_cms_manager.registerProp({
-		name: "text_type",
+		name: "text_tag",
 		type_groups: ["appearance"],
 		blc_groups: [
 			{
@@ -22,7 +22,7 @@
 		],
 		menu_html: html`
 			<div class="label">Typ tekstu</div>
-			<div class="pretty_radio flex columns_1 global_root spiky box_align_left">
+			<div class="pretty_radio flex columns_1 global_root spiky box_align_left" data-blc_prop="tag">
 				<div class="checkbox_area">
 					<p-checkbox data-value="h1"></p-checkbox>
 					<div style="font-size:var(--size_h1);line-height: 1.2;">Nagłówek H1</div>
@@ -215,6 +215,24 @@
 	});
 
 	const floating_tag_containing_text_priority = 5;
+
+	piep_cms_manager.registerFloatingProp({
+		name: "text_tag",
+		blc_groups: [
+			{
+				matcher: matchTextContainer,
+				priority: tag_containing_text_priority,
+			},
+		],
+		menu_html: html`
+			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="tag" data-tooltip="Typ tekstu">
+				<p-option data-value="h1"> <div style="font-size:var(--size_h1);">H1</div> </p-option>
+				<p-option data-value="h2"> <div style="font-size:var(--size_h2);">H2</div> </p-option>
+				<p-option data-value="h3"> <div style="font-size:var(--size_h3);">H3</div> </p-option>
+				<p-option data-value="p"> <div style="font-size:1em;">P</div> </p-option>
+			</p-dropdown>
+		`,
+	});
 
 	piep_cms_manager.registerFloatingProp({
 		name: "font_size",

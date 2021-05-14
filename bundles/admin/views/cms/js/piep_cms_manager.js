@@ -33,7 +33,7 @@ class PiepCMSManager {
 		this.pretty_percentages = this.pretty_percentages.filter(onlyUnique);
 		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 
-		this.text_block_props = ["styles.textAlign"];
+		this.text_block_props = ["styles.textAlign", "tag"];
 		this.match_inline_tag = /^(span)$/;
 	}
 

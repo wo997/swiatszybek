@@ -32,7 +32,6 @@ class PiepCMS {
 		this.initEditables();
 		this.initEditingColors();
 		this.initEditingFontSize();
-		this.initEditingTextType();
 
 		this.initPaste();
 		this.initClick();
@@ -198,30 +197,6 @@ class PiepCMS {
 			floating_blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
-	}
-
-	initEditingTextType() {
-		/**
-		 *
-		 * @param {PiepNode} text_type_wrapper
-		 */
-		const updateTextTypeWrapper = (text_type_wrapper) => {
-			const radio_group = text_type_wrapper._child(".radio_group");
-			radio_group.addEventListener("change", () => {
-				const text_container_vid = this.getParentTextContainerId(this.focus_node_vid);
-				if (text_container_vid) {
-					this.getVNodeById(text_container_vid).tag = radio_group._get_value();
-					this.update({ all: true });
-				}
-			});
-		};
-		/**
-		 *
-		 * @param {PiepNode} text_type_dropdown
-		 */
-		const updateTextTypeDropdown = (text_type_dropdown) => {};
-		//updateTextTypeDropdown(this.float_menu._child(`.prop_text_type`));
-		updateTextTypeWrapper(this.blc_menu._child(`.prop_text_type`));
 	}
 
 	initEditingFontSize() {
@@ -745,15 +720,13 @@ class PiepCMS {
 							}
 							prop_ref = prop_ref.styles[this.selected_resolution];
 							prop_str = prop_str.substring("styles.".length);
-						}
-						if (prop_str.startsWith("attrs.")) {
+						} else if (prop_str.startsWith("attrs.")) {
 							if (!prop_ref.attrs) {
 								prop_ref.attrs = {};
 							}
 							prop_ref = prop_ref.attrs;
 							prop_str = prop_str.substring("attrs.".length);
-						}
-						if (prop_str.startsWith("settings.")) {
+						} else if (prop_str.startsWith("settings.")) {
 							if (!prop_ref.settings) {
 								prop_ref.settings = {};
 							}
@@ -1493,12 +1466,12 @@ class PiepCMS {
 
 		const map_tag_display_name = {
 			a: "Link",
-			h1: "Nagłówek",
-			h2: "Nagłówek",
-			h3: "Nagłówek",
-			h4: "Nagłówek",
-			h5: "Nagłówek",
-			h6: "Nagłówek",
+			h1: "Nagłówek H1",
+			h2: "Nagłówek H2",
+			h3: "Nagłówek H3",
+			h4: "Nagłówek H4",
+			h5: "Nagłówek H5",
+			h6: "Nagłówek H6",
 			div: "Kontener",
 			p: "Paragraf",
 			span: "Tekst",
@@ -3234,18 +3207,18 @@ class PiepCMS {
 				if (res_styles) {
 					prop_val = res_styles[prop_str.substring("styles.".length)];
 				}
-			}
-			if (prop_str.startsWith("attrs.")) {
+			} else if (prop_str.startsWith("attrs.")) {
 				if (!v_node_ref.attrs) {
 					v_node_ref.attrs = {};
 				}
 				prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
-			}
-			if (prop_str.startsWith("settings.")) {
+			} else if (prop_str.startsWith("settings.")) {
 				if (!v_node_ref.settings) {
 					v_node_ref.settings = {};
 				}
 				prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
+			} else {
+				prop_val = v_node_ref[prop_str];
 			}
 
 			let val = def(prop_val, "");
