@@ -656,10 +656,6 @@ class PiepCMS {
 					let prop_str = input.dataset.blc_prop;
 
 					/** @type {number} */
-					let select_start;
-					/** @type {number} */
-					let select_end;
-					/** @type {number} */
 					let select_vid;
 					/** @type {vDomNode} */
 					let set_prop_of_v_node;
@@ -726,15 +722,9 @@ class PiepCMS {
 
 						set_prop_of_v_node = min_v_node_data.v_node;
 						select_vid = mid_vid;
-						select_start = 0;
-						select_end = end_offset - begin_offset;
 					} else {
 						set_prop_of_v_node = v_node;
 						select_vid = v_node.id;
-						if (v_node.text !== undefined) {
-							select_start = begin_offset;
-							select_end = end_offset;
-						}
 					}
 
 					/**
@@ -835,11 +825,8 @@ class PiepCMS {
 
 					this.update({ all: true });
 
-					const node_ref = this.getNode(select_vid);
+					this.last_selection = undefined;
 					this.setFocusNode(select_vid);
-					if (node_ref || !validPiepInput($(document.activeElement))) {
-						setSelectionByIndex(node_ref, select_start, select_end);
-					}
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
 					this.displayNodeLayout();
@@ -3101,6 +3088,7 @@ class PiepCMS {
 
 		const sel = window.getSelection();
 		if (this.content_active || this.float_menu_active) {
+			/** @type {Selection} */
 			this.last_selection = cloneObject(sel);
 		}
 		const csel = this.last_selection;
