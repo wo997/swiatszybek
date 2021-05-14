@@ -997,11 +997,11 @@ class PiepCMS {
 						}
 					} else {
 						v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
-						this.update({ dom: true, styles: true });
+						this.recreateDom();
 
-						const node_ref = this.getNode(vid);
-						if (node_ref) {
-							setSelectionByIndex(node_ref, focus_offset - 1);
+						const node = this.getNode(vid);
+						if (node) {
+							setSelectionByIndex(node, focus_offset - 1);
 						}
 					}
 				}
@@ -1863,24 +1863,24 @@ class PiepCMS {
 		const anchor_offset = sel.anchorOffset;
 		const focus_node = this.getFocusNode();
 		if (!focus_node) {
-			return;
+			return 0;
 		}
 		const vid = +focus_node.dataset.vid;
 		const v_node = this.getVNodeById(vid);
 		if (!v_node) {
-			return;
+			return 0;
 		}
 
 		const text = v_node.text;
 		if (text === undefined) {
-			return;
+			return 0;
 		}
 
 		let begin_offset = focus_offset;
 		let end_offset = focus_offset;
 		let chars_removed = 0;
 		if (anchor_offset === focus_offset) {
-			return;
+			return 0;
 		}
 
 		begin_offset = Math.min(anchor_offset, focus_offset);
