@@ -2,7 +2,7 @@
 
 .product_list {
 	& {
-		--auto-grid-min-size: calc(150px + 0.12 * min(50%, 900px));
+		--auto-grid-min-size: calc(170px + 0.12 * min(50%, 900px));
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
 		gap: calc(30px + 2vw) calc(20px + 1vw);

@@ -15,7 +15,10 @@ class PiepCMS {
 
 		this.max_vid_inside = 0;
 
-		this.last_map_vid_render_props = {}; // vid => settings
+		this.last_map_vid_render_props = {}; // vid => props
+
+		/** @type {"float" | "side" | ""} */
+		this.last_blc_menu_name = "";
 
 		this.initNodes();
 		this.initConsts();
@@ -74,7 +77,7 @@ class PiepCMS {
 
 		this.styles = styles("piep_editor_styles");
 
-		this.blc_menu = this.container._child(".piep_editor_blc_menu");
+		this.side_menu = this.container._child(".piep_editor_blc_menu");
 
 		this.float_multi_insert_bckg = node("piep_editor_float_multi_insert_bckg");
 		this.float_multi_insert_bckg.classList.add("hidden");
@@ -310,50 +313,17 @@ class PiepCMS {
 
 			const different_size = options_wrapper._child(".different_size");
 			different_size.addEventListener("click", () => {
-				any_picker.wrapper._set_content(
-					html`<div class="font_size_float">
-						<div class="label first">Rozmiar:</div>
-						<div class="glue_children">
-							<input class="field small value_input" />
-							<select class="piep_editor_unit_input field inline small">
-								<option value="px">px</option>
-								<option value="em">em</option>
-								<option value="rem">rem</option>
-								<option value=""></option>
-							</select>
-						</div>
-					</div>`
-				);
-				const value_input = any_picker.wrapper._child(".value_input");
-				const unit_input = any_picker.wrapper._child(".piep_editor_unit_input");
-				/** @type {string} */
-				const get_value = different_size.classList.contains("selected") ? font_size_dropdown._get_value() : "";
-				/** @type {any} */
-				let val = get_value;
-				let uni = "";
-				for (const unit of ["px", "em", "rem"]) {
-					if (get_value.endsWith(unit)) {
-						val = numberFromStr(val);
-						uni = unit;
-					}
-				}
-				value_input._set_value(val);
-				unit_input._set_value(uni);
-
-				const change = () => {
-					font_size_dropdown._set_value(value_input._get_value() + unit_input._get_value());
-				};
-				unit_input.addEventListener("change", change);
-				value_input.addEventListener("change", change);
-				value_input.addEventListener("input", change);
-
-				any_picker.show(different_size);
+				piep_cms.filter_blc_menu._set_value("appearance");
+				const value_input = piep_cms.side_menu._child(".prop_font_size .value_input");
+				value_input.click();
+				value_input.focus();
+				this.last_blc_menu_name = "side";
 			});
 		};
 
 		const themeSettingsChanged = () => {
 			updateFontSizeDropdown(this.float_menu._child(`[data-blc_prop="styles.fontSize"]`));
-			updateFontSizeWrapper(this.blc_menu._child(`.prop_font_size`));
+			updateFontSizeWrapper(this.side_menu._child(`.prop_font_size`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -468,8 +438,8 @@ class PiepCMS {
 		const themeSettingsChanged = () => {
 			updateColorDropdown(this.float_menu._child(`.prop_color`));
 			//updateColorDropdown(this.float_menu._child(`.prop_background_color`));
-			updateColorWrapper(this.blc_menu._child(`.prop_color`));
-			updateColorWrapper(this.blc_menu._child(`.prop_background_color`));
+			updateColorWrapper(this.side_menu._child(`.prop_color`));
+			updateColorWrapper(this.side_menu._child(`.prop_background_color`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -559,7 +529,7 @@ class PiepCMS {
 
 				ev.preventDefault();
 			} else {
-				if (!target._parent(this.blc_menu)) {
+				if (!target._parent(this.side_menu)) {
 					this.finishEditingLayout();
 				}
 			}
@@ -845,6 +815,11 @@ class PiepCMS {
 
 	initClick() {
 		document.addEventListener("mousedown", (ev) => {
+			const target = $(ev.target);
+
+			/** @type {"float" | "side" | ""} */
+			this.last_blc_menu_name = target._parent(".blc_menu_scroll_panel") ? "side" : "float";
+
 			this.just_clicked = true;
 		});
 
@@ -949,7 +924,7 @@ class PiepCMS {
 
 			const choose_img_btn = target._parent(".choose_img_btn");
 			if (choose_img_btn) {
-				const input = this.blc_menu._child(`[data-blc_prop="settings.img_src"]`);
+				const input = this.side_menu._child(`[data-blc_prop="settings.img_src"]`);
 				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_target = input;
 				select_file_modal._render();
@@ -1163,7 +1138,7 @@ class PiepCMS {
 	}
 
 	initBlcMenu() {
-		this.blc_menu._set_content(html`
+		this.side_menu._set_content(html`
 			<div class="filter_blc_menu radio_group hide_checks">
 				<div class="checkbox_area">
 					<div>
@@ -1231,8 +1206,8 @@ class PiepCMS {
 			</div>
 		`);
 
-		this.blc_menu_scroll_panel = this.blc_menu._child(".blc_menu_scroll_panel");
-		this.case_blc_menu_empty = this.blc_menu._child(".case_blc_menu_empty");
+		this.blc_menu_scroll_panel = this.side_menu._child(".blc_menu_scroll_panel");
+		this.case_blc_menu_empty = this.side_menu._child(".case_blc_menu_empty");
 
 		let blc_props_menu_html = "";
 		piep_cms_manager.blc_props.forEach((blc_prop) => {
@@ -1242,7 +1217,7 @@ class PiepCMS {
 
 		registerForms();
 
-		this.filter_blc_menu = this.blc_menu._child(".filter_blc_menu");
+		this.filter_blc_menu = this.side_menu._child(".filter_blc_menu");
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
 			if (this.filter_blc_menu._get_value() === "layout") {
@@ -1739,7 +1714,12 @@ class PiepCMS {
 
 					if (!isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
 						this.last_map_vid_render_props[vid] = render_props;
-						node._set_content(blc_schema.render(v_node));
+						const html = blc_schema.render(v_node);
+						if (html === undefined) {
+							// TODO: call a manager to
+						} else {
+							node._set_content(html);
+						}
 					}
 				}
 
@@ -2175,7 +2155,7 @@ class PiepCMS {
 				set_val_pretty = floor(set_val) + "px";
 			}
 
-			const prop_input = this.blc_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
+			const prop_input = this.side_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
 			const change = set_val_pretty !== prop_input._get_value();
 			scrollIntoView(prop_input);
 			prop_input.classList.add("editing_now");
@@ -3228,11 +3208,13 @@ class PiepCMS {
 	}
 
 	setBlcMenuFromFocusedNode() {
-		if (this.last_blc_menu_to_vid === this.focus_node_vid && this.last_blc_menu_to_res === this.selected_resolution) {
-			return;
+		let quiet = false;
+
+		const blc_menu_token = this.focus_node_vid + "_" + this.selected_resolution;
+		if (this.last_blc_menu_token === blc_menu_token) {
+			quiet = true;
 		}
-		this.last_blc_menu_to_vid = this.focus_node_vid;
-		this.last_blc_menu_to_res = this.selected_resolution;
+		this.last_blc_menu_token = blc_menu_token;
 
 		let v_node_data = this.getVNodeDataById(this.focus_node_vid);
 		let v_node = v_node_data ? v_node_data.v_node : undefined;
@@ -3241,41 +3223,53 @@ class PiepCMS {
 			return;
 		}
 
-		// will take everything, even hidden items
-		this.container._children("[data-blc_prop]").forEach((input) => {
-			const prop_str = input.dataset.blc_prop;
-			let prop_val;
-			let v_node_ref = v_node; // we cant change it below dude
+		/**
+		 *
+		 * @param {PiepNode[]} inputs
+		 */
+		const setPropsOfInputs = (inputs) => {
+			inputs.forEach((input) => {
+				const prop_str = input.dataset.blc_prop;
+				let prop_val;
+				let v_node_ref = v_node; // we cant change it below dude
 
-			if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_inline_tag)) {
-				const parent = v_node_data.parent_v_nodes[0];
-				if (parent && this.isTextContainer(parent)) {
-					v_node_ref = parent;
+				if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_inline_tag)) {
+					const parent = v_node_data.parent_v_nodes[0];
+					if (parent && this.isTextContainer(parent)) {
+						v_node_ref = parent;
+					}
 				}
-			}
 
-			if (prop_str.startsWith("styles.")) {
-				const res_styles = v_node_ref.styles[this.selected_resolution];
-				if (res_styles) {
-					prop_val = res_styles[prop_str.substring("styles.".length)];
+				if (prop_str.startsWith("styles.")) {
+					const res_styles = v_node_ref.styles[this.selected_resolution];
+					if (res_styles) {
+						prop_val = res_styles[prop_str.substring("styles.".length)];
+					}
+				} else if (prop_str.startsWith("attrs.")) {
+					if (!v_node_ref.attrs) {
+						v_node_ref.attrs = {};
+					}
+					prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
+				} else if (prop_str.startsWith("settings.")) {
+					if (!v_node_ref.settings) {
+						v_node_ref.settings = {};
+					}
+					prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
+				} else {
+					prop_val = v_node_ref[prop_str];
 				}
-			} else if (prop_str.startsWith("attrs.")) {
-				if (!v_node_ref.attrs) {
-					v_node_ref.attrs = {};
-				}
-				prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
-			} else if (prop_str.startsWith("settings.")) {
-				if (!v_node_ref.settings) {
-					v_node_ref.settings = {};
-				}
-				prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
-			} else {
-				prop_val = v_node_ref[prop_str];
-			}
 
-			let val = def(prop_val, "");
-			input._set_value(val, { quiet: true });
-		});
+				let val = def(prop_val, "");
+				input._set_value(val, { quiet: true });
+			});
+		};
+
+		if (this.last_blc_menu_name !== "float" || !quiet) {
+			setPropsOfInputs(this.float_menu._children("[data-blc_prop]"));
+		}
+		if (this.last_blc_menu_name !== "side" || !quiet) {
+			setPropsOfInputs(this.side_menu._children("[data-blc_prop]"));
+		}
 	}
 
 	/**
@@ -3299,7 +3293,7 @@ class PiepCMS {
 
 			piep_cms_manager.blc_props
 				.map((prop, index) => {
-					const blc_prop_wrapper = this.blc_menu._child(".prop_" + prop.name);
+					const blc_prop_wrapper = this.side_menu._child(".prop_" + prop.name);
 
 					let visible = true;
 					let priority = -index * 0.001;

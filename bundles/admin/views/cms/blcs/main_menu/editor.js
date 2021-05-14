@@ -21,8 +21,9 @@
 			// 	modules_html.main_menu_html,
 			// 	html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukajka itd.</div>`
 			// );
-			let body = html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukiwarka</div>`;
-			return body;
+			//let body = html`<div class="empty_module" data-container_queries="">LOGO, Menu, Wyszukiwarka</div>`;
+			// we need a request anyway? do whenever html is undefined
+			return undefined;
 		},
 	});
 }

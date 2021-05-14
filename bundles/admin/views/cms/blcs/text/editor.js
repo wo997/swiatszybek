@@ -226,10 +226,10 @@
 		],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="tag" data-tooltip="Typ tekstu">
-				<p-option data-value="h1"> <div style="font-size:var(--size_h1);">H1</div> </p-option>
-				<p-option data-value="h2"> <div style="font-size:var(--size_h2);">H2</div> </p-option>
-				<p-option data-value="h3"> <div style="font-size:var(--size_h3);">H3</div> </p-option>
-				<p-option data-value="p"> <div style="font-size:1em;">P</div> </p-option>
+				<p-option data-value="h1" data-tooltip="Nagłówek H1"> <div style="font-size:var(--size_h1);">H1</div> </p-option>
+				<p-option data-value="h2" data-tooltip="Nagłówek H2"> <div style="font-size:var(--size_h2);">H2</div> </p-option>
+				<p-option data-value="h3" data-tooltip="Nagłówek H3"> <div style="font-size:var(--size_h3);">H3</div> </p-option>
+				<p-option data-value="p" data-tooltip="Paragraf"> <div style="font-size:1em;">P</div> </p-option>
 			</p-dropdown>
 		`,
 	});
