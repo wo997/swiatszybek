@@ -583,81 +583,77 @@ class PiepCMS {
 
 	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
+			let prop_str = input.dataset.blc_prop;
+
 			const setProp = () => {
 				const focus_node = this.getFocusNode();
 				//console.log(input, focus_node);
 				if (focus_node) {
 					const v_node_data = this.getVNodeDataById(+focus_node.dataset.vid);
 					let v_node = v_node_data.v_node;
-					const anchor_offset = this.last_selection ? this.last_selection.anchorOffset : 0;
-					const focus_offset = this.last_selection ? this.last_selection.focusOffset : 0;
+					const anchor_offset = this.last_selection ? this.last_selection.anchorOffset : undefined;
+					const focus_offset = this.last_selection ? this.last_selection.focusOffset : undefined;
 
-					if (this.last_selection && this.last_selection.focusNode !== this.last_selection.anchorNode) {
-						alert("Currently only single line editing is available");
-						return;
-					}
+					// if ( && this.last_selection.focusNode !== this.last_selection.anchorNode) {
+					// 	alert("Currently only single line editing is available");
+					// 	return;
+					// }
 
-					const begin_offset = Math.min(anchor_offset, focus_offset);
-					const end_offset = Math.max(anchor_offset, focus_offset);
+					let set_prop_of_v_node_data = v_node_data;
+					let set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 
-					let prop_str = input.dataset.blc_prop;
+					if (this.last_selection) {
+						const begin_offset = Math.min(anchor_offset, focus_offset);
+						const end_offset = Math.max(anchor_offset, focus_offset);
 
-					/** @type {number} */
-					let select_vid;
-					/** @type {vDomNode} */
-					let set_prop_of_v_node;
-					/** @type {vDomNodeData} */
-					let set_prop_of_v_node_data;
+						if (v_node.text.length !== end_offset - begin_offset) {
+							// the selection is not everything in the v_node
+							const bef_vid = this.getNewBlcId();
+							const mid_vid = bef_vid + 1;
+							const aft_vid = bef_vid + 2;
 
-					// the selection is something but not everything in the v_node
-					if (anchor_offset !== focus_offset && v_node.text.length !== end_offset - begin_offset) {
-						// since the first one is the greatest so the other two will be
-						const bef_vid = this.getNewBlcId();
-						const mid_vid = bef_vid + 1;
-						const aft_vid = mid_vid + 1;
+							/** @type {vDomNode[]} */
+							const put_v_nodes = [];
 
-						/** @type {vDomNode} */
-						const bef_child = {
-							id: bef_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(0, begin_offset),
-							attrs: {},
-							classes: [],
-						};
-						/** @type {vDomNode} */
-						const mid_child = {
-							id: mid_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(begin_offset, end_offset),
-							attrs: {},
-							classes: [],
-						};
-						/** @type {vDomNode} */
-						const aft_child = {
-							id: aft_vid,
-							tag: "span",
-							styles: {},
-							text: v_node.text.substring(end_offset),
-							attrs: {},
-							classes: [],
-						};
+							if (begin_offset > 0) {
+								put_v_nodes.push({
+									id: bef_vid,
+									tag: "span",
+									styles: {},
+									text: v_node.text.substring(0, begin_offset),
+									attrs: {},
+									classes: [],
+								});
+							}
 
-						const put_v_nodes = [];
-						if (begin_offset > 0) {
-							put_v_nodes.push(bef_child);
-						}
-						put_v_nodes.push(mid_child);
-						if (end_offset < v_node.text.length) {
-							put_v_nodes.push(aft_child);
-						}
+							put_v_nodes.push({
+								id: mid_vid,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(begin_offset, end_offset),
+								attrs: {},
+								classes: [],
+							});
 
-						if (this.isTextContainer(v_node)) {
-							// split inside
-							v_node.children = put_v_nodes;
-							v_node.text = undefined;
-						} else {
+							if (end_offset < v_node.text.length) {
+								put_v_nodes.push({
+									id: aft_vid,
+									tag: "span",
+									styles: {},
+									text: v_node.text.substring(end_offset),
+									attrs: {},
+									classes: [],
+								});
+							}
+
+							// NEVER
+							// if (this.isTextContainer(v_node)) {
+							// 	// split inside
+
+							// 	v_node.children = put_v_nodes;
+							// 	v_node.text = undefined;
+							// } else
+
 							// do the split and spread options
 							put_v_nodes.forEach((put_v_node) => {
 								deepAssign(put_v_node.styles, v_node.styles);
@@ -665,17 +661,12 @@ class PiepCMS {
 								deepAssign(put_v_node.settings, v_node.settings);
 							});
 							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+
+							const min_v_node_data = this.getVNodeDataById(mid_vid);
+
+							set_prop_of_v_node_data = min_v_node_data;
+							set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 						}
-
-						const min_v_node_data = this.getVNodeDataById(+mid_vid);
-
-						set_prop_of_v_node_data = min_v_node_data;
-						set_prop_of_v_node = set_prop_of_v_node_data.v_node;
-						select_vid = mid_vid;
-					} else {
-						set_prop_of_v_node_data = v_node_data;
-						set_prop_of_v_node = set_prop_of_v_node_data.v_node;
-						select_vid = v_node.id;
 					}
 
 					/**
@@ -782,7 +773,10 @@ class PiepCMS {
 					this.update({ all: true });
 
 					this.last_selection = undefined;
-					this.setFocusNode(select_vid);
+					this.setFocusNode(set_prop_of_v_node.id);
+
+					// TODO: always at the end? hell no! select all
+					setSelectionByIndex(this.getNode(set_prop_of_v_node.id), set_prop_of_v_node.text.length);
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
 					this.displayNodeLayout();
@@ -1659,7 +1653,8 @@ class PiepCMS {
 
 				const text = v_node.text;
 				if (text !== undefined) {
-					node._set_content(text === "" ? "<br>" : text);
+					node._set_content(text);
+					//node._set_content(text === "" ? "<br>" : text);
 					classes.push("textable");
 					//console.log("textable", node, text);
 				}
