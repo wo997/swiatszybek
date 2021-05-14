@@ -15,6 +15,7 @@
 			attrs: {},
 			module_name: "view_product_comments",
 		},
+		rerender_on: [],
 		render: (v_node) => {
 			// let body = def(
 			// 	modules_html.view_product_comments,

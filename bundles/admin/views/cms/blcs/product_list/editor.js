@@ -14,6 +14,7 @@
 			attrs: {},
 			module_name: "product_list",
 		},
+		rerender_on: ["settings.sort"],
 		render: (v_node) => {
 			//v_node.settings.product_categories
 			//v_node.settings.sort

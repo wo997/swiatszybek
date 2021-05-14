@@ -15,6 +15,7 @@
 			attrs: {},
 			module_name: "main_menu",
 		},
+		rerender_on: [],
 		render: (v_node) => {
 			// let body = def(
 			// 	modules_html.main_menu_html,

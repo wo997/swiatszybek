@@ -15,6 +15,8 @@ class PiepCMS {
 
 		this.max_vid_inside = 0;
 
+		this.last_map_vid_render_props = {}; // vid => settings
+
 		this.initNodes();
 		this.initConsts();
 
@@ -965,6 +967,10 @@ class PiepCMS {
 	}
 
 	initKeyDown() {
+		document.addEventListener("keyup", (ev) => {
+			this.update({ selection: true }); // optimisation
+		});
+
 		document.addEventListener("keydown", (ev) => {
 			const sel = window.getSelection();
 			const focus_node = this.getFocusNode();
@@ -1107,19 +1113,47 @@ class PiepCMS {
 			if (ev.key === "Enter" && v_node_data) {
 				ev.preventDefault();
 
+				// maybe insert a new paragraph?
 				const text = v_node.text;
-				if (typeof text === "string") {
-					const insert_v_node = cloneObject(v_node);
-					insert_v_node.text = text.substr(focus_offset);
-					const insert_node_vid = this.getNewBlcId();
-					insert_v_node.id = insert_node_vid;
-					v_node.text = text.substr(0, focus_offset);
-					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
-					this.update({ all: true });
+				if (text !== undefined) {
+					//v_node.text = text.substr(0, focus_offset);
 
-					const insert_node_ref = this.getNode(insert_node_vid);
-					if (insert_node_ref) {
-						setSelectionByIndex(insert_node_ref, 0);
+					if (!this.isTextContainer(v_node_data.v_node)) {
+						const parent_v_node = v_node_data.parent_v_nodes[0];
+						if (this.isTextContainer(parent_v_node)) {
+							const new_vid = this.getNewBlcId();
+
+							const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
+
+							/** @type {vDomNode} */
+							const empty_paragraph = {
+								tag: "p",
+								id: new_vid,
+								styles: {},
+								classes: [],
+								attrs: {},
+								children: [
+									// TODO: the span might be added by a "fixer", we need one in every textable u know ;)
+									{
+										id: new_vid + 2,
+										tag: "span",
+										text: "",
+										attrs: {},
+										classes: [],
+										styles: {},
+									},
+								],
+							};
+
+							parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, empty_paragraph); // place it after
+
+							this.update({ all: true });
+
+							const insert_node_ref = this.getNode(new_vid);
+							if (insert_node_ref) {
+								setSelectionByIndex(insert_node_ref, 0);
+							}
+						}
 					}
 				}
 
@@ -1591,7 +1625,15 @@ class PiepCMS {
 		this.styles._set_content(styles_css);
 	}
 
-	recreateDom() {
+	/**
+	 *
+	 * @param {{
+	 * vids?: number[]
+	 * }} options
+	 *
+	 * options just for optimisation but seems unnecessary
+	 */
+	recreateDom(options = {}) {
 		this.recalculateFromSettings();
 
 		/** @type {number[]} */
@@ -1613,10 +1655,12 @@ class PiepCMS {
 				if (node && node.tagName.toLocaleLowerCase() !== v_node.tag.toLocaleLowerCase()) {
 					node.remove();
 					node = undefined;
+					//console.log("removed node");
 				}
 
 				if (!node) {
 					node = $(document.createElement(v_node.tag));
+					//console.log("new", node);
 				}
 
 				const before_node = put_in_node._direct_children()[index];
@@ -1657,7 +1701,6 @@ class PiepCMS {
 				if (v_node.disabled) {
 					classes.push("editor_disabled");
 				}
-
 				classes.forEach((c) => {
 					node.classList.add(c);
 				});
@@ -1672,7 +1715,9 @@ class PiepCMS {
 				Object.assign(attrs, v_node.attrs);
 
 				Object.entries(attrs).map(([key, val]) => {
-					node.setAttribute(key, val);
+					if (node.getAttribute(key) !== val) {
+						node.setAttribute(key, val);
+					}
 				});
 				const attr_names = Object.keys(attrs);
 				for (const attr of node.attributes) {
@@ -1684,12 +1729,18 @@ class PiepCMS {
 					}
 				}
 
-				// TODO: render the module and set the contents immediately
-				// if (v_node.rendered_body) {
-				// 	node._set_content(v_node.rendered_body);
-				// } else
-				if (blc_schema && blc_schema.render) {
-					node._set_content(blc_schema.render(v_node));
+				if (blc_schema && blc_schema.render && blc_schema.rerender_on) {
+					let render_props = {};
+					blc_schema.rerender_on.forEach((prop_str) => {
+						if (prop_str.startsWith("settings.")) {
+							render_props[prop_str] = v_node.settings[prop_str.substring("settings.".length)];
+						}
+					});
+
+					if (!isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
+						this.last_map_vid_render_props[vid] = render_props;
+						node._set_content(blc_schema.render(v_node));
+					}
 				}
 
 				const children = v_node.children;
@@ -1892,7 +1943,8 @@ class PiepCMS {
 
 		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
 
-		this.update({ dom: true, selection: true });
+		//this.update({ dom: true });
+		this.recreateDom(); // optimisation
 
 		const node_ref = this.getNode(vid);
 		if (node_ref) {

@@ -108,6 +108,7 @@
  * nonclickable?: boolean
  * priority?: number
  * render?(v_node?: vDomNode): string
+ * rerender_on?: string[]
  * }} BlockSchema
  */
 

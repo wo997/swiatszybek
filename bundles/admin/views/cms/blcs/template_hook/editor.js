@@ -50,6 +50,7 @@
 			attrs: {},
 			module_name: "template_hook",
 		},
+		rerender_on: ["settings.template_hook_name", "settings.template_hook_id"],
 		render: (v_node) => {
 			let body = html`
 				<div class="empty_module">
