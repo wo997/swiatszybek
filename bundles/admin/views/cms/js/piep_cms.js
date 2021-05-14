@@ -41,12 +41,48 @@ class PiepCMS {
 		this.initPaste();
 		this.initClick();
 		this.initKeyDown();
+		this.initTextSelection();
 
 		this.initHistory();
 
 		this.mainLoop();
 
 		piep_cms_manager.editorReady();
+	}
+
+	initTextSelection() {
+		/** @type {PiepCMSTextSelection} */
+		this.text_selection = undefined;
+
+		this.content.addEventListener("click", () => {
+			this.text_selection = undefined;
+
+			const sel = window.getSelection();
+
+			if (sel.anchorNode && sel.focusNode) {
+				// span is always a wrapper duude, text inside is selected so go up
+				const sel_anchor_node = $(sel.anchorNode)._parent("*");
+				const sel_focus_node = $(sel.focusNode)._parent("*");
+
+				if (sel_anchor_node && sel_focus_node) {
+					const sel_anchor_offset = sel.anchorOffset;
+					const sel_focus_offset = sel.focusOffset;
+
+					if (sel_anchor_node === sel_focus_node) {
+						if (sel_focus_node.classList.contains("blc")) {
+							this.text_selection = {
+								anchor_vid: +sel_anchor_node.dataset.vid,
+								anchor_offset: sel_anchor_offset,
+								focus_vid: +sel_focus_node.dataset.vid,
+								focus_offset: sel_focus_offset,
+							};
+						}
+					}
+				}
+			}
+
+			console.log(this.text_selection);
+		});
 	}
 
 	initNodes() {

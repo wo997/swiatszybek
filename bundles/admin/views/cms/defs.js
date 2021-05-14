@@ -21,6 +21,15 @@
  */
 
 /**
+ * @typedef {{
+ * anchor_vid: number
+ * anchor_offset: number
+ * focus_vid
+ * focus_offset: number
+ * }} PiepCMSTextSelection
+ */
+
+/**
  * @typedef {"all" | "appearance" | "layout" | "advanced"} cmsEditableGroupEnum
  */
 
