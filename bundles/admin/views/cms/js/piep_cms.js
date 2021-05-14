@@ -1096,37 +1096,38 @@ class PiepCMS {
 					if (!this.isTextContainer(v_node_data.v_node)) {
 						const parent_v_node = v_node_data.parent_v_nodes[0];
 						if (this.isTextContainer(parent_v_node)) {
-							const new_vid = this.getNewBlcId();
-
 							const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
+							const move_v_nodes_on_right_down = v_node_data.v_nodes.splice(
+								v_node_data.index,
+								v_node_data.v_nodes.length - v_node_data.index
+							);
 
-							/** @type {vDomNode} */
-							const empty_paragraph = {
+							// place it below the text container
+							const new_vid = this.getNewBlcId();
+							parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
 								tag: "p",
 								id: new_vid,
 								styles: {},
 								classes: [],
 								attrs: {},
-								children: [
-									// TODO: the span might be added by a "fixer", we need one in every textable u know ;)
-									{
-										id: new_vid + 2,
-										tag: "span",
-										text: "",
-										attrs: {},
-										classes: [],
-										styles: {},
-									},
-								],
-							};
+								children: move_v_nodes_on_right_down,
+							});
 
-							parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, empty_paragraph); // place it after
+							/** @type {vDomNode} */
+							const new_old_v_node = cloneObject(v_node);
+							new_old_v_node.id = new_vid + 1;
+
+							// text split
+							new_old_v_node.text = text.substr(0, focus_offset);
+							v_node.text = text.substr(focus_offset);
+
+							v_node_data.v_nodes.push(new_old_v_node);
 
 							this.update({ all: true });
 
-							const insert_node_ref = this.getNode(new_vid);
-							if (insert_node_ref) {
-								setSelectionByIndex(insert_node_ref, 0);
+							const insert_first_node = this.getNode(v_node.id);
+							if (insert_first_node) {
+								setSelectionByIndex(insert_first_node, 0);
 							}
 						}
 					}
@@ -1446,10 +1447,10 @@ class PiepCMS {
 							const disabled = parent_v_node.disabled ? "disabled" : "";
 							const tooltip = disabled ? `data-tooltip="Część szablonu"` : "";
 
-							return html` <i class="fas fa-chevron-right"></i>
-								<span class="v_node_label ${disabled}" data-vid="${parent_v_node.id}" ${tooltip}
-									>${this.getVNodeDisplayName(parent_v_node)}</span
-								>`;
+							return html`<span class="v_node_label ${disabled}" data-vid="${parent_v_node.id}" ${tooltip}>
+								<i class="fas fa-chevron-right"></i>
+								<span>${this.getVNodeDisplayName(parent_v_node)}</span>
+							</span>`;
 						})
 						.join("") +
 					html` <button class="btn small transparent unselect_everything" style="margin:-4px 0" data-tooltip="Odznacz element">
