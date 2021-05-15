@@ -22,12 +22,23 @@
 
 /**
  * @typedef {{
+ * vid: number
+ * start: number
+ * end: number
+ * }} PiepTextPartialRange
+ */
+
+/**
+ * @typedef {{
  * anchor_vid: number
  * anchor_offset: number
  * focus_vid: number
  * focus_offset: number
  * middle_vids: number[]
+ * partial_ranges: PiepTextPartialRange[]
  * direction: -1 | 1 | 0
+ * length: number
+ * single_node: boolean
  * }} PiepTextSelection
  */
 

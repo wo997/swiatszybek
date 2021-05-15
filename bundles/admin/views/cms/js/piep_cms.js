@@ -67,49 +67,105 @@ class PiepCMS {
 
 			if (sel.anchorNode && sel.focusNode) {
 				// span is always a wrapper duude, text inside is selected so go up
-				const sel_anchor_node = $(sel.anchorNode)._parent("*");
-				const sel_focus_node = $(sel.focusNode)._parent("*");
+				const sel_anchor_node = $(sel.anchorNode)._parent(".blc");
+				const sel_focus_node = $(sel.focusNode)._parent(".blc");
 				// TOOD: tell direction based on Y COORDINATE diff? seems easy to do
 
 				if (sel_anchor_node && sel_focus_node) {
-					const sel_anchor_offset = sel.anchorOffset;
-					const sel_focus_offset = sel.focusOffset;
+					const anchor_vid = +sel_anchor_node.dataset.vid;
+					const focus_vid = +sel_focus_node.dataset.vid;
+
+					const anchor_offset = sel.anchorOffset;
+					const focus_offset = sel.focusOffset;
 
 					const is_anchor_textable = sel_anchor_node.classList.contains("textable");
 					const is_focus_textable = sel_focus_node.classList.contains("textable");
 
 					if (is_anchor_textable && is_focus_textable) {
 						const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
-						indices_anchor.push(sel_anchor_offset);
+						indices_anchor.push(anchor_offset);
 						const indices_focus = sel_focus_node.dataset.indices.split(",").map((e) => +e);
-						indices_focus.push(sel_focus_offset);
+						indices_focus.push(focus_offset);
+
+						const single_node = anchor_vid === focus_vid;
 
 						const direction = compareIndices(indices_anchor, indices_focus);
 
+						let length = 0; // TODO: calc? not needed now but still
+
+						/** @type {PiepTextPartialRange[]} */
+						const partial_ranges = [];
+						/** @type {number[]} */
 						const middle_vids = [];
-						let next = sel_anchor_node;
-						while (true) {
-							next = this.getDeepSibling(next, ".textable", direction);
-							if (next === sel_focus_node) {
-								break;
-							}
-							if (next) {
-								middle_vids.push(+next.dataset.vid);
+
+						{
+							const start_offset = direction === 1 ? anchor_offset : focus_offset;
+							const end_offset = direction === 1 ? focus_offset : anchor_offset;
+							const start_vid = direction === 1 ? anchor_vid : focus_vid;
+							const end_vid = direction === 1 ? focus_vid : anchor_vid;
+							const sel_start_node = direction === 1 ? sel_anchor_node : sel_focus_node;
+							const sel_end_node = direction === 1 ? sel_focus_node : sel_anchor_node;
+
+							if (single_node) {
+								if (start_offset === 0 && end_offset === sel_start_node.textContent.length) {
+									middle_vids.push(start_vid);
+								} else {
+									partial_ranges.push({
+										vid: start_vid,
+										start: start_offset,
+										end: end_offset,
+									});
+								}
 							} else {
-								break;
+								if (start_offset === 0) {
+									middle_vids.push(start_vid);
+								} else {
+									partial_ranges.push({
+										vid: start_vid,
+										start: start_offset,
+										end: sel_start_node.textContent.length,
+									});
+								}
+								if (end_offset === sel_end_node.textContent.length) {
+									middle_vids.push(end_vid);
+								} else {
+									partial_ranges.push({
+										vid: end_vid,
+										start: 0,
+										end: end_offset,
+									});
+								}
+							}
+						}
+
+						if (!single_node) {
+							let next = sel_anchor_node;
+							while (true) {
+								next = this.getDeepSibling(next, ".textable", direction);
+								if (next === sel_focus_node) {
+									break;
+								}
+								if (next) {
+									middle_vids.push(+next.dataset.vid);
+								} else {
+									break;
+								}
 							}
 						}
 
 						this.text_selection = {
 							anchor_vid: +sel_anchor_node.dataset.vid,
-							anchor_offset: sel_anchor_offset,
+							anchor_offset: anchor_offset,
 							focus_vid: +sel_focus_node.dataset.vid,
-							focus_offset: sel_focus_offset,
+							focus_offset: focus_offset,
 							middle_vids,
+							partial_ranges,
 							direction,
+							length,
+							single_node,
 						};
 
-						//console.log(this.text_selection);
+						//console.log(middle_vids, partial_ranges[0], partial_ranges[1]);
 					}
 				}
 			}
