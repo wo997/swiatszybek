@@ -27,7 +27,7 @@ class PiepCMS {
 
 		this.initInspector();
 		this.initSelectionBreadcrumbs();
-		this.initBlcMenu();
+		this.initSideMenu();
 		this.initFloatMenu();
 		this.initSelectResolution();
 		this.initRightMenu();
@@ -97,7 +97,7 @@ class PiepCMS {
 						/** @type {PiepTextPartialRange[]} */
 						const partial_ranges = [];
 						/** @type {number[]} */
-						const middle_vids = [];
+						const middle_vids = []; // TODO: include full text blocks? separate array
 
 						{
 							const start_offset = direction === 1 ? anchor_offset : focus_offset;
@@ -166,6 +166,8 @@ class PiepCMS {
 							single_node,
 						};
 
+						this.displayTextSelection();
+
 						//console.log(middle_vids, partial_ranges[0], partial_ranges[1]);
 					}
 				}
@@ -189,12 +191,67 @@ class PiepCMS {
 		});
 	}
 
+	displayTextSelection() {
+		let selection_html = "";
+
+		this.text_selection.middle_vids.forEach((vid) => {
+			const node = this.getNode(vid);
+			const text_len = node.textContent.length;
+			/** @type {DOMRect[]} */
+			let rects = [];
+			/** @type {Position} */
+			let base_direction_vector;
+			/** @type {number[]} */
+			let wrap_positions = [];
+			for (let i = 0; i < text_len; i++) {
+				const text_range = getRangeByIndex(node, i, i + 1);
+				const text_range_rect = text_range.getBoundingClientRect();
+				rects.push(text_range_rect);
+
+				if (i > 0) {
+					/** @type {Position} */
+					const direction_vector = { x: rects[i].x - rects[i - 1].x, y: rects[i].y - rects[i - 1].y };
+
+					if (i === 1) {
+						base_direction_vector = direction_vector;
+					} else {
+						if (direction_vector.x * base_direction_vector.x + direction_vector.y + base_direction_vector.y < 0) {
+							// other direction, wrap? lol
+							wrap_positions.push(i);
+						}
+					}
+				}
+			}
+
+			const join_points = [0, ...wrap_positions, text_len];
+
+			for (let i = 0; i < join_points.length - 1; i++) {
+				let p1 = join_points[i];
+				let p2 = join_points[i + 1] - 1;
+
+				const r1 = rects[p1];
+				const r2 = rects[p2];
+
+				selection_html += html`<div
+					class="text_selection"
+					style="
+                        left:${r1.left}px;
+                        top:${r1.top + this.content_scroll.scrollTop}px;
+                        width:${r2.left + r2.width - r1.left}px;
+                        height:${r2.top + r2.height - r1.top}px;"
+				></div>`;
+			}
+		});
+
+		this.display_text_selection._set_content(selection_html);
+	}
+
 	initNodes() {
 		this.content = this.container._child(".piep_editor_content");
 		this.content_wrapper = this.container._child(".piep_editor_content_wrapper");
 		this.content_scroll = this.container._child(".piep_editor_content_scroll");
 
-		const node = (class_name) => {
+		const container_node = (class_name) => {
 			this.container.insertAdjacentHTML("beforeend", html`<div class="${class_name}"></div>`);
 			return this.container._child(`.${class_name}`);
 		};
@@ -204,29 +261,30 @@ class PiepCMS {
 			return this.container._child(`.${class_name}`);
 		};
 
-		this.cursor = node("piep_editor_cursor");
-		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
-		//this.grabbed_block_wrapper.classList.add("focus_rect");
+		this.grabbed_block_wrapper = container_node("piep_editor_grabbed_block_wrapper");
+		this.add_block_menu = container_node("piep_editor_add_block_menu");
+		//this.grabbed_block_wrapper.classList.add("focus_rect"); // TODO: just use or remove
+		this.side_menu = this.container._child(".piep_editor_side_menu");
 
-		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
-		this.float_focuses = node("piep_editor_float_focuses");
-		this.parent_float_focus = node("piep_editor_parent_float_focus"); // TODO: display more than just a parent? f.e. for columns
-		this.float_menu = node("piep_editor_float_menu");
-		this.add_block_menu = node("piep_editor_add_block_menu");
-		this.layout_controls = node("piep_editor_layout_controls");
+		{
+			this.alternative_scroll_panel = container_node("piep_editor_alternative_scroll_panel");
+			const scroll_node = (class_name) => {
+				this.alternative_scroll_panel.insertAdjacentHTML("beforeend", html`<div class="${class_name}"></div>`);
+				return this.alternative_scroll_panel._child(`.${class_name}`);
+			};
+
+			this.cursor = scroll_node("piep_editor_cursor");
+			this.float_focuses = scroll_node("piep_editor_float_focuses");
+			this.float_menu = scroll_node("piep_editor_float_menu");
+			this.layout_controls = scroll_node("piep_editor_layout_controls");
+
+			this.display_text_selection = scroll_node("piep_editor_display_text_selection");
+			this.insert_blcs = scroll_node("piep_editor_insert_blcs");
+			this.float_multi_insert_bckg = scroll_node("piep_editor_float_multi_insert_bckg");
+			this.float_multi_insert_bckg.classList.add("hidden");
+		}
 
 		this.styles = styles("piep_editor_styles");
-
-		this.side_menu = this.container._child(".piep_editor_blc_menu");
-
-		this.float_multi_insert_bckg = node("piep_editor_float_multi_insert_bckg");
-		this.float_multi_insert_bckg.classList.add("hidden");
-
-		this.alternative_scroll_panel.append(this.float_multi_insert_bckg);
-		this.alternative_scroll_panel.append(this.layout_controls);
-		this.alternative_scroll_panel.append(this.float_menu);
-		this.alternative_scroll_panel.append(this.float_focuses);
-		this.alternative_scroll_panel.append(this.cursor);
 	}
 
 	initHistory() {
@@ -1269,7 +1327,7 @@ class PiepCMS {
 		});
 	}
 
-	initBlcMenu() {
+	initSideMenu() {
 		this.side_menu._set_content(html`
 			<div class="filter_blc_menu radio_group hide_checks">
 				<div class="checkbox_area">
@@ -2145,16 +2203,6 @@ class PiepCMS {
 				this.update({ dom: true, styles: true });
 				this.float_focuses._empty();
 			}
-
-			this.parent_float_focus.classList.toggle("hidden", !pretty_focus_parent);
-			if (pretty_focus_parent) {
-				const focus_parent_node_rect = pretty_focus_parent.getBoundingClientRect();
-
-				this.parent_float_focus._set_absolute_pos(focus_parent_node_rect.left - 1, focus_parent_node_rect.top - 1);
-
-				this.parent_float_focus.style.width = focus_parent_node_rect.width + 2 + "px";
-				this.parent_float_focus.style.height = focus_parent_node_rect.height + 2 + "px";
-			}
 		}
 
 		this.has_insert_pos = !!(this.current_insert_blc && !this.current_insert_blc.classList.contains("multiple"));
@@ -2755,7 +2803,7 @@ class PiepCMS {
 		const getInsertBlc = () => {
 			const insert_blc = document.createElement("DIV");
 			insert_blc.classList.add("insert_blc");
-			this.alternative_scroll_panel.append(insert_blc);
+			this.insert_blcs.append(insert_blc);
 
 			// @ts-ignore
 			return $(insert_blc);
@@ -3062,7 +3110,7 @@ class PiepCMS {
 			}
 		});
 
-		this.alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
+		this.insert_blcs._children(".insert_blc").forEach((insert_blc) => {
 			insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
 			insert_blc.dataset.wght = "1";
 		});
@@ -3081,7 +3129,7 @@ class PiepCMS {
 
 			/** @type {insertBlc[]} */
 			// @ts-ignore
-			const insert_blcs = this.alternative_scroll_panel._children(".insert_blc");
+			const insert_blcs = this.insert_blcs._children(".insert_blc");
 			const insert_blcs_len = insert_blcs.length;
 			for (let a = 0; a < insert_blcs_len; a++) {
 				if (shrunk_ids.includes(a)) {
@@ -3177,13 +3225,10 @@ class PiepCMS {
 		this.container.classList.remove("has_insert_pos");
 		this.float_focuses._empty();
 		this.float_multi_insert_bckg.classList.add("hidden");
-		this.parent_float_focus.classList.add("hidden");
 
 		this.content.style.minHeight = "";
 
-		this.alternative_scroll_panel._children(".insert_blc").forEach((insert_blc) => {
-			insert_blc.remove();
-		});
+		this.insert_blcs._empty();
 
 		const grabbed_block_vid = this.grabbed_block_vid;
 		delete this.grabbed_block_vid;

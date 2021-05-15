@@ -106,7 +106,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn primary save ml1"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
-    <div class="piep_editor_blc_menu"></div>
+    <div class="piep_editor_side_menu"></div>
 
     <div class="piep_editor_center_column">
         <div class="piep_editor_selection_breadcrumbs"></div>
