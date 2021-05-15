@@ -950,7 +950,15 @@ class PiepCMS {
 			/** @type {"float" | "side" | ""} */
 			this.last_blc_menu_name = target._parent(".blc_menu_scroll_panel") ? "side" : "float";
 
-			this.just_clicked = true;
+			const click_blc = target._parent(".blc");
+			if (click_blc) {
+				const click_blc_vid = +click_blc.dataset.vid;
+				const click_v_node = this.getVNodeById(click_blc_vid);
+				// not needed click_v_node.text === undefined
+				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
+					this.setFocusNode(click_blc_vid);
+				}
+			}
 		});
 
 		document.addEventListener("click", (ev) => {
@@ -3312,7 +3320,7 @@ class PiepCMS {
 			this.filterMenu({ scroll_to_top: true });
 
 			if (vid === undefined) {
-				//this.removeEditorSelection();
+				this.cursor.classList.add("hidden");
 			}
 		}
 
