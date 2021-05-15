@@ -43,7 +43,7 @@
 		icon: html`<i class="fas fa-anchor"></i>`,
 		label: html`Sekcja szablonu`,
 		v_node: {
-			tag: "section",
+			tag: "div",
 			id: -1,
 			styles: {},
 			classes: [],

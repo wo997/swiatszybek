@@ -72,7 +72,7 @@ class PiepCMS {
 
 		this.cursor = node("piep_editor_cursor");
 		this.grabbed_block_wrapper = node("piep_editor_grabbed_block_wrapper");
-		this.grabbed_block_wrapper.classList.add("focus_rect");
+		//this.grabbed_block_wrapper.classList.add("focus_rect");
 
 		this.alternative_scroll_panel = node("piep_editor_alternative_scroll_panel");
 		this.float_focuses = node("piep_editor_float_focuses");
@@ -1619,6 +1619,10 @@ class PiepCMS {
 				const vid = v_node.id;
 				included_vids.push(vid);
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+				const children = v_node.children;
+				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
+				const attrs = { "data-vid": v_node.id + "" };
+				const text = v_node.text;
 
 				let node = this.getNode(vid);
 
@@ -1647,10 +1651,8 @@ class PiepCMS {
 					}
 				}
 
-				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
 				let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
 
-				const text = v_node.text;
 				if (text !== undefined) {
 					node._set_content(text);
 					//node._set_content(text === "" ? "<br>" : text);
@@ -1682,7 +1684,6 @@ class PiepCMS {
 				});
 
 				// attrs
-				const attrs = { "data-vid": v_node.id + "" };
 				Object.assign(attrs, v_node.attrs);
 
 				Object.entries(attrs).map(([key, val]) => {
@@ -1719,7 +1720,19 @@ class PiepCMS {
 					}
 				}
 
-				const children = v_node.children;
+				if (classes.includes("vertical_container")) {
+					const vertical_container_placeholder = node._child(".vertical_container_placeholder");
+					if (children.length === 0) {
+						if (!vertical_container_placeholder) {
+							node.insertAdjacentHTML("beforeend", html` <div class="vertical_container_placeholder">Pusty kontener</div> `);
+						}
+					} else {
+						if (vertical_container_placeholder) {
+							vertical_container_placeholder.remove();
+						}
+					}
+				}
+
 				if (children) {
 					// clean up text nodes if any existed
 					node.childNodes.forEach((c) => {

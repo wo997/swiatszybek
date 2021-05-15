@@ -1,0 +1,24 @@
+/* css[piep_cms_dependencies] */
+
+.vertical_container_placeholder {
+	& {
+		margin: 5px;
+		background: #eee;
+		min-height: 50px;
+		padding: 10px;
+		border-radius: 5px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23333333C4' stroke-width='4' stroke-dasharray='2%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	}
+	&:not(:hover) {
+		opacity: 0.7;
+	}
+}
+
+.piep_editor_grabbed_block_wrapper {
+	& > .blc.columns_container {
+		width: 500px !important;
+	}
+}
