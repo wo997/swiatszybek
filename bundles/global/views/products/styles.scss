@@ -236,8 +236,8 @@
 	.no_results {
 		& {
 			text-align: center;
-			width: 100%;
 			margin: 40px 0;
+			grid-column: 1 / -1;
 		}
 		& > span {
 			font-size: max(1em, min(3vw, 1.3em));
