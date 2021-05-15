@@ -167,6 +167,7 @@ function renderGeneralProductsList($params)
 
     $product_ids = def($params, "product_ids", null);
     $general_product_ids = def($params, "general_product_ids", null);
+    $layout = def($params, "layout", "slider");
 
     $where = "p.active AND gp.active"; // repeats but leave it like this ;)
 
@@ -214,6 +215,11 @@ function renderGeneralProductsList($params)
     $products_data = paginateData($pagination_params);
 
     ob_start();
+
+    $product_block_class = "product_block";
+    if ($layout === "slider") {
+        $product_block_class .= " wo997_slide";
+    }
 
     // it should be a template to use anywhere tho, well, not rly? sliders will be different by a lot anyway
     foreach ($products_data["rows"] as $product) {
@@ -290,9 +296,8 @@ function renderGeneralProductsList($params)
         } else {
             $images_json = "[]";
         }
-
 ?>
-        <div class="product_block">
+        <div class="<?= $product_block_class ?>">
             <a href="<?= $link ?>">
                 <div class="product_img_wrapper" data-images="<?= htmlspecialchars($images_json) ?>">
                     <img data-src="<?= $img_url ?>" class="product_img wo997_img" alt="">

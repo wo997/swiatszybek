@@ -36,10 +36,11 @@ body,
 input,
 select,
 textarea {
-	line-height: 1.55;
+	line-height: var(--default_line_height);
 }
 :root {
-	--field-height: 35px;
+	//--field-height: 35px;
+	--default_line_height: 1.55;
 }
 *,
 *::after,
