@@ -55,6 +55,7 @@ class PiepCMS {
 		this.text_selection = undefined;
 
 		document.addEventListener("selectionchange", () => {
+			// TODO: trigger more often? or by a function? that has some params like a selected node idk
 			if (this.grabbed_v_node || this.editing_layout) {
 				return;
 			}
@@ -732,11 +733,6 @@ class PiepCMS {
 					const anchor_offset = this.text_selection.anchor_offset;
 					const focus_offset = this.text_selection.focus_offset;
 
-					// if ( && this.last_selection.focusNode !== this.last_selection.anchorNode) {
-					// 	alert("Currently only single line editing is available");
-					// 	return;
-					// }
-
 					let set_prop_of_v_node_data = v_node_data;
 					let set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 
@@ -908,11 +904,9 @@ class PiepCMS {
 
 					this.update({ all: true });
 
-					//this.last_selection = undefined;
 					this.setFocusNode(set_prop_of_v_node.id);
 
-					// TODO: always at the end? hell no! select all
-					setSelectionByIndex(this.getNode(set_prop_of_v_node.id), set_prop_of_v_node.text.length);
+					// TODO: select every full vid
 
 					this.pushHistory(`set_blc_prop_${prop_str}`);
 					this.displayNodeLayout();
@@ -1082,6 +1076,7 @@ class PiepCMS {
 		});
 
 		document.addEventListener("keydown", (ev) => {
+			return; // TODO: use text_selection
 			const sel = document.getSelection();
 			const focus_node = this.getFocusNode();
 			const focus_offset = sel.focusOffset;
@@ -1126,7 +1121,7 @@ class PiepCMS {
 
 								const prev_node_ref = this.getNode(prev_vid);
 								if (prev_node_ref) {
-									setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
+									//setSelectionByIndex(prev_node_ref, prev_v_node_text_before.length);
 								}
 							}
 						}
@@ -1136,7 +1131,7 @@ class PiepCMS {
 
 						const node = this.getNode(vid);
 						if (node) {
-							setSelectionByIndex(node, focus_offset - 1);
+							//setSelectionByIndex(node, focus_offset - 1);
 						}
 					}
 				}
@@ -1165,7 +1160,7 @@ class PiepCMS {
 
 								const node_ref = this.getNode(node_vid);
 								if (node_ref) {
-									setSelectionByIndex(node_ref, v_node_text_before.length);
+									//setSelectionByIndex(node_ref, v_node_text_before.length);
 								}
 							}
 						}
@@ -1175,7 +1170,7 @@ class PiepCMS {
 
 						const node_ref = this.getNode(vid);
 						if (node_ref) {
-							setSelectionByIndex(node_ref, focus_offset);
+							//setSelectionByIndex(node_ref, focus_offset);
 						}
 					}
 				}
@@ -1189,10 +1184,10 @@ class PiepCMS {
 				if (focus_offset <= 0) {
 					const prev_textable = this.getDeepSibling(focus_node, ".textable", -1);
 					if (prev_textable) {
-						setSelectionByIndex(prev_textable, prev_textable.textContent.length);
+						//setSelectionByIndex(prev_textable, prev_textable.textContent.length);
 					}
 				} else {
-					setSelectionByIndex(focus_node, focus_offset - 1);
+					//setSelectionByIndex(focus_node, focus_offset - 1);
 				}
 			}
 			if (ev.key === "ArrowRight") {
@@ -1201,12 +1196,12 @@ class PiepCMS {
 				if (focus_offset >= v_node.text.length) {
 					const next_textable = this.getDeepSibling(focus_node, ".textable", 1);
 					if (next_textable) {
-						setSelectionByIndex(next_textable, 0);
+						//setSelectionByIndex(next_textable, 0);
 					} else {
-						setSelectionByIndex(focus_node, focus_offset);
+						//setSelectionByIndex(focus_node, focus_offset);
 					}
 				} else {
-					setSelectionByIndex(focus_node, focus_offset + 1);
+					//setSelectionByIndex(focus_node, focus_offset + 1);
 				}
 			}
 
@@ -1263,7 +1258,7 @@ class PiepCMS {
 
 							const insert_first_node = this.getNode(v_node.id);
 							if (insert_first_node) {
-								setSelectionByIndex(insert_first_node, 0);
+								//setSelectionByIndex(insert_first_node, 0);
 							}
 						}
 					}
@@ -2019,6 +2014,7 @@ class PiepCMS {
 	}
 
 	removeTextInSelection() {
+		return; // TODO: use text_selection
 		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
@@ -2053,7 +2049,7 @@ class PiepCMS {
 
 		const node_ref = this.getNode(vid);
 		if (node_ref) {
-			setSelectionByIndex(node_ref, begin_offset);
+			//setSelectionByIndex(node_ref, begin_offset);
 		}
 
 		return chars_removed;
@@ -2067,6 +2063,7 @@ class PiepCMS {
 	insertText(insert_text) {
 		this.removeTextInSelection();
 
+		return; // TODO: use text_selection
 		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const focus_node = this.getFocusNode();
@@ -2089,7 +2086,7 @@ class PiepCMS {
 
 		const node_ref = this.getNode(vid);
 		if (node_ref) {
-			setSelectionByIndex(node_ref, focus_offset + insert_text.length);
+			//setSelectionByIndex(node_ref, focus_offset + insert_text.length);
 		}
 	}
 
@@ -3220,86 +3217,6 @@ class PiepCMS {
 		return focus_node;
 	}
 
-	// removeEditorSelection() {
-	// 	this.last_selection = undefined;
-	// 	removeSelection();
-	// }
-
-	// updateCursorPosition() {
-	// 	if (mouse.target) {
-	// 		if (this.just_clicked) {
-	// 			const click_blc = mouse.target._parent(".blc");
-	// 			if (click_blc) {
-	// 				const click_blc_vid = +click_blc.dataset.vid;
-	// 				const click_v_node = this.getVNodeById(click_blc_vid);
-	// 				if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
-	// 					this.setFocusNode(click_blc_vid);
-	// 					//this.removeEditorSelection();
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	const sel = document.getSelection();
-	// 	if (this.content_active || this.float_menu_active) {
-	// 		/** @type {Selection} */
-	// 		//this.last_selection = cloneObject(sel);
-	// 	}
-	// 	const csel = sel; // this.last_selection;
-
-	// 	const range = document.createRange();
-	// 	const focus_node = csel ? $(csel.focusNode) : undefined;
-
-	// 	const focus_textable = focus_node ? focus_node._parent(`.textable:not(.editor_disabled)`) : undefined;
-
-	// 	if (focus_textable) {
-	// 		let cursor_top, cursor_left, cursor_width, cursor_height;
-
-	// 		if (focus_textable.innerText === "\n") {
-	// 			const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
-	// 			const sel_width = node_cursor_rect.width;
-	// 			const sel_height = node_cursor_rect.height;
-	// 			cursor_width = Math.max(sel_width, 2);
-	// 			cursor_height = Math.max(sel_height, 20);
-
-	// 			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
-	// 			cursor_top = node_cursor_rect.top + sel_height * 0.5;
-	// 		} else {
-	// 			range.setStart(csel.focusNode, csel.focusOffset);
-	// 			range.setEnd(csel.focusNode, csel.focusOffset);
-
-	// 			const selection_cursor_rect = range.getBoundingClientRect();
-	// 			const sel_width = selection_cursor_rect.width;
-	// 			const sel_height = selection_cursor_rect.height;
-	// 			cursor_width = Math.max(sel_width, 2);
-	// 			cursor_height = Math.max(sel_height, 20);
-
-	// 			cursor_left = selection_cursor_rect.left + sel_width * 0.5;
-	// 			cursor_top = selection_cursor_rect.top + sel_height * 0.5;
-	// 		}
-
-	// 		this.cursor.style.left = cursor_left - cursor_width * 0.5 + "px";
-	// 		this.cursor.style.top = cursor_top - cursor_height * 0.5 + "px";
-	// 		this.cursor.style.width = cursor_width + "px";
-	// 		this.cursor.style.height = cursor_height + "px";
-
-	// 		if (this.content_active) {
-	// 			this.setCursorActive(true);
-	// 		}
-	// 	} else {
-	// 		this.setCursorActive(false);
-	// 	}
-
-	// 	if (focus_textable) {
-	// 		const vid = +focus_textable.dataset.vid;
-	// 		if (vid !== this.focus_node_vid) {
-	// 			this.setFocusNode(vid);
-	// 		}
-	// 	}
-
-	// 	this.just_clicked = false;
-	// }
-
 	/**
 	 *
 	 * @param {number} vid
@@ -3314,7 +3231,9 @@ class PiepCMS {
 		this.focus_node_vid = vid;
 
 		const focus_node = this.getNode(vid);
-		let tblc;
+
+		/** @type {PiepNode} */
+		let tree_blc;
 
 		if (just_changed_focus_vid) {
 			this.filterMenu({ scroll_to_top: true });
@@ -3329,9 +3248,9 @@ class PiepCMS {
 				this.setBlcMenuFromFocusedNode();
 			}
 
-			tblc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
-			if (tblc && just_changed_focus_vid) {
-				scrollIntoView(tblc);
+			tree_blc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
+			if (tree_blc && just_changed_focus_vid) {
+				scrollIntoView(tree_blc);
 			}
 		}
 
@@ -3339,7 +3258,7 @@ class PiepCMS {
 			e.classList.toggle("piep_focus", e === focus_node);
 		});
 		this.inspector_tree._children(".v_node_label").forEach((e) => {
-			e.classList.toggle("selected", e === tblc);
+			e.classList.toggle("selected", e === tree_blc);
 		});
 
 		this.displaySelectionBreadcrumbs();
@@ -3646,6 +3565,8 @@ class PiepCMS {
 	 * @param {number} dy
 	 */
 	selectElementContentsFromAnywhere(dx, dy) {
+		return; // TODO: use text_selection
+
 		const sel = document.getSelection();
 		/** @type {DOMRect} */
 		let sel_rect;
@@ -3749,7 +3670,7 @@ class PiepCMS {
 				}
 			}
 
-			setSelectionByIndex(closest_textable, closest_pos);
+			// setSelectionByIndex(closest_textable, closest_pos);
 		}
 	}
 
