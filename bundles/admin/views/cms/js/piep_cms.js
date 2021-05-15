@@ -1046,7 +1046,7 @@ class PiepCMS {
 				ev.preventDefault();
 
 				if (focus_offset <= 0) {
-					const prev_textable = this.getTextable(focus_node, -1);
+					const prev_textable = this.getDeepSibling(focus_node, ".textable", -1);
 					if (prev_textable) {
 						setSelectionByIndex(prev_textable, prev_textable.textContent.length);
 					}
@@ -1058,7 +1058,7 @@ class PiepCMS {
 				ev.preventDefault();
 
 				if (focus_offset >= v_node.text.length) {
-					const next_textable = this.getTextable(focus_node, 1);
+					const next_textable = this.getDeepSibling(focus_node, ".textable", 1);
 					if (next_textable) {
 						setSelectionByIndex(next_textable, 0);
 					} else {
@@ -1828,26 +1828,35 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {PiepNode} node
+	 * @param {string} selector
 	 * @param {-1 | 1} direction
 	 * @returns {PiepNode | undefined}
 	 */
-	getTextable(node, direction) {
-		let next_node;
+	getDeepSibling(node, selector, direction) {
+		/** @type {PiepNode} */
 		let parent = node;
 		while (parent) {
 			const next = direction === 1 ? parent._next() : parent._prev();
 			if (next) {
-				next_node = next;
-				break;
+				if (!this.content.contains(next)) {
+					return undefined;
+				}
+
+				if (next.matches(selector)) {
+					return next;
+				}
+				const next_children = next._children(selector);
+				if (next_children.length > 0) {
+					if (direction === 1) {
+						return next_children[0];
+					} else {
+						return getLast(next_children);
+					}
+				}
+
+				parent = next;
 			} else {
 				parent = parent._parent();
-			}
-		}
-		if (next_node && this.content.contains(next_node)) {
-			if (direction === 1) {
-				return def(next_node._children("*")[0], next_node);
-			} else {
-				return def(getLast(next_node._children("*")), next_node);
 			}
 		}
 		return undefined;
