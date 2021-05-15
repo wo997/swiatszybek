@@ -75,3 +75,24 @@ function getRectCenter(rect) {
 		y: rect.top + rect.height * 0.5,
 	};
 }
+
+/**
+ *
+ * @param {number[]} indices_a
+ * @param {number[]} indices_b
+ * @return {-1 | 1 | 0}
+ */
+function compareIndices(indices_a, indices_b) {
+	const len_a = indices_a.length;
+	const len_b = indices_b.length;
+	const search_len = Math.min(len_a, len_b);
+	for (let i = 0; i < search_len; i++) {
+		const compare = Math.sign(indices_b[i] - indices_a[i]);
+		if (compare !== 0) {
+			// @ts-ignore
+			return compare;
+		}
+	}
+	// @ts-ignore
+	return Math.sign(len_b - len_a);
+}

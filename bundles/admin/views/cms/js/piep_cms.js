@@ -967,7 +967,7 @@ class PiepCMS {
 			if (ev.key === "Backspace" && v_node_data) {
 				ev.preventDefault();
 
-				let chars_removed = this.removeTextSelection();
+				let chars_removed = this.removeTextInSelection();
 
 				if (chars_removed === 0) {
 					const text = v_node.text;
@@ -1006,7 +1006,7 @@ class PiepCMS {
 			if (ev.key === "Delete" && v_node_data) {
 				ev.preventDefault();
 
-				let chars_removed = this.removeTextSelection();
+				let chars_removed = this.removeTextInSelection();
 
 				if (chars_removed === 0) {
 					const text = v_node.text;
@@ -1613,16 +1613,17 @@ class PiepCMS {
 		 *
 		 * @param {PiepNode} put_in_node
 		 * @param {vDomNode[]} v_nodes
+		 * @param {number[]} indices
 		 */
-		const traverseVDom = (put_in_node, v_nodes, level = 0) => {
+		const traverseVDom = (put_in_node, v_nodes, indices = []) => {
 			v_nodes.forEach((v_node, index) => {
 				const vid = v_node.id;
 				included_vids.push(vid);
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
 				const children = v_node.children;
 				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
-				const attrs = { "data-vid": v_node.id + "" };
 				const text = v_node.text;
+				const curr_indices = [...indices, index];
 
 				let node = this.getNode(vid);
 
@@ -1684,6 +1685,7 @@ class PiepCMS {
 				});
 
 				// attrs
+				const attrs = { "data-vid": v_node.id + "", "data-index": index + "", "data-indices": curr_indices.join(",") };
 				Object.assign(attrs, v_node.attrs);
 
 				Object.entries(attrs).map(([key, val]) => {
@@ -1741,7 +1743,7 @@ class PiepCMS {
 						}
 					});
 
-					traverseVDom(node, children, level + 1);
+					traverseVDom(node, children, curr_indices);
 				}
 			});
 		};
@@ -1875,7 +1877,7 @@ class PiepCMS {
 		return undefined;
 	}
 
-	removeTextSelection() {
+	removeTextInSelection() {
 		const sel = window.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
@@ -1922,7 +1924,7 @@ class PiepCMS {
 	 * @returns
 	 */
 	insertText(insert_text) {
-		this.removeTextSelection();
+		this.removeTextInSelection();
 
 		const sel = window.getSelection();
 		const focus_offset = sel.focusOffset;
@@ -2251,6 +2253,8 @@ class PiepCMS {
 				const sel_anchor_offset = sel.anchorOffset;
 				const sel_focus_offset = sel.focusOffset;
 
+				// TODO: HEY if we hover over a non textable blc make it the focus
+
 				if (sel_anchor_node === sel_focus_node) {
 					if (sel_focus_node.classList.contains("blc")) {
 						this.text_selection = {
@@ -2285,6 +2289,11 @@ class PiepCMS {
 			}
 
 			this.cursor.classList.toggle("hidden", !this.text_selection);
+
+			// compare indices
+			const indices_a = [1, 2, 6];
+			const indices_b = [1, 2, 7];
+			console.log(compareIndices(indices_a, indices_b));
 		}
 	}
 
