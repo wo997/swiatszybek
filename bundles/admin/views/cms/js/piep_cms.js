@@ -190,7 +190,8 @@ class PiepCMS {
 
 						this.displayTextSelection();
 
-						console.log(total_length);
+						// lovely
+						//console.log(total_length);
 						//console.log(middle_vids, partial_ranges[0], partial_ranges[1]);
 					}
 				}
