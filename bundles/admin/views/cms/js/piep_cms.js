@@ -54,6 +54,10 @@ class PiepCMS {
 		/** @type {PiepTextSelection} */
 		this.text_selection = undefined;
 
+		this.container.addEventListener("dragstart", (ev) => {
+			ev.preventDefault();
+		});
+
 		document.addEventListener("selectionchange", () => {
 			// TODO: trigger more often? or by a function? that has some params like a selected node idk
 			if (this.grabbed_v_node || this.editing_layout) {
@@ -92,7 +96,7 @@ class PiepCMS {
 
 						const direction = compareIndices(indices_anchor, indices_focus);
 
-						let length = 0; // TODO: calc? not needed now but still
+						let total_length = 0; // TODO: calc? not needed now but still
 
 						/** @type {PiepTextPartialRange[]} */
 						const partial_ranges = [];
@@ -106,35 +110,52 @@ class PiepCMS {
 							const end_vid = direction === 1 ? focus_vid : anchor_vid;
 							const sel_start_node = direction === 1 ? sel_anchor_node : sel_focus_node;
 							const sel_end_node = direction === 1 ? sel_focus_node : sel_anchor_node;
+							const start_len = sel_start_node.textContent.length;
+							const end_len = sel_end_node.textContent.length;
 
 							if (single_node) {
-								if (start_offset === 0 && end_offset === sel_start_node.textContent.length) {
+								if (start_offset === 0 && end_offset === start_len) {
 									middle_vids.push(start_vid);
+									total_length += start_len;
 								} else {
-									partial_ranges.push({
-										vid: start_vid,
-										start: start_offset,
-										end: end_offset,
-									});
+									const length = end_offset - start_offset;
+									if (length > 0) {
+										total_length += length;
+										partial_ranges.push({
+											vid: start_vid,
+											start: start_offset,
+											end: end_offset,
+										});
+									}
 								}
 							} else {
 								if (start_offset === 0) {
 									middle_vids.push(start_vid);
 								} else {
-									partial_ranges.push({
-										vid: start_vid,
-										start: start_offset,
-										end: sel_start_node.textContent.length,
-									});
+									const length = start_len - start_offset;
+									if (length > 0) {
+										total_length += length;
+										partial_ranges.push({
+											vid: start_vid,
+											start: start_offset,
+											end: start_len,
+										});
+									}
 								}
-								if (end_offset === sel_end_node.textContent.length) {
+
+								if (end_offset === end_len) {
 									middle_vids.push(end_vid);
+									total_length += end_len;
 								} else {
-									partial_ranges.push({
-										vid: end_vid,
-										start: 0,
-										end: end_offset,
-									});
+									const length = end_offset;
+									if (length > 0) {
+										total_length += length;
+										partial_ranges.push({
+											vid: end_vid,
+											start: 0,
+											end: end_offset,
+										});
+									}
 								}
 							}
 						}
@@ -148,6 +169,7 @@ class PiepCMS {
 								}
 								if (next) {
 									middle_vids.push(+next.dataset.vid);
+									total_length += next.textContent.length;
 								} else {
 									break;
 								}
@@ -162,12 +184,13 @@ class PiepCMS {
 							middle_vids,
 							partial_ranges,
 							direction,
-							length,
+							length: total_length,
 							single_node,
 						};
 
 						this.displayTextSelection();
 
+						console.log(total_length);
 						//console.log(middle_vids, partial_ranges[0], partial_ranges[1]);
 					}
 				}
@@ -194,36 +217,51 @@ class PiepCMS {
 	displayTextSelection() {
 		let selection_html = "";
 
-		this.text_selection.middle_vids.forEach((vid) => {
+		/**
+		 *
+		 * @param {number} vid
+		 * @param {number} start
+		 * @param {number} end
+		 */
+		const diplsaySelection = (vid, start = undefined, end = undefined) => {
 			const node = this.getNode(vid);
-			const text_len = node.textContent.length;
 			/** @type {DOMRect[]} */
 			let rects = [];
 			/** @type {Position} */
 			let base_direction_vector;
 			/** @type {number[]} */
 			let wrap_positions = [];
-			for (let i = 0; i < text_len; i++) {
+
+			if (start === undefined) {
+				start = 0;
+			}
+			if (end === undefined) {
+				end = node.textContent.length;
+			}
+
+			let cnt = -1;
+			for (let i = start; i < end; i++) {
+				cnt++;
 				const text_range = getRangeByIndex(node, i, i + 1);
 				const text_range_rect = text_range.getBoundingClientRect();
 				rects.push(text_range_rect);
 
-				if (i > 0) {
+				if (cnt > 0) {
 					/** @type {Position} */
-					const direction_vector = { x: rects[i].x - rects[i - 1].x, y: rects[i].y - rects[i - 1].y };
+					const direction_vector = { x: rects[cnt].x - rects[cnt - 1].x, y: rects[cnt].y - rects[cnt - 1].y };
 
-					if (i === 1) {
+					if (cnt === 1) {
 						base_direction_vector = direction_vector;
 					} else {
 						if (direction_vector.x * base_direction_vector.x + direction_vector.y + base_direction_vector.y < 0) {
 							// other direction, wrap? lol
-							wrap_positions.push(i);
+							wrap_positions.push(cnt);
 						}
 					}
 				}
 			}
 
-			const join_points = [0, ...wrap_positions, text_len];
+			const join_points = [0, ...wrap_positions, end - start];
 
 			for (let i = 0; i < join_points.length - 1; i++) {
 				let p1 = join_points[i];
@@ -241,6 +279,14 @@ class PiepCMS {
                         height:${r2.top + r2.height - r1.top}px;"
 				></div>`;
 			}
+		};
+
+		this.text_selection.middle_vids.forEach((vid) => {
+			diplsaySelection(vid);
+		});
+		this.text_selection.partial_ranges.forEach((partial_range) => {
+			console.log(partial_range);
+			diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
 		});
 
 		this.display_text_selection._set_content(selection_html);
