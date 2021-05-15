@@ -92,6 +92,7 @@ class PiepCMS {
 		this.alternative_scroll_panel.append(this.layout_controls);
 		this.alternative_scroll_panel.append(this.float_menu);
 		this.alternative_scroll_panel.append(this.float_focuses);
+		this.alternative_scroll_panel.append(this.cursor);
 	}
 
 	initHistory() {
@@ -592,13 +593,11 @@ class PiepCMS {
 			let prop_str = input.dataset.blc_prop;
 
 			const setProp = () => {
-				const focus_node = this.getFocusNode();
-				//console.log(input, focus_node);
-				if (focus_node) {
-					const v_node_data = this.getVNodeDataById(+focus_node.dataset.vid);
+				if (this.text_selection) {
+					const v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
 					let v_node = v_node_data.v_node;
-					const anchor_offset = this.last_selection ? this.last_selection.anchorOffset : undefined;
-					const focus_offset = this.last_selection ? this.last_selection.focusOffset : undefined;
+					const anchor_offset = this.text_selection.anchor_offset;
+					const focus_offset = this.text_selection.focus_offset;
 
 					// if ( && this.last_selection.focusNode !== this.last_selection.anchorNode) {
 					// 	alert("Currently only single line editing is available");
@@ -608,71 +607,69 @@ class PiepCMS {
 					let set_prop_of_v_node_data = v_node_data;
 					let set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 
-					if (this.last_selection) {
-						const begin_offset = Math.min(anchor_offset, focus_offset);
-						const end_offset = Math.max(anchor_offset, focus_offset);
+					const begin_offset = Math.min(anchor_offset, focus_offset);
+					const end_offset = Math.max(anchor_offset, focus_offset);
 
-						if (v_node.text.length !== end_offset - begin_offset) {
-							// the selection is not everything in the v_node
-							const bef_vid = this.getNewBlcId();
-							const mid_vid = bef_vid + 1;
-							const aft_vid = bef_vid + 2;
+					if (v_node.text.length !== end_offset - begin_offset) {
+						// the selection is not everything in the v_node
+						const bef_vid = this.getNewBlcId();
+						const mid_vid = bef_vid + 1;
+						const aft_vid = bef_vid + 2;
 
-							/** @type {vDomNode[]} */
-							const put_v_nodes = [];
+						/** @type {vDomNode[]} */
+						const put_v_nodes = [];
 
-							if (begin_offset > 0) {
-								put_v_nodes.push({
-									id: bef_vid,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(0, begin_offset),
-									attrs: {},
-									classes: [],
-								});
-							}
-
+						if (begin_offset > 0) {
 							put_v_nodes.push({
-								id: mid_vid,
+								id: bef_vid,
 								tag: "span",
 								styles: {},
-								text: v_node.text.substring(begin_offset, end_offset),
+								text: v_node.text.substring(0, begin_offset),
 								attrs: {},
 								classes: [],
 							});
-
-							if (end_offset < v_node.text.length) {
-								put_v_nodes.push({
-									id: aft_vid,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(end_offset),
-									attrs: {},
-									classes: [],
-								});
-							}
-
-							// NEVER
-							// if (this.isTextContainer(v_node)) {
-							// 	// split inside
-
-							// 	v_node.children = put_v_nodes;
-							// 	v_node.text = undefined;
-							// } else
-
-							// do the split and spread options
-							put_v_nodes.forEach((put_v_node) => {
-								deepAssign(put_v_node.styles, v_node.styles);
-								deepAssign(put_v_node.attrs, v_node.attrs);
-								deepAssign(put_v_node.settings, v_node.settings);
-							});
-							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
-
-							const min_v_node_data = this.getVNodeDataById(mid_vid);
-
-							set_prop_of_v_node_data = min_v_node_data;
-							set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 						}
+
+						put_v_nodes.push({
+							id: mid_vid,
+							tag: "span",
+							styles: {},
+							text: v_node.text.substring(begin_offset, end_offset),
+							attrs: {},
+							classes: [],
+						});
+
+						if (end_offset < v_node.text.length) {
+							put_v_nodes.push({
+								id: aft_vid,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(end_offset),
+								attrs: {},
+								classes: [],
+							});
+						}
+
+						// NEVER
+						// if (this.isTextContainer(v_node)) {
+						// 	// split inside
+
+						// 	v_node.children = put_v_nodes;
+						// 	v_node.text = undefined;
+						// } else
+
+						// do the split and spread options
+						put_v_nodes.forEach((put_v_node) => {
+							deepAssign(put_v_node.styles, v_node.styles);
+							deepAssign(put_v_node.attrs, v_node.attrs);
+							deepAssign(put_v_node.settings, v_node.settings);
+						});
+						v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+
+						const min_v_node_data = this.getVNodeDataById(mid_vid);
+
+						set_prop_of_v_node_data = min_v_node_data;
+						set_prop_of_v_node = set_prop_of_v_node_data.v_node;
 					}
 
 					/**
@@ -952,7 +949,7 @@ class PiepCMS {
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
 
 			//v_node.text === undefined
-			if (!this.cursor_active) {
+			if (!this.content_active) {
 				return;
 			}
 
@@ -2257,7 +2254,10 @@ class PiepCMS {
 				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
 				const focus_range_rect = focus_range.getBoundingClientRect();
 
-				this.cursor._set_absolute_pos(focus_range_rect.left - focus_range_rect.width * 0.5, focus_range_rect.top);
+				this.cursor._set_absolute_pos(
+					focus_range_rect.left - focus_range_rect.width * 0.5,
+					focus_range_rect.top + this.content_scroll.scrollTop
+				);
 				this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
 				this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
 			}
