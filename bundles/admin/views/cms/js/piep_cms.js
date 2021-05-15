@@ -51,8 +51,85 @@ class PiepCMS {
 	}
 
 	initTextSelection() {
-		/** @type {PiepCMSTextSelection} */
+		/** @type {PiepTextSelection} */
 		this.text_selection = undefined;
+
+		document.addEventListener("selectionchange", () => {
+			if (this.grabbed_v_node || this.editing_layout) {
+				return;
+			}
+
+			// do it in the main loop when mouse is down dude XD
+			// when up mark as anchor, so siiiimple
+			this.text_selection = undefined;
+
+			const sel = document.getSelection();
+
+			if (sel.anchorNode && sel.focusNode) {
+				// span is always a wrapper duude, text inside is selected so go up
+				const sel_anchor_node = $(sel.anchorNode)._parent("*");
+				const sel_focus_node = $(sel.focusNode)._parent("*");
+				// TOOD: tell direction based on Y COORDINATE diff? seems easy to do
+
+				if (sel_anchor_node && sel_focus_node) {
+					const sel_anchor_offset = sel.anchorOffset;
+					const sel_focus_offset = sel.focusOffset;
+
+					const is_anchor_textable = sel_anchor_node.classList.contains("textable");
+					const is_focus_textable = sel_focus_node.classList.contains("textable");
+
+					if (is_anchor_textable && is_focus_textable) {
+						const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
+						indices_anchor.push(sel_anchor_offset);
+						const indices_focus = sel_focus_node.dataset.indices.split(",").map((e) => +e);
+						indices_focus.push(sel_focus_offset);
+
+						const direction = compareIndices(indices_anchor, indices_focus);
+
+						const middle_vids = [];
+						let next = sel_anchor_node;
+						while (true) {
+							next = this.getDeepSibling(next, ".textable", direction);
+							if (next === sel_focus_node) {
+								break;
+							}
+							if (next) {
+								middle_vids.push(+next.dataset.vid);
+							} else {
+								break;
+							}
+						}
+
+						this.text_selection = {
+							anchor_vid: +sel_anchor_node.dataset.vid,
+							anchor_offset: sel_anchor_offset,
+							focus_vid: +sel_focus_node.dataset.vid,
+							focus_offset: sel_focus_offset,
+							middle_vids,
+							direction,
+						};
+
+						//console.log(this.text_selection);
+					}
+				}
+			}
+
+			if (this.text_selection) {
+				const anchor_node = this.getNode(this.text_selection.anchor_vid);
+				const focus_node = this.getNode(this.text_selection.focus_vid);
+				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+				const focus_range_rect = focus_range.getBoundingClientRect();
+
+				this.cursor._set_absolute_pos(
+					focus_range_rect.left - focus_range_rect.width * 0.5,
+					focus_range_rect.top + this.content_scroll.scrollTop
+				);
+				this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
+				this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
+			}
+
+			this.cursor.classList.toggle("hidden", !this.text_selection);
+		});
 	}
 
 	initNodes() {
@@ -941,7 +1018,7 @@ class PiepCMS {
 		});
 
 		document.addEventListener("keydown", (ev) => {
-			const sel = window.getSelection();
+			const sel = document.getSelection();
 			const focus_node = this.getFocusNode();
 			const focus_offset = sel.focusOffset;
 			const vid = focus_node ? +focus_node.dataset.vid : undefined;
@@ -1844,7 +1921,7 @@ class PiepCMS {
 	 *
 	 * @param {PiepNode} node
 	 * @param {string} selector
-	 * @param {-1 | 1} direction
+	 * @param {-1 | 1 | 0} direction
 	 * @returns {PiepNode | undefined}
 	 */
 	getDeepSibling(node, selector, direction) {
@@ -1878,7 +1955,7 @@ class PiepCMS {
 	}
 
 	removeTextInSelection() {
-		const sel = window.getSelection();
+		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
 		const focus_node = this.getFocusNode();
@@ -1926,7 +2003,7 @@ class PiepCMS {
 	insertText(insert_text) {
 		this.removeTextInSelection();
 
-		const sel = window.getSelection();
+		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const focus_node = this.getFocusNode();
 		const vid = focus_node ? +focus_node.dataset.vid : 0;
@@ -2232,75 +2309,9 @@ class PiepCMS {
 		this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
 	}
 
-	handleSelection() {
-		if (this.grabbed_v_node || this.editing_layout) {
-			return;
-		}
-
-		// do it in the main loop when mouse is down dude XD
-		// when up mark as anchor, so siiiimple
-		this.text_selection = undefined;
-
-		const sel = window.getSelection();
-
-		if (sel.anchorNode && sel.focusNode) {
-			// span is always a wrapper duude, text inside is selected so go up
-			const sel_anchor_node = $(sel.anchorNode)._parent("*");
-			const sel_focus_node = $(sel.focusNode)._parent("*");
-			// TOOD: tell direction based on Y COORDINATE diff? seems easy to do
-
-			if (sel_anchor_node && sel_focus_node) {
-				const sel_anchor_offset = sel.anchorOffset;
-				const sel_focus_offset = sel.focusOffset;
-
-				// TODO: HEY if we hover over a non textable blc make it the focus
-
-				if (sel_anchor_node === sel_focus_node) {
-					if (sel_focus_node.classList.contains("blc")) {
-						this.text_selection = {
-							anchor_vid: +sel_anchor_node.dataset.vid,
-							anchor_offset: sel_anchor_offset,
-							focus_vid: +sel_focus_node.dataset.vid,
-							focus_offset: sel_focus_offset,
-							middle_vids: [],
-						};
-					}
-				}
-			}
-		}
-
-		if (!isEquivalent(this.text_selection, this.last_text_selection)) {
-			/** @type {PiepCMSTextSelection} */
-			this.last_text_selection = cloneObject(this.text_selection);
-			//console.log(this.text_selection);
-
-			if (this.text_selection) {
-				const anchor_node = this.getNode(this.text_selection.anchor_vid);
-				const focus_node = this.getNode(this.text_selection.focus_vid);
-				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-				const focus_range_rect = focus_range.getBoundingClientRect();
-
-				this.cursor._set_absolute_pos(
-					focus_range_rect.left - focus_range_rect.width * 0.5,
-					focus_range_rect.top + this.content_scroll.scrollTop
-				);
-				this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
-				this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
-			}
-
-			this.cursor.classList.toggle("hidden", !this.text_selection);
-
-			// compare indices
-			const indices_a = [1, 2, 6];
-			const indices_b = [1, 2, 7];
-			console.log(compareIndices(indices_a, indices_b));
-		}
-	}
-
 	mainLoop() {
 		updateMouseTarget();
 
-		this.handleSelection();
 		this.grabbedBlock();
 		this.showFocus();
 		this.inspectorMove();
@@ -3165,7 +3176,7 @@ class PiepCMS {
 	// 		}
 	// 	}
 
-	// 	const sel = window.getSelection();
+	// 	const sel = document.getSelection();
 	// 	if (this.content_active || this.float_menu_active) {
 	// 		/** @type {Selection} */
 	// 		//this.last_selection = cloneObject(sel);
@@ -3571,7 +3582,7 @@ class PiepCMS {
 	 * @param {number} dy
 	 */
 	selectElementContentsFromAnywhere(dx, dy) {
-		const sel = window.getSelection();
+		const sel = document.getSelection();
 		/** @type {DOMRect} */
 		let sel_rect;
 

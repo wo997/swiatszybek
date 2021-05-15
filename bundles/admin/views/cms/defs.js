@@ -27,7 +27,8 @@
  * focus_vid: number
  * focus_offset: number
  * middle_vids: number[]
- * }} PiepCMSTextSelection
+ * direction: -1 | 1 | 0
+ * }} PiepTextSelection
  */
 
 /**
