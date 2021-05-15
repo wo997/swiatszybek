@@ -53,36 +53,6 @@ class PiepCMS {
 	initTextSelection() {
 		/** @type {PiepCMSTextSelection} */
 		this.text_selection = undefined;
-
-		this.content.addEventListener("click", () => {
-			this.text_selection = undefined;
-
-			const sel = window.getSelection();
-
-			if (sel.anchorNode && sel.focusNode) {
-				// span is always a wrapper duude, text inside is selected so go up
-				const sel_anchor_node = $(sel.anchorNode)._parent("*");
-				const sel_focus_node = $(sel.focusNode)._parent("*");
-
-				if (sel_anchor_node && sel_focus_node) {
-					const sel_anchor_offset = sel.anchorOffset;
-					const sel_focus_offset = sel.focusOffset;
-
-					if (sel_anchor_node === sel_focus_node) {
-						if (sel_focus_node.classList.contains("blc")) {
-							this.text_selection = {
-								anchor_vid: +sel_anchor_node.dataset.vid,
-								anchor_offset: sel_anchor_offset,
-								focus_vid: +sel_focus_node.dataset.vid,
-								focus_offset: sel_focus_offset,
-							};
-						}
-					}
-				}
-			}
-
-			console.log(this.text_selection);
-		});
 	}
 
 	initNodes() {
@@ -199,7 +169,7 @@ class PiepCMS {
 		this.update({ all: true });
 		this.renderHistory();
 		this.setFocusNode(undefined);
-		this.removeEditorSelection();
+		//this.removeEditorSelection();
 	}
 
 	renderHistory() {
@@ -808,7 +778,7 @@ class PiepCMS {
 
 					this.update({ all: true });
 
-					this.last_selection = undefined;
+					//this.last_selection = undefined;
 					this.setFocusNode(set_prop_of_v_node.id);
 
 					// TODO: always at the end? hell no! select all
@@ -930,10 +900,7 @@ class PiepCMS {
 				this.releaseBlock();
 			}
 
-			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
-			this.setContentActive(content_active);
-
-			this.updateCursorPosition();
+			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
 
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
@@ -1347,7 +1314,6 @@ class PiepCMS {
 				const vid = +v_node_label.dataset.vid;
 
 				setSelectionRange(undefined);
-				this.setCursorActive(false);
 				this.setFocusNode(vid);
 
 				scrollIntoView(this.getNode(vid));
@@ -1966,7 +1932,7 @@ class PiepCMS {
 	}
 
 	grabbedBlock() {
-		if (!mouse.target) {
+		if (!this.grabbed_v_node || !mouse.target) {
 			return;
 		}
 
@@ -2037,8 +2003,11 @@ class PiepCMS {
 		this.container.classList.toggle("has_insert_pos", this.has_insert_pos);
 	}
 
-	notGrabbedBlock() {
-		// not grabbed
+	showFocus() {
+		if (this.grabbed_v_node) {
+			return;
+		}
+
 		/** @type {ShowFocusToNodeData[]} */
 		const show_vids = [];
 
@@ -2242,20 +2211,69 @@ class PiepCMS {
 		this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
 	}
 
-	mainLoop() {
-		updateMouseTarget();
-		this.updateCursorPosition();
-
-		if (this.grabbed_v_node) {
-			this.grabbedBlock();
-		} else {
-			this.notGrabbedBlock();
+	handleSelection() {
+		if (this.grabbed_v_node || this.editing_layout) {
+			return;
 		}
 
+		// do it in the main loop when mouse is down dude XD
+		// when up mark as anchor, so siiiimple
+		this.text_selection = undefined;
+
+		const sel = window.getSelection();
+
+		if (sel.anchorNode && sel.focusNode) {
+			// span is always a wrapper duude, text inside is selected so go up
+			const sel_anchor_node = $(sel.anchorNode)._parent("*");
+			const sel_focus_node = $(sel.focusNode)._parent("*");
+			// TOOD: tell direction based on Y COORDINATE diff? seems easy to do
+
+			if (sel_anchor_node && sel_focus_node) {
+				const sel_anchor_offset = sel.anchorOffset;
+				const sel_focus_offset = sel.focusOffset;
+
+				if (sel_anchor_node === sel_focus_node) {
+					if (sel_focus_node.classList.contains("blc")) {
+						this.text_selection = {
+							anchor_vid: +sel_anchor_node.dataset.vid,
+							anchor_offset: sel_anchor_offset,
+							focus_vid: +sel_focus_node.dataset.vid,
+							focus_offset: sel_focus_offset,
+							middle_vids: [],
+						};
+					}
+				}
+			}
+		}
+
+		if (!isEquivalent(this.text_selection, this.last_text_selection)) {
+			/** @type {PiepCMSTextSelection} */
+			this.last_text_selection = cloneObject(this.text_selection);
+			//console.log(this.text_selection);
+
+			if (this.text_selection) {
+				const anchor_node = this.getNode(this.text_selection.anchor_vid);
+				const focus_node = this.getNode(this.text_selection.focus_vid);
+				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+				const focus_range_rect = focus_range.getBoundingClientRect();
+
+				this.cursor._set_absolute_pos(focus_range_rect.left - focus_range_rect.width * 0.5, focus_range_rect.top);
+				this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
+				this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
+			}
+
+			this.cursor.classList.toggle("hidden", !this.text_selection);
+		}
+	}
+
+	mainLoop() {
+		updateMouseTarget();
+
+		this.handleSelection();
+		this.grabbedBlock();
+		this.showFocus();
 		this.inspectorMove();
-
 		this.layoutEditMove();
-
 		this.addBtnMove();
 
 		const alternative_scroll_panel_left = 0;
@@ -3091,109 +3109,90 @@ class PiepCMS {
 		}
 	}
 
-	/**
-	 *
-	 * @param {boolean} peca
-	 */
-	setContentActive(peca) {
-		this.content_active = peca;
-		if (!this.content_active) {
-			this.setCursorActive(false);
-		}
-	}
-
-	/**
-	 *
-	 * @param {boolean} peca
-	 */
-	setCursorActive(peca) {
-		this.cursor_active = peca;
-		this.cursor.classList.toggle("hidden", !this.cursor_active);
-	}
 	getFocusNode() {
 		const focus_node = this.getNode(this.focus_node_vid);
 		return focus_node;
 	}
 
-	removeEditorSelection() {
-		this.last_selection = undefined;
-		removeSelection();
-	}
+	// removeEditorSelection() {
+	// 	this.last_selection = undefined;
+	// 	removeSelection();
+	// }
 
-	updateCursorPosition() {
-		if (mouse.target) {
-			if (this.just_clicked) {
-				const click_blc = mouse.target._parent(".blc");
-				if (click_blc) {
-					const click_blc_vid = +click_blc.dataset.vid;
-					const click_v_node = this.getVNodeById(click_blc_vid);
-					if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
-						this.setFocusNode(click_blc_vid);
-						this.removeEditorSelection();
-					}
-				}
-			}
-		}
+	// updateCursorPosition() {
+	// 	if (mouse.target) {
+	// 		if (this.just_clicked) {
+	// 			const click_blc = mouse.target._parent(".blc");
+	// 			if (click_blc) {
+	// 				const click_blc_vid = +click_blc.dataset.vid;
+	// 				const click_v_node = this.getVNodeById(click_blc_vid);
+	// 				if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
+	// 					this.setFocusNode(click_blc_vid);
+	// 					//this.removeEditorSelection();
+	// 				}
+	// 			}
+	// 		}
+	// 	}
 
-		const sel = window.getSelection();
-		if (this.content_active || this.float_menu_active) {
-			/** @type {Selection} */
-			this.last_selection = cloneObject(sel);
-		}
-		const csel = this.last_selection;
+	// 	const sel = window.getSelection();
+	// 	if (this.content_active || this.float_menu_active) {
+	// 		/** @type {Selection} */
+	// 		//this.last_selection = cloneObject(sel);
+	// 	}
+	// 	const csel = sel; // this.last_selection;
 
-		const range = document.createRange();
-		const focus_node = csel ? $(csel.focusNode) : undefined;
+	// 	const range = document.createRange();
+	// 	const focus_node = csel ? $(csel.focusNode) : undefined;
 
-		const focus_textable = focus_node ? focus_node._parent(`.textable:not(.editor_disabled)`) : undefined;
+	// 	const focus_textable = focus_node ? focus_node._parent(`.textable:not(.editor_disabled)`) : undefined;
 
-		if (focus_textable) {
-			let cursor_top, cursor_left, cursor_width, cursor_height;
+	// 	if (focus_textable) {
+	// 		let cursor_top, cursor_left, cursor_width, cursor_height;
 
-			if (focus_textable.innerText === "\n") {
-				const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
-				const sel_width = node_cursor_rect.width;
-				const sel_height = node_cursor_rect.height;
-				cursor_width = Math.max(sel_width, 2);
-				cursor_height = Math.max(sel_height, 20);
+	// 		if (focus_textable.innerText === "\n") {
+	// 			const node_cursor_rect = focus_textable._child("br").getBoundingClientRect();
+	// 			const sel_width = node_cursor_rect.width;
+	// 			const sel_height = node_cursor_rect.height;
+	// 			cursor_width = Math.max(sel_width, 2);
+	// 			cursor_height = Math.max(sel_height, 20);
 
-				cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
-				cursor_top = node_cursor_rect.top + sel_height * 0.5;
-			} else {
-				range.setStart(csel.focusNode, csel.focusOffset);
-				range.setEnd(csel.focusNode, csel.focusOffset);
+	// 			cursor_left = node_cursor_rect.left + 1 + sel_width * 0.5;
+	// 			cursor_top = node_cursor_rect.top + sel_height * 0.5;
+	// 		} else {
+	// 			range.setStart(csel.focusNode, csel.focusOffset);
+	// 			range.setEnd(csel.focusNode, csel.focusOffset);
 
-				const selection_cursor_rect = range.getBoundingClientRect();
-				const sel_width = selection_cursor_rect.width;
-				const sel_height = selection_cursor_rect.height;
-				cursor_width = Math.max(sel_width, 2);
-				cursor_height = Math.max(sel_height, 20);
+	// 			const selection_cursor_rect = range.getBoundingClientRect();
+	// 			const sel_width = selection_cursor_rect.width;
+	// 			const sel_height = selection_cursor_rect.height;
+	// 			cursor_width = Math.max(sel_width, 2);
+	// 			cursor_height = Math.max(sel_height, 20);
 
-				cursor_left = selection_cursor_rect.left + sel_width * 0.5;
-				cursor_top = selection_cursor_rect.top + sel_height * 0.5;
-			}
+	// 			cursor_left = selection_cursor_rect.left + sel_width * 0.5;
+	// 			cursor_top = selection_cursor_rect.top + sel_height * 0.5;
+	// 		}
 
-			this.cursor.style.left = cursor_left - cursor_width * 0.5 + "px";
-			this.cursor.style.top = cursor_top - cursor_height * 0.5 + "px";
-			this.cursor.style.width = cursor_width + "px";
-			this.cursor.style.height = cursor_height + "px";
+	// 		this.cursor.style.left = cursor_left - cursor_width * 0.5 + "px";
+	// 		this.cursor.style.top = cursor_top - cursor_height * 0.5 + "px";
+	// 		this.cursor.style.width = cursor_width + "px";
+	// 		this.cursor.style.height = cursor_height + "px";
 
-			if (this.content_active) {
-				this.setCursorActive(true);
-			}
-		} else {
-			this.setCursorActive(false);
-		}
+	// 		if (this.content_active) {
+	// 			this.setCursorActive(true);
+	// 		}
+	// 	} else {
+	// 		this.setCursorActive(false);
+	// 	}
 
-		if (focus_textable) {
-			const vid = +focus_textable.dataset.vid;
-			if (vid !== this.focus_node_vid) {
-				this.setFocusNode(vid);
-			}
-		}
+	// 	if (focus_textable) {
+	// 		const vid = +focus_textable.dataset.vid;
+	// 		if (vid !== this.focus_node_vid) {
+	// 			this.setFocusNode(vid);
+	// 		}
+	// 	}
 
-		this.just_clicked = false;
-	}
+	// 	this.just_clicked = false;
+	// }
 
 	/**
 	 *
@@ -3215,7 +3214,7 @@ class PiepCMS {
 			this.filterMenu({ scroll_to_top: true });
 
 			if (vid === undefined) {
-				this.removeEditorSelection();
+				//this.removeEditorSelection();
 			}
 		}
 

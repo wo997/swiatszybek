@@ -24,8 +24,9 @@
  * @typedef {{
  * anchor_vid: number
  * anchor_offset: number
- * focus_vid
+ * focus_vid: number
  * focus_offset: number
+ * middle_vids: number[]
  * }} PiepCMSTextSelection
  */
 
