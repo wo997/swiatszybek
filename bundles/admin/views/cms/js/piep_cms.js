@@ -212,7 +212,7 @@ class PiepCMS {
 		 * @param {number} start
 		 * @param {number} end
 		 */
-		const diplsaySelection = (vid, start = undefined, end = undefined) => {
+		const diplsaySelection = (vid, start = undefined, end = undefined, class_name = "text_selection") => {
 			const node = this.getNode(vid);
 			/** @type {DOMRect[]} */
 			let rects = [];
@@ -260,7 +260,7 @@ class PiepCMS {
 				const r2 = rects[p2];
 
 				selection_html += html`<div
-					class="text_selection"
+					class="${class_name}"
 					style="
                         left:${r1.left}px;
                         top:${r1.top + this.content_scroll.scrollTop}px;
@@ -276,6 +276,8 @@ class PiepCMS {
 		this.text_selection.partial_ranges.forEach((partial_range) => {
 			diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
 		});
+
+		diplsaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
 
 		this.display_text_selection._set_content(selection_html);
 
