@@ -29,6 +29,10 @@
  */
 
 /**
+ * @typedef {-1 | 0 | 1} Direction
+ */
+
+/**
  * @typedef {{
  * anchor_vid: number
  * anchor_offset: number
@@ -36,7 +40,7 @@
  * focus_offset: number
  * middle_vids: number[]
  * partial_ranges: PiepTextPartialRange[]
- * direction: -1 | 1 | 0
+ * direction: Direction
  * length: number
  * single_node: boolean
  * }} PiepTextSelection

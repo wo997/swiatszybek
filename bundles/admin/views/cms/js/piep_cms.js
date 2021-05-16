@@ -281,12 +281,25 @@ class PiepCMS {
 			const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
 			const focus_range_rect = focus_range.getBoundingClientRect();
 
+			const width = Math.max(focus_range_rect.width, 2);
+			const height = Math.max(focus_range_rect.height, 20);
 			this.cursor._set_absolute_pos(
 				focus_range_rect.left - focus_range_rect.width * 0.5,
 				focus_range_rect.top + this.content_scroll.scrollTop
 			);
-			this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
-			this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
+			this.cursor.style.width = width + "px";
+			this.cursor.style.height = height + "px";
+
+			const content_scroll_rect = this.content_scroll.getBoundingClientRect();
+			const off = 50;
+			const dy_top = focus_range_rect.top - (content_scroll_rect.top + off);
+			if (dy_top < 0) {
+				this.content_scroll.scrollBy(0, dy_top);
+			}
+			const dy_bottom = focus_range_rect.top + focus_range_rect.height - (content_scroll_rect.top + content_scroll_rect.height - off);
+			if (dy_bottom > 0) {
+				this.content_scroll.scrollBy(0, dy_bottom);
+			}
 		}
 
 		this.cursor.classList.toggle("hidden", !this.text_selection);
@@ -1055,8 +1068,9 @@ class PiepCMS {
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node = this.getVNodeById(click_blc_vid);
-				// not needed click_v_node.text === undefined
-				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
+				if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
+					this.text_selection = undefined;
+					this.displayTextSelection();
 					this.setFocusNode(click_blc_vid);
 				}
 			}
@@ -1287,39 +1301,21 @@ class PiepCMS {
 			}
 
 			if (ev.key === "ArrowLeft") {
+				this.moveCursorSideways(-1);
 				ev.preventDefault();
-
-				if (focus_offset <= 0) {
-					const prev_textable = this.getDeepSibling(focus_node, ".textable", -1);
-					if (prev_textable) {
-						//setSelectionByIndex(prev_textable, prev_textable.textContent.length);
-					}
-				} else {
-					//setSelectionByIndex(focus_node, focus_offset - 1);
-				}
 			}
 			if (ev.key === "ArrowRight") {
+				this.moveCursorSideways(1);
 				ev.preventDefault();
-
-				if (focus_offset >= v_node.text.length) {
-					const next_textable = this.getDeepSibling(focus_node, ".textable", 1);
-					if (next_textable) {
-						//setSelectionByIndex(next_textable, 0);
-					} else {
-						//setSelectionByIndex(focus_node, focus_offset);
-					}
-				} else {
-					//setSelectionByIndex(focus_node, focus_offset + 1);
-				}
 			}
 
 			if (ev.key === "ArrowUp") {
-				this.selectElementContentsFromAnywhere(0, -1);
+				this.moveCursorFromAnywhere(0, -1);
 				ev.preventDefault();
 			}
 
 			if (ev.key === "ArrowDown") {
-				this.selectElementContentsFromAnywhere(0, 1);
+				this.moveCursorFromAnywhere(0, 1);
 				ev.preventDefault();
 			}
 
@@ -2088,7 +2084,7 @@ class PiepCMS {
 	 *
 	 * @param {PiepNode} node
 	 * @param {string} selector
-	 * @param {-1 | 1 | 0} direction
+	 * @param {Direction} direction
 	 * @returns {PiepNode | undefined}
 	 */
 	getDeepSibling(node, selector, direction) {
@@ -2943,7 +2939,7 @@ class PiepCMS {
 
 			/**
 			 *
-			 * @param {-1 | 1} dir
+			 * @param {Direction} dir
 			 */
 			const insertAboveOrBelow = (dir) => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
@@ -2960,7 +2956,7 @@ class PiepCMS {
 
 			/**
 			 *
-			 * @param {-1 | 1} dir
+			 * @param {Direction} dir
 			 */
 			const insertOnSides = (dir) => {
 				if (flow_direction === "inline") {
@@ -3657,10 +3653,35 @@ class PiepCMS {
 
 	/**
 	 *
+	 * @param {Direction} dir
+	 */
+	moveCursorSideways(dir) {
+		const focus_node = this.getNode(this.text_selection.focus_vid);
+		const focus_offset = this.text_selection.focus_offset;
+		const vid = this.text_selection.focus_vid;
+		const v_node = this.getVNodeById(vid);
+
+		const edge = dir === 1 ? focus_offset >= v_node.text.length : focus_offset <= 0;
+		if (edge) {
+			const next_textable = this.getDeepSibling(focus_node, ".textable", dir);
+			if (next_textable) {
+				this.text_selection.focus_vid = +next_textable.dataset.vid;
+				this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
+			}
+		} else {
+			this.text_selection.focus_offset += dir;
+		}
+
+		this.collapseSelection();
+		this.displayTextSelection();
+	}
+
+	/**
+	 *
 	 * @param {number} dx
 	 * @param {number} dy
 	 */
-	selectElementContentsFromAnywhere(dx, dy) {
+	moveCursorFromAnywhere(dx, dy) {
 		return; // TODO: use text_selection
 
 		const sel = document.getSelection();
