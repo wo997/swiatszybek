@@ -432,6 +432,8 @@ class PiepCMS {
 	renderHistory() {
 		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.v_dom_history.length - 1);
 		this.redo_btn.toggleAttribute("disabled", this.history_steps_back === 0);
+
+		this.displayTextSelection();
 	}
 
 	initSelectResolution() {
@@ -1238,50 +1240,16 @@ class PiepCMS {
 				} else {
 					let anything = this.removeEmptyText();
 					if (anything) {
+						this.recreateDom();
 						updateSelection();
 					}
 				}
 
-				if (ev.key === "Backspace" && focus_v_node_data) {
-					ev.preventDefault();
-
-					if (this.text_selection.length > 0) {
-						this.removeTextInSelection();
-					} else {
-						const text = focus_v_node.text;
-						if (focus_offset <= 0) {
-							const prev_index = focus_v_node_data.index - 1;
-							if (prev_index >= 0) {
-								const prev_v_node = focus_v_node_data.v_nodes[prev_index];
-
-								if (prev_v_node.text !== undefined) {
-									const prev_vid = prev_v_node.id;
-									const prev_v_node_text_before = prev_v_node.text;
-									prev_v_node.text = prev_v_node_text_before + focus_v_node.text;
-									focus_v_node_data.v_nodes.splice(focus_v_node_data.index, 1);
-									this.update({ dom: true, styles: true });
-
-									this.text_selection.focus_vid = prev_vid;
-									this.text_selection.focus_offset = prev_v_node_text_before.length;
-									updateSelection();
-								}
-							}
-						} else {
-							focus_v_node.text = text.substr(0, focus_offset - 1) + text.substr(focus_offset);
-							this.recreateDom();
-
-							this.text_selection.focus_offset--;
-							updateSelection();
-						}
-
-						this.collapseSelection();
-						this.displayTextSelection();
-					}
-
-					this.pushHistory("delete_text");
-				}
-
-				if (ev.key === "Delete" && focus_v_node_data) {
+				/**
+				 *
+				 * @param {Direction} dir
+				 */
+				const deleteAction = (dir) => {
 					ev.preventDefault();
 
 					if (this.text_selection.length > 0) {
@@ -1289,14 +1257,16 @@ class PiepCMS {
 					} else {
 						let text = focus_v_node.text;
 						let do_remove = true;
-						if (focus_offset >= focus_v_node.text.length) {
+
+						const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
+						if (edge) {
 							do_remove = false;
-							const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + 1];
+							const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
 							if (next_v_node) {
 								const next_text = next_v_node.text;
 								if (next_text !== undefined) {
 									this.text_selection.focus_vid = next_v_node.id;
-									this.text_selection.focus_offset = 0;
+									this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
 									text = next_text;
 									updateSelection();
 									do_remove = true;
@@ -1305,20 +1275,23 @@ class PiepCMS {
 						}
 
 						if (do_remove) {
-							focus_v_node.text = text.substr(0, focus_offset) + text.substr(this.text_selection.focus_offset + 1);
+							if (dir === -1) {
+								this.text_selection.focus_offset--;
+							}
+							focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
 							this.update({ dom: true, styles: true });
 
 							if (focus_v_node.text === "") {
 								for (const try_v_node of [
-									// relative to the new selection that is already + 1
-									focus_v_node_data.v_nodes[focus_v_node_data.index + 1],
-									focus_v_node_data.v_nodes[focus_v_node_data.index - 1],
+									// relative to the new selection that is already +dir
+									focus_v_node_data.v_nodes[focus_v_node_data.index + dir],
+									focus_v_node_data.v_nodes[focus_v_node_data.index - dir],
 								]) {
 									if (try_v_node) {
 										const next_text = try_v_node.text;
 										if (next_text !== undefined) {
 											this.text_selection.focus_vid = try_v_node.id;
-											this.text_selection.focus_offset = 0;
+											this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
 											break;
 										}
 									}
@@ -1326,11 +1299,18 @@ class PiepCMS {
 							}
 
 							this.collapseSelection();
-							this.displayTextSelection();
 						}
 
 						this.pushHistory("delete_text");
 					}
+				};
+
+				if (ev.key === "Backspace") {
+					deleteAction(-1);
+				}
+
+				if (ev.key === "Delete") {
+					deleteAction(1);
 				}
 
 				if (ev.key === "ArrowLeft") {
@@ -1640,6 +1620,7 @@ class PiepCMS {
 	 * @returns {boolean}
 	 */
 	removeEmptyText() {
+		// TODO: also text containers?
 		let anything = false;
 		/**
 		 * @param {vDomNode[]} v_nodes
@@ -2268,7 +2249,6 @@ class PiepCMS {
 
 		this.text_selection.focus_offset += insert_text.length;
 		this.collapseSelection();
-		this.displayTextSelection();
 	}
 
 	collapseSelection() {
