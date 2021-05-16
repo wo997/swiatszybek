@@ -96,3 +96,37 @@ function compareIndices(indices_a, indices_b) {
 	// @ts-ignore
 	return Math.sign(len_b - len_a);
 }
+
+/**
+ *
+ * @param {PiepNode} node
+ * @param {string[]} classes
+ */
+function setNodeClasses(node, classes) {
+	classes.forEach((c) => {
+		node.classList.add(c);
+	});
+	node.classList.forEach((c) => {
+		if (!classes.includes(c)) {
+			node.classList.remove(c);
+		}
+	});
+}
+
+/**
+ *
+ * @param {PiepNode} node
+ * @param {*} empty
+ */
+function displayPlaceholder(node, empty, match, content) {
+	const placeholder = node._direct_child(match);
+	if (empty) {
+		if (!placeholder) {
+			node.insertAdjacentHTML("beforeend", content);
+		}
+	} else {
+		if (placeholder) {
+			placeholder.remove();
+		}
+	}
+}
