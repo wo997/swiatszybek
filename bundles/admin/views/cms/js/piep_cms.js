@@ -59,7 +59,6 @@ class PiepCMS {
 		});
 
 		document.addEventListener("selectionchange", () => {
-			// TODO: trigger more often? or by a function? that has some params like a selected node idk
 			if (this.grabbed_v_node || this.editing_layout) {
 				return;
 			}
@@ -196,22 +195,6 @@ class PiepCMS {
 					}
 				}
 			}
-
-			if (this.text_selection) {
-				const anchor_node = this.getNode(this.text_selection.anchor_vid);
-				const focus_node = this.getNode(this.text_selection.focus_vid);
-				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-				const focus_range_rect = focus_range.getBoundingClientRect();
-
-				this.cursor._set_absolute_pos(
-					focus_range_rect.left - focus_range_rect.width * 0.5,
-					focus_range_rect.top + this.content_scroll.scrollTop
-				);
-				this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
-				this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
-			}
-
-			this.cursor.classList.toggle("hidden", !this.text_selection);
 		});
 	}
 
@@ -286,11 +269,27 @@ class PiepCMS {
 			diplsaySelection(vid);
 		});
 		this.text_selection.partial_ranges.forEach((partial_range) => {
-			console.log(partial_range);
 			diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
 		});
 
 		this.display_text_selection._set_content(selection_html);
+
+		// cursor
+		if (this.text_selection) {
+			const anchor_node = this.getNode(this.text_selection.anchor_vid);
+			const focus_node = this.getNode(this.text_selection.focus_vid);
+			const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+			const focus_range_rect = focus_range.getBoundingClientRect();
+
+			this.cursor._set_absolute_pos(
+				focus_range_rect.left - focus_range_rect.width * 0.5,
+				focus_range_rect.top + this.content_scroll.scrollTop
+			);
+			this.cursor.style.width = Math.max(focus_range_rect.width, 2) + "px";
+			this.cursor.style.height = Math.max(focus_range_rect.height, 20) + "px";
+		}
+
+		this.cursor.classList.toggle("hidden", !this.text_selection);
 	}
 
 	initNodes() {
@@ -720,7 +719,7 @@ class PiepCMS {
 				// @ts-ignore
 				this.layout_control_dir = layout_control.dataset.layout_dir;
 
-				const focus_node = this.getFocusNode();
+				const focus_node = this.getNode(this.focus_node_vid);
 				const focus_node_parent = focus_node._parent();
 				const focus_node_rect = focus_node.getBoundingClientRect();
 				const visible_width = focus_node_rect.width;
@@ -1181,20 +1180,21 @@ class PiepCMS {
 		});
 
 		document.addEventListener("keydown", (ev) => {
-			return; // TODO: use text_selection
-			const sel = document.getSelection();
-			const focus_node = this.getFocusNode();
-			const focus_offset = sel.focusOffset;
-			const vid = focus_node ? +focus_node.dataset.vid : undefined;
-			const v_node_data = this.getVNodeDataById(vid);
-			const v_node = v_node_data ? v_node_data.v_node : undefined;
-
-			//v_node.text === undefined
 			if (!this.content_active) {
 				return;
 			}
 
-			if (ev.key.length === 1 && sel) {
+			const focus_node = this.getNode(this.text_selection.focus_vid);
+			const focus_offset = this.text_selection.focus_offset;
+			const vid = this.text_selection.focus_vid;
+			const v_node_data = this.getVNodeDataById(vid);
+			const v_node = v_node_data ? v_node_data.v_node : undefined;
+
+			if (!v_node.text === undefined) {
+				return;
+			}
+
+			if (ev.key.length === 1 && this.text_selection) {
 				if (!ev.ctrlKey) {
 					ev.preventDefault();
 
@@ -2123,7 +2123,7 @@ class PiepCMS {
 		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
-		const focus_node = this.getFocusNode();
+		const focus_node = this.getNode(this.focus_node_vid);
 		if (!focus_node) {
 			return 0;
 		}
@@ -2166,13 +2166,15 @@ class PiepCMS {
 	 * @returns
 	 */
 	insertText(insert_text) {
+		if (!this.text_selection) {
+			return;
+		}
+
 		this.removeTextInSelection();
 
-		return; // TODO: use text_selection
-		const sel = document.getSelection();
-		const focus_offset = sel.focusOffset;
-		const focus_node = this.getFocusNode();
-		const vid = focus_node ? +focus_node.dataset.vid : 0;
+		//const focus_node = this.getNode(this.text_selection.focus_vid);
+		const focus_offset = this.text_selection.focus_offset;
+		const vid = this.text_selection.focus_vid;
 		const v_node = this.getVNodeById(vid);
 
 		if (!v_node) {
@@ -2189,10 +2191,17 @@ class PiepCMS {
 		//this.update({ dom: true });
 		this.recreateDom(); // optimisation
 
-		const node_ref = this.getNode(vid);
-		if (node_ref) {
-			//setSelectionByIndex(node_ref, focus_offset + insert_text.length);
-		}
+		this.text_selection.focus_offset += insert_text.length;
+		this.collapseSelection();
+		this.displayTextSelection();
+	}
+
+	collapseSelection() {
+		this.text_selection.anchor_offset = this.text_selection.focus_offset;
+		this.text_selection.anchor_vid = this.text_selection.focus_vid;
+		this.text_selection.length = 0;
+		this.text_selection.middle_vids = [];
+		this.text_selection.partial_ranges = [];
 	}
 
 	grabbedBlock() {
@@ -2507,7 +2516,7 @@ class PiepCMS {
 
 		let layout_html = "";
 
-		const focus_node = this.getFocusNode();
+		const focus_node = this.getNode(this.focus_node_vid);
 		const focus_node_rect = focus_node.getBoundingClientRect();
 
 		const focus_node_style = window.getComputedStyle(focus_node);
@@ -2751,7 +2760,7 @@ class PiepCMS {
 		// TODO: think if necessary ugh
 		this.current_insert_blc = 123456789; // will warm up everything on grab
 
-		const focus_node = this.getFocusNode();
+		const focus_node = this.getNode(this.focus_node_vid);
 		this.grabbed_block_wrapper._set_content(focus_node.outerHTML);
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
 		removeClasses(".wo997_img_waiting", ["wo997_img_waiting"], this.grabbed_block_wrapper);
@@ -3304,11 +3313,6 @@ class PiepCMS {
 		}
 	}
 
-	getFocusNode() {
-		const focus_node = this.getNode(this.focus_node_vid);
-		return focus_node;
-	}
-
 	/**
 	 *
 	 * @param {number} vid
@@ -3346,9 +3350,6 @@ class PiepCMS {
 			}
 		}
 
-		this.content._children(".blc").forEach((e) => {
-			e.classList.toggle("piep_focus", e === focus_node);
-		});
 		this.inspector_tree._children(".v_node_label").forEach((e) => {
 			e.classList.toggle("selected", e === tree_blc);
 		});
@@ -3663,7 +3664,7 @@ class PiepCMS {
 		/** @type {DOMRect} */
 		let sel_rect;
 
-		const focus_node = this.getFocusNode();
+		const focus_node = this.getNode(this.focus_node_vid);
 		if (focus_node && focus_node.innerText === "\n") {
 			sel_rect = focus_node._child("br").getBoundingClientRect();
 		} else {
