@@ -187,7 +187,7 @@ class PiepCMS {
 							single_node,
 						};
 
-						this.displayTextSelection();
+						//this.displayTextSelection();
 
 						// lovely
 						//console.log(total_length);
@@ -198,13 +198,28 @@ class PiepCMS {
 		});
 	}
 
-	displayTextSelection() {
-		if (!this.text_selection) {
-			this.display_text_selection._set_content("");
+	/**
+	 *
+	 * @param {{
+	 * vids?: number[]
+	 * }} options
+	 */
+	displayTextSelection(options = {}) {
+		let render_selection_token = "";
+		if (options.vids) {
+			render_selection_token += "_" + options.vids.join(",");
+		}
+		if (this.text_selection) {
+			render_selection_token += "_" + JSON.stringify(this.text_selection);
+		}
+		if (render_selection_token === this.last_render_selection_token) {
 			return;
 		}
+		this.last_render_selection_token = render_selection_token;
 
 		let selection_html = "";
+
+		const rendered_vids = [];
 
 		/**
 		 *
@@ -213,6 +228,11 @@ class PiepCMS {
 		 * @param {number} end
 		 */
 		const diplsaySelection = (vid, start = undefined, end = undefined, class_name = "text_selection") => {
+			if (rendered_vids.includes(vid)) {
+				return;
+			}
+			rendered_vids.push(vid);
+
 			const node = this.getNode(vid);
 			/** @type {DOMRect[]} */
 			let rects = [];
@@ -270,20 +290,27 @@ class PiepCMS {
 			}
 		};
 
-		this.text_selection.middle_vids.forEach((vid) => {
-			diplsaySelection(vid);
-		});
-		this.text_selection.partial_ranges.forEach((partial_range) => {
-			diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
-		});
+		if (this.text_selection) {
+			this.text_selection.middle_vids.forEach((vid) => {
+				diplsaySelection(vid);
+			});
+			this.text_selection.partial_ranges.forEach((partial_range) => {
+				diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
+			});
 
-		diplsaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
+			diplsaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
+		}
+
+		if (options.vids) {
+			options.vids.forEach((vid) => {
+				diplsaySelection(vid, undefined, undefined, "just_underline");
+			});
+		}
 
 		this.display_text_selection._set_content(selection_html);
 
 		// cursor
 		if (this.text_selection) {
-			const anchor_node = this.getNode(this.text_selection.anchor_vid);
 			const focus_node = this.getNode(this.text_selection.focus_vid);
 			const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
 			const focus_range_rect = focus_range.getBoundingClientRect();
@@ -296,17 +323,6 @@ class PiepCMS {
 			);
 			this.cursor.style.width = width + "px";
 			this.cursor.style.height = height + "px";
-
-			const content_scroll_rect = this.content_scroll.getBoundingClientRect();
-			const off = 100;
-			const dy_top = focus_range_rect.top - (content_scroll_rect.top + off);
-			if (dy_top < 0) {
-				this.content_scroll.scrollBy(0, dy_top);
-			}
-			const dy_bottom = focus_range_rect.top + focus_range_rect.height - (content_scroll_rect.top + content_scroll_rect.height - off);
-			if (dy_bottom > 0) {
-				this.content_scroll.scrollBy(0, dy_bottom);
-			}
 		}
 
 		this.cursor.classList.toggle("hidden", !this.text_selection);
@@ -435,7 +451,7 @@ class PiepCMS {
 		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.v_dom_history.length - 1);
 		this.redo_btn.toggleAttribute("disabled", this.history_steps_back === 0);
 
-		this.displayTextSelection();
+		//this.displayTextSelection();
 	}
 
 	initSelectResolution() {
@@ -1078,7 +1094,7 @@ class PiepCMS {
 				const click_v_node = this.getVNodeById(click_blc_vid);
 				if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
 					this.text_selection = undefined;
-					this.displayTextSelection();
+					//this.displayTextSelection();
 					this.setFocusNode(click_blc_vid);
 				}
 			}
@@ -1375,18 +1391,35 @@ class PiepCMS {
 
 								this.update({ all: true });
 
-								const insert_first_node = this.getNode(focus_v_node.id);
-								if (insert_first_node) {
-									//setSelectionByIndex(insert_first_node, 0);
-								}
+								this.text_selection.focus_vid = focus_v_node.id;
+								this.text_selection.focus_offset = 0;
+								this.collapseSelection();
 							}
 						}
 					}
 
 					this.pushHistory("insert_text");
 				}
+
+				this.scrollToCursor();
 			}
 		});
+	}
+
+	scrollToCursor() {
+		this.displayTextSelection();
+		const cursor_rect = this.cursor.getBoundingClientRect();
+
+		const content_scroll_rect = this.content_scroll.getBoundingClientRect();
+		const off = 100;
+		const dy_top = cursor_rect.top - (content_scroll_rect.top + off);
+		if (dy_top < 0) {
+			this.content_scroll.scrollBy(0, dy_top);
+		}
+		const dy_bottom = cursor_rect.top + cursor_rect.height - (content_scroll_rect.top + content_scroll_rect.height - off);
+		if (dy_bottom > 0) {
+			this.content_scroll.scrollBy(0, dy_bottom);
+		}
 	}
 
 	initSideMenu() {
@@ -3630,23 +3663,32 @@ class PiepCMS {
 	showFocusToNodes(show_nodes) {
 		let float_focuses_html = "";
 
+		/** @type {number[]} */
+		const vids = [];
+
 		for (const show_node of show_nodes.filter((e, index) => show_nodes.findIndex((z) => z.vid === e.vid) === index)) {
 			const focus_node = this.getNode(show_node.vid);
 			if (!focus_node) {
 				continue;
 			}
-			const focus_node_rect = focus_node.getBoundingClientRect();
-			float_focuses_html += html`<div
-				class="focus_rect"
-				style="
-                left:${focus_node_rect.left - 1}px;
-                top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
-                width:${focus_node_rect.width + 2}px;
-                height:${focus_node_rect.height + 2}px;
-                opacity:${show_node.opacity};
-            "
-			></div>`;
+			if (focus_node.classList.contains("textable")) {
+				vids.push(show_node.vid);
+			} else {
+				const focus_node_rect = focus_node.getBoundingClientRect();
+				float_focuses_html += html`<div
+					class="focus_rect"
+					style="
+                        left:${focus_node_rect.left - 1}px;
+                        top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
+                        width:${focus_node_rect.width + 2}px;
+                        height:${focus_node_rect.height + 2}px;
+                        opacity:${show_node.opacity};
+                "
+				></div>`;
+			}
 		}
+
+		this.displayTextSelection({ vids });
 
 		this.float_focuses._set_content(float_focuses_html);
 	}
@@ -3731,7 +3773,7 @@ class PiepCMS {
 		}
 
 		this.collapseSelection();
-		this.displayTextSelection();
+		//this.displayTextSelection();
 	}
 
 	/**
@@ -3836,7 +3878,7 @@ class PiepCMS {
 			this.text_selection.focus_vid = +closest_textable.dataset.vid;
 			this.text_selection.focus_offset = closest_pos;
 			this.collapseSelection();
-			this.displayTextSelection();
+			//this.displayTextSelection();
 		}
 	}
 
