@@ -1098,10 +1098,16 @@ class PiepCMS {
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node = this.getVNodeById(click_blc_vid);
-				if (click_v_node && click_v_node.text === undefined && !click_blc.classList.contains("editor_disabled")) {
-					this.text_selection = undefined;
-					//this.displayTextSelection();
-					this.setFocusNode(click_blc_vid);
+				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
+					if (click_v_node.text === undefined) {
+						this.text_selection = undefined;
+						this.setFocusNode(click_blc_vid);
+					} else {
+						const text_container_vid = this.getParentTextContainerId(click_blc_vid);
+						if (text_container_vid !== undefined) {
+							this.setFocusNode(text_container_vid);
+						}
+					}
 				}
 			}
 		});
@@ -1315,7 +1321,7 @@ class PiepCMS {
 										const next_text = try_v_node.text;
 										if (next_text !== undefined) {
 											this.text_selection.focus_vid = try_v_node.id;
-											this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+											this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length; // this is wrong dude, just nah
 											break;
 										}
 									}
