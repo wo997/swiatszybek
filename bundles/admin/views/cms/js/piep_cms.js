@@ -1009,6 +1009,9 @@ class PiepCMS {
 					this.update({ all: true });
 
 					this.setFocusNode(set_prop_of_v_node.id);
+					this.text_selection.focus_vid = set_prop_of_v_node.id;
+					this.text_selection.focus_offset = 0;
+					this.content_active = true;
 
 					// TODO: select every full vid
 
