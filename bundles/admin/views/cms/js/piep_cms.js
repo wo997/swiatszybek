@@ -234,6 +234,11 @@ class PiepCMS {
 			rendered_vids.push(vid);
 
 			const node = this.getNode(vid);
+
+			if (!node) {
+				return;
+			}
+
 			/** @type {DOMRect[]} */
 			let rects = [];
 			/** @type {Position} */
