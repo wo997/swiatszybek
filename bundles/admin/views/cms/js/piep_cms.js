@@ -3688,53 +3688,56 @@ class PiepCMS {
 	 */
 	moveCursorFromAnywhere(dx, dy) {
 		const sel_rect = this.cursor.getBoundingClientRect();
-		const sel_center = getRectCenter(this.cursor.getBoundingClientRect());
+		const sel_center = getRectCenter(sel_rect);
 
 		const textables = this.content._children(".textable");
 		let closest_textable;
 		let textable_smallest_dist = 100000000;
 		for (const textable of textables) {
-			const textable_rect = textable.getBoundingClientRect();
-
-			/** @type {DOMRect} */
-			let start_range_rect;
-			/** @type {DOMRect} */
-			let end_range_rect;
-
 			const start_range = getRangeByIndex(textable, 0);
-			start_range_rect = start_range.getBoundingClientRect();
+			const start_range_rect = start_range.getBoundingClientRect();
 
 			const end_range = getRangeByIndex(textable, textable.textContent.length);
-			end_range_rect = end_range.getBoundingClientRect();
+			const end_range_rect = end_range.getBoundingClientRect();
 
-			if (dy === 1) {
-				if (end_range_rect.top < sel_rect.top + 1) {
-					continue;
-				}
-			}
-			if (dy === -1) {
-				if (start_range_rect.top > sel_rect.top - 1) {
-					continue;
-				}
-			}
-			if (dx === 1) {
-				if (end_range_rect.left < sel_rect.left + 1) {
-					continue;
-				}
-			}
-			if (dx === -1) {
-				if (start_range_rect.left > sel_rect.left - 1) {
-					continue;
-				}
-			}
+			/**
+			 *
+			 * @param {DOMRect} rect
+			 */
+			const tryRefPoint = (rect) => {
+				const x = rect.left + rect.width * 0.5;
+				const y = rect.top + (dy < 0 ? rect.height : 0);
 
-			const textable_center = getRectCenter(textable_rect);
+				let textable_dist = 0;
+				const ddx = x - sel_center.x;
+				const ddy = y - sel_center.y;
+				if (dx === 0) {
+					textable_dist += 0.1 * Math.abs(ddx);
+				} else {
+					const dddx = dx * ddx;
+					if (dddx < 1) {
+						return;
+					}
+					textable_dist += dddx;
+				}
+				if (dy === 0) {
+					textable_dist += 0.1 * Math.abs(ddy);
+				} else {
+					const dddy = dy * ddy;
+					if (dddy < 1) {
+						return;
+					}
+					textable_dist += dddy;
+				}
 
-			const textable_dist = dx * textable_center.x + dy * textable_center.y;
-			if (textable_dist < textable_smallest_dist) {
-				textable_smallest_dist = textable_dist;
-				closest_textable = textable;
-			}
+				if (textable_dist < textable_smallest_dist) {
+					textable_smallest_dist = textable_dist;
+					closest_textable = textable;
+				}
+			};
+
+			tryRefPoint(start_range_rect);
+			tryRefPoint(end_range_rect);
 		}
 
 		if (closest_textable) {
