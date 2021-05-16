@@ -2123,7 +2123,7 @@ class PiepCMS {
 	}
 
 	removeTextInSelection() {
-		return; // TODO: use text_selection
+		return 0; // TODO: use text_selection
 		const sel = document.getSelection();
 		const focus_offset = sel.focusOffset;
 		const anchor_offset = sel.anchorOffset;
