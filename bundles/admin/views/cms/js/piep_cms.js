@@ -219,7 +219,7 @@ class PiepCMS {
 
 		let selection_html = "";
 
-		const rendered_vids = [];
+		const rendered_keys = [];
 
 		/**
 		 *
@@ -228,11 +228,6 @@ class PiepCMS {
 		 * @param {number} end
 		 */
 		const diplsaySelection = (vid, start = undefined, end = undefined, class_name = "text_selection") => {
-			if (rendered_vids.includes(vid)) {
-				return;
-			}
-			rendered_vids.push(vid);
-
 			const node = this.getNode(vid);
 
 			if (!node) {
@@ -252,6 +247,12 @@ class PiepCMS {
 			if (end === undefined) {
 				end = node.textContent.length;
 			}
+
+			const key = vid + "_" + start + "_" + end + "_" + class_name;
+			if (rendered_keys.includes(key)) {
+				return;
+			}
+			rendered_keys.push(key);
 
 			let cnt = -1;
 			for (let i = start; i < end; i++) {
@@ -1330,10 +1331,12 @@ class PiepCMS {
 
 				if (ev.key === "Backspace") {
 					deleteAction(-1);
+					this.pushHistory("delete_text");
 				}
 
 				if (ev.key === "Delete") {
 					deleteAction(1);
+					this.pushHistory("delete_text");
 				}
 
 				if (ev.key === "ArrowLeft") {
@@ -1657,11 +1660,45 @@ class PiepCMS {
 
 	/**
 	 *
+	 * @param {number[]} vids
+	 * @returns {boolean}
+	 */
+	removeVNodes(vids) {
+		let anything = false;
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVNodes = (v_nodes) => {
+			for (let i = 0; i < v_nodes.length; i++) {
+				const v_node = v_nodes[i];
+				const vid = v_node.id;
+				const children = v_node.children;
+
+				if (vids.includes(vid)) {
+					v_nodes.splice(i, 1);
+					i--;
+					anything = true;
+					continue;
+				}
+
+				if (children) {
+					traverseVNodes(children);
+				}
+			}
+		};
+
+		traverseVNodes(this.v_dom);
+
+		return anything;
+	}
+
+	/**
+	 *
 	 * @returns {boolean}
 	 */
 	removeEmptyText() {
 		// TODO: also text containers?
-		let anything = false;
+		const vids = [];
 		/**
 		 * @param {vDomNode[]} v_nodes
 		 */
@@ -1673,9 +1710,7 @@ class PiepCMS {
 				const children = v_node.children;
 
 				if (text === "" && this.text_selection.focus_vid !== vid) {
-					v_nodes.splice(i, 1);
-					i--;
-					anything = true;
+					vids.push(vid);
 					continue;
 				}
 
@@ -1687,7 +1722,7 @@ class PiepCMS {
 
 		traverseEmptyText(this.v_dom);
 
-		return anything;
+		return this.removeVNodes(vids);
 	}
 
 	precalculateSettings() {
@@ -2212,47 +2247,24 @@ class PiepCMS {
 	}
 
 	removeTextInSelection() {
-		//this.text;
-
-		return 0; // TODO: use text_selection
-		const sel = document.getSelection();
-		const focus_offset = sel.focusOffset;
-		const anchor_offset = sel.anchorOffset;
-		const focus_node = this.getNode(this.focus_node_vid);
-		if (!focus_node) {
-			return 0;
+		if (!this.text_selection) {
+			return;
 		}
-		const vid = +focus_node.dataset.vid;
-		const v_node = this.getVNodeById(vid);
-		if (!v_node) {
-			return 0;
-		}
+		this.removeVNodes(this.text_selection.middle_vids);
 
-		const text = v_node.text;
-		if (text === undefined) {
-			return 0;
-		}
+		this.text_selection.partial_ranges.forEach((range) => {
+			const v_node = this.getVNodeById(range.vid);
+			v_node.text = v_node.text.substring(0, range.start) + v_node.text.substring(range.end);
+			if (v_node.text === "") {
+				// change the selection dude, it be gone in a sec
+			}
+		});
 
-		let begin_offset = focus_offset;
-		let end_offset = focus_offset;
-		let chars_removed = 0;
-		if (anchor_offset === focus_offset) {
-			return 0;
-		}
+		this.collapseSelection();
+		//this.text_selection = ; // TODO: temp
 
-		begin_offset = Math.min(anchor_offset, focus_offset);
-		end_offset = Math.max(anchor_offset, focus_offset);
-		chars_removed = end_offset - begin_offset;
-		v_node.text = text.substr(0, begin_offset) + text.substr(end_offset);
+		this.recreateDom();
 
-		this.update({ dom: true, selection: true });
-
-		const node_ref = this.getNode(vid);
-		if (node_ref) {
-			//setSelectionByIndex(node_ref, begin_offset);
-		}
-
-		return chars_removed;
 		this.pushHistory("delete_text");
 	}
 
