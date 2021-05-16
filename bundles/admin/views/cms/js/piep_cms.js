@@ -291,7 +291,7 @@ class PiepCMS {
 			this.cursor.style.height = height + "px";
 
 			const content_scroll_rect = this.content_scroll.getBoundingClientRect();
-			const off = 50;
+			const off = 100;
 			const dy_top = focus_range_rect.top - (content_scroll_rect.top + off);
 			if (dy_top < 0) {
 				this.content_scroll.scrollBy(0, dy_top);
@@ -3682,19 +3682,8 @@ class PiepCMS {
 	 * @param {number} dy
 	 */
 	moveCursorFromAnywhere(dx, dy) {
-		return; // TODO: use text_selection
-
-		const sel = document.getSelection();
-		/** @type {DOMRect} */
-		let sel_rect;
-
-		const focus_node = this.getNode(this.focus_node_vid);
-		if (focus_node && focus_node.innerText === "\n") {
-			sel_rect = focus_node._child("br").getBoundingClientRect();
-		} else {
-			sel_rect = sel.getRangeAt(0).getBoundingClientRect();
-		}
-		const sel_center = getRectCenter(sel_rect);
+		const sel_rect = this.cursor.getBoundingClientRect();
+		const sel_center = getRectCenter(this.cursor.getBoundingClientRect());
 
 		const textables = this.content._children(".textable");
 		let closest_textable;
@@ -3707,16 +3696,11 @@ class PiepCMS {
 			/** @type {DOMRect} */
 			let end_range_rect;
 
-			if (textable.innerText === "\n") {
-				start_range_rect = textable._child("br").getBoundingClientRect();
-				end_range_rect = start_range_rect;
-			} else {
-				const start_range = getRangeByIndex(textable, 0);
-				start_range_rect = start_range.getBoundingClientRect();
+			const start_range = getRangeByIndex(textable, 0);
+			start_range_rect = start_range.getBoundingClientRect();
 
-				const end_range = getRangeByIndex(textable, textable.textContent.length);
-				end_range_rect = end_range.getBoundingClientRect();
-			}
+			const end_range = getRangeByIndex(textable, textable.textContent.length);
+			end_range_rect = end_range.getBoundingClientRect();
 
 			if (dy === 1) {
 				if (end_range_rect.top < sel_rect.top + 1) {
@@ -3787,7 +3771,10 @@ class PiepCMS {
 				}
 			}
 
-			// setSelectionByIndex(closest_textable, closest_pos);
+			this.text_selection.focus_vid = +closest_textable.dataset.vid;
+			this.text_selection.focus_offset = closest_pos;
+			this.collapseSelection();
+			this.displayTextSelection();
 		}
 	}
 
