@@ -199,6 +199,11 @@ class PiepCMS {
 	}
 
 	displayTextSelection() {
+		if (!this.text_selection) {
+			this.display_text_selection._set_content("");
+			return;
+		}
+
 		let selection_html = "";
 
 		/**
