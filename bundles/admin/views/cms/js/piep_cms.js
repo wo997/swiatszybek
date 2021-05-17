@@ -38,6 +38,8 @@ class PiepCMS {
 		this.initEditingColors();
 		this.initEditingFontSize();
 
+		this.focus_node_vid = -1;
+
 		this.initPaste();
 		this.initClick();
 		this.initKeyDown();
@@ -1574,6 +1576,7 @@ class PiepCMS {
 			const unselect_everything = target._parent(".unselect_everything");
 			if (unselect_everything) {
 				this.setFocusNode(undefined);
+				this.text_selection = undefined;
 			}
 		});
 	}
@@ -2893,7 +2896,7 @@ class PiepCMS {
 		this.container.classList.add("grabbed_block");
 		this.container.classList.add("disable_editing");
 		// TODO: think if necessary ugh
-		this.current_insert_blc = 123456789; // will warm up everything on grab
+		this.current_insert_blc = -1; // will warm up everything on grab
 
 		const focus_node = this.getNode(this.focus_node_vid);
 		this.grabbed_block_wrapper._set_content(focus_node.outerHTML);
