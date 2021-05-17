@@ -120,6 +120,12 @@
 	}
 }
 
+.wo997_slider {
+	.product_variants {
+		pointer-events: none;
+	}
+}
+
 .product_block .product_variants {
 	& {
 		position: relative;
@@ -148,11 +154,13 @@
 			background: #fff;
 			padding: 6px 10px;
 			width: 100%;
-			box-shadow: 0 2px 4px 0 #0003;
+			// box-shadow: 0 2px 4px 0 #0003;
+			box-shadow: 0 3px 9px -2px #0003;
 			border-radius: 4px;
 			max-height: 250px;
 			overflow-y: auto;
-			border: 1px solid #ccc;
+			// border: 1px solid #ccc;
+			z-index: 200;
 		}
 		& ul:not(:first-child) {
 			margin-top: 5px;
