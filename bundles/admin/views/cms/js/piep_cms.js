@@ -2112,7 +2112,7 @@ class PiepCMS {
 						this.last_map_vid_render_props[vid] = render_props;
 						const html = blc_schema.render(v_node);
 						if (html === undefined) {
-							// TODO: call a manager to
+							piep_cms_manager.requestRender(vid);
 						} else {
 							node._set_content(html);
 						}
@@ -2146,6 +2146,7 @@ class PiepCMS {
 		};
 
 		traverseVDom(this.content, this.v_dom);
+		piep_cms_manager.updateModules();
 
 		displayEmptyVerticalContainer(this.content, this.v_dom.length === 0);
 
