@@ -220,8 +220,6 @@
 		`,
 	});
 
-	const floating_tag_containing_text_priority = 5;
-
 	piep_cms_manager.registerFloatingProp({
 		name: "text_tag",
 		blc_groups: [

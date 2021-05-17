@@ -1245,6 +1245,14 @@ class PiepCMS {
 				this.pushHistory(`remove_format_${v_node_data.v_node.id}`);
 			}
 
+			if (target._parent(".link_btn")) {
+				this.filter_blc_menu._set_value("advanced");
+				const link_input = this.side_menu._child(".prop_link input");
+				link_input.click();
+				link_input.focus();
+				this.last_blc_menu_name = "side";
+			}
+
 			const choose_img_btn = target._parent(".choose_img_btn");
 			if (choose_img_btn) {
 				const input = this.side_menu._child(`[data-blc_prop="settings.img_src"]`);
