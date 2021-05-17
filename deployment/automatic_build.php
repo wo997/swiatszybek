@@ -98,6 +98,9 @@ Files::scanDirectories(
     }
 );
 
+$build_template_ids = [];
+$build_page_ids = [];
+
 if ($build_info != $new_build_info) {
     foreach ($new_build_info["scopes"] as $name => $scope) {
         $version = def($build_info, ["scopes", $name, "version"], 0);
@@ -143,6 +146,21 @@ if ($build_info != $new_build_info) {
 
             if ($name === "settings") {
                 buildSettings();
+            }
+
+            if (startsWith($name, "modules/")) {
+                $module_name = substr($name, strlen("modules/"));
+
+                foreach (DB::fetchCol("SELECT template_id FROM template WHERE FIND_IN_SET(?, used_modules_csv)", [$module_name]) as $template_id) {
+                    if (!in_array($template_id, $build_template_ids)) {
+                        $build_template_ids[] = $template_id;
+                    }
+                }
+                foreach (DB::fetchCol("SELECT page_id FROM page WHERE FIND_IN_SET(?, used_modules_csv)", [$module_name]) as $page_id) {
+                    if (!in_array($page_id, $build_page_ids)) {
+                        $build_page_ids[] = $page_id;
+                    }
+                }
             }
         }
 

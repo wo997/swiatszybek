@@ -54,5 +54,7 @@ foreach (["entity", "helper", "event", "register"] as $hook_name) {
 }
 include "scripts/entities.php";
 
+include "scripts/build_pages.php";
+
 include "scripts/images.php";
 include "scripts/previews.php";
