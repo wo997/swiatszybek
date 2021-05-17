@@ -373,7 +373,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
 <link rel="canonical" href="<?= SITE_URL . getProductCategoryLink($category_path) ?>" />
 
-<title><?= join(" | ", $all_category_names) ?> - LSIT.pl</title>
+<title><?= join(" | ", $all_category_names) ?> - <?= getShopName() ?></title>
 
 <script>
     const product_category_id = <?= $product_category_id ?>;

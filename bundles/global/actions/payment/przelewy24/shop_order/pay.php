@@ -41,7 +41,7 @@ $p24->addValue("p24_pos_id", def($p24::$settings, "p24_pos_id"));
 $p24->addValue("p24_amount", round($shop_order->getProp("total_price") * 100));
 $p24->addValue("p24_currency", $currency);
 
-$p24->addValue("p24_description", getSetting(["general", "company", "shop_name"], "") . " zamowienie #$shop_order_id");
+$p24->addValue("p24_description", getShopName() . " zamowienie #$shop_order_id");
 $p24->addValue("p24_client", $main_address->getProp("__display_name"));
 $p24->addValue("p24_address", $main_address->getProp("__address_line_1"));
 $p24->addValue("p24_zip", $main_address->getProp("post_code"));

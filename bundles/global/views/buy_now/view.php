@@ -63,7 +63,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
             <div class="label big first">Wybór konta</div>
 
-            <p class="semi_bold">Zalety korzystania z konta LSIT.pl</p>
+            <p class="semi_bold">Zalety korzystania z konta <?= getShopName() ?></p>
             <p>- Przeglądaj historię zamówień</p>
             <p>- Zapisz swoje adresy</p>
             <p>- Możesz wziąć udział w programie partnerskim</p>

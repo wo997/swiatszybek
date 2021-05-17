@@ -224,7 +224,7 @@ class User
             <a style=\"font-size: 1.3em;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/zresetuj-haslo/" .  $user_data["user_id"] . "/" . $authentication_token . "\">Resetuj hasło</a>
         ";
 
-        $mailTitle = "Resetowanie hasła konta " . $email . " - LSIT";
+        $mailTitle = "Resetowanie hasła konta " . $email . " - " . getShopName();
         $message .= getEmailFooter();
 
         sendEmail($email, $message, $mailTitle);
@@ -392,7 +392,7 @@ class User
 
         ";
 
-        $mailTitle = "Aktywacja konta " . $user_data["email"] . " - LSIT";
+        $mailTitle = "Aktywacja konta " . $user_data["email"] . " - " . getShopName();
         $message .= getEmailFooter();
 
         sendEmail($user_data["email"], $message, $mailTitle);

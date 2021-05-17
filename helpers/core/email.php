@@ -24,7 +24,7 @@ function sendEmail($recipient, $message, $title, $headers = null, $from = null)
 
 function sendDefaultEmail($recipient, $message, $title, $who_label)
 {
-    $shop_name = getSetting(["general", "company", "shop_name"], "");
+    $shop_name = getShopName();
     if ($shop_name) {
         $title .= " - $shop_name";
     }

@@ -297,7 +297,7 @@ function renderPage($page_id, $data = [])
 
     $dom_data = traverseVDom($full_v_dom, ["html_only" => true]);
 
-    $shop_name = getSetting(["general", "company", "shop_name"], "");
+    $shop_name = getShopName();
     $seo_title = $page_data["seo_title"] ? $page_data["seo_title"] : $shop_name;
     $seo_description = $page_data["seo_description"];
 

@@ -34,6 +34,8 @@ include_once "helpers/core/Theme.php";
 include_once "helpers/core/Templates.php";
 include_once "helpers/core/PiepCMSManager.php";
 
+include_once "helpers/core/company.php";
+
 include_once "helpers/core/payments/przelewy24/Przelewy24.php";
 
 include_once "helpers/core/packaging/packaging.php";

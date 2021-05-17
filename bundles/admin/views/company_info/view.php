@@ -35,20 +35,20 @@
         <div class="label">Nazwa sklepu</div>
         <input class="field" data-name="shop_name">
 
-        <div class="label">Nr telefonu</div>
-        <input class="field" data-name="main_phone">
+        <!-- <div class="label">Nr telefonu</div>
+        <input class="field" data-name="main_phone"> -->
 
-        <div class="label">Nazwa firmy</div>
-        <input class="field" data-name="company_name">
+        <!-- <div class="label">Nazwa firmy</div>
+        <input class="field" data-name="company_name"> -->
 
-        <div class="label">Godziny otwarcia (słownie)</div>
-        <input class="field" data-name="opening_hours">
+        <!-- <div class="label">Godziny otwarcia (słownie)</div>
+        <input class="field" data-name="opening_hours"> -->
     </div>
 
     <br>
 
-    <div>
-        <div class="medium">Adres firmy</div>
+    <div class="hidden">
+        <div class="medium text_error">Adres firmy</div>
 
         <div class="label">Kod pocztowy</div>
         <input class="field" data-name="post_code">
