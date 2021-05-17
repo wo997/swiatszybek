@@ -1404,8 +1404,6 @@ class PiepCMS {
 								children: move_v_nodes_on_right_down,
 							});
 
-							console.log(move_v_nodes_on_right_down, parent_v_node_data.v_nodes);
-
 							/** @type {vDomNode} */
 							// the one that stays on top where v_node has been previously
 							const new_old_v_node = cloneObject(focus_v_node);
