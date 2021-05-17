@@ -11,15 +11,18 @@
 	}
 	h1& {
 		font-size: var(--size_h1);
+		font-weight: var(--bold);
 		margin: 0.8em 0;
 		text-align: center;
 	}
 	h2& {
 		font-size: var(--size_h2);
+		font-weight: var(--bold);
 		margin: 0.65em 0;
 	}
 	h3& {
 		font-size: var(--size_h3);
+		font-weight: var(--semi_bold);
 		margin: 0.55em 0;
 	}
 	p& {

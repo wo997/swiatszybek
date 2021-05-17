@@ -198,6 +198,7 @@ class PiepCMS {
 	 *
 	 * @param {{
 	 * vids?: number[]
+	 * force?: boolean
 	 * }} options
 	 */
 	displayTextSelection(options = {}) {
@@ -208,7 +209,7 @@ class PiepCMS {
 		if (this.text_selection) {
 			render_selection_token += "_" + JSON.stringify(this.text_selection);
 		}
-		if (render_selection_token === this.last_render_selection_token) {
+		if (!options.force && render_selection_token === this.last_render_selection_token) {
 			return;
 		}
 		this.last_render_selection_token = render_selection_token;
@@ -457,8 +458,7 @@ class PiepCMS {
 		//this.removeEditorSelection();
 
 		this.text_selection = undefined;
-		this.last_render_selection_token = undefined;
-		this.displayTextSelection();
+		this.displayTextSelection({ force: true });
 	}
 
 	renderHistory() {
@@ -977,6 +977,9 @@ class PiepCMS {
 					const new_middle_vids = [];
 					this.text_selection.partial_ranges.forEach((range) => {
 						const v_node_data = this.getVNodeDataById(range.vid);
+						if (!v_node_data) {
+							return;
+						}
 						const v_node = v_node_data.v_node;
 
 						if (v_node.text.length !== range.end - range.start) {
@@ -1061,6 +1064,8 @@ class PiepCMS {
 				});
 
 				this.update({ all: true });
+
+				this.displayTextSelection({ force: true });
 
 				// this.setFocusNode(set_prop_of_v_node.id);
 				// this.text_selection.focus_vid = set_prop_of_v_node.id;
@@ -2081,6 +2086,10 @@ class PiepCMS {
 				}
 				if (this.isTextContainer(v_node)) {
 					classes.push("text_container");
+
+					if (children) {
+						displayPlaceholder(node, children.length === 0, "br", html`<br />`);
+					}
 				}
 
 				if (v_node.module_name) {
