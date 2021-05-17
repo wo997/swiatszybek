@@ -1077,12 +1077,9 @@ class PiepCMS {
 
 				this.displayTextSelection({ force: true });
 
-				// this.setFocusNode(set_prop_of_v_node.id);
-				// this.text_selection.focus_vid = set_prop_of_v_node.id;
-				// this.text_selection.focus_offset = 0;
-				// this.content_active = true;
-
-				// TODO: select every full vid
+				if (this.text_selection) {
+					this.content_active = true;
+				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
 				this.displayNodeLayout();
@@ -3881,9 +3878,10 @@ class PiepCMS {
 		const sel_center = getRectCenter(sel_rect);
 
 		const textables = this.content._children(".textable");
-		/** @type {PiepNode} */
-		let closest_textable;
-		let textable_smallest_dist = 100000000;
+
+		/** @type {{node:PiepNode, dist: number}[]} */
+		let textables_with_dist = [];
+
 		for (const textable of textables) {
 			const start_range = getRangeByIndex(textable, 0);
 			const start_range_rect = start_range.getBoundingClientRect();
@@ -3902,18 +3900,14 @@ class PiepCMS {
 				let textable_dist = 0;
 				const ddx = x - sel_center.x;
 				const ddy = y - sel_center.y;
-				if (dx === 0) {
-					textable_dist += 0.001 * Math.abs(ddx);
-				} else {
+				if (dx !== 0) {
 					const dddx = dx * ddx;
 					if (dddx < 1) {
 						return;
 					}
 					textable_dist += dddx;
 				}
-				if (dy === 0) {
-					textable_dist += 0.001 * Math.abs(ddy);
-				} else {
+				if (dy !== 0) {
 					const dddy = dy * ddy;
 					if (dddy < 1) {
 						return;
@@ -3921,59 +3915,83 @@ class PiepCMS {
 					textable_dist += dddy;
 				}
 
-				if (textable_dist < textable_smallest_dist) {
-					textable_smallest_dist = textable_dist;
-					closest_textable = textable;
-				}
+				textables_with_dist.push({ dist: textable_dist, node: textable });
 			};
 
 			tryRefPoint(start_range_rect);
 			tryRefPoint(end_range_rect);
 		}
 
-		if (closest_textable) {
-			const range = document.createRange();
+		if (textables_with_dist.length > 0) {
+			textables_with_dist.sort((a, b) => Math.sign(a.dist - b.dist));
 
-			let closest_pos = 0;
-			let pos_smallest_dist = 100000000;
-			const text_node = getTextNode(closest_textable);
-			for (let pos = 0; pos <= text_node.textContent.length; pos++) {
-				range.setStart(text_node, pos);
-				range.setEnd(text_node, pos);
+			let lowest = textables_with_dist[0].dist;
 
-				const position_center = getRectCenter(range.getBoundingClientRect());
-				let pos_dist = 0;
-				const ddx = position_center.x - sel_center.x;
-				const ddy = position_center.y - sel_center.y;
-				if (dx === 0) {
-					pos_dist += 0.001 * Math.abs(ddx);
-				} else {
-					const dddx = dx * ddx;
-					if (dddx < 1) {
-						continue;
-					}
-					pos_dist += dddx;
-				}
-				if (dy === 0) {
-					pos_dist += 0.001 * Math.abs(ddy);
-				} else {
-					const dddy = dy * ddy;
-					if (dddy < 1) {
-						continue;
-					}
-					pos_dist += dddy;
+			let pretty_dist = 100000000;
+			/** @type {PiepNode} */
+			let pretty_textable;
+			/** @type {number} */
+			let pretty_pos;
+
+			const margin = 50;
+			for (let i = 0; i < textables_with_dist.length; i++) {
+				if (textables_with_dist[i].dist > lowest + margin) {
+					break;
 				}
 
-				if (pos_dist < pos_smallest_dist) {
-					pos_smallest_dist = pos_dist;
-					closest_pos = pos;
+				const textable = textables_with_dist[i].node;
+
+				const range = document.createRange();
+
+				let closest_pos = 0;
+				let pos_smallest_dist = 100000000;
+				const text_node = getTextNode(textable);
+				for (let pos = 0; pos <= text_node.textContent.length; pos++) {
+					range.setStart(text_node, pos);
+					range.setEnd(text_node, pos);
+
+					const position_center = getRectCenter(range.getBoundingClientRect());
+					let pos_dist = 0;
+					const ddx = position_center.x - sel_center.x;
+					const ddy = position_center.y - sel_center.y;
+					if (dx === 0) {
+						pos_dist += 0.1 * Math.abs(ddx);
+					} else {
+						const dddx = dx * ddx;
+						if (dddx < 1) {
+							continue;
+						}
+						pos_dist += dddx;
+					}
+					if (dy === 0) {
+						pos_dist += 0.1 * Math.abs(ddy);
+					} else {
+						const dddy = dy * ddy;
+						if (dddy < 1) {
+							continue;
+						}
+						pos_dist += dddy;
+					}
+
+					if (pos_dist < pos_smallest_dist) {
+						pos_smallest_dist = pos_dist;
+						closest_pos = pos;
+					}
+				}
+
+				if (pos_smallest_dist < pretty_dist) {
+					pretty_dist = pos_smallest_dist;
+
+					pretty_textable = textable;
+					pretty_pos = closest_pos;
 				}
 			}
 
-			this.text_selection.focus_vid = +closest_textable.dataset.vid;
-			this.text_selection.focus_offset = closest_pos;
+			if (pretty_textable) {
+				this.text_selection.focus_vid = +pretty_textable.dataset.vid;
+				this.text_selection.focus_offset = pretty_pos;
+			}
 			this.collapseSelection();
-			//this.displayTextSelection();
 		}
 	}
 
