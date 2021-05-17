@@ -2415,20 +2415,21 @@ class PiepCMS {
 		if (this.current_insert_blc !== insert_blc) {
 			this.current_insert_blc = insert_blc;
 
-			/** @type {PiepNode} */
-			let pretty_focus_parent;
-
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.after_grab_v_dom);
 
 			if (insert_blc && insert_blc._insert_action) {
 				insert_blc._insert_action();
+
 				this.update({ dom: true, styles: true });
 
-				const v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
-				if (v_node_data.parent_v_nodes[0]) {
-					const parent_vid = v_node_data.parent_v_nodes[0].id;
-					pretty_focus_parent = this.getNode(parent_vid);
+				// rewrite rendered module contents
+				const inserted_blc = this.getNode(this.grabbed_v_node.id);
+				if (inserted_blc._is_empty()) {
+					const copy_from = this.grabbed_block_wrapper._direct_child();
+					if (copy_from) {
+						inserted_blc.innerHTML = copy_from.innerHTML;
+					}
 				}
 			} else {
 				this.update({ dom: true, styles: true });
@@ -3464,7 +3465,7 @@ class PiepCMS {
 		const grabbed_block_vid = this.grabbed_block_vid;
 		delete this.grabbed_block_vid;
 
-		const grabbed_v_node = this.grabbed_v_node;
+		//const grabbed_v_node = this.grabbed_v_node;
 		delete this.grabbed_v_node;
 
 		const current_insert_blc = this.current_insert_blc;
@@ -3902,7 +3903,7 @@ class PiepCMS {
 				const ddx = x - sel_center.x;
 				const ddy = y - sel_center.y;
 				if (dx === 0) {
-					textable_dist += 0.1 * Math.abs(ddx);
+					textable_dist += 0.001 * Math.abs(ddx);
 				} else {
 					const dddx = dx * ddx;
 					if (dddx < 1) {
@@ -3911,7 +3912,7 @@ class PiepCMS {
 					textable_dist += dddx;
 				}
 				if (dy === 0) {
-					textable_dist += 0.1 * Math.abs(ddy);
+					textable_dist += 0.001 * Math.abs(ddy);
 				} else {
 					const dddy = dy * ddy;
 					if (dddy < 1) {
@@ -3945,7 +3946,7 @@ class PiepCMS {
 				const ddx = position_center.x - sel_center.x;
 				const ddy = position_center.y - sel_center.y;
 				if (dx === 0) {
-					pos_dist += 0.1 * Math.abs(ddx);
+					pos_dist += 0.001 * Math.abs(ddx);
 				} else {
 					const dddx = dx * ddx;
 					if (dddx < 1) {
@@ -3954,7 +3955,7 @@ class PiepCMS {
 					pos_dist += dddx;
 				}
 				if (dy === 0) {
-					pos_dist += 0.1 * Math.abs(ddy);
+					pos_dist += 0.001 * Math.abs(ddy);
 				} else {
 					const dddy = dy * ddy;
 					if (dddy < 1) {
