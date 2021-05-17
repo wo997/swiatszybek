@@ -16,8 +16,11 @@ class PiepCMSManager {
 
 		this.match_media_tags = /^(img|video|iframe)$/;
 
-		this.match_tags_containing_text =
-			/^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
+		// this.match_tags_containing_text =
+		// 	/^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
+
+		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p)$/;
+		this.match_textables = /^(span|b)$/;
 
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
@@ -34,7 +37,6 @@ class PiepCMSManager {
 		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 
 		this.text_block_props = ["styles.textAlign", "tag"];
-		this.match_inline_tag = /^(span)$/;
 
 		this.request_vids = []; // backend render
 

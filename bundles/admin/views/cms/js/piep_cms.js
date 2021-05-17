@@ -1038,7 +1038,7 @@ class PiepCMS {
 					this.text_selection.middle_vids.push(...new_middle_vids);
 				}
 
-				// if (piep_cms_manager.text_block_props.includes(prop_str) && set_prop_of_v_node.tag.match(piep_cms_manager.match_inline_tag)) {
+				// if (piep_cms_manager.text_block_props.includes(prop_str) && set_prop_of_v_node.tag.match(piep_cms_manager.match_textables)) {
 				// 	const parent = set_prop_of_v_node_data.parent_v_nodes[0];
 				// 	if (parent && this.isTextContainer(parent)) {
 				// 		set_prop_of_v_node = parent;
@@ -1739,8 +1739,10 @@ class PiepCMS {
 				const text = v_node.text;
 				const children = v_node.children;
 
-				if (text === "" && this.text_selection.focus_vid !== vid) {
-					vids.push(vid);
+				if (text === "") {
+					if (!(this.text_selection || this.text_selection.focus_vid === vid)) {
+						vids.push(vid);
+					}
 					continue;
 				}
 
@@ -3546,7 +3548,7 @@ class PiepCMS {
 				let prop_val;
 				let v_node_ref = v_node; // we cant change it below dude
 
-				if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_inline_tag)) {
+				if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_textables)) {
 					const parent = v_node_data.parent_v_nodes[0];
 					if (parent && this.isTextContainer(parent)) {
 						v_node_ref = parent;
