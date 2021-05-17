@@ -188,12 +188,6 @@ class PiepCMS {
 							length: total_length,
 							single_node,
 						};
-
-						//this.displayTextSelection();
-
-						// lovely
-						//console.log(total_length);
-						//console.log(middle_vids, partial_ranges[0], partial_ranges[1]);
 					}
 				}
 			}
@@ -286,6 +280,10 @@ class PiepCMS {
 
 				const r1 = rects[p1];
 				const r2 = rects[p2];
+
+				if (!r1 || !r2) {
+					continue;
+				}
 
 				selection_html += html`<div
 					class="${class_name}"
@@ -456,6 +454,7 @@ class PiepCMS {
 		this.setFocusNode(undefined);
 		//this.removeEditorSelection();
 
+		this.text_selection = undefined;
 		this.last_render_selection_token = undefined;
 		this.displayTextSelection();
 	}
@@ -1305,17 +1304,26 @@ class PiepCMS {
 						const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
 						if (edge) {
 							do_remove = false;
-							const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
-							if (next_v_node) {
-								const next_text = next_v_node.text;
-								if (next_text !== undefined) {
-									this.text_selection.focus_vid = next_v_node.id;
-									this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-									text = next_text;
-									updateSelection();
-									do_remove = true;
-								}
+							const next_textable = this.getDeepSibling(this.getNode(this.text_selection.focus_vid), ".textable", dir);
+							if (next_textable) {
+								const next_text = next_textable.textContent;
+								this.text_selection.focus_vid = +next_textable.dataset.vid;
+								this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+								text = next_text;
+								updateSelection();
+								do_remove = true;
 							}
+							// const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
+							// if (next_v_node) {
+							// 	const next_text = next_v_node.text;
+							// 	if (next_text !== undefined) {
+							// 		this.text_selection.focus_vid = next_v_node.id;
+							// 		this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+							// 		text = next_text;
+							// 		updateSelection();
+							// 		do_remove = true;
+							// 	}
+							// }
 						}
 
 						if (do_remove) {
@@ -1326,18 +1334,23 @@ class PiepCMS {
 							this.update({ dom: true, styles: true });
 
 							if (focus_v_node.text === "") {
-								for (const try_v_node of [
-									// relative to the new selection that is already +dir
-									focus_v_node_data.v_nodes[focus_v_node_data.index + dir],
-									focus_v_node_data.v_nodes[focus_v_node_data.index - dir],
-								]) {
+								let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
+								if (try_v_node) {
+									const next_text = try_v_node.text;
+									if (next_text !== undefined) {
+										this.text_selection.focus_vid = try_v_node.id;
+										this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+									}
+								} else {
+									let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index - dir];
+
 									if (try_v_node) {
 										const next_text = try_v_node.text;
 										if (next_text !== undefined) {
 											this.text_selection.focus_vid = try_v_node.id;
-											this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length; // this is wrong dude, just nah
-											break;
+											this.text_selection.focus_offset = dir === 1 ? next_text.length : 0;
 										}
+									} else {
 									}
 								}
 							}
@@ -1351,12 +1364,10 @@ class PiepCMS {
 
 				if (ev.key === "Backspace") {
 					deleteAction(-1);
-					this.pushHistory("delete_text");
 				}
 
 				if (ev.key === "Delete") {
 					deleteAction(1);
-					this.pushHistory("delete_text");
 				}
 
 				if (ev.key === "ArrowLeft") {
