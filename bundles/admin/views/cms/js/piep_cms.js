@@ -1231,6 +1231,9 @@ class PiepCMS {
 			}
 
 			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+			if (!this.content_active) {
+				removeSelection();
+			}
 
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 			const v_node = v_node_data ? v_node_data.v_node : undefined;
@@ -1381,6 +1384,9 @@ class PiepCMS {
 
 							this.collapseSelection();
 						}
+
+						this.recreateDom();
+						this.displayInspectorTree();
 
 						this.pushHistory("delete_text");
 					}
@@ -1765,7 +1771,7 @@ class PiepCMS {
 				const children = v_node.children;
 
 				if (text === "") {
-					if (!(this.text_selection || this.text_selection.focus_vid === vid)) {
+					if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
 						vids.push(vid);
 					}
 					continue;
