@@ -1291,8 +1291,8 @@ class PiepCMS {
 				let focus_offset;
 
 				const updateSelection = () => {
-					focus_node = this.getNode(this.text_selection.focus_vid);
 					focus_vid = this.text_selection.focus_vid;
+					focus_node = this.getNode(focus_vid);
 					focus_v_node_data = this.getVNodeDataById(focus_vid);
 					focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
 					focus_offset = this.text_selection.focus_offset;
@@ -1327,64 +1327,109 @@ class PiepCMS {
 						this.removeTextInSelection();
 					} else {
 						let text = focus_v_node.text;
-						let do_remove = true;
+						//let do_remove = true;
 
 						const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
-						if (edge) {
-							do_remove = false;
-							const next_textable = this.getDeepSibling(this.getNode(this.text_selection.focus_vid), ".textable", dir);
-							if (next_textable) {
-								const next_text = next_textable.textContent;
-								this.text_selection.focus_vid = +next_textable.dataset.vid;
-								this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-								text = next_text;
-								updateSelection();
-								do_remove = true;
-							}
-							// const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
-							// if (next_v_node) {
-							// 	const next_text = next_v_node.text;
-							// 	if (next_text !== undefined) {
-							// 		this.text_selection.focus_vid = next_v_node.id;
-							// 		this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-							// 		text = next_text;
-							// 		updateSelection();
-							// 		do_remove = true;
-							// 	}
-							// }
-						}
+						console.log("edge", edge, text.length, focus_offset, dir, "focus", focus_vid);
 
-						if (do_remove) {
+						if (edge) {
+							const node = this.getNode(this.text_selection.focus_vid);
+							const near_textable = dir === 1 ? node._next() : node._prev();
+							if (near_textable) {
+								const next_text = near_textable.textContent;
+								this.text_selection.focus_vid = +near_textable.dataset.vid;
+								console.log(+near_textable.dataset.vid);
+								this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+								console.log("SET", this.text_selection.focus_offset);
+
+								// recursive yay
+								updateSelection();
+								this.collapseSelection();
+								this.recreateDom();
+								deleteAction(dir);
+								return;
+								// if (next_text === "") {
+
+								// }
+
+								//text = next_text;
+								//updateSelection();
+								//do_remove = true;
+							}
+							// const next_textable = this.getDeepSibling(this.getNode(this.text_selection.focus_vid), ".textable", dir);
+							// if (next_textable) {
+							// 	const next_text = next_textable.textContent;
+							// 	this.text_selection.focus_vid = +next_textable.dataset.vid;
+							// 	this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+							// 	//text = next_text;
+							// 	//updateSelection();
+							// 	//do_remove = true;
+							// }
+						} else {
 							if (dir === -1) {
 								this.text_selection.focus_offset--;
 							}
 							focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
-							this.update({ dom: true, styles: true });
-
-							if (focus_v_node.text === "") {
-								let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
-								if (try_v_node) {
-									const next_text = try_v_node.text;
-									if (next_text !== undefined) {
-										this.text_selection.focus_vid = try_v_node.id;
-										this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-									}
-								} else {
-									let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index - dir];
-
-									if (try_v_node) {
-										const next_text = try_v_node.text;
-										if (next_text !== undefined) {
-											this.text_selection.focus_vid = try_v_node.id;
-											this.text_selection.focus_offset = dir === 1 ? next_text.length : 0;
-										}
-									} else {
-									}
-								}
-							}
-
-							this.collapseSelection();
 						}
+
+						// if (edge) {
+						// 	do_remove = false;
+						// 	const next_textable = this.getDeepSibling(this.getNode(this.text_selection.focus_vid), ".textable", dir);
+						// 	if (next_textable) {
+						// 		const next_text = next_textable.textContent;
+						// 		this.text_selection.focus_vid = +next_textable.dataset.vid;
+						// 		this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+						// 		text = next_text;
+						// 		updateSelection();
+						// 		do_remove = true;
+						// 	}
+						// 	// const next_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
+						// 	// if (next_v_node) {
+						// 	// 	const next_text = next_v_node.text;
+						// 	// 	if (next_text !== undefined) {
+						// 	// 		this.text_selection.focus_vid = next_v_node.id;
+						// 	// 		this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+						// 	// 		text = next_text;
+						// 	// 		updateSelection();
+						// 	// 		do_remove = true;
+						// 	// 	}
+						// 	// }
+						// }
+
+						// if (do_remove) {
+						//     this.text_selection.focus_offset > 0
+						// 	if (dir === -1) {
+						// 		this.text_selection.focus_offset--;
+						// 	}
+						// 	focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
+						// 	this.update({ dom: true, styles: true });
+
+						// 	if (focus_v_node.text === "") {
+						// 		let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index + dir];
+						// 		if (try_v_node) {
+						// 			const next_text = try_v_node.text;
+						// 			if (next_text !== undefined) {
+						// 				this.text_selection.focus_vid = try_v_node.id;
+						// 				this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+						// 			}
+						// 		} else {
+						// 			let try_v_node = focus_v_node_data.v_nodes[focus_v_node_data.index - dir];
+
+						// 			if (try_v_node) {
+						// 				const next_text = try_v_node.text;
+						// 				if (next_text !== undefined) {
+						// 					this.text_selection.focus_vid = try_v_node.id;
+						// 					this.text_selection.focus_offset = dir === 1 ? next_text.length : 0;
+						// 				}
+						// 			} else {
+						// 			}
+						// 		}
+						// 	}
+
+						// 	this.collapseSelection();
+						// }
+
+						this.collapseSelection();
 
 						this.recreateDom();
 						this.displayInspectorTree();
