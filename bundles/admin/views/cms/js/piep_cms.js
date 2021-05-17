@@ -1765,13 +1765,14 @@ class PiepCMS {
 		 * @param {vDomNode[]} v_nodes
 		 */
 		const traverseEmptyText = (v_nodes) => {
+			const single_node = v_nodes.length === 1;
 			for (let i = 0; i < v_nodes.length; i++) {
 				const v_node = v_nodes[i];
 				const vid = v_node.id;
 				const text = v_node.text;
 				const children = v_node.children;
 
-				if (text === "") {
+				if (!single_node && text === "") {
 					if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
 						vids.push(vid);
 					}
@@ -2114,16 +2115,18 @@ class PiepCMS {
 
 				if (text !== undefined) {
 					node._set_content(text);
-					//node._set_content(text === "" ? "<br>" : text);
+
+					let content = text;
+					if (text === "" && v_nodes.length === 1) {
+						content = "<br>";
+					}
+					node._set_content(content);
+
 					classes.push("textable");
 					//console.log("textable", node, text);
 				}
 				if (this.isTextContainer(v_node)) {
 					classes.push("text_container");
-
-					if (children) {
-						displayPlaceholder(node, children.length === 0, "br", html`<br />`);
-					}
 				}
 
 				if (v_node.module_name) {
