@@ -1006,7 +1006,7 @@ function DatatableComp(comp, parent, data) {
 			};
 
 			document.body.addEventListener("mousedown", tacz);
-			document.body.addEventListener("touchstart", tacz);
+			document.body.addEventListener("touchstart", tacz, { passive: true });
 
 			comp._nodes.clear_filters_btn.addEventListener("click", () => {
 				const data = comp._data;
