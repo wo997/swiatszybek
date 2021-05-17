@@ -1132,29 +1132,22 @@ class PiepCMS {
 
 			/** @type {"float" | "side" | ""} */
 			this.last_blc_menu_name = target._parent(".blc_menu_scroll_panel") ? "side" : "float";
+		});
+
+		document.addEventListener("click", (ev) => {
+			const target = $(ev.target);
 
 			const click_blc = target._parent(".blc");
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node = this.getVNodeById(click_blc_vid);
 				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
-					//if (click_v_node.text === undefined) {
-					this.text_selection = undefined;
-					this.setFocusNode(click_blc_vid);
-
-					// TODO: hmm
-					// } else {
-					// 	const text_container_vid = this.getParentTextContainerId(click_blc_vid);
-					// 	if (text_container_vid !== undefined) {
-					// 		this.setFocusNode(text_container_vid);
-					// 	}
-					// }
+					if (click_v_node.text === undefined && !click_blc.classList.contains("text_container")) {
+						this.text_selection = undefined;
+						this.setFocusNode(click_blc_vid);
+					}
 				}
 			}
-		});
-
-		document.addEventListener("click", (ev) => {
-			const target = $(ev.target);
 
 			/** @type {insertBlc} */
 			// @ts-ignore
@@ -1232,7 +1225,7 @@ class PiepCMS {
 
 			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
 			if (!this.content_active) {
-				removeSelection();
+				//removeSelection(); // TODO: then when?
 			}
 
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
@@ -2479,6 +2472,10 @@ class PiepCMS {
 			show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
 		}
 
+		if (this.text_selection !== undefined) {
+			show_float_menu = true;
+		}
+
 		if (!this.layout_control_prop) {
 			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
 			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
@@ -2513,8 +2510,41 @@ class PiepCMS {
 		this.showFocusToNodes(show_vids);
 
 		this.float_menu.classList.toggle("hidden", !show_float_menu);
+
 		if (show_float_menu) {
-			this.showFloatMenuToNode(this.focus_node_vid);
+			if (this.text_selection !== undefined) {
+				const all_ids = [
+					...this.text_selection.partial_ranges.map((e) => e.vid),
+					...this.text_selection.middle_vids,
+					this.text_selection.focus_vid,
+				].filter(onlyUnique);
+
+				let highest_y = 1000000;
+				/** @type {number} */
+				let highest_vid;
+				for (const vid of all_ids) {
+					const node = this.getNode(vid);
+					if (!node) {
+						continue;
+					}
+					const parent = node._parent();
+					const parent_vid = +parent.dataset.vid;
+
+					const y = node.getBoundingClientRect().y;
+					if (y < highest_y) {
+						highest_y = y;
+						highest_vid = parent_vid;
+					}
+				}
+				if (highest_vid) {
+					this.showFloatMenuToNode(highest_vid);
+				}
+			} else {
+				const node = this.getNode(this.focus_node_vid);
+				if (!(node && node.classList.contains("textable"))) {
+					this.showFloatMenuToNode(this.focus_node_vid);
+				}
+			}
 		}
 	}
 
