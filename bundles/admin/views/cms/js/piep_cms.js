@@ -323,7 +323,7 @@ class PiepCMS {
 			const focus_node = this.getNode(this.text_selection.focus_vid);
 			if (focus_node) {
 				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-				const focus_range_rect = focus_range.getBoundingClientRect();
+				const focus_range_rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
 
 				const width = Math.max(focus_range_rect.width, 2);
 				const height = Math.max(focus_range_rect.height, 20);
@@ -996,7 +996,17 @@ class PiepCMS {
 			const setProp = () => {
 				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
 					const new_middle_vids = [];
-					this.text_selection.partial_ranges.forEach((range) => {
+					/** @type {PiepTextPartialRange[]} */
+					let partial_ranges;
+					if (this.text_selection.length === 0) {
+						partial_ranges = [
+							{ vid: this.text_selection.focus_vid, start: this.text_selection.focus_offset, end: this.text_selection.focus_offset },
+						];
+					} else {
+						partial_ranges = [...this.text_selection.partial_ranges];
+					}
+
+					partial_ranges.forEach((range) => {
 						const v_node_data = this.getVNodeDataById(range.vid);
 						if (!v_node_data) {
 							return;
@@ -1055,6 +1065,13 @@ class PiepCMS {
 						}
 					});
 
+					if (this.text_selection.length === 0 && new_middle_vids.length === 1) {
+						this.text_selection.focus_vid = new_middle_vids[0];
+						this.text_selection.focus_offset = 0;
+						//this.setFocusNode(this.text_selection.focus_vid);
+						this.collapseSelection();
+					}
+
 					this.text_selection.partial_ranges = [];
 					this.text_selection.middle_vids.push(...new_middle_vids);
 				}
@@ -1069,7 +1086,7 @@ class PiepCMS {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
 
-				set_prop_of_ids.forEach((vid) => {
+				set_prop_of_ids.filter(onlyUnique).forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
 				});
 
@@ -1079,6 +1096,7 @@ class PiepCMS {
 
 				if (this.text_selection) {
 					this.content_active = true;
+					this.setFocusNode(this.text_selection.focus_vid);
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
@@ -2315,7 +2333,9 @@ class PiepCMS {
 		if (!this.text_selection) {
 			return;
 		}
-		this.removeVNodes(this.text_selection.middle_vids);
+		if (!(this.text_selection.middle_vids.length === 1 && this.text_selection.middle_vids[0] === this.text_selection.focus_vid)) {
+			this.removeVNodes(this.text_selection.middle_vids);
+		}
 
 		this.text_selection.partial_ranges.forEach((range) => {
 			const v_node = this.getVNodeById(range.vid);
