@@ -608,8 +608,8 @@ class PiepCMS {
 
 			const different_size = options_wrapper._child(".different_size");
 			different_size.addEventListener("click", () => {
-				piep_cms.filter_blc_menu._set_value("appearance");
-				const value_input = piep_cms.side_menu._child(".prop_font_size .value_input");
+				this.filter_blc_menu._set_value("appearance");
+				const value_input = this.side_menu._child(".prop_font_size .value_input");
 				value_input.click();
 				value_input.focus();
 				this.last_blc_menu_name = "side";
@@ -702,31 +702,21 @@ class PiepCMS {
 			});
 
 			color_options_html += html`
-				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}">
-					<i class="fas fa-eye-dropper"></i> <color-picker class="alpha"></color-picker>
+				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}" class="other_color">
+					<i class="fas fa-eye-dropper"></i>
 				</p-option>
 				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
 			`;
 
 			options_wrapper._set_content(color_options_html);
 
-			registerForms();
-
-			const color_picker = color_dropdown._child("color-picker");
-			color_dropdown.addEventListener("value_set", () => {
-				/** @type {string} */
-				const color = color_dropdown._get_value();
-				if (color.match(/#\w{3,}/)) {
-					color_picker._set_value(color, { quiet: true });
-				}
-			});
-
-			color_picker.addEventListener("change", () => {
-				color_dropdown._set_value(color_picker._get_value());
-			});
-
-			color_picker.addEventListener("any_picker_hidden", () => {
-				color_dropdown.click();
+			color_dropdown._child(".other_color").addEventListener("click", () => {
+				this.filter_blc_menu._set_value("appearance");
+				const color_picker = this.side_menu._child(".prop_color color-picker");
+				color_picker.click();
+				color_picker.focus();
+				scrollIntoView(color_picker, { duration: 0, offset: this.blc_menu_scroll_panel.offsetHeight * 0.5 });
+				this.last_blc_menu_name = "side";
 			});
 		};
 
