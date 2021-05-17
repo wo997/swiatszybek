@@ -97,12 +97,12 @@ class PiepCMS {
 
 						const direction = compareIndices(indices_anchor, indices_focus);
 
-						let total_length = 0; // TODO: calc? not needed now but still
+						let total_length = 0;
 
 						/** @type {PiepTextPartialRange[]} */
 						const partial_ranges = [];
 						/** @type {number[]} */
-						const middle_vids = []; // TODO: include full text blocks? separate array
+						const middle_vids = []; // TODO: include full text blocks? separate array, maybe even other items like modules etc
 
 						{
 							const start_offset = direction === 1 ? anchor_offset : focus_offset;
@@ -320,17 +320,19 @@ class PiepCMS {
 		// cursor
 		if (this.text_selection) {
 			const focus_node = this.getNode(this.text_selection.focus_vid);
-			const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-			const focus_range_rect = focus_range.getBoundingClientRect();
+			if (focus_node) {
+				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+				const focus_range_rect = focus_range.getBoundingClientRect();
 
-			const width = Math.max(focus_range_rect.width, 2);
-			const height = Math.max(focus_range_rect.height, 20);
-			this.cursor._set_absolute_pos(
-				focus_range_rect.left - focus_range_rect.width * 0.5,
-				focus_range_rect.top + this.content_scroll.scrollTop
-			);
-			this.cursor.style.width = width + "px";
-			this.cursor.style.height = height + "px";
+				const width = Math.max(focus_range_rect.width, 2);
+				const height = Math.max(focus_range_rect.height, 20);
+				this.cursor._set_absolute_pos(
+					focus_range_rect.left - focus_range_rect.width * 0.5,
+					focus_range_rect.top + this.content_scroll.scrollTop
+				);
+				this.cursor.style.width = width + "px";
+				this.cursor.style.height = height + "px";
+			}
 		}
 
 		this.cursor.classList.toggle("hidden", !this.text_selection);
@@ -971,65 +973,67 @@ class PiepCMS {
 			let prop_str = input.dataset.blc_prop;
 
 			const setProp = () => {
-				// TODO: maybe two scenarios? once when u have a single partial range and the other one for split case for code clarity
-				// if (this.text_selection) {
-				// 	const v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-				// 	let v_node = v_node_data.v_node;
-				// 	const anchor_offset = this.text_selection.anchor_offset;
-				// 	const focus_offset = this.text_selection.focus_offset;
+				if (this.text_selection) {
+					const new_middle_vids = [];
+					this.text_selection.partial_ranges.forEach((range) => {
+						const v_node_data = this.getVNodeDataById(range.vid);
+						const v_node = v_node_data.v_node;
 
-				// 	const begin_offset = Math.min(anchor_offset, focus_offset);
-				// 	const end_offset = Math.max(anchor_offset, focus_offset);
+						if (v_node.text.length !== range.end - range.start) {
+							// the selection is not everything in the v_node
+							const bef_vid = this.getNewBlcId();
+							const mid_vid = bef_vid + 1;
+							const aft_vid = bef_vid + 2;
 
-				// 	if (v_node.text.length !== end_offset - begin_offset) {
-				// 		// the selection is not everything in the v_node
-				// 		const bef_vid = this.getNewBlcId();
-				// 		const mid_vid = bef_vid + 1;
-				// 		const aft_vid = bef_vid + 2;
+							/** @type {vDomNode[]} */
+							const put_v_nodes = [];
 
-				// 		/** @type {vDomNode[]} */
-				// 		const put_v_nodes = [];
+							if (range.start > 0) {
+								put_v_nodes.push({
+									id: bef_vid,
+									tag: "span",
+									styles: {},
+									text: v_node.text.substring(0, range.start),
+									attrs: {},
+									classes: [],
+								});
+							}
 
-				// 		if (begin_offset > 0) {
-				// 			put_v_nodes.push({
-				// 				id: bef_vid,
-				// 				tag: "span",
-				// 				styles: {},
-				// 				text: v_node.text.substring(0, begin_offset),
-				// 				attrs: {},
-				// 				classes: [],
-				// 			});
-				// 		}
+							put_v_nodes.push({
+								id: mid_vid,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(range.start, range.end),
+								attrs: {},
+								classes: [],
+							});
 
-				// 		put_v_nodes.push({
-				// 			id: mid_vid,
-				// 			tag: "span",
-				// 			styles: {},
-				// 			text: v_node.text.substring(begin_offset, end_offset),
-				// 			attrs: {},
-				// 			classes: [],
-				// 		});
+							if (range.end < v_node.text.length) {
+								put_v_nodes.push({
+									id: aft_vid,
+									tag: "span",
+									styles: {},
+									text: v_node.text.substring(range.end),
+									attrs: {},
+									classes: [],
+								});
+							}
 
-				// 		if (end_offset < v_node.text.length) {
-				// 			put_v_nodes.push({
-				// 				id: aft_vid,
-				// 				tag: "span",
-				// 				styles: {},
-				// 				text: v_node.text.substring(end_offset),
-				// 				attrs: {},
-				// 				classes: [],
-				// 			});
-				// 		}
+							// do the split and spread options
+							put_v_nodes.forEach((put_v_node) => {
+								deepAssign(put_v_node.styles, v_node.styles);
+								deepAssign(put_v_node.attrs, v_node.attrs);
+								deepAssign(put_v_node.settings, v_node.settings);
+							});
+							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
 
-				// 		// do the split and spread options
-				// 		put_v_nodes.forEach((put_v_node) => {
-				// 			deepAssign(put_v_node.styles, v_node.styles);
-				// 			deepAssign(put_v_node.attrs, v_node.attrs);
-				// 			deepAssign(put_v_node.settings, v_node.settings);
-				// 		});
-				// 		v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
-				// 	}
-				// }
+							new_middle_vids.push(mid_vid);
+						}
+					});
+
+					this.text_selection.partial_ranges = [];
+					this.text_selection.middle_vids.push(...new_middle_vids);
+				}
 
 				// if (piep_cms_manager.text_block_props.includes(prop_str) && set_prop_of_v_node.tag.match(piep_cms_manager.match_inline_tag)) {
 				// 	const parent = set_prop_of_v_node_data.parent_v_nodes[0];
@@ -2304,7 +2308,6 @@ class PiepCMS {
 		});
 
 		this.collapseSelection();
-		//this.text_selection = ; // TODO: temp
 
 		this.recreateDom();
 

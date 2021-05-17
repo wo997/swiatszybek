@@ -127,7 +127,10 @@ $modules_html["main_menu_html"] = ob_get_clean();
             <i class="fas fa-stream"></i>
         </button>
         <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
-            <i class="fas fa-cogs"></i>
+            <i class="fas fa-paint-brush"></i>
+        </button>
+        <button class="btn transparent advanced_mode_btn" data-tooltip_position="left" data-tooltip="Tryb zaawansowany (NIEDOSTĘPNY)">
+            <i class="fas fa-hammer"></i>
         </button>
     </div>
 
