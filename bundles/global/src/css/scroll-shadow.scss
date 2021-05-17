@@ -5,7 +5,7 @@
 		z-index: 1000;
 		pointer-events: none;
 		flex-shrink: 0;
-		--shadow_clr: #0001;
+		--shadow_clr: #00000015;
 	}
 	&.light {
 		--shadow_clr: #fff5;
@@ -24,20 +24,20 @@
 		height: 20px;
 	}
 	&.top {
-		box-shadow: inset 0 10px 5px -5px var(--shadow_clr);
+		box-shadow: inset 0 15px 8px -12px var(--shadow_clr);
 		margin-bottom: -20px;
 	}
 	&.bottom {
-		box-shadow: inset 0 -10px 5px -5px var(--shadow_clr);
+		box-shadow: inset 0 -15px 8px -12px var(--shadow_clr);
 		margin-top: -20px;
 	}
 
 	&.left {
-		box-shadow: inset 10px 0 5px -5px var(--shadow_clr);
+		box-shadow: inset 15px 0 8px -12px var(--shadow_clr);
 		left: 0;
 	}
 	&.right {
-		box-shadow: inset -10px 0 5px -5px var(--shadow_clr);
+		box-shadow: inset -15px 0 8px -12px var(--shadow_clr);
 		right: 0;
 	}
 }

@@ -11,7 +11,7 @@ else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-s
     </a>
     <div class="headerbtn_menu user_menu">
         <div class="username"><?= $display_user ?></div>
-        <hr class="indent">
+        <hr>
         <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
             <a class="menu_item gray_hover semi_bold" style="margin-bottom:7px" href="<?= Request::$static_urls["ADMIN"] ?>/pulpit"> <i class="fas fa-user-cog"></i> Panel administratora</a>
         <?php endif ?>

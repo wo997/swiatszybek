@@ -286,7 +286,7 @@ if ($main_img) {
             <?php } ?>
         </div>
 
-        <p style="font-size: 1.6em;" class="label">
+        <p class="price_label">
             <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
         </p>
 
