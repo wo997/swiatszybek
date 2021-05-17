@@ -2160,6 +2160,10 @@ class PiepCMS {
 							node._set_content(html);
 						}
 					}
+
+					if (node._is_empty() && v_node.rendered_body !== undefined) {
+						node._set_content(v_node.rendered_body);
+					}
 				}
 
 				if (children) {

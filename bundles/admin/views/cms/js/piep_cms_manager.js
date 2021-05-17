@@ -47,8 +47,6 @@ class PiepCMSManager {
 		];
 
 		this.request_vids = []; // backend render
-
-		this.map_vid_css = {}; // vid => css
 	}
 
 	/**
@@ -87,6 +85,8 @@ class PiepCMSManager {
 	}
 
 	updateModules() {
+		this.recalculateCss();
+
 		if (this.request_vids.length === 0) {
 			return;
 		}
@@ -137,7 +137,6 @@ class PiepCMSManager {
 						if (node) {
 							node._set_content(rendered_v_node.rendered_body);
 						}
-						this.map_vid_css[rendered_v_node.id] = rendered_v_node.rendered_css_content;
 					}
 				}
 				if (v_node.children) {
@@ -178,7 +177,25 @@ class PiepCMSManager {
 	}
 
 	recalculateCss() {
-		let full_css_cheat = Object.values(this.map_vid_css).join(" ");
+		let full_css_cheat = "";
+
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
+				if (v_node.module_name) {
+					if (v_node.rendered_css_content !== undefined) {
+						full_css_cheat += v_node.rendered_css_content;
+					}
+				}
+				if (v_node.children) {
+					traverseVDom(v_node.children);
+				}
+			}
+		};
+		traverseVDom(this.piep_cms.v_dom);
+
 		if (!full_css_cheat) {
 			return;
 		}

@@ -9,6 +9,10 @@ domload(() => {
 	document.body.classList.add("just_desktop");
 
 	const getSaveVDOMJson = () => {
+		/** @type {vDomNode[]} */
+		let v_dom_copy = cloneObject(piep_cms.v_dom);
+
+		/** @type {vDomNode[]} */
 		let save_v_dom;
 
 		if (all_v_doms.length > 1) {
@@ -28,11 +32,27 @@ domload(() => {
 				}
 			};
 
-			traverseVDom(piep_cms.v_dom);
+			traverseVDom(v_dom_copy);
 		} else {
 			// plain page / template
-			save_v_dom = piep_cms.v_dom;
+			save_v_dom = v_dom_copy;
 		}
+
+		// clean up / export
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (const v_node of v_nodes) {
+				delete v_node.rendered_body;
+				delete v_node.rendered_css_content;
+				if (v_node.children) {
+					traverseVDom(v_node.children);
+				}
+			}
+		};
+
+		traverseVDom(save_v_dom);
 
 		return JSON.stringify(save_v_dom);
 	};
