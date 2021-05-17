@@ -455,6 +455,9 @@ class PiepCMS {
 		this.renderHistory();
 		this.setFocusNode(undefined);
 		//this.removeEditorSelection();
+
+		this.last_render_selection_token = undefined;
+		this.displayTextSelection();
 	}
 
 	renderHistory() {

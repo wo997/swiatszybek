@@ -2,10 +2,14 @@
 
 let let_click_slide = false;
 
-domload(() => {
+function initSliders() {
 	$$(".wo997_slider:not(.wo997_slider_ready)").forEach((slider) => {
 		initSlider(slider);
 	});
+}
+
+domload(() => {
+	initSliders();
 
 	animateSliders();
 
@@ -22,6 +26,7 @@ domload(() => {
 	document.addEventListener("touchend", releaseAllSliders);
 
 	window.addEventListener("resize", () => {
+		initSliders();
 		wo997_sliders.forEach((node) => {
 			node._slider.update();
 		});
@@ -168,9 +173,7 @@ function initSlider(elem) {
 	// @ts-ignore
 	const node = elem;
 
-	node.classList.add("overflow_hidden");
-	node.classList.add("wo997_slider"); // in case it wasn't here already
-	node.classList.add("wo997_slider_ready");
+	node.classList.add("overflow_hidden", "wo997_slider", "wo997_slider_ready");
 
 	node._slider = {
 		scroll: 0,
@@ -319,12 +322,16 @@ function initSlider(elem) {
 		slider.input_x = pos_x;
 	};
 
-	slides_wrapper.addEventListener("touchstart", (ev) => {
-		const touch = ev.targetTouches[0];
-		if (touch) {
-			grab(touch.clientX, touch.clientY);
-		}
-	});
+	slides_wrapper.addEventListener(
+		"touchstart",
+		(ev) => {
+			const touch = ev.targetTouches[0];
+			if (touch) {
+				grab(touch.clientX, touch.clientY);
+			}
+		},
+		{ passive: true }
+	);
 
 	slides_wrapper.addEventListener("touchmove", (ev) => {
 		if (slider.grabbed_at_scroll === undefined) {

@@ -96,8 +96,8 @@ domload(() => {
 		}
 	};
 
-	window.addEventListener("mousemove", tacz);
-	window.addEventListener("touchstart", tacz);
+	window.addEventListener("mousemove", tacz, { passive: true });
+	window.addEventListener("touchstart", tacz, { passive: true });
 
 	setInterval(() => {
 		tacz({ target: mouse.target });

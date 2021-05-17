@@ -70,10 +70,17 @@ class PiepCMSManager {
 	}
 
 	requestRender(vid) {
+		if (this.request_vids.includes(vid)) {
+			return;
+		}
 		this.request_vids.push(vid);
 	}
 
 	updateModules() {
+		if (this.request_vids.length === 0) {
+			return;
+		}
+
 		this.v_nodes_to_render = [];
 
 		/**
@@ -132,7 +139,8 @@ class PiepCMSManager {
 
 		this.recalculateCss();
 
-		this.piep_cms.recreateDom();
+		//this.piep_cms.recreateDom();
+		window.dispatchEvent(new Event("resize"));
 	}
 
 	/**

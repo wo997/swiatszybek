@@ -21,8 +21,8 @@
 
 			// let piep cms store requests we had by url + params and reuse responses, no repeating yet we have totally dynamic modules yay :P
 			//let body = def(modules_html.main_menu_htmlxxx, html`<div class="empty_module" data-container_queries="">Lista produktów</div>`);
-			let body = html`<div class="empty_module" data-container_queries="">Lista produktów</div>`;
-			return body;
+			//let body = html`<div class="empty_module" data-container_queries="">Lista produktów</div>`;
+			return undefined;
 		},
 	});
 

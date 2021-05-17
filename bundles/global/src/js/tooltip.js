@@ -105,8 +105,8 @@ domload(() => {
 
 		tooltip.last_target = e;
 	};
-	window.addEventListener("mousemove", tacz);
-	window.addEventListener("touchstart", tacz);
+	window.addEventListener("mousemove", tacz, { passive: true });
+	window.addEventListener("touchstart", tacz, { passive: true });
 
 	window.addEventListener("mousewheel", () => {
 		tooltip.dismiss();
