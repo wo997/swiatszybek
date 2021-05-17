@@ -891,7 +891,6 @@ class PiepCMS {
 		let prop_ref = v_node;
 
 		if (prop_str.startsWith("styles.")) {
-			console.log(this.selected_resolution);
 			if (v_node.styles[this.selected_resolution] === undefined) {
 				v_node.styles[this.selected_resolution] = {};
 			}
@@ -966,7 +965,6 @@ class PiepCMS {
 			}
 		});
 
-		console.log(prop_ref, all_props_to_set, val);
 		all_props_to_set.forEach((all_prop_str) => {
 			if (val === "") {
 				delete prop_ref[all_prop_str];
@@ -981,6 +979,7 @@ class PiepCMS {
 			let prop_str = input.dataset.blc_prop;
 
 			const setProp = () => {
+				// TODO: maybe two scenarios? once when u have a single partial range and the other one for split case for code clarity
 				// if (this.text_selection) {
 				// 	const v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
 				// 	let v_node = v_node_data.v_node;
