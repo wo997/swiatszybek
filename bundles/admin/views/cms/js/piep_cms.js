@@ -875,7 +875,28 @@ class PiepCMS {
 	 * @param {PiepNode} input
 	 */
 	setPropOfVNode(prop_str, vid, input) {
-		const v_node = this.getVNodeById(vid);
+		const v_node_data = this.getVNodeDataById(vid);
+		if (!v_node_data) {
+			return;
+		}
+		const v_node = v_node_data.v_node;
+
+		if (piep_cms_manager.text_block_props.includes(prop_str) && v_node.tag.match(piep_cms_manager.match_textables)) {
+			const parent = v_node_data.parent_v_nodes[0];
+			if (parent) {
+				this.setPropOfVNode(prop_str, parent.id, input);
+				return;
+			}
+		} else if (piep_cms_manager.textable_props.includes(prop_str) && v_node.tag.match(piep_cms_manager.match_text_containers)) {
+			// to all children
+			const children = v_node_data.v_node.children;
+			if (children) {
+				children.forEach((child) => {
+					this.setPropOfVNode(prop_str, child.id, input);
+				});
+			}
+			return;
+		}
 
 		if (!v_node) {
 			return;
@@ -973,7 +994,7 @@ class PiepCMS {
 			let prop_str = input.dataset.blc_prop;
 
 			const setProp = () => {
-				if (this.text_selection) {
+				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
 					const new_middle_vids = [];
 					this.text_selection.partial_ranges.forEach((range) => {
 						const v_node_data = this.getVNodeDataById(range.vid);
@@ -1038,17 +1059,6 @@ class PiepCMS {
 					this.text_selection.middle_vids.push(...new_middle_vids);
 				}
 
-				// if (piep_cms_manager.text_block_props.includes(prop_str) && set_prop_of_v_node.tag.match(piep_cms_manager.match_textables)) {
-				// 	const parent = set_prop_of_v_node_data.parent_v_nodes[0];
-				// 	if (parent && this.isTextContainer(parent)) {
-				// 		set_prop_of_v_node = parent;
-				// 	}
-				// }
-
-				//setPropOfVNode(set_prop_of_v_node);
-
-				// TODO: actually do it dude
-				// no partial ranges will exist at this point so chill
 				const set_prop_of_ids = [];
 
 				if (this.text_selection) {
@@ -3549,10 +3559,19 @@ class PiepCMS {
 				let v_node_ref = v_node; // we cant change it below dude
 
 				if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_textables)) {
+					// to parent
 					const parent = v_node_data.parent_v_nodes[0];
-					if (parent && this.isTextContainer(parent)) {
+					// Ofc it is!  && this.isTextContainer(parent)
+					if (parent) {
 						v_node_ref = parent;
 					}
+				} else if (piep_cms_manager.textable_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_text_containers)) {
+					// to all children
+					const children = v_node_data.v_node.children;
+					// TODO: all have to match? tricky one, for now leave empty, it's ok
+					// if (children) {
+					// 	v_node_ref = parent;
+					// }
 				}
 
 				if (prop_str.startsWith("styles.")) {
