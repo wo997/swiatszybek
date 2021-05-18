@@ -1325,7 +1325,7 @@ class PiepCMS {
 
 					if (this.text_selection.length > 0) {
 						this.removeTextInSelection();
-					} else {
+					} else if (focus_v_node) {
 						let text = focus_v_node.text;
 						const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
 						if (edge) {
@@ -2336,7 +2336,7 @@ class PiepCMS {
 			const v_node = this.getVNodeById(range.vid);
 			v_node.text = v_node.text.substring(0, range.start) + v_node.text.substring(range.end);
 
-			if (this.text_selection.focus_vid === range.vid) {
+			if (this.text_selection.focus_vid === range.vid && this.text_selection.direction === 1) {
 				this.text_selection.focus_offset += range.start - range.end;
 			}
 			// if (v_node.text === "") {
