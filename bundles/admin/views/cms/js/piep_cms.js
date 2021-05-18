@@ -193,7 +193,7 @@ class PiepCMS {
 				}
 			}
 
-			this.removeEmptyText();
+			this.manageText();
 		});
 	}
 
@@ -1475,7 +1475,7 @@ class PiepCMS {
 				this.scrollToCursor();
 			}
 
-			this.removeEmptyText();
+			this.manageText();
 		});
 	}
 
@@ -1758,37 +1758,68 @@ class PiepCMS {
 		return anything;
 	}
 
-	removeEmptyText() {
+	manageText() {
+		// removes empty textables that are not focused btw
+		// also merges textables that are similar and next to each other
+
 		// TODO: also text containers?
 		const vids = [];
 		/**
 		 * @param {vDomNode[]} v_nodes
 		 */
-		const traverseEmptyText = (v_nodes) => {
-			const single_node = v_nodes.length === 1;
-			for (let i = 0; i < v_nodes.length; i++) {
+		const traverseVDom = (v_nodes) => {
+			const len = v_nodes.length;
+			const single_node = len === 1;
+			for (let i = 0; i < len; i++) {
 				const v_node = v_nodes[i];
 				const vid = v_node.id;
 				const text = v_node.text;
 				const children = v_node.children;
 
-				if (!single_node && text === "") {
-					if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
-						vids.push(vid);
+				if (!single_node) {
+					if (text === "") {
+						if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
+							vids.push(vid);
+						}
+						continue;
+					} else if (i + 1 < len) {
+						const next_v_node = v_nodes[i + 1];
+
+						if (
+							isEquivalent(v_node.styles, next_v_node.styles) &&
+							isEquivalent(v_node.attrs, next_v_node.attrs) &&
+							isEquivalent(v_node.settings, next_v_node.settings)
+						) {
+							// remove self and append text to another, ezy?
+							vids.push(vid);
+							if (this.text_selection) {
+								if (this.text_selection.focus_vid === next_v_node.id) {
+									this.text_selection.focus_offset += text.length;
+									// offset same yay
+								} else if (this.text_selection.focus_vid === v_node.id) {
+									this.text_selection.focus_vid = next_v_node.id;
+									// offset same yay
+								}
+							}
+							next_v_node.text = text + next_v_node.text;
+						}
 					}
-					continue;
 				}
 
 				if (children) {
-					traverseEmptyText(children);
+					traverseVDom(children);
 				}
 			}
 		};
 
-		traverseEmptyText(this.v_dom);
+		traverseVDom(this.v_dom);
 
 		const anything = this.removeVNodes(vids);
 		if (anything) {
+			// just in case we needed to collapse somethin
+			traverseVDom(this.v_dom);
+			this.removeVNodes(vids);
+
 			this.update({ dom: true, selection: true });
 		}
 	}
