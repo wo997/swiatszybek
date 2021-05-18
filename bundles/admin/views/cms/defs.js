@@ -151,5 +151,5 @@
  */
 
 /**
- * @typedef {"side" | "float"} PiepCMSSideMenuName
+ * @typedef {"side" | "float"} PiepCMSMenuName
  */

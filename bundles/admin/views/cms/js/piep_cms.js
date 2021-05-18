@@ -506,7 +506,9 @@ class PiepCMS {
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
 		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
-			floating_blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
+			floating_blc_props_menu_html += html`<div class="prop_wrapper prop_${blc_prop.name}" data-prop="${blc_prop.name}">
+				${blc_prop.menu_html}
+			</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
 	}
@@ -1000,8 +1002,12 @@ class PiepCMS {
 	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			let prop_str = input.dataset.blc_prop;
-			const prop_def = piep_cms_manager.blc_props.find((b) => b.name === prop_str);
+			/** @type {PiepCMSMenuName} */
 			const blc_menu_name = input._parent(this.side_menu) ? "side" : "float";
+			const prop_wrapper = input._parent(".prop_wrapper");
+			const prop_def = (blc_menu_name === "side" ? piep_cms_manager.blc_props : piep_cms_manager.floating_blc_props).find(
+				(b) => b.name === prop_wrapper.dataset.prop
+			);
 
 			const setProp = () => {
 				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
@@ -1563,7 +1569,7 @@ class PiepCMS {
 
 		let blc_props_menu_html = "";
 		piep_cms_manager.blc_props.forEach((blc_prop) => {
-			blc_props_menu_html += html`<div class="prop_${blc_prop.name}">${blc_prop.menu_html}</div>`;
+			blc_props_menu_html += html`<div class="prop_wrapper prop_${blc_prop.name}" data-prop="${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.blc_menu_scroll_panel._set_content(blc_props_menu_html);
 
@@ -3619,7 +3625,7 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {{
-	 * from_blc_menu_name?: PiepCMSSideMenuName
+	 * from_blc_menu_name?: PiepCMSMenuName
 	 * }} options
 	 * @returns
 	 */
@@ -3695,7 +3701,7 @@ class PiepCMS {
 	 *
 	 * @param {{
 	 * scroll_to_top?: boolean
-	 * from_blc_menu_name?: PiepCMSSideMenuName
+	 * from_blc_menu_name?: PiepCMSMenuName
 	 * }} options
 	 */
 	filterMenu(options = {}) {
