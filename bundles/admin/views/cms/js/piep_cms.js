@@ -3935,12 +3935,6 @@ class PiepCMS {
 		let textables_with_dist = [];
 
 		for (const textable of textables) {
-			const start_range = getRangeByIndex(textable, 0);
-			const start_range_rect = start_range.getBoundingClientRect();
-
-			const end_range = getRangeByIndex(textable, textable.textContent.length);
-			const end_range_rect = end_range.getBoundingClientRect();
-
 			/**
 			 *
 			 * @param {DOMRect} rect
@@ -3970,8 +3964,12 @@ class PiepCMS {
 				textables_with_dist.push({ dist: textable_dist, node: textable });
 			};
 
-			tryRefPoint(start_range_rect);
-			tryRefPoint(end_range_rect);
+			if (textable.textContent === "") {
+				tryRefPoint(textable.getBoundingClientRect());
+			} else {
+				tryRefPoint(getRangeByIndex(textable, 0).getBoundingClientRect());
+				tryRefPoint(getRangeByIndex(textable, textable.textContent.length).getBoundingClientRect());
+			}
 		}
 
 		if (textables_with_dist.length > 0) {
@@ -3998,11 +3996,8 @@ class PiepCMS {
 				let closest_pos = 0;
 				let pos_smallest_dist = 100000000;
 				const text_node = getTextNode(textable);
-				for (let pos = 0; pos <= text_node.textContent.length; pos++) {
-					range.setStart(text_node, pos);
-					range.setEnd(text_node, pos);
 
-					const position_center = getRectCenter(range.getBoundingClientRect());
+				const considerRect = (position_center) => {
 					let pos_dist = 0;
 					const ddx = position_center.x - sel_center.x;
 					const ddy = position_center.y - sel_center.y;
@@ -4011,7 +4006,7 @@ class PiepCMS {
 					} else {
 						const dddx = dx * ddx;
 						if (dddx < 1) {
-							continue;
+							return false;
 						}
 						pos_dist += dddx;
 					}
@@ -4020,14 +4015,32 @@ class PiepCMS {
 					} else {
 						const dddy = dy * ddy;
 						if (dddy < 1) {
-							continue;
+							return false;
 						}
 						pos_dist += dddy;
 					}
 
 					if (pos_dist < pos_smallest_dist) {
 						pos_smallest_dist = pos_dist;
+						return true;
+					}
+
+					return false;
+				};
+
+				for (let pos = 0; pos <= text_node.textContent.length; pos++) {
+					range.setStart(text_node, pos);
+					range.setEnd(text_node, pos);
+
+					const position_center = getRectCenter(range.getBoundingClientRect());
+					if (considerRect(position_center)) {
 						closest_pos = pos;
+					}
+				}
+
+				if (text_node.textContent === "") {
+					if (considerRect(getRectCenter(textable.getBoundingClientRect()))) {
+						closest_pos = 0;
 					}
 				}
 
