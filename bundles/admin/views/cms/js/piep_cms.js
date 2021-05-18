@@ -1000,6 +1000,7 @@ class PiepCMS {
 	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			let prop_str = input.dataset.blc_prop;
+			const prop_def = piep_cms_manager.blc_props.find((b) => b.name === prop_str);
 			const blc_menu_name = input._parent(this.side_menu) ? "side" : "float";
 
 			const setProp = () => {
@@ -1100,7 +1101,9 @@ class PiepCMS {
 				});
 
 				this.update({ all: true });
-
+				if (prop_def && prop_def.affects_selection) {
+					this.displaySelectionBreadcrumbs();
+				}
 				this.displayTextSelection({ force: true });
 
 				if (this.text_selection) {
@@ -1109,7 +1112,7 @@ class PiepCMS {
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
-				this.filterMenu({ scroll_to_top: true, from_blc_menu_name: blc_menu_name });
+				this.filterMenu({ from_blc_menu_name: blc_menu_name });
 
 				this.displayNodeLayout();
 			};
@@ -3627,6 +3630,8 @@ class PiepCMS {
 		if (!v_node) {
 			return;
 		}
+
+		// TODO: if a value is different than anything set just return nothing in the box yayayayay
 
 		/**
 		 *

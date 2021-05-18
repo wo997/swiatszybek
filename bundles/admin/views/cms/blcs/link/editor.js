@@ -13,6 +13,7 @@
 		name: "link",
 		type_groups: ["advanced"],
 		blc_groups: [{ match_tag: piep_cms_manager.match_linkables, priority: link_priority }],
+		affects_selection: true,
 		menu_html: html`
 			<div class="label">Link</div>
 			<input class="field trim" data-blc_prop="settings.link" />

@@ -75,19 +75,24 @@
 /**
  * @typedef {{
  * name: string
- * blc_groups?: BlcGroup[]
- * menu_html: string
- * }} cmsFloatingEditableProp
+ * } & cmsEditablePropBase} cmsFloatingEditableProp
+ */
+
+/**
+ * @typedef {{
+ * name: string
+ * type_groups: cmsEditableGroupEnum[]
+ * init?(piep_cms: PiepCMS)
+ * } & cmsEditablePropBase} cmsEditableProp
  */
 
 /**
  * @typedef {{
  * name: string
  * blc_groups?: BlcGroup[]
- * type_groups: cmsEditableGroupEnum[]
  * menu_html: string
- * init?(piep_cms: PiepCMS)
- * }} cmsEditableProp
+ * affects_selection?: boolean
+ * }} cmsEditablePropBase
  */
 
 /**
