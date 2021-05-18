@@ -3978,7 +3978,7 @@ class PiepCMS {
 		const sel_rect = this.cursor.getBoundingClientRect();
 		const sel_center = getRectCenter(sel_rect);
 
-		const textables = this.content._children(".textable");
+		const textables = this.content._children(".textable:not(.editor_disabled)");
 
 		/** @type {{node:PiepNode, dist: number}[]} */
 		let textables_with_dist = [];
