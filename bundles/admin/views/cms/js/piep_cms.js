@@ -2335,9 +2335,13 @@ class PiepCMS {
 		this.text_selection.partial_ranges.forEach((range) => {
 			const v_node = this.getVNodeById(range.vid);
 			v_node.text = v_node.text.substring(0, range.start) + v_node.text.substring(range.end);
-			if (v_node.text === "") {
-				// change the selection dude, it be gone in a sec
+
+			if (this.text_selection.focus_vid === range.vid) {
+				this.text_selection.focus_offset += range.start - range.end;
 			}
+			// if (v_node.text === "") {
+			// 	// change the selection dude, it be gone in a sec
+			// }
 		});
 
 		this.collapseSelection();
