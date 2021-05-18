@@ -1141,11 +1141,14 @@ class PiepCMS {
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node = this.getVNodeById(click_blc_vid);
-				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
-					if (click_v_node.text === undefined && !click_blc.classList.contains("text_container")) {
-						this.text_selection = undefined;
-						this.setFocusNode(click_blc_vid);
-					}
+				if (
+					click_v_node &&
+					!click_blc.classList.contains("editor_disabled") &&
+					click_v_node.text === undefined &&
+					!click_blc.classList.contains("text_container")
+				) {
+					this.text_selection = undefined;
+					this.setFocusNode(click_blc_vid);
 				}
 			}
 
@@ -2328,8 +2331,17 @@ class PiepCMS {
 		if (!this.text_selection) {
 			return;
 		}
-		if (!(this.text_selection.middle_vids.length === 1 && this.text_selection.middle_vids[0] === this.text_selection.focus_vid)) {
-			this.removeVNodes(this.text_selection.middle_vids);
+
+		/** @type {number[]} */
+		const remove_vids = [];
+		for (const mid_vid of this.text_selection.middle_vids) {
+			if (mid_vid === this.text_selection.focus_vid) {
+				const v_node = this.getVNodeById(mid_vid);
+				v_node.text = ""; // just empty the guy who is selected, remove others
+				this.text_selection.focus_offset = 0;
+			} else {
+				remove_vids.push(mid_vid);
+			}
 		}
 
 		this.text_selection.partial_ranges.forEach((range) => {
@@ -2339,9 +2351,6 @@ class PiepCMS {
 			if (this.text_selection.focus_vid === range.vid && this.text_selection.direction === 1) {
 				this.text_selection.focus_offset += range.start - range.end;
 			}
-			// if (v_node.text === "") {
-			// 	// change the selection dude, it be gone in a sec
-			// }
 		});
 
 		this.collapseSelection();
