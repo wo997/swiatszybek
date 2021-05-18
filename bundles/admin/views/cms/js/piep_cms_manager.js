@@ -36,7 +36,7 @@ class PiepCMSManager {
 		this.pretty_percentages = this.pretty_percentages.filter(onlyUnique);
 		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 
-		this.text_block_props = ["styles.textAlign", "tag"];
+		this.text_container_props = ["styles.textAlign", "tag"];
 		this.textable_props = [
 			"styles.color",
 			"styles.backgroundColor",

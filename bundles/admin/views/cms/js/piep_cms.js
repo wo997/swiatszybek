@@ -192,6 +192,8 @@ class PiepCMS {
 					}
 				}
 			}
+
+			this.removeEmptyText();
 		});
 	}
 
@@ -368,7 +370,6 @@ class PiepCMS {
 
 		this.grabbed_block_wrapper = container_node("piep_editor_grabbed_block_wrapper");
 		this.add_block_menu = container_node("piep_editor_add_block_menu");
-		//this.grabbed_block_wrapper.classList.add("focus_rect"); // TODO: just use or remove
 		this.side_menu = this.container._child(".piep_editor_side_menu");
 
 		{
@@ -891,13 +892,13 @@ class PiepCMS {
 		}
 		const v_node = v_node_data.v_node;
 
-		if (piep_cms_manager.text_block_props.includes(prop_str) && v_node.tag.match(piep_cms_manager.match_textables)) {
+		if (piep_cms_manager.text_container_props.includes(prop_str) && this.isTextable(v_node)) {
 			const parent = v_node_data.parent_v_nodes[0];
 			if (parent) {
 				this.setPropOfVNode(prop_str, parent.id, input);
 				return;
 			}
-		} else if (piep_cms_manager.textable_props.includes(prop_str) && v_node.tag.match(piep_cms_manager.match_text_containers)) {
+		} else if (piep_cms_manager.textable_props.includes(prop_str) && this.isTextContainer(v_node)) {
 			// to all children
 			const children = v_node_data.v_node.children;
 			if (children) {
@@ -1249,7 +1250,10 @@ class PiepCMS {
 			}
 
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
-			const v_node = v_node_data ? v_node_data.v_node : undefined;
+			if (!v_node_data) {
+				return;
+			}
+			const v_node = v_node_data.v_node;
 
 			if (target._parent(".move_btn")) {
 				this.grabBlock({ type: "move" });
@@ -1328,12 +1332,6 @@ class PiepCMS {
 							this.insertText(ev.key);
 							this.pushHistory("insert_text");
 						}
-					}
-				} else {
-					let anything = this.removeEmptyText();
-					if (anything) {
-						this.recreateDom();
-						updateSelection();
 					}
 				}
 
@@ -1476,6 +1474,8 @@ class PiepCMS {
 
 				this.scrollToCursor();
 			}
+
+			this.removeEmptyText();
 		});
 	}
 
@@ -1758,10 +1758,6 @@ class PiepCMS {
 		return anything;
 	}
 
-	/**
-	 *
-	 * @returns {boolean}
-	 */
 	removeEmptyText() {
 		// TODO: also text containers?
 		const vids = [];
@@ -1791,7 +1787,10 @@ class PiepCMS {
 
 		traverseEmptyText(this.v_dom);
 
-		return this.removeVNodes(vids);
+		const anything = this.removeVNodes(vids);
+		if (anything) {
+			this.update({ dom: true, selection: true });
+		}
 	}
 
 	precalculateSettings() {
@@ -1825,11 +1824,6 @@ class PiepCMS {
 		};
 
 		traverseSettings(this.v_dom);
-	}
-
-	preRender() {
-		this.removeEmptyText();
-		this.precalculateSettings();
 	}
 
 	/**
@@ -2067,7 +2061,7 @@ class PiepCMS {
 	 * options just for optimisation but seems unnecessary
 	 */
 	recreateDom(options = {}) {
-		this.preRender();
+		this.precalculateSettings();
 
 		/** @type {number[]} */
 		let included_vids = [];
@@ -3082,7 +3076,15 @@ class PiepCMS {
 	 * @param {vDomNode} v_node
 	 */
 	isTextContainer(v_node) {
-		return ["h1", "h2", "h3", "h4", "h5", "h6", "p"].includes(v_node.tag);
+		return !!v_node.tag.match(piep_cms_manager.match_text_containers);
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 */
+	isTextable(v_node) {
+		return !!v_node.tag.match(piep_cms_manager.match_textables);
 	}
 
 	getParentTextContainerId(vid) {
@@ -3630,14 +3632,41 @@ class PiepCMS {
 	 * @returns
 	 */
 	setBlcMenuFromFocusedNode(options = {}) {
-		let v_node_data = this.getVNodeDataById(this.focus_node_vid);
-		let v_node = v_node_data ? v_node_data.v_node : undefined;
+		/** @type {number[]} */
+		const from_vids = [];
 
-		if (!v_node) {
-			return;
+		if (this.text_selection) {
+			from_vids.push(...this.text_selection.middle_vids);
+			from_vids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
+			from_vids.push(this.text_selection.focus_vid);
+		} else {
+			if (this.focus_node_vid !== undefined) {
+				from_vids.push(this.focus_node_vid);
+			}
 		}
 
-		// TODO: if a value is different than anything set just return nothing in the box yayayayay
+		/** @type {vDomNode[]} */
+		const from_v_nodes = [];
+
+		from_vids.filter(onlyUnique).forEach((vid) => {
+			const v_node_data = this.getVNodeDataById(vid);
+			if (!v_node_data) {
+				return;
+			}
+			const v_node = v_node_data.v_node;
+
+			if (this.isTextable(v_node)) {
+				from_v_nodes.push(v_node_data.parent_v_nodes[0]);
+			}
+			if (this.isTextContainer(v_node)) {
+				const children = v_node_data.v_node.children;
+				if (children) {
+					from_v_nodes.push(...children);
+				}
+			}
+
+			from_v_nodes.push(v_node);
+		});
 
 		/**
 		 *
@@ -3646,45 +3675,55 @@ class PiepCMS {
 		const setPropsOfInputs = (inputs) => {
 			inputs.forEach((input) => {
 				const prop_str = input.dataset.blc_prop;
-				let prop_val;
-				let v_node_ref = v_node; // we cant change it below dude
+				let val = "";
+				for (const v_node of from_v_nodes) {
+					let prop_val;
+					let v_node_ref = v_node;
 
-				if (piep_cms_manager.text_block_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_textables)) {
-					// to parent
-					const parent = v_node_data.parent_v_nodes[0];
-					// Ofc it is!  && this.isTextContainer(parent)
-					if (parent) {
-						v_node_ref = parent;
+					if (this.isTextContainer(v_node)) {
+						if (!piep_cms_manager.text_container_props.includes(prop_str)) {
+							continue;
+						}
+					} else if (this.isTextable(v_node)) {
+						if (!piep_cms_manager.textable_props.includes(prop_str)) {
+							continue;
+						}
 					}
-				} else if (piep_cms_manager.textable_props.includes(prop_str) && v_node_ref.tag.match(piep_cms_manager.match_text_containers)) {
-					// to all children
-					const children = v_node_data.v_node.children;
-					// TODO: all have to match? tricky one, for now leave empty, it's ok
-					// if (children) {
-					// 	v_node_ref = parent;
-					// }
+
+					if (prop_str.startsWith("styles.")) {
+						const res_styles = v_node_ref.styles[this.selected_resolution];
+						if (res_styles) {
+							prop_val = res_styles[prop_str.substring("styles.".length)];
+						}
+					} else if (prop_str.startsWith("attrs.")) {
+						if (!v_node_ref.attrs) {
+							v_node_ref.attrs = {};
+						}
+						prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
+					} else if (prop_str.startsWith("settings.")) {
+						if (!v_node_ref.settings) {
+							v_node_ref.settings = {};
+						}
+						prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
+					} else {
+						prop_val = v_node_ref[prop_str];
+					}
+
+					if (prop_val === undefined) {
+						// nothing selected? just ignore, eeeeezy
+						val = "";
+						break;
+					} else {
+						if (val !== undefined) {
+							val = prop_val;
+						} else if (prop_val !== val) {
+							// duuude, can't display 2 different values, thus leave empty
+							val = "";
+							break;
+						}
+					}
 				}
 
-				if (prop_str.startsWith("styles.")) {
-					const res_styles = v_node_ref.styles[this.selected_resolution];
-					if (res_styles) {
-						prop_val = res_styles[prop_str.substring("styles.".length)];
-					}
-				} else if (prop_str.startsWith("attrs.")) {
-					if (!v_node_ref.attrs) {
-						v_node_ref.attrs = {};
-					}
-					prop_val = v_node_ref.attrs[prop_str.substring("attrs.".length)];
-				} else if (prop_str.startsWith("settings.")) {
-					if (!v_node_ref.settings) {
-						v_node_ref.settings = {};
-					}
-					prop_val = v_node_ref.settings[prop_str.substring("settings.".length)];
-				} else {
-					prop_val = v_node_ref[prop_str];
-				}
-
-				let val = def(prop_val, "");
 				input._set_value(val, { quiet: true });
 			});
 		};
