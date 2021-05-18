@@ -60,6 +60,10 @@ class PiepCMS {
 			ev.preventDefault();
 		});
 
+		this.content.addEventListener("mousemove", (ev) => {
+			this.select_blc_active = true;
+		});
+
 		document.addEventListener("selectionchange", () => {
 			if (this.grabbed_v_node || this.editing_layout) {
 				return;
@@ -218,6 +222,8 @@ class PiepCMS {
 
 		const rendered_keys = [];
 
+		const text_range = document.createRange();
+
 		/**
 		 *
 		 * @param {number} vid
@@ -252,9 +258,18 @@ class PiepCMS {
 			rendered_keys.push(key);
 
 			let cnt = -1;
+			const text_node = getTextNode(node); // optimisation - pass to getRangeByIndex for speeeed
+
 			for (let i = start; i < end; i++) {
 				cnt++;
-				const text_range = getRangeByIndex(node, i, i + 1);
+
+				try {
+					text_range.setStart(text_node, i);
+					text_range.setEnd(text_node, i + 1);
+				} catch (e) {
+					console.error(e, node);
+				}
+
 				const text_range_rect = text_range.getBoundingClientRect();
 				rects.push(text_range_rect);
 
@@ -1282,6 +1297,8 @@ class PiepCMS {
 			}
 
 			if (this.text_selection) {
+				this.select_blc_active = false;
+
 				/** @type {PiepNode} */
 				let focus_node;
 				/** @type {number} */
@@ -1352,12 +1369,14 @@ class PiepCMS {
 
 									const focus_v_node_parent = focus_v_node_data.parent_v_nodes[0];
 
-									if (dir === 1) {
-										focus_v_node_parent.children.push(...next_text_container_v_node.children);
-										this.removeVNodes([next_text_container_v_node.id]);
-									} else {
-										next_text_container_v_node.children.push(...focus_v_node_parent.children);
-										this.removeVNodes([focus_v_node_parent.id]);
+									if (next_text_container_v_node && next_text_container_v_node.children && focus_v_node_parent.children) {
+										if (dir === 1) {
+											focus_v_node_parent.children.push(...next_text_container_v_node.children);
+											this.removeVNodes([next_text_container_v_node.id]);
+										} else {
+											next_text_container_v_node.children.push(...focus_v_node_parent.children);
+											this.removeVNodes([focus_v_node_parent.id]);
+										}
 									}
 								}
 							}
@@ -2295,15 +2314,21 @@ class PiepCMS {
 	 * @param {PiepNode} node
 	 * @param {string} selector
 	 * @param {Direction} direction
+	 * @param {{
+	 * include_template?: boolean
+	 * }} options
 	 * @returns {PiepNode | undefined}
 	 */
-	getDeepSibling(node, selector, direction) {
+	getDeepSibling(node, selector, direction, options = {}) {
 		/** @type {PiepNode} */
 		let parent = node;
 		while (parent) {
 			const next = direction === 1 ? parent._next() : parent._prev();
 			if (next) {
 				if (!this.content.contains(next)) {
+					return undefined;
+				}
+				if (!options.include_template && next.classList.contains("editor_disabled")) {
 					return undefined;
 				}
 
@@ -2468,24 +2493,25 @@ class PiepCMS {
 	}
 
 	showFocus() {
-		if (this.grabbed_v_node) {
-			return;
-		}
-
 		/** @type {ShowFocusToNodeData[]} */
 		const show_vids = [];
 
 		let show_float_menu = false;
-		if (this.focus_node_vid !== undefined) {
+
+		if (!this.grabbed_v_node && this.focus_node_vid !== undefined) {
 			show_float_menu = true;
 			show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
 		}
 
-		if (this.text_selection !== undefined) {
+		if (this.grabbed_v_node) {
+			show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
+		}
+
+		if (this.text_selection !== undefined && !this.grabbed_v_node) {
 			show_float_menu = true;
 		}
 
-		if (!this.layout_control_prop) {
+		if (!this.layout_control_prop && !this.grabbed_v_node) {
 			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
 			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
 
@@ -3823,25 +3849,27 @@ class PiepCMS {
 		/** @type {number[]} */
 		const vids = [];
 
-		for (const show_node of show_nodes.filter((e, index) => show_nodes.findIndex((z) => z.vid === e.vid) === index)) {
-			const focus_node = this.getNode(show_node.vid);
-			if (!focus_node) {
-				continue;
-			}
-			if (focus_node.classList.contains("textable")) {
-				vids.push(show_node.vid);
-			} else {
-				const focus_node_rect = focus_node.getBoundingClientRect();
-				float_focuses_html += html`<div
-					class="focus_rect"
-					style="
+		if (this.select_blc_active) {
+			for (const show_node of show_nodes.filter((e, index) => show_nodes.findIndex((z) => z.vid === e.vid) === index)) {
+				const focus_node = this.getNode(show_node.vid);
+				if (!focus_node) {
+					continue;
+				}
+				if (focus_node.classList.contains("textable")) {
+					vids.push(show_node.vid);
+				} else {
+					const focus_node_rect = focus_node.getBoundingClientRect();
+					float_focuses_html += html`<div
+						class="focus_rect"
+						style="
                         left:${focus_node_rect.left - 1}px;
                         top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
                         width:${focus_node_rect.width + 2}px;
                         height:${focus_node_rect.height + 2}px;
                         opacity:${show_node.opacity};
                 "
-				></div>`;
+					></div>`;
+				}
 			}
 		}
 

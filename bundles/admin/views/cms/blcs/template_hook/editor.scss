@@ -3,3 +3,11 @@
 .template_hook_root {
 	min-height: 100px;
 }
+
+.editor_disabled:not(.template_hook_root) {
+	user-select: none;
+}
+
+.template_hook_root {
+	user-select: auto;
+}
