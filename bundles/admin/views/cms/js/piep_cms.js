@@ -17,9 +17,6 @@ class PiepCMS {
 
 		this.last_map_vid_render_props = {}; // vid => props
 
-		/** @type {"float" | "side" | ""} */
-		this.last_blc_menu_name = "";
-
 		this.initNodes();
 		this.initConsts();
 
@@ -444,8 +441,6 @@ class PiepCMS {
 		this.v_dom_history.push(cloneObject(this.v_dom));
 		this.renderHistory();
 
-		this.filterMenu();
-
 		clearTimeout(this.forgetHistoryChangeName);
 		this.history_change_name = name;
 		this.forgetHistoryChangeName = setTimeout(() => {
@@ -629,7 +624,6 @@ class PiepCMS {
 				const value_input = this.side_menu._child(".prop_font_size .value_input");
 				value_input.click();
 				value_input.focus();
-				this.last_blc_menu_name = "side";
 			});
 		};
 
@@ -733,7 +727,6 @@ class PiepCMS {
 				color_picker.click();
 				color_picker.focus();
 				scrollIntoView(color_picker, { duration: 0, offset: this.blc_menu_scroll_panel.offsetHeight * 0.5 });
-				this.last_blc_menu_name = "side";
 			});
 		};
 
@@ -1007,6 +1000,7 @@ class PiepCMS {
 	initEditables() {
 		this.container._children("[data-blc_prop]").forEach((input) => {
 			let prop_str = input.dataset.blc_prop;
+			const blc_menu_name = input._parent(this.side_menu) ? "side" : "float";
 
 			const setProp = () => {
 				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
@@ -1115,6 +1109,8 @@ class PiepCMS {
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
+				this.filterMenu({ scroll_to_top: true, from_blc_menu_name: blc_menu_name });
+
 				this.displayNodeLayout();
 			};
 
@@ -1144,9 +1140,6 @@ class PiepCMS {
 	initClick() {
 		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
-
-			/** @type {"float" | "side" | ""} */
-			this.last_blc_menu_name = target._parent(".blc_menu_scroll_panel") ? "side" : "float";
 		});
 
 		document.addEventListener("click", (ev) => {
@@ -1268,7 +1261,6 @@ class PiepCMS {
 				const link_input = this.side_menu._child(".prop_link input");
 				link_input.click();
 				link_input.focus();
-				this.last_blc_menu_name = "side";
 			}
 
 			const choose_img_btn = target._parent(".choose_img_btn");
@@ -3621,15 +3613,14 @@ class PiepCMS {
 		});
 	}
 
-	setBlcMenuFromFocusedNode() {
-		let quiet = false;
-
-		const blc_menu_token = this.focus_node_vid + "_" + this.selected_resolution;
-		if (this.last_blc_menu_token === blc_menu_token) {
-			quiet = true;
-		}
-		this.last_blc_menu_token = blc_menu_token;
-
+	/**
+	 *
+	 * @param {{
+	 * from_blc_menu_name?: PiepCMSSideMenuName
+	 * }} options
+	 * @returns
+	 */
+	setBlcMenuFromFocusedNode(options = {}) {
 		let v_node_data = this.getVNodeDataById(this.focus_node_vid);
 		let v_node = v_node_data ? v_node_data.v_node : undefined;
 
@@ -3687,10 +3678,10 @@ class PiepCMS {
 			});
 		};
 
-		if (this.last_blc_menu_name !== "float" || !quiet) {
+		if (options.from_blc_menu_name !== "float") {
 			setPropsOfInputs(this.float_menu._children("[data-blc_prop]"));
 		}
-		if (this.last_blc_menu_name !== "side" || !quiet) {
+		if (options.from_blc_menu_name !== "side") {
 			setPropsOfInputs(this.side_menu._children("[data-blc_prop]"));
 		}
 	}
@@ -3699,6 +3690,7 @@ class PiepCMS {
 	 *
 	 * @param {{
 	 * scroll_to_top?: boolean
+	 * from_blc_menu_name?: PiepCMSSideMenuName
 	 * }} options
 	 */
 	filterMenu(options = {}) {
@@ -3835,7 +3827,7 @@ class PiepCMS {
 			this.blc_menu_scroll_panel.scrollTop = 0;
 		}
 
-		this.setBlcMenuFromFocusedNode();
+		this.setBlcMenuFromFocusedNode({ from_blc_menu_name: options.from_blc_menu_name });
 	}
 
 	/**
@@ -3900,18 +3892,23 @@ class PiepCMS {
 		let top = focus_node_rect.top - piep_editor_float_menu_rect.height - 1;
 
 		const safe_off_x = 5;
-		const safe_off_y = 25;
+		const safe_off_y = 20;
 		left = clamp(
 			content_wrapper_rect.left + safe_off_x,
 			left,
 			content_wrapper_rect.left + content_wrapper_rect.width - piep_editor_float_menu_rect.width - safe_off_x
 		);
-		// TODO: hide sometimes? not always necessary when user scrolls
-		if (top < content_wrapper_rect.top + safe_off_y) {
-			top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
 
-			if (top > content_wrapper_rect.top + content_wrapper_rect.height - safe_off_y) {
-				top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
+		const min_y = content_wrapper_rect.top + safe_off_y;
+		if (focus_node.classList.contains("text_container")) {
+			top = Math.max(top, min_y);
+		} else {
+			if (top < min_y) {
+				top += focus_node_rect.height + piep_editor_float_menu_rect.height + 2;
+
+				if (top > content_wrapper_rect.top + content_wrapper_rect.height - safe_off_y) {
+					top -= 0.5 * (focus_node_rect.height + piep_editor_float_menu_rect.height + 2);
+				}
 			}
 		}
 

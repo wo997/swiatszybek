@@ -77,8 +77,7 @@
 			grid-area: 2 / 2 / 3 / 3;
 			align-items: stretch;
 		}
-		// TODO: that sucks, maybe a query for p,h1 etc? text can appear only in these
-		.textable {
+		.text_container {
 			white-space: pre-wrap;
 		}
 	}

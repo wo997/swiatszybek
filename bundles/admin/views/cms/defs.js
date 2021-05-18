@@ -144,3 +144,7 @@
  * opacity: number
  * }} ShowFocusToNodeData
  */
+
+/**
+ * @typedef {"side" | "float"} PiepCMSSideMenuName
+ */
