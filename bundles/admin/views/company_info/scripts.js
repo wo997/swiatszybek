@@ -23,7 +23,6 @@ domload(() => {
 			params,
 			success: () => {
 				showNotification("Zapisano zmiany", { one_line: true, type: "success" });
-				//window.location.reload();
 			},
 		});
 	});

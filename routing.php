@@ -65,6 +65,7 @@ $admin_navigations_tree = [
             //["url" => "/zestawy", "title" => '<i class="fas fa-layer-group"></i> Zestawy'], // nah
         ]
     ],
+    ["url" => "/platnosci", "title" => '<i class="fas fa-credit-card"></i> Płatności'],
     ["url" => "/wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
     ["url" => "/dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
     [

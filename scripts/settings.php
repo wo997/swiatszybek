@@ -9,11 +9,12 @@
  */
 function getSetting($path, $default = "")
 {
-    return def(SETTINGS, $path, $default);
+    global $settings;
+    return def($settings, $path, $default);
 }
 
+global $settings;
 $settings = json_decode(@file_get_contents(BUILDS_PATH . "settings.json"), true);
 if (!$settings) {
     $settings = [];
 }
-define("SETTINGS", $settings);

@@ -91,7 +91,7 @@ class Przelewy24
     public static function get()
     {
         if (!self::$p24) {
-            self::$settings = getSetting(["payments", "przelewy24"]);
+            self::$settings = getSetting(["general", "payments"]);
             self::$p24 = new Przelewy24(
                 def(self::$settings, "p24_merchant_id"),
                 def(self::$settings, "p24_pos_id"),

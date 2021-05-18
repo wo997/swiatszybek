@@ -94,6 +94,8 @@ function saveSettings($dir, $file, $json_paths_and_values, $merge = true)
 
 function buildSettings()
 {
+    global $settings;
+
     $_settings = [];
 
     Files::scanDirectories(
@@ -122,6 +124,8 @@ function buildSettings()
 
     $sp = BUILDS_PATH . "settings.json";
     $res = json_encode($_settings);
+
+    $settings = $_settings;
 
     if (file_get_contents($sp) !== $res) {
         Files::save($sp, $res);
