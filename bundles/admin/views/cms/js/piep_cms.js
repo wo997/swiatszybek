@@ -1073,7 +1073,9 @@ class PiepCMS {
 
 				if (this.text_selection) {
 					set_prop_of_ids.push(...this.text_selection.middle_vids);
-				} else if (this.focus_node_vid !== undefined) {
+				}
+
+				if (this.focus_node_vid !== undefined && !piep_cms_manager.textable_props.includes(prop_str)) {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
 
