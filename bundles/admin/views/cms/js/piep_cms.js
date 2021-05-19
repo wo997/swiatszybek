@@ -1891,14 +1891,14 @@ class PiepCMS {
 	update(options = {}) {
 		this.content.style.minHeight = this.content.offsetHeight + "px";
 
-		if (options.all || options.selection) {
-			this.displayInspectorTree();
-		}
 		if (options.all || options.styles) {
 			this.recalculateStyles();
 		}
 		if (options.all || options.dom) {
 			this.recreateDom();
+		}
+		if (options.all || options.selection) {
+			this.displayInspectorTree();
 		}
 
 		registerForms();
@@ -3692,7 +3692,7 @@ class PiepCMS {
 		}
 
 		this.inspector_tree._children(".v_node_label").forEach((e) => {
-			e.classList.toggle("selected", e === tree_blc);
+			e.classList.toggle("selected", +e.dataset.vid === this.focus_node_vid);
 		});
 	}
 
