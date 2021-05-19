@@ -24,7 +24,7 @@
 		name: "link_btn",
 		blc_groups: text_groups,
 		menu_html: html`
-			<button class="btn transparent small link_btn" data-tooltip="Ustaw jako link">
+			<button class="btn transparent small link_btn" data-tooltip="Wstaw link">
 				<i class="fas fa-link"></i>
 			</button>
 		`,

@@ -19,6 +19,15 @@
 	});
 
 	piep_cms_manager.registerFloatingProp({
+		name: "copy_btn",
+		menu_html: html`
+			<button class="btn transparent small copy_btn" data-tooltip="Skopiuj blok">
+				<i class="fas fa-copy"></i>
+			</button>
+		`,
+	});
+
+	piep_cms_manager.registerFloatingProp({
 		name: "remove_btn",
 		menu_html: html`
 			<button class="btn transparent small remove_btn" data-tooltip="Usuń blok">

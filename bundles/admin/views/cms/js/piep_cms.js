@@ -852,34 +852,7 @@ class PiepCMS {
 			`;
 		}
 
-		// menu_html += html`
-		// 	<div style="width:100%"></div>
-		// 	<div class="btn transparent mt2"><i class="fas fa-ellipsis-h"></i> Więcej</div>
-		// `;
-
 		this.add_block_menu._set_content(menu_html);
-
-		this.add_block_menu.addEventListener("click", (ev) => {
-			const target = $(ev.target);
-
-			const block_to_add_btn = target._parent(".block_to_add");
-			if (block_to_add_btn) {
-				setTimeout(() => {
-					const blc_schema = piep_cms_manager.blcs_schema.find((e) => e.id === block_to_add_btn.dataset.id);
-					const add_v_node = blc_schema.v_node;
-					add_v_node.id = this.getNewBlcId();
-					if (add_v_node.children) {
-						add_v_node.children.forEach((child, index) => {
-							child.id = add_v_node.id + 1 + index;
-						});
-					}
-					this.v_dom.push(add_v_node); // hidden at the end ;) removed right when grab is triggered
-					this.update({ all: true }); // creates the node to grab
-					this.setFocusNode(add_v_node.id);
-					this.grabBlock({ type: "insert" });
-				});
-			}
-		});
 	}
 
 	/**
@@ -1150,6 +1123,37 @@ class PiepCMS {
 		});
 	}
 
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 * @returns
+	 */
+	grabBlockFromVNode(v_node) {
+		v_node = cloneObject(v_node);
+
+		let next_id = this.getNewBlcId();
+
+		/**
+		 * @param {vDomNode} v_node
+		 */
+		const setIds = (v_node) => {
+			v_node.id = next_id;
+			next_id++;
+			if (v_node.children) {
+				v_node.children.forEach((child) => {
+					setIds(child);
+				});
+			}
+		};
+		setIds(v_node);
+
+		this.v_dom.push(v_node); // hidden at the end ;) removed right when grab is triggered
+		this.update({ all: true }); // creates the node to grab
+		this.setFocusNode(v_node.id);
+		this.text_selection = undefined;
+		this.grabBlock({ type: "insert" });
+	}
+
 	initClick() {
 		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
@@ -1157,6 +1161,13 @@ class PiepCMS {
 
 		document.addEventListener("click", (ev) => {
 			const target = $(ev.target);
+
+			const block_to_add_btn = target._parent(".block_to_add");
+			if (block_to_add_btn) {
+				const blc_schema = piep_cms_manager.blcs_schema.find((e) => e.id === block_to_add_btn.dataset.id);
+				this.grabBlockFromVNode(blc_schema.v_node);
+				return;
+			}
 
 			const click_blc = target._parent(".blc");
 			if (click_blc) {
@@ -1264,6 +1275,10 @@ class PiepCMS {
 
 			if (target._parent(".move_btn")) {
 				this.grabBlock({ type: "move" });
+			}
+
+			if (target._parent(".copy_btn")) {
+				this.grabBlockFromVNode(v_node);
 			}
 
 			if (target._parent(".layout_btn")) {
