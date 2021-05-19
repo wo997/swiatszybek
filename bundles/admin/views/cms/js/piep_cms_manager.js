@@ -44,6 +44,7 @@ class PiepCMSManager {
 			"styles.fontWeight",
 			"styles.fontStyle",
 			"styles.textDecoration",
+			"settings.link",
 		];
 
 		this.request_vids = []; // backend render

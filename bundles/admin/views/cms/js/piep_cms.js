@@ -1168,6 +1168,11 @@ class PiepCMS {
 						this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
 					} else {
 						this.setFocusNode(click_v_node.id);
+
+						if (!this.isTextContainer(click_v_node)) {
+							// sometimes it's just a text container that's clicked dude
+							this.text_selection = undefined;
+						}
 					}
 				}
 			}
