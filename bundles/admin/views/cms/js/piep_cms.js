@@ -2787,6 +2787,11 @@ class PiepCMS {
 	}
 
 	editLayout() {
+		const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
+		if (this.isTextable(focus_v_node_data.v_node)) {
+			this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
+		}
+
 		this.editing_layout = true;
 
 		this.container.classList.add("editing_layout");
@@ -2806,10 +2811,10 @@ class PiepCMS {
 
 		let layout_html = "";
 
-		const focus_node = this.getNode(this.focus_node_vid);
-		const focus_node_rect = focus_node.getBoundingClientRect();
+		const edit_node = this.getNode(this.focus_node_vid);
+		const edit_node_rect = edit_node.getBoundingClientRect();
 
-		const focus_node_style = window.getComputedStyle(focus_node);
+		const focus_node_style = window.getComputedStyle(edit_node);
 
 		const orange = "#d806";
 		const green = "#3d56";
@@ -2841,9 +2846,9 @@ class PiepCMS {
 
 		{
 			// top
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top;
-			let width = focus_node_rect.width;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top;
+			let width = edit_node_rect.width;
 			let height = Math.abs(mr_top);
 			let background = mr_top > 0 ? orange : orange;
 			if (mr_top > 0) {
@@ -2853,9 +2858,9 @@ class PiepCMS {
 		}
 		{
 			// bottom
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height;
-			let width = focus_node_rect.width;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top + edit_node_rect.height;
+			let width = edit_node_rect.width;
 			let height = Math.abs(mr_bottom);
 			let background = mr_bottom > 0 ? orange : orange;
 			if (mr_bottom < 0) {
@@ -2865,10 +2870,10 @@ class PiepCMS {
 		}
 		{
 			// left
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top;
 			let width = Math.abs(mr_left);
-			let height = focus_node_rect.height;
+			let height = edit_node_rect.height;
 			let background = mr_top > 0 ? orange : orange;
 			if (mr_left > 0) {
 				left -= width;
@@ -2877,10 +2882,10 @@ class PiepCMS {
 		}
 		{
 			// right
-			let left = focus_node_rect.left + focus_node_rect.width;
-			let top = focus_node_rect.top;
+			let left = edit_node_rect.left + edit_node_rect.width;
+			let top = edit_node_rect.top;
 			let width = Math.abs(mr_right);
-			let height = focus_node_rect.height;
+			let height = edit_node_rect.height;
 			let background = mr_top > 0 ? orange : orange;
 			if (mr_right < 0) {
 				left -= width;
@@ -2903,35 +2908,35 @@ class PiepCMS {
 
 		{
 			// top
-			let left = focus_node_rect.left + bw_left;
-			let top = focus_node_rect.top + bw_top;
-			let width = focus_node_rect.width - bw_left - bw_right;
+			let left = edit_node_rect.left + bw_left;
+			let top = edit_node_rect.top + bw_top;
+			let width = edit_node_rect.width - bw_left - bw_right;
 			let height = Math.abs(pd_top);
 			display_padding(left, top, width, height);
 		}
 		{
 			// bottom
-			let left = focus_node_rect.left + bw_left;
-			let top = focus_node_rect.top + focus_node_rect.height - bw_bottom;
-			let width = focus_node_rect.width - bw_left - bw_right;
+			let left = edit_node_rect.left + bw_left;
+			let top = edit_node_rect.top + edit_node_rect.height - bw_bottom;
+			let width = edit_node_rect.width - bw_left - bw_right;
 			let height = Math.abs(pd_bottom);
 			top -= height;
 			display_padding(left, top, width, height);
 		}
 		{
 			// left
-			let left = focus_node_rect.left + bw_left;
-			let top = focus_node_rect.top + bw_top;
+			let left = edit_node_rect.left + bw_left;
+			let top = edit_node_rect.top + bw_top;
 			let width = Math.abs(pd_left);
-			let height = focus_node_rect.height - bw_top - bw_bottom;
+			let height = edit_node_rect.height - bw_top - bw_bottom;
 			display_padding(left, top, width, height);
 		}
 		{
 			// right
-			let left = focus_node_rect.left + focus_node_rect.width - bw_right;
-			let top = focus_node_rect.top + bw_top;
+			let left = edit_node_rect.left + edit_node_rect.width - bw_right;
+			let top = edit_node_rect.top + bw_top;
 			let width = Math.abs(pd_right);
-			let height = focus_node_rect.height - bw_top - bw_bottom;
+			let height = edit_node_rect.height - bw_top - bw_bottom;
 			left -= width;
 			display_padding(left, top, width, height);
 		}
@@ -2959,57 +2964,57 @@ class PiepCMS {
 		};
 		{
 			// left bottom
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
 			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
 		}
 		{
 			// right bottom
-			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
-			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
 			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
 		}
 		{
 			// left top
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top;
 			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
 		}
 		{
 			// right top
-			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
-			let top = focus_node_rect.top;
+			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+			let top = edit_node_rect.top;
 			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
 		}
 
 		{
 			// top
-			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
-			let top = focus_node_rect.top;
+			let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
+			let top = edit_node_rect.top;
 			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top", "Margines zewnętrzny górny");
 			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top", "Grubość górnej krawędzi");
 			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top", "Margines wewnętrzny górny");
 		}
 		{
 			// bottom
-			let left = focus_node_rect.left + focus_node_rect.width * 0.5 - layout_control_width * 0.5;
-			let top = focus_node_rect.top + focus_node_rect.height - layout_control_width;
+			let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
+			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
 			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom", "Margines zewnętrzny dolny");
 			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom", "Grubość dolnej krawędzi");
 			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom", "Margines wewnętrzny dolny");
 		}
 		{
 			// left
-			let left = focus_node_rect.left;
-			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
+			let left = edit_node_rect.left;
+			let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
 			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left", "Margines zewnętrzny lewy");
 			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left", "Grubość lewej krawędzi");
 			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left", "Margines wewnętrzny lewy");
 		}
 		{
 			// right
-			let left = focus_node_rect.left + focus_node_rect.width - layout_control_width;
-			let top = focus_node_rect.top + focus_node_rect.height * 0.5 - layout_control_width * 0.5;
+			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+			let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
 			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right", "Margines zewnętrzny prawy");
 			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right", "Grubość prawej krawędzi");
 			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right", "Margines wewnętrzny prawy");
@@ -3043,15 +3048,20 @@ class PiepCMS {
 	 */
 	grabBlock(options) {
 		this.grab_block_options = options;
-		this.grabbed_block_vid = this.focus_node_vid;
+		const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
+		if (this.isTextable(focus_v_node_data.v_node)) {
+			this.grabbed_block_vid = focus_v_node_data.parent_v_nodes[0].id;
+		} else {
+			this.grabbed_block_vid = this.focus_node_vid;
+		}
 
 		this.container.classList.add("grabbed_block");
 		this.container.classList.add("disable_editing");
 		// TODO: think if necessary ugh
 		this.current_insert_blc = -1; // will warm up everything on grab
 
-		const focus_node = this.getNode(this.focus_node_vid);
-		this.grabbed_block_wrapper._set_content(focus_node.outerHTML);
+		const grabbed_node = this.getNode(this.grabbed_block_vid);
+		this.grabbed_block_wrapper._set_content(grabbed_node.outerHTML);
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
 		removeClasses(".wo997_img_waiting", ["wo997_img_waiting"], this.grabbed_block_wrapper);
 		lazyLoadImages({ duration: 0 });
