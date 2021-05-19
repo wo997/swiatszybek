@@ -1090,7 +1090,9 @@ class PiepCMS {
 				this.displayTextSelection({ force: true });
 
 				if (this.text_selection) {
-					this.content_active = true;
+					if (input._parent(this.float_menu)) {
+						this.content_active = true;
+					}
 					this.setFocusNode(this.text_selection.focus_vid);
 				}
 
@@ -3718,7 +3720,10 @@ class PiepCMS {
 					let v_node_ref = v_node;
 
 					if (this.isTextContainer(v_node)) {
-						if (!piep_cms_manager.text_container_props.includes(prop_str)) {
+						// if (!piep_cms_manager.text_container_props.includes(prop_str)) {
+						// 	continue;
+						// }
+						if (piep_cms_manager.textable_props.includes(prop_str)) {
 							continue;
 						}
 					} else if (this.isTextable(v_node)) {
