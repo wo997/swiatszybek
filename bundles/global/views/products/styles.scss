@@ -112,7 +112,7 @@
 	}
 }
 
-.product_features {
+.product_filters {
 	.feature_label {
 		font-weight: var(--semi_bold);
 		display: block;
@@ -292,7 +292,7 @@
 				--field_padding_ver: 0.7em;
 			}
 			i {
-				margin-left: 5px;
+				margin-left: 3px !important;
 			}
 		}
 		.separator {
@@ -312,9 +312,8 @@
 		a {
 			display: flex;
 			align-items: center;
-			padding: 8px 0;
-		}
-		li:not(:last-child) > a {
+			padding: 9px 15px;
+			padding-right: 0;
 			box-shadow: 0 1px 0 0 #eee;
 		}
 		.count {

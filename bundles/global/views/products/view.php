@@ -386,9 +386,9 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
 <div class="products_all">
     <div class="mobile_searching">
-        <button class="btn transparent">Kategorie <i class="fas fa-stream"></i></button>
+        <button class="btn transparent categories_btn">Kategorie <i class="fas fa-list"></i></button>
         <div class="separator"></div>
-        <button class="btn transparent">Filtry <i class="fas fa-sliders-h"></i></button>
+        <button class="btn transparent filters_btn">Filtry<span class="product_filter_count"></span> <i class="fas fa-sliders-h"></i></button>
     </div>
     <div class="searching_wrapper">
         <div class="scroll_panel scroll_shadow">
@@ -397,6 +397,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 <div class="product_categories">
                     <?= traverseCategories() ?>
                 </div>
+                <div class="prcbf"></div>
 
                 <div class="label"> <span>Wyszukaj po frazie</span> </div>
                 <input class="field search_phrase" placeholder="Nazwa produktu">
@@ -406,9 +407,10 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                     <span class="feature_filter_count"></span>
                     <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser" style="transform: scale(1.25);"></i></button>
                 </div>
-                <ul class="product_features">
+                <ul class="product_filters">
                     <?= traverseFeatures() ?>
                 </ul>
+                <div class="prfbf"></div>
             </div>
         </div>
     </div>
@@ -448,22 +450,40 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
             </select>
         </div>
 
-        <div class="results_info_mobile">
-            <span>
-                Znaleziono wyników:
-                <div class="spinner_wrapper inline" style="margin-left:1px">
-                    <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
-                    <div class="spinner overlay"></div>
-                </div>
-            </span>
-            <button class="btn primary">Pokaż <i class="fas fa-angle-double-down"></i></button>
-        </div>
-
         <div class="product_list"><?= $products_search_data["html"] ?></div>
 
         <pagination-comp class="product_list_pagination"></pagination-comp>
 
         <div style="height:200px"></div>
+    </div>
+</div>
+
+<div id="products_Categories" data-modal data-dismissable data-expand>
+    <div class="modal_body">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+        <h3 class="modal_header">Kategorie</h3>
+        <div class="scroll_panel scroll_shadow"></div>
+    </div>
+</div>
+
+<div id="products_Filters" data-modal data-dismissable data-expand>
+    <div class="modal_body">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+        <h3 class="modal_header">Filtry</h3>
+        <div class="scroll_panel scroll_shadow panel_padding"></div>
+        <div class="footer flex pa1">
+            <button class="btn subtle fill clear_filters_btn">Wyczyść<span class="product_filter_count"></span></button>
+            <button class="btn primary fill ml1" onclick="hideParentModal(this)">
+                Pokaż:
+                <div class="spinner_wrapper inline" style="margin-left:1px">
+                    <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
+                    <div class="spinner overlay white"></div>
+                </div>
+
+            </button>
+
+
+        </div>
     </div>
 </div>
 
