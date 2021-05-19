@@ -1073,9 +1073,7 @@ class PiepCMS {
 
 				if (this.text_selection) {
 					set_prop_of_ids.push(...this.text_selection.middle_vids);
-				}
-
-				if (this.focus_node_vid !== undefined) {
+				} else if (this.focus_node_vid !== undefined) {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
 
@@ -1932,6 +1930,12 @@ class PiepCMS {
 			}
 		} else if (map_tag_display_name[tag]) {
 			display_name = map_tag_display_name[tag];
+		}
+
+		if (v_node.classes.includes("vertical_container")) {
+			display_name = "Kontener";
+		} else if (v_node.classes.includes("columns_container")) {
+			display_name = "Kolumny";
 		}
 
 		if (v_node.settings && v_node.settings.link) {

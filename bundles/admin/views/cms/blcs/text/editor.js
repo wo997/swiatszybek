@@ -337,11 +337,17 @@
 		init: (piep_cms) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
-				if (target._parent(".remove_format_btn")) {
-					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
-					v_node.styles = {};
+				if (target._parent(".remove_format_btn") && piep_cms.text_selection) {
+					const vids = [...piep_cms.text_selection.middle_vids, piep_cms.text_selection.focus_vid, piep_cms.text_selection.anchor_vid];
+					vids.filter(onlyUnique).forEach((vid) => {
+						const v_node = piep_cms.getVNodeById(vid);
+						v_node.styles = {};
+						v_node.attrs = {};
+						v_node.settings = {};
+					});
+
 					piep_cms.update({ all: true });
-					piep_cms.pushHistory(`remove_format_${piep_cms.focus_node_vid}`);
+					piep_cms.pushHistory(`remove_format_${vids.join("_")}`);
 				}
 			});
 		},
