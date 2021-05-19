@@ -20,8 +20,11 @@ header.main {
 		padding: var(--header_padding_vertical) var(--header_padding_horizontal);
 		justify-content: space-around;
 		--header_btn_radius: 4px;
-		transition: 0.2s transform;
 		flex-flow: row wrap;
+		transition: 0.15s all;
+	}
+	&.no_shadow {
+		box-shadow: none;
 	}
 
 	&.invisible {

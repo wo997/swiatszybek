@@ -385,6 +385,11 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 <?php startSection("body_content"); ?>
 
 <div class="products_all">
+    <div class="mobile_searching">
+        <button class="btn transparent">Kategorie <i class="fas fa-stream"></i></button>
+        <div class="separator"></div>
+        <button class="btn transparent">Filtry <i class="fas fa-sliders-h"></i></button>
+    </div>
     <div class="searching_wrapper">
         <div class="scroll_panel scroll_shadow">
             <div>
@@ -397,7 +402,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 <input class="field search_phrase" placeholder="Nazwa produktu">
 
                 <div class="search_header">
-                    <span>Cechy</span>
+                    <span>Filtry</span>
                     <span class="feature_filter_count"></span>
                     <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser" style="transform: scale(1.25);"></i></button>
                 </div>

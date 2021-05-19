@@ -726,10 +726,17 @@ domload(() => {
 	const getmob = () => window.innerWidth < 850;
 	const scrclb = () => {
 		const mobile = getmob();
+		let no_shadow = false;
 		if (mobile) {
 			const r = products_category_name.getBoundingClientRect();
 			const visible = r.top > window.innerHeight;
 			results_info_mobile.classList.toggle("visible", visible);
+
+			no_shadow = document.documentElement.scrollTop < 5;
+		}
+
+		if (main_header) {
+			main_header.classList.toggle("no_shadow", no_shadow);
 		}
 
 		$(".searching_wrapper > .scroll_panel").classList.toggle("separate_scroll", !mobile);

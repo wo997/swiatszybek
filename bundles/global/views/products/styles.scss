@@ -158,6 +158,10 @@
 		flex-shrink: 1;
 	}
 
+	.mobile_searching {
+		display: none;
+	}
+
 	.searching_wrapper .mobile_search_btn {
 		display: none;
 	}
@@ -272,8 +276,32 @@
 		padding: 15px;
 	}
 	.searching_wrapper {
-		border-bottom: 1px solid #ccc;
-		box-shadow: 0 2px 5px 0 #0002;
+		display: none;
+	}
+	.mobile_searching {
+		& {
+			display: flex;
+			border-top: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+		}
+		button {
+			& {
+				width: 100%;
+				font-weight: var(--bold);
+				font-size: 1.1em;
+				--field_padding_ver: 0.7em;
+			}
+			i {
+				margin-left: 5px;
+			}
+		}
+		.separator {
+			width: 1px;
+			background: #ccc;
+		}
+	}
+	.category_name {
+		margin-top: 10px;
 	}
 	.product_categories {
 		& .expand_btn {
@@ -353,47 +381,3 @@
 	padding-right: 0;
 	text-align: center;
 }
-
-/* randomize animation start */
-
-// .randomize_btn {
-// 	width: 170px;
-// 	white-space: nowrap;
-// }
-
-// .randomize_btn .randomize_text {
-// 	width: 110px;
-// 	transition: 0.2s all;
-// 	display: inline-block;
-// }
-
-// .randomize_btn.randomize .randomize_text {
-// 	width: 0;
-// 	transform: scale(0);
-// 	opacity: 0;
-// }
-
-// .randomize_btn .randomize_loader_wrapper {
-// 	display: inline-block;
-// }
-
-// .randomize_btn.randomize .randomize_loader_wrapper {
-// 	transform: scale(1.4);
-// 	transition: 0.2s transform;
-// }
-
-// .randomize_btn.randomize .randomize_loader {
-// 	animation: rotating 1s linear infinite;
-// }
-
-// @keyframes rotating {
-// 	from {
-// 		transform: rotate(0deg);
-// 	}
-
-// 	to {
-// 		transform: rotate(360deg);
-// 	}
-// }
-
-/* randomize animation end */
