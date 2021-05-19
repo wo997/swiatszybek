@@ -396,14 +396,6 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 <div class="label"> <span>Wyszukaj po frazie</span> </div>
                 <input class="field search_phrase" placeholder="Nazwa produktu">
 
-                <div class="label"> <span>Sortuj wyniki</span> </div>
-                <select class="field search_order">
-                    <option value="bestsellery">Bestsellery</option>
-                    <option value="najnowsze">Najnowsze</option>
-                    <option value="ceny-rosnaco">Ceny rosnąco</option>
-                    <option value="ceny-malejaco">Ceny malejąco</option>
-                </select>
-
                 <div class="search_header">
                     <span>Cechy</span>
                     <span class="feature_filter_count"></span>
@@ -439,6 +431,16 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
                 <div class="spinner overlay"></div>
             </div>
+        </div>
+
+        <div class="sorting_wrapper">
+            <span class="semi_bold mr2">Sortuj</span>
+            <select class="field inline search_order">
+                <option value="bestsellery">Bestsellery</option>
+                <option value="najnowsze">Najnowsze</option>
+                <option value="ceny-rosnaco">Ceny rosnąco</option>
+                <option value="ceny-malejaco">Ceny malejąco</option>
+            </select>
         </div>
 
         <div class="results_info_mobile">

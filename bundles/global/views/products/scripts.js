@@ -96,7 +96,7 @@ domload(() => {
 });
 
 function initSearchOrder() {
-	search_order = $(".searching_wrapper .search_order");
+	search_order = $(".search_order");
 	search_order.addEventListener("change", () => {
 		delay("mainSearchProducts");
 	});
