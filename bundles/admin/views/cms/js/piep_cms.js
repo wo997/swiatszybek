@@ -1763,7 +1763,7 @@ class PiepCMS {
 		// also merges textables that are similar and next to each other
 
 		// TODO: also text containers?
-		const vids = [];
+		let vids = [];
 		/**
 		 * @param {vDomNode[]} v_nodes
 		 */
@@ -1776,7 +1776,7 @@ class PiepCMS {
 				const text = v_node.text;
 				const children = v_node.children;
 
-				if (!single_node) {
+				if (!single_node && v_node.text !== undefined) {
 					if (text === "") {
 						if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
 							vids.push(vid);
@@ -1786,6 +1786,7 @@ class PiepCMS {
 						const next_v_node = v_nodes[i + 1];
 
 						if (
+							next_v_node.text !== undefined &&
 							isEquivalent(v_node.styles, next_v_node.styles) &&
 							isEquivalent(v_node.attrs, next_v_node.attrs) &&
 							isEquivalent(v_node.settings, next_v_node.settings)
@@ -1795,10 +1796,8 @@ class PiepCMS {
 							if (this.text_selection) {
 								if (this.text_selection.focus_vid === next_v_node.id) {
 									this.text_selection.focus_offset += text.length;
-									// offset same yay
 								} else if (this.text_selection.focus_vid === v_node.id) {
 									this.text_selection.focus_vid = next_v_node.id;
-									// offset same yay
 								}
 							}
 							next_v_node.text = text + next_v_node.text;
@@ -1817,6 +1816,7 @@ class PiepCMS {
 		const anything = this.removeVNodes(vids);
 		if (anything) {
 			// just in case we needed to collapse somethin
+			vids = [];
 			traverseVDom(this.v_dom);
 			this.removeVNodes(vids);
 
