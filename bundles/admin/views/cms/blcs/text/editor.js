@@ -229,11 +229,23 @@
 			},
 		],
 		menu_html: html`
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="tag" data-tooltip="Typ tekstu">
-				<p-option data-value="h1" data-tooltip="Nagłówek H1"> <div style="font-size:var(--size_h1);">H1</div> </p-option>
-				<p-option data-value="h2" data-tooltip="Nagłówek H2"> <div style="font-size:var(--size_h2);">H2</div> </p-option>
-				<p-option data-value="h3" data-tooltip="Nagłówek H3"> <div style="font-size:var(--size_h3);">H3</div> </p-option>
-				<p-option data-value="p" data-tooltip="Paragraf"> <div style="font-size:1em;">P</div> </p-option>
+			<p-dropdown class="field small inline pretty_blue center grid align_left" data-blc_prop="tag" data-tooltip="Typ tekstu">
+				<p-option data-value="h1">
+					<label style="font-size:var(--size_h1);">H1</label>
+					<div style="font-size:var(--size_h1);">Nagłówek H1</div>
+				</p-option>
+				<p-option data-value="h2">
+					<label style="font-size:var(--size_h2);">H2</label>
+					<div style="font-size:var(--size_h2);">Nagłówek H2</div>
+				</p-option>
+				<p-option data-value="h3">
+					<label style="font-size:var(--size_h3);">H3</label>
+					<div style="font-size:var(--size_h3);">Nagłówek H3</div>
+				</p-option>
+				<p-option data-value="p">
+					<label style="font-size:1em;"><i class="fas fa-paragraph"></i></label>
+					<div style="font-size:1em;">Paragraf</div>
+				</p-option>
 			</p-dropdown>
 		`,
 	});

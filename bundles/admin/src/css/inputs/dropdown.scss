@@ -87,12 +87,16 @@ p-dropdown {
 	}
 
 	p-option {
+		label {
+			display: none !important;
+		}
 		& {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			position: relative;
 			line-height: 1;
+			white-space: nowrap;
 		}
 		&:hover {
 			background: #eee;
@@ -119,5 +123,8 @@ p-dropdown {
 				visibility: hidden;
 			}
 		}
+	}
+	&.align_left p-option {
+		justify-content: start;
 	}
 }

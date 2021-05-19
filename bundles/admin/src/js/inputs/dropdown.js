@@ -149,7 +149,12 @@ function selectDropdownOption(input, option, options = {}) {
 		option = first_option;
 	}
 	if (option) {
-		selected_option._set_content(option.innerHTML);
+		const label = option._child("label");
+		if (label) {
+			selected_option._set_content(label.innerHTML);
+		} else {
+			selected_option._set_content(option.innerHTML);
+		}
 	}
 
 	return true;
