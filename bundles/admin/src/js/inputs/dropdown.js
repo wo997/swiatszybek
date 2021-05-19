@@ -151,7 +151,7 @@ function selectDropdownOption(input, option, options = {}) {
 	if (option) {
 		const label = option._child("label");
 		if (label) {
-			selected_option._set_content(label.innerHTML);
+			selected_option._set_content(label.outerHTML);
 		} else {
 			selected_option._set_content(option.innerHTML);
 		}

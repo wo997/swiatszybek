@@ -230,21 +230,21 @@
 		],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid align_left" data-blc_prop="tag" data-tooltip="Typ tekstu">
-				<p-option data-value="h1">
-					<label style="font-size:var(--size_h1);">H1</label>
-					<div style="font-size:var(--size_h1);">Nagłówek H1</div>
+				<p-option data-value="h1" style="font-size:var(--size_h1);">
+					<label class="semi_bold">H1</label>
+					Nagłówek H1
 				</p-option>
-				<p-option data-value="h2">
-					<label style="font-size:var(--size_h2);">H2</label>
-					<div style="font-size:var(--size_h2);">Nagłówek H2</div>
+				<p-option data-value="h2" style="font-size:var(--size_h2);">
+					<label class="semi_bold">H2</label>
+					Nagłówek H2
 				</p-option>
-				<p-option data-value="h3">
-					<label style="font-size:var(--size_h3);">H3</label>
-					<div style="font-size:var(--size_h3);">Nagłówek H3</div>
+				<p-option data-value="h3" style="font-size:var(--size_h3);">
+					<label class="semi_bold">H3</label>
+					Nagłówek H3
 				</p-option>
 				<p-option data-value="p">
-					<label style="font-size:1em;"><i class="fas fa-paragraph"></i></label>
-					<div style="font-size:1em;">Paragraf</div>
+					<label><i class="fas fa-paragraph"></i></label>
+					Paragraf
 				</p-option>
 			</p-dropdown>
 		`,
@@ -270,11 +270,15 @@
 		name: "font_weight",
 		blc_groups: text_groups,
 		menu_html: html`
-			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.fontWeight" data-tooltip="Grubość czcionki">
+			<p-dropdown
+				class="field small inline pretty_blue center grid align_left"
+				data-blc_prop="styles.fontWeight"
+				data-tooltip="Grubość czcionki"
+			>
 				<p-option data-value=""><span class="bold">B</span></p-option>
-				<p-option data-value="var(--normal)">B</p-option>
-				<p-option data-value="var(--semi_bold)"><span class="semi_bold">B</span></p-option>
-				<p-option data-value="var(--bold)"><span class="bold">B</span></p-option>
+				<p-option data-value="var(--normal)"><label>B</label> Chuda </p-option>
+				<p-option data-value="var(--semi_bold)" class="semi_bold"><label class="semi_bold">B</label> Średnia </p-option>
+				<p-option data-value="var(--bold)" class="bold"> <label class="bold">B</label> Gruba </p-option>
 			</p-dropdown>
 		`,
 	});
