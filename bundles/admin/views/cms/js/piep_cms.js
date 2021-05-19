@@ -2551,7 +2551,11 @@ class PiepCMS {
 					const v_node_data = this.getVNodeDataById(blc_vid);
 
 					if (v_node_data && v_node_data.parent_v_nodes.length > 0) {
-						show_vids.push(...v_node_data.parent_v_nodes.map((p, index) => ({ vid: p.id, opacity: Math.pow(0.5, index + 1) })));
+						v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
+							if (!parent_v_node.disabled) {
+								show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
+							}
+						});
 					}
 				}
 			}
