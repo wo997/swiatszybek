@@ -229,7 +229,7 @@ class PiepCMS {
 		 * @param {number} start
 		 * @param {number} end
 		 */
-		const diplsaySelection = (vid, start = undefined, end = undefined, class_name = "text_selection") => {
+		const displaySelection = (vid, start = undefined, end = undefined, class_name = "text_selection") => {
 			const node = this.getNode(vid);
 
 			if (!node) {
@@ -313,20 +313,23 @@ class PiepCMS {
 
 		if (this.text_selection) {
 			this.text_selection.middle_vids.forEach((vid) => {
-				diplsaySelection(vid);
+				displaySelection(vid);
 			});
 			this.text_selection.partial_ranges.forEach((partial_range) => {
-				diplsaySelection(partial_range.vid, partial_range.start, partial_range.end);
+				displaySelection(partial_range.vid, partial_range.start, partial_range.end);
 			});
 
-			diplsaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
+			displaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
 
-			this.setFocusNode(this.text_selection.focus_vid);
+			const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+			if (focus_node_data) {
+				this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
+			}
 		}
 
 		if (options.vids) {
 			options.vids.forEach((vid) => {
-				diplsaySelection(vid, undefined, undefined, "just_underline");
+				displaySelection(vid, undefined, undefined, "just_underline");
 			});
 		}
 
@@ -1158,15 +1161,14 @@ class PiepCMS {
 			const click_blc = target._parent(".blc");
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
-				const click_v_node = this.getVNodeById(click_blc_vid);
-				if (
-					click_v_node &&
-					!click_blc.classList.contains("editor_disabled") &&
-					click_v_node.text === undefined &&
-					!click_blc.classList.contains("text_container")
-				) {
-					this.text_selection = undefined;
-					this.setFocusNode(click_blc_vid);
+				const click_v_node_data = this.getVNodeDataById(click_blc_vid);
+				const click_v_node = click_v_node_data.v_node;
+				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
+					if (this.isTextable(click_v_node_data.v_node)) {
+						this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
+					} else {
+						this.setFocusNode(click_v_node.id);
+					}
 				}
 			}
 
@@ -1286,7 +1288,7 @@ class PiepCMS {
 			}
 
 			if (target._parent(".remove_btn")) {
-				v_node_data.v_nodes.splice(v_node_data.index, 1);
+				this.removeVNodes([v_node.id]);
 				this.update({ all: true });
 				this.setFocusNode(undefined);
 
@@ -3048,12 +3050,7 @@ class PiepCMS {
 	 */
 	grabBlock(options) {
 		this.grab_block_options = options;
-		const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
-		if (this.isTextable(focus_v_node_data.v_node)) {
-			this.grabbed_block_vid = focus_v_node_data.parent_v_nodes[0].id;
-		} else {
-			this.grabbed_block_vid = this.focus_node_vid;
-		}
+		this.grabbed_block_vid = this.focus_node_vid;
 
 		this.container.classList.add("grabbed_block");
 		this.container.classList.add("disable_editing");
