@@ -3274,9 +3274,9 @@ class PiepCMS {
 			 * @param {Direction} dir
 			 */
 			const insertOnSides = (dir) => {
-				if (flow_direction === "inline") {
-					return insertAboveOrBelow(dir);
-				}
+				// if (flow_direction === "inline") {
+				// 	return insertAboveOrBelow(dir); // TOOOO MANY
+				// }
 
 				const near_v_node_data = getNearVNodeData();
 				const near_v_node = near_v_node_data.v_node;
@@ -3422,7 +3422,12 @@ class PiepCMS {
 			let on_sides = true;
 			let above_or_below = true;
 			let inside = true;
+
 			if (near_v_node.classes.includes("columns_container")) {
+				on_sides = false;
+			}
+
+			if (flow_direction === "inline") {
 				on_sides = false;
 			}
 
