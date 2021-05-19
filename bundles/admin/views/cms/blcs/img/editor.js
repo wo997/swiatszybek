@@ -19,6 +19,19 @@
 				<i class="fas fa-image"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				const choose_img_btn = target._parent(".choose_img_btn");
+				if (choose_img_btn) {
+					const input = piep_cms.side_menu._child(`[data-blc_prop="settings.img_src"]`);
+					const select_file_modal = getSelectFileModal();
+					select_file_modal._data.file_manager.select_target = input;
+					select_file_modal._render();
+					select_file_modal._show({ source: choose_img_btn });
+				}
+			});
+		},
 	});
 
 	piep_cms_manager.registerBlcSchema({

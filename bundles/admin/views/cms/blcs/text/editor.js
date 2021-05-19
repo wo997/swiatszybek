@@ -334,6 +334,17 @@
 				<i class="fas fa-remove-format"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".remove_format_btn")) {
+					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+					v_node.styles = {};
+					piep_cms.update({ all: true });
+					piep_cms.pushHistory(`remove_format_${piep_cms.focus_node_vid}`);
+				}
+			});
+		},
 	});
 }
 

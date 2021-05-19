@@ -82,7 +82,6 @@
  * @typedef {{
  * name: string
  * type_groups: cmsEditableGroupEnum[]
- * init?(piep_cms: PiepCMS)
  * } & cmsEditablePropBase} cmsEditableProp
  */
 
@@ -92,6 +91,7 @@
  * blc_groups?: BlcGroup[]
  * menu_html: string
  * affects_selection?: boolean
+ * init?(piep_cms: PiepCMS)
  * }} cmsEditablePropBase
  */
 

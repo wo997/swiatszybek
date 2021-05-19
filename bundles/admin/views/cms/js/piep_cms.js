@@ -1266,54 +1266,6 @@ class PiepCMS {
 			if (!this.content_active) {
 				//removeSelection(); // TODO: then when?
 			}
-
-			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
-			if (!v_node_data) {
-				return;
-			}
-			const v_node = v_node_data.v_node;
-
-			if (target._parent(".move_btn")) {
-				this.grabBlock({ type: "move" });
-			}
-
-			if (target._parent(".copy_btn")) {
-				this.grabBlockFromVNode(v_node);
-			}
-
-			if (target._parent(".layout_btn")) {
-				this.editLayout();
-			}
-
-			if (target._parent(".remove_format_btn")) {
-				v_node.styles = {};
-				this.update({ all: true });
-				this.pushHistory(`remove_format_${v_node_data.v_node.id}`);
-			}
-
-			if (target._parent(".link_btn")) {
-				this.filter_blc_menu._set_value("advanced");
-				const link_input = this.side_menu._child(".prop_link input");
-				link_input.click();
-				link_input.focus();
-			}
-
-			const choose_img_btn = target._parent(".choose_img_btn");
-			if (choose_img_btn) {
-				const input = this.side_menu._child(`[data-blc_prop="settings.img_src"]`);
-				const select_file_modal = getSelectFileModal();
-				select_file_modal._data.file_manager.select_target = input;
-				select_file_modal._render();
-				select_file_modal._show({ source: choose_img_btn });
-			}
-
-			if (target._parent(".remove_btn")) {
-				this.removeVNodes([v_node.id]);
-				this.update({ all: true });
-				this.setFocusNode(undefined);
-
-				this.pushHistory(`remove_blc_${v_node_data.v_node.id}`);
-			}
 		});
 	}
 
@@ -1607,6 +1559,12 @@ class PiepCMS {
 			}
 
 			this.filterMenu({ scroll_to_top: true });
+		});
+
+		[...piep_cms_manager.blc_props, ...piep_cms_manager.floating_blc_props].forEach((blc_prop) => {
+			if (blc_prop.init) {
+				blc_prop.init(this);
+			}
 		});
 	}
 
@@ -3131,6 +3089,7 @@ class PiepCMS {
 		this.update({ dom: true, styles: true });
 
 		this.displayInsertPositions();
+		this.text_selection = undefined;
 	}
 
 	/**

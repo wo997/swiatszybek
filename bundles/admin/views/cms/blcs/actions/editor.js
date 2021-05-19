@@ -7,6 +7,14 @@
 				<i class="fas fa-ruler-combined filter_icon"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".layout_btn")) {
+					piep_cms.editLayout();
+				}
+			});
+		},
 	});
 
 	piep_cms_manager.registerFloatingProp({
@@ -16,6 +24,16 @@
 				<i class="fas fa-arrows-alt"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".move_btn")) {
+					setTimeout(() => {
+						piep_cms.grabBlock({ type: "move" });
+					});
+				}
+			});
+		},
 	});
 
 	piep_cms_manager.registerFloatingProp({
@@ -25,6 +43,21 @@
 				<i class="fas fa-copy"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".copy_btn")) {
+					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+					if (!v_node) {
+						return;
+					}
+					setTimeout(() => {
+						// otherwise would be released immediately
+						piep_cms.grabBlockFromVNode(v_node);
+					});
+				}
+			});
+		},
 	});
 
 	piep_cms_manager.registerFloatingProp({
@@ -34,6 +67,18 @@
 				<i class="fas fa-trash"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".remove_btn")) {
+					piep_cms.removeVNodes([piep_cms.focus_node_vid]);
+					piep_cms.update({ all: true });
+					piep_cms.setFocusNode(undefined);
+
+					piep_cms.pushHistory(`remove_blc_${piep_cms.focus_node_vid}`);
+				}
+			});
+		},
 	});
 
 	piep_cms_manager.registerFloatingProp({

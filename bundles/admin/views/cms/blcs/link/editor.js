@@ -28,5 +28,16 @@
 				<i class="fas fa-link"></i>
 			</button>
 		`,
+		init: (piep_cms) => {
+			piep_cms.container.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				if (target._parent(".link_btn")) {
+					piep_cms.filter_blc_menu._set_value("advanced");
+					const link_input = piep_cms.side_menu._child(".prop_link input");
+					link_input.click();
+					link_input.focus();
+				}
+			});
+		},
 	});
 }
