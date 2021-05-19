@@ -29,7 +29,8 @@ function previewUrl(url, params) {
 								</div>
 							</div>
 						</span>
-						<button class="btn primary mla" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
+						<a class="btn subtle ml1 open_btn mla" target="_blank">Pokaż <i class="fas fa-external-link-square-alt"></i></a
+						><button class="btn primary ml1" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
 					</div>
 					<div class="flex_stretch">
 						<iframe name="preview_iframe"></iframe>
@@ -41,8 +42,11 @@ function previewUrl(url, params) {
 			</div>
 		`);
 
-		const select_resolution = $("#previewUrl .select_resolution");
-		const iframe = $("#previewUrl iframe");
+		const preview_url = $("#previewUrl");
+		const select_resolution = preview_url._child(" .select_resolution");
+		const iframe = preview_url._child("iframe");
+
+		preview_url._child(".open_btn").href = url;
 
 		select_resolution.addEventListener("change", () => {
 			const [w, h] = select_resolution._get_value().split("x");
