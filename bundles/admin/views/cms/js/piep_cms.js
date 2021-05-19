@@ -3241,10 +3241,10 @@ class PiepCMS {
 				return;
 			}
 
-			const getGrabbedVNodeData = () => {
-				const grabbed_v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
-				return grabbed_v_node_data;
-			};
+			// const getGrabbedVNodeData = () => {
+			// 	const grabbed_v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
+			// 	return grabbed_v_node_data;
+			// };
 			const getNearVNodeData = () => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
 				return near_v_node_data;
@@ -3427,7 +3427,11 @@ class PiepCMS {
 				on_sides = false;
 			}
 
-			if (flow_direction === "inline") {
+			if (on_sides && flow_direction === "inline") {
+				on_sides = false;
+			}
+
+			if (on_sides && blc._parent(".columns_container", { skip: 2 })) {
 				on_sides = false;
 			}
 
