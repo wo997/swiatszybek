@@ -3638,10 +3638,11 @@ class PiepCMS {
 
 		if (just_changed_focus_vid) {
 			this.filterMenu({ scroll_to_top: true });
+		}
 
-			if (vid === undefined) {
-				this.cursor.classList.add("hidden");
-			}
+		if (vid === undefined) {
+			this.text_selection = undefined;
+			this.cursor.classList.add("hidden");
 		}
 
 		if (just_changed_focus_vid) {
