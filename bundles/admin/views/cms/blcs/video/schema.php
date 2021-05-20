@@ -1,11 +1,11 @@
 <?php //hook[register]
 
 PiepCMSManager::registerModule([
-    "name" => "img",
+    "name" => "video",
     "render" => function ($params) {
-        $img_src = def($params, ["v_node", "settings", "img_src"]);
-        if ($img_src) {
-            return "<img class=\"wo997_img\" data-src=\"$img_src\" />";
+        $video_src = def($params, ["v_node", "settings", "video_src"]);
+        if ($video_src) {
+            //return "<img class=\"wo997_img\" data-src=\"$video_src\" />";
         }
         return "";
     },

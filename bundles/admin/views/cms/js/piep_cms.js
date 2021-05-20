@@ -352,6 +352,9 @@ class PiepCMS {
 		}
 
 		this.cursor.classList.toggle("hidden", !this.text_selection);
+
+		// it's dependent on selection
+		this.displaySelectionBreadcrumbs();
 	}
 
 	initNodes() {
@@ -1913,7 +1916,10 @@ class PiepCMS {
 				const crumb_v_nodes = [v_node_data.v_node, ...v_node_data.parent_v_nodes];
 
 				if (this.text_selection) {
-					crumb_v_nodes.unshift(this.getVNodeById(this.text_selection.focus_vid));
+					const focus_node = this.getVNodeById(this.text_selection.focus_vid);
+					if (focus_node) {
+						crumb_v_nodes.unshift(focus_node);
+					}
 				}
 
 				crumb_v_nodes.reverse();

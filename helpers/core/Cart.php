@@ -24,7 +24,7 @@ class Cart
     private $products_price;
 
     // other vars
-    private $rebate_codes_limit = 2; // that will be a subject to change
+    private $rebate_codes_limit = 1; // that will be a subject to change
     private $max_single_product_count = 10; // should be a var
     public ?User $user;
 
