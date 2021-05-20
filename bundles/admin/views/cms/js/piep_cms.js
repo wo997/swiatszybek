@@ -1816,11 +1816,12 @@ class PiepCMS {
 		}
 	}
 
-	precalculateSettings() {
+	preRecreateDom() {
 		/**
 		 * @param {vDomNode[]} v_nodes
+		 * @param {vDomNode[]} parents
 		 */
-		const traverseSettings = (v_nodes) => {
+		const traverseSettings = (v_nodes, parents = []) => {
 			for (const v_node of v_nodes) {
 				if (!v_node.settings) {
 					v_node.settings = {};
@@ -1839,9 +1840,20 @@ class PiepCMS {
 					v_node.settings.bind_borderColors = "all";
 				}
 
+				const parent = parents[0];
+
+				if (parent) {
+					if (parent.tag === "ul" && v_node.tag !== "li") {
+						v_node.tag = "li";
+					}
+					if (parent.tag !== "ul" && v_node.tag === "li") {
+						v_node.tag = "p";
+					}
+				}
+
 				const children = v_node.children;
 				if (children) {
-					traverseSettings(children);
+					traverseSettings(children, [v_node, ...parents]);
 				}
 			}
 		};
@@ -2092,7 +2104,7 @@ class PiepCMS {
 	 * options just for optimisation but seems unnecessary
 	 */
 	recreateDom(options = {}) {
-		this.precalculateSettings();
+		this.preRecreateDom();
 
 		/** @type {number[]} */
 		let included_vids = [];
