@@ -1,0 +1,15 @@
+/* css[global] */
+
+li.blc {
+	& {
+		padding-left: 20px;
+	}
+	&::before {
+		content: "•";
+		display: inline-block;
+		margin-left: -15px;
+		width: 10px;
+		margin-right: 5px;
+		text-align: center;
+	}
+}

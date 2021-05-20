@@ -5,24 +5,15 @@
 	/** @type {BlcGroup[]} */
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
-		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
+		// { match_tag: piep_cms_manager.match_textables, priority: text_priority },
 	];
-
-	/**
-	 *
-	 * @param {vDomNodeData} v_node_data
-	 * @returns
-	 */
-	const matchTextContainer = (v_node_data) => {
-		return piep_cms.getParentTextContainerId(v_node_data.v_node.id) !== undefined;
-	};
 
 	piep_cms_manager.registerProp({
 		name: "text_tag",
 		type_groups: ["appearance"],
 		blc_groups: [
 			{
-				matcher: matchTextContainer,
+				match_tag: piep_cms_manager.match_basic_text_containers,
 				priority: text_priority,
 			},
 		],
@@ -224,7 +215,7 @@
 		name: "text_tag",
 		blc_groups: [
 			{
-				matcher: matchTextContainer,
+				match_tag: piep_cms_manager.match_basic_text_containers,
 				priority: text_priority,
 			},
 		],

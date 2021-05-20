@@ -1422,9 +1422,11 @@ class PiepCMS {
 								focus_v_node_data.v_nodes.length - focus_v_node_data.index
 							);
 
+							const tag = parent_v_node.tag === "li" ? "li" : "p";
+
 							// place it below the text container, including the v_node
 							parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
-								tag: "p",
+								tag,
 								id: new_vid,
 								styles: {},
 								classes: [],
@@ -1932,6 +1934,8 @@ class PiepCMS {
 			div: "Kontener",
 			p: "Paragraf",
 			span: "Tekst",
+			ul: "Lista",
+			li: "Element listy",
 		};
 		let display_name = "";
 		if (v_node.settings && v_node.settings.template_hook_name) {
@@ -3116,6 +3120,14 @@ class PiepCMS {
 		return !!v_node.tag.match(piep_cms_manager.match_text_containers);
 	}
 
+	// /**
+	//  *
+	//  * @param {vDomNode} v_node
+	//  */
+	// isBasicTextContainer(v_node) {
+	// 	return !!v_node.tag.match(piep_cms_manager.match_basic_text_containers);
+	// }
+
 	/**
 	 *
 	 * @param {vDomNode} v_node
@@ -3124,20 +3136,34 @@ class PiepCMS {
 		return !!v_node.tag.match(piep_cms_manager.match_textables);
 	}
 
-	getParentTextContainerId(vid) {
-		const v_node_data = this.getVNodeDataById(vid);
-		const v_node = v_node_data.v_node;
-		if (this.isTextContainer(v_node)) {
-			return v_node.id;
-		}
-		const parent_v_node = v_node_data.parent_v_nodes[0];
-		if (parent_v_node) {
-			if (this.isTextContainer(parent_v_node)) {
-				return parent_v_node.id;
-			}
-		}
-		return undefined;
-	}
+	// /**
+	//  *
+	//  * @param {*} vid
+	//  * @param {{
+	//  * basic?: boolean
+	//  * }} options
+	//  * @returns
+	//  */
+	// getParentTextContainerId(vid, options = {}) {
+	// 	const v_node_data = this.getVNodeDataById(vid);
+	// 	const v_node = v_node_data.v_node;
+	// 	if (this.isTextContainer(v_node)) {
+	// 		return v_node.id;
+	// 	}
+	// 	const parent_v_node = v_node_data.parent_v_nodes[0];
+	// 	if (parent_v_node) {
+	// 		if (options.basic) {
+	// 			if (this.isBasicTextContainer(parent_v_node)) {
+	// 				return parent_v_node.id;
+	// 			}
+	// 		} else {
+	// 			if (this.isTextContainer(parent_v_node)) {
+	// 				return parent_v_node.id;
+	// 			}
+	// 		}
+	// 	}
+	// 	return undefined;
+	// }
 
 	/**
 	 * @param {number} vid
@@ -3619,25 +3645,33 @@ class PiepCMS {
 			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
 
-			if (this.grab_block_options.is_new && this.isTextContainer(grabbed_v_node)) {
-				const textables = grabbed_v_node.children;
-				if (textables) {
-					const last_textable = textables[textables.length - 1];
-
-					this.text_selection = {
-						anchor_offset: 0,
-						anchor_vid: last_textable.id,
-						focus_offset: last_textable.text.length,
-						focus_vid: last_textable.id,
-						direction: 1,
-						length: last_textable.text.length,
-						middle_vids: grabbed_v_node.children.map((child) => child.id),
-						partial_ranges: [],
-						single_node: true,
-					};
-
-					this.content_active = true;
-				}
+			if (this.grab_block_options.is_new) {
+				/**
+				 * @param {vDomNode[]} v_nodes
+				 */
+				const traverseVDom = (v_nodes) => {
+					for (const v_node of v_nodes) {
+						if (this.isTextable(v_node)) {
+							this.text_selection = {
+								anchor_offset: 0,
+								anchor_vid: v_node.id,
+								focus_offset: v_node.text.length,
+								focus_vid: v_node.id,
+								direction: 1,
+								length: v_node.text.length,
+								middle_vids: [v_node.id],
+								partial_ranges: [],
+								single_node: true,
+							};
+							this.content_active = true;
+							break;
+						}
+						if (v_node.children) {
+							traverseVDom(v_node.children);
+						}
+					}
+				};
+				traverseVDom([grabbed_v_node]);
 			}
 		} else {
 			this.v_dom.splice(0, this.v_dom.length);

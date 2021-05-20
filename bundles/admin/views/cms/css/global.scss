@@ -25,7 +25,8 @@
 		font-weight: var(--semi_bold);
 		margin: 0.55em 0;
 	}
-	p& {
+	p&,
+	li& {
 		margin: 0.5em 0;
 	}
 }
