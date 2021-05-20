@@ -57,4 +57,3 @@ include "scripts/entities.php";
 include "scripts/build_pages.php";
 
 include "scripts/images.php";
-include "scripts/previews.php";
