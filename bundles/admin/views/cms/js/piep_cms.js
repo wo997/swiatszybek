@@ -3044,8 +3044,8 @@ class PiepCMS {
 
 		this.container.classList.add("grabbed_block");
 		this.container.classList.add("disable_editing");
-		// TODO: think if necessary ugh
-		this.current_insert_blc = -1; // will warm up everything on grab
+		/** @type {insertBlc} */
+		this.current_insert_blc = undefined;
 
 		const grabbed_node = this.getNode(this.grabbed_block_vid);
 		this.grabbed_block_wrapper._set_content(grabbed_node.outerHTML);
@@ -3594,7 +3594,7 @@ class PiepCMS {
 		const grabbed_block_vid = this.grabbed_block_vid;
 		delete this.grabbed_block_vid;
 
-		//const grabbed_v_node = this.grabbed_v_node;
+		const grabbed_v_node = this.grabbed_v_node;
 		delete this.grabbed_v_node;
 
 		const current_insert_blc = this.current_insert_blc;
@@ -3610,6 +3610,29 @@ class PiepCMS {
 
 			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
+
+			if (this.isTextContainer(grabbed_v_node)) {
+				const textables = grabbed_v_node.children;
+				if (textables) {
+					const last_textable = textables[textables.length - 1];
+
+					this.text_selection = {
+						anchor_offset: last_textable.text.length,
+						anchor_vid: last_textable.id,
+						focus_offset: last_textable.text.length,
+						focus_vid: last_textable.id,
+						direction: 1,
+						length: 0,
+						middle_vids: grabbed_v_node.children.map((child) => child.id),
+						partial_ranges: [],
+						single_node: true,
+					};
+
+					setTimeout(() => {
+						this.content_active = true;
+					});
+				}
+			}
 		} else {
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.before_grab_v_dom);
