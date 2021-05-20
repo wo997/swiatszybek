@@ -1133,9 +1133,12 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {vDomNode} v_node
+	 * @param {{
+	 * is_new?: boolean
+	 * }} options
 	 * @returns
 	 */
-	grabBlockFromVNode(v_node) {
+	grabBlockFromVNode(v_node, options = {}) {
 		v_node = cloneObject(v_node);
 
 		let next_id = this.getNewBlcId();
@@ -1158,7 +1161,7 @@ class PiepCMS {
 		this.update({ all: true }); // creates the node to grab
 		this.setFocusNode(v_node.id);
 		this.text_selection = undefined;
-		this.grabBlock({ type: "insert" });
+		this.grabBlock({ type: "insert", is_new: options.is_new });
 	}
 
 	initClick() {
@@ -1177,7 +1180,7 @@ class PiepCMS {
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
 				const blc_schema = piep_cms_manager.blcs_schema.find((e) => e.id === block_to_add_btn.dataset.id);
-				this.grabBlockFromVNode(blc_schema.v_node);
+				this.grabBlockFromVNode(blc_schema.v_node, { is_new: true });
 				return;
 			}
 
@@ -3043,7 +3046,7 @@ class PiepCMS {
 	 *
 	 * @param {GrabBlockOptions} options
 	 */
-	grabBlock(options) {
+	grabBlock(options = {}) {
 		this.grab_block_options = options;
 		this.grabbed_block_vid = this.focus_node_vid;
 
@@ -3616,18 +3619,18 @@ class PiepCMS {
 			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
 
-			if (this.isTextContainer(grabbed_v_node)) {
+			if (this.grab_block_options.is_new && this.isTextContainer(grabbed_v_node)) {
 				const textables = grabbed_v_node.children;
 				if (textables) {
 					const last_textable = textables[textables.length - 1];
 
 					this.text_selection = {
-						anchor_offset: last_textable.text.length,
+						anchor_offset: 0,
 						anchor_vid: last_textable.id,
 						focus_offset: last_textable.text.length,
 						focus_vid: last_textable.id,
 						direction: 1,
-						length: 0,
+						length: last_textable.text.length,
 						middle_vids: grabbed_v_node.children.map((child) => child.id),
 						partial_ranges: [],
 						single_node: true,
@@ -4056,6 +4059,22 @@ class PiepCMS {
 	 * @param {Direction} dir
 	 */
 	moveCursorSideways(dir) {
+		if (this.text_selection.length > 0) {
+			if (dir === -1) {
+				if (this.text_selection.direction === 1) {
+					this.text_selection.focus_offset = this.text_selection.anchor_offset;
+					this.text_selection.focus_vid = this.text_selection.anchor_vid;
+				}
+			} else {
+				if (this.text_selection.direction === -1) {
+					this.text_selection.anchor_offset = this.text_selection.focus_offset;
+					this.text_selection.anchor_vid = this.text_selection.focus_vid;
+				}
+			}
+			this.collapseSelection();
+			return;
+		}
+
 		const focus_node = this.getNode(this.text_selection.focus_vid);
 		const focus_offset = this.text_selection.focus_offset;
 		const vid = this.text_selection.focus_vid;

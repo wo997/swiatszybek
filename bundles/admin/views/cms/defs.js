@@ -119,7 +119,8 @@
 
 /**
  * @typedef {{
- * type: ("move" | "insert")
+ * type?: ("move" | "insert")
+ * is_new?: boolean
  * }} GrabBlockOptions
  */
 
