@@ -1909,17 +1909,25 @@ class PiepCMS {
 			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 
 			if (v_node_data) {
+				/** @type {vDomNode[]} */
+				const crumb_v_nodes = [v_node_data.v_node, ...v_node_data.parent_v_nodes];
+
+				if (this.text_selection) {
+					crumb_v_nodes.unshift(this.getVNodeById(this.text_selection.focus_vid));
+				}
+
+				crumb_v_nodes.reverse();
+
 				selection_breadcrumbs_html =
 					html`<i class="fas fa-home"></i> ` +
-					[v_node_data.v_node, ...v_node_data.parent_v_nodes]
-						.reverse()
-						.map((parent_v_node) => {
-							const disabled = parent_v_node.disabled ? "disabled" : "";
+					crumb_v_nodes
+						.map((crumb_v_node) => {
+							const disabled = crumb_v_node.disabled ? "disabled" : "";
 							const tooltip = disabled ? `data-tooltip="Część szablonu"` : "";
 
-							return html`<span class="v_node_label ${disabled}" data-vid="${parent_v_node.id}" ${tooltip}>
+							return html`<span class="v_node_label ${disabled}" data-vid="${crumb_v_node.id}" ${tooltip}>
 								<i class="fas fa-chevron-right"></i>
-								<span>${this.getVNodeDisplayName(parent_v_node)}</span>
+								<span>${this.getVNodeDisplayName(crumb_v_node)}</span>
 							</span>`;
 						})
 						.join("") +
