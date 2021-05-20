@@ -3,7 +3,7 @@
     <div class="headerbtn_menu last_viewed_products_menu">
         <p class="menu_header">Ostatnio przeglądane</p>
         <hr>
-        <div class="move_this_last_viewed_part flex_stretch">
+        <div class="flex_stretch">
             <div class='case_last_viewed_products_empty expand_y'>
                 <div style='text-align:center;margin:2em 0'>Brak ostatnio<br>przeglądanych produktów</div>
             </div>

@@ -35,27 +35,10 @@ function requestHeaderModals() {
 					<img class="product_history_icon" src="/src/img/product_history_icon.svg" />
 					Ostatnie
 				</h3>
-				<div class="put_it_here flex_stretch"></div>
+				<div class="flex_stretch"></div>
 			</div>
 		</div>
 	`);
-
-	const last_viewed_products_menu = $(".last_viewed_products_menu");
-	const move_this_last_viewed_part = $(".move_this_last_viewed_part");
-	window.addEventListener("modal_show", (event) => {
-		// @ts-ignore
-		if (event.detail.node.id != "lastViewedProducts") {
-			return;
-		}
-		$("#lastViewedProducts .put_it_here").append(move_this_last_viewed_part);
-	});
-	window.addEventListener("modal_hidden", (event) => {
-		// @ts-ignore
-		if (event.detail.node.id != "lastViewedProducts") {
-			return;
-		}
-		last_viewed_products_menu.append(move_this_last_viewed_part);
-	});
 
 	// search
 	const msb = $(".mobile_search_btn");
@@ -72,16 +55,10 @@ function requestHeaderModals() {
 			<div class="modal_body" style="max-width: 500px;">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
-				<div class="scroll_panel scroll_shadow panel_padding">
-					<div></div>
-				</div>
+				<div class="scroll_panel scroll_shadow panel_padding"></div>
 			</div>
 		</div>
 	`);
-
-	const sc = $("#mainSearch .scroll_panel > div");
-	const sw = $("header .main_search_wrapper");
-	sc.insertAdjacentHTML("afterbegin", sw.outerHTML);
 
 	// menu
 	registerModalContent(html`
@@ -129,6 +106,32 @@ function requestHeaderModals() {
 			expand(expand_btn._parent()._next(), open);
 			ev.preventDefault();
 			return false;
+		}
+	});
+
+	const last_viewed_products_menu = $(".last_viewed_products_menu");
+	const move_this_last_viewed_part = $(".last_viewed_products_menu .flex_stretch");
+
+	const main_search_wrapper = $("header .main_search_wrapper");
+
+	window.addEventListener("modal_show", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id === "lastViewedProducts") {
+			$("#lastViewedProducts .flex_stretch").append(move_this_last_viewed_part);
+		}
+		// @ts-ignore
+		if (event.detail.node.id === "mainSearch") {
+			$("#mainSearch .scroll_panel").append(main_search_wrapper);
+		}
+	});
+	window.addEventListener("modal_hidden", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id === "lastViewedProducts") {
+			last_viewed_products_menu.append(move_this_last_viewed_part);
+		}
+		// @ts-ignore
+		if (event.detail.node.id === "mainSearch") {
+			$("header").insertBefore($("header .main_search_wrapper"), $("header .header_buttons"));
 		}
 	});
 }

@@ -441,7 +441,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
         <div class="results_info">
             Znaleziono wyników:
-            <div class="spinner_wrapper inline" style="margin-left:1px">
+            <div class="spinner_wrapper inline prod_search_spinner_wrapper" style="margin-left:1px">
                 <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
                 <div class="spinner overlay"></div>
             </div>
@@ -482,7 +482,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
             <button class="btn subtle fill clear_filters_btn">Wyczyść<span class="product_filter_count"></span></button>
             <button class="btn primary fill ml1" onclick="hideParentModal(this)">
                 Pokaż:
-                <div class="spinner_wrapper inline" style="margin-left:1px">
+                <div class="spinner_wrapper inline prod_search_spinner_wrapper" style="margin-left:1px">
                     <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
                     <div class="spinner overlay white"></div>
                 </div>

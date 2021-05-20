@@ -620,7 +620,7 @@ function mainSearchProducts(force = false) {
 	//document.title = full_name;
 
 	const setSpinners = (spinning) => {
-		$$(".spinner_wrapper").forEach((w) => {
+		$$(".prod_search_spinner_wrapper").forEach((w) => {
 			w.classList.toggle("spinning", spinning);
 		});
 	};

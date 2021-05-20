@@ -132,8 +132,8 @@ function topSearchProducts(force) {
 	if (search_phrase_val.length < 3) {
 		return callback(html`<span class="product_block"> Wpisz mininum 3 znaki ...</span>`);
 	}
-	const spinner = $(".main_search_wrapper .spinner");
-	spinner.classList.add("visible");
+	const wrapper = $(".main_search_wrapper .spinner_wrapper");
+	wrapper.classList.add("spinning");
 
 	last_top_search_url = top_search_url;
 	search_product_list_xhr = xhr({
@@ -142,7 +142,7 @@ function topSearchProducts(force) {
 			url: top_search_url,
 		},
 		success: (res) => {
-			spinner.classList.remove("visible");
+			wrapper.classList.remove("spinning");
 			if (res.total_rows === 0) {
 				callback(html`<div class="product_block no-results"><i class="fas fa-ban" style="margin:0 5px"></i> Brak wyników</div>`);
 			} else {
