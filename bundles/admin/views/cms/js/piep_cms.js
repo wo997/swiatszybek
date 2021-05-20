@@ -62,12 +62,10 @@ class PiepCMS {
 		});
 
 		document.addEventListener("selectionchange", () => {
-			if (this.grabbed_v_node || this.editing_layout) {
+			if (this.grabbed_v_node || this.editing_layout || !this.content_active) {
 				return;
 			}
 
-			// do it in the main loop when mouse is down dude XD
-			// when up mark as anchor, so siiiimple
 			this.text_selection = undefined;
 
 			const sel = document.getSelection();
@@ -1079,6 +1077,7 @@ class PiepCMS {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
 
+				// kurwa selekcja sie zmienia bo probuje sie menu filtrowac a juz jest wpisane ziomek kurwa sie selektuje raz jeszcze czy co
 				set_prop_of_ids.filter(onlyUnique).forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
 				});
@@ -1089,11 +1088,17 @@ class PiepCMS {
 				}
 				this.displayTextSelection({ force: true });
 
-				if (this.text_selection) {
+				if (blc_menu_name === "float" && this.text_selection) {
 					if (input._parent(this.float_menu)) {
 						this.content_active = true;
 					}
-					this.setFocusNode(this.text_selection.focus_vid);
+					//this.setFocusNode(this.text_selection.focus_vid);
+
+					const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+					if (focus_v_node_data && this.isTextable(focus_v_node_data.v_node)) {
+						this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
+					}
+					this.text_selection = undefined; // maybe leave it if there was just one thing selected
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
@@ -1159,6 +1164,11 @@ class PiepCMS {
 	initClick() {
 		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
+
+			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+			if (!this.content_active) {
+				//removeSelection(); // TODO: then when?
+			}
 		});
 
 		document.addEventListener("click", (ev) => {
@@ -1262,11 +1272,6 @@ class PiepCMS {
 				this.float_multi_insert_bckg.style.height = size;
 			} else if (this.grabbed_v_node) {
 				this.releaseBlock();
-			}
-
-			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
-			if (!this.content_active) {
-				//removeSelection(); // TODO: then when?
 			}
 		});
 	}
@@ -3628,9 +3633,7 @@ class PiepCMS {
 						single_node: true,
 					};
 
-					setTimeout(() => {
-						this.content_active = true;
-					});
+					this.content_active = true;
 				}
 			}
 		} else {
@@ -4057,6 +4060,10 @@ class PiepCMS {
 		const focus_offset = this.text_selection.focus_offset;
 		const vid = this.text_selection.focus_vid;
 		const v_node = this.getVNodeById(vid);
+
+		if (!v_node || v_node.text === undefined) {
+			return;
+		}
 
 		const edge = dir === 1 ? focus_offset >= v_node.text.length : focus_offset <= 0;
 		if (edge) {
