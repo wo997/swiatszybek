@@ -53,7 +53,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					<div class="user_info mb3"><i class="fas fa-info-circle"></i> Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div>
 
 					<div class="label first">Główna czcionka</div>
-					<div class="pretty_radio semi_bold columns_3" data-bind="{${data.font_family}}" style="max-width: 500px">
+					<div class="pretty_radio semi_bold columns_3 spiky" data-bind="{${data.font_family}}" style="max-width: 500px">
 						${Object.entries(fonts)
 							.map(
 								([font_family, data]) =>

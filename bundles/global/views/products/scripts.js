@@ -381,9 +381,14 @@ function setProductsFilterCountFromUrl() {
 		filter_count += v.split("-").length;
 	}
 
+	if (url_params.get("znajdz")) {
+		filter_count++;
+	}
+
 	$$(".product_filter_count").forEach((pfc) => {
 		pfc._set_content(filter_count ? `: ${filter_count}` : "");
 	});
+
 	feature_filter_count._set_content(filter_count ? `(${filter_count})` : "");
 	$(".searching_wrapper .clear_filters_btn").classList.toggle("hidden", filter_count === 0);
 	$("#products_Filters .clear_filters_btn").classList.toggle("disabled", filter_count === 0);

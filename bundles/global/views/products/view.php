@@ -404,15 +404,17 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 </div>
                 <div class="prcbf"></div>
 
-                <div class="label"> <span>Wyszukaj po frazie</span> </div>
-                <input class="field search_phrase" placeholder="Nazwa produktu">
-
                 <div class="search_header">
                     <span>Filtry</span>
                     <span class="feature_filter_count"></span>
                     <button class="btn transparent small clear_filters_btn" data-tooltip="Wyczyść filtry" data-tooltip_position="right"> <i class="fas fa-eraser" style="transform: scale(1.25);"></i></button>
                 </div>
                 <ul class="product_filters">
+                    <div class="label"> <span>Wyszukaj po frazie</span> </div>
+                    <div class="float_icon">
+                        <input class="field search_phrase" placeholder="Nazwa produktu">
+                        <i class="fas fa-search"></i>
+                    </div>
                     <?= traverseFeatures() ?>
                 </ul>
                 <div class="prfbf"></div>
