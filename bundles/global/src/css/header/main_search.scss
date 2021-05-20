@@ -1,12 +1,14 @@
 /* css[modules/main_menu] */
 
 .main_search_wrapper {
+	header & {
+		margin: 0 10px;
+	}
 	& {
 		position: relative;
 		flex-grow: 0.6;
 		display: flex;
 		flex-basis: 200px;
-		margin: 0 10px;
 		z-index: 100;
 	}
 	&:not(.active),
