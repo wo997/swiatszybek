@@ -27,7 +27,7 @@ if ($global_template_id) {
 
 <?php startSection("head_content"); ?>
 
-<link href="/<?= BUILDS_PATH . "templates/css/template_$global_template_id.css?v=$template_release" ?>" rel="stylesheet">
+<link href="/<?= BUILDS_PATH . "template/css/template_$global_template_id.css?v=$template_release" ?>" rel="stylesheet">
 
 <?php startSection("body"); ?>
 
@@ -35,6 +35,6 @@ if ($global_template_id) {
     <?= $content_html ?>
 </div>
 
-<script src="/<?= BUILDS_PATH . "templates/js/template_$global_template_id.js?v=$template_release" ?>"></script>
+<script src="/<?= BUILDS_PATH . "template/js/template_$global_template_id.js?v=$template_release" ?>"></script>
 
 <?php include "bundles/global/templates/blank.php"; ?>

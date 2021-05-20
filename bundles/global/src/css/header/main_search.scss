@@ -1,7 +1,7 @@
 /* css[modules/main_menu] */
 
 .main_search_wrapper {
-	header {
+	header & {
 		& {
 			margin: 0 10px;
 		}

@@ -133,22 +133,22 @@ function getPageCss($styles_css_responsive)
 
 function buildPageable($entity_name, $id)
 {
-    $page = EntityManager::getEntityById($entity_name, $id);
-    $v_dom = json_decode($page->getProp("v_dom_json"), true);
-
+    $id_column_name = EntityManager::getEntityIdColumn($entity_name);
+    $pageable_data = DB::fetchRow("SELECT * FROM $entity_name WHERE $id_column_name=$id");
+    $v_dom = json_decode($pageable_data["v_dom_json"], true);
     if ($v_dom) {
         $dom_data = traverseVDom($v_dom);
 
         $page_css = $dom_data["styles_css"];
         $page_css .= getPageCss($dom_data["styles_css_responsive"]);
         $page_css_minified = Assets::minifyCss($page_css);
-        Files::save(BUILDS_PATH . "/{$entity_name}s/css/{$entity_name}_$id.css", $page_css_minified);
+        Files::save(BUILDS_PATH . "/{$entity_name}/css/{$entity_name}_$id.css", $page_css_minified);
 
         $page_js = $dom_data["scripts_js"];
         $page_js_minified = Assets::minifyJs($page_js);
-        Files::save(BUILDS_PATH . "/{$entity_name}s/js/{$entity_name}_$id.js", $page_js_minified);
+        Files::save(BUILDS_PATH . "/{$entity_name}/js/{$entity_name}_$id.js", $page_js_minified);
 
-        $page->setProp("version", $page->getProp("version") + 1);
+        DB::execute("UPDATE $entity_name SET version = version+1 WHERE $id_column_name=$id");
     }
 }
 
@@ -328,12 +328,12 @@ function renderPage($page_id)
         $template_release = $parent_template["version"];
         $template_id = $parent_template["template_id"];
     ?>
-        <link href="/<?= BUILDS_PATH . "templates/css/template_$template_id.css?v=$template_release" ?>" rel="stylesheet">
+        <link href="/<?= BUILDS_PATH . "template/css/template_$template_id.css?v=$template_release" ?>" rel="stylesheet">
     <?php
     }
     ?>
 
-    <link href="/<?= BUILDS_PATH . "pages/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
+    <link href="/<?= BUILDS_PATH . "page/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
 
     <?= def($sections, "page_type_specific_head", ""); ?>
 
@@ -346,12 +346,12 @@ function renderPage($page_id)
             $template_release = $parent_template["version"];
             $template_id = $parent_template["template_id"];
         ?>
-            <script src="/<?= BUILDS_PATH . "templates/js/template_$template_id.js?v=$template_release" ?>"></script>
+            <script src="/<?= BUILDS_PATH . "template/js/template_$template_id.js?v=$template_release" ?>"></script>
         <?php
         }
         ?>
 
-        <script src="/<?= BUILDS_PATH . "pages/js/page_$page_id.js?v=$page_release" ?>"></script>
+        <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
     </div>
 <?php include "bundles/global/templates/blank.php";
 }
