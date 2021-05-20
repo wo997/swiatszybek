@@ -195,11 +195,7 @@ if (isset($route_file)) {
     $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [ltrim(Request::$url, "/")]);
 
     if ($page_data) {
-        $data = [];
-        if (isset($preview_params) && $preview_params) {
-            $data["preview_params"] = $preview_params;
-        }
-        renderPage($page_data["page_id"], $data);
+        renderPage($page_data["page_id"]);
         die;
     }
 

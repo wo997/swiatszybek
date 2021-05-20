@@ -1,5 +1,3 @@
 <?php
 
-if (isset($_POST["preview_params"])) {
-    $preview_params = json_decode($_POST["preview_params"], true);
-}
+$preview_params = json_decode(def($_POST, "preview_params", "[]"), true);
