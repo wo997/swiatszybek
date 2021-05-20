@@ -29,7 +29,7 @@ function previewUrl(url, params) {
 								</div>
 							</div>
 						</span>
-						<a class="btn subtle ml1 open_btn mla" target="_blank">Pokaż <i class="fas fa-external-link-square-alt"></i></a
+						<a class="btn subtle ml1 open_btn mla" target="_blank">Pokaż <i class="fas fa-external-link-alt"></i></a
 						><button class="btn primary ml1" onclick="hideParentModal(this)">Ukryj <i class="fas fa-times"></i></button>
 					</div>
 					<div class="flex_stretch">

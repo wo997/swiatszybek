@@ -122,7 +122,12 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
 
         //$checkbox_style = "";
 
-        $html .= "<li class=\"option_row\">";
+        $classes = "option_row";
+        if (!$count) {
+            $classes .= " empty";
+        }
+
+        $html .= "<li class=\"$classes\">";
         $html .= "<div class=\"checkbox_area\">";
         $html .= "<p-checkbox class=\"$checkbox_class\" data-value=\"$id\" style=\"$checkbox_style\"></p-checkbox>";
         $html .= " <span class=\"feature_option_label\">$show_before $value</span>";

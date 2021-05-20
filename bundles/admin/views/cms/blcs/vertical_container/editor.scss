@@ -2,6 +2,7 @@
 
 .vertical_container_placeholder {
 	& {
+		pointer-events: none;
 		margin: 5px;
 		background: #eee;
 		min-height: 50px;
