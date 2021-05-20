@@ -180,6 +180,8 @@
 				width: 66px;
 				height: 66px;
 				border-radius: inherit;
+				object-fit: contain;
+				display: block;
 			}
 		}
 		&:not(.visible) {
