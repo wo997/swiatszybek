@@ -748,11 +748,20 @@ class PiepCMS {
 		this.add_block_btn = this.container._child(".add_block_btn");
 		this.add_block_btn_wrapper = this.container._child(".add_block_btn_wrapper");
 
+		this.advanced_mode = false;
+
 		document.addEventListener("click", (event) => {
 			const target = $(event.target);
 			const edit_theme_btn = target._parent(".edit_theme_btn");
 			if (edit_theme_btn) {
 				getThemeSettingsModal()._show({ source: edit_theme_btn });
+			}
+			const advanced_mode_btn = target._parent(".advanced_mode_btn");
+			if (advanced_mode_btn) {
+				this.advanced_mode = !this.advanced_mode;
+				this.container.classList.toggle("advanced_mode", this.advanced_mode);
+				advanced_mode_btn.classList.toggle("important", this.advanced_mode);
+				advanced_mode_btn.classList.toggle("transparent", !this.advanced_mode);
 			}
 		});
 	}

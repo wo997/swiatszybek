@@ -32,7 +32,7 @@
 			<div class="label">Szerokość</div>
 			<input class="field" data-blc_prop="styles.width" />
 
-			<div class="glue_children">
+			<div class="glue_children case_advanced">
 				<div class="mr2">
 					<div class="label normal">Minimalna</div>
 					<input class="field" data-blc_prop="styles.minWidth" />
@@ -54,7 +54,7 @@
 			<div class="label">Wysokość</div>
 			<input class="field" data-blc_prop="styles.height" />
 
-			<div class="glue_children">
+			<div class="glue_children case_advanced">
 				<div class="mr2">
 					<div class="label normal">Minimalna</div>
 					<input class="field" data-blc_prop="styles.minHeight" />

@@ -118,6 +118,12 @@
 	::placeholder {
 		color: #aaa;
 	}
+
+	&:not(.advanced_mode) {
+		.case_advanced {
+			display: none !important;
+		}
+	}
 }
 
 @keyframes cursor_blink {
