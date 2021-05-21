@@ -996,6 +996,17 @@ function ProductComp(comp, parent, data = undefined) {
 					return;
 				}
 
+				if (data.missing_products_variants.length > 0) {
+					showNotification(html`<div class="header">Błąd zapisywania</div>
+						Musisz najpierw dodać brakujące produkty do listy`);
+					return;
+				}
+				if (data.unnecessary_product_ids.length > 0) {
+					showNotification(html`<div class="header">Błąd zapisywania</div>
+						Musisz najpierw usunąć niepotrzebne produkty z listy`);
+					return;
+				}
+
 				const save_products = cloneObject(data.products_dt.dataset);
 				save_products.forEach((product) => {
 					product.variant_options = [];
