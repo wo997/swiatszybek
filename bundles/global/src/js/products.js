@@ -49,7 +49,6 @@ domload(() => {
 						}
 
 						image_id = (image_id + 1) % images.length;
-
 						setTimeout(() => {
 							overlay.style.opacity = "1";
 						});
@@ -96,8 +95,8 @@ domload(() => {
 		}
 	};
 
-	window.addEventListener("mousemove", tacz, { passive: true });
-	window.addEventListener("touchstart", tacz, { passive: true });
+	window.addEventListener("mousemove", tacz);
+	window.addEventListener("touchstart", tacz);
 
 	setInterval(() => {
 		tacz({ target: mouse.target });
