@@ -232,7 +232,6 @@ function renderPage($page_id)
 
     $all_v_doms = [];
 
-
     foreach ($parent_templates as $parent_template) {
         $parent_template_v_dom = json_decode($parent_template["v_dom_json"], true);
         $all_v_doms[] = def($parent_template_v_dom, []);
@@ -296,7 +295,15 @@ function renderPage($page_id)
 
     $full_v_dom = $all_v_doms[0];
 
-    $dom_data = traverseVDom($full_v_dom, ["html_only" => true]);
+    $full_dom_data = traverseVDom($full_v_dom, ["html_only" => true]);
+
+    if ($preview_v_dom_json) {
+        $dom_data = traverseVDom($v_dom);
+        $preview_css = $dom_data["styles_css"];
+        $preview_css .= getPageCss($dom_data["styles_css_responsive"]);
+    } else {
+        $preview_css = null;
+    }
 
     $shop_name = getShopName();
     $seo_title = $page_data["seo_title"] ? $page_data["seo_title"] : $shop_name;
@@ -333,14 +340,20 @@ function renderPage($page_id)
     }
     ?>
 
-    <link href="/<?= BUILDS_PATH . "page/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
+    <?php if ($preview_css) : ?>
+        <style>
+            <?= $preview_css ?>
+        </style>
+    <?php else : ?>
+        <link href="/<?= BUILDS_PATH . "page/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
+    <?php endif ?>
 
     <?= def($sections, "page_type_specific_head", ""); ?>
 
     <?php startSection("body"); ?>
 
     <div class="main_wrapper global_root">
-        <?= $dom_data["content_html"] ?>
+        <?= $full_dom_data["content_html"] ?>
 
         <?php foreach ($parent_templates as $parent_template) {
             $template_release = $parent_template["version"];
@@ -353,5 +366,6 @@ function renderPage($page_id)
 
         <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
     </div>
+
 <?php include "bundles/global/templates/blank.php";
 }
