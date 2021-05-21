@@ -18,7 +18,7 @@ domload(() => {
 			const left = btn_rect.left;
 			const top = btn_rect.top + btn_rect.height - 1;
 			float_menu.style.left = left + "px";
-			float_menu.style.top = top + "px";
+			float_menu.style.top = top - main_header.getBoundingClientRect().top + "px";
 			float_menu.style.minWidth = btn_rect.width + "px";
 
 			if (!float_menu.classList.contains("created_columns")) {

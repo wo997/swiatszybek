@@ -373,15 +373,18 @@ function renderPage($page_id)
 
     <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
         <div class="edit_page_menu">
-            <a href="<?= Request::$static_urls["ADMIN"] ?>/strona?nr_strony=<?= $page_id ?>" class="btn transparent small mr1">Edytuj stronę <i class="fas fa-cog"></i></a>
-            <button class="btn transparent small mr1 published" data-tooltip="Ukryj">
-                Widoczna
+            <button class="mla xbutton published" data-tooltip="Ukryj">
+                <span>Widoczna</span>
                 <i class='fas fa-eye'></i>
             </button>
-            <button class="btn transparent small mr1 unpublished" data-tooltip="Pokaż">
-                Ukryta
+            <button class="mla xbutton unpublished" data-tooltip="Pokaż">
+                <span>Ukryta</span>
                 <i class='fas fa-eye-slash'></i>
             </button>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/strona?nr_strony=<?= $page_id ?>" class="xbutton">
+                <span>Edytuj stronę</span>
+                <i class="fas fa-cog"></i>
+            </a>
         </div>
 
         <style>
@@ -390,24 +393,26 @@ function renderPage($page_id)
                 top: 0;
                 left: 0;
                 right: 0;
-                background: #000;
+                background: #222;
                 padding: 0 5px;
                 height: var(--body_padding_top);
                 display: flex;
                 align-items: stretch;
                 z-index: 10000;
                 --hover-shadow: none;
+                line-height: var(--body_padding_top);
             }
 
-            #p .edit_page_menu .btn {
-                --btn-font-clr: #fff;
-                --hover-shadow: none;
-                --brighten-factor: 1;
-                font-weight: var(--bold);
+            #p .edit_page_menu .xbutton {
+                padding: 0 10px;
+                background: none;
+                color: #fff;
+                border: none;
+                cursor: pointer;
             }
 
-            #p .edit_page_menu .btn:not(:hover) {
-                opacity: 0.8;
+            #p .edit_page_menu .xbutton:hover span {
+                text-decoration: underline;
             }
 
             :root {
@@ -420,11 +425,11 @@ function renderPage($page_id)
             }
 
             #p .edit_page_menu .published {
-                --btn-font-clr: #2d3
+                color: #4d4
             }
 
             #p .edit_page_menu .unpublished {
-                --btn-font-clr: #f34
+                color: #f44
             }
         </style>
 
