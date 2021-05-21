@@ -2693,6 +2693,50 @@ class PiepCMS {
 				const top = add_block_btn_rect.top;
 
 				this.add_block_menu._set_absolute_pos(left, top);
+
+				// restrict options
+
+				const blc_ids_we_have = [];
+
+				/**
+				 * @param {vDomNode[]} v_nodes
+				 */
+				const traverseVDom = (v_nodes) => {
+					for (const v_node of v_nodes) {
+						const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+						if (blc_schema) {
+							if (!blc_ids_we_have.includes(blc_schema.id)) {
+								blc_ids_we_have.push(blc_schema.id);
+							}
+						}
+						if (v_node.children) {
+							traverseVDom(v_node.children);
+						}
+					}
+				};
+				traverseVDom(this.v_dom);
+
+				this.add_block_menu._children(".block_to_add").forEach((block_to_add) => {
+					let visible = true;
+
+					const blc_id = block_to_add.dataset.id;
+					const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === blc_id);
+
+					if (blc_schema.page_type) {
+						if (blc_schema.page_type === "template") {
+							if (!template_data) {
+								visible = false;
+							}
+						} else if (blc_schema.page_type !== pageable_data.page_type) {
+							visible = false;
+						}
+					}
+					if (visible && blc_schema.single_usage && blc_ids_we_have.includes(blc_id)) {
+						visible = false;
+					}
+
+					block_to_add.classList.toggle("hidden", !visible);
+				});
 			}
 		} else {
 			this.add_block_menu.classList.remove("visible");
@@ -3932,7 +3976,7 @@ class PiepCMS {
 						for (const blc_group of prop.blc_groups) {
 							if (blc_group.matcher) {
 								const v_node_data = this.getVNodeDataById(v_node.id);
-								const matches = blc_group.matcher(v_node_data);
+								const matches = blc_group.matcher(v_node_data, this);
 								if (matches) {
 									visible = true;
 								}
@@ -3992,7 +4036,7 @@ class PiepCMS {
 						for (const blc_group of prop.blc_groups) {
 							if (blc_group.matcher) {
 								const v_node_data = this.getVNodeDataById(v_node.id);
-								const matches = blc_group.matcher(v_node_data);
+								const matches = blc_group.matcher(v_node_data, this);
 								if (matches) {
 									visible = true;
 								}

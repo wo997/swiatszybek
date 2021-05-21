@@ -42,6 +42,7 @@
 		id: "template_hook",
 		icon: html`<i class="fas fa-anchor"></i>`,
 		label: html`Sekcja szablonu`,
+		page_type: "template",
 		v_node: {
 			tag: "div",
 			id: -1,

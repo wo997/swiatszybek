@@ -43,6 +43,17 @@
 				<i class="fas fa-copy"></i>
 			</button>
 		`,
+		blc_groups: [
+			{
+				matcher: (v_node_data) => {
+					const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node_data.v_node.module_name);
+					if (blc_schema && blc_schema.single_usage) {
+						return false;
+					}
+					return true;
+				},
+			},
+		],
 		init: (piep_cms) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);

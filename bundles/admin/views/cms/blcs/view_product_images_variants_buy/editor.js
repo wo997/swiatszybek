@@ -8,6 +8,7 @@
 		single_usage: true,
 		tooltip: "(Zdjęcia, wybór wariantów, kup teraz)",
 		nonclickable: true,
+		page_type: "general_product",
 		v_node: {
 			tag: "div",
 			id: -1,

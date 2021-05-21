@@ -7,6 +7,7 @@
 		label: html`Komentarze produktu`,
 		single_usage: true,
 		nonclickable: true,
+		page_type: "general_product",
 		v_node: {
 			tag: "div",
 			id: -1,

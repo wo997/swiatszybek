@@ -55,7 +55,7 @@
  * match_tag?: RegExp
  * has_classes?: string[]
  * module_names?: string[]
- * matcher?(v_node_data: vDomNodeData): boolean
+ * matcher?(v_node_data: vDomNodeData, piep_cms: PiepCMS): boolean
  * priority?: number
  * }} BlcGroup
  */

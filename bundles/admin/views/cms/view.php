@@ -81,6 +81,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
     let page_data = <?= json_encode($page_data) ?>;
     let template_data = <?= json_encode($template_data) ?>;
     let parent_templates = <?= json_encode($parent_templates) ?>;
+    let pageable_data = def(page_data, template_data);
 </script>
 
 <script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . version("piep_cms_dependencies") ?>"></script>
