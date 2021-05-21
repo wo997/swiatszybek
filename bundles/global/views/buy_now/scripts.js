@@ -327,13 +327,16 @@ domload(() => {
 			return;
 		}
 
+		showLoader();
+
 		xhr({
 			url: "/shop_order/confirm",
 			params: {
 				shop_order: data,
 			},
 			success: (res) => {
-				// will be redirected
+				hideLoader();
+				// will be redirected to order page and then straight to payment
 			},
 		});
 	});
