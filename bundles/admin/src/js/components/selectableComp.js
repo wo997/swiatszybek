@@ -78,6 +78,10 @@ function SelectableComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		data.selection = data.selection.filter((s) => data.dataset.map((d) => d.value).includes(s));
 
+		if (data.dataset.length === 1 && data.selection.length === 0) {
+			data.selection.push(data.dataset[0].value);
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {

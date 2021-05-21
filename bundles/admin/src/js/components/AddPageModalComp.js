@@ -85,13 +85,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 
 	if (data.select_template === undefined) {
 		data.select_template = {
-			options: {
-				single: true,
-			},
-			dataset: [
-				{ value: "-1", label: "Brak - Pusta strona" },
-				...templates.map((t) => ({ value: t.template_id.toString(), label: t.name })),
-			],
+			options: { single: true },
+			dataset: [],
 			parent_variable: "template_id",
 		};
 	}
@@ -118,6 +113,14 @@ function AddPageModalComp(comp, parent, data = undefined) {
 
 		if (data.page_type === "page") {
 			data.link_what_id = null;
+		}
+
+		data.select_template.dataset = [
+			...templates.filter((t) => t.page_type === data.page_type).map((t) => ({ value: t.template_id.toString(), label: t.name })),
+		];
+
+		if (data.page_type === "page") {
+			data.select_template.dataset.unshift({ value: "-1", label: "Brak - Pusta strona" });
 		}
 
 		setCompData(comp, data, {
@@ -173,7 +176,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
 				</div>
 
-				<div class="label">Szablon nadrzędny</div>
+				<div class="label">Szablon</div>
 				<selectable-comp data-bind="{${data.select_template}}" data-validate=""></selectable-comp>
 			</div>
 		`,

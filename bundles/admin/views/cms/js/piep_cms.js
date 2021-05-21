@@ -1135,8 +1135,9 @@ class PiepCMS {
 			}
 
 			e.preventDefault();
-			// "text/html" is cool but dont use it yet
+			//console.log(e.clipboardData.getData("text/html"));
 			const text = e.clipboardData.getData("text/plain");
+
 			// this text can contain html cool
 			this.insertText(text);
 		});
