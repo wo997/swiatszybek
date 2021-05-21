@@ -22,9 +22,9 @@
 }
 
 .piep_editor_content {
-	::selection {
-		background: transparent;
-	}
+	// ::selection {
+	// 	background: transparent;
+	// }
 }
 
 .piep_editor .focus_rect {
@@ -40,4 +40,20 @@
 	animation: cursor_blink 1s infinite;
 	//box-shadow: 0 0 0 1px #7775;
 	z-index: 500;
+}
+
+@keyframes cursor_blink {
+	0%,
+	20%,
+	80%,
+	100% {
+		background: #000;
+		//box-shadow: 0 0 1px 1px transparent;
+		//box-shadow: 0 0 1px 1px #fff5;
+	}
+	50% {
+		background: #fff;
+		//box-shadow: 0 0 1px 1px #fff;
+		//box-shadow: 0 0 1px 1px #0005;
+	}
 }

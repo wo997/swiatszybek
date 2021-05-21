@@ -62,6 +62,11 @@ class PiepCMS {
 		});
 
 		document.addEventListener("selectionchange", () => {
+			if (this.removing_selection) {
+				this.removing_selection = false;
+				return;
+			}
+
 			if (this.grabbed_v_node || this.editing_layout || !this.content_active) {
 				return;
 			}
@@ -191,8 +196,23 @@ class PiepCMS {
 				}
 			}
 
-			this.manageText();
+			this.onSelectionChange();
+
+			// why? so the change actually happens next time we click something
+			this.removing_selection = true;
+			removeSelection();
 		});
+	}
+
+	onSelectionChange() {
+		this.manageText();
+
+		if (this.text_selection) {
+			const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+			if (focus_node_data) {
+				this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
+			}
+		}
 	}
 
 	/**
@@ -1106,11 +1126,11 @@ class PiepCMS {
 					}
 					//this.setFocusNode(this.text_selection.focus_vid);
 
-					const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-					if (focus_v_node_data && this.isTextable(focus_v_node_data.v_node)) {
-						this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
-					}
-					this.text_selection = undefined; // maybe leave it if there was just one thing selected
+					// const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+					// if (focus_v_node_data && this.isTextable(focus_v_node_data.v_node)) {
+					// 	this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
+					// }
+					// this.text_selection = undefined; // maybe leave it if there was just one thing selected
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
