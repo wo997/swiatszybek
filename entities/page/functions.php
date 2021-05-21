@@ -425,11 +425,11 @@ function renderPage($page_id)
             }
 
             #p .edit_page_menu .published {
-                color: #4d4
+                color: #7c7
             }
 
             #p .edit_page_menu .unpublished {
-                color: #f44
+                color: #c88
             }
         </style>
 
