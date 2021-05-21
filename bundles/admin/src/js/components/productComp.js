@@ -53,6 +53,9 @@
  *      add_variant_btn: PiepNode
  *      delete_btn: PiepNode
  *      products_dt_wrapper: PiepNode
+ *      prices_tab: PiepNode
+ *      stock_tab: PiepNode
+ *      dim_tab: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _remove_missing_products()
@@ -468,6 +471,31 @@ function ProductComp(comp, parent, data = undefined) {
 					}
 				});
 
+				if (cd.products_dt) {
+					let missing_price = 0;
+					let missing_dim = 0;
+					let missing_stock = 0;
+					data.products_dt.dataset.forEach((/** @type {DtProductData} */ product) => {
+						if (+product.gross_price === 0) {
+							missing_price++;
+						}
+						if (+product.weight === 0 || +product.length === 0 || +product.width === 0 || +product.height === 0) {
+							missing_price++;
+						}
+						if (+product.stock <= 0) {
+							missing_stock++;
+						}
+					});
+
+					comp._nodes.prices_tab.classList.toggle("error", !!missing_price);
+					comp._nodes.stock_tab.classList.toggle("error", !!missing_stock);
+					comp._nodes.dim_tab.classList.toggle("error", !!missing_dim);
+
+					comp._nodes.prices_tab.dataset.tooltip = missing_price ? `Nie uzupełniono cen: ${missing_price}` : "";
+					comp._nodes.stock_tab.dataset.tooltip = missing_stock ? `Zerowy stan magazynowy produktów: ${missing_stock}` : "";
+					comp._nodes.dim_tab.dataset.tooltip = missing_dim ? `Nie uzupełniono wymiarów / wag: ${missing_dim}` : "";
+				}
+
 				if (cd.variants || cd.products_dt) {
 					// redefine products DT columns to make sure the order is right etc
 
@@ -868,11 +896,11 @@ function ProductComp(comp, parent, data = undefined) {
 							<p-checkbox data-value="active"></p-checkbox>
 							<span> <i class="fas fa-check"></i> Aktywne </span>
 						</div>
-						<div class="checkbox_area">
+						<div class="checkbox_area" data-node="{${comp._nodes.prices_tab}}">
 							<p-checkbox data-value="price"></p-checkbox>
 							<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
 						</div>
-						<div class="checkbox_area">
+						<div class="checkbox_area" data-node="{${comp._nodes.stock_tab}}">
 							<p-checkbox data-value="stock"></p-checkbox>
 							<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
 						</div>
@@ -880,7 +908,7 @@ function ProductComp(comp, parent, data = undefined) {
 							<p-checkbox data-value="discount"></p-checkbox>
 							<span> <i class="fas fa-percentage"></i> Zniżki </span>
 						</div>
-						<div class="checkbox_area">
+						<div class="checkbox_area" data-node="{${comp._nodes.dim_tab}}">
 							<p-checkbox data-value="weight_dimensions"></p-checkbox>
 							<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
 						</div>

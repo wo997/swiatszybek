@@ -32,7 +32,7 @@ domload(() => {
 
 		const target = $(event.target);
 		const e = target._parent("[data-tooltip]");
-		if (e) {
+		if (e && e.dataset.tooltip) {
 			let tooltipText = e.dataset.tooltip;
 
 			if (!tooltipText || e.matches("p-dropdown.dropped")) {

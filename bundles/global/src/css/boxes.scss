@@ -79,8 +79,11 @@
 			pointer-events: none;
 		}
 
-		&.checked:not(.empty) {
-			border-color: var(--selection_clr);
+		&.checked,
+		&.error {
+			&:not(.empty) {
+				border-color: var(--selection_clr);
+			}
 		}
 	}
 	&:not(.pretty_blue) > .checked {
@@ -130,6 +133,13 @@
 		}
 		& > * {
 			box-shadow: none !important;
+		}
+		& > *.error:not(.empty) {
+			background: var(--pretty_error_background);
+			color: var(--pretty_error);
+			font-weight: var(--semi_bold);
+			--selection_clr: var(--pretty_error_border);
+			z-index: 10;
 		}
 		& > *.checked:not(.empty) {
 			background: var(--pretty_blue_background);
