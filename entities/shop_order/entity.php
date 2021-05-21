@@ -202,7 +202,7 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         $email_body .= "<div style=\"{label}\">Produkty</div>\n";
         $email_body .= $ordered_products_html;
 
-        $email_body .= "<br><div>Jeśli nie opłaciłaś/eś jeszcze zamówienia możesz to zrobić korzystajać z " . $get_shop_order_link("tego linku") . ".</div>\n";
+        $email_body .= "<br><div>Jeśli nie opłaciłaś/eś jeszcze zamówienia możesz to zrobić korzystając z " . $get_shop_order_link("tego linku") . ".</div>\n";
 
         sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
     }

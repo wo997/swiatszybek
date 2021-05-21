@@ -88,7 +88,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						</label>
 					</div>
 
-					<button class="btn primary medium" style="margin:10px 0; width: 100%" data-node="{${comp._nodes.login_btn}}" data-submit>
+					<button class="btn primary medium submit_btn" style="margin:10px 0; width: 100%" data-node="{${comp._nodes.login_btn}}">
 						Zaloguj się <i class="fa fa-chevron-right"></i>
 					</button>
 
