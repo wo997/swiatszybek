@@ -76,6 +76,7 @@ textarea {
 		--btn-border-clr: #0001;
 		--disabled-opacity: 0.4;
 		//--btn-hover-clr: #8888880c;
+		--brighten-factor: 1.02;
 	}
 	&.success {
 		--btn-background-clr: var(--success-clr);
