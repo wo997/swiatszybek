@@ -500,75 +500,10 @@ if ($main_img) {
     </div>
 <?php endif ?>
 
-<?php endSection(); ?>
+<?php
 
-<?php startSection("forget_it"); ?>
-
-
-<?php if (User::getCurrent()->priveleges["backend_access"] && !isset($preview_params)) : ?>
-    <!-- <div class="right_side_menu">
-        <button class="toggle-sidemenu-btn btn primary" onclick="toggleRightSideMenu()">
-            <i class="fas fa-chevron-right"></i>
-            <i class="fas fa-cog"></i>
-        </button>
-        <div class="label first" style="font-size:1.2em;margin-top: 2px;text-align:center">Edycja</div>
-
-        <?php if (1 /*$general_product_data["published"] === 1*/) {
-            $clr = "var(--success-clr)";
-            $info_label = "<i class='fas fa-eye'></i> Widoczny";
-            $btn_label = 'Ukryj';
-            $btn_class = 'subtle';
-        } else {
-            $clr = "var(--error-clr)";
-            $info_label = "<i class='fas fa-eye-slash'></i> Ukryty!";
-            $btn_label = 'Upublicznij';
-            $btn_class = 'primary';
-        }
-        ?>
-
-        <div style="color:<?= $clr ?>;margin:10px 0 5px;font-weight:var(--semi_bold);text-align:center">
-            <?= $info_label ?>
-        </div>
-        <button class="btn <?= $btn_class ?> fill" onclick="toggleProductPublish()"><?= $btn_label ?></button>
-
-        <div style="height:10px"></div>
-
-        <div>
-            <a href="<?= Request::$static_urls["ADMIN"] ?>/produkt/<?= $general_product_id ?>" class="btn primary fill">Więcej <i class="fas fa-cog"></i></a>
-        </div>
-    </div>
-
-    <script>
-        // function toggleProductPublish() {
-        //     xhr({
-        //         url: STATIC_URLS["ADMIN"] + "/set_publish",
-        //         params: {
-        //             table: "products",
-        //             primary: "general_product_id",
-        //             primary_id: <?= $general_product_id ?>,
-        //             published: <?= 1 // - $general_product_data["published"] 
-                                    ?>,
-        //         },
-        //         success: () => {
-        //             window.location.reload();
-        //         },
-        //     });
-        // }
-
-        <?php if (false) : //$general_product_data["published"] == 0) : 
-        ?>
-            domload(() => {
-                toggleRightSideMenu();
-            })
-        <?php endif ?>
-    </script> -->
-<?php endif ?>
-
-<?php endSection(); ?>
-<?php //include "bundles/global/templates/default.php"; 
+endSection();
 
 renderPage($page_data["page_id"]);
-
-//var_dump(array_keys($sections));
 
 ?>

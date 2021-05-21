@@ -206,6 +206,10 @@ function renderPage($page_id)
 
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
+    if ($page_data["active"] !== 1 && $page_data["url"] !== "" && !User::getCurrent()->priveleges["backend_access"]) {
+        Request::redirect("/");
+    }
+
     $v_dom_json = $page_data["v_dom_json"];
 
     $preview_params = json_decode(def($_POST, "preview_params", "[]"), true);
@@ -366,6 +370,100 @@ function renderPage($page_id)
 
         <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
     </div>
+
+    <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
+        <div class="edit_page_menu">
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/strona?nr_strony=<?= $page_id ?>" class="btn transparent small mr1">Edytuj stronę <i class="fas fa-cog"></i></a>
+            <button class="btn transparent small mr1 published" data-tooltip="Ukryj">
+                Widoczna
+                <i class='fas fa-eye'></i>
+            </button>
+            <button class="btn transparent small mr1 unpublished" data-tooltip="Pokaż">
+                Ukryta
+                <i class='fas fa-eye-slash'></i>
+            </button>
+        </div>
+
+        <style>
+            .edit_page_menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #000;
+                padding: 0 5px;
+                height: var(--body_padding_top);
+                display: flex;
+                align-items: stretch;
+                z-index: 10000;
+                --hover-shadow: none;
+            }
+
+            #p .edit_page_menu .btn {
+                --btn-font-clr: #fff;
+                --hover-shadow: none;
+                --brighten-factor: 1;
+                font-weight: var(--bold);
+            }
+
+            #p .edit_page_menu .btn:not(:hover) {
+                opacity: 0.8;
+            }
+
+            :root {
+                --body_padding_top: 30px;
+            }
+
+            .edit_page_menu.published .unpublished,
+            .edit_page_menu:not(.published) .published {
+                display: none;
+            }
+
+            #p .edit_page_menu .published {
+                --btn-font-clr: #2d3
+            }
+
+            #p .edit_page_menu .unpublished {
+                --btn-font-clr: #f34
+            }
+        </style>
+
+        <script>
+            domload(() => {
+                $(".edit_page_menu .published").addEventListener("click", () => {
+                    doSetPublished(0);
+                });
+
+                $(".edit_page_menu .unpublished").addEventListener("click", () => {
+                    doSetPublished(1);
+                });
+
+                const doSetPublished = (published) => {
+                    showLoader();
+                    xhr({
+                        url: STATIC_URLS["ADMIN"] + "/page/save",
+                        params: {
+                            page: {
+                                page_id: <?= $page_id ?>,
+                                active: published
+                            },
+                        },
+                        success: (res) => {
+                            hideLoader();
+                            setPublished(published);
+                        },
+                    });
+                }
+
+                const setPublished = (published) => {
+                    $(".edit_page_menu").classList.toggle("published", published);
+
+                }
+
+                setPublished(<?= $page_data["active"] ?>);
+            });
+        </script>
+    <?php endif ?>
 
 <?php include "bundles/global/templates/blank.php";
 }

@@ -70,11 +70,12 @@ textarea {
 		--btn-border-clr: var(--clr_primary);
 	}
 	&.subtle {
-		--btn-background-clr: #0000000c;
+		--btn-background-clr: #f3f3f3;
+		//--btn-background-clr: #0000000c;
 		--btn-font-clr: #000d;
 		--btn-border-clr: #0001;
 		--disabled-opacity: 0.4;
-		--btn-hover-clr: #8888880c;
+		//--btn-hover-clr: #8888880c;
 	}
 	&.success {
 		--btn-background-clr: var(--success-clr);

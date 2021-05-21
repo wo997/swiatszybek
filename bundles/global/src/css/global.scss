@@ -2,6 +2,8 @@
 
 :root {
 	--focus-clr: #47a;
+	--body_padding_top: 0;
+	--base_font_size: 14px;
 }
 
 html {
@@ -14,8 +16,8 @@ body {
 	margin: 0;
 }
 
-:root {
-	--base_font_size: 14px;
+body {
+	padding-top: var(--body_padding_top);
 }
 
 :root,

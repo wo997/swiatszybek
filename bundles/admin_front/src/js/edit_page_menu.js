@@ -1,0 +1,1 @@
+/* js[admin_front] */
