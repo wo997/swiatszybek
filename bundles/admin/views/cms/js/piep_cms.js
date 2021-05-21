@@ -197,10 +197,6 @@ class PiepCMS {
 			}
 
 			this.onSelectionChange();
-
-			// why? so the change actually happens next time we click something
-			this.removing_selection = true;
-			removeSelection();
 		});
 	}
 
@@ -1088,11 +1084,13 @@ class PiepCMS {
 						}
 					});
 
-					if (this.text_selection.length === 0 && new_middle_vids.length === 1) {
+					// TODO: work on this to get it right baby
+
+					if (this.text_selection.single_node && new_middle_vids.length === 1) {
 						this.text_selection.focus_vid = new_middle_vids[0];
 						this.text_selection.focus_offset = 0;
 						//this.setFocusNode(this.text_selection.focus_vid);
-						this.collapseSelection();
+						//this.collapseSelection();
 					}
 
 					this.text_selection.partial_ranges = [];
@@ -1202,9 +1200,15 @@ class PiepCMS {
 			const target = $(ev.target);
 
 			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+		});
+
+		document.addEventListener("mouseup", (ev) => {
 			if (!this.content_active) {
-				//removeSelection(); // TODO: then when?
+				return;
 			}
+			// why? so the change actually happens next time we click something
+			this.removing_selection = true;
+			removeSelection();
 		});
 
 		document.addEventListener("click", (ev) => {
