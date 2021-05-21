@@ -11,6 +11,7 @@ DB::createTable("general_product", [
     ["name" => "__search", "type" => "TEXT"],
     ["name" => "__url", "type" => "VARCHAR(255)"],
     ["name" => "__features_html", "type" => "TEXT"],
+    ["name" => "compare_sales", "type" => "INT", "index" => "index"],
 ]);
 
 DB::update("general_product", ["product_type" => "normal"], "product_type = ''");

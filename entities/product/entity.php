@@ -16,6 +16,7 @@ EntityManager::register("product", [
         "__name" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
         "__url" => ["type" => "string"],
+        "compare_sales" => ["type" => "number"],
     ],
 ]);
 

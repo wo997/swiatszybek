@@ -181,7 +181,7 @@ function renderGeneralProductsList($params)
 
     $actual_order = "general_product_id DESC";
     if ($search_order === "bestsellery") {
-        //$actual_order = "compare_sales DESC"; just do it
+        $actual_order = "gp.compare_sales DESC";
     }
     if ($search_order === "ceny-rosnaco") {
         $actual_order = "AVG(gross_price) ASC";

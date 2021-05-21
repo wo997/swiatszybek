@@ -16,4 +16,5 @@ DB::createTable("product", [
     ["name" => "__name", "type" => "VARCHAR(255)"],
     ["name" => "__options_json", "type" => "TEXT"],
     ["name" => "__url", "type" => "VARCHAR(255)"],
+    ["name" => "compare_sales", "type" => "INT", "index" => "index"],
 ]);

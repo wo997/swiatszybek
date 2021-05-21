@@ -97,6 +97,14 @@ function confirmOrder($shop_order_data)
 
     $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME
 
+    /** @var Entity[] OrderedProduct */
+    $ordered_products = $shop_order->getProp("ordered_products");
+
+    foreach ($ordered_products as $ordered_product) {
+        $product = EntityManager::getEntityById("product", $ordered_product->getProp("product_id"));
+        $product->setProp("compare_sales", $product->getProp("compare_sales") + $ordered_product->getProp("qty"));
+    }
+
     $shop_order->setProp("user_id", User::getCurrent()->getId());
 
     // you can do it once everything is ready

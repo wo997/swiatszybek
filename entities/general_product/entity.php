@@ -11,8 +11,7 @@ EntityManager::register("general_product", [
         "__search" => ["type" => "string"],
         "__url" => ["type" => "string"],
         "__features_html" => ["type" => "string"],
-        // "seo_title" => ["type" => "string"], // THINK ABOUT IT FIRST
-        // "seo_description" => ["type" => "string"],
+        "compare_sales" => ["type" => "number"],
     ],
 ]);
 
@@ -261,4 +260,7 @@ EventListener::register("after_save_general_product_entity", function ($params) 
         AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
 
     DB::execute("DELETE FROM product_feature_option WHERE just_general_product_id = $general_product_id AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
+
+    $compare_sales = DB::fetchVal("SELECT SUM(compare_sales) FROM product WHERE general_product_id = $general_product_id");
+    DB::execute("UPDATE general_product SET compare_sales = ? WHERE general_product_id = $general_product_id", [$compare_sales]);
 });

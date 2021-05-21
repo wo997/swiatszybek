@@ -192,7 +192,7 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
 
             $ordered_products_html .= "<tr>\n";
 
-            $ordered_products_html .= "<td> <img src=\"$img_url\" width=\"70\" height=\"70\" alt=\"$name\" title=\"$name\" style=\"display:block;margin-right:5px\"> </td>\n";
+            $ordered_products_html .= "<td> <img src=\"$img_url\" width=\"70\" height=\"70\" alt=\"$name\" title=\"$name\" style=\"display:block;margin-right:5px;object-fit:contain;\"> </td>\n";
             $ordered_products_html .= "<td> <a style=\"font-weight: 600;\" href=\"$url\">$name</a> <div style=\"margin-top:5px\"> $gross_price zł × $qty = $total_price zł</div> </td>\n";
 
             $ordered_products_html .= "</tr>\n";
