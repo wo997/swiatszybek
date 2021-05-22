@@ -63,7 +63,7 @@ class PiepCMS {
 		);
 
 		this.selection_helper._child(".part_btn").addEventListener("click", () => {
-			const blc = this.last_selection_helper_to_node;
+			const blc = this.selection_helper_target;
 			const vid = +blc.dataset.vid;
 			this.text_selection = {
 				anchor_vid: vid,
@@ -81,8 +81,7 @@ class PiepCMS {
 		});
 
 		this.selection_helper._child(".full_btn").addEventListener("click", () => {
-			const blc = this.last_selection_helper_to_node;
-			const text_container = blc._parent(".text_container");
+			const text_container = this.selection_helper_target;
 			this.selectTextContainerContents(+text_container.dataset.vid);
 			this.selection_helper.classList.add("hidden");
 		});
@@ -90,12 +89,20 @@ class PiepCMS {
 
 	selectionHelperMove() {
 		let blc = undefined;
+
+		this.selection_helper_target = undefined;
+
 		if (mouse.target) {
-			if (mouse.target._parent(this.selection_helper)) {
+			blc = mouse.target._parent(".textable, .text_container");
+
+			let maybe_target = blc;
+			if (!maybe_target) {
+				maybe_target = this.last_selection_helper_to_node;
+			}
+			if (maybe_target && mouse.target._parent(this.selection_helper)) {
+				this.selection_helper_target = mouse.target._parent(".full_btn") ? maybe_target._parent(".text_container") : maybe_target;
 				return;
 			}
-
-			blc = mouse.target._parent(".textable, .text_container");
 		}
 
 		if (this.last_selection_helper_to_node === blc) {
@@ -168,7 +175,9 @@ class PiepCMS {
 
 		document.addEventListener("selectionchange", () => {
 			if (this.removing_selection) {
-				this.removing_selection = false;
+				setTimeout(() => {
+					this.removing_selection = false;
+				});
 				return;
 			}
 
@@ -1261,15 +1270,16 @@ class PiepCMS {
 	}
 
 	initPaste() {
-		this.container.addEventListener("paste", (e) => {
+		this.container.addEventListener("paste", (ev) => {
 			if (!this.content_active) {
 				return;
 			}
 
-			e.preventDefault();
+			ev.preventDefault();
 			//console.log(e.clipboardData.getData("text/html"));
-			const text = e.clipboardData.getData("text/plain");
+			const text = ev.clipboardData.getData("text/plain");
 
+			//console.log(text);
 			// this text can contain html cool
 			this.insertText(text);
 		});
@@ -1342,7 +1352,10 @@ class PiepCMS {
 			this.remove_seleciton_timeout = setTimeout(() => {
 				this.remove_seleciton_timeout = undefined;
 				this.removing_selection = true;
-				removeSelection();
+
+				// cant be empty cause pasting wouldn't work dude
+				//removeSelection();
+				setSelectionByIndex($(".piep_editor_header"), 0);
 			}, 200);
 		});
 
@@ -2729,6 +2742,17 @@ class PiepCMS {
 			show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
 		}
 
+		if (this.selection_helper_target) {
+			if (this.selection_helper_target.classList.contains("text_container")) {
+				const v_node = this.getVNodeById(+this.selection_helper_target.dataset.vid);
+				v_node.children.forEach((c) => {
+					show_vids.push({ vid: c.id, opacity: 1 });
+				});
+			} else {
+				show_vids.push({ vid: +this.selection_helper_target.dataset.vid, opacity: 1 });
+			}
+		}
+
 		if (this.text_selection !== undefined && !this.grabbed_v_node) {
 			show_float_menu = true;
 		}
@@ -2774,11 +2798,13 @@ class PiepCMS {
 
 		if (show_float_menu) {
 			if (this.text_selection !== undefined) {
-				const all_ids = [
-					...this.text_selection.partial_ranges.map((e) => e.vid),
-					...this.text_selection.middle_vids,
-					this.text_selection.focus_vid,
-				].filter(onlyUnique);
+				let all_ids = [];
+
+				all_ids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
+				all_ids.push(...this.text_selection.middle_vids);
+				all_ids.push(this.text_selection.focus_vid);
+
+				all_ids = all_ids.filter(onlyUnique);
 
 				let highest_y = 1000000;
 				/** @type {number} */

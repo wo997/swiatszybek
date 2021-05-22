@@ -59,10 +59,11 @@ function getRangeByIndex(node, pos, end = undefined) {
  * @returns
  */
 function setSelectionByIndex(node, pos, end = undefined) {
-	const sel = window.getSelection();
+	//const sel = window.getSelection();
 	const range = getRangeByIndex(node, pos, end);
-	sel.removeAllRanges();
-	sel.addRange(range);
+	// sel.removeAllRanges();
+	// sel.addRange(range)
+	window.setSelectionRange(range);
 }
 
 /**
