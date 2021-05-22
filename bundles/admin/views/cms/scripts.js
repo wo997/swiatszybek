@@ -69,7 +69,7 @@ domload(() => {
 		const page_type = page_data.page_type;
 
 		if (page_type === "general_product") {
-			breadcrumbs += html` <div class="crumb">${page_data.general_product.name}</div> `;
+			breadcrumbs += html` <button class="btn transparent crumb" data-tooltip="Edytuj stronę">${page_data.general_product.name}</button> `;
 			$(".piep_editor_header").insertAdjacentHTML(
 				"beforeend",
 				html`
@@ -82,7 +82,7 @@ domload(() => {
 
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
-			breadcrumbs += html` <div class="crumb">${location.host}${page_data.url ? "/" : ""}${page_data.url}</div> `;
+			breadcrumbs += html` <button class="btn transparent crumb" data-tooltip="Edytuj stronę">${location.host}${page_data.url ? "/" : ""}${page_data.url}</button> `;
 			preview_url = "/" + page_data.url;
 		}
 	}

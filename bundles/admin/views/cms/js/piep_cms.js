@@ -30,7 +30,6 @@ class PiepCMS {
 		this.initRightMenu();
 		this.initAddBlockMenu();
 		this.initLayoutEdit();
-		this.initSelectionHelper();
 
 		this.initEditables();
 		this.initEditingColors();
@@ -48,85 +47,6 @@ class PiepCMS {
 		this.mainLoop();
 
 		piep_cms_manager.editorReady();
-	}
-
-	initSelectionHelper() {
-		this.selection_helper._set_content(
-			html`
-				<button class="btn subtle part_btn" data-tooltip="Zaznacz fragment">
-					<i class="far fa-square"></i>
-				</button>
-				<button class="btn subtle full_btn" data-tooltip="Zaznacz cały blok">
-					<i class="fas fa-square"></i>
-				</button>
-			`
-		);
-
-		this.selection_helper._child(".part_btn").addEventListener("click", () => {
-			const blc = this.selection_helper_target;
-			const vid = +blc.dataset.vid;
-			this.text_selection = {
-				anchor_vid: vid,
-				anchor_offset: 0,
-				focus_vid: vid,
-				focus_offset: blc.textContent.length,
-				middle_vids: [vid],
-				partial_ranges: [],
-				// @ts-ignore
-				direction: 1,
-				length: blc.textContent.length,
-				single_node: true,
-			};
-			this.selection_helper.classList.add("hidden");
-		});
-
-		this.selection_helper._child(".full_btn").addEventListener("click", () => {
-			const text_container = this.selection_helper_target;
-			this.selectTextContainerContents(+text_container.dataset.vid);
-			this.selection_helper.classList.add("hidden");
-		});
-	}
-
-	selectionHelperMove() {
-		let blc = undefined;
-
-		this.selection_helper_target = undefined;
-
-		if (mouse.target) {
-			blc = mouse.target._parent(".textable, .text_container");
-
-			let maybe_target = blc;
-			if (!maybe_target) {
-				maybe_target = this.last_selection_helper_to_node;
-			}
-			if (maybe_target && mouse.target._parent(this.selection_helper)) {
-				this.selection_helper_target = mouse.target._parent(".full_btn") ? maybe_target._parent(".text_container") : maybe_target;
-				return;
-			}
-		}
-
-		if (this.last_selection_helper_to_node === blc) {
-			return;
-		}
-		/** @type {PiepNode} */
-		this.last_selection_helper_to_node = blc;
-
-		if (blc) {
-			this.selection_helper.classList.remove("hidden");
-
-			this.selection_helper
-				._child(".part_btn")
-				.classList.toggle("hidden", !blc.classList.contains("textable") || (!blc._next() && !blc._prev()));
-
-			const blc_rect = blc.getBoundingClientRect();
-
-			this.selection_helper._set_absolute_pos(
-				blc_rect.left + (blc_rect.width - this.selection_helper.offsetWidth) * 0.5,
-				blc_rect.top + blc_rect.height + this.content_scroll.scrollTop
-			);
-		} else {
-			this.selection_helper.classList.add("hidden");
-		}
 	}
 
 	/**
@@ -525,8 +445,6 @@ class PiepCMS {
 			this.float_focuses = scroll_node("piep_editor_float_focuses");
 			this.float_menu = scroll_node("piep_editor_float_menu");
 			this.layout_controls = scroll_node("piep_editor_layout_controls");
-			this.selection_helper = scroll_node("piep_editor_selection_helper");
-			this.selection_helper.classList.add("hidden"); //, "glue_children");
 
 			this.display_text_selection = scroll_node("piep_editor_display_text_selection");
 			this.insert_blcs = scroll_node("piep_editor_insert_blcs");
@@ -1336,6 +1254,32 @@ class PiepCMS {
 			if (this.remove_seleciton_timeout) {
 				clearTimeout(this.remove_seleciton_timeout);
 				this.remove_seleciton_timeout = undefined;
+			}
+
+			if (ev.detail > 1) {
+				if (this.text_selection) {
+					const vid = +this.text_selection.focus_vid;
+
+					if (ev.detail === 2) {
+						const v_node = this.getVNodeById(vid);
+						this.text_selection = {
+							anchor_vid: vid,
+							anchor_offset: 0,
+							focus_vid: vid,
+							focus_offset: v_node.text.length,
+							middle_vids: [vid],
+							partial_ranges: [],
+							// @ts-ignore
+							direction: 1,
+							length: v_node.text.length,
+							single_node: true,
+						};
+					} else {
+						this.selectTextContainerContents(this.focus_node_vid);
+					}
+				}
+
+				ev.preventDefault();
 			}
 		});
 
@@ -2742,17 +2686,6 @@ class PiepCMS {
 			show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
 		}
 
-		if (this.selection_helper_target) {
-			if (this.selection_helper_target.classList.contains("text_container")) {
-				const v_node = this.getVNodeById(+this.selection_helper_target.dataset.vid);
-				v_node.children.forEach((c) => {
-					show_vids.push({ vid: c.id, opacity: 1 });
-				});
-			} else {
-				show_vids.push({ vid: +this.selection_helper_target.dataset.vid, opacity: 1 });
-			}
-		}
-
 		if (this.text_selection !== undefined && !this.grabbed_v_node) {
 			show_float_menu = true;
 		}
@@ -3042,7 +2975,6 @@ class PiepCMS {
 		this.inspectorMove();
 		this.layoutEditMove();
 		this.addBtnMove();
-		this.selectionHelperMove();
 
 		const alternative_scroll_panel_left = 0;
 		const alternative_scroll_panel_top = 0 - this.content_scroll.scrollTop;
@@ -3924,6 +3856,7 @@ class PiepCMS {
 								anchor_vid: v_node.id,
 								focus_offset: v_node.text.length,
 								focus_vid: v_node.id,
+								// @ts-ignore
 								direction: 1,
 								length: v_node.text.length,
 								middle_vids: [v_node.id],
