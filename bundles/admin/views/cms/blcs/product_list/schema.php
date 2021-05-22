@@ -5,6 +5,7 @@ PiepCMSManager::registerModule([
     "render" => function ($params) {
         $product_list_sort = def($params, ["v_node", "settings", "product_list_sort"], "bestsellery");
         $product_list_layout = def($params, ["v_node", "settings", "product_list_layout"], "slider");
+        //$product_list_category_ids_csv = def($params, ["v_node", "settings", "product_list_category_ids_csv"], "slider");
 
         ob_start();
 

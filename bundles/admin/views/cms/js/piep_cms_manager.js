@@ -49,6 +49,7 @@ class PiepCMSManager {
 		];
 
 		this.request_vids = []; // backend render
+		this.backend_rendering = false;
 	}
 
 	/**
@@ -93,6 +94,8 @@ class PiepCMSManager {
 			return;
 		}
 
+		this.backend_rendering = true;
+
 		this.v_nodes_to_render = [];
 
 		/**
@@ -120,6 +123,8 @@ class PiepCMSManager {
 			success: (res) => {
 				this.rendered_nodes = res;
 				this.render();
+
+				this.backend_rendering = false;
 			},
 		});
 	}
@@ -152,6 +157,8 @@ class PiepCMSManager {
 
 		//this.piep_cms.recreateDom();
 		window.dispatchEvent(new Event("resize"));
+
+		this.piep_cms.container.dispatchEvent(new CustomEvent("rendered_backend_modules"));
 	}
 
 	/**

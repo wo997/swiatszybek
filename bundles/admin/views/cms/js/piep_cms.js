@@ -1107,7 +1107,6 @@ class PiepCMS {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
 
-				// kurwa selekcja sie zmienia bo probuje sie menu filtrowac a juz jest wpisane ziomek kurwa sie selektuje raz jeszcze czy co
 				set_prop_of_ids.filter(onlyUnique).forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
 				});
@@ -1192,7 +1191,15 @@ class PiepCMS {
 		this.update({ all: true }); // creates the node to grab
 		this.setFocusNode(v_node.id);
 		this.text_selection = undefined;
-		this.grabBlock({ type: "insert", is_new: options.is_new });
+
+		const grab = () => {
+			this.grabBlock({ type: "insert", is_new: options.is_new });
+		};
+		if (piep_cms_manager.backend_rendering) {
+			this.container.addEventListener("rendered_backend_modules", grab, { once: true });
+		} else {
+			grab();
+		}
 	}
 
 	initClick() {
@@ -2143,15 +2150,7 @@ class PiepCMS {
 		this.styles._set_content(styles_css);
 	}
 
-	/**
-	 *
-	 * @param {{
-	 * vids?: number[]
-	 * }} options
-	 *
-	 * options just for optimisation but seems unnecessary
-	 */
-	recreateDom(options = {}) {
+	recreateDom() {
 		this.preRecreateDom();
 
 		/** @type {number[]} */
@@ -2259,6 +2258,7 @@ class PiepCMS {
 						}
 					});
 
+					//console.log(render_props, this.last_map_vid_render_props[vid])
 					if (!isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
 						this.last_map_vid_render_props[vid] = render_props;
 						const html = blc_schema.render(v_node);

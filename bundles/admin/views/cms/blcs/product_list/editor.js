@@ -77,7 +77,7 @@
 						: product_categories
 								.filter((c) => category_ids.includes(c.product_category_id))
 								.map((c) => c.__category_path_names_csv.replace(/,/g, " ― "))
-								.join(", ")
+								.join("<br>")
 				);
 			});
 		},
