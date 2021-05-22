@@ -199,7 +199,7 @@ domload(() => {
 				? "Wszystkie produkty"
 				: product_categories
 						.filter((c) => current_categories.includes(c.product_category_id))
-						.map((c) => c.name)
+						.map((c) => c.__category_path_names_csv.replace(/,/g, " ― "))
 						.join(", ")
 		);
 	};
