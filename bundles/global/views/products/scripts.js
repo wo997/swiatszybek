@@ -688,7 +688,10 @@ function mainSearchProducts(force = false) {
 
 function displayNoProducts() {
 	const action_html = feature_filter_count._is_empty()
-		? html`<div style="margin-top:5px">Przejdź do innej kategorii</div>`
+		? html`
+				<div class="mt1 link case_mobile" onclick="$('.categories_btn').click()">Przejdź do innej kategorii</div>
+				<div class="mt1 case_desktop">Przejdź do innej kategorii</div>
+		  `
 		: html`<button class="btn primary clear_filters_btn">Wyczyść filtry <i class="fas fa-eraser"></i></button>`;
 
 	product_list._set_content(html`<div class="no_results">

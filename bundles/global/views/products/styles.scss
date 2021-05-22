@@ -165,6 +165,10 @@
 }
 
 @media (min-width: 850px) {
+	.product_list_wrapper .case_mobile {
+		display: none;
+	}
+
 	.products_all {
 		display: flex;
 		flex-shrink: 1;
@@ -283,13 +287,19 @@
 }
 
 @media (max-width: 849px) {
+	.product_list_wrapper .case_desktop {
+		display: none;
+	}
+
 	.product_list_wrapper,
 	.searching_wrapper > .scroll_panel {
 		padding: 15px;
 	}
+
 	.searching_wrapper {
 		display: none;
 	}
+
 	.mobile_searching {
 		& {
 			display: flex;

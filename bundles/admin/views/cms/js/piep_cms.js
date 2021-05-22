@@ -74,6 +74,7 @@ class PiepCMS {
 			this.text_selection = undefined;
 
 			const sel = document.getSelection();
+			//console.log(cloneObject(sel));
 
 			if (sel.anchorNode && sel.focusNode) {
 				// span is always a wrapper duude, text inside is selected so go up
@@ -192,6 +193,36 @@ class PiepCMS {
 							length: total_length,
 							single_node,
 						};
+					}
+
+					if (is_anchor_textable && !is_focus_textable) {
+						const anchor_parent = sel_anchor_node._parent();
+						if (anchor_parent.classList.contains("text_container")) {
+							const v_node = this.getVNodeById(+anchor_parent.dataset.vid);
+							const children = v_node.children;
+							if (children) {
+								let length = 0;
+								const middle_vids = [];
+								v_node.children.forEach((c) => {
+									if (c.text) {
+										length += c.text.length;
+										middle_vids.push(c.id);
+									}
+								});
+
+								this.text_selection = {
+									anchor_vid: children[0].id,
+									anchor_offset: 0,
+									focus_vid: children[children.length - 1].id,
+									focus_offset: children[children.length - 1].text.length,
+									middle_vids,
+									partial_ranges: [],
+									direction: 1,
+									length,
+									single_node: children.length === 1,
+								};
+							}
+						}
 					}
 				}
 			}
@@ -1207,6 +1238,11 @@ class PiepCMS {
 			const target = $(ev.target);
 
 			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+
+			if (this.remove_seleciton_timeout) {
+				clearTimeout(this.remove_seleciton_timeout);
+				this.remove_seleciton_timeout = undefined;
+			}
 		});
 
 		document.addEventListener("mouseup", (ev) => {
@@ -1214,8 +1250,16 @@ class PiepCMS {
 				return;
 			}
 			// why? so the change actually happens next time we click something
-			this.removing_selection = true;
-			removeSelection();
+
+			if (this.remove_seleciton_timeout) {
+				clearTimeout(this.remove_seleciton_timeout);
+				this.remove_seleciton_timeout = undefined;
+			}
+			this.remove_seleciton_timeout = setTimeout(() => {
+				this.remove_seleciton_timeout = undefined;
+				this.removing_selection = true;
+				removeSelection();
+			}, 200);
 		});
 
 		document.addEventListener("click", (ev) => {
@@ -1237,11 +1281,19 @@ class PiepCMS {
 					if (this.isTextable(click_v_node_data.v_node)) {
 						this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
 					} else {
-						this.setFocusNode(click_v_node.id);
-
 						if (!this.isTextContainer(click_v_node)) {
-							// sometimes it's just a text container that's clicked dude
-							this.text_selection = undefined;
+							const select = () => {
+								this.text_selection = undefined;
+								this.setFocusNode(click_v_node.id);
+							};
+							if (this.text_selection) {
+								const text_focus_node = this.getNode(this.text_selection.focus_vid);
+								if (!text_focus_node._parent(click_blc)) {
+									select();
+								}
+							} else {
+								select();
+							}
 						}
 					}
 				}
