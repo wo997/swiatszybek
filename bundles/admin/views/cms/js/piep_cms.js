@@ -1320,6 +1320,13 @@ class PiepCMS {
 				const click_v_node = click_v_node_data.v_node;
 				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
 					if (this.isTextable(click_v_node_data.v_node)) {
+						const text_focus_node = this.getNode(this.text_selection.focus_vid);
+						if (click_blc._prev() === text_focus_node) {
+							this.text_selection.focus_vid = +click_blc.dataset.vid;
+							this.text_selection.focus_offset = 0;
+							this.collapseSelection();
+						}
+
 						this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
 					} else {
 						if (!this.isTextContainer(click_v_node)) {
