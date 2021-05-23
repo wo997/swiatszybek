@@ -2,6 +2,7 @@
 
 /**
  * @typedef {{
+ * container_max_width: string
  * colors: ThemeSettings_ColorCompData[]
  * font_sizes: ThemeSettings_FontSizeCompData[]
  * font_family: string
@@ -26,7 +27,7 @@
  */
 function ThemeSettingsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { colors: [], font_sizes: [], font_family: "" };
+		data = { colors: [], font_sizes: [], font_family: "", container_max_width: "1300px" };
 	}
 
 	comp._show = (options = {}) => {
@@ -49,10 +50,13 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 			<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div>
-					<div class="user_info mb3"><i class="fas fa-info-circle"></i> Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div>
+				<div class="mtfn">
+					<!-- <div class="hover_info">Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div> -->
 
-					<div class="label first">Główna czcionka</div>
+					<div class="label">Maksymalna szerkość sekcji</div>
+					<input class="field" data-bind="{${data.container_max_width}}" />
+
+					<div class="label">Główna czcionka</div>
 					<div class="pretty_radio semi_bold columns_3 spiky" data-bind="{${data.font_family}}" style="max-width: 500px">
 						${Object.entries(fonts)
 							.map(
@@ -128,6 +132,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 						colors_palette: save_colors_palette,
 						font_family: data.font_family,
 						font_sizes: save_font_sizes,
+						container_max_width: data.container_max_width,
 					},
 					success: (res) => {
 						colors_palette = res.colors_palette;
@@ -171,9 +176,12 @@ function getThemeSettingsModal() {
 		ThemeSettingsComp(theme_settings_comp, undefined);
 	}
 
-	theme_settings_comp._data.colors = colors_palette;
-	theme_settings_comp._data.font_family = main_font_family;
-	theme_settings_comp._data.font_sizes = font_sizes;
+	const data = theme_settings_comp._data;
+
+	data.colors = colors_palette;
+	data.font_family = main_font_family;
+	data.font_sizes = font_sizes;
+	data.container_max_width = container_max_width;
 	theme_settings_comp._render();
 
 	$("#ThemeSettings .custom_toolbar").append(theme_settings_comp._nodes.save_btn);

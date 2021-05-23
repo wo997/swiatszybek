@@ -1,4 +1,4 @@
-/* js[!global] */
+/* js[!admin] */
 
 let fonts = {};
 let main_font_family = "";

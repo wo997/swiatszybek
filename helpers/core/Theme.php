@@ -211,6 +211,13 @@ CSS;
             $font_family = getSetting(["theme", "general", "font_family"]);
         }
 
+        $container_max_width = def($post, "container_max_width", "");
+        if ($container_max_width) {
+            saveSetting("theme", "general", ["path" => ["container_max_width"], "value" => $container_max_width]);
+        } else {
+            $container_max_width = getSetting(["theme", "general", "container_max_width"]);
+        }
+
         $theme_scss = "/* css[global] */";
 
         $theme_scss .= ":root, .global_root {";
@@ -250,6 +257,11 @@ CSS;
             $theme_scss .= "--font_family: $font[use];";
         }
 
+        // container_max_width
+        if ($container_max_width) {
+            $theme_scss .= "--container_max_width: $container_max_width;";
+        }
+
         $theme_scss .= "}";
 
         Files::save(PREBUILDS_PATH . "theme.scss", $theme_scss);
@@ -261,6 +273,7 @@ CSS;
             "colors_palette" => $colors_palette,
             "font_family" => $font_family,
             "font_sizes" => $font_sizes,
+            "container_max_width" => $container_max_width,
         ];
 
         return $res;
@@ -280,11 +293,13 @@ CSS;
         $fonts = json_encode(Theme::$fonts);
         $colors_palette = json_encode(getSetting(["theme", "general", "colors_palette"], "[]"));
         $font_sizes = json_encode(getSetting(["theme", "general", "font_sizes"], "[]"));
+        $container_max_width = json_encode(getSetting(["theme", "general", "container_max_width"], "1300px"));
         return <<<JS
     fonts = $fonts;
     main_font_family = $main_font_family; 
     colors_palette = $colors_palette;
     font_sizes = $font_sizes;
+    container_max_width = $container_max_width;
     loadedThemeSettings();
 JS;
     }
