@@ -86,7 +86,7 @@ domload(() => {
 		} else if (page_type === "page") {
 			breadcrumbs += html`
 				<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj stronę">
-					${location.host}${page_data.url ? "/" : ""}${page_data.url}
+					${location.host}${page_data.url ? "/" : ""}<span class="current_page_url">${page_data.url}</span>
 				</button>
 			`;
 			preview_url = "/" + page_data.url;
@@ -99,7 +99,9 @@ domload(() => {
 			<i class="fas fa-chevron-right"></i>
 		`;
 
-		breadcrumbs += html` <div class="crumb">${template_data.name}</div> `;
+		breadcrumbs += html`
+			<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj szablon">${template_data.name}</button>
+		`;
 
 		// preview_url = template_data.???; // make sure that anything exists that extends that template? well, maybe in case of products, otherwise disable
 	}
@@ -109,7 +111,7 @@ domload(() => {
 	const edit_pageable_btn = $(".edit_pageable_btn");
 	if (edit_pageable_btn) {
 		edit_pageable_btn.addEventListener("click", () => {
-			getEditPageableModal()._show({ source: edit_pageable_btn });
+			getEditPageableModal()._show(pageable_data, { source: edit_pageable_btn });
 		});
 	}
 

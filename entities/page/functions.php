@@ -220,6 +220,9 @@ function renderPage($page_id)
     }
 
     $v_dom = def(json_decode($v_dom_json, true), []);
+    if (!$v_dom) {
+        $v_dom = [];
+    }
 
     $parent_template_id = $page_data["template_id"];
 

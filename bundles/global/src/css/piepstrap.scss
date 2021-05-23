@@ -16,6 +16,22 @@
 	margin-left: var(--form_spacing);
 }
 
+.mafn {
+	margin: calc(-1 * var(--form_spacing));
+}
+.mtfn {
+	margin-top: calc(-1 * var(--form_spacing));
+}
+.mbfn {
+	margin-bottom: calc(-1 * var(--form_spacing));
+}
+.mbfn {
+	margin-right: calc(-1 * var(--form_spacing));
+}
+.mbfn {
+	margin-left: calc(-1 * var(--form_spacing));
+}
+
 .ma1 {
 	margin: 5px !important;
 }
