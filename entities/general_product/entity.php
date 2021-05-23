@@ -232,6 +232,12 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
     $general_product_url = getProductLink($general_product_id, $general_product->getProp("name"));
     $general_product->setProp("__url", $general_product_url);
+
+    // fill empty
+    $product_type = $general_product->getProp("product_type");
+    if (!$product_type) {
+        $general_product->setProp("product_type", "normal");
+    }
 });
 
 EventListener::register("after_save_general_product_entity", function ($params) {

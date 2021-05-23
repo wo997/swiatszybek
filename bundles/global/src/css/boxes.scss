@@ -80,7 +80,7 @@
 		}
 
 		&.checked,
-		&.error {
+		&.attention {
 			&:not(.empty) {
 				border-color: var(--selection_clr);
 			}
@@ -134,7 +134,7 @@
 		& > * {
 			box-shadow: none !important;
 		}
-		& > *.error:not(.empty) {
+		& > *.attention:not(.empty) {
 			background: var(--pretty_error_background);
 			color: var(--pretty_error);
 			font-weight: var(--semi_bold);

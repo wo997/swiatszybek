@@ -108,7 +108,12 @@ function ProductComp(comp, parent, data = undefined) {
 			product_list_view: "active",
 			product_type: "normal",
 		};
+		console.log(cloneObject(data));
 	}
+
+	// product_list_view: "active",
+	// data.product_type = def(data.product_type, "active");
+	// data.product_type = def(data.product_type, "normal");
 
 	/** @type {DatatableCompData} */
 	const table = {
@@ -490,9 +495,9 @@ function ProductComp(comp, parent, data = undefined) {
 						}
 					});
 
-					comp._nodes.prices_tab.classList.toggle("error", !!missing_price);
-					comp._nodes.stock_tab.classList.toggle("error", !!missing_stock);
-					comp._nodes.dim_tab.classList.toggle("error", !!missing_dim);
+					comp._nodes.prices_tab.classList.toggle("attention", !!missing_price);
+					comp._nodes.stock_tab.classList.toggle("attention", !!missing_stock);
+					comp._nodes.dim_tab.classList.toggle("attention", !!missing_dim);
 
 					comp._nodes.prices_tab.dataset.tooltip = missing_price ? `Nie uzupełniono cen: ${missing_price}` : "";
 					comp._nodes.stock_tab.dataset.tooltip = missing_stock ? `Zerowy stan magazynowy produktów: ${missing_stock}` : "";
