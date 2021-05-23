@@ -917,9 +917,11 @@ class PiepCMS {
 
 		for (const blc_schema of piep_cms_manager.blcs_schema) {
 			const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
-			menu_html += html`
-				<div class="btn transparent block_to_add" data-id="${blc_schema.id}" ${tooltip}>${blc_schema.icon} ${blc_schema.label}</div>
-			`;
+			let classes = "btn transparent block_to_add";
+			if (blc_schema.is_advanced) {
+				classes += " case_advanced";
+			}
+			menu_html += html` <div class="${classes}" data-id="${blc_schema.id}" ${tooltip}>${blc_schema.icon} ${blc_schema.label}</div> `;
 		}
 
 		this.add_block_menu._set_content(menu_html);

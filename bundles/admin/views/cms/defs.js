@@ -141,6 +141,7 @@
  * priority?: number
  * render?(v_node?: vDomNode): string
  * rerender_on?: string[]
+ * is_advanced?: boolean
  * }} BlockSchema
  */
 

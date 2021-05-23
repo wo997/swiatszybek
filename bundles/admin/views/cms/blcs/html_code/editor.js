@@ -22,6 +22,7 @@
 		icon: html`<i class="fas fa-code"></i>`,
 		label: html`Kod HTML`,
 		nonclickable: true,
+		is_advanced: true,
 		v_node: {
 			tag: "div",
 			id: -1,
