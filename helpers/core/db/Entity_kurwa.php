@@ -401,6 +401,7 @@ class Entity
             if ($only_new && $this->getProp($prop_name) !== null) {
                 continue;
             }
+
             $this->setProp($prop_name, $val);
         }
     }

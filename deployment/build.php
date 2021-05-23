@@ -17,6 +17,6 @@ if (isset($_SERVER["HTTP_HOST"]) && !getSetting(["general", "advanced", "domain"
     ]);
 }
 
-Assets::build();
+//Assets::build();
 
 ob_clean();

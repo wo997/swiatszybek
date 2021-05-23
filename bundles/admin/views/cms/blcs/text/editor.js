@@ -194,7 +194,7 @@
 	piep_cms_manager.registerProp({
 		name: "background_color",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Kolor tła</div>
 

@@ -27,6 +27,10 @@ function traverseVDom($v_dom, $options = [])
         $classes[] = "blc";
         $classes[] = $base_class;
 
+        if ($link) {
+            $classes[] = "link";
+        }
+
         if (isset($v_node["text"])) {
             $classes[] = "textable";
             if ($v_node["text"]) {

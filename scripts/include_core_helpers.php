@@ -10,7 +10,7 @@ include_once "helpers/core/array.php";
 include_once "helpers/core/Files_fuck_you_sftp_ext.php";
 include_once "helpers/core/settings.php";
 
-include_once "helpers/core/db/DB.php";
+include_once "helpers/core/db/DB_kurwa.php";
 include_once "helpers/core/db/EntityManager.php";
 include_once "helpers/core/db/Entity_kurwa.php";
 

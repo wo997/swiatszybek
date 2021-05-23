@@ -76,7 +76,7 @@ class Cart
     {
         $cod_fee = 0;
         if ($this->getPaymentTime() === "cod") {
-            $cod_fee = getSetting(["general", "deliveries", "cod_fee"], 0);
+            $cod_fee = floatval(getSetting(["general", "deliveries", "cod_fee"], 0));
         }
 
         $cart_product_ids = array_column($this->products, "product_id");

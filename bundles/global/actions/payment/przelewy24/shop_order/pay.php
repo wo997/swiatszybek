@@ -1,6 +1,7 @@
 <?php //route[/payment/przelewy24/shop_order/pay]  
 
-$shop_order_id = Request::urlParam(4);
+
+$shop_order_id = intval(Request::urlParam(4));
 $shop_order = EntityManager::getEntityById("shop_order", $shop_order_id);
 
 if (!$shop_order) {
@@ -10,19 +11,22 @@ if (!$shop_order) {
 $p24 = Przelewy24::get();
 
 // TEMPORARY
-$RET = $p24->testConnection();
-if (isset($RET["error"]) && $RET["error"] === '0') {
-    echo "przelewy24 connected";
-} else {
-    var_dump("connectopn error", $RET);
-}
-die;
+// $RET = $p24->testConnection();
+// if (isset($RET["error"]) && $RET["error"] === '0') {
+//     echo "przelewy24 connected";
+// } else {
+//     var_dump("connectopn error", $RET);
+// }
+// die;
+
+DB::beginTransaction();
 
 $session_id = $shop_order_id . "_"
     . DB::fetchVal("SELECT count(1) FROM payment WHERE payment_name = 'p24' AND shop_order_id = $shop_order_id")
     . "_" . Security::generateToken(32);
 
 $payment =  EntityManager::getEntity("payment", [
+    "payment_id" => -1,
     "payment_name" => "p24",
     "payment_status_id" => 0,
     "shop_order" => $shop_order_id,
@@ -39,7 +43,7 @@ $p24->addValue("p24_merchant_id", def($p24::$settings, "p24_merchant_id"));
 $p24->addValue("p24_pos_id", def($p24::$settings, "p24_pos_id"));
 
 $p24->addValue("p24_amount", round($shop_order->getProp("total_price") * 100));
-$p24->addValue("p24_currency", $currency);
+$p24->addValue("p24_currency", "PLN");
 
 $p24->addValue("p24_description", getShopName() . " zamowienie #$shop_order_id");
 $p24->addValue("p24_client", $main_address->getProp("__display_name"));
@@ -61,8 +65,18 @@ if (isset($RET["token"])) {
     // we dont even need the token dude
     //$_SESSION["p24_back_url"] = $link; // redirect as we come back? think about it
     $p24->trnRequest($RET["token"], true);
-    Request::redirect($url);
+    // DB::rollbackTransation();
+    // die;
+    //Request::redirect($url);
 } else {
+    var_dump("connectopn error", $RET);
+    DB::rollbackTransation();
+    die;
+
     // fails
     Request::redirect($shop_order->getProp("__url"));
 }
+
+EntityManager::saveAll();
+DB::commitTransaction();
+die;

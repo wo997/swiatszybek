@@ -44,7 +44,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<button class="close_modal_btn"><i class="fas fa-times"></i></button>
+			<button class="close_modal_btn" type="button"><i class="fas fa-times"></i></button>
 
 			<h3 class="modal_header">
 				<img class="user_icon" src="/src/img/user_icon.svg" />
@@ -70,6 +70,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 							data-node="{${comp._nodes.password_visible_btn}}"
 							data-tooltip="{${data.password_visible ? "Ukryj hasło" : "Pokaż hasło"}}"
 							data-tooltip_position="right"
+							type="button"
 						>
 							<i class="fas {${data.password_visible}?fa-eye-slash:fa-eye}"></i>
 						</button>
@@ -88,7 +89,12 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						</label>
 					</div>
 
-					<button class="btn primary medium submit_btn" style="margin:10px 0; width: 100%" data-node="{${comp._nodes.login_btn}}">
+					<button
+						class="btn primary medium submit_btn"
+						style="margin:10px 0; width: 100%"
+						data-node="{${comp._nodes.login_btn}}"
+						type="submit"
+					>
 						Zaloguj się <i class="fa fa-chevron-right"></i>
 					</button>
 

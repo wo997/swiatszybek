@@ -1,9 +1,11 @@
 <?php
 
+
 $include_paths = [
-    "admin", "cron", "deployment", "event_listeners", "global", "helpers", "img", "migrations", "modules", "node_modules", "packages", "src", "user", "vendor", "theme",
+    "bundles", "cron", "deployment", "helpers", "modules", "node_modules", "scripts", "packages", "src", "vendor", "entities",
     ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
-]; // that's wrong af
+];
+
 
 $exclude_paths = [];
 
@@ -23,6 +25,7 @@ Files::scanDirectories(
     ],
     function ($path) {
         global $zip;
+        var_dump($path);
         $zip->addFile($path);
     }
 );

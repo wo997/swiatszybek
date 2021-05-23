@@ -1,7 +1,7 @@
 <?php
 
-//ini_set('max_execution_time', '1000');
-ini_set('max_execution_time', '5');
+ini_set('max_execution_time', '1000');
+//ini_set('max_execution_time', '5');
 
 // in case e-mails are not configured (for debugging), kinda weird it's not a part of settings, it's more like a dev mode in reality, there is a need to define it on the code level
 define("DISPLAY_EMAIL", false);

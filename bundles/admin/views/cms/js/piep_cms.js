@@ -702,6 +702,7 @@ class PiepCMS {
 		themeSettingsChanged();
 	}
 
+	// TODO: move to the props instead
 	initEditingColors() {
 		/**
 		 *
@@ -2486,6 +2487,10 @@ class PiepCMS {
 					classes.push("editor_disabled");
 				}
 
+				if (v_node.settings && v_node.settings.link) {
+					classes.push("link");
+				}
+
 				setNodeClasses(node, classes);
 
 				// attrs
@@ -2848,6 +2853,15 @@ class PiepCMS {
 
 		if (this.grabbed_v_node) {
 			show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
+
+			const v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
+			if (v_node_data) {
+				v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
+					if (!parent_v_node.disabled) {
+						show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
+					}
+				});
+			}
 		}
 
 		if (this.text_selection !== undefined && !this.grabbed_v_node) {
@@ -2865,7 +2879,7 @@ class PiepCMS {
 
 					const v_node_data = this.getVNodeDataById(blc_vid);
 
-					if (v_node_data && v_node_data.parent_v_nodes.length > 0) {
+					if (v_node_data) {
 						v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
 							if (!parent_v_node.disabled) {
 								show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
@@ -3620,10 +3634,8 @@ class PiepCMS {
 				return;
 			}
 
-			// const getGrabbedVNodeData = () => {
-			// 	const grabbed_v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
-			// 	return grabbed_v_node_data;
-			// };
+			const blc_parent = blc._parent();
+
 			const getNearVNodeData = () => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
 				return near_v_node_data;
@@ -3637,15 +3649,40 @@ class PiepCMS {
 			 */
 			const insertAboveOrBelow = (dir) => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
+				const near_v_node = near_v_node_data.v_node;
 
 				let ind = near_v_node_data.index;
 				if (dir === 1) {
 					ind++;
 				}
 
+				let suggest_wrapping_with_container_module = false;
+
+				if (!near_v_node.classes.includes("vertical_container") && !near_v_node.classes.includes("columns_container")) {
+					if (blc_parent.classList.contains("template_hook_root") || blc_parent === this.content) {
+						suggest_wrapping_with_container_module = true;
+					}
+				}
+
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-				near_v_node_data.v_nodes.splice(ind, 0, grabbed_node_copy);
+
+				let insert_v_node = grabbed_node_copy;
+
+				if (suggest_wrapping_with_container_module && !grabbed_node_copy.classes.includes("vertical_container")) {
+					let new_vid = this.getNewBlcId();
+
+					insert_v_node = {
+						id: new_vid++,
+						tag: "div",
+						styles: { df: {} },
+						attrs: {},
+						classes: ["vertical_container"],
+						children: [grabbed_node_copy],
+					};
+				}
+
+				near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
 			};
 
 			/**
@@ -3670,13 +3707,13 @@ class PiepCMS {
 					suggest_wrapping_with_columns_module = true;
 				}
 
-				const new_vid = this.getNewBlcId();
+				let new_vid = this.getNewBlcId();
 
 				let insert_v_node = grabbed_node_copy;
 
 				if (suggest_wrapping_with_columns_module && !grabbed_node_copy.classes.includes("vertical_container")) {
 					insert_v_node = {
-						id: new_vid,
+						id: new_vid++,
 						tag: "div",
 						styles: { df: {} },
 						attrs: {},
@@ -3687,7 +3724,7 @@ class PiepCMS {
 
 				if (suggest_wrapping_with_columns_module) {
 					const near_column = {
-						id: new_vid + 1,
+						id: new_vid++,
 						tag: "div",
 						styles: { df: { width: "50%" } },
 						attrs: {},
@@ -3712,7 +3749,7 @@ class PiepCMS {
 						attrs: {},
 						children: just_columns,
 						classes: ["columns_container"],
-						id: new_vid + 2,
+						id: new_vid++,
 						styles: {},
 						module_name: "columns",
 						settings: {

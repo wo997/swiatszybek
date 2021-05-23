@@ -166,6 +166,16 @@ foreach ($deployment_routes as $route) {
     $routes[] = $route;
 }
 
+foreach ($routes as $route) // new routing
+{
+    if (strpos(Request::$url . "/", $route . "/") === 0 || Request::$url == $route) {
+        Request::$route = $route;
+        define("ROUTE", $route);
+        $route_file = ltrim($route, "/") . ".php";
+        break;
+    }
+}
+
 foreach (def($build_info, "routes") as $route => $file) // new routing
 {
     if (strpos(Request::$url . "/", $route . "/") === 0 || Request::$url == $route) {
@@ -175,6 +185,7 @@ foreach (def($build_info, "routes") as $route => $file) // new routing
         break;
     }
 }
+
 
 if (isset($route_file)) {
     // hardcoded page example - will be removed in the future
