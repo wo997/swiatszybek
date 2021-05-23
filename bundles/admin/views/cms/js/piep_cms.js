@@ -1298,7 +1298,39 @@ class PiepCMS {
 			//if (this.isTextable(focus_v_node_data.v_node)) {
 
 			const next_v_node_data = this.getVNodeDataById(next_vid);
+			const next_v_node = next_v_node_data.v_node;
+			const prev_v_node = next_v_node_data.v_nodes[next_v_node_data.index - 1];
 			next_v_node_data.v_nodes.splice(next_v_node_data.index, 0, ...insert);
+
+			this.update({ all: true });
+
+			const first_insert_v_node = insert[0];
+			if (first_insert_v_node) {
+				if (first_insert_v_node.tag === next_v_node.tag && this.isTextContainer(next_v_node)) {
+					const first_textable = first_insert_v_node.children[0];
+
+					// TODO: nice to have that selection even if can't merge
+					this.text_selection.focus_vid = first_textable.id;
+					this.text_selection.focus_offset = 0;
+					this.collapseSelection();
+
+					this.deleteAction(-1);
+				}
+			}
+
+			const last_insert_v_node = insert[insert.length - 1];
+			if (last_insert_v_node) {
+				if (last_insert_v_node.tag === next_v_node.tag && this.isTextContainer(next_v_node)) {
+					const first_textable = next_v_node.children[0];
+
+					// TODO: nice to have that selection even if can't merge
+					this.text_selection.focus_vid = first_textable.id;
+					this.text_selection.focus_offset = 0;
+					this.collapseSelection();
+
+					this.deleteAction(-1);
+				}
+			}
 			//}
 
 			//const focus_v_node_parent_data = this.getVNodeDataById(focus_v_node_data.parent_v_nodes[0].id);
@@ -1342,8 +1374,6 @@ class PiepCMS {
 			// 	// this text can contain html cool
 			// 	//this.insertText(text);
 			// }
-
-			this.update({ all: true });
 		});
 	}
 
@@ -1578,29 +1608,12 @@ class PiepCMS {
 			if (this.text_selection) {
 				this.select_blc_active = false;
 
-				/** @type {PiepNode} */
-				let focus_node;
-				/** @type {number} */
-				let focus_vid;
-				/** @type {vDomNodeData} */
-				let focus_v_node_data;
-				/** @type {vDomNode} */
-				let focus_v_node;
-				/** @type {number} */
-				let focus_offset;
-
-				const updateSelection = () => {
-					focus_vid = this.text_selection.focus_vid;
-					focus_node = this.getNode(focus_vid);
-					focus_v_node_data = this.getVNodeDataById(focus_vid);
-					focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
-					focus_offset = this.text_selection.focus_offset;
-				};
-				updateSelection();
-
 				if (ev.key.length === 1) {
 					if (!ev.ctrlKey) {
 						ev.preventDefault();
+
+						const focus_vid = this.text_selection.focus_vid;
+						const focus_node = this.getNode(focus_vid);
 
 						if (focus_node && focus_node.classList.contains("textable")) {
 							this.insertText(ev.key);
@@ -1608,73 +1621,14 @@ class PiepCMS {
 						}
 					}
 				}
-
-				/**
-				 *
-				 * @param {Direction} dir
-				 */
-				const deleteAction = (dir) => {
-					ev.preventDefault();
-
-					if (this.text_selection.length > 0) {
-						this.removeTextInSelection();
-					} else if (focus_v_node) {
-						let text = focus_v_node.text;
-						const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
-						if (edge) {
-							const node = this.getNode(this.text_selection.focus_vid);
-							const near_textable = dir === 1 ? node._next() : node._prev();
-							if (near_textable) {
-								const next_text = near_textable.textContent;
-								this.text_selection.focus_vid = +near_textable.dataset.vid;
-								this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-
-								// recursive yay
-								updateSelection();
-								deleteAction(dir);
-								return;
-							} else {
-								const next_text_container = this.getDeepSibling(node, ".text_container", dir);
-								if (next_text_container) {
-									const next_text_container_vid = +next_text_container.dataset.vid;
-									const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
-									const next_text_container_v_node = next_text_container_v_node_data.v_node;
-
-									const focus_v_node_parent = focus_v_node_data.parent_v_nodes[0];
-
-									if (next_text_container_v_node && next_text_container_v_node.children && focus_v_node_parent.children) {
-										if (dir === 1) {
-											focus_v_node_parent.children.push(...next_text_container_v_node.children);
-											this.removeVNodes([next_text_container_v_node.id]);
-										} else {
-											next_text_container_v_node.children.push(...focus_v_node_parent.children);
-											this.removeVNodes([focus_v_node_parent.id]);
-										}
-									}
-								}
-							}
-						} else {
-							if (dir === -1) {
-								this.text_selection.focus_offset--;
-							}
-							focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
-						}
-
-						this.collapseSelection();
-
-						this.recreateDom();
-						this.displayInspectorTree();
-
-						this.pushHistory("delete_text");
-					}
-				};
-
 				if (ev.key === "Backspace") {
-					deleteAction(-1);
+					ev.preventDefault();
+					this.deleteAction(-1);
 				}
 
 				if (ev.key === "Delete") {
-					deleteAction(1);
+					ev.preventDefault();
+					this.deleteAction(1);
 				}
 
 				if (ev.key === "ArrowLeft") {
@@ -1696,7 +1650,7 @@ class PiepCMS {
 					this.moveCursorFromAnywhere(0, 1);
 				}
 
-				if (ev.key === "Enter" && focus_v_node_data) {
+				if (ev.key === "Enter") {
 					ev.preventDefault();
 					this.breakTextAtCursor();
 				}
@@ -1706,6 +1660,68 @@ class PiepCMS {
 
 			this.manageText();
 		});
+	}
+
+	/**
+	 *
+	 * @param {Direction} dir
+	 */
+	deleteAction(dir) {
+		const focus_vid = this.text_selection.focus_vid;
+		const focus_v_node_data = this.getVNodeDataById(focus_vid);
+		const focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
+		const focus_offset = this.text_selection.focus_offset;
+
+		if (this.text_selection.length > 0) {
+			this.removeTextInSelection();
+		} else if (focus_v_node) {
+			let text = focus_v_node.text;
+			const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
+			if (edge) {
+				const node = this.getNode(this.text_selection.focus_vid);
+				const near_textable = dir === 1 ? node._next() : node._prev();
+				if (near_textable) {
+					const next_text = near_textable.textContent;
+					this.text_selection.focus_vid = +near_textable.dataset.vid;
+					this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+
+					// recursive yay
+					this.deleteAction(dir);
+					return;
+				} else {
+					const next_text_container = this.getDeepSibling(node, ".text_container", dir);
+					if (next_text_container) {
+						const next_text_container_vid = +next_text_container.dataset.vid;
+						const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
+						const next_text_container_v_node = next_text_container_v_node_data.v_node;
+
+						const focus_v_node_parent = focus_v_node_data.parent_v_nodes[0];
+
+						if (next_text_container_v_node && next_text_container_v_node.children && focus_v_node_parent.children) {
+							if (dir === 1) {
+								focus_v_node_parent.children.push(...next_text_container_v_node.children);
+								this.removeVNodes([next_text_container_v_node.id]);
+							} else {
+								next_text_container_v_node.children.push(...focus_v_node_parent.children);
+								this.removeVNodes([focus_v_node_parent.id]);
+							}
+						}
+					}
+				}
+			} else {
+				if (dir === -1) {
+					this.text_selection.focus_offset--;
+				}
+				focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
+			}
+
+			this.collapseSelection();
+
+			this.recreateDom();
+			this.displayInspectorTree();
+
+			this.pushHistory("delete_text");
+		}
 	}
 
 	breakTextAtCursor() {
