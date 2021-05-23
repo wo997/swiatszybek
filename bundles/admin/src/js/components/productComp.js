@@ -480,7 +480,7 @@ function ProductComp(comp, parent, data = undefined) {
 							missing_price++;
 						}
 						if (+product.weight === 0 || +product.length === 0 || +product.width === 0 || +product.height === 0) {
-							missing_price++;
+							missing_dim++;
 						}
 						if (+product.stock <= 0) {
 							missing_stock++;
@@ -781,22 +781,6 @@ function ProductComp(comp, parent, data = undefined) {
 
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
-						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
-						<div class="hover_info">
-							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
-						</div>
-						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
-							Dodaj cechy <i class="fas fa-plus"></i>
-						</button>
-					</div>
-
-					<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
-						<product_feature-comp></product_feature-comp>
-					</list-comp>
-				</div>
-
-				<div class="mt5">
-					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Zdjęcia (<span html="{${data.images.length}}"></span>) </span>
 						<div class="hover_info">
 							Dodaj zdjęcia produktu i ustaw je w kolejności zaczynając od zdjęcia głównego. Dodatkowo możesz powiązać każde z nich z
@@ -810,6 +794,22 @@ function ProductComp(comp, parent, data = undefined) {
 
 					<list-comp class="wireframe space" data-bind="{${data.images}}" data-primary="product_img_id">
 						<product_img-comp></product_img-comp>
+					</list-comp>
+				</div>
+
+				<div class="mt5">
+					<div class="sticky_subheader mb2">
+						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
+						<div class="hover_info">
+							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
+						</div>
+						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
+							Dodaj cechy <i class="fas fa-plus"></i>
+						</button>
+					</div>
+
+					<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
+						<product_feature-comp></product_feature-comp>
 					</list-comp>
 				</div>
 
@@ -1024,16 +1024,16 @@ function ProductComp(comp, parent, data = undefined) {
 					return;
 				}
 
-				if (data.missing_products_variants.length > 0) {
-					showNotification(html`<div class="header">Błąd zapisywania</div>
-						Musisz najpierw dodać brakujące produkty do listy`);
-					return;
-				}
-				if (data.unnecessary_product_ids.length > 0) {
-					showNotification(html`<div class="header">Błąd zapisywania</div>
-						Musisz najpierw usunąć niepotrzebne produkty z listy`);
-					return;
-				}
+				// if (data.missing_products_variants.length > 0) {
+				// 	showNotification(html`<div class="header">Błąd zapisywania</div>
+				// 		Musisz najpierw dodać brakujące produkty do listy`);
+				// 	return;
+				// }
+				// if (data.unnecessary_product_ids.length > 0) {
+				// 	showNotification(html`<div class="header">Błąd zapisywania</div>
+				// 		Musisz najpierw usunąć niepotrzebne produkty z listy`);
+				// 	return;
+				// }
 
 				const save_products = cloneObject(data.products_dt.dataset);
 				save_products.forEach((product) => {

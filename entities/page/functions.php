@@ -418,9 +418,14 @@ function renderPage($page_id)
                 text-decoration: underline;
             }
 
-            :root {
+            .no_touch {
                 --body_padding_top: 30px;
             }
+
+            .touch_device .edit_page_menu {
+                display: none !important;
+            }
+
 
             .edit_page_menu.published .unpublished,
             .edit_page_menu:not(.published) .published {

@@ -251,15 +251,15 @@ EventListener::register("after_save_general_product_entity", function ($params) 
     $non_list_option_ids_csv = $non_list_option_ids ? join(",", $non_list_option_ids) : "-1";
 
     // idk why but it might work
-    DB::execute("DELETE pfo
-        FROM product_feature_option pfo
-        INNER JOIN general_product_to_feature_option gptfo USING (product_feature_option_id)
-        INNER JOIN product_feature pf USING (product_feature_id)
-        WHERE gptfo.general_product_id = $general_product_id
-        AND data_type NOT LIKE '%_list%'
-        AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
+    // DB::execute("DELETE pfo
+    //     FROM product_feature_option pfo
+    //     INNER JOIN general_product_to_feature_option gptfo USING (product_feature_option_id)
+    //     INNER JOIN product_feature pf USING (product_feature_id)
+    //     WHERE gptfo.general_product_id = $general_product_id
+    //     AND data_type NOT LIKE '%_list%'
+    //     AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
 
-    DB::execute("DELETE FROM product_feature_option WHERE just_general_product_id = $general_product_id AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
+    //DB::execute("DELETE FROM product_feature_option WHERE just_general_product_id = $general_product_id AND product_feature_option_id NOT IN ($non_list_option_ids_csv)");
 
     $compare_sales = DB::fetchVal("SELECT SUM(compare_sales) FROM product WHERE general_product_id = $general_product_id");
     DB::execute("UPDATE general_product SET compare_sales = ? WHERE general_product_id = $general_product_id", [$compare_sales]);

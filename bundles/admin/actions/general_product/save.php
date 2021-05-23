@@ -7,14 +7,14 @@ try {
     foreach (json_decode(def($_POST, "product_feature_options", "[]"), true) as $product_feature_option_data) {
         $product_feature_option = EntityManager::getEntityById("product_feature_option", $product_feature_option_data["product_feature_option_id"]);
         if (!$product_feature_option) {
-            return;
+            continue;
         }
         $product_feature = $product_feature_option->getParent("product_feature");
         if (!$product_feature) {
-            return;
+            continue;
         }
         if (!endsWith($product_feature->getProp("data_type"), "_value")) {
-            return;
+            continue;
         }
         $product_feature_option_data["just_general_product_id"] = $general_product_id; // it's not really necessary, but leave it here
         $product_feature_option->setProps($product_feature_option_data);
