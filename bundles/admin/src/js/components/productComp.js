@@ -476,6 +476,9 @@ function ProductComp(comp, parent, data = undefined) {
 					let missing_dim = 0;
 					let missing_stock = 0;
 					data.products_dt.dataset.forEach((/** @type {DtProductData} */ product) => {
+						if (!product.active) {
+							return;
+						}
 						if (+product.gross_price === 0) {
 							missing_price++;
 						}

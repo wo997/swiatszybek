@@ -1319,7 +1319,7 @@ class PiepCMS {
 
 			const first_insert_v_node = insert[0];
 			if (first_insert_v_node) {
-				if (first_insert_v_node.tag === prev_v_node.tag && this.isTextContainer(prev_v_node)) {
+				if (this.isTextContainer(prev_v_node) && this.isTextContainer(first_insert_v_node)) {
 					const first_textable = first_insert_v_node.children[0];
 
 					this.text_selection.focus_vid = first_textable.id;
@@ -1332,7 +1332,7 @@ class PiepCMS {
 
 			const last_insert_v_node = insert[insert.length - 1];
 			if (last_insert_v_node) {
-				if (last_insert_v_node.tag === next_v_node.tag && this.isTextContainer(next_v_node)) {
+				if (this.isTextContainer(next_v_node) && this.isTextContainer(last_insert_v_node)) {
 					const first_textable = next_v_node.children[0];
 
 					// TODO: nice to have that selection even if can't merge
