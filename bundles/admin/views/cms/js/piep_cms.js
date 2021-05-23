@@ -1579,7 +1579,7 @@ class PiepCMS {
 			if (this.text_selection) {
 				this.select_blc_active = false;
 
-				if (ev.key.length === 1) {
+				if (ev.key && ev.key.length === 1) {
 					if (!ev.ctrlKey) {
 						ev.preventDefault();
 
@@ -2237,6 +2237,13 @@ class PiepCMS {
 	 * @param {vDomNode} v_node
 	 */
 	getVNodeDisplayName(v_node) {
+		if (v_node.settings) {
+			const display_name = v_node.settings.display_name;
+			if (display_name) {
+				return display_name;
+			}
+		}
+
 		const tag = v_node.tag;
 		const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
 

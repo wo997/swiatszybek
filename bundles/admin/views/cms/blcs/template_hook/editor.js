@@ -14,7 +14,7 @@
 				Nazwa sekcji
 				<div class="hover_info">Opisz co pojawi się w sekcji, np.: Opis produktu</div>
 			</div>
-			<input class="field" data-blc_prop="settings.template_hook_name" />
+			<input class="field trim" data-blc_prop="settings.template_hook_name" />
 		`,
 	});
 
@@ -32,7 +32,7 @@
 				ID sekcji
 				<div class="hover_info">Unikalny identyfikator, np.: product_description</div>
 			</div>
-			<input class="field" data-blc_prop="settings.template_hook_id" />
+			<input class="field trim" data-blc_prop="settings.template_hook_id" />
 		`,
 	});
 }
