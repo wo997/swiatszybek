@@ -1231,32 +1231,43 @@ class PiepCMS {
 						if (child.nodeType === Node.TEXT_NODE) {
 							// span wants to go into last text block, find it!
 
-							/**
-							 *
-							 * @param {vDomNode[]} v_nodes
-							 */
-							const traverseInsert = (v_nodes) => {
-								const last_v_node = v_nodes[v_nodes.length - 1];
-								if (!last_v_node) {
-									return;
-								}
-								if (available_text_blocks.includes(last_v_node.tag)) {
-									const plain_text = child.textContent.replace(/\n\r/g, "");
-									if (plain_text.replace(/\s/g, "") !== "") {
-										last_v_node.children.push({
-											id: new_id++,
-											classes: [],
-											attrs: {},
-											styles: {},
-											tag: "span",
-											text: plain_text,
-										});
+							const plain_text = child.textContent.replace(/\n\r/g, "");
+							if (plain_text.replace(/\s/g, "") !== "") {
+								let success = false;
+
+								const insert_span = {
+									id: new_id++,
+									classes: [],
+									attrs: {},
+									styles: {},
+									tag: "span",
+									text: plain_text,
+								};
+
+								/**
+								 *
+								 * @param {vDomNode[]} v_nodes
+								 */
+								const traverseInsert = (v_nodes) => {
+									const last_v_node = v_nodes[v_nodes.length - 1];
+									if (!last_v_node) {
+										return;
 									}
-								} else {
-									traverseInsert(last_v_node.children);
+									if (available_text_blocks.includes(last_v_node.tag)) {
+										last_v_node.children.push(insert_span);
+										success = true;
+									} else {
+										traverseInsert(last_v_node.children);
+									}
+
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
+								};
+								traverseInsert(insert);
+
+								if (!success) {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
 								}
-							};
-							traverseInsert(insert);
+							}
 						} else if (child.nodeType === Node.ELEMENT_NODE) {
 							const sub_node = $(child);
 
@@ -1290,6 +1301,8 @@ class PiepCMS {
 				}
 			};
 
+			//console.log(insert);
+
 			traverseNode(this.paste_html);
 
 			const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
@@ -1306,10 +1319,9 @@ class PiepCMS {
 
 			const first_insert_v_node = insert[0];
 			if (first_insert_v_node) {
-				if (first_insert_v_node.tag === next_v_node.tag && this.isTextContainer(next_v_node)) {
+				if (first_insert_v_node.tag === prev_v_node.tag && this.isTextContainer(prev_v_node)) {
 					const first_textable = first_insert_v_node.children[0];
 
-					// TODO: nice to have that selection even if can't merge
 					this.text_selection.focus_vid = first_textable.id;
 					this.text_selection.focus_offset = 0;
 					this.collapseSelection();
@@ -1331,49 +1343,6 @@ class PiepCMS {
 					this.deleteAction(-1);
 				}
 			}
-			//}
-
-			//const focus_v_node_parent_data = this.getVNodeDataById(focus_v_node_data.parent_v_nodes[0].id);
-			// if (this.isTextable(focus_v_node_parent_data.v_node)) {
-			// 	// const focus_text = focus_v_node_data.v_node.text;
-			// 	// focus_v_node_data.v_node.text = focus_text.substring(0, this.text_selection.focus_offset);
-
-			// 	// /** @type {vDomNode} */
-			// 	// const after_focus_v_node = cloneObject(focus_v_node_data.v_node);
-			// 	// after_focus_v_node.id = new_id++;
-			// 	// after_focus_v_node.text = focus_text.substring(this.text_selection.focus_offset);
-
-			// 	// focus_v_node_data.v_nodes.splice(focus_v_node_data.index + 1, 0, after_focus_v_node);
-
-			// 	// focus_v_node_parent_data.v_nodes.splice(0, focus_v_node_parent_data.index);
-			// }
-			// if (focus_v_node_parent_data.v_node.tag === "li") {
-			// 	const focus_text = focus_v_node_data.v_node.text;
-			// 	focus_v_node_data.v_node.text = focus_text.substring(0, this.text_selection.focus_offset);
-
-			// 	/** @type {vDomNode} */
-			// 	const after_focus_v_node = cloneObject(focus_v_node_data.v_node);
-			// 	after_focus_v_node.id = new_id++;
-			// 	after_focus_v_node.text = focus_text.substring(this.text_selection.focus_offset);
-
-			// 	focus_v_node_data.v_nodes.splice(focus_v_node_data.index + 1, 0, after_focus_v_node);
-
-			// 	focus_v_node_parent_data.v_nodes.splice(0,focus_v_node_parent_data.index);
-			// }
-
-			// if (inflow_v_node) {
-			// 	const inflow_v_node_data = this.getVNodeDataById(inflow_v_node.id);
-
-			// 	inflow_v_node_data.v_nodes.splice(inflow_v_node_data.index + 1, 0, ...insert);
-
-			// 	this.update({ all: true });
-			// 	//insert
-
-			// 	console.log(insert);
-			// 	//console.log(text);
-			// 	// this text can contain html cool
-			// 	//this.insertText(text);
-			// }
 		});
 	}
 
@@ -1431,7 +1400,7 @@ class PiepCMS {
 			}
 
 			if (ev.detail > 1) {
-				if (this.text_selection) {
+				if (this.text_selection && this.content_active) {
 					const vid = +this.text_selection.focus_vid;
 
 					if (ev.detail === 2) {
@@ -2083,6 +2052,13 @@ class PiepCMS {
 				const vid = v_node.id;
 				const text = v_node.text;
 				const children = v_node.children;
+
+				if (this.isTextContainer(v_node)) {
+					if (children.length === 0) {
+						vids.push(vid);
+						return;
+					}
+				}
 
 				if (!single_node && v_node.text !== undefined) {
 					if (text === "") {
