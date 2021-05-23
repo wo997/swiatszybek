@@ -69,7 +69,9 @@ domload(() => {
 		const page_type = page_data.page_type;
 
 		if (page_type === "general_product") {
-			breadcrumbs += html` <button class="btn transparent crumb" data-tooltip="Edytuj stronę">${page_data.general_product.name}</button> `;
+			breadcrumbs += html`
+				<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj stronę">${page_data.general_product.name}</button>
+			`;
 			$(".piep_editor_header").insertAdjacentHTML(
 				"beforeend",
 				html`
@@ -82,7 +84,11 @@ domload(() => {
 
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
-			breadcrumbs += html` <button class="btn transparent crumb" data-tooltip="Edytuj stronę">${location.host}${page_data.url ? "/" : ""}${page_data.url}</button> `;
+			breadcrumbs += html`
+				<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj stronę">
+					${location.host}${page_data.url ? "/" : ""}${page_data.url}
+				</button>
+			`;
 			preview_url = "/" + page_data.url;
 		}
 	}
@@ -95,10 +101,17 @@ domload(() => {
 
 		breadcrumbs += html` <div class="crumb">${template_data.name}</div> `;
 
-		// preview_url = template_data.???;
+		// preview_url = template_data.???; // make sure that anything exists that extends that template? well, maybe in case of products, otherwise disable
 	}
 
 	$(".piep_editor_header .breadcrumbs")._set_content(breadcrumbs);
+
+	const edit_pageable_btn = $(".edit_pageable_btn");
+	if (edit_pageable_btn) {
+		edit_pageable_btn.addEventListener("click", () => {
+			getEditPageableModal()._show({ source: edit_pageable_btn });
+		});
+	}
 
 	$(".piep_editor_header .preview").addEventListener("click", () => {
 		previewUrl(preview_url, { v_dom_json: getSaveVDOMJson() });

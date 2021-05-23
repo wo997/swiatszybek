@@ -920,7 +920,7 @@ function ProductComp(comp, parent, data = undefined) {
 
 			<div style="height:100px"></div>
 
-			<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+			<div class="mta pt2" style="text-align: right;">
 				<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
 			</div>
 		`,
