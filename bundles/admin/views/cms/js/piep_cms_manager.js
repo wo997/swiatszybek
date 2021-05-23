@@ -23,6 +23,8 @@ class PiepCMSManager {
 		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p|li)$/;
 		this.match_textables = /^(span|b)$/;
 
+		//this.match_text_wrappers = /^(h1|h2|h3|h4|h5|h6|p|ul)$/;
+
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
 		this.match_linkables = new RegExp(`^(?!${this.single_tags.map((e) => e + "$").join("|")})`);

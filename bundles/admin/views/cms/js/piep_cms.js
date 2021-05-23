@@ -433,6 +433,8 @@ class PiepCMS {
 		this.grabbed_block_wrapper = container_node("piep_editor_grabbed_block_wrapper");
 		this.add_block_menu = container_node("piep_editor_add_block_menu");
 		this.side_menu = this.container._child(".piep_editor_side_menu");
+		this.paste_html = container_node("piep_editor_paste_html");
+		this.paste_html.classList.add("hidden");
 
 		{
 			this.alternative_scroll_panel = container_node("piep_editor_alternative_scroll_panel");
@@ -1189,17 +1191,126 @@ class PiepCMS {
 
 	initPaste() {
 		this.container.addEventListener("paste", (ev) => {
-			if (!this.content_active) {
+			if (!this.content_active || !this.text_selection) {
 				return;
 			}
 
 			ev.preventDefault();
-			//console.log(e.clipboardData.getData("text/html"));
-			const text = ev.clipboardData.getData("text/plain");
 
-			//console.log(text);
-			// this text can contain html cool
-			this.insertText(text);
+			// const text = ev.clipboardData.getData("text/plain"); // TODO: if no html found then just text?
+
+			const pasted_html = ev.clipboardData.getData("text/html");
+			this.paste_html._set_content(pasted_html);
+
+			//console.log(this.paste_html);
+			/** @type {vDomNode[]} */
+			let insert = [];
+
+			let new_id = this.getNewBlcId();
+
+			const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
+
+			/**
+			 *
+			 * @param {PiepNode} node
+			 */
+			const traverseNode = (node) => {
+				// console.log(">>>", node);
+				if (node.childNodes) {
+					node.childNodes.forEach((child) => {
+						if (child.nodeType === Node.TEXT_NODE) {
+							// span wants to go into last text block, find it!
+
+							/**
+							 *
+							 * @param {vDomNode[]} v_nodes
+							 */
+							const traverseInsert = (v_nodes) => {
+								const last_v_node = v_nodes[v_nodes.length - 1];
+								if (!last_v_node) {
+									return;
+								}
+								if (available_text_blocks.includes(last_v_node.tag)) {
+									last_v_node.children.push({
+										id: new_id++,
+										classes: [],
+										attrs: {},
+										styles: {},
+										tag: "span",
+										text: child.textContent.replace(/\n/g, ""),
+									});
+								} else {
+									traverseInsert(last_v_node.children);
+								}
+							};
+							traverseInsert(insert);
+						} else if (child.nodeType === Node.ELEMENT_NODE) {
+							const sub_node = $(child);
+
+							const tag = sub_node.tagName.toLowerCase();
+							if (tag === "ul") {
+								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
+							} else if (tag === "li") {
+								/**
+								 *
+								 * @param {vDomNode[]} v_nodes
+								 */
+								const traverseInsert = (v_nodes) => {
+									const last_v_node = v_nodes[v_nodes.length - 1];
+									if (!last_v_node) {
+										return;
+									}
+									if (last_v_node.tag === "ul") {
+										last_v_node.children.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "li", children: [] });
+									} else {
+										traverseInsert(last_v_node.children);
+									}
+								};
+								traverseInsert(insert);
+							} else if (available_text_blocks.includes(tag)) {
+								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag, children: [] });
+							}
+							traverseNode(sub_node);
+						}
+					});
+				}
+			};
+
+			traverseNode(this.paste_html);
+
+			const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+
+			// WORK on it baby
+			// const focus_v_node_parent_data = this.getVNodeDataById(focus_v_node_data.parent_v_nodes[0].id);
+			// if (focus_v_node_parent_data.v_node.tag === "li") {
+			// 	const focus_text = focus_v_node_data.v_node.text;
+			// 	focus_v_node_data.v_node.text = focus_text.substring(0, this.text_selection.focus_offset);
+
+			// 	/** @type {vDomNode} */
+			// 	const after_focus_v_node = cloneObject(focus_v_node_data.v_node);
+			// 	after_focus_v_node.id = new_id++;
+			// 	after_focus_v_node.text = focus_text.substring(this.text_selection.focus_offset);
+
+			// 	focus_v_node_data.v_nodes.splice(focus_v_node_data.index + 1, 0, after_focus_v_node);
+
+			// 	focus_v_node_parent_data.v_nodes.splice(0,focus_v_node_parent_data.index);
+			// }
+
+			// if (inflow_v_node) {
+			// 	const inflow_v_node_data = this.getVNodeDataById(inflow_v_node.id);
+
+			// 	inflow_v_node_data.v_nodes.splice(inflow_v_node_data.index + 1, 0, ...insert);
+
+			// 	this.update({ all: true });
+			// 	//insert
+
+			// 	console.log(insert);
+			// 	//console.log(text);
+			// 	// this text can contain html cool
+			// 	//this.insertText(text);
+			// }
+
+			this.update({ all: true });
 		});
 	}
 
