@@ -30,6 +30,7 @@ class PiepCMS {
 		this.initRightMenu();
 		this.initAddBlockMenu();
 		this.initLayoutEdit();
+		this.initInserting();
 
 		this.initEditables();
 		this.initEditingColors();
@@ -826,6 +827,22 @@ class PiepCMS {
 				advanced_mode_btn.classList.toggle("important", this.advanced_mode);
 				advanced_mode_btn.classList.toggle("transparent", !this.advanced_mode);
 			}
+		});
+	}
+
+	initInserting() {
+		this.content_scroll.addEventListener("scroll", () => {
+			if (!this.grabbed_v_node) {
+				return;
+			}
+
+			if (this.grab_scroll_timeout) {
+				clearTimeout(this.grab_scroll_timeout);
+			}
+
+			this.grab_scroll_timeout = setTimeout(() => {
+				this.displayInsertPositions();
+			}, 100);
 		});
 	}
 
@@ -3591,6 +3608,12 @@ class PiepCMS {
 	};
 
 	displayInsertPositions() {
+		this.insert_blcs._empty();
+
+		const insert_blc_size = 24;
+
+		const content_scroll_rect = piep_cms.content_scroll.getBoundingClientRect();
+
 		/**
 		 *
 		 * @returns {insertBlc}
@@ -3646,7 +3669,7 @@ class PiepCMS {
 			return { left, top };
 		};
 
-		const blcs = this.content._children(".blc");
+		const blcs = this.content._children(".blc:not(.textable)");
 
 		if (blcs.length === 0) {
 			// left
@@ -3666,6 +3689,12 @@ class PiepCMS {
 				return;
 			}
 
+			const blc_rect = blc.getBoundingClientRect();
+			if (blc_rect.top + blc_rect.height < content_scroll_rect.top || blc_rect.top > content_scroll_rect.top + content_scroll_rect.height) {
+				// whole blc off
+				return;
+			}
+
 			const blc_parent = blc._parent();
 			const is_parent_root = blc_parent.classList.contains("template_hook_root") || blc_parent === this.content;
 
@@ -3682,7 +3711,7 @@ class PiepCMS {
 			 */
 			const insertAboveOrBelow = (dir) => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
-				const near_v_node = near_v_node_data.v_node;
+				//const near_v_node = near_v_node_data.v_node;
 
 				let ind = near_v_node_data.index;
 				if (dir === 1) {
@@ -3866,12 +3895,17 @@ class PiepCMS {
 			};
 
 			/**
-			 * @param {insertBlc} insert_blc
 			 * @param {insertPosEnum} pos_str
+			 * @param {any} action
 			 */
-			const setInsertPos = (insert_blc, pos_str) => {
+			const addInsertBlc = (pos_str, action) => {
 				let pos = getInsertBlcPos(blc, pos_str);
-				insert_blc._set_absolute_pos(pos.left, pos.top);
+
+				// we dont truly care anymore
+				// if (pos.top < content_scroll_rect.top || pos.top + insert_blc_size > content_scroll_rect.top + content_scroll_rect.height) {
+				// 	// off just a bit
+				// 	return;
+				// }
 
 				const prev_blc = blc._prev();
 
@@ -3886,10 +3920,16 @@ class PiepCMS {
 					const comp_pos = getInsertBlcPos(prev_blc, comp_pos_str);
 
 					// useless? covers the prev pos
-					if (Math.abs(comp_pos.left - pos.left) < insert_blc.offsetWidth && Math.abs(comp_pos.top - pos.top) < insert_blc.offsetHeight) {
-						insert_blc.remove();
+					if (Math.abs(comp_pos.left - pos.left) < insert_blc_size && Math.abs(comp_pos.top - pos.top) < insert_blc_size) {
+						return;
 					}
 				}
+
+				const insert_blc = getInsertBlc();
+
+				insert_blc._insert_action = action;
+
+				insert_blc._set_absolute_pos(pos.left, pos.top);
 			};
 
 			const flow_direction = this.getFlowDirection(blc_vid);
@@ -3930,39 +3970,29 @@ class PiepCMS {
 			}
 
 			if (on_sides) {
-				const insert_left_blc = getInsertBlc();
-				insert_left_blc._insert_action = () => {
+				addInsertBlc("left", () => {
 					insertOnSides(-1);
-				};
-				setInsertPos(insert_left_blc, "left");
+				});
 
-				const insert_right_blc = getInsertBlc();
-				insert_right_blc._insert_action = () => {
+				addInsertBlc("right", () => {
 					insertOnSides(1);
-				};
-				setInsertPos(insert_right_blc, "right");
+				});
 			}
 
 			if (above_or_below) {
-				const insert_top_blc = getInsertBlc();
-				insert_top_blc._insert_action = () => {
+				addInsertBlc("top", () => {
 					insertAboveOrBelow(-1);
-				};
-				setInsertPos(insert_top_blc, "top");
+				});
 
-				const insert_bottom_blc = getInsertBlc();
-				insert_bottom_blc._insert_action = () => {
+				addInsertBlc("bottom", () => {
 					insertAboveOrBelow(1);
-				};
-				setInsertPos(insert_bottom_blc, "bottom");
+				});
 			}
 
 			if (inside) {
-				const insert_center_blc = getInsertBlc();
-				insert_center_blc._insert_action = () => {
+				addInsertBlc("center", () => {
 					insertInside();
-				};
-				setInsertPos(insert_center_blc, "center");
+				});
 			}
 		});
 
