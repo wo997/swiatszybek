@@ -11,3 +11,10 @@ foreach (array_keys(EntityManager::getEntities()) as $entity_name) {
 }
 
 EntityManager::saveAll();
+
+foreach (DB::fetchCol("SELECT page_id FROM page") as $page_id) {
+    buildPageable("page", $page_id);
+}
+foreach (DB::fetchCol("SELECT template_id FROM template") as $template_id) {
+    buildPageable("template", $template_id);
+}
