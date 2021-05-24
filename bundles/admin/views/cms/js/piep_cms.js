@@ -2949,27 +2949,33 @@ class PiepCMS {
 
 	addBtnMove() {
 		let show_add_block_menu = false;
+		const was_visible = this.add_block_menu.classList.contains("visible");
 
 		if (mouse.target) {
 			if (!this.grabbed_v_node) {
-				show_add_block_menu = !!(mouse.target._parent(this.add_block_btn_wrapper) || mouse.target._parent(this.add_block_menu));
+				const sabm = !!mouse.target._parent(this.add_block_btn_wrapper) || !!mouse.target._parent(this.add_block_menu);
+				if (sabm) {
+					show_add_block_menu = true;
+
+					if (this.hide_add_block_menu_timeout) {
+						clearTimeout(this.hide_add_block_menu_timeout);
+						this.hide_add_block_menu_timeout = undefined;
+					}
+				} else {
+					if (!this.hide_add_block_menu_timeout && was_visible) {
+						this.hide_add_block_menu_timeout = setTimeout(() => {
+							show_add_block_menu = false;
+							this.hide_add_block_menu_timeout = undefined;
+							this.add_block_menu.classList.remove("visible");
+						}, 300);
+					}
+				}
 			}
 		}
+
 		if (show_add_block_menu) {
-			if (!this.add_block_menu.classList.contains("visible")) {
-				this.add_block_menu.classList.add("visible");
-				this.add_block_menu._set_absolute_pos(0, 0);
-
-				const add_block_btn_rect = this.add_block_btn.getBoundingClientRect();
-				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
-
-				const left = add_block_btn_rect.left - add_block_menu_rect.width;
-				const top = add_block_btn_rect.top;
-
-				this.add_block_menu._set_absolute_pos(left, top);
-
+			if (!was_visible) {
 				// restrict options
-
 				const blc_ids_we_have = [];
 
 				/**
@@ -3011,9 +3017,19 @@ class PiepCMS {
 
 					block_to_add.classList.toggle("hidden", !visible);
 				});
+
+				// display
+				this.add_block_menu.classList.add("visible");
+				this.add_block_menu._set_absolute_pos(0, 0);
+
+				const add_block_btn_rect = this.add_block_btn.getBoundingClientRect();
+				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
+
+				const left = add_block_btn_rect.left - add_block_menu_rect.width;
+				const top = add_block_btn_rect.top;
+
+				this.add_block_menu._set_absolute_pos(left, top);
 			}
-		} else {
-			this.add_block_menu.classList.remove("visible");
 		}
 
 		this.add_block_btn.style.setProperty("--btn-background-clr", show_add_block_menu ? "#eee" : "");
