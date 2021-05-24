@@ -5,7 +5,7 @@
 	/** @type {BlcGroup[]} */
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
-		// { match_tag: piep_cms_manager.match_textables, priority: text_priority },
+		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
 	];
 
 	piep_cms_manager.registerProp({
@@ -97,7 +97,12 @@
 	piep_cms_manager.registerProp({
 		name: "text_align",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		blc_groups: [
+			{
+				match_tag: piep_cms_manager.match_basic_text_containers,
+				priority: text_priority,
+			},
+		],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
 			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textAlign">
@@ -276,7 +281,12 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
-		blc_groups: text_groups,
+		blc_groups: [
+			{
+				match_tag: piep_cms_manager.match_basic_text_containers,
+				priority: text_priority,
+			},
+		],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
@@ -303,19 +313,19 @@
 	});
 
 	// bloated
-	// piep_cms_manager.registerFloatingProp({
-	// 	name: "background_color",
-	// blc_groups: text_groups,
-	// 	menu_html: html`
-	// 		<p-dropdown
-	// 			class="field small inline pretty_blue center static_label grid global_root"
-	// 			data-blc_prop="styles.backgroundColor"
-	// 			data-tooltip="Kolor tła"
-	// 		>
-	// 			<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
-	// 		</p-dropdown>
-	// 	`,
-	// });
+	piep_cms_manager.registerFloatingProp({
+		name: "background_color",
+		blc_groups: text_groups,
+		menu_html: html`
+			<p-dropdown
+				class="field small inline pretty_blue center static_label grid global_root"
+				data-blc_prop="styles.backgroundColor"
+				data-tooltip="Kolor tła"
+			>
+				<p-option data-value=""> <i class="fas fa-fill"></i> </p-option>
+			</p-dropdown>
+		`,
+	});
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",

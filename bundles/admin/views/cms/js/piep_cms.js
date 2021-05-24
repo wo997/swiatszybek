@@ -246,10 +246,12 @@ class PiepCMS {
 		this.manageText();
 
 		if (this.text_selection) {
-			const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-			if (focus_node_data) {
-				this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
-			}
+			this.setFocusNode(this.text_selection.focus_vid);
+
+			// const focus_node_data = this.getVNodeDataById();
+			// if (focus_node_data) {
+			// 	this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
+			// }
 		}
 	}
 
@@ -377,10 +379,10 @@ class PiepCMS {
 
 			displaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
 
-			const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-			if (focus_node_data) {
-				this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
-			}
+			// const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+			// if (focus_node_data) {
+			// 	this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
+			// }
 		}
 
 		if (options.vids) {
@@ -410,9 +412,6 @@ class PiepCMS {
 		}
 
 		this.cursor.classList.toggle("hidden", !this.text_selection);
-
-		// it's dependent on selection
-		this.displaySelectionBreadcrumbs();
 	}
 
 	initNodes() {
@@ -800,7 +799,7 @@ class PiepCMS {
 
 		const themeSettingsChanged = () => {
 			updateColorDropdown(this.float_menu._child(`.prop_color`));
-			//updateColorDropdown(this.float_menu._child(`.prop_background_color`));
+			updateColorDropdown(this.float_menu._child(`.prop_background_color`));
 			updateColorWrapper(this.side_menu._child(`.prop_color`));
 			updateColorWrapper(this.side_menu._child(`.prop_background_color`));
 		};
@@ -941,22 +940,22 @@ class PiepCMS {
 		}
 		const v_node = v_node_data.v_node;
 
-		if (piep_cms_manager.text_container_props.includes(prop_str) && this.isTextable(v_node)) {
-			const parent = v_node_data.parent_v_nodes[0];
-			if (parent) {
-				this.setPropOfVNode(prop_str, parent.id, input);
-				return;
-			}
-		} else if (piep_cms_manager.textable_props.includes(prop_str) && this.isTextContainer(v_node)) {
-			// to all children
-			const children = v_node_data.v_node.children;
-			if (children) {
-				children.forEach((child) => {
-					this.setPropOfVNode(prop_str, child.id, input);
-				});
-			}
-			return;
-		}
+		// if (piep_cms_manager.text_container_props.includes(prop_str) && this.isTextable(v_node)) {
+		// 	const parent = v_node_data.parent_v_nodes[0];
+		// 	if (parent) {
+		// 		this.setPropOfVNode(prop_str, parent.id, input);
+		// 		return;
+		// 	}
+		// } else if (piep_cms_manager.textable_props.includes(prop_str) && this.isTextContainer(v_node)) {
+		// 	// to all children
+		// 	const children = v_node_data.v_node.children;
+		// 	if (children) {
+		// 		children.forEach((child) => {
+		// 			this.setPropOfVNode(prop_str, child.id, input);
+		// 		});
+		// 	}
+		// 	return;
+		// }
 
 		if (!v_node) {
 			return;
@@ -1150,9 +1149,13 @@ class PiepCMS {
 					set_prop_of_ids.push(...this.text_selection.middle_vids);
 				}
 
-				if (this.focus_node_vid !== undefined && !piep_cms_manager.textable_props.includes(prop_str)) {
+				if (this.focus_node_vid !== undefined) {
 					set_prop_of_ids.push(this.focus_node_vid);
 				}
+				// if (this.focus_node_vid !== undefined && !piep_cms_manager.textable_props.includes(prop_str)) {
+				//     this.isTextContainer(this.focus_node_vid)
+				// 	set_prop_of_ids.push(this.focus_node_vid);
+				// }
 
 				set_prop_of_ids.filter(onlyUnique).forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
@@ -1456,6 +1459,9 @@ class PiepCMS {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node_data = this.getVNodeDataById(click_blc_vid);
 				const click_v_node = click_v_node_data.v_node;
+
+				//console.log(click_blc);
+
 				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
 					if (this.isTextable(click_v_node_data.v_node)) {
 						if (this.text_selection) {
@@ -1467,24 +1473,25 @@ class PiepCMS {
 							}
 						}
 
-						this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
+						//this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
+						this.setFocusNode(click_v_node.id);
 					} else {
-						if (!this.isTextContainer(click_v_node)) {
-							const select = () => {
-								setTimeout(() => {
-									this.text_selection = undefined;
-									this.setFocusNode(click_v_node.id);
-								});
-							};
-							if (this.text_selection) {
-								const text_focus_node = this.getNode(this.text_selection.focus_vid);
-								if (text_focus_node._parent() !== click_blc) {
-									select();
-								}
-							} else {
-								select();
-							}
+						//if (!this.isTextContainer(click_v_node)) {
+						const select = () => {
+							setTimeout(() => {
+								this.text_selection = undefined;
+								this.setFocusNode(click_v_node.id);
+							});
+						};
+						if (this.text_selection) {
+							// const text_focus_node = this.getNode(this.text_selection.focus_vid);
+							// if (text_focus_node._parent() !== click_blc) {
+							select();
+							//}
+						} else {
+							select();
 						}
+						//}
 					}
 				}
 			}
@@ -2192,12 +2199,12 @@ class PiepCMS {
 				/** @type {vDomNode[]} */
 				const crumb_v_nodes = [v_node_data.v_node, ...v_node_data.parent_v_nodes];
 
-				if (this.text_selection) {
-					const focus_node = this.getVNodeById(this.text_selection.focus_vid);
-					if (focus_node) {
-						crumb_v_nodes.unshift(focus_node);
-					}
-				}
+				// if (this.text_selection) {
+				// 	const focus_node = this.getVNodeById(this.text_selection.focus_vid);
+				// 	if (focus_node) {
+				// 		crumb_v_nodes.unshift(focus_node);
+				// 	}
+				// }
 
 				crumb_v_nodes.reverse();
 
@@ -3184,10 +3191,10 @@ class PiepCMS {
 	}
 
 	editLayout() {
-		const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
-		if (this.isTextable(focus_v_node_data.v_node)) {
-			this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
-		}
+		// const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
+		// if (this.isTextable(focus_v_node_data.v_node)) {
+		// 	this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
+		// }
 
 		this.editing_layout = true;
 
@@ -4174,15 +4181,15 @@ class PiepCMS {
 			}
 			const v_node = v_node_data.v_node;
 
-			if (this.isTextable(v_node)) {
-				from_v_nodes.push(v_node_data.parent_v_nodes[0]);
-			}
-			if (this.isTextContainer(v_node)) {
-				const children = v_node_data.v_node.children;
-				if (children) {
-					from_v_nodes.push(...children);
-				}
-			}
+			// if (this.isTextable(v_node)) {
+			// 	from_v_nodes.push(v_node_data.parent_v_nodes[0]);
+			// }
+			// if (this.isTextContainer(v_node)) {
+			// 	const children = v_node_data.v_node.children;
+			// 	if (children) {
+			// 		from_v_nodes.push(...children);
+			// 	}
+			// }
 
 			from_v_nodes.push(v_node);
 		});
@@ -4311,6 +4318,11 @@ class PiepCMS {
 									visible = true;
 								}
 							}
+
+							if (blc_group.exclude) {
+								visible = !visible;
+							}
+
 							if (visible) {
 								//priority += def(blc_group.priority, 1);
 								priority += def(blc_group.priority, 0);
@@ -4371,6 +4383,11 @@ class PiepCMS {
 									visible = true;
 								}
 							}
+
+							if (blc_group.exclude) {
+								visible = !visible;
+							}
+
 							if (visible) {
 								priority += def(blc_group.priority, 0);
 								break;

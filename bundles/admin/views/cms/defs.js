@@ -57,6 +57,7 @@
  * module_names?: string[]
  * matcher?(v_node_data: vDomNodeData, piep_cms: PiepCMS): boolean
  * priority?: number
+ * exclude?: boolean
  * }} BlcGroup
  */
 

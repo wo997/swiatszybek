@@ -138,8 +138,17 @@ function getPageCss($styles_css_responsive)
 function buildPageable($entity_name, $id)
 {
     $id_column_name = EntityManager::getEntityIdColumn($entity_name);
-    $pageable_data = DB::fetchRow("SELECT * FROM $entity_name WHERE $id_column_name=$id");
-    $v_dom = json_decode($pageable_data["v_dom_json"], true);
+
+    $page = EntityManager::getEntityById($entity_name, $id);
+    if ($page) {
+        $v_dom_json = $page->getProp("v_dom_json");
+    } else {
+        $pageable_data = DB::fetchRow("SELECT * FROM $entity_name WHERE $id_column_name=$id");
+        $v_dom_json = $pageable_data["v_dom_json"];
+    }
+
+    $v_dom = json_decode($v_dom_json, true);
+
     if ($v_dom) {
         $dom_data = traverseVDom($v_dom);
 
