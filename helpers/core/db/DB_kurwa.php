@@ -77,6 +77,9 @@ class DB
     {
         // it could add a limit by itself
         $res = DB::fetchRow($sql, $params);
+        if (!$res) {
+            return null;
+        }
         return isset(array_keys($res)[0]) ? $res[array_keys($res)[0]] : null;
     }
 
