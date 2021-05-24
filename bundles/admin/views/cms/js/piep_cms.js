@@ -1262,8 +1262,6 @@ class PiepCMS {
 									} else {
 										traverseInsert(last_v_node.children);
 									}
-
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
 								};
 								traverseInsert(insert);
 
@@ -1304,14 +1302,7 @@ class PiepCMS {
 				}
 			};
 
-			//console.log(insert);
-
 			traverseNode(this.paste_html);
-
-			const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-
-			// well, it must be lol
-			//if (this.isTextable(focus_v_node_data.v_node)) {
 
 			const next_v_node_data = this.getVNodeDataById(next_vid);
 			const next_v_node = next_v_node_data.v_node;
@@ -1346,6 +1337,8 @@ class PiepCMS {
 					this.deleteAction(-1);
 				}
 			}
+
+			this.manageText();
 		});
 	}
 

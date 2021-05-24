@@ -110,7 +110,7 @@ domload(() => {
 									},
 								},
 								success: (res) => {
-									showNotification(`${data.url}: ${data.active ? "aktywna" : "nieaktywna"}`, { type: "success", one_line: true });
+									showNotification(`${data.name}: ${data.active ? "aktywna" : "nieaktywna"}`, { type: "success", one_line: true });
 									general_products_dt._backend_search();
 								},
 							});
@@ -176,7 +176,10 @@ domload(() => {
 									},
 								},
 								success: (res) => {
-									showNotification(`${data.url}: ${data.active ? "aktywna" : "nieaktywna"}`, { type: "success", one_line: true });
+									showNotification(`${data.__category_path_names_csv.replace(/,/g, " ― ")}: ${data.active ? "aktywna" : "nieaktywna"}`, {
+										type: "success",
+										one_line: true,
+									});
 									product_categories_dt._backend_search();
 								},
 							});
