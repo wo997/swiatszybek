@@ -1206,6 +1206,8 @@ class PiepCMS {
 			const pasted_html = ev.clipboardData.getData("text/html");
 			const pasted_text = ev.clipboardData.getData("text/plain");
 
+			this.removeTextInSelection();
+
 			if (pasted_text && !pasted_html) {
 				// maybe do the split dude, but it's unnecessary now
 				this.insertText(pasted_text.replace(/[\n\r]/g, ""));
@@ -1595,6 +1597,7 @@ class PiepCMS {
 						const focus_node = this.getNode(focus_vid);
 
 						if (focus_node && focus_node.classList.contains("textable")) {
+							this.removeTextInSelection();
 							this.insertText(ev.key);
 							this.pushHistory("insert_text");
 						}
@@ -2750,8 +2753,6 @@ class PiepCMS {
 			return;
 		}
 
-		this.removeTextInSelection();
-
 		//const focus_node = this.getNode(this.text_selection.focus_vid);
 		const focus_offset = this.text_selection.focus_offset;
 		const vid = this.text_selection.focus_vid;
@@ -3582,6 +3583,8 @@ class PiepCMS {
 				return "inline";
 			} else if (parent_v_node.classes.includes("columns_container")) {
 				return "row";
+			} else if (parent_v_node.tag === "ul") {
+				return "text_list";
 			}
 		}
 		return "column";
@@ -3901,7 +3904,7 @@ class PiepCMS {
 				on_sides = false;
 			}
 
-			if (on_sides && flow_direction === "inline") {
+			if (on_sides && (flow_direction === "inline" || flow_direction === "text_list")) {
 				on_sides = false;
 			}
 

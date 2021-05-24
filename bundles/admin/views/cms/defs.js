@@ -126,7 +126,7 @@
  */
 
 /**
- * @typedef {"column" | "row" | "inline"} FlowDirectionEnum
+ * @typedef {"column" | "row" | "inline" | "text_list"} FlowDirectionEnum
  */
 
 /**
