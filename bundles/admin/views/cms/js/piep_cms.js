@@ -1448,7 +1448,7 @@ class PiepCMS {
 			}, 200);
 		});
 
-		document.addEventListener("click", (ev) => {
+		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
 
 			const block_to_add_btn = target._parent(".block_to_add");
@@ -1478,12 +1478,14 @@ class PiepCMS {
 					} else {
 						if (!this.isTextContainer(click_v_node)) {
 							const select = () => {
-								this.text_selection = undefined;
-								this.setFocusNode(click_v_node.id);
+								setTimeout(() => {
+									this.text_selection = undefined;
+									this.setFocusNode(click_v_node.id);
+								});
 							};
 							if (this.text_selection) {
 								const text_focus_node = this.getNode(this.text_selection.focus_vid);
-								if (!text_focus_node._parent(click_blc)) {
+								if (text_focus_node._parent() !== click_blc) {
 									select();
 								}
 							} else {

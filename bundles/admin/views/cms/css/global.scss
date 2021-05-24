@@ -37,10 +37,12 @@
 	align-items: stretch;
 }
 
+.main_wrapper,
 .piep_editor_content,
 .vertical_container {
 	> * {
 		width: 100%;
+		align-self: center;
 	}
 }
 
