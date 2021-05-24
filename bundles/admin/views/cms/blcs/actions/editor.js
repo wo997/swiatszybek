@@ -82,7 +82,8 @@
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				if (target._parent(".remove_btn")) {
-					piep_cms.removeVNodes([piep_cms.focus_node_vid]);
+					piep_cms.removeVNodes([piep_cms.focus_node_vid, ...piep_cms.getAllTextSelectionVids()]);
+					piep_cms.manageText();
 					piep_cms.update({ all: true });
 					piep_cms.setFocusNode(undefined);
 

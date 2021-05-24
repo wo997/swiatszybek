@@ -2060,7 +2060,7 @@ class PiepCMS {
 				if (this.isTextContainer(v_node)) {
 					if (children.length === 0) {
 						vids.push(vid);
-						return;
+						continue;
 					}
 				}
 
@@ -2841,6 +2841,20 @@ class PiepCMS {
 		this.container.classList.toggle("has_insert_pos", this.has_insert_pos);
 	}
 
+	getAllTextSelectionVids() {
+		let all_ids = [];
+
+		if (this.text_selection) {
+			all_ids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
+			all_ids.push(...this.text_selection.middle_vids);
+			all_ids.push(this.text_selection.focus_vid);
+		}
+
+		all_ids = all_ids.filter(onlyUnique);
+
+		return all_ids;
+	}
+
 	showFocus() {
 		/** @type {ShowFocusToNodeData[]} */
 		const show_vids = [];
@@ -2910,18 +2924,10 @@ class PiepCMS {
 
 		if (show_float_menu) {
 			if (this.text_selection !== undefined) {
-				let all_ids = [];
-
-				all_ids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
-				all_ids.push(...this.text_selection.middle_vids);
-				all_ids.push(this.text_selection.focus_vid);
-
-				all_ids = all_ids.filter(onlyUnique);
-
 				let highest_y = 1000000;
 				/** @type {number} */
 				let highest_vid;
-				for (const vid of all_ids) {
+				for (const vid of this.getAllTextSelectionVids()) {
 					const node = this.getNode(vid);
 					if (!node) {
 						continue;
