@@ -37,6 +37,13 @@
 	align-items: stretch;
 }
 
+.piep_editor_content,
+.vertical_container {
+	> * {
+		width: 100%;
+	}
+}
+
 .columns_container {
 	display: flex;
 	flex-direction: row;

@@ -32,7 +32,6 @@ if (isset($RET["error"]) && $RET["error"] === '0') {
     $shop_order->setProp("status", 2);
     $payment->setProp("payment_order_id", $p24_order_id);
     $payment->setProp("payment_status_id", 1);
-
     $payment->setProp("paid_at", date("Y-m-d H:i:s"));
 
     // TODO: DO IT

@@ -287,7 +287,7 @@ class Files
 
         @unlink($file_path);
 
-        if (in_array(self::$minify_extensions, $file_ext)) {
+        if (in_array($file_ext, self::$minify_extensions)) {
             $image_data = self::getResponsiveImageData($file_path);
             if ($image_data) {
                 foreach (self::$image_fixed_dimensions as $size_name => $area) {

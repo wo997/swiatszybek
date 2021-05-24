@@ -158,6 +158,7 @@ $deployment_routes = [
     "/deployment/export",
     "/deployment/install",
     "/deployment/get_size",
+    "/deployment/clean_uploads",
 ];
 
 $routes = [];

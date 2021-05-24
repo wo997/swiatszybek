@@ -1423,9 +1423,8 @@ class PiepCMS {
 					} else {
 						this.selectTextContainerContents(this.focus_node_vid);
 					}
+					ev.preventDefault();
 				}
-
-				ev.preventDefault();
 			}
 		});
 
