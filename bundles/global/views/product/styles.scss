@@ -108,7 +108,7 @@
 @media (min-width: 850px) {
 	.product_wrapper {
 		display: flex;
-		max-width: 1350px;
+		max-width: var(--container_max_width);
 		margin: 10px auto;
 		width: 100%;
 		position: relative;
@@ -341,4 +341,10 @@ comment-comp.comp {
 			max-width: none;
 		}
 	}
+}
+
+.product_comments {
+	max-width: var(--container_max_width);
+	margin: 50px auto;
+	padding: 10px;
 }

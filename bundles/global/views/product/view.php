@@ -406,58 +406,56 @@ if ($main_img) {
 
 <?php startSection("view_product_comments"); ?>
 
-<div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-    <div style="max-width: 1000px;margin: 0 auto" class="product_comments">
-        <div style="margin-bottom: 5px;">
-            <span class="label medium bold inline comments_label mr1">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
-            <?php if (User::getCurrent()->isLoggedIn()) : ?>
-                <button class="btn primary mr1 add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
-                    Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
-                </button>
-            <?php endif ?>
-            <button class="btn subtle show_filters"> Filtruj <i class="fas fa-search"></i></button>
-        </div>
-
-        <div class="comments_filters expand_y hidden animate_hidden">
-            <div class="coms_container">
-                <div class="label first">Wyszukaj w komentarzu:</div>
-                <input class="field inline phrase">
-
-                <div class="variants_container">
-                    <?= $variants_less_html ?>
-                </div>
-
-                <div class="mtf"></div>
-                <button class="btn primary search_btn">
-                    Pokaż wyniki
-                    <div class="spinner_wrapper inline">
-                        <i class="fas fa-search"></i>
-                        <div class="spinner overlay white"></div>
-                    </div>
-                </button>
-                <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
-            </div>
-        </div>
-
-        <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
-        ?>
-        <list-comp class="comments striped" data-primary="comment_id">
-            <comment-comp></comment-comp>
-        </list-comp>
-        <pagination-comp class="comments"></pagination-comp>
-
+<div class="product_comments">
+    <div class="mb1">
+        <span class="label medium bold inline comments_label mr1">Komentarze (<span class="results_info_count"><?= $comments_data["total_rows"] ?></span>)</span>
         <?php if (User::getCurrent()->isLoggedIn()) : ?>
-            <div class="label medium">Podziel się swoją opinią</div>
-            <button class="btn primary" onclick="showModal(`addComment`,{source:this});">
+            <button class="btn primary mr1 add_comment_btn_top" onclick="showModal(`addComment`,{source:this});">
                 Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
             </button>
-        <?php else : ?>
-            <div class="label medium">Aby móc dodać komentarz musisz się zalogować</div>
-            <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
-                Zaloguj się <i class="fas fa-user"></i>
-            </button>
         <?php endif ?>
+        <button class="btn subtle show_filters"> Filtruj <i class="fas fa-search"></i></button>
     </div>
+
+    <div class="comments_filters expand_y hidden animate_hidden">
+        <div class="coms_container">
+            <div class="label first">Wyszukaj w komentarzu:</div>
+            <input class="field inline phrase">
+
+            <div class="variants_container">
+                <?= $variants_less_html ?>
+            </div>
+
+            <div class="mtf"></div>
+            <button class="btn primary search_btn">
+                Pokaż wyniki
+                <div class="spinner_wrapper inline">
+                    <i class="fas fa-search"></i>
+                    <div class="spinner overlay white"></div>
+                </div>
+            </button>
+            <button class="btn subtle hide_btn"> Wyczyść filtry <i class="fas fa-eraser"></i></button>
+        </div>
+    </div>
+
+    <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
+    ?>
+    <list-comp class="comments striped" data-primary="comment_id">
+        <comment-comp></comment-comp>
+    </list-comp>
+    <pagination-comp class="comments"></pagination-comp>
+
+    <?php if (User::getCurrent()->isLoggedIn()) : ?>
+        <div class="label medium">Podziel się swoją opinią</div>
+        <button class="btn primary" onclick="showModal(`addComment`,{source:this});">
+            Napisz komentarz <i class="fas fa-comment" style="margin-left:4px"></i>
+        </button>
+    <?php else : ?>
+        <div class="label medium">Aby móc dodać komentarz musisz się zalogować</div>
+        <button class="btn primary" onclick="showModal(`loginForm`,{source:this});">
+            Zaloguj się <i class="fas fa-user"></i>
+        </button>
+    <?php endif ?>
 </div>
 
 <?php if (User::getCurrent()->isLoggedIn()) : ?>
