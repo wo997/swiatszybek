@@ -25,7 +25,7 @@ domload(() => {
 	resize();
 
 	$(".menu_btn").addEventListener("click", () => {
-		const open = $("header.mobile").classList.toggle("open");
+		const open = $(".navbar_admin_mobile").classList.toggle("open");
 		expand(navbar_admin, open);
 	});
 });

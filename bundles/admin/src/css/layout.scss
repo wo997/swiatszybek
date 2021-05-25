@@ -66,7 +66,7 @@ footer {
 			max-height: calc(100% - 37px);
 		}
 		.navbar_admin_mobile .logo {
-			height: 40px;
+			height: 36px;
 			display: block;
 		}
 		.content {
@@ -75,6 +75,7 @@ footer {
 		.admin_layout {
 			flex-direction: column;
 			height: auto;
+			min-height: 100vh;
 		}
 		.navbar_admin.hidden > .scroll_panel {
 			overflow: initial !important;
