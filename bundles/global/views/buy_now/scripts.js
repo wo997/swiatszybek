@@ -65,7 +65,6 @@ domload(() => {
 	const delivery_input = buy_now_form._child(".delivery");
 	const case_courier = buy_now_form._child(".case_courier");
 	const case_courier_above = buy_now_form._child(".case_courier_above");
-
 	const case_parcel_locker = buy_now_form._child(".case_parcel_locker");
 	const case_in_person = buy_now_form._child(".case_in_person");
 	const case_form_filled = buy_now_form._child(".case_form_filled");
@@ -78,6 +77,7 @@ domload(() => {
 	const payment_time_input = buy_now_form._child(".payment_time");
 	const cart_delivery_price_wrapper = $(".cart_delivery_price_wrapper");
 	const in_person_map_wrapper = buy_now_form._child(".in_person_map_wrapper");
+	const client_notes_input = buy_now_form._child(".client_notes");
 
 	const renderCarriers = () => {
 		const delivery_type_id = delivery_input._get_value();
@@ -121,16 +121,24 @@ domload(() => {
 	};
 
 	const loadCart = () => {
+		/**
+		 *
+		 * @param {number} delivery_type_id
+		 * @param {PiepNode} target
+		 */
 		const setPrettyPrices = (delivery_type_id, target) => {
 			const prices = user_cart.available_carriers.filter((c) => c.delivery_type_id === delivery_type_id).map((c) => c.fit_dimensions.price);
-			const price_min = Math.min(...prices);
-			const price_max = Math.max(...prices);
-			/** @type {any} */
-			let display_prices = price_min;
-			if (price_min !== price_max) {
-				display_prices += " - " + price_max;
+			let display_prices = "Niedostępny";
+			if (prices.length) {
+				const price_min = Math.min(...prices);
+				const price_max = Math.max(...prices);
+				display_prices = price_min + "";
+				if (price_min !== price_max) {
+					display_prices += " - " + price_max;
+				}
+				display_prices += " zł";
 			}
-			display_prices += " zł";
+			target._parent(".checkbox_area").classList.toggle("disabled", prices.length === 0);
 			target._set_content(display_prices);
 		};
 		setPrettyPrices(1, buy_now_form._child(".courier_prices"));
@@ -280,7 +288,7 @@ domload(() => {
 			valid = false;
 		}
 
-		const data = { main_address: main_address._data };
+		const data = { main_address: main_address._data, client_notes: client_notes_input._get_value() };
 
 		const delivery_type = delivery_input._get_value();
 		if (delivery_type <= 0) {
@@ -491,7 +499,7 @@ window.easyPackAsyncInit = () => {
 		defaultLocale: "pl",
 	});
 	// @ts-ignore
-	const map = easyPack.mapWidget("easypack-map", (point) => {
+	easyPack.mapWidget("easypack-map", (point) => {
 		hideModal("InpostParcelLockerPicker");
 
 		const address_details = point.address_details;

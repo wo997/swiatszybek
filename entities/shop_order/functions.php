@@ -93,7 +93,10 @@ function confirmOrder($shop_order_data)
 
     $shop_order->setProp("payment_time", $payment_time);
 
-    $shop_order->setProp("package_api_key", $user_cart->getDeliveryFitDimensions()["api_key"]);
+    $fit_dim = $user_cart->getDeliveryFitDimensions();
+    if ($fit_dim) {
+        $shop_order->setProp("package_api_key", $fit_dim["api_key"]);
+    }
 
     $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME
 

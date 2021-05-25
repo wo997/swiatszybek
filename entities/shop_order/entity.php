@@ -20,6 +20,7 @@ EntityManager::register("shop_order", [
         "ordered_products" => ["type" => "ordered_product[]"],
         "ordered_at" => ["type" => "string"],
         "paid_at" => ["type" => "string"],
+        "client_notes" => ["type" => "string"],
     ],
 ]);
 

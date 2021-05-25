@@ -19,4 +19,5 @@ DB::createTable("shop_order", [
     ["name" => "parcel_locker_id", "type" => "INT", "null" => true, "index" => "index"],
     ["name" => "ordered_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
     ["name" => "paid_at", "type" => "DATETIME", "null" => true],
+    ["name" => "client_notes", "type" => "TEXT"],
 ]);
