@@ -109,52 +109,38 @@ function delay(action, time = 0, context = window, params = [], options = {}) {
 	}, time);
 }
 
-function fallbackCopyTextToClipboard(text) {
-	var textArea = document.createElement("textarea");
-	textArea.value = text;
-
-	// Avoid scrolling to bottom
-	textArea.style.top = "0";
-	textArea.style.left = "0";
-	textArea.style.position = "fixed";
-
-	console.log(textArea);
-	document.body.appendChild(textArea);
-	textArea.focus();
-	textArea.select();
-
-	try {
-		var successful = document.execCommand("copy");
-		var msg = successful ? "successful" : "unsuccessful";
-		console.log("Fallback: Copying text command was " + msg);
-	} catch (err) {
-		console.error("Fallback: Oops, unable to copy", err);
-	}
-
-	document.body.removeChild(textArea);
-}
 function copyTextToClipboard(text) {
-	fallbackCopyTextToClipboard(text); // feels safe
-	/*if (!navigator.clipboard) {
-    console.log(123456);
-    fallbackCopyTextToClipboard(text);
-    return;
-  }
-  navigator.clipboard.writeText(text).then(function() {
-    console.log('Async: Copying to clipboard was successful!');
-  }, function(err) {
-    console.error('Async: Could not copy text: ', err);
-  });*/
+	navigator.clipboard.writeText(text);
+	// .then(
+	// 	function () {
+	// 		console.log("Async: Copying to clipboard was successful!");
+	// 	},
+	// 	function (err) {
+	// 		console.error("Async: Could not copy text: ", err);
+	// 	}
+	// );
 }
 
-/*
-never used
-function decodeHtmlEntities(html) {
-	var txt = document.createElement("textarea");
-	txt.innerHTML = html;
-	return txt.value;
+/**
+ *
+ * @param {PiepNode} node
+ */
+function copyNodeToClipboard(node) {
+	const range = document.createRange();
+	range.selectNode(node);
+	copyRangeToClipboard(range);
 }
-*/
+
+/**
+ *
+ * @param {Range} range
+ */
+function copyRangeToClipboard(range) {
+	window.getSelection().removeAllRanges();
+	window.getSelection().addRange(range);
+	document.execCommand("copy");
+	window.getSelection().removeAllRanges();
+}
 
 function validURL(str) {
 	var pattern = new RegExp(

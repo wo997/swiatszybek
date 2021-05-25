@@ -1619,6 +1619,15 @@ class PiepCMS {
 							this.pushHistory("insert_text");
 						}
 					}
+
+					if (ev.ctrlKey && ev.key === "c") {
+						ev.preventDefault();
+
+						const range = document.createRange();
+						range.setStart(getTextNode(this.getNode(this.text_selection.anchor_vid)), this.text_selection.anchor_offset);
+						range.setEnd(getTextNode(this.getNode(this.text_selection.focus_vid)), this.text_selection.focus_offset);
+						copyRangeToClipboard(range);
+					}
 				}
 				if (ev.key === "Backspace") {
 					ev.preventDefault();
