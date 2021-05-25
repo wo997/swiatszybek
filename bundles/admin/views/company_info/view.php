@@ -19,7 +19,7 @@
         </div>
     </span>
     <div class="mla">
-        <button class="btn primary save_company_info_btn">Zapisz <i class="fas fa-save"></i></button>
+        <button class="btn primary save_btn">Zapisz <i class="fas fa-save"></i></button>
     </div>
 </div>
 

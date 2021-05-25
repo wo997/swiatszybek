@@ -41,3 +41,8 @@ if (Request::$is_admin_url) {
         Chart.defaults.global.animation.duration = 300;
     </script>
 <?php endif ?>
+
+
+<?php if (!Request::$is_admin_url) : ?>
+    <?= getSetting(["general", "additional_scripts", "footer"], "") ?>
+<?php endif ?>

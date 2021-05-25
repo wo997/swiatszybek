@@ -13,7 +13,7 @@ domload(() => {
 		}
 	});
 
-	$(".save_company_info_btn").addEventListener("click", () => {
+	$(".main_header .save_btn").addEventListener("click", () => {
 		const params = {
 			company_info: Object.fromEntries(daneFirmyForm._children("[data-name]").map((field) => [field.dataset.name, field._get_value()])),
 		};

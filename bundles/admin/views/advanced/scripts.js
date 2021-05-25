@@ -2,9 +2,6 @@
 
 domload(() => {
 	const advancedSettingsForm = $(`#advancedSettingsForm`);
-	advancedSettingsForm._children("[data-name]").forEach((field) => {
-		field.setAttribute("autocomplete", Math.random().toPrecision(10));
-	});
 
 	Object.entries(advanced_settings).forEach(([key, val]) => {
 		const field = advancedSettingsForm._child(`[data-name="${key}"]`);
@@ -13,7 +10,7 @@ domload(() => {
 		}
 	});
 
-	$(".save_advanced_settings_btn").addEventListener("click", () => {
+	$(".main_header .save_btn").addEventListener("click", () => {
 		const params = {
 			advanced_settings: Object.fromEntries(
 				advancedSettingsForm._children("[data-name]").map((field) => [field.dataset.name, field._get_value()])
@@ -25,7 +22,6 @@ domload(() => {
 			params,
 			success: () => {
 				showNotification("Zapisano zmiany", { one_line: true, type: "success" });
-				//window.location.reload();
 			},
 		});
 	});

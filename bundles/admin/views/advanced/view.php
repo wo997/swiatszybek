@@ -18,7 +18,7 @@
             Ustawienia zaawansowane
         </div>
     </span>
-    <button class="btn primary save_advanced_settings_btn mla">Zapisz <i class="fas fa-save"></i></button>
+    <button class="btn primary save_btn mla">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
 <?php startSection("admin_page_body"); ?>
@@ -26,18 +26,39 @@
 <div id="advancedSettingsForm">
     <span class="label first">Certyfikat SSL</span>
     <p-checkbox data-name="ssl"></p-checkbox>
+
     <span class="label">Tryb developmentu</span>
     <p-checkbox data-name="dev_mode"></p-checkbox>
+
     <span class="label">Tryb debugowania</span>
     <p-checkbox data-name="debug_mode"></p-checkbox>
+
     <span class="label">Domena sklepu</span>
     <input type="text" class="field" data-name="domain">
+
+    <span class="label">Przekierowanie WWW</span>
+    <div class="radio_group boxes hide_checks semi_bold" data-name="www_redirect">
+        <div class="checkbox_area">
+            <p-checkbox data-value=""></p-checkbox>
+            <span>Brak przekierowania</span>
+        </div>
+        <div class="checkbox_area">
+            <p-checkbox data-value="www"></p-checkbox>
+            <span>WWW</span>
+        </div>
+        <div class="checkbox_area">
+            <p-checkbox data-value="nowww"></p-checkbox>
+            <span>Bez WWW</span>
+        </div>
+    </div>
+
 
 </div>
 
 <br><br>
 
-<b>Takie tam informacje dla developera:</b><br>
-<?= json_encode(getSetting([]), JSON_PRETTY_PRINT) ?>
+<!-- <b>Takie tam informacje dla developera:</b><br> -->
+<?= "" //json_encode(getSetting([]), JSON_PRETTY_PRINT) 
+?>
 
 <?php include "bundles/admin/templates/default.php"; ?>

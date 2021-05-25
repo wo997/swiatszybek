@@ -9,7 +9,6 @@ if (defined("ROUTE")) {
     $has_js = false;
 }
 
-
 ?>
 
 <link id="main_stylesheet" href="/builds/global.css?v=<?= version("global") ?>" rel="stylesheet">
@@ -98,19 +97,13 @@ if (defined("ROUTE")) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
 <link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
 
-<meta name="google-signin-client_id" content="<?= secret('google_client_id') ?>">
-
-<style>
-    <?php if (User::getCurrent()->isLoggedIn()) : ?>.hide_case_logged_in {
-        display: none;
-    }
-
-    <?php endif ?>
-</style>
-
 <?php if ($has_js) { ?>
     <script src="/<?= BUILDS_PATH . "views" . ROUTE . ".js" ?>?v=<?= version("views" . ROUTE) ?>"></script>
 <?php } ?>
 <?php if ($has_css) { ?>
     <link href="/<?= BUILDS_PATH . "views" . ROUTE . ".css" ?>?v=<?= version("views" . ROUTE) ?>" rel="stylesheet">
 <?php } ?>
+
+<?php if (!Request::$is_admin_url) : ?>
+    <?= getSetting(["general", "additional_scripts", "header"], "") ?>
+<?php endif ?>

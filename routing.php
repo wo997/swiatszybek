@@ -21,6 +21,26 @@ if (getSetting(["general", "advanced", "ssl"])) {
     }
 }
 
+
+$www_redirect = getSetting(["general", "advanced", "www_redirect"]);
+
+if ($www_redirect) {
+    $protocol = (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") ? "http://" : "https://";
+
+    if ($www_redirect === "www" && substr($_SERVER['HTTP_HOST'], 0, 4) !== 'www.') {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $protocol . 'www.' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        exit;
+    }
+    if ($www_redirect === "nowww" && substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $protocol . substr($_SERVER['HTTP_HOST'], 4) . $_SERVER['REQUEST_URI']);
+        exit;
+    }
+}
+
+
+
 function getAdminNavitationTree()
 {
     global $admin_navigations_tree;
@@ -81,6 +101,7 @@ $admin_navigations_tree = [
             //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
             ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
             ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-paint-brush"></i> Ustawienia motywu'],
+            ["url" => "/dodatkowe-skrypty", "title" => '<i class="fas fa-code"></i> Dodatkowe skrypty'],
         ]
     ],
     ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
