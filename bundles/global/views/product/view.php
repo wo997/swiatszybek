@@ -12,7 +12,7 @@ if ($general_product_id) {
     Request::redirect("/");
 }
 
-$page_data = DB::fetchRow("SELECT page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
+$page_data = DB::fetchRow("SELECT seo_title, seo_description, page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
 
 if (!$page_data) {
     Request::redirect("/");
@@ -142,31 +142,32 @@ $user_email = $user_data ? $user_data["email"] : "";
     const general_product_comments_rows = <?= json_encode($comments_data["rows"]) ?>;
 
     <?php if (isset($_GET["komentarz"])) { ?>
-        domload(() => {
-            showModal(`addComment`);
-        })
+        // not yet dude :)
+        // domload(() => {
+        //     showModal(`addComment`);
+        // })
     <?php } ?>
 </script>
 
 <?php if ($general_product_data["cache_rating_count"] > 0) : ?>
-    <script <?= 'type="application/ld+json"' ?>>
+    <script type="application/ld+json">
         {
             "@context": "https://schema.org/",
             "@type": "Product",
             "name": "<?= htmlspecialchars($full_product_name) ?>",
             "url": "<?= SITE_URL . "/" . Request::$url ?>",
             "image": [
-                "<?= $general_product_data["cache_thumbnail"] ?>"
+                "<?= $general_product_data["img_url"] ?>"
             ],
-            "description": "<?= $general_product_data["seo_description"] ?>",
+            "description": "<?= $page_data["seo_description"] ?>",
             "brand": {
                 "@type": "Thing",
                 "name": "<?= getShopName() ?>"
             },
             "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "<?= $general_product_data["cache_avg_rating"] ?>",
-                "reviewCount": "<?= $general_product_data["cache_rating_count"] ?>",
+                "ratingValue": "<?= $general_product_data["__avg_rating"] ?>",
+                "reviewCount": "<?= $general_product_data["__rating_count"] ?>",
                 "bestRating": 5,
                 "worstRating": 0
             },
@@ -502,6 +503,6 @@ if ($main_img) {
 
 endSection();
 
-renderPage($page_data["page_id"]);
+renderPage($page_data["page_id"], ["default_seo_title" => $general_product_data["name"]]);
 
 ?>

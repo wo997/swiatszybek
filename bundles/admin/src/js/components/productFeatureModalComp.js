@@ -50,9 +50,11 @@ function ProductFeatureModalComp(comp, parent, data = undefined) {
 					Cecha produktu:
 					<span html="{${data.product_feature.name.trim() ? data.product_feature.name : "Nowa"}}"> </span>
 				</span>
-				<p-trait data-trait="history"></p-trait>
-				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				<button class="btn primary" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">Zapisz <i class="fas fa-save"></i></button>
+				<p-trait class="mla" data-trait="history"></p-trait>
+				<button class="btn subtle ml1" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}" disabled="{${false}}">
+					Zapisz <i class="fas fa-save"></i>
+				</button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<product-feature-comp

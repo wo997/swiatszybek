@@ -213,7 +213,7 @@ function updatePageableMetadata($entity_name, $id)
 }
 
 
-function renderPage($page_id)
+function renderPage($page_id, $data = [])
 {
     global $sections;
 
@@ -326,8 +326,15 @@ function renderPage($page_id)
     }
 
     $shop_name = getShopName();
-    $seo_title = $page_data["seo_title"] ? $page_data["seo_title"] : $shop_name;
+    $seo_title = $page_data["seo_title"];
     $seo_description = $page_data["seo_description"];
+    if (!$seo_title) {
+        if (isset($data["default_seo_title"])) {
+            $seo_title = $data["default_seo_title"] . " - " . $shop_name;
+        } else {
+            $seo_title = $shop_name;
+        }
+    }
 
     $page_data["seo_image"] = "";
     $seo_image = $page_data["seo_image"];

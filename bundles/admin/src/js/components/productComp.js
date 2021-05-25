@@ -789,6 +789,22 @@ function ProductComp(comp, parent, data = undefined) {
 
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
+						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
+						<div class="hover_info">
+							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
+						</div>
+						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
+							Dodaj cechy <i class="fas fa-plus"></i>
+						</button>
+					</div>
+
+					<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
+						<product_feature-comp></product_feature-comp>
+					</list-comp>
+				</div>
+
+				<div class="mt5">
+					<div class="sticky_subheader mb2">
 						<span class="medium bold"> Zdjęcia (<span html="{${data.images.length}}"></span>) </span>
 						<div class="hover_info">
 							Dodaj zdjęcia produktu i ustaw je w kolejności zaczynając od zdjęcia głównego. Dodatkowo możesz powiązać każde z nich z
@@ -802,22 +818,6 @@ function ProductComp(comp, parent, data = undefined) {
 
 					<list-comp class="wireframe space" data-bind="{${data.images}}" data-primary="product_img_id">
 						<product_img-comp></product_img-comp>
-					</list-comp>
-				</div>
-
-				<div class="mt5">
-					<div class="sticky_subheader mb2">
-						<span class="medium bold"> Cechy (<span html="{${data.features.length}}"></span>) </span>
-						<div class="hover_info">
-							Uzupełnij każdą z cech produktu (np. producenta, kolor, rozmiar). Dzieki temu klient sprawniej odnajdzie produkt.
-						</div>
-						<button data-node="{${comp._nodes.add_feature_btn}}" class="btn primary small ml1">
-							Dodaj cechy <i class="fas fa-plus"></i>
-						</button>
-					</div>
-
-					<list-comp class="wireframe space separate light_gray_rows" data-bind="{${data.features}}" data-primary="product_feature_id">
-						<product_feature-comp></product_feature-comp>
 					</list-comp>
 				</div>
 
