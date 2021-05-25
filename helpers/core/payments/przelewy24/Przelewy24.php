@@ -102,6 +102,59 @@ class Przelewy24
 
         return self::$p24;
     }
+
+    private static function callUrlJson($url, $data_string)
+    {
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($ch, CURLOPT_USERPWD, def(self::$settings, "p24_pos_id") . ":" . def(self::$settings, "p24_reports_key"));
+
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
+    public function refund($shop_order_id)
+    {
+        return;
+        $shop_order = EntityManager::getEntityById("shop_order", $shop_order_id);
+
+        // TODO: ofc check if refunded already and so on
+
+        $data_string = json_encode([
+            'requestId' => randomString(45),
+            'refundsUuid' => randomString(35),
+            'refunds' => [
+                [
+                    // "orderId" => $zamowienie_data["p24_order_id"],
+                    // "sessionId" => $zamowienie_data["session_id"],
+                    "amount" => round($shop_order->getProp("products_price") * 100),
+                    "description" => "Zwrot"
+                ]
+            ]
+        ]);
+
+        $call_url = "https://" . (secret("p24_testMode") ? "sandbox" : "secure") . ".przelewy24.pl/api/v1/transaction/refund";
+        $res = self::callUrlJson($call_url, $data_string);
+
+        $success = json_decode($res, true)["responseCode"] === 0;
+
+        if ($success) {
+            // TODO: create refund object
+            //query("UPDATE zamowienia SET p24_refunded = 1 WHERE zamowienie_id = ?", [$zamowienie_data["zamowienie_id"]]);
+        } else {
+            $detail = $call_url . " //// CURLOPT_USERPWD: " . secret("p24_posId") . ":" . secret("p24_reports_key") . " !!!! " . $data_string . " ====>>>> " . $res;
+            sendEmail("wojtekwo997@gmail.com", $detail, "Błąd zwrotu");
+        }
+    }
+
+
     /** WO997 END */
 
     /**

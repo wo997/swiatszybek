@@ -248,5 +248,8 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         $email_body .= "<div>Zapraszamy na <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejne zakupy</a>.</div>\n";
 
         sendDefaultEmail($main_address->getProp("email"), $email_body, $email_title, $main_address->getProp("__display_name"));
+
+        // TODO: just do it
+        Przelewy24::get()->refund($shop_order_id);
     }
 });

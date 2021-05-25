@@ -32,11 +32,14 @@
         <div class="label">Merchant ID</div>
         <input class="field" data-name="p24_merchant_id">
 
-        <div class="label">Pos ID</div>
+        <div class="label">Pos ID (jeśli brak - przepisz Merchant ID)</div>
         <input class="field" data-name="p24_pos_id">
 
         <div class="label">CRC</div>
         <input class="field" data-name="p24_crc">
+
+        <div class="label">Klucz do raportów (zwroty)</div>
+        <input class="field" data-name="p24_reports_key">
 
         <div class="label">Tryb testowy</div>
         <p-checkbox data-name="p24_test_mode"></p-checkbox>
