@@ -1415,6 +1415,14 @@ class PiepCMS {
 			}, 200);
 		});
 
+		document.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+
+			if (target._parent("a") && target._parent(this.content)) {
+				ev.preventDefault();
+			}
+		});
+
 		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
 

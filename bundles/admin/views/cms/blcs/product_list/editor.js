@@ -5,7 +5,6 @@
 		id: "product_list",
 		icon: html`<i class="fas fa-cubes"></i>`,
 		label: html`Lista produktów`,
-		nonclickable: true,
 		v_node: {
 			tag: "div",
 			id: -1,
