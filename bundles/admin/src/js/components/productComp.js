@@ -1002,7 +1002,7 @@ function ProductComp(comp, parent, data = undefined) {
 						general_product_id,
 					},
 					success: (res) => {
-						if (res.page_id) {
+						if (res && res.page_id) {
 							window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${res.page_id}`;
 						} else {
 							window.location.href = `${STATIC_URLS["ADMIN"]}/strony?utworz&general_product_id=${general_product_id}`;

@@ -210,7 +210,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 					},
 					success: (res) => {
 						hideLoader();
-						if (!res.page_id) {
+						if (!res || res.page_id) {
 							alert("Wystąpił błąd krytyczny");
 							return;
 						}

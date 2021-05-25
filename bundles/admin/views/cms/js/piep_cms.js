@@ -467,20 +467,6 @@ class PiepCMS {
 			this.redo_btn.addEventListener("click", () => {
 				this.redoHistory();
 			});
-			// document.addEventListener("keydown", (ev) => {
-			//     if (!history_comp_focus) {
-			//         return;
-			//     }
-
-			//     if (ev.key && ev.ctrlKey) {
-			//         if (ev.key.toLowerCase() == "z") {
-			//             ev.preventDefault();
-			//         }
-			//         if (ev.key.toLowerCase() == "y") {
-			//             ev.preventDefault();
-			//         }
-			//     }
-			// });
 		}
 
 		this.history_steps_back = 0;
@@ -1620,13 +1606,25 @@ class PiepCMS {
 						}
 					}
 
-					if (ev.ctrlKey && ev.key === "c") {
-						ev.preventDefault();
+					const lower_key = ev.key.toLocaleLowerCase();
 
-						const range = document.createRange();
-						range.setStart(getTextNode(this.getNode(this.text_selection.anchor_vid)), this.text_selection.anchor_offset);
-						range.setEnd(getTextNode(this.getNode(this.text_selection.focus_vid)), this.text_selection.focus_offset);
-						copyRangeToClipboard(range);
+					if (ev.ctrlKey) {
+						if (lower_key === "c") {
+							ev.preventDefault();
+
+							const range = document.createRange();
+							range.setStart(getTextNode(this.getNode(this.text_selection.anchor_vid)), this.text_selection.anchor_offset);
+							range.setEnd(getTextNode(this.getNode(this.text_selection.focus_vid)), this.text_selection.focus_offset);
+							copyRangeToClipboard(range);
+						}
+						if (lower_key == "z") {
+							ev.preventDefault();
+							this.undoHistory();
+						}
+						if (lower_key == "y") {
+							ev.preventDefault();
+							this.redoHistory();
+						}
 					}
 				}
 				if (ev.key === "Backspace") {
