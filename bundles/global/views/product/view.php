@@ -507,6 +507,16 @@ foreach ($general_product_products as $product) {
 
 endSection();
 
-renderPage($page_data["page_id"], ["default_seo_title" => $general_product_data["name"]]);
+renderPage(
+    $page_data["page_id"],
+    [
+        "default_seo_title" => $general_product_data["name"],
+        "admin_edit_btn" => "<a href=\"" . Request::$static_urls["ADMIN"] . "/produkt/$general_product_id\" class=\"xbutton\">
+            <span>Edytuj produkt</span>
+            <i class=\"fas fa-cube\"></i>
+        </a>"
+    ]
+);
+
 
 ?>

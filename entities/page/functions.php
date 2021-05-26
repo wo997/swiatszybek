@@ -418,6 +418,7 @@ function renderPage($page_id, $data = [])
                 <span>Edytuj stronę</span>
                 <i class="fas fa-cog"></i>
             </a>
+            <?= def($data, ["admin_edit_btn"], "")  ?>
         </div>
 
         <style>
