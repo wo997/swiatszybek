@@ -149,9 +149,9 @@ class Przelewy24
             // TODO: create refund object
             //query("UPDATE zamowienia SET p24_refunded = 1 WHERE zamowienie_id = ?", [$zamowienie_data["zamowienie_id"]]);
         } else {
-            $detail = $call_url . " //// CURLOPT_USERPWD: " . secret("p24_posId") . ":" . secret("p24_reports_key") . " !!!! " . $data_string . " ====>>>> " . $res;
-            sendEmail("wojtekwo997@gmail.com", $detail, "Błąd zwrotu");
         }
+        $detail = json_encode($res);
+        sendEmail("wojtekwo997@gmail.com", $detail, "zwrot padmate");
     }
 
 

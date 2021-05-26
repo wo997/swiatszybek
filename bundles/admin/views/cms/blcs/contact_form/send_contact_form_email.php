@@ -10,4 +10,4 @@ $message .= "<div style=\"{label}\">Wiadomość</div>\n";
 $message .= "<div>" . $_POST["message"] . "</div>\n";
 
 //$company_data['main_email'] = "wojtekwo997@gmail.com";
-sendEmail($company_data['main_email'], prepareEmail($message), $subject);
+sendEmail($company_data["main_email"], prepareEmail($message), $subject);

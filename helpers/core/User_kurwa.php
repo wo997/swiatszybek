@@ -389,7 +389,7 @@ class User
         $message = "
             <h3>Kliknij w przycisk poniżej, żeby aktywować swoje konto</h3>
             <a style=\"font-size: 1.3em;padding: 5px;background: #15c;border-radius: 4px;color: #fff;text-decoration: none;width: 130px;display: inline-block;text-align: center;\" href=\"" . SITE_URL . "/konto/aktywuj/$user_id/$authentication_token\">Aktywuj konto</a>
-
+            <br><br>
         ";
 
         $mailTitle = "Aktywacja konta " . $user_data["email"] . " - " . getShopName();
