@@ -32,7 +32,13 @@ function getPhysicalMeasures()
         "none" => [
             "description" => "Brak / Ilość",
             "base_unit" => "",
-            "units" => []
+            "units" => [
+                // [
+                //     "id" => "",
+                //     "name" => "",
+                //     "factor" => 1
+                // ]
+            ]
         ],
         "weight" => [
             "description" => "Waga",
@@ -210,18 +216,15 @@ function getPhysicalMeasureUnit($unit_id)
  * prettyPrintPhysicalMeasure
  *
  * @param  float $double_value
- * @param  string $physical_measure
+ * @param  array $units
  * @return PrettyPhysicalMeasureData
  */
-function prettyPrintPhysicalMeasure($double_value, $physical_measure)
+function prettyPrintPhysicalMeasure($double_value, $units)
 {
-    $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-
-    if ($physical_measure_data) {
-        $units = $physical_measure_data["units"];
-        //usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]);
+    if ($units && isset($units[0])) {
+        //usort($units, fn ($a, $b) => $a["factor"] <=> $b["factor"]); // sorted already
         $target_unit = $units[0];
-        foreach ($units as  $unit) {
+        foreach ($units as $unit) {
             if ($unit["factor"] >= $double_value + 0.000001) {
                 break;
             }
@@ -236,7 +239,11 @@ function prettyPrintPhysicalMeasure($double_value, $physical_measure)
         ];
     }
 
-    return $double_value;
+    return [
+        "value" => $double_value,
+        "unit_name" => "",
+        "unit_id" => "",
+    ];
 }
 
 function getAllProductFeatures()

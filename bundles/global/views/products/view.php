@@ -144,7 +144,7 @@ function traverseFeatures()
 {
     global $where_products_0;
 
-    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type, extra FROM product_feature ORDER BY pos ASC");
+    $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type, extra, units_json FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
         return "";
     }
@@ -157,6 +157,7 @@ function traverseFeatures()
         "physical_measure" => "price",
         "list_type" => "",
         "extra" => "[]",
+        "units_json" => "[]"
     ];
 
     foreach ($product_features as $product_feature) {
@@ -178,16 +179,22 @@ function traverseFeatures()
                     $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
                 } else {
-                    // $double_values = DB::fetchArr("SELECT double_value as v, JSON_ARRAYAGG(product_id) as i FROM product_feature_option
-                    //     INNER JOIN product_to_variant_option USING(product_id) ptfo USING(product_feature_option_id)
-                    //     INNER JOIN product p USING(product_id)
-                    //     WHERE product_feature_id = $product_feature_id AND $where_products_0 GROUP BY double_value ORDER BY double_value DESC");
+
+                    // $double_values = DB::fetchArr("SELECT pfo.double_value as v, JSON_ARRAYAGG(product_id) as i FROM product p
+                    //     INNER JOIN product_to_variant_option ptvo USING(product_id)
+                    //     INNER JOIN product_variant_option_to_feature_option pvotfo USING (product_variant_option_id)
+                    //     INNER JOIN product_feature_option pfo USING(product_feature_option_id)
+                    //     WHERE pfo.product_feature_id = $product_feature_id AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
+
+                    // seems to be correct but hidden temporarily
 
                     $double_values = DB::fetchArr("SELECT pfo.double_value as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         INNER JOIN product_to_variant_option ptvo USING(product_id)
-                        INNER JOIN product_variant_option_to_feature_option USING (product_variant_option_id)
-                        INNER JOIN product_feature_option pfo USING(product_feature_option_id)
-                        WHERE pfo.product_feature_id = $product_feature_id AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
+                        INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
+                        INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
+                        INNER JOIN product_feature_option pfo ON pvotfo.product_feature_option_id = pfo.product_feature_option_id OR gptfo.product_feature_option_id = pfo.product_feature_option_id
+                        WHERE (pfo.product_feature_id = $product_feature_id OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id = $product_feature_id))
+                        AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
                 }
 
                 // $time = microtime(true);
@@ -212,8 +219,23 @@ function traverseFeatures()
 
                 $physical_measure = $product_feature["physical_measure"];
 
-                $pretty_min = prettyPrintPhysicalMeasure($min_value, $physical_measure);
-                $pretty_max = prettyPrintPhysicalMeasure($max_value, $physical_measure);
+                $units = json_decode($product_feature["units_json"], true);
+                $unit_ids = $units ? array_column($units, "id") : [];
+
+                $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
+
+                if ($physical_measure_data) {
+                    if ($unit_ids) {
+                        $units = array_values(array_filter($physical_measure_data["units"], fn ($u) => in_array($u["id"], $unit_ids)));
+                    } else {
+                        $units = $physical_measure_data["units"];
+                    }
+                } else {
+                    $units = [];
+                }
+
+                $pretty_min = prettyPrintPhysicalMeasure($min_value, $units);
+                $pretty_max = prettyPrintPhysicalMeasure($max_value, $units);
 
                 $feature_label .= " ($pretty_min[value] $pretty_min[unit_name] - $pretty_max[value] $pretty_max[unit_name])";
 
@@ -234,12 +256,12 @@ function traverseFeatures()
                     $value = $double_value["v"];
                     $max = def($double_value, "max", 0);
                     $count = $double_value["c"];
-                    $pretty_val_data = prettyPrintPhysicalMeasure($value, $physical_measure);
+                    $pretty_val_data = prettyPrintPhysicalMeasure($value, $units);
                     $pretty_val = "$pretty_val_data[value] $pretty_val_data[unit_name]";
                     $search_value = "$pretty_val_data[value]$pretty_val_data[unit_id]";
                     $add_unit($unit_map, $pretty_val_data["unit_id"]);
                     if ($max) {
-                        $max_pretty_val_data = prettyPrintPhysicalMeasure($max, $physical_measure);
+                        $max_pretty_val_data = prettyPrintPhysicalMeasure($max, $units);
                         $pretty_val .= " - $max_pretty_val_data[value] $max_pretty_val_data[unit_name]";
                         $search_value .= "_do_$max_pretty_val_data[value]$max_pretty_val_data[unit_id]";
                         $add_unit($unit_map, $max_pretty_val_data["unit_id"]);
