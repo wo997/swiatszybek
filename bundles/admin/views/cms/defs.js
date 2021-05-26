@@ -1,5 +1,14 @@
 /**
  * @typedef {{
+ * v_dom: vDomNode[]
+ * text_selection: PiepTextSelection
+ * focus_vid: number
+ * resolution: string
+ * }} PiepCMSEditHistory
+ */
+
+/**
+ * @typedef {{
  * id: number
  * tag: string
  * text?: string

@@ -10,8 +10,8 @@ class PiepCMS {
 
 		/** @type {vDomNode[]} */
 		this.v_dom = [];
-		/** @type {vDomNode[][]} */
-		this.v_dom_history = [];
+		/** @type {PiepCMSEditHistory[]} */
+		this.edit_history = [];
 
 		this.max_vid_inside = 0;
 
@@ -470,7 +470,7 @@ class PiepCMS {
 		}
 
 		this.history_steps_back = 0;
-		this.v_dom_history = [];
+		this.edit_history = [];
 		this.pushHistory("");
 	}
 
@@ -479,17 +479,22 @@ class PiepCMS {
 	 * @param {string} name
 	 */
 	pushHistory(name) {
-		if (this.history_change_name && this.history_change_name === name && this.v_dom_history.length > 1) {
-			this.v_dom_history.splice(this.v_dom_history.length - 1, 1);
+		if (this.history_change_name && this.history_change_name === name && this.edit_history.length > 1) {
+			this.edit_history.splice(this.edit_history.length - 1, 1);
 		}
 
-		this.v_dom_history.splice(this.v_dom_history.length - this.history_steps_back, this.history_steps_back);
+		this.edit_history.splice(this.edit_history.length - this.history_steps_back, this.history_steps_back);
 		this.history_steps_back = 0;
 
-		if (this.v_dom_history.length > 0 && isEquivalent(this.v_dom_history[this.v_dom_history.length - 1], this.v_dom)) {
+		if (this.edit_history.length > 0 && isEquivalent(this.edit_history[this.edit_history.length - 1].v_dom, this.v_dom)) {
 			return;
 		}
-		this.v_dom_history.push(cloneObject(this.v_dom));
+		this.edit_history.push({
+			text_selection: cloneObject(this.text_selection),
+			v_dom: cloneObject(this.v_dom),
+			focus_vid: this.focus_node_vid,
+			resolution: this.select_resolution._get_value(),
+		});
 		this.renderHistory();
 
 		clearTimeout(this.forgetHistoryChangeName);
@@ -507,23 +512,24 @@ class PiepCMS {
 		this.setDataFromHistory();
 	}
 	undoHistory() {
-		this.history_steps_back = Math.min(this.history_steps_back + 1, this.v_dom_history.length - 1);
+		this.history_steps_back = Math.min(this.history_steps_back + 1, this.edit_history.length - 1);
 		this.setDataFromHistory();
 	}
 
 	setDataFromHistory() {
-		this.v_dom = cloneObject(this.v_dom_history[this.v_dom_history.length - 1 - this.history_steps_back]);
+		const history_entry = this.edit_history[this.edit_history.length - 1 - this.history_steps_back];
+		this.v_dom = cloneObject(history_entry.v_dom);
+		this.text_selection = cloneObject(history_entry.text_selection);
 		this.update({ all: true });
 		this.renderHistory();
-		this.setFocusNode(undefined);
-		//this.removeEditorSelection();
-
-		this.text_selection = undefined;
-		this.displayTextSelection({ force: true });
+		this.setFocusNode(history_entry.focus_vid);
+		if (history_entry.resolution !== this.select_resolution._get_value()) {
+			this.select_resolution._set_value(history_entry.resolution);
+		}
 	}
 
 	renderHistory() {
-		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.v_dom_history.length - 1);
+		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.edit_history.length - 1);
 		this.redo_btn.toggleAttribute("disabled", this.history_steps_back === 0);
 
 		//this.displayTextSelection();
