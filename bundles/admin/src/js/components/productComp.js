@@ -108,7 +108,6 @@ function ProductComp(comp, parent, data = undefined) {
 			product_list_view: "active",
 			product_type: "normal",
 		};
-		console.log(cloneObject(data));
 	}
 
 	// product_list_view: "active",

@@ -52,9 +52,11 @@ function Product_FeatureOptionComp(
 				});
 
 				if (data.data_type === "double_value") {
+					const product_feature = product_features.find((pf) => pf.product_feature_id === data.product_feature_id);
 					const physical_measure_data = physical_measures[data.physical_measure];
 					if (physical_measure_data && physical_measure_data.units && physical_measure_data.units.length > 0) {
 						const options = physical_measure_data.units
+							.filter((unit) => product_feature.units.find((u) => u.id === unit.id))
 							.map((unit) => {
 								return html`<option value="${unit.id}">${unit.name}</option>`;
 							})
@@ -180,6 +182,10 @@ function Product_FeatureOptionComp(
 					pfoi.splice(to, 0, ...temp);
 				}
 				product_comp._render();
+			});
+
+			window.addEventListener("product_features_changed", () => {
+				comp._render({ force_render: true });
 			});
 
 			window.addEventListener("modify_product_features", (ev) => {
