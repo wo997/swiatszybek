@@ -96,7 +96,11 @@ $modules_html["main_menu_html"] = ob_get_clean();
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
         <span class="title breadcrumbs mr0"></span>
-        <button class="btn transparent edit_seo_btn small semi_medium bold">
+        <button class="btn transparent small semi_medium bold edit_pageable_btn">
+            Edytuj
+            <i class="fas fa-cog"></i>
+        </button>
+        <button class="btn transparent small semi_medium bold edit_seo_btn">
             SEO
             <span class="seo_state_icon"></span>
         </button>

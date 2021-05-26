@@ -69,9 +69,7 @@ domload(() => {
 		const page_type = page_data.page_type;
 
 		if (page_type === "general_product") {
-			breadcrumbs += html`
-				<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj stronę">${page_data.general_product.name}</button>
-			`;
+			breadcrumbs += html` <button class="btn transparent crumb">${page_data.general_product.name}</button> `;
 			$(".piep_editor_header").insertAdjacentHTML(
 				"beforeend",
 				html`
@@ -85,9 +83,7 @@ domload(() => {
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
 			breadcrumbs += html`
-				<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj stronę">
-					${location.host}${page_data.url ? "/" : ""}<span class="current_page_url">${page_data.url}</span>
-				</button>
+				<div class="crumb">${location.host}${page_data.url ? "/" : ""}<span class="current_page_url">${page_data.url}</span></div>
 			`;
 			preview_url = "/" + page_data.url;
 		}
@@ -99,9 +95,7 @@ domload(() => {
 			<i class="fas fa-chevron-right"></i>
 		`;
 
-		breadcrumbs += html`
-			<button class="btn transparent crumb edit_pageable_btn" data-tooltip="Edytuj szablon">${template_data.name}</button>
-		`;
+		breadcrumbs += html` <button class="btn transparent crumb">${template_data.name}</button> `;
 
 		// preview_url = template_data.???; // make sure that anything exists that extends that template? well, maybe in case of products, otherwise disable
 	}

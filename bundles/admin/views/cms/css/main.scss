@@ -124,6 +124,10 @@
 			display: none !important;
 		}
 	}
+
+	.edit_pageable_btn {
+		--btn-font-clr: var(--clr_primary);
+	}
 }
 
 .piep_editor_alternative_scroll_panel {
