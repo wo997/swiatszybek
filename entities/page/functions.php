@@ -416,7 +416,7 @@ function renderPage($page_id, $data = [])
             </button>
             <a href="<?= Request::$static_urls["ADMIN"] ?>/strona?nr_strony=<?= $page_id ?>" class="xbutton">
                 <span>Edytuj stronę</span>
-                <i class="fas fa-cog"></i>
+                <i class="fas fa-file-alt"></i>
             </a>
             <?= def($data, ["admin_edit_btn"], "")  ?>
         </div>
