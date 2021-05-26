@@ -594,7 +594,9 @@ function initProductCommentsCallback() {
 			first_label.classList.add("first");
 		}
 
-		addComment._child(".submit_btn").addEventListener("click", () => {
+		addComment._child("form").addEventListener("submit", (ev) => {
+			ev.preventDefault();
+
 			const rating = +def(rating_picker.dataset.rating, "");
 			const nickname_input = addComment._child(".nickname");
 			const nickname = nickname_input._get_value();

@@ -18,12 +18,7 @@
 		},
 		rerender_on: [],
 		render: (v_node) => {
-			// let body = def(
-			// 	modules_html.view_product_comments,
-			// 	html`<div class="empty_module" data-container_queries="">Komentarze produktu</div>`
-			// );
-			let body = html`<div class="empty_module" data-container_queries="">Komentarze produktu</div>`;
-			return body;
+			return html`<div class="empty_module" data-container_queries="">Komentarze produktu</div>`;
 		},
 	});
 }

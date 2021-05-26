@@ -41,6 +41,8 @@ function traverseVDom($v_dom, $options = [])
         } else if (isset($v_node["children"])) {
             $sub_data = traverseVDom($v_node["children"], $options);
             $body .= $sub_data["content_html"];
+            $styles_css .= $sub_data["styles_css"];
+            $scripts_js .= $sub_data["scripts_js"];
 
             foreach (Theme::$responsive_breakpoints as $res_name => $width) {
                 // we will put styles in here yay
@@ -321,8 +323,10 @@ function renderPage($page_id, $data = [])
         $dom_data = traverseVDom($v_dom);
         $preview_css = $dom_data["styles_css"];
         $preview_css .= getPageCss($dom_data["styles_css_responsive"]);
+        $preview_js = $dom_data["scripts_js"];
     } else {
         $preview_css = null;
+        $preview_js = null;
     }
 
     $shop_name = getShopName();
@@ -391,7 +395,13 @@ function renderPage($page_id, $data = [])
         }
         ?>
 
-        <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
+        <?php if ($preview_js) : ?>
+            <script>
+                <?= $preview_js ?>
+            </script>
+        <?php else : ?>
+            <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
+        <?php endif ?>
     </div>
 
     <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>

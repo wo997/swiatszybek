@@ -65,6 +65,6 @@ PiepCMSManager::registerModule([
 
         return ob_get_clean();
     },
-    "js_path" => BUILDS_PATH . "modules/product_list.js",
-    "css_path" => BUILDS_PATH . "modules/product_list.css",
+    // "js_path" => BUILDS_PATH . "modules/product_list.js",
+    // "css_path" => BUILDS_PATH . "modules/product_list.css",
 ]);

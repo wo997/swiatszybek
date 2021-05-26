@@ -112,6 +112,22 @@ function showInputErrors(input, errors) {
  */
 function clearInputErrors(input) {
 	showInputErrors(input, []);
+
+	const pretty_errors = input._next();
+	if (pretty_errors && pretty_errors.classList.contains("pretty_errors")) {
+		pretty_errors.classList.remove("correct");
+		pretty_errors.classList.remove("wrong");
+	}
+}
+
+/**
+ *
+ * @param {PiepNode[]} inputs
+ */
+function clearInputsErrors(inputs) {
+	inputs.forEach((input) => {
+		clearInputErrors(input);
+	});
 }
 
 /**
@@ -258,6 +274,7 @@ function getInputValidationErrors(input) {
 }
 
 function validateEmail(email) {
-	const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	const re =
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	return re.test(String(email).toLowerCase());
 }

@@ -470,7 +470,7 @@ if ($main_img) {
             </h3>
 
             <div class="scroll_panel scroll_shadow panel_padding">
-                <div>
+                <form>
                     <div class="variants_container">
                         <?= $variants_less_html ?>
                     </div>
@@ -491,9 +491,8 @@ if ($main_img) {
                         <textarea class="field comment scroll_panel" style="height:150px;min-height:80px;"></textarea>
                     </label>
 
-                    <button class="btn primary submit_btn">Wyślij <i class="fas fa-paper-plane"></i></button>
-
-                </div>
+                    <button class="btn primary submit_btn fill mt2" type="submit">Wyślij <i class="fas fa-paper-plane"></i></button>
+                </form>
             </div>
         </div>
     </div>

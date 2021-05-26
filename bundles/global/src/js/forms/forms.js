@@ -117,15 +117,3 @@ function registerForms(parent = undefined) {
 		})
 	);
 }
-
-/**
- *
- * @param {PiepNode} form
- */
-function submitForm(form) {
-	const submit_btn = form._child(".submit_btn");
-	if (submit_btn) {
-		submit_btn.click();
-	}
-	return false;
-}

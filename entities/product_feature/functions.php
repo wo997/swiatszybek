@@ -69,6 +69,10 @@ function getPhysicalMeasures()
                     "id" => "cm",
                     "name" => "cm",
                     "factor" => 0.01
+                ],  [
+                    "id" => "cal",
+                    "name" => "\"",
+                    "factor" => 0.0254
                 ], [
                     "id" => "m",
                     "name" => "m",
@@ -148,6 +152,25 @@ function getPhysicalMeasures()
                 ],
             ]
         ],
+        "area" => [
+            "description" => "Pole powierzchni",
+            "base_unit" => "cm²",
+            "units" => [
+                [
+                    "id" => "mm2",
+                    "name" => "mm²",
+                    "factor" => 0.01
+                ], [
+                    "id" => "cm2",
+                    "name" => "cm²",
+                    "factor" => 1
+                ], [
+                    "id" => "m2",
+                    "name" => "m²",
+                    "factor" => 10000
+                ],
+            ]
+        ]
     ];
 }
 

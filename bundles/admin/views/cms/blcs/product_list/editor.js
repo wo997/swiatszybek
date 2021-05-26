@@ -14,9 +14,7 @@
 			module_name: "product_list",
 		},
 		rerender_on: ["settings.product_list_sort", "settings.product_list_category_ids_csv"],
-		render: (v_node) => {
-			return undefined;
-		},
+		backend_render: true,
 	});
 
 	piep_cms_manager.registerProp({

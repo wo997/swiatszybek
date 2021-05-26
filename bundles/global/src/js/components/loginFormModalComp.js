@@ -12,7 +12,6 @@
  * _data: LoginFormModalCompData
  * _set_data(data?: LoginFormModalCompData, options?: SetCompDataOptions)
  * _nodes: {
- *  login_btn: PiepNode
  *  email: PiepNode
  *  password: PiepNode
  *  password_visible_btn: PiepNode
@@ -52,7 +51,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 			</h3>
 
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div>
+				<form>
 					<div class="label first">E-mail</div>
 					<input
 						data-node="{${comp._nodes.email}}"
@@ -89,12 +88,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						</label>
 					</div>
 
-					<button
-						class="btn primary medium submit_btn"
-						style="margin:10px 0; width: 100%"
-						data-node="{${comp._nodes.login_btn}}"
-						type="submit"
-					>
+					<button class="btn primary medium" style="margin:10px 0; width: 100%" type="submit">
 						Zaloguj się <i class="fa fa-chevron-right"></i>
 					</button>
 
@@ -108,7 +102,7 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 
 					<!-- <div style="text-align: center;">lub</div> -->
 					<!-- <div class="g-signin2" data-onsuccess="onSignIn"></div> -->
-				</div>
+				</form>
 			</div>
 		`,
 		ready: () => {
@@ -117,7 +111,9 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 				comp._render();
 			});
 
-			comp._nodes.login_btn.addEventListener("click", () => {
+			comp._child("form").addEventListener("submit", (ev) => {
+				ev.preventDefault();
+
 				if (!validateInputs([comp._nodes.email, comp._nodes.password])) {
 					return;
 				}

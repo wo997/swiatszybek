@@ -211,28 +211,6 @@ cart-products-comp.has_products {
 	margin: 5px 0 15px;
 }
 
-.addComment {
-	.submit_btn {
-		width: 100% /*170px*/;
-		margin-left: auto;
-		margin-right: auto;
-		display: block;
-		margin-top: 10px;
-	}
-	@media (max-width: 699px) {
-		.submit_btn {
-			width: 100%;
-		}
-	}
-	.price_diff,
-	.price_diff_before {
-		display: none;
-	}
-	.count {
-		display: none;
-	}
-}
-
 .addComment,
 .notifyProductAvailable,
 .notifyProductSuccess {

@@ -2480,8 +2480,10 @@ class PiepCMS {
 					//console.log("removed node");
 				}
 
+				let just_created = false;
 				if (!node) {
 					node = $(document.createElement(v_node.tag));
+					just_created = true;
 					//console.log("new", node);
 				}
 
@@ -2554,7 +2556,7 @@ class PiepCMS {
 					}
 				}
 
-				if (blc_schema && blc_schema.render && blc_schema.rerender_on) {
+				if (blc_schema && (blc_schema.render || blc_schema.backend_render)) {
 					let render_props = {};
 					blc_schema.rerender_on.forEach((prop_str) => {
 						if (prop_str.startsWith("settings.")) {
@@ -2562,14 +2564,12 @@ class PiepCMS {
 						}
 					});
 
-					//console.log(render_props, this.last_map_vid_render_props[vid])
-					if (!isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
+					if (just_created || !isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
 						this.last_map_vid_render_props[vid] = render_props;
-						const html = blc_schema.render(v_node);
-						if (html === undefined) {
-							piep_cms_manager.requestRender(vid);
+						if (blc_schema.render) {
+							node._set_content(blc_schema.render(v_node));
 						} else {
-							node._set_content(html);
+							piep_cms_manager.requestRender(vid);
 						}
 					}
 
