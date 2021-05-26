@@ -405,7 +405,7 @@ function renderPage($page_id, $data = [])
     </div>
 
     <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
-        <div class="edit_page_menu">
+        <div class="edit_page_menu hidden">
             <button class="mla xbutton published" data-tooltip="Ukryj">
                 <span>Widoczna</span>
                 <i class='fas fa-eye'></i>
@@ -504,6 +504,8 @@ function renderPage($page_id, $data = [])
                 }
 
                 setPublished(<?= $page_data["active"] ?>);
+
+                $(".edit_page_menu").classList.remove("hidden");
             });
         </script>
     <?php endif ?>

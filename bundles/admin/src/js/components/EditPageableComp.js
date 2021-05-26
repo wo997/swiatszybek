@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * url?: string
+ * active?: number
  * }} EditPageableCompData
  *
  * @typedef {{
@@ -35,7 +36,11 @@ function EditPageableComp(comp, parent, data = undefined) {
 		$("#EditPageable .custom_toolbar .title")._set_content(is_template ? "Edycja szablonu" : "Edycja strony");
 		$("#EditPageable .node_delete_btn span")._set_content(is_template ? "Usuń szablon" : "Usuń stronę");
 
-		const case_page_page = !is_template && this_pageable_data.page_type === "page";
+		const case_page = !is_template;
+		comp._children(".case_page").forEach((child) => {
+			child.classList.toggle("hidden", !case_page_page);
+		});
+		const case_page_page = case_page && this_pageable_data.page_type === "page";
 		comp._children(".case_page_page").forEach((child) => {
 			child.classList.toggle("hidden", !case_page_page);
 		});
@@ -69,6 +74,23 @@ function EditPageableComp(comp, parent, data = undefined) {
 					<div class="case_page_page">
 						<div class="label">Link</div>
 						<input class="field" data-bind="{${data.url}}" />
+					</div>
+
+					<div class="case_page">
+						<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">
+							<div class="checkbox_area error">
+								<div>
+									<p-checkbox data-value="0"></p-checkbox>
+									<span class="semi_bold">Nieaktywna <i class="fas fa-eye-slash"></i></span>
+								</div>
+							</div>
+							<div class="checkbox_area success">
+								<div>
+									<p-checkbox data-value="1"></p-checkbox>
+									<span class="semi_bold">Aktywna <i class="fas fa-eye"></i></span>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div class="label">Pojawi się możliwość zmiany szablonu</div>
