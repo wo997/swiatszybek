@@ -239,7 +239,7 @@ function traverseFeatures()
 
                 $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\" class=\"double_value_quick_list\">";
 
-                setRangesFromLongDatasetWithIndices($double_values, 4);
+                setRangesFromLongDatasetWithIndices($double_values, 10);
 
                 $unit_map = [];
 
@@ -284,10 +284,8 @@ function traverseFeatures()
                     }
                 }
 
-                $physical_measure_data = def(getPhysicalMeasures(), $physical_measure);
-                if ($physical_measure_data) {
+                if ($units) {
                     $options = "";
-                    $units = $physical_measure_data["units"];
                     $unit_count = count($units);
                     for ($i = 0; $i < $unit_count; $i++) {
                         $unit = $units[$i];
