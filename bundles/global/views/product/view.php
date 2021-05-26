@@ -60,8 +60,6 @@ foreach ($general_product_products as &$product) {
 }
 unset($product);
 
-$stockSchema = true ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
-
 User::getCurrent()->last_viewed_products->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
@@ -148,43 +146,6 @@ $user_email = $user_data ? $user_data["email"] : "";
         // })
     <?php } ?>
 </script>
-
-<?php if ($general_product_data["cache_rating_count"] > 0) : ?>
-    <script type="application/ld+json">
-        {
-            "@context": "https://schema.org/",
-            "@type": "Product",
-            "name": "<?= htmlspecialchars($full_product_name) ?>",
-            "url": "<?= SITE_URL . "/" . Request::$url ?>",
-            "image": [
-                "<?= $general_product_data["img_url"] ?>"
-            ],
-            "description": "<?= $page_data["seo_description"] ?>",
-            "brand": {
-                "@type": "Thing",
-                "name": "<?= getShopName() ?>"
-            },
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": "<?= $general_product_data["__avg_rating"] ?>",
-                "reviewCount": "<?= $general_product_data["__rating_count"] ?>",
-                "bestRating": 5,
-                "worstRating": 0
-            },
-            "offers": {
-                "@type": "Offer",
-                "priceCurrency": "PLN",
-                "price": "<?= $general_product_data["price_min"] ?>",
-                "itemCondition": "https://schema.org/UsedCondition",
-                "availability": "<?= $stockSchema ?>",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "<?= getShopName() ?>"
-                }
-            }
-        }
-    </script>
-<?php endif ?>
 
 <?php startSection("view_product_images_variants_buy"); ?>
 
@@ -497,6 +458,50 @@ if ($main_img) {
         </div>
     </div>
 <?php endif ?>
+
+<?php
+foreach ($general_product_products as $product) {
+    $name = htmlspecialchars($product["__name"]);
+    $gross_price = $product["gross_price"];
+    $url = $product["__url"];
+    $img_url = $product["__img_url"];
+    $stockSchema = $product["stock"] > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
+?>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            "name": "<?= $name ?>",
+            "description": "<?= $page_data["seo_description"] ?>",
+            "image": [
+                "<?= $img_url ?>"
+            ],
+            "brand": {
+                "@type": "Thing",
+                "name": "<?= getShopName() ?>"
+            },
+            <?php if ($general_product_data["__rating_count"] > 0) : ?> "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "<?= $general_product_data["__avg_rating"] ?>",
+                    "reviewCount": "<?= $general_product_data["__rating_count"] ?>",
+                    "bestRating": 5,
+                    "worstRating": 0
+                },
+            <?php endif ?> "offers": {
+                "@type": "Offer",
+                "url": "<?= SITE_URL . $url ?>",
+                "priceCurrency": "PLN",
+                "price": "<?= $gross_price ?>",
+                "itemCondition": "https://schema.org/UsedCondition",
+                "availability": "<?= $stockSchema ?>",
+                "seller": {
+                    "@type": "Organization",
+                    "name": "<?= getShopName() ?>"
+                }
+            }
+        }
+    </script>
+<?php } ?>
 
 <?php
 
