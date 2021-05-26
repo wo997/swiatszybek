@@ -186,8 +186,6 @@ function traverseFeatures()
                     //     INNER JOIN product_feature_option pfo USING(product_feature_option_id)
                     //     WHERE pfo.product_feature_id = $product_feature_id AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
 
-                    // seems to be correct but hidden temporarily
-
                     $double_values = DB::fetchArr("SELECT pfo.double_value as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         INNER JOIN product_to_variant_option ptvo USING(product_id)
                         INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
@@ -369,16 +367,18 @@ $products_search_data = getGlobalProductsSearch(Request::$full_url);
 
 $products_search_data_0 = getGlobalProductsSearch(getProductCategoryLink($category_path));
 
-// it's important to split it cause when the where query gets thicc (fe. extended phrase search) we shouldnt repeat it but focus on already known ids
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-1";
 
-$options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, product_feature_option_id option_id
-    FROM product p 
+$options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, pfo.product_feature_option_id option_id
+    FROM product p INNER JOIN general_product
     INNER JOIN product_to_variant_option ptvo USING(product_id)
     INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
+    INNER JOIN general_product_to_feature_option gptfo ON gptfo.general_product_id = p.general_product_id
+    INNER JOIN product_feature_option pfo ON (pvotfo.product_feature_option_id = pfo.product_feature_option_id OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id = pfo.product_feature_option_id))
     WHERE $where_products_0
-    GROUP BY product_feature_option_id");
+    GROUP BY pfo.product_feature_option_id");
+
 usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
 
 $prices_data = DB::fetchRow("SELECT MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
