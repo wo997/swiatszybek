@@ -10,6 +10,8 @@
  * physical_measure?: string
  * list_type?: string
  * extra?: string
+ * units_json?: string
+ * units?: {id: string}[]
  * }} ProductFeatureData
  *
  */
@@ -50,6 +52,8 @@ function loadedProductFeatures() {
 		const data_type_data = feature_data_types[feature.data_type];
 
 		feature.options = "";
+		feature.units = [];
+
 		if (feature.data_type.endsWith("_list")) {
 			feature.options = product_feature_options
 				.filter((e) => e.product_feature_id === feature.product_feature_id)
@@ -60,9 +64,24 @@ function loadedProductFeatures() {
 				feature.options = data_type_data.description;
 			}
 
+			if (feature.units_json) {
+				try {
+					const units = JSON.parse(feature.units_json);
+					feature.units = units;
+				} catch (e) {}
+			}
+
 			const physical_measure_data = physical_measures[feature.physical_measure];
 			if (feature.physical_measure !== "none" && physical_measure_data) {
-				feature.options += ` (${physical_measure_data.description})`;
+				const feature_units_names = [];
+				feature.units.forEach((u) => {
+					const measure_unit = physical_measure_unit_map[u.id];
+					if (measure_unit) {
+						feature_units_names.push(measure_unit.name);
+					}
+				});
+
+				feature.options += ` (${physical_measure_data.description}) [${feature_units_names.join(", ")}]`;
 			}
 		}
 

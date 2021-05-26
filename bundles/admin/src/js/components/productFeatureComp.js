@@ -11,6 +11,7 @@
  * current_group_id: number
  * groups: any[]
  * extra?: string
+ * units?: ProductFeature_UnitCompData[]
  * }} ProductFeatureCompData
  *
  * @typedef {{
@@ -53,6 +54,7 @@ function ProductFeatureComp(comp, parent, data) {
 	data.extra = def(data.extra, "");
 
 	data.physical_measure = def(data.physical_measure, "none");
+	data.units = def(data.units, []);
 
 	/** @type {DatatableCompData} */
 	const dt = {
@@ -151,6 +153,7 @@ function ProductFeatureComp(comp, parent, data) {
 			physical_measure: data.physical_measure,
 			list_type: data.list_type,
 			extra: data.extra,
+			units_json: JSON.stringify(data.units.filter((u) => u.active).map((u) => ({ id: u.unit_id }))),
 		};
 
 		const is_list = comp._data.data_type.endsWith("_list");
@@ -224,10 +227,38 @@ function ProductFeatureComp(comp, parent, data) {
 			}
 		}
 
+		const is_list = data.data_type.endsWith("_list");
+		if (!is_list) {
+			const measure_data = physical_measures[data.physical_measure];
+			const measure_units = measure_data ? measure_data.units : [];
+
+			const product_feature = product_features.find((pf) => pf.product_feature_id === data.product_feature_id);
+			measure_units.forEach((measure_unit) => {
+				if (!data.units.find((feature_unit) => feature_unit.unit_id === measure_unit.id)) {
+					let active = 1;
+					if (product_feature) {
+						if (!product_feature.units.find((u) => u.id === measure_unit.id)) {
+							active = 0;
+						}
+					}
+					data.units.push({ active, unit_name: measure_unit.name, unit_id: measure_unit.id });
+				}
+			});
+
+			const missing_ids = [];
+			data.units.forEach((feature_unit) => {
+				if (!measure_units.find((measure_unit) => measure_unit.id === feature_unit.unit_id)) {
+					missing_ids.push(feature_unit.unit_id);
+				}
+			});
+			if (missing_ids.length > 0) {
+				data.units = data.units.filter((feature_unit) => !missing_ids.includes(feature_unit.unit_id));
+			}
+		}
+
 		setCompData(comp, data, {
 			...options,
 			render: () => {
-				const is_list = data.data_type.endsWith("_list");
 				expand(comp._nodes.options_wrapper, is_list);
 
 				const is_double_value = data.data_type === "double_value";
@@ -323,7 +354,7 @@ function ProductFeatureComp(comp, parent, data) {
 			</select>
 
 			<div class="expand_y" data-node="{${comp._nodes.physical_measures_wrapper}}">
-				<div class="label">Miara fizyczna (jednostki)</div>
+				<div class="label">Miara fizyczna</div>
 				<select class="field" data-bind="{${data.physical_measure}}">
 					${Object.entries(physical_measures)
 						.map(([name, measure_data]) => {
@@ -335,6 +366,11 @@ function ProductFeatureComp(comp, parent, data) {
 						})
 						.join("")}
 				</select>
+
+				<div class="label">Jednostki</div>
+				<list-comp data-bind="{${data.units}}" class="wireframe space">
+					<product-feature_unit-comp></product-feature_unit-comp>
+				</list-comp>
 			</div>
 
 			<div class="expand_y" data-node="{${comp._nodes.options_wrapper}}">

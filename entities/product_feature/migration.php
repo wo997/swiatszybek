@@ -8,6 +8,7 @@ DB::createTable("product_feature", [
     ["name" => "physical_measure", "type" => "VARCHAR(255)"],
     ["name" => "list_type", "type" => "VARCHAR(255)"],
     ["name" => "extra", "type" => "VARCHAR(255)"],
+    ["name" => "units_json", "type" => "TEXT"],
 ]);
 
 DB::createTable("general_product_to_feature", [

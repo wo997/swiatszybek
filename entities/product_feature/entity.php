@@ -10,6 +10,7 @@ EntityManager::register("product_feature", [
         "physical_measure" => ["type" => "string"],
         "list_type" => ["type" => "string"],
         "extra" => ["type" => "string"],
+        "units_json" => ["type" => "string"],
     ],
 ]);
 

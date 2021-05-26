@@ -88,7 +88,7 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 				empty_html: html`Brak opcji`,
 				label: "Opcje",
 				after_label: html`<button
-					class="add_feature_option_btn btn primary"
+					class="add_feature_option_btn btn primary small"
 					data-tooltip="W przypadku gdy nie widzisz takiej opcji na liście"
 				>
 					Dodaj <i class="fas fa-plus"></i>
@@ -165,8 +165,9 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 							if (!product_comp._data.product_feature_option_ids.includes(option_id)) {
 								product_comp._data.product_feature_option_ids.push(option_id);
 
-								const product_feature_id = product_feature_options.find((opt) => opt.product_feature_option_id === option_id)
-									.product_feature_id;
+								const product_feature_id = product_feature_options.find(
+									(opt) => opt.product_feature_option_id === option_id
+								).product_feature_id;
 
 								if (!product_comp._data.product_feature_ids.includes(product_feature_id)) {
 									product_comp._data.product_feature_ids.push(product_feature_id);
