@@ -1194,13 +1194,6 @@ class PiepCMS {
 					if (input._parent(this.float_menu)) {
 						this.content_active = true;
 					}
-					//this.setFocusNode(this.text_selection.focus_vid);
-
-					// const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-					// if (focus_v_node_data && this.isTextable(focus_v_node_data.v_node)) {
-					// 	this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
-					// }
-					// this.text_selection = undefined; // maybe leave it if there was just one thing selected
 				}
 
 				this.pushHistory(`set_blc_prop_${prop_str}`);
@@ -2259,13 +2252,6 @@ class PiepCMS {
 				/** @type {vDomNode[]} */
 				const crumb_v_nodes = [v_node_data.v_node, ...v_node_data.parent_v_nodes];
 
-				// if (this.text_selection) {
-				// 	const focus_node = this.getVNodeById(this.text_selection.focus_vid);
-				// 	if (focus_node) {
-				// 		crumb_v_nodes.unshift(focus_node);
-				// 	}
-				// }
-
 				crumb_v_nodes.reverse();
 
 				selection_breadcrumbs_html =
@@ -3249,6 +3235,7 @@ class PiepCMS {
 	}
 
 	editLayout() {
+		// layout edit is not allowed on textables, need to select text container ;)
 		// const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
 		// if (this.isTextable(focus_v_node_data.v_node)) {
 		// 	this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
@@ -3578,14 +3565,6 @@ class PiepCMS {
 		return !!v_node.tag.match(piep_cms_manager.match_text_containers);
 	}
 
-	// /**
-	//  *
-	//  * @param {vDomNode} v_node
-	//  */
-	// isBasicTextContainer(v_node) {
-	// 	return !!v_node.tag.match(piep_cms_manager.match_basic_text_containers);
-	// }
-
 	/**
 	 *
 	 * @param {vDomNode} v_node
@@ -3593,35 +3572,6 @@ class PiepCMS {
 	isTextable(v_node) {
 		return !!v_node.tag.match(piep_cms_manager.match_textables);
 	}
-
-	// /**
-	//  *
-	//  * @param {*} vid
-	//  * @param {{
-	//  * basic?: boolean
-	//  * }} options
-	//  * @returns
-	//  */
-	// getParentTextContainerId(vid, options = {}) {
-	// 	const v_node_data = this.getVNodeDataById(vid);
-	// 	const v_node = v_node_data.v_node;
-	// 	if (this.isTextContainer(v_node)) {
-	// 		return v_node.id;
-	// 	}
-	// 	const parent_v_node = v_node_data.parent_v_nodes[0];
-	// 	if (parent_v_node) {
-	// 		if (options.basic) {
-	// 			if (this.isBasicTextContainer(parent_v_node)) {
-	// 				return parent_v_node.id;
-	// 			}
-	// 		} else {
-	// 			if (this.isTextContainer(parent_v_node)) {
-	// 				return parent_v_node.id;
-	// 			}
-	// 		}
-	// 	}
-	// 	return undefined;
-	// }
 
 	/**
 	 * @param {number} vid
@@ -4267,9 +4217,7 @@ class PiepCMS {
 		const from_vids = [];
 
 		if (this.text_selection) {
-			from_vids.push(...this.text_selection.middle_vids);
-			from_vids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
-			from_vids.push(this.text_selection.focus_vid);
+			from_vids.push(...this.getAllTextSelectionVids());
 		} else {
 			if (this.focus_node_vid !== undefined) {
 				from_vids.push(this.focus_node_vid);
@@ -4289,12 +4237,6 @@ class PiepCMS {
 			if (this.isTextable(v_node)) {
 				from_v_nodes.push(v_node_data.parent_v_nodes[0]);
 			}
-			// if (this.isTextContainer(v_node)) {
-			// 	const children = v_node_data.v_node.children;
-			// 	if (children) {
-			// 		from_v_nodes.push(...children);
-			// 	}
-			// }
 
 			from_v_nodes.push(v_node);
 		});
@@ -4317,6 +4259,8 @@ class PiepCMS {
 					// 		continue;
 					// 	}
 					// } else
+
+					// only textables propagate things like text container tag name or text alignment
 					if (this.isTextable(v_node)) {
 						if (is_text_container_prop) {
 							continue;
@@ -4547,12 +4491,12 @@ class PiepCMS {
 					float_focuses_html += html`<div
 						class="focus_rect"
 						style="
-                        left:${focus_node_rect.left - 1}px;
-                        top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
-                        width:${focus_node_rect.width + 2}px;
-                        height:${focus_node_rect.height + 2}px;
-                        opacity:${show_node.opacity};
-                "
+                            left:${focus_node_rect.left - 1}px;
+                            top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
+                            width:${focus_node_rect.width + 2}px;
+                            height:${focus_node_rect.height + 2}px;
+                            opacity:${show_node.opacity};
+                        "
 					></div>`;
 				}
 			}
