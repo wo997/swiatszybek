@@ -778,7 +778,9 @@ class PiepCMS {
 
 			color_dropdown._child(".other_color").addEventListener("click", () => {
 				this.filter_blc_menu._set_value("appearance");
-				const color_picker = this.side_menu._child(".prop_color color-picker");
+				let match = color_wrapper.classList.contains("prop_background_color") ? ".prop_background_color" : ".prop_color";
+				match += " color-picker";
+				const color_picker = this.side_menu._child(match);
 				color_picker.click();
 				color_picker.focus();
 				scrollIntoView(color_picker, { duration: 0, offset: this.blc_menu_scroll_panel.offsetHeight * 0.5 });
