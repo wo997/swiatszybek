@@ -7,6 +7,7 @@
  * name: string
  * options: Product_VariantOptionCompData[]
  * pos?: number
+ * common?: number
  * features?: Product_FeatureCompData[]
  * } & ListCompRowData} Product_VariantCompData
  *
@@ -17,6 +18,7 @@
  *  fill_options_btn: PiepNode
  *  add_option_btn: PiepNode
  * } & ListControlTraitNodes
+ * _add_variant_option?(options?: {callback?()})
  * } & BaseComp} Product_VariantComp
  */
 
@@ -36,14 +38,46 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 				{ what: "product_feature_option_ids", where: "options" },
 			],
 			...options,
-			render: () => {},
+			render: () => {
+				comp._parent().classList.toggle("common_variant", !!data.common);
+			},
+		});
+	};
+
+	comp._add_variant_option = (options = {}) => {
+		showLoader();
+
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/general_product/variant/option/save",
+			params: {
+				product_variant_option: {
+					product_variant_id: comp._data.product_variant_id,
+					name: "",
+				},
+			},
+			success: (res) => {
+				const product_variant_option = res.product_variant_option;
+				comp._data.options.push({
+					product_variant_option_id: product_variant_option.product_variant_option_id,
+					product_variant_id: product_variant_option.product_variant_id,
+					name: product_variant_option.name,
+					selected_product_feature_options: [],
+				});
+				comp._render();
+				hideLoader();
+
+				// never used dude XD
+				if (options.callback) {
+					options.callback();
+				}
+			},
 		});
 	};
 
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="variant_header">
-				<span class="semi_bold mr2" html="{${"Pole wyboru " + (data.row_index + 1) + "."}}"></span>
+				<span class="semi_bold mr2" html="{${"Pole wyboru " + data.row_index + "."}}"></span>
 				<input class="field small inline" data-bind="{${data.name}}" data-tooltip="Wpisz nazwę pola wyboru, np. Kolor" />
 				<button data-node="{${comp._nodes.add_option_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml2">
 					Dodaj opcję <i class="fas fa-plus"></i>
@@ -68,28 +102,7 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 
 		initialize: () => {
 			comp._nodes.add_option_btn.addEventListener("click", () => {
-				showLoader();
-
-				xhr({
-					url: STATIC_URLS["ADMIN"] + "/general_product/variant/option/save",
-					params: {
-						product_variant_option: {
-							product_variant_id: comp._data.product_variant_id,
-							name: "",
-						},
-					},
-					success: (res) => {
-						const product_variant_option = res.product_variant_option;
-						comp._data.options.push({
-							product_variant_option_id: product_variant_option.product_variant_option_id,
-							product_variant_id: product_variant_option.product_variant_id,
-							name: product_variant_option.name,
-							selected_product_feature_options: [],
-						});
-						comp._render();
-						hideLoader();
-					},
-				});
+				comp._add_variant_option();
 			});
 
 			comp._nodes.fill_options_btn.addEventListener("click", () => {

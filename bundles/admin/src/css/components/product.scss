@@ -20,6 +20,14 @@ product-comp {
 		margin-left: 10px;
 	}
 
+	.common_variant {
+		height: 0px;
+		overflow: hidden;
+		padding: 0px;
+		border: none;
+		margin: 0px;
+	}
+
 	.select_options_wrapper {
 		& {
 			position: relative;

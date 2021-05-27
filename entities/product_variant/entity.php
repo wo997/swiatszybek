@@ -5,6 +5,7 @@ EntityManager::register("product_variant", [
         "general_product_id" => ["type" => "number"],
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
+        "common" => ["type" => "number"],
     ],
 ]);
 

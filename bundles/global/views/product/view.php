@@ -64,7 +64,7 @@ User::getCurrent()->last_viewed_products->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
 
-$general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id AND pos <> 0 ORDER BY pv.pos ASC");
+$general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id AND pos <> 0 AND common = 0 ORDER BY pv.pos ASC");
 
 foreach ($general_product_variants as $key => $variant) {
     $product_variant_id = $general_product_variants[$key]["product_variant_id"];

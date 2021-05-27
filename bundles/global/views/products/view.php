@@ -179,20 +179,11 @@ function traverseFeatures()
                     $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
                 } else {
-
-                    // $double_values = DB::fetchArr("SELECT pfo.double_value as v, JSON_ARRAYAGG(product_id) as i FROM product p
-                    //     INNER JOIN product_to_variant_option ptvo USING(product_id)
-                    //     INNER JOIN product_variant_option_to_feature_option pvotfo USING (product_variant_option_id)
-                    //     INNER JOIN product_feature_option pfo USING(product_feature_option_id)
-                    //     WHERE pfo.product_feature_id = $product_feature_id AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
-
                     $double_values = DB::fetchArr("SELECT pfo.double_value as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         INNER JOIN product_to_variant_option ptvo USING(product_id)
-                        INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
-                        INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
-                        INNER JOIN product_feature_option pfo ON pvotfo.product_feature_option_id = pfo.product_feature_option_id OR gptfo.product_feature_option_id = pfo.product_feature_option_id
-                        WHERE (pfo.product_feature_id = $product_feature_id OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id = $product_feature_id))
-                        AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
+                        INNER JOIN product_variant_option_to_feature_option pvotfo USING (product_variant_option_id)
+                        INNER JOIN product_feature_option pfo USING(product_feature_option_id)
+                        WHERE pfo.product_feature_id = $product_feature_id AND $where_products_0 GROUP BY pfo.double_value ORDER BY pfo.double_value DESC");
                 }
 
                 // $time = microtime(true);
@@ -369,15 +360,14 @@ $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-1";
 
 $options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, pfo.product_feature_option_id option_id
-    FROM product p INNER JOIN general_product
+    FROM product p
     INNER JOIN product_to_variant_option ptvo USING(product_id)
     INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
-    INNER JOIN general_product_to_feature_option gptfo ON gptfo.general_product_id = p.general_product_id
-    INNER JOIN product_feature_option pfo ON (pvotfo.product_feature_option_id = pfo.product_feature_option_id OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id = pfo.product_feature_option_id))
+    INNER JOIN product_feature_option pfo USING (product_feature_option_id)
     WHERE $where_products_0
     GROUP BY pfo.product_feature_option_id");
 
-usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
+// usort($options_data, fn ($a, $b) => $b["count"] <=> $a["count"]);
 
 $prices_data = DB::fetchRow("SELECT MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price
     FROM general_product
@@ -391,6 +381,11 @@ foreach ($options_data as $option_data) {
     $option_ids_desc[] = $option_data["option_id"];
 }
 $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
+
+
+//var_dump("TIME" . ((microtime(true) - $time) * 1000) . "<br>\n");
+
+
 
 ?>
 

@@ -58,6 +58,7 @@
  *      dim_tab: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
+ *  _add_variant?(options?: {common?: number, callback?()})
  *  _remove_missing_products()
  * } & BaseComp} ProductComp
  */
@@ -335,6 +336,9 @@ function ProductComp(comp, parent, data = undefined) {
 
 		if (allow || params.pls_add_columns) {
 			data.variants.forEach((variant) => {
+				if (variant.common) {
+					return;
+				}
 				const key = getVariantKeyFromId(variant.product_variant_id);
 				const columns = data.products_dt.columns;
 				if (!columns.find((column) => column.key === key)) {
@@ -370,6 +374,47 @@ function ProductComp(comp, parent, data = undefined) {
 		comp._render();
 	};
 
+	comp._add_variant = (options = {}) => {
+		showLoader();
+
+		const product_variant = {
+			general_product_id: comp._data.general_product_id,
+			name: "",
+			common: def(options.common, 0),
+			options: [],
+		};
+
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/general_product/variant/save",
+			params: {
+				product_variant,
+			},
+			success: (res) => {
+				const product_variant = res.product_variant;
+				/** @type {Product_VariantCompData} */
+				const variant = {
+					product_variant_id: product_variant.product_variant_id,
+					general_product_id: product_variant.general_product_id,
+					name: product_variant.name,
+					options: product_variant.options,
+					common: product_variant.common,
+				};
+
+				if (options.common) {
+					comp._data.variants.unshift(variant);
+				} else {
+					comp._data.variants.push(variant);
+				}
+				comp._render();
+				hideLoader();
+
+				if (options.callback) {
+					options.callback();
+				}
+			},
+		});
+	};
+
 	comp._set_data = (data, options = {}) => {
 		data.products_dt.dataset.forEach((row_data) => {
 			// warmup
@@ -377,6 +422,35 @@ function ProductComp(comp, parent, data = undefined) {
 			const vat_val = vat ? vat.value : 0;
 			row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
 		});
+
+		if (!OPTIMIZE_COMPONENTS) {
+			const common_variant = data.variants.find((v) => v.common);
+			if (common_variant) {
+				const variant_used_fids = [];
+				data.variants.forEach((variant) => {
+					variant.options.forEach((option) => {
+						option.selected_product_feature_options = option.selected_product_feature_options.filter((e) =>
+							data.product_feature_option_ids.includes(e)
+						);
+						variant_used_fids.push(...option.selected_product_feature_options);
+					});
+				});
+
+				const first_option = common_variant.options[0];
+				if (first_option && first_option.selected_product_feature_options) {
+					data.product_feature_option_ids.forEach((pfoid) => {
+						if (!variant_used_fids.includes(pfoid)) {
+							first_option.selected_product_feature_options.push(pfoid);
+						}
+					});
+
+					const key = getVariantKeyFromId(common_variant.product_variant_id);
+					data.products_dt.dataset.forEach((data) => {
+						data[key] = first_option.product_variant_option_id;
+					});
+				}
+			}
+		}
 
 		setCompData(comp, data, {
 			...options,
@@ -440,6 +514,10 @@ function ProductComp(comp, parent, data = undefined) {
 				// full product list
 				let cross_variants = [[]];
 				data.variants.forEach((variant) => {
+					if (variant.common) {
+						return;
+					}
+
 					const cross_variants_next = [];
 					cross_variants.forEach((variant_set) => {
 						variant.options.forEach((option) => {
@@ -453,6 +531,10 @@ function ProductComp(comp, parent, data = undefined) {
 				});
 
 				data.variants.forEach((variant) => {
+					if (variant.common) {
+						return;
+					}
+
 					const key = getVariantKeyFromId(variant.product_variant_id);
 
 					/** @type {DatatableColumnDef} */
@@ -512,6 +594,10 @@ function ProductComp(comp, parent, data = undefined) {
 					const set_columns = [columns.find((c) => c.key === "select")];
 
 					data.variants.forEach((variant) => {
+						if (variant.common) {
+							return;
+						}
+
 						const variant_key = getVariantKeyFromId(variant.product_variant_id);
 						const column = columns.find((c) => c.key === variant_key);
 						if (column) {
@@ -822,7 +908,7 @@ function ProductComp(comp, parent, data = undefined) {
 
 				<div class="mt5">
 					<div class="sticky_subheader mb2">
-						<span class="medium bold"> Pola wyboru / Warianty (<span html="{${data.variants.length}}"></span>) </span>
+						<span class="medium bold"> Pola wyboru / Warianty (<span html="{${data.variants.length - 1}}"></span>) </span>
 						<div class="hover_info">
 							Określ wszystkie warianty produktu.
 							<div style="height:7px"></div>
@@ -948,28 +1034,7 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
-				showLoader();
-
-				xhr({
-					url: STATIC_URLS["ADMIN"] + "/general_product/variant/save",
-					params: {
-						product_variant: {
-							general_product_id: comp._data.general_product_id,
-							name: "",
-						},
-					},
-					success: (res) => {
-						const product_variant = res.product_variant;
-						comp._data.variants.push({
-							product_variant_id: product_variant.product_variant_id,
-							general_product_id: product_variant.general_product_id,
-							name: product_variant.name,
-							options: product_variant.options,
-						});
-						comp._render();
-						hideLoader();
-					},
-				});
+				comp._add_variant();
 			});
 
 			comp._nodes.add_category_btn.addEventListener("click", () => {
@@ -1031,16 +1096,16 @@ function ProductComp(comp, parent, data = undefined) {
 					return;
 				}
 
-				// if (data.missing_products_variants.length > 0) {
-				// 	showNotification(html`<div class="header">Błąd zapisywania</div>
-				// 		Musisz najpierw dodać brakujące produkty do listy`);
-				// 	return;
-				// }
-				// if (data.unnecessary_product_ids.length > 0) {
-				// 	showNotification(html`<div class="header">Błąd zapisywania</div>
-				// 		Musisz najpierw usunąć niepotrzebne produkty z listy`);
-				// 	return;
-				// }
+				if (data.missing_products_variants.length > 0) {
+					showNotification(html`<div class="header">Błąd zapisywania</div>
+						Musisz najpierw dodać brakujące produkty do listy`);
+					return;
+				}
+				if (data.unnecessary_product_ids.length > 0) {
+					showNotification(html`<div class="header">Błąd zapisywania</div>
+						Musisz najpierw usunąć niepotrzebne produkty z listy`);
+					return;
+				}
 
 				const save_products = cloneObject(data.products_dt.dataset);
 				save_products.forEach((product) => {

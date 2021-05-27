@@ -28,7 +28,7 @@ domload(() => {
 	window.addEventListener("modal_show", nameChange);
 	nameChange();
 
-	const data = product_comp._data;
+	let data = product_comp._data;
 
 	data.general_product_id = general_product_data ? general_product_data.general_product_id : -1;
 	if (general_product_data) {
@@ -128,4 +128,53 @@ domload(() => {
 
 	finishComponentsOptimization();
 	product_comp.style.visibility = "";
+
+	// a common variant is necessary to tell which options are... common, for the search dude
+	data = product_comp._data;
+	const common_variant = data.variants.find((v) => v.common);
+
+	let requesting_common_variant = false;
+	let requesting_common_variant_option = false;
+
+	const checkOption = () => {
+		data = product_comp._data;
+		const common_variant = data.variants.find((v) => v.common);
+		if (!common_variant || common_variant.options.length !== 0 || requesting_common_variant_option) {
+			return;
+		}
+		const common_variant_index = data.variants.findIndex((v) => v.common);
+
+		requesting_common_variant_option = true;
+
+		/** @type {Product_VariantComp} */
+		// @ts-ignore
+		const product_variant_comp = product_comp._direct_children()[common_variant_index]._child("product_variant-comp");
+		if (product_variant_comp) {
+			product_variant_comp._add_variant_option({
+				callback: () => {
+					requesting_common_variant_option = false;
+				},
+			});
+		}
+	};
+
+	if (!common_variant) {
+		if (!requesting_common_variant) {
+			// must be first, otherwise sorting might be glitchy duuuudee, ofc if we hide it
+			requesting_common_variant = true;
+			product_comp._add_variant({
+				common: 1,
+				callback: () => {
+					requesting_common_variant = false;
+					setTimeout(() => {
+						checkOption();
+					});
+				},
+			});
+		}
+	} else {
+		setTimeout(() => {
+			checkOption();
+		});
+	}
 });

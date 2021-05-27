@@ -50,7 +50,7 @@ function getGlobalProductsSearch($url)
             INNER JOIN product_to_variant_option ptvo USING(product_id)
             INNER JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)
             INNER JOIN general_product_to_feature_option gptfo USING(general_product_id)
-            WHERE p.product_id IN ($product_ids_csv) AND (pvotfo.product_feature_option_id IN ($option_ids_csv) OR (gptfo.is_shared = 1 AND gptfo.product_feature_option_id IN ($option_ids_csv)))
+            WHERE p.product_id IN ($product_ids_csv) AND pvotfo.product_feature_option_id IN ($option_ids_csv)
             GROUP BY product_id");
     }
 
@@ -104,7 +104,7 @@ function getGlobalProductsSearch($url)
             if ($is_cena) {
                 $where .= " AND gross_price >= $min";
             } else {
-                $where .= " AND (pfo.double_value >= $min OR (gptfo.is_shared = 1 AND gpfo.double_value >= $min))";
+                $where .= " AND pfo.double_value >= $min";
             }
         }
         if ($max !== "") {
@@ -120,7 +120,7 @@ function getGlobalProductsSearch($url)
             if ($is_cena) {
                 $where .= " AND gross_price <= $max";
             } else {
-                $where .= " AND (pfo.double_value <= $max OR (gptfo.is_shared = 1 AND gpfo.double_value <= $max))";
+                $where .= " AND pfo.double_value <= $max";
             }
         }
 

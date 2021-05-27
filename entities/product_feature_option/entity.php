@@ -40,7 +40,6 @@ EntityManager::manyToMany(
     [
         "meta" => [
             "pos" => ["type" => "number"],
-            "is_shared" => ["type" => "number"],
         ]
     ]
 );
