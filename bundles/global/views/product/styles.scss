@@ -330,6 +330,7 @@ comment-comp.comp {
 	.pflr {
 		& {
 			display: flex;
+			flex-wrap: wrap;
 		}
 		&:not(:first-child) {
 			border-top: 1px solid #ddd;
@@ -337,7 +338,21 @@ comment-comp.comp {
 	}
 	.pflc {
 		padding: 10px 10px 10px 0;
-		width: 50%;
+		&:first-child {
+			width: 35%;
+		}
+		&:last-child {
+			width: 65%;
+		}
+		@media (max-width: 600px) {
+			&:first-child {
+				width: 100%;
+			}
+			&:last-child {
+				width: 100%;
+				padding-top: 0;
+			}
+		}
 	}
 	.pflv {
 		&:not(:first-child)::before {
