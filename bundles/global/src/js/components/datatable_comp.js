@@ -649,7 +649,7 @@ function DatatableComp(comp, parent, data) {
 						const select_row = row._child(".select_row");
 						const primary_id = +row.dataset.primary;
 						ids.push(primary_id);
-						const selected = comp._data.selection.indexOf(primary_id) !== -1;
+						const selected = data.selection.indexOf(primary_id) !== -1;
 						if (selected) {
 							visible_selection.push(primary_id);
 							select_count++;
@@ -657,9 +657,9 @@ function DatatableComp(comp, parent, data) {
 						select_row._set_value(selected, { quiet: true });
 					});
 
-					comp._data.selection = visible_selection;
+					data.selection = visible_selection;
 
-					const select_all = select_count === comp._data.rows.length && comp._data.rows.length > 0;
+					const select_all = select_count === data.rows.length && data.rows.length > 0;
 					const select_all_rows = comp._child(".select_all_rows");
 					if (select_all_rows) {
 						select_all_rows._set_value(select_all ? 1 : 0);
@@ -872,6 +872,7 @@ function DatatableComp(comp, parent, data) {
 					showModal("datatableBatchEdit", { source: dt_batch_edit });
 
 					cont._child(".accept").addEventListener("click", () => {
+						const data = comp._data;
 						const key = column.key;
 						const ids = modify_rows.map((e) => e._row_id);
 						const value = cont._child(`[data-bind="${key}"]`)._get_value();

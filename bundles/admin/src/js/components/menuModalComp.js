@@ -100,8 +100,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 			options: {
 				single: true,
 			},
-			dataset: [], //pages.map((p) => ({ value: p.page_id.toString(), label: p.seo_title })),
-			parent_variable: "page",
+			dataset: pages.filter((e) => e.page_type === "page").map((p) => ({ value: p.page_id.toString(), label: p.url + " " + p.seo_title })),
+			parent_variable: "page_id",
 		};
 	}
 

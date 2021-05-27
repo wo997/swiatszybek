@@ -2,6 +2,21 @@
 
 define("SINGLE_HTML_TAGS", ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
 
+
+function getAllPages()
+{
+    return DB::fetchArr("SELECT * FROM page");
+}
+
+function preloadPages()
+{
+    $pages = json_encode(getAllPages());
+    return <<<JS
+    pages = $pages;
+    loadedPages();
+JS;
+}
+
 function traverseVDom($v_dom, $options = [])
 {
     $html_only = def($options, ["html_only"], false);

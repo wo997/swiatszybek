@@ -207,6 +207,12 @@ function MenusComp(comp, parent, data = undefined) {
 							if (pretty_general_product) {
 								tooltip = pretty_general_product.label;
 							}
+						} else if (link_what === "page") {
+							info = "Strona";
+							const page = pages.find((p) => p.page_id === com._data.link_what_id);
+							if (page) {
+								tooltip = `${location.host}/${page.url}`;
+							}
 						} else if (link_what === "url") {
 							info = "Link";
 							tooltip = com._data.url;
