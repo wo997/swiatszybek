@@ -38,7 +38,7 @@ function EditPageableComp(comp, parent, data = undefined) {
 
 		const case_page = !is_template;
 		comp._children(".case_page").forEach((child) => {
-			child.classList.toggle("hidden", !case_page_page);
+			child.classList.toggle("hidden", !case_page);
 		});
 		const case_page_page = case_page && this_pageable_data.page_type === "page";
 		comp._children(".case_page_page").forEach((child) => {

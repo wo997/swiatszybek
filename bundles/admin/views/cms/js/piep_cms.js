@@ -60,7 +60,7 @@ class PiepCMS {
 		if (children) {
 			let length = 0;
 			const middle_vids = [];
-			v_node.children.forEach((c) => {
+			children.forEach((c) => {
 				if (c.text) {
 					length += c.text.length;
 					middle_vids.push(c.id);
@@ -1400,6 +1400,26 @@ class PiepCMS {
 		}
 	}
 
+	/**
+	 *
+	 * @param {number} vid
+	 */
+	selectTextableContents(vid) {
+		const v_node = this.getVNodeById(vid);
+		this.text_selection = {
+			anchor_vid: vid,
+			anchor_offset: 0,
+			focus_vid: vid,
+			focus_offset: v_node.text.length,
+			middle_vids: [vid],
+			partial_ranges: [],
+			// @ts-ignore
+			direction: 1,
+			length: v_node.text.length,
+			single_node: true,
+		};
+	}
+
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
 			if (!this.content_active) {
@@ -1434,49 +1454,27 @@ class PiepCMS {
 
 			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
 
-			if (this.remove_seleciton_timeout) {
-				clearTimeout(this.remove_seleciton_timeout);
-				this.remove_seleciton_timeout = undefined;
-			}
-
-			if (ev.detail > 1 && this.content_active) {
-				if (this.text_selection) {
-					const vid = +this.text_selection.focus_vid;
-
-					if (ev.detail === 2) {
-						const v_node = this.getVNodeById(vid);
-						this.text_selection = {
-							anchor_vid: vid,
-							anchor_offset: 0,
-							focus_vid: vid,
-							focus_offset: v_node.text.length,
-							middle_vids: [vid],
-							partial_ranges: [],
-							// @ts-ignore
-							direction: 1,
-							length: v_node.text.length,
-							single_node: true,
-						};
-					} else {
-						this.selectTextContainerContents(this.focus_node_vid);
-					}
-					ev.preventDefault();
-				} else {
-					const focus_v_node = this.getVNodeById(this.focus_node_vid);
-					if (this.isTextContainer(focus_v_node)) {
-						setTimeout(() => {
-							this.selectTextContainerContents(this.focus_node_vid);
-						});
-						return;
-					}
-				}
-			}
-
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
 				const blc_schema = piep_cms_manager.blcs_schema.find((e) => e.id === block_to_add_btn.dataset.id);
 				this.grabBlockFromVNode(blc_schema.v_node, { is_new: true });
 				return;
+			}
+
+			if (this.remove_seleciton_timeout) {
+				clearTimeout(this.remove_seleciton_timeout);
+				this.remove_seleciton_timeout = undefined;
+			}
+
+			if (this.content_active && this.text_selection && ev.detail > 1) {
+				const vid = +this.text_selection.focus_vid;
+
+				if (ev.detail === 2) {
+					this.selectTextableContents(vid);
+				} else {
+					this.selectTextContainerContents(this.focus_node_vid);
+				}
+				ev.preventDefault();
 			}
 
 			const click_blc = target._parent(".blc");
@@ -1487,38 +1485,31 @@ class PiepCMS {
 
 				//console.log(click_blc);
 
-				if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
-					if (this.isTextable(click_v_node_data.v_node)) {
+				// let selection propagate basically
+				setTimeout(() => {
+					if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
 						if (this.text_selection) {
 							const text_focus_node = this.getNode(this.text_selection.focus_vid);
-							if (click_blc._prev() === text_focus_node) {
-								this.text_selection.focus_vid = +click_blc.dataset.vid;
-								this.text_selection.focus_offset = 0;
-								this.collapseSelection();
-							}
-						}
+							if (this.isTextable(click_v_node_data.v_node)) {
+								if (click_blc._prev() === text_focus_node) {
+									// fixes inaccurate selection on edge cases
+									this.text_selection.focus_vid = +click_blc.dataset.vid;
+									this.text_selection.focus_offset = 0;
+									this.collapseSelection();
+								}
 
-						//this.setFocusNode(click_v_node_data.parent_v_nodes[0].id);
-						this.setFocusNode(click_v_node.id);
-					} else {
-						//if (!this.isTextContainer(click_v_node)) {
-						const select = () => {
-							setTimeout(() => {
-								this.text_selection = undefined;
 								this.setFocusNode(click_v_node.id);
-							});
-						};
-						if (this.text_selection) {
-							// const text_focus_node = this.getNode(this.text_selection.focus_vid);
-							// if (text_focus_node._parent() !== click_blc) {
-							select();
-							//}
+							} else {
+								if (ev.detail > 1) {
+									this.setFocusNode(click_v_node.id);
+									this.text_selection = undefined;
+								}
+							}
 						} else {
-							select();
+							this.setFocusNode(click_v_node.id);
 						}
-						//}
 					}
-				}
+				});
 			}
 
 			/** @type {insertBlc} */
@@ -1656,6 +1647,14 @@ class PiepCMS {
 					this.moveCursorSideways(-1);
 				}
 				if (ev.key === "ArrowRight") {
+					ev.preventDefault();
+					this.moveCursorSideways(1);
+				}
+				if (ev.key === "Home") {
+					ev.preventDefault();
+					this.moveCursorSideways(-1);
+				}
+				if (ev.key === "End") {
 					ev.preventDefault();
 					this.moveCursorSideways(1);
 				}
