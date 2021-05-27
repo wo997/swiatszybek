@@ -321,6 +321,31 @@ comment-comp.comp {
 	}
 }
 
+.product_feature_list {
+	& {
+		max-width: var(--container_max_width);
+		margin: 0px auto;
+		padding: 10px;
+	}
+	.pflr {
+		& {
+			display: flex;
+		}
+		&:not(:first-child) {
+			border-top: 1px solid #ddd;
+		}
+	}
+	.pflc {
+		padding: 10px 10px 10px 0;
+		width: 50%;
+	}
+	.pflv {
+		&:not(:first-child)::before {
+			content: " | ";
+		}
+	}
+}
+
 .product_comments {
 	max-width: var(--container_max_width);
 	margin: 50px auto;

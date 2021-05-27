@@ -2,9 +2,9 @@
 
 {
 	piep_cms_manager.registerBlcSchema({
-		id: "view_product_comments",
-		icon: html`<i class="fas fa-comments"></i>`,
-		label: html`Komentarze produktu`,
+		id: "view_product_feature_list",
+		icon: html`<i class="fas fa-list-alt"></i>`,
+		label: html`Specyfikacja produktu`,
 		single_usage: true,
 		nonclickable: true,
 		page_type: "general_product",
@@ -14,11 +14,11 @@
 			styles: {},
 			classes: [],
 			attrs: {},
-			module_name: "view_product_comments",
+			module_name: "view_product_feature_list",
 		},
 		rerender_on: [],
 		render: (v_node) => {
-			return html`<div class="empty_module">Komentarze produktu</div>`;
+			return html`<div class="empty_module">Specyfikacja produktu</div>`;
 		},
 	});
 }

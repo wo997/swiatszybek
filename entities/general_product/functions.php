@@ -190,6 +190,8 @@ function renderGeneralProductsList($params)
         $actual_order = "AVG(gross_price) DESC";
     }
 
+    $where .= " AND pv.common = 0";
+
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
@@ -202,9 +204,11 @@ function renderGeneralProductsList($params)
     ",
         "from" => "general_product gp
         INNER JOIN product p USING (general_product_id)
-        LEFT JOIN product_to_variant_option ptvo ON ptvo.product_id = p.product_id
+        LEFT JOIN product_to_variant_option ptvo USING(product_id)
+        LEFT JOIN product_variant_option pvo USING(product_variant_option_id)
+        LEFT JOIN product_variant pv USING(product_variant_id)
         LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
-        "group" => "general_product_id",
+        "group" => "gp.general_product_id",
         "order" => $actual_order,
         "where" => $where,
         "datatable_params" => json_encode($datatable_params),

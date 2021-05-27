@@ -357,14 +357,39 @@ if ($main_img) {
     </div>
 </div>
 
-<?php //startSection("view_product_similar_products"); 
-?>
+<?php startSection("view_product_feature_list"); ?>
 
-<!-- <div style="width: 100%;max-width: 1500px;margin: 50px auto; padding:10px;">
-    <div>
-        <h2>Podobne produkty</h2>
-    </div>
-</div> -->
+<div class="product_feature_list">
+    <?php
+    $product_features = DB::fetchArr("SELECT name, product_feature_id
+        FROM general_product_to_feature gptf
+        INNER JOIN product_feature USING (product_feature_id)
+        WHERE general_product_id = $general_product_id
+        ORDER BY gptf.pos ASC");
+
+    foreach ($product_features as $product_feature) {
+        $product_feature_id = $product_feature["product_feature_id"];
+    ?>
+        <div class="pflr">
+            <div class="pflc semi_bold">
+                <?= $product_feature["name"] ?>
+            </div>
+            <div class="pflc">
+                <?php
+                $product_feature_options = DB::fetchArr("SELECT value, product_feature_option_id
+                    FROM general_product_to_feature_option gptfo
+                    INNER JOIN product_feature_option USING (product_feature_option_id)
+                    WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
+                    ORDER BY gptfo.pos ASC");
+
+                foreach ($product_feature_options as $product_feature_option) {
+                ?>
+                    <span class="pflv"><?= $product_feature_option["value"] ?></span>
+                <?php } ?>
+            </div>
+        </div>
+    <?php } ?>
+</div>
 
 <?php startSection("view_product_comments"); ?>
 

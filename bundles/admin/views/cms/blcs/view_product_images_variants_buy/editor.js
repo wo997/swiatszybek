@@ -19,7 +19,7 @@
 		},
 		rerender_on: [],
 		render: (v_node) => {
-			return html`<div class="empty_module" data-container_queries="">Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"</div>`;
+			return html`<div class="empty_module">Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"</div>`;
 		},
 	});
 }
