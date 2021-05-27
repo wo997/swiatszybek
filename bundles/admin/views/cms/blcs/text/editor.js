@@ -319,7 +319,12 @@
 	// bloated
 	piep_cms_manager.registerFloatingProp({
 		name: "background_color",
-		blc_groups: text_groups,
+		blc_groups: [
+			{
+				match_tag: piep_cms_manager.match_text_containers,
+				priority: text_priority,
+			},
+		],
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid global_root"

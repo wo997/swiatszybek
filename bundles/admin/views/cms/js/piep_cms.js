@@ -1481,7 +1481,8 @@ class PiepCMS {
 				if (ev.detail === 2) {
 					this.selectTextableContents(vid);
 				} else {
-					this.selectTextContainerContents(this.focus_node_vid);
+					const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
+					this.selectTextContainerContents(focus_v_node_data.parent_v_nodes[0].id);
 				}
 				ev.preventDefault();
 			}
