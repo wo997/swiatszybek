@@ -40,6 +40,8 @@ class PiepCMSManager {
 		this.pretty_percentages.sort((a, b) => Math.sign(a - b));
 
 		this.text_container_props = ["styles.textAlign", "tag"];
+
+		// editor will split textables on these
 		this.textable_props = [
 			"styles.color",
 			"styles.backgroundColor",

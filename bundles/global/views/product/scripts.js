@@ -81,13 +81,13 @@ domload(() => {
 	});
 
 	// TEMPORARY
-	const vdo = $(".vdo");
+	// const vdo = $(".vdo");
 
-	vdo.addEventListener("change", () => {
-		toggleVariantStyle(vdo);
-	});
+	// vdo.addEventListener("change", () => {
+	// 	toggleVariantStyle(vdo);
+	// });
 
-	vdo._set_value("1");
+	// vdo._set_value("1");
 
 	/** @type {CartProductsComp} */
 	// @ts-ignore
@@ -183,17 +183,17 @@ domload(() => {
 	});
 });
 
-/**
- *
- * @param {PiepNode} radio
- */
-function toggleVariantStyle(radio) {
-	const val = radio._get_value();
-	document.body.classList.toggle("price_diff_1", val === "1");
-	document.body.classList.toggle("price_diff_2", val === "2");
-	document.body.classList.toggle("price_diff_3", val === "3");
-	document.body.classList.toggle("price_diff_4", val === "4");
-}
+// /**
+//  *
+//  * @param {PiepNode} radio
+//  */
+// function toggleVariantStyle(radio) {
+// 	const val = radio._get_value();
+// 	document.body.classList.toggle("price_diff_1", val === "1");
+// 	document.body.classList.toggle("price_diff_2", val === "2");
+// 	document.body.classList.toggle("price_diff_3", val === "3");
+// 	document.body.classList.toggle("price_diff_4", val === "4");
+// }
 
 window.addEventListener("popstate", () => {
 	setProductFeaturesFromUrl();
@@ -404,9 +404,40 @@ function setVariantData() {
 
 	expand($(".case_notify_available"), !!(single_product && single_product.stock <= 0));
 
+	$(".main_qty_controls .val_qty")._dispatch_change();
+
 	productImagesChange();
 
-	$(".main_qty_controls .val_qty")._set_value();
+	// display on a feature list
+	const product_feature_list = $(".product_feature_list");
+	if (product_feature_list) {
+		removeClasses(".pflo", ["inactive", "active"], product_feature_list);
+		general_product_variants.forEach((variant) => {
+			variant.options.forEach((option) => {
+				try {
+					const selected = ps_selected_variant_option_ids.includes(option.product_variant_option_id);
+
+					const fo_ids = JSON.parse(option.__feature_options_json);
+					fo_ids.forEach((fo_id) => {
+						const pflo = product_feature_list._child(`.pflo[data-option_id="${fo_id}"]`);
+
+						if (selected) {
+							pflo.classList.add("active");
+							pflo
+								._parent(".pflc")
+								._children(".pflo")
+								.forEach((e) => {
+									e.classList.add("inactive");
+								});
+						}
+					});
+				} catch (e) {
+					console.error(e);
+				}
+			});
+		});
+		removeClasses(".active", ["inactive"], product_feature_list);
+	}
 }
 
 domload(() => {

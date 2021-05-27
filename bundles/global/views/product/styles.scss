@@ -354,9 +354,24 @@ comment-comp.comp {
 			}
 		}
 	}
-	.pflv {
-		&:not(:first-child)::before {
-			content: " | ";
+	.pflo {
+		// &.active {
+		// 	font-weight: var(--semi_bold);
+		// }
+		&.inactive {
+			opacity: 0.5;
+		}
+		&:not(.active) .case_active,
+		&:not(.inactive) .case_inactive {
+			display: none;
+		}
+		.case_active,
+		.case_inactive {
+			margin: 0 2px;
+			font-size: 0.9em;
+		}
+		.pflo {
+			white-space: nowrap;
 		}
 	}
 }

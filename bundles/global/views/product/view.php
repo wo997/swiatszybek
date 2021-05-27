@@ -192,7 +192,7 @@ if ($main_img) {
     <div class="product_offer">
         <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
-        <div style="display:none">
+        <!-- <div style="display:none">
             <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
             <div class="vdo radio_group columns_1">
                 <div class="checkbox_area">
@@ -212,7 +212,7 @@ if ($main_img) {
                     Brak
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="variants_container">
             <?php
@@ -370,7 +370,7 @@ if ($main_img) {
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
     ?>
-        <div class="pflr">
+        <div class="pflr" data-feature_id="<?= $product_feature["product_feature_id"] ?>">
             <div class="pflc semi_bold">
                 <?= $product_feature["name"] ?>
             </div>
@@ -382,9 +382,19 @@ if ($main_img) {
                     WHERE general_product_id = $general_product_id AND product_feature_id = $product_feature_id
                     ORDER BY gptfo.pos ASC");
 
+                $first = true;
                 foreach ($product_feature_options as $product_feature_option) {
+                    if ($first) {
+                        $first = false;
+                    } else {
+                        echo "|";
+                    }
                 ?>
-                    <span class="pflv"><?= $product_feature_option["value"] ?></span>
+                    <span class="pflo" data-option_id="<?= $product_feature_option["product_feature_option_id"] ?>">
+                        <?= $product_feature_option["value"] ?>
+                        <i class="fas fa-check case_active text_success"></i>
+                        <i class="fas fa-times case_inactive"></i>
+                    </span>
                 <?php } ?>
             </div>
         </div>
