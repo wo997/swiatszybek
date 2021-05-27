@@ -11,12 +11,13 @@
 	piep_cms_manager.registerProp({
 		name: "text_tag",
 		type_groups: ["appearance"],
-		blc_groups: [
-			{
-				match_tag: piep_cms_manager.match_basic_text_containers,
-				priority: text_priority,
-			},
-		],
+		blc_groups: text_groups,
+		// blc_groups: [
+		// 	{
+		// 		match_tag: piep_cms_manager.match_basic_text_containers,
+		// 		priority: text_priority,
+		// 	},
+		// ],
 		menu_html: html`
 			<div class="label">Typ tekstu</div>
 			<div class="pretty_radio flex columns_1 global_root spiky box_align_left" data-blc_prop="tag">
@@ -97,12 +98,13 @@
 	piep_cms_manager.registerProp({
 		name: "text_align",
 		type_groups: ["appearance"],
-		blc_groups: [
-			{
-				match_tag: piep_cms_manager.match_basic_text_containers,
-				priority: text_priority,
-			},
-		],
+		blc_groups: text_groups,
+		// [
+		// 	{
+		// 		match_tag: piep_cms_manager.match_basic_text_containers,
+		// 		priority: text_priority,
+		// 	},
+		// ],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
 			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textAlign">
@@ -218,12 +220,13 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_tag",
-		blc_groups: [
-			{
-				match_tag: piep_cms_manager.match_basic_text_containers,
-				priority: text_priority,
-			},
-		],
+		blc_groups: text_groups,
+		// blc_groups: [
+		// 	{
+		// 		match_tag: piep_cms_manager.match_basic_text_containers,
+		// 		priority: text_priority,
+		// 	},
+		// ],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid align_left" data-blc_prop="tag" data-tooltip="Typ tekstu">
 				<p-option data-value="h1" style="font-size:var(--size_h1);">
@@ -281,12 +284,13 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
-		blc_groups: [
-			{
-				match_tag: piep_cms_manager.match_basic_text_containers,
-				priority: text_priority,
-			},
-		],
+		blc_groups: text_groups,
+		// blc_groups: [
+		// 	{
+		// 		match_tag: piep_cms_manager.match_basic_text_containers,
+		// 		priority: text_priority,
+		// 	},
+		// ],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>

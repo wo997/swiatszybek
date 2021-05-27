@@ -379,11 +379,6 @@ class PiepCMS {
 			});
 
 			displaySelection(this.text_selection.focus_vid, undefined, undefined, "just_underline");
-
-			// const focus_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-			// if (focus_node_data) {
-			// 	this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
-			// }
 		}
 
 		if (options.vids) {
@@ -1139,13 +1134,10 @@ class PiepCMS {
 						}
 					});
 
-					// TODO: work on this to get it right baby
-
-					if (this.text_selection.single_node && new_middle_vids.length === 1) {
+					// TODO: selection direction might help us choose between first or last middle vnode yay
+					if (this.text_selection.single_node && new_middle_vids.length > 0) {
 						this.text_selection.focus_vid = new_middle_vids[0];
 						this.text_selection.focus_offset = 0;
-						//this.setFocusNode(this.text_selection.focus_vid);
-						//this.collapseSelection();
 					}
 
 					this.text_selection.partial_ranges = [];
@@ -1153,20 +1145,42 @@ class PiepCMS {
 				}
 
 				const set_prop_of_ids = [];
+				/**
+				 *
+				 * @param {number[]} vids
+				 */
+				const considerVid = (...vids) => {
+					vids.forEach((vid) => {
+						if (!set_prop_of_ids.includes(vid)) {
+							set_prop_of_ids.push(vid);
+						}
+					});
+				};
 
-				if (this.text_selection) {
-					set_prop_of_ids.push(...this.text_selection.middle_vids);
+				if (piep_cms_manager.text_container_props.includes(prop_str)) {
+					if (this.text_selection) {
+						this.getAllTextSelectionVids().forEach((vid) => {
+							const v_node = this.getVNodeDataById(vid);
+							if (!v_node) {
+								return;
+							}
+							const parent_v_node = v_node.parent_v_nodes[0];
+							if (parent_v_node) {
+								considerVid(parent_v_node.id);
+							}
+						});
+					}
+				} else {
+					if (this.text_selection) {
+						considerVid(...this.getAllTextSelectionVids());
+					}
 				}
 
-				if (this.focus_node_vid !== undefined) {
-					set_prop_of_ids.push(this.focus_node_vid);
+				if (set_prop_of_ids.length === 0 && this.focus_node_vid !== undefined) {
+					considerVid(this.focus_node_vid);
 				}
-				// if (this.focus_node_vid !== undefined && !piep_cms_manager.textable_props.includes(prop_str)) {
-				//     this.isTextContainer(this.focus_node_vid)
-				// 	set_prop_of_ids.push(this.focus_node_vid);
-				// }
 
-				set_prop_of_ids.filter(onlyUnique).forEach((vid) => {
+				set_prop_of_ids.forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
 				});
 
@@ -4222,7 +4236,10 @@ class PiepCMS {
 
 		if (just_changed_focus_vid) {
 			if (focus_node) {
-				this.setBlcMenuFromFocusedNode();
+				// it's' dumb but that's how selection works, we must wait untill it finishes
+				setTimeout(() => {
+					this.setBlcMenuFromFocusedNode();
+				});
 
 				tree_blc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
 				if (tree_blc) {
@@ -4269,9 +4286,9 @@ class PiepCMS {
 			}
 			const v_node = v_node_data.v_node;
 
-			// if (this.isTextable(v_node)) {
-			// 	from_v_nodes.push(v_node_data.parent_v_nodes[0]);
-			// }
+			if (this.isTextable(v_node)) {
+				from_v_nodes.push(v_node_data.parent_v_nodes[0]);
+			}
 			// if (this.isTextContainer(v_node)) {
 			// 	const children = v_node_data.v_node.children;
 			// 	if (children) {
@@ -4289,20 +4306,19 @@ class PiepCMS {
 		const setPropsOfInputs = (inputs) => {
 			inputs.forEach((input) => {
 				const prop_str = input.dataset.blc_prop;
+				const is_text_container_prop = piep_cms_manager.text_container_props.includes(prop_str);
 				let val = "";
 				for (const v_node of from_v_nodes) {
 					let prop_val;
 					let v_node_ref = v_node;
 
-					if (this.isTextContainer(v_node)) {
-						// if (!piep_cms_manager.text_container_props.includes(prop_str)) {
-						// 	continue;
-						// }
-						if (piep_cms_manager.textable_props.includes(prop_str)) {
-							continue;
-						}
-					} else if (this.isTextable(v_node)) {
-						if (!piep_cms_manager.textable_props.includes(prop_str)) {
+					// if (this.isTextContainer(v_node)) {
+					// 	if (!is_text_container_prop) {
+					// 		continue;
+					// 	}
+					// } else
+					if (this.isTextable(v_node)) {
+						if (is_text_container_prop) {
 							continue;
 						}
 					}
