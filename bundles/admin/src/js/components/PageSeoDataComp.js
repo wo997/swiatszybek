@@ -42,6 +42,10 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 		setCompData(comp, data, {
 			...options,
 			render: () => {
+				const active = document.activeElement;
+				// @ts-ignore
+				const selection_end = active.selectionEnd;
+
 				// give it a tiny margin
 				comp._nodes.seo_description._set_value(data.seo_description + "m", { quiet: true });
 				comp._nodes.seo_title._set_value(data.seo_title + "m", { quiet: true });
@@ -77,6 +81,15 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 				// and remove the margin, ezy
 				comp._nodes.seo_description._set_value(data.seo_description, { quiet: true });
 				comp._nodes.seo_title._set_value(data.seo_title, { quiet: true });
+
+				if (active === comp._nodes.seo_description) {
+					// @ts-ignore
+					comp._nodes.seo_description.setSelectionRange(selection_end, selection_end);
+				}
+				if (active === comp._nodes.seo_title) {
+					// @ts-ignore
+					comp._nodes.seo_title.setSelectionRange(selection_end, selection_end);
+				}
 			},
 		});
 	};
