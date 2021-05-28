@@ -1500,7 +1500,7 @@ class PiepCMS {
 					if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
 						if (this.text_selection) {
 							const text_focus_node = this.getNode(this.text_selection.focus_vid);
-							if (this.isTextable(click_v_node_data.v_node)) {
+							if (click_blc.classList.contains("textable")) {
 								if (click_blc._prev() === text_focus_node) {
 									// fixes inaccurate selection on edge cases
 									this.text_selection.focus_vid = +click_blc.dataset.vid;
@@ -1510,7 +1510,7 @@ class PiepCMS {
 
 								this.setFocusNode(click_v_node.id);
 							} else {
-								if (ev.detail > 1) {
+								if (ev.detail > 1 || !click_blc.classList.contains("text_container")) {
 									this.setFocusNode(click_v_node.id);
 									this.text_selection = undefined;
 								}
@@ -1862,12 +1862,12 @@ class PiepCMS {
 				</div>
 			</div>
 
-			<div class="pa1" style="border-bottom:1px solid #ccc">
+			<!-- <div class="pa1" style="border-bottom:1px solid #ccc">
 				<div class="float_icon">
 					<input class="field" placeholder="Filtruj opcje" />
 					<i class="fas fa-search"></i>
 				</div>
-			</div>
+			</div> -->
 
 			<div class="center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
 
