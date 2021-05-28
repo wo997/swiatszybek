@@ -1,0 +1,44 @@
+/* css[admin_everywhere] */
+
+.edit_page_menu {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: #222;
+	padding: 0 5px;
+	height: var(--body_padding_top);
+	display: flex;
+	align-items: stretch;
+	z-index: 1000;
+	--hover-shadow: none;
+	line-height: var(--body_padding_top);
+}
+
+#p .edit_page_menu .xbutton {
+	padding: 0 10px;
+	background: none;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+#p .edit_page_menu .xbutton:hover span {
+	text-decoration: underline;
+}
+.touch_device .edit_page_menu {
+	display: none !important;
+}
+
+body.current_page_published .page_unpublished_btn,
+body:not(.current_page_published) .page_published_btn {
+	display: none;
+}
+
+#p .edit_page_menu .page_published_btn {
+	color: #7c7;
+}
+
+#p .edit_page_menu .page_unpublished_btn {
+	color: #c88;
+}

@@ -95,16 +95,20 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">
-        <span class="title breadcrumbs mr0"></span>
-        <button class="btn transparent small semi_medium bold edit_pageable_btn">
-            Edytuj
-            <i class="fas fa-cog"></i>
-        </button>
-        <button class="btn transparent small semi_medium bold edit_seo_btn">
-            SEO
-            <span class="seo_state_icon"></span>
-        </button>
-        <button class="btn subtle undo mla" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
+        <span class="title breadcrumbs mra"></span>
+
+        <div class="page_publish">
+            <button class="btn success page_published_btn" data-tooltip="Ukryj">
+                <span>Widoczna</span>
+                <i class='fas fa-eye'></i>
+            </button>
+            <button class="btn error page_unpublished_btn" data-tooltip="Pokaż">
+                <span>Ukryta</span>
+                <i class='fas fa-eye-slash'></i>
+            </button>
+        </div>
+
+        <button class="btn subtle undo ml1" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo ml1" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
         <button class="btn primary preview ml1" data-tooltip="Otwórz stronę w nowej karcie">
             Podgląd <i class="fas fa-eye"></i>
@@ -135,8 +139,17 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
             <i class="fas fa-paint-brush"></i>
         </button>
+        <button class="btn transparent edit_seo_btn bold" data-tooltip_position="left">
+            SEO
+        </button>
+
+
+        <div style="flex-grow:1"> </div>
         <button class="btn transparent advanced_mode_btn" data-tooltip_position="left" data-tooltip="Tryb zaawansowany">
             <i class="fas fa-hammer"></i>
+        </button>
+        <button class="btn transparent delete_pageable_btn">
+            <i class="fas fa-trash"></i>
         </button>
     </div>
 

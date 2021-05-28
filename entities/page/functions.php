@@ -421,11 +421,11 @@ function renderPage($page_id, $data = [])
 
     <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
         <div class="edit_page_menu hidden">
-            <button class="mla xbutton published" data-tooltip="Ukryj">
+            <button class="mla xbutton page_published_btn" data-tooltip="Ukryj">
                 <span>Widoczna</span>
                 <i class='fas fa-eye'></i>
             </button>
-            <button class="mla xbutton unpublished" data-tooltip="Pokaż">
+            <button class="mla xbutton page_unpublished_btn" data-tooltip="Pokaż">
                 <span>Ukryta</span>
                 <i class='fas fa-eye-slash'></i>
             </button>
@@ -437,89 +437,21 @@ function renderPage($page_id, $data = [])
         </div>
 
         <style>
-            .edit_page_menu {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: #222;
-                padding: 0 5px;
-                height: var(--body_padding_top);
-                display: flex;
-                align-items: stretch;
-                z-index: 10000;
-                --hover-shadow: none;
-                line-height: var(--body_padding_top);
-            }
-
-            #p .edit_page_menu .xbutton {
-                padding: 0 10px;
-                background: none;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-            }
-
-            #p .edit_page_menu .xbutton:hover span {
-                text-decoration: underline;
-            }
-
             .no_touch {
                 --body_padding_top: 30px;
-            }
-
-            .touch_device .edit_page_menu {
-                display: none !important;
-            }
-
-
-            .edit_page_menu.published .unpublished,
-            .edit_page_menu:not(.published) .published {
-                display: none;
-            }
-
-            #p .edit_page_menu .published {
-                color: #7c7
-            }
-
-            #p .edit_page_menu .unpublished {
-                color: #c88
             }
         </style>
 
         <script>
             domload(() => {
-                $(".edit_page_menu .published").addEventListener("click", () => {
-                    doSetPublished(0);
+                $(".edit_page_menu .page_published_btn").addEventListener("click", () => {
+                    setPagePublished(<?= $page_id ?>, 0);
+                });
+                $(".edit_page_menu .page_unpublished_btn").addEventListener("click", () => {
+                    setPagePublished(<?= $page_id ?>, 1);
                 });
 
-                $(".edit_page_menu .unpublished").addEventListener("click", () => {
-                    doSetPublished(1);
-                });
-
-                const doSetPublished = (published) => {
-                    showLoader();
-                    xhr({
-                        url: STATIC_URLS["ADMIN"] + "/page/save",
-                        params: {
-                            page: {
-                                page_id: <?= $page_id ?>,
-                                active: published
-                            },
-                        },
-                        success: (res) => {
-                            hideLoader();
-                            setPublished(published);
-                        },
-                    });
-                }
-
-                const setPublished = (published) => {
-                    $(".edit_page_menu").classList.toggle("published", published);
-
-                }
-
-                setPublished(<?= $page_data["active"] ?>);
+                setPagePublishedCallback(<?= $page_data["active"] ?>);
 
                 $(".edit_page_menu").classList.remove("hidden");
             });

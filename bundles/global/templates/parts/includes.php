@@ -89,8 +89,8 @@ if (defined("ROUTE")) {
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-    <!-- <link href="/builds/admin_front.css?v=<?= version("admin_front") ?>" rel="stylesheet">
-    <script src="/builds/admin_front.js?v=<?= version("admin_front") ?>"></script> -->
+    <link href="/builds/admin_everywhere.css?v=<?= version("admin_everywhere") ?>" rel="stylesheet">
+    <script src="/builds/admin_everywhere.js?v=<?= version("admin_everywhere") ?>"></script>
 <?php endif ?>
 
 <meta charset="utf-8">

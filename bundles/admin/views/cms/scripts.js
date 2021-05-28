@@ -102,19 +102,42 @@ domload(() => {
 
 	$(".piep_editor_header .breadcrumbs")._set_content(breadcrumbs);
 
-	const edit_pageable_btn = $(".edit_pageable_btn");
-	if (edit_pageable_btn) {
-		edit_pageable_btn.addEventListener("click", () => {
-			getEditPageableModal()._show(pageable_data, { source: edit_pageable_btn });
-		});
-	}
-
 	$(".piep_editor_header .preview").addEventListener("click", () => {
 		previewUrl(preview_url, { v_dom_json: getSaveVDOMJson() });
 	});
 
+	const is_template = pageable_data.parent_template_id !== undefined;
+	const delete_pageable_btn = $(".delete_pageable_btn");
+	delete_pageable_btn.dataset.tooltip = is_template ? "Usuń szablon" : "Usuń stronę";
+	delete_pageable_btn.addEventListener("click", () => {
+		if (!confirm(`Czy aby na pewno chcesz usunąć ${is_template ? "ten szablon" : "tę stronę"}?`)) {
+			return;
+		}
+
+		showLoader();
+
+		xhr({
+			url: `${STATIC_URLS["ADMIN"]}/${is_template ? "template" : "page"}/delete/${pageable_data[is_template ? "template_id" : "page_id"]}`,
+			success: (res) => {
+				hideLoader();
+				window.location.href = STATIC_URLS["ADMIN"] + `/${is_template ? "szablony" : "strony"}`;
+			},
+		});
+	});
+
+	const page_publish = $(".page_publish");
+	if (is_template) {
+		page_publish.classList.add("hidden");
+	} else {
+		page_publish._child(".page_published_btn").addEventListener("click", () => {
+			setPagePublished(page_data.page_id, 0);
+		});
+		page_publish._child(".page_unpublished_btn").addEventListener("click", () => {
+			setPagePublished(page_data.page_id, 1);
+		});
+	}
+
 	const edit_seo_btn = $(".edit_seo_btn");
-	const seo_state_icon = edit_seo_btn._child(".seo_state_icon");
 	const page_seo_data_modal = getPageSeoDataModal();
 
 	edit_seo_btn.addEventListener("click", () => {
@@ -160,8 +183,6 @@ domload(() => {
 		const is_seo_ok = page_data.seo_title && page_data.seo_description;
 		edit_seo_btn.classList.toggle("text_success", is_seo_ok);
 		edit_seo_btn.classList.toggle("text_warning", !is_seo_ok);
-		// seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-times"></i>`);
-		seo_state_icon._set_content(is_seo_ok ? html`<i class="fas fa-check"></i>` : html`<i class="fas fa-exclamation-triangle"></i>`);
 
 		edit_seo_btn.dataset.tooltip = html`
 			<div class="semi_bold">Tytuł strony:</div>
