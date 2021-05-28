@@ -190,8 +190,6 @@ function renderGeneralProductsList($params)
         $actual_order = "AVG(gross_price) DESC";
     }
 
-    $where .= " AND pv.common = 0";
-
     /** @var PaginationParams */
     $pagination_params = [
         "select" => "
@@ -259,6 +257,9 @@ function renderGeneralProductsList($params)
         $product_definite_variant_option_ids = [];
 
         foreach ($options as $variant_id => $variant_option_ids) {
+            if (count($variant_option_ids) === 1) {
+                continue;
+            }
             $first_matched_option_id = null;
             $definite = true;
             foreach ($variant_option_ids as $variant_option_id) {
