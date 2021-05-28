@@ -56,15 +56,15 @@
 			<div class="pretty_radio flex columns_6 global_root spiky"></div>
 
 			<div class="label normal">Inny rozmiar</div>
-			<div class="glue_children">
-				<input class="field value_input" />
-				<select class="piep_editor_unit_input field inline">
+			<unit-input>
+				<input />
+				<select>
 					<option value="px">px</option>
 					<option value="em">em</option>
 					<option value="rem">rem</option>
 					<option value=""></option>
 				</select>
-			</div>
+			</unit-input>
 		`,
 	});
 

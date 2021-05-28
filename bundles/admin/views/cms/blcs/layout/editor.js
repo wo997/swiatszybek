@@ -9,17 +9,38 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Szerokość</div>
-			<input class="field" data-blc_prop="styles.width" />
+			<unit-input data-blc_prop="styles.width">
+				<input />
+				<select>
+					<option value="px">px</option>
+					<option value="%">%</option>
+					<option value=""></option>
+				</select>
+			</unit-input>
 
 			<div class="glue_children">
 				<div class="mr2 case_advanced">
 					<div class="label normal">Minimalna</div>
-					<input class="field" data-blc_prop="styles.minWidth" />
+					<unit-input data-blc_prop="styles.minWidth">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 
 				<div>
 					<div class="label normal">Maksymalna</div>
-					<input class="field" data-blc_prop="styles.maxWidth" />
+					<unit-input data-blc_prop="styles.maxWidth">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 			</div>
 		`,
@@ -31,17 +52,36 @@
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
 			<div class="label">Wysokość</div>
-			<input class="field" data-blc_prop="styles.height" />
+			<unit-input data-blc_prop="styles.height">
+				<input />
+				<select>
+					<option value="px">px</option>
+					<option value="%">%</option>
+					<option value=""></option>
+				</select>
+			</unit-input>
 
 			<div class="glue_children">
 				<div class="mr2">
 					<div class="label normal">Minimalna</div>
-					<input class="field" data-blc_prop="styles.minHeight" />
+					<unit-input data-blc_prop="styles.minHeight">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 
 				<div class="case_advanced">
 					<div class="label normal">Maksymalna</div>
-					<input class="field" data-blc_prop="styles.maxHeight" />
+					<unit-input data-blc_prop="styles.maxHeight">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 			</div>
 		`,
@@ -73,15 +113,47 @@
 
 			<div class="flex align_center center center_fields" data-bind_wrapper="margins">
 				<div>
-					<input class="field" data-blc_prop="styles.marginLeft" placeholder="Lewy" data-bind_dir="left" />
+					<unit-input data-blc_prop="styles.marginLeft" data-bind_dir="left">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↔</option>
+						</select>
+					</unit-input>
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="styles.marginTop" placeholder="Górny" data-bind_dir="top" />
+					<unit-input class="mb4" data-blc_prop="styles.marginTop" data-bind_dir="top">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↕</option>
+						</select>
+					</unit-input>
 
-					<input class="field" data-blc_prop="styles.marginBottom" placeholder="Dolny" data-bind_dir="bottom" />
+					<unit-input data-blc_prop="styles.marginBottom" data-bind_dir="bottom">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↕</option>
+						</select>
+					</unit-input>
 				</div>
 				<div>
-					<input class="field" data-blc_prop="styles.marginRight" placeholder="Prawy" data-bind_dir="right" />
+					<unit-input data-blc_prop="styles.marginRight" data-bind_dir="right">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↔</option>
+						</select>
+					</unit-input>
 				</div>
 			</div>`,
 	});
@@ -113,15 +185,47 @@
 
 			<div class="flex align_center center center_fields" data-bind_wrapper="paddings">
 				<div>
-					<input class="field" data-blc_prop="styles.paddingLeft" placeholder="Lewy" data-bind_dir="left" />
+					<unit-input data-blc_prop="styles.paddingLeft" data-bind_dir="left">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↔</option>
+						</select>
+					</unit-input>
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="styles.paddingTop" placeholder="Górny" data-bind_dir="top" />
+					<unit-input class="mb4" data-blc_prop="styles.paddingTop" data-bind_dir="top">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↕</option>
+						</select>
+					</unit-input>
 
-					<input class="field" data-blc_prop="styles.paddingBottom" placeholder="Dolny" data-bind_dir="bottom" />
+					<unit-input data-blc_prop="styles.paddingBottom" data-bind_dir="bottom">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↕</option>
+						</select>
+					</unit-input>
 				</div>
 				<div>
-					<input class="field" data-blc_prop="styles.paddingRight" placeholder="Prawy" data-bind_dir="right" />
+					<unit-input data-blc_prop="styles.paddingRight" data-bind_dir="right">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+							<option value="auto">↔</option>
+						</select>
+					</unit-input>
 				</div>
 			</div>
 		`,
@@ -155,15 +259,39 @@
 
 			<div class="flex align_center center center_fields" data-bind_wrapper="borderWidths">
 				<div>
-					<input class="field" data-blc_prop="styles.borderLeftWidth" placeholder="Lewy" data-bind_dir="left" />
+					<unit-input data-blc_prop="styles.borderLeftWidth" data-bind_dir="left">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 				<div class="ml2 mr2">
-					<input class="field mb4" data-blc_prop="styles.borderTopWidth" placeholder="Górny" data-bind_dir="top" />
+					<unit-input class="mb4" data-blc_prop="styles.borderTopWidth" data-bind_dir="top">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 
-					<input class="field" data-blc_prop="styles.borderBottomWidth" placeholder="Dolny" data-bind_dir="bottom" />
+					<unit-input data-blc_prop="styles.borderBottomWidth" data-bind_dir="bottom">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 				<div>
-					<input class="field" data-blc_prop="styles.borderRightWidth" placeholder="Prawy" data-bind_dir="right" />
+					<unit-input data-blc_prop="styles.borderRightWidth" data-bind_dir="right">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
 				</div>
 			</div>
 
@@ -197,5 +325,10 @@
 				</div>
 			</div>
 		`,
+		init: (piep_cms) => {
+			piep_cms.side_menu._children(".center_fields unit-input input, .center_fields unit-input select").forEach((e) => {
+				e.classList.add("small");
+			});
+		},
 	});
 }

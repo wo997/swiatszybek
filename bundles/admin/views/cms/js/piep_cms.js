@@ -596,12 +596,12 @@ class PiepCMS {
 
 			registerForms();
 
-			const value_input = font_size_wrapper._child(".value_input");
-			const unit_input = font_size_wrapper._child(".piep_editor_unit_input");
+			const unit_input = font_size_wrapper._child("unit-input");
 
 			if (!middle_input.classList.contains("wrrgstrd")) {
 				middle_input.classList.add("wrrgstrd");
 
+				// TODO: remove?
 				let middle_input_setting_val_user = false;
 				middle_input.addEventListener("value_set", () => {
 					if (middle_input_setting_val_user) {
@@ -612,31 +612,17 @@ class PiepCMS {
 					const get_value = middle_input._get_value();
 					const on_the_list = !!font_sizes.find((f) => `var(--${f.name})` === get_value);
 
-					/** @type {any} */
-					let val = get_value;
-					let uni = "";
-					for (const unit of ["px", "em", "rem"]) {
-						if (get_value.endsWith(unit)) {
-							val = numberFromStr(val);
-							uni = unit;
-						}
-					}
-
-					const set_val = on_the_list ? "" : val;
-					value_input._set_value(set_val, { quiet: true });
-					unit_input._set_value(on_the_list ? "px" : uni, { quiet: true });
+					unit_input._set_value(on_the_list ? "" : get_value, { quiet: true });
 
 					radio_group._set_value(on_the_list ? get_value : "", { quiet: true });
 				});
 
 				const change = () => {
 					middle_input_setting_val_user = true;
-					middle_input._set_value(value_input._get_value() + unit_input._get_value());
+					middle_input._set_value(unit_input._get_value());
 					middle_input_setting_val_user = false;
 				};
 				unit_input.addEventListener("change", change);
-				value_input.addEventListener("change", change);
-				value_input.addEventListener("input", change);
 
 				radio_group.addEventListener("change", () => {
 					middle_input._set_value(radio_group._get_value());
