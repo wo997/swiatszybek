@@ -316,9 +316,10 @@ class Entity
      *
      * @param  string $prop_name !entity_prop_name
      * @param  mixed $val
+     * @param  boolean $quiet
      * @return void
      */
-    public function setProp($prop_name, $val)
+    public function setProp($prop_name, $val, $quiet = false)
     {
         if ($prop_name === $this->id_column && $this->getId() !== -1) {
             // set id once, ezy
@@ -375,11 +376,13 @@ class Entity
             $val = EntityManager::setOneToOneEntity($this, $prop_name, $prop_type, $val, $relation_data);
         }
 
-        $setter = "set_" . $this->name . "_entity_" .  $prop_name;
-        $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
-        foreach ($vals as $v) {
-            if ($v !== null) {
-                $val = $v;
+        if ($quiet === false) {
+            $setter = "set_" . $this->name . "_entity_" .  $prop_name;
+            $vals = EventListener::dispatch($setter, ["obj" => $this, "val" => $val]);
+            foreach ($vals as $v) {
+                if ($v !== null) {
+                    $val = $v;
+                }
             }
         }
 

@@ -34,9 +34,7 @@ EventListener::register("set_template_entity_is_global", function ($params) {
     }
 });
 
-EventListener::register("before_save_template_entity", function ($params) {
-    /** @var Entity Template  */
-    $template = $params["obj"];
 
-    updatePageableMetadata("template", $template->getId());
+EventListener::register("before_save_template_entity", function ($params) {
+    updatePageableMetadata("template", $params["obj"]->getId());
 });
