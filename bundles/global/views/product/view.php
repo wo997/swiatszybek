@@ -393,7 +393,6 @@ if ($main_img) {
                     <span class="pflo" data-option_id="<?= $product_feature_option["product_feature_option_id"] ?>">
                         <?= $product_feature_option["value"] ?>
                         <i class="fas fa-check case_active text_success"></i>
-                        <i class="fas fa-times case_inactive"></i>
                     </span>
                 <?php } ?>
             </div>

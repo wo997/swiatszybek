@@ -339,10 +339,10 @@ comment-comp.comp {
 	.pflc {
 		padding: 10px 10px 10px 0;
 		&:first-child {
-			width: 35%;
+			width: 40%;
 		}
 		&:last-child {
-			width: 65%;
+			width: 60%;
 		}
 		@media (max-width: 600px) {
 			&:first-child {
@@ -361,12 +361,10 @@ comment-comp.comp {
 		&.inactive {
 			opacity: 0.5;
 		}
-		&:not(.active) .case_active,
-		&:not(.inactive) .case_inactive {
+		&:not(.active) .case_active {
 			display: none;
 		}
-		.case_active,
-		.case_inactive {
+		.case_active {
 			margin: 0 2px;
 			font-size: 0.9em;
 		}

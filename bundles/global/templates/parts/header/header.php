@@ -33,7 +33,7 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
         } else if ($menu["link_what"] === "page") {
             $menu["url"] = DB::fetchVal("SELECT url FROM page WHERE page_id = " . $menu["link_what_id"]);
         }
-        $html .= "<li><a href=\"" . $menu["url"] . "\">" . $menu["name"] . "</a>" .  $traverse_result . "</li>";
+        $html .= "<li><a href=\"/" . $menu["url"] . "\">" . $menu["name"] . "</a>" .  $traverse_result . "</li>";
     }
     $html .= "</ul>";
     return $html;

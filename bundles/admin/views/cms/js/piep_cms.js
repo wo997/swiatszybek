@@ -2290,45 +2290,46 @@ class PiepCMS {
 	 * @param {vDomNode} v_node
 	 */
 	getVNodeDisplayName(v_node) {
-		if (v_node.settings) {
-			const display_name = v_node.settings.display_name;
-			if (display_name) {
-				return display_name;
-			}
-		}
-
-		const tag = v_node.tag;
-		const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
-
-		const map_tag_display_name = {
-			a: "Link",
-			h1: "Nagłówek H1",
-			h2: "Nagłówek H2",
-			h3: "Nagłówek H3",
-			h4: "Nagłówek H4",
-			h5: "Nagłówek H5",
-			h6: "Nagłówek H6",
-			div: "Kontener",
-			p: "Paragraf",
-			span: "Tekst",
-			ul: "Lista",
-			li: "Element listy",
-		};
 		let display_name = "";
-		if (v_node.settings && v_node.settings.template_hook_name) {
-			display_name = v_node.settings.template_hook_name;
-		} else if (v_node.module_name) {
-			if (blc_schema) {
-				display_name = blc_schema.label;
-			}
-		} else if (map_tag_display_name[tag]) {
-			display_name = map_tag_display_name[tag];
+
+		if (v_node.settings && v_node.settings.display_name) {
+			display_name = v_node.settings.display_name;
 		}
 
-		if (v_node.classes.includes("vertical_container")) {
-			display_name = "Kontener";
-		} else if (v_node.classes.includes("columns_container")) {
-			display_name = "Kolumny";
+		if (!display_name) {
+			const tag = v_node.tag;
+			const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+
+			const map_tag_display_name = {
+				a: "Link",
+				h1: "Nagłówek H1",
+				h2: "Nagłówek H2",
+				h3: "Nagłówek H3",
+				h4: "Nagłówek H4",
+				h5: "Nagłówek H5",
+				h6: "Nagłówek H6",
+				div: "Kontener",
+				p: "Paragraf",
+				span: "Tekst",
+				ul: "Lista",
+				li: "Element listy",
+			};
+
+			if (v_node.settings && v_node.settings.template_hook_name) {
+				display_name = v_node.settings.template_hook_name;
+			} else if (v_node.module_name) {
+				if (blc_schema) {
+					display_name = blc_schema.label;
+				}
+			} else if (map_tag_display_name[tag]) {
+				display_name = map_tag_display_name[tag];
+			}
+
+			if (v_node.classes.includes("vertical_container")) {
+				display_name = "Kontener";
+			} else if (v_node.classes.includes("columns_container")) {
+				display_name = "Kolumny";
+			}
 		}
 
 		if (v_node.settings && v_node.settings.link) {
@@ -4259,11 +4260,12 @@ class PiepCMS {
 					let prop_val;
 					let v_node_ref = v_node;
 
-					// if (this.isTextContainer(v_node)) {
-					// 	if (!is_text_container_prop) {
-					// 		continue;
-					// 	}
-					// } else
+					// ignore textable styles of text container if there is any selection
+					if (this.text_selection) {
+						if (this.isTextContainer(v_node) && piep_cms_manager.textable_props.includes(prop_str)) {
+							continue;
+						}
+					}
 
 					// only textables propagate things like text container tag name or text alignment
 					if (this.isTextable(v_node)) {

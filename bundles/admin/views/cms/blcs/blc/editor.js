@@ -3,6 +3,7 @@
 	piep_cms_manager.registerProp({
 		name: "display_name",
 		type_groups: ["advanced"],
+		affects_selection: true,
 		menu_html: html`
 			<div class="label">Pomocnicza nazwa bloku</div>
 			<input class="field trim" data-blc_prop="settings.display_name" />
