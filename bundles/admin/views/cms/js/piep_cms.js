@@ -1910,7 +1910,9 @@ class PiepCMS {
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
 			if (this.filter_blc_menu._get_value() === "layout") {
-				this.editLayout();
+				if (!this.text_selection) {
+					this.editLayout();
+				}
 			} else {
 				this.finishEditingLayout();
 			}
