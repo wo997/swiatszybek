@@ -71,6 +71,7 @@ function CartProducts_ProductComp(comp, parent, data = undefined) {
 		template,
 		initialize: () => {
 			comp._nodes.remove_btn.addEventListener("click", () => {
+				comp.style.opacity = "0.6";
 				xhr({
 					url: "/cart/remove-product",
 					params: {
