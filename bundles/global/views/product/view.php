@@ -273,6 +273,8 @@ if ($main_img) {
                 <button class="btn subtle add_qty">
                     <i class="fas fa-plus"></i>
                 </button>
+
+                <div class="qty_price_quick"></div>
             </div>
             <br>
             <button class="btn fill medium buy_btn main_buy_btn">

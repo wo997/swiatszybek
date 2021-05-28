@@ -152,6 +152,11 @@ function getPhysicalMeasures()
                     "factor" => 10000
                 ],
                 [
+                    "id" => "bar",
+                    "name" => "bar",
+                    "factor" => 100000
+                ],
+                [
                     "id" => "N.mm2",
                     "name" => "N/mm²",
                     "factor" => 10000 * 100

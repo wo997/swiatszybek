@@ -99,6 +99,11 @@
 	--slide_padding: 3px;
 }
 
+.main_qty_controls .qty_price_quick {
+	align-self: center;
+	margin-left: 10px;
+}
+
 @media (max-width: 650px) {
 	.comments_label {
 		width: 100%;

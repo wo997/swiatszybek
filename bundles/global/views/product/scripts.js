@@ -103,6 +103,12 @@ domload(() => {
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
 
+	const qty_input = $(".main_qty_controls .val_qty");
+	const more_qty = qty_input.addEventListener("change", () => {
+		const qty = qty_input._get_value();
+		$(".main_qty_controls .qty_price_quick")._set_content(qty !== 1 ? `${numberFromStr(single_product.gross_price) * qty} zł` : "");
+	});
+
 	const main_buy_btn = $(".main_buy_btn");
 	main_buy_btn.addEventListener("click", () => {
 		if (adding_product_from_cart) {
@@ -113,7 +119,7 @@ domload(() => {
 			showNotification(`Wybierz wariant produktu powyżej`, { type: "error", one_line: true });
 			return;
 		}
-		const more_qty = $(".main_qty_controls .val_qty")._get_value();
+		const more_qty = qty_input._get_value();
 		const product_id = single_product.product_id;
 		const cart_product = user_cart.products.find((e) => e.product_id === product_id);
 		const was_qty = cart_product ? cart_product.qty : 0;
@@ -125,12 +131,6 @@ domload(() => {
 		spinner_wrapper.classList.add("spinning");
 
 		let offset = 290;
-
-		// HEY - seems like it does not need to be considered
-		// if (!user_cart.products.find((p) => p.product_id === product_id)) {
-		// 	// new
-		// 	offset += 140; // probably enough to contain a row
-		// }
 
 		xhr({
 			url: "/cart/add-product",
