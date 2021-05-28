@@ -370,7 +370,7 @@ if ($main_img) {
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
     ?>
-        <div class="pflr" data-feature_id="<?= $product_feature["product_feature_id"] ?>">
+        <div class="pflr">
             <div class="pflc semi_bold">
                 <?= $product_feature["name"] ?>
             </div>

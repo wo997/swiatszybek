@@ -504,7 +504,7 @@ function initProductCommentsCallback() {
 		searchComments();
 	});
 
-	const searchComments = () => {
+	const searchComments = (callback = undefined) => {
 		const datatable_params = {};
 		// just newest on top is ok
 		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
@@ -532,6 +532,10 @@ function initProductCommentsCallback() {
 			success: (res) => {
 				comments_list._data = res.rows;
 				comments_list._render();
+
+				if (callback) {
+					callback();
+				}
 			},
 		});
 	};

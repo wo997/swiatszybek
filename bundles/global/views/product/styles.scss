@@ -3,7 +3,7 @@
 .price_label {
 	margin: 1em 0;
 	font-size: 1.8em;
-	font-weight: var(--semi_bold);
+	font-weight: var(--bold);
 }
 
 .variant_option {
@@ -368,7 +368,7 @@ comment-comp.comp {
 			margin: 0 2px;
 			font-size: 0.9em;
 		}
-		.pflo {
+		& {
 			white-space: nowrap;
 		}
 	}
