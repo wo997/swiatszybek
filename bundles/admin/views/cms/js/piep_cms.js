@@ -102,7 +102,7 @@ class PiepCMS {
 				return;
 			}
 
-			if (this.grabbed_v_node || this.editing_layout || !this.content_active) {
+			if (this.grabbed_v_node || !this.content_active) {
 				return;
 			}
 
@@ -892,9 +892,9 @@ class PiepCMS {
 
 				ev.preventDefault();
 			} else {
-				if (!target._parent(this.side_menu)) {
-					this.finishEditingLayout();
-				}
+				// if (!target._parent(this.side_menu)) {
+				// 	this.finishEditingLayout();
+				// }
 			}
 		});
 	}
@@ -3227,12 +3227,6 @@ class PiepCMS {
 	}
 
 	editLayout() {
-		// layout edit is not allowed on textables, need to select text container ;)
-		// const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
-		// if (this.isTextable(focus_v_node_data.v_node)) {
-		// 	this.setFocusNode(focus_v_node_data.parent_v_nodes[0].id);
-		// }
-
 		this.editing_layout = true;
 
 		this.container.classList.add("editing_layout");
@@ -3253,212 +3247,217 @@ class PiepCMS {
 		let layout_html = "";
 
 		const edit_node = this.getNode(this.focus_node_vid);
-		const edit_node_rect = edit_node.getBoundingClientRect();
 
-		const focus_node_style = window.getComputedStyle(edit_node);
+		const can_edit_layout = edit_node && !edit_node.classList.contains("textable");
 
-		const orange = "#d806";
-		const green = "#3d56";
-		const mr_top = numberFromStr(focus_node_style.marginTop);
-		const mr_right = numberFromStr(focus_node_style.marginRight);
-		const mr_bottom = numberFromStr(focus_node_style.marginBottom);
-		const mr_left = numberFromStr(focus_node_style.marginLeft);
-		const pd_top = numberFromStr(focus_node_style.paddingTop);
-		const pd_right = numberFromStr(focus_node_style.paddingRight);
-		const pd_bottom = numberFromStr(focus_node_style.paddingBottom);
-		const pd_left = numberFromStr(focus_node_style.paddingLeft);
-		const bw_top = numberFromStr(focus_node_style.borderTopWidth);
-		const bw_right = numberFromStr(focus_node_style.borderRightWidth);
-		const bw_bottom = numberFromStr(focus_node_style.borderBottomWidth);
-		const bw_left = numberFromStr(focus_node_style.borderLeftWidth);
+		if (can_edit_layout) {
+			const edit_node_rect = edit_node.getBoundingClientRect();
 
-		// margins
-		const display_margin = (left, top, width, height, background) => {
-			layout_html += html`<div
-				class="margin_display"
-				style="
+			const focus_node_style = window.getComputedStyle(edit_node);
+
+			const orange = "#d806";
+			const green = "#3d56";
+			const mr_top = numberFromStr(focus_node_style.marginTop);
+			const mr_right = numberFromStr(focus_node_style.marginRight);
+			const mr_bottom = numberFromStr(focus_node_style.marginBottom);
+			const mr_left = numberFromStr(focus_node_style.marginLeft);
+			const pd_top = numberFromStr(focus_node_style.paddingTop);
+			const pd_right = numberFromStr(focus_node_style.paddingRight);
+			const pd_bottom = numberFromStr(focus_node_style.paddingBottom);
+			const pd_left = numberFromStr(focus_node_style.paddingLeft);
+			const bw_top = numberFromStr(focus_node_style.borderTopWidth);
+			const bw_right = numberFromStr(focus_node_style.borderRightWidth);
+			const bw_bottom = numberFromStr(focus_node_style.borderBottomWidth);
+			const bw_left = numberFromStr(focus_node_style.borderLeftWidth);
+
+			// margins
+			const display_margin = (left, top, width, height, background) => {
+				layout_html += html`<div
+					class="margin_display"
+					style="
                 left:${left}px;
                 top:${top + this.content_scroll.scrollTop}px;
                 width:${width}px;
                 height:${height}px;
                 background:${background}"
-			></div>`;
-		};
+				></div>`;
+			};
 
-		{
-			// top
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top;
-			let width = edit_node_rect.width;
-			let height = Math.abs(mr_top);
-			let background = mr_top > 0 ? orange : orange;
-			if (mr_top > 0) {
-				top -= height;
+			{
+				// top
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top;
+				let width = edit_node_rect.width;
+				let height = Math.abs(mr_top);
+				let background = mr_top > 0 ? orange : orange;
+				if (mr_top > 0) {
+					top -= height;
+				}
+				display_margin(left, top, width, height, background);
 			}
-			display_margin(left, top, width, height, background);
-		}
-		{
-			// bottom
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top + edit_node_rect.height;
-			let width = edit_node_rect.width;
-			let height = Math.abs(mr_bottom);
-			let background = mr_bottom > 0 ? orange : orange;
-			if (mr_bottom < 0) {
-				top -= height;
+			{
+				// bottom
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top + edit_node_rect.height;
+				let width = edit_node_rect.width;
+				let height = Math.abs(mr_bottom);
+				let background = mr_bottom > 0 ? orange : orange;
+				if (mr_bottom < 0) {
+					top -= height;
+				}
+				display_margin(left, top, width, height, background);
 			}
-			display_margin(left, top, width, height, background);
-		}
-		{
-			// left
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top;
-			let width = Math.abs(mr_left);
-			let height = edit_node_rect.height;
-			let background = mr_top > 0 ? orange : orange;
-			if (mr_left > 0) {
-				left -= width;
+			{
+				// left
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top;
+				let width = Math.abs(mr_left);
+				let height = edit_node_rect.height;
+				let background = mr_top > 0 ? orange : orange;
+				if (mr_left > 0) {
+					left -= width;
+				}
+				display_margin(left, top, width, height, background);
 			}
-			display_margin(left, top, width, height, background);
-		}
-		{
-			// right
-			let left = edit_node_rect.left + edit_node_rect.width;
-			let top = edit_node_rect.top;
-			let width = Math.abs(mr_right);
-			let height = edit_node_rect.height;
-			let background = mr_top > 0 ? orange : orange;
-			if (mr_right < 0) {
-				left -= width;
+			{
+				// right
+				let left = edit_node_rect.left + edit_node_rect.width;
+				let top = edit_node_rect.top;
+				let width = Math.abs(mr_right);
+				let height = edit_node_rect.height;
+				let background = mr_top > 0 ? orange : orange;
+				if (mr_right < 0) {
+					left -= width;
+				}
+				display_margin(left, top, width, height, background);
 			}
-			display_margin(left, top, width, height, background);
-		}
 
-		// paddings
-		const display_padding = (left, top, width, height) => {
-			layout_html += html`<div
-				class="padding_display"
-				style="
+			// paddings
+			const display_padding = (left, top, width, height) => {
+				layout_html += html`<div
+					class="padding_display"
+					style="
                 left:${left}px;
                 top:${top + this.content_scroll.scrollTop}px;
                 width:${width}px;
                 height:${height}px;
                 background:${green}"
-			></div>`;
-		};
+				></div>`;
+			};
 
-		{
-			// top
-			let left = edit_node_rect.left + bw_left;
-			let top = edit_node_rect.top + bw_top;
-			let width = edit_node_rect.width - bw_left - bw_right;
-			let height = Math.abs(pd_top);
-			display_padding(left, top, width, height);
-		}
-		{
-			// bottom
-			let left = edit_node_rect.left + bw_left;
-			let top = edit_node_rect.top + edit_node_rect.height - bw_bottom;
-			let width = edit_node_rect.width - bw_left - bw_right;
-			let height = Math.abs(pd_bottom);
-			top -= height;
-			display_padding(left, top, width, height);
-		}
-		{
-			// left
-			let left = edit_node_rect.left + bw_left;
-			let top = edit_node_rect.top + bw_top;
-			let width = Math.abs(pd_left);
-			let height = edit_node_rect.height - bw_top - bw_bottom;
-			display_padding(left, top, width, height);
-		}
-		{
-			// right
-			let left = edit_node_rect.left + edit_node_rect.width - bw_right;
-			let top = edit_node_rect.top + bw_top;
-			let width = Math.abs(pd_right);
-			let height = edit_node_rect.height - bw_top - bw_bottom;
-			left -= width;
-			display_padding(left, top, width, height);
-		}
+			{
+				// top
+				let left = edit_node_rect.left + bw_left;
+				let top = edit_node_rect.top + bw_top;
+				let width = edit_node_rect.width - bw_left - bw_right;
+				let height = Math.abs(pd_top);
+				display_padding(left, top, width, height);
+			}
+			{
+				// bottom
+				let left = edit_node_rect.left + bw_left;
+				let top = edit_node_rect.top + edit_node_rect.height - bw_bottom;
+				let width = edit_node_rect.width - bw_left - bw_right;
+				let height = Math.abs(pd_bottom);
+				top -= height;
+				display_padding(left, top, width, height);
+			}
+			{
+				// left
+				let left = edit_node_rect.left + bw_left;
+				let top = edit_node_rect.top + bw_top;
+				let width = Math.abs(pd_left);
+				let height = edit_node_rect.height - bw_top - bw_bottom;
+				display_padding(left, top, width, height);
+			}
+			{
+				// right
+				let left = edit_node_rect.left + edit_node_rect.width - bw_right;
+				let top = edit_node_rect.top + bw_top;
+				let width = Math.abs(pd_right);
+				let height = edit_node_rect.height - bw_top - bw_bottom;
+				left -= width;
+				display_padding(left, top, width, height);
+			}
 
-		const layout_control_width = 15;
+			const layout_control_width = 15;
 
-		// just controls
-		/**
-		 *
-		 * @param {number} left
-		 * @param {number} top
-		 * @param {string} gener_prop
-		 * @param {string} spec_prop
-		 * @param {DirectionEnum} dir
-		 * @param {string} tooltip
-		 */
-		const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
-			layout_html += html`<div
-				class="layout_control ${gener_prop}_control"
-				data-layout_prop="${spec_prop}"
-				data-layout_dir="${dir}"
-				style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
-				data-tooltip="${tooltip}"
-			></div>`;
-		};
-		{
-			// left bottom
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
-		}
-		{
-			// right bottom
-			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
-			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
-			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
-		}
-		{
-			// left top
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top;
-			display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
-		}
-		{
-			// right top
-			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
-			let top = edit_node_rect.top;
-			display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
-		}
+			// just controls
+			/**
+			 *
+			 * @param {number} left
+			 * @param {number} top
+			 * @param {string} gener_prop
+			 * @param {string} spec_prop
+			 * @param {DirectionEnum} dir
+			 * @param {string} tooltip
+			 */
+			const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
+				layout_html += html`<div
+					class="layout_control ${gener_prop}_control"
+					data-layout_prop="${spec_prop}"
+					data-layout_dir="${dir}"
+					style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+					data-tooltip="${tooltip}"
+				></div>`;
+			};
+			{
+				// left bottom
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+				display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
+			}
+			{
+				// right bottom
+				let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+				let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+				display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
+			}
+			{
+				// left top
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top;
+				display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
+			}
+			{
+				// right top
+				let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+				let top = edit_node_rect.top;
+				display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
+			}
 
-		{
-			// top
-			let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
-			let top = edit_node_rect.top;
-			display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top", "Margines zewnętrzny górny");
-			display_layout_control(left, top, "borderWidth", "borderTopWidth", "top", "Grubość górnej krawędzi");
-			display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top", "Margines wewnętrzny górny");
-		}
-		{
-			// bottom
-			let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
-			let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
-			display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom", "Margines zewnętrzny dolny");
-			display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom", "Grubość dolnej krawędzi");
-			display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom", "Margines wewnętrzny dolny");
-		}
-		{
-			// left
-			let left = edit_node_rect.left;
-			let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
-			display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left", "Margines zewnętrzny lewy");
-			display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left", "Grubość lewej krawędzi");
-			display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left", "Margines wewnętrzny lewy");
-		}
-		{
-			// right
-			let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
-			let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
-			display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right", "Margines zewnętrzny prawy");
-			display_layout_control(left, top, "borderWidth", "borderRightWidth", "right", "Grubość prawej krawędzi");
-			display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right", "Margines wewnętrzny prawy");
+			{
+				// top
+				let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
+				let top = edit_node_rect.top;
+				display_layout_control(left, top - layout_control_width, "margin", "marginTop", "top", "Margines zewnętrzny górny");
+				display_layout_control(left, top, "borderWidth", "borderTopWidth", "top", "Grubość górnej krawędzi");
+				display_layout_control(left, top + layout_control_width, "padding", "paddingTop", "top", "Margines wewnętrzny górny");
+			}
+			{
+				// bottom
+				let left = edit_node_rect.left + edit_node_rect.width * 0.5 - layout_control_width * 0.5;
+				let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+				display_layout_control(left, top + layout_control_width, "margin", "marginBottom", "bottom", "Margines zewnętrzny dolny");
+				display_layout_control(left, top, "borderWidth", "borderBottomWidth", "bottom", "Grubość dolnej krawędzi");
+				display_layout_control(left, top - layout_control_width, "padding", "paddingBottom", "bottom", "Margines wewnętrzny dolny");
+			}
+			{
+				// left
+				let left = edit_node_rect.left;
+				let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
+				display_layout_control(left - layout_control_width, top, "margin", "marginLeft", "left", "Margines zewnętrzny lewy");
+				display_layout_control(left, top, "borderWidth", "borderLeftWidth", "left", "Grubość lewej krawędzi");
+				display_layout_control(left + layout_control_width, top, "padding", "paddingLeft", "left", "Margines wewnętrzny lewy");
+			}
+			{
+				// right
+				let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+				let top = edit_node_rect.top + edit_node_rect.height * 0.5 - layout_control_width * 0.5;
+				display_layout_control(left + layout_control_width, top, "margin", "marginRight", "right", "Margines zewnętrzny prawy");
+				display_layout_control(left, top, "borderWidth", "borderRightWidth", "right", "Grubość prawej krawędzi");
+				display_layout_control(left - layout_control_width, top, "padding", "paddingRight", "right", "Margines wewnętrzny prawy");
+			}
 		}
 
 		this.layout_controls._set_content(layout_html);
@@ -4155,7 +4154,7 @@ class PiepCMS {
 	 * @returns
 	 */
 	setFocusNode(vid) {
-		if (this.grabbed_v_node || this.editing_layout) {
+		if (this.grabbed_v_node) {
 			return;
 		}
 
@@ -4190,6 +4189,7 @@ class PiepCMS {
 			}
 
 			this.displaySelectionBreadcrumbs();
+			this.displayNodeLayout();
 		}
 
 		this.inspector_tree._children(".v_node_label").forEach((e) => {

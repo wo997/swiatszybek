@@ -232,16 +232,53 @@
 	});
 
 	piep_cms_manager.registerProp({
-		name: "border",
-		type_groups: ["layout", "appearance"],
+		name: "border_color",
+		type_groups: ["appearance"],
+		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		menu_html: html`
+			<div class="label">Kolor krawędzi / obramowania</div>
+
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderColors">
+				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
+					<p-checkbox data-value="all"></p-checkbox>
+					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome tego samego koloru">
+					<p-checkbox data-value="opposite"></p-checkbox>
+					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
+				</div>
+				<div class="checkbox_area" data-tooltip="Każdy krawędź może mieć inny kolor">
+					<p-checkbox data-value="none"></p-checkbox>
+					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
+				</div>
+			</div>
+
+			<div class="flex align_center center center_fields" data-bind_wrapper="borderColors">
+				<div>
+					<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
+				</div>
+				<div class="ml2 mr2">
+					<color-picker class="NOalpha mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
+
+					<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
+				</div>
+				<div>
+					<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
+				</div>
+			</div>
+		`,
+	});
+
+	piep_cms_manager.registerProp({
+		name: "border_width",
+		type_groups: ["appearance", "layout"],
 		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
 		menu_html: html`
 			<div class="label">
 				<div class="layout_info_rect" style="background: var(--border_control_clr);"></div>
-				Krawędź / Obramowanie
+				Grubość krawędzi / obramowania
 			</div>
 
-			<div class="label normal">Grubość</div>
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderWidths">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
@@ -294,41 +331,11 @@
 					</unit-input>
 				</div>
 			</div>
-
-			<div class="label normal">Kolor</div>
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderColors">
-				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
-					<p-checkbox data-value="all"></p-checkbox>
-					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
-				</div>
-				<div class="checkbox_area" data-tooltip="Krawędzie pionowe oraz poziome tego samego koloru">
-					<p-checkbox data-value="opposite"></p-checkbox>
-					<img src="/src/img/bind_hor_ver.svg" class="bind_directions_icon" />
-				</div>
-				<div class="checkbox_area" data-tooltip="Każdy krawędź może mieć inny kolor">
-					<p-checkbox data-value="none"></p-checkbox>
-					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
-				</div>
-			</div>
-
-			<div class="flex align_center center center_fields" data-bind_wrapper="borderColors">
-				<div>
-					<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
-				</div>
-				<div class="ml2 mr2">
-					<color-picker class="NOalpha mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
-
-					<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
-				</div>
-				<div>
-					<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
-				</div>
-			</div>
 		`,
-		init: (piep_cms) => {
-			piep_cms.side_menu._children(".center_fields unit-input input, .center_fields unit-input select").forEach((e) => {
-				e.classList.add("small");
-			});
-		},
+		// init: (piep_cms) => {
+		// 	piep_cms.side_menu._children(".center_fields unit-input input, .center_fields unit-input select").forEach((e) => {
+		// 		e.classList.add("small");
+		// 	});
+		// },
 	});
 }

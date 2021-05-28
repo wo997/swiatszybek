@@ -1,24 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
 	piep_cms_manager.registerFloatingProp({
-		name: "layout_btn",
-		blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
-		menu_html: html`
-			<button class="btn transparent small layout_btn" data-tooltip="Edytuj wymiary, marginesy, itd...">
-				<i class="fas fa-ruler-combined filter_icon"></i>
-			</button>
-		`,
-		init: (piep_cms) => {
-			piep_cms.container.addEventListener("click", (ev) => {
-				const target = $(ev.target);
-				if (target._parent(".layout_btn")) {
-					piep_cms.editLayout();
-				}
-			});
-		},
-	});
-
-	piep_cms_manager.registerFloatingProp({
 		name: "move_btn",
 		blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
 		menu_html: html`

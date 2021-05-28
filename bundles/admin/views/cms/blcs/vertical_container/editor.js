@@ -133,7 +133,7 @@
 						<div></div>
 					</div>
 				</div>
-				<div class="checkbox_area">
+				<div class="checkbox_area case_advanced">
 					<p-checkbox data-value="space-around"></p-checkbox>
 					<div class="flex_justify_content_vertical_icon" style="justify-content:space-around">
 						<div></div>
@@ -141,7 +141,7 @@
 						<div></div>
 					</div>
 				</div>
-				<div class="checkbox_area">
+				<div class="checkbox_area case_advanced">
 					<p-checkbox data-value="space-between"></p-checkbox>
 					<div class="flex_justify_content_vertical_icon" style="justify-content:space-between">
 						<div></div>
@@ -149,7 +149,7 @@
 						<div></div>
 					</div>
 				</div>
-				<div class="checkbox_area">
+				<div class="checkbox_area case_advanced">
 					<p-checkbox data-value="space-evenly"></p-checkbox>
 					<div class="flex_justify_content_vertical_icon" style="justify-content:space-evenly">
 						<div></div>
