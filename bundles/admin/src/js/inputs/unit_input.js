@@ -20,7 +20,7 @@ function registerUnitInputs(parent) {
 		input.classList.add("field");
 		select.classList.add("field", "inline", "blank", "unit_picker");
 
-		let setting_value = false;
+		let last_val;
 
 		/**
 		 *
@@ -28,9 +28,8 @@ function registerUnitInputs(parent) {
 		 * @param {SetDataOptions} options
 		 */
 		container._set_value = (value = null, options = {}) => {
-			if (setting_value) {
-				return;
-			}
+			const new_val = container._get_value();
+			const same = new_val === last_val;
 
 			value = def(value, "");
 			let unit;
@@ -52,27 +51,11 @@ function registerUnitInputs(parent) {
 
 			select._set_value(unit, { quiet: true });
 			input._set_value(value.substr(0, value.length - unit.length), { quiet: true });
-		};
 
-		let last_val = 0;
-		const anyChange = () => {
-			const new_val = container._get_value();
-			if (new_val === last_val) {
-				return;
+			if (!options.quiet && !same) {
+				container._dispatch_change();
 			}
-			last_val = new_val;
-
-			setting_value = true;
-			container._dispatch_change();
-			setTimeout(() => {
-				setting_value = false;
-			});
 		};
-
-		input.addEventListener("value_set", anyChange);
-		input.addEventListener("change", anyChange);
-		input.addEventListener("input", anyChange);
-		select.addEventListener("change", anyChange);
 
 		/**
 		 *

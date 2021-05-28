@@ -1024,6 +1024,7 @@ class PiepCMS {
 		const all_props_to_set = [prop_str];
 		bind_dirs.forEach((bind_dir) => {
 			const bind_input = bind_wrapper._child(`[data-bind_dir="${bind_dir}"]`);
+			//console.log(bind_input, val);
 			bind_input._set_value(val, { quiet: true });
 			const prop_to_set = bind_input.dataset.blc_prop.split(".")[1];
 			if (prop_to_set) {

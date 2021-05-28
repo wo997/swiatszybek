@@ -187,7 +187,8 @@ function setValue(input, value = null, options = {}) {
 		if (!options.quiet) {
 			input._dispatch_change();
 		}
-		input.dispatchEvent(new Event("value_set"));
+
+		input.dispatchEvent(new CustomEvent("value_set", { detail: { ...options } }));
 	};
 
 	if (!options.force) {

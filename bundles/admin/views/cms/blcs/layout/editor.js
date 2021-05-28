@@ -12,8 +12,8 @@
 			<unit-input data-blc_prop="styles.width">
 				<input />
 				<select>
-					<option value="px">px</option>
 					<option value="%">%</option>
+					<option value="px">px</option>
 					<option value=""></option>
 				</select>
 			</unit-input>

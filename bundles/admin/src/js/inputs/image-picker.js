@@ -30,10 +30,12 @@ function registerImageInputs(parent) {
 		const change_btn = input._child(".change_btn");
 		const preview_btn = input._child(".preview_btn");
 
+		let setting_value = false;
+
 		img.addEventListener("change", () => {
 			const value = img._get_value();
 			const selected = !!value && value != "/src/img/empty_img_147x94.svg";
-			if (!input._setting_value) {
+			if (!setting_value) {
 				input._dispatch_change();
 			}
 			input.classList.toggle("selected", selected);
@@ -63,9 +65,9 @@ function registerImageInputs(parent) {
 		};
 
 		input._set_value = (value, options = {}) => {
-			input._setting_value = true;
+			setting_value = true;
 			img._set_value(value);
-			delete input._setting_value;
+			setting_value = false;
 
 			if (!options.quiet) {
 				input._dispatch_change();
