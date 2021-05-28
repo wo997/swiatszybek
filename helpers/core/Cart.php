@@ -25,7 +25,7 @@ class Cart
 
     // other vars
     private $rebate_codes_limit = 1; // that will be a subject to change
-    private $max_single_product_count = 10; // should be a var
+    private $max_single_product_count = 1000; // should be a var
     public ?User $user;
 
     public function __construct($user)

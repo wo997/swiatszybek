@@ -234,7 +234,7 @@ function renderGeneralProductsList($params)
         $sum_stock = $product["sum_stock"];
         $avg_rating = $product["__avg_rating"];
         $rating_count = $product["__rating_count"];
-        $features_html =  $product["__features_html"];
+        $features_html = $layout !== "slider" ? $product["__features_html"] : "";
         $options = json_decode($product["__options_json"], true);
         $product_count = $product["product_count"];
 

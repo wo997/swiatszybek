@@ -158,25 +158,59 @@ function getPhysicalMeasures()
                 ],
             ]
         ],
-        "area" => [
-            "description" => "Pole powierzchni",
-            "base_unit" => "cm²",
+        "current" => [
+            "description" => "Natężenie prądu",
+            "base_unit" => "mA",
             "units" => [
                 [
-                    "id" => "mm2",
-                    "name" => "mm²",
-                    "factor" => 0.01
+                    "id" => "uA",
+                    "name" => "µA",
+                    "factor" => 0.001
                 ], [
-                    "id" => "cm2",
-                    "name" => "cm²",
+                    "id" => "mA",
+                    "name" => "mA",
                     "factor" => 1
                 ], [
-                    "id" => "m2",
-                    "name" => "m²",
-                    "factor" => 10000
+                    "id" => "A",
+                    "name" => "cm²",
+                    "factor" => 1000
                 ],
             ]
-        ]
+        ],
+        "voltage" => [
+            "description" => "Napięcie prądu",
+            "base_unit" => "V",
+            "units" => [
+                [
+                    "id" => "V",
+                    "name" => "V",
+                    "factor" => 1
+                ], [
+                    "id" => "KV",
+                    "name" => "KV",
+                    "factor" => 1000
+                ], [
+                    "id" => "MV",
+                    "name" => "MV",
+                    "factor" => 1000 * 1000
+                ],
+            ]
+        ],
+        // "temperature" => [
+        //     "description" => "Napięcie prądu",
+        //     "base_unit" => "V",
+        //     "units" => [
+        //         [
+        //             "id" => "",
+        //             "name" => "K",
+        //             "factor" => 1
+        //         ], [
+        //             "id" => "KV",
+        //             "name" => "KV",
+        //             "factor" => 1000
+        //         ],
+        //     ]
+        // ]
     ];
 }
 

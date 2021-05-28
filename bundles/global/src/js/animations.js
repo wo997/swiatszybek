@@ -140,5 +140,5 @@ windowload(() => {
 	}, 250);
 	setTimeout(() => {
 		LAZY_MORE = true;
-	}, 1000);
+	}, 4500);
 });
