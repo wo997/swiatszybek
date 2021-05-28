@@ -462,6 +462,7 @@ domload(() => {
 domload(() => {
 	window.addEventListener("scroll", initProductCommentsCallback);
 	initProductCommentsCallback();
+	$(".seo_comments").remove();
 });
 function initProductCommentsCallback() {
 	// search
@@ -503,7 +504,7 @@ function initProductCommentsCallback() {
 		searchComments();
 	});
 
-	const searchComments = (callback) => {
+	const searchComments = () => {
 		const datatable_params = {};
 		// just newest on top is ok
 		//     datatable_params.order = data.sort.key + " " + data.sort.order.toUpperCase();
@@ -529,9 +530,6 @@ function initProductCommentsCallback() {
 			url: "/comment/search",
 			params,
 			success: (res) => {
-				if (callback) {
-					callback();
-				}
 				comments_list._data = res.rows;
 				comments_list._render();
 			},
@@ -541,19 +539,17 @@ function initProductCommentsCallback() {
 	// filters
 	show_filters.addEventListener("click", () => {
 		filters_open = true;
-		searchComments(() => {
-			if (expand(comments_filters, true) === undefined) {
-				scrollIntoView(comments_filters);
-			}
-			show_filters.classList.add("hidden");
-		});
+		if (expand(comments_filters, true) === undefined) {
+			scrollIntoView(comments_filters);
+		}
+		show_filters.classList.add("hidden");
+		searchComments();
 	});
 	$(".product_comments .comments_filters .hide_btn").addEventListener("click", () => {
 		filters_open = false;
-		searchComments(() => {
-			expand(comments_filters, false);
-			show_filters.classList.remove("hidden");
-		});
+		expand(comments_filters, false);
+		show_filters.classList.remove("hidden");
+		searchComments();
 	});
 
 	// it's weird - it says that we want to have the 0 option selected by default, so the user doesn't have to actually think

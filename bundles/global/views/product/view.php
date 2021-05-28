@@ -435,8 +435,9 @@ if ($main_img) {
         </div>
     </div>
 
-    <?php // TODO: SEO comments preload some and replace on domload, or just hidden by default, really simple, you can also use structured data schema maybe 
-    ?>
+    <div class="seo_comments hidden">
+        <?= join(", ", DB::fetchCol("SELECT comment FROM comment WHERE general_product_id = $general_product_id")) ?>
+    </div>
     <list-comp class="comments striped" data-primary="comment_id">
         <comment-comp></comment-comp>
     </list-comp>
