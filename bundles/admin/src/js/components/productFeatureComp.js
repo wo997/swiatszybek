@@ -235,10 +235,10 @@ function ProductFeatureComp(comp, parent, data) {
 			const product_feature = product_features.find((pf) => pf.product_feature_id === data.product_feature_id);
 			measure_units.forEach((measure_unit) => {
 				if (!data.units.find((feature_unit) => feature_unit.unit_id === measure_unit.id)) {
-					let active = 1;
+					let active = 0;
 					if (product_feature) {
-						if (!product_feature.units.find((u) => u.id === measure_unit.id)) {
-							active = 0;
+						if (product_feature.units.find((u) => u.id === measure_unit.id)) {
+							active = 1;
 						}
 					}
 					data.units.push({ active, unit_name: measure_unit.name, unit_id: measure_unit.id });

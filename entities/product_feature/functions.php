@@ -90,6 +90,33 @@ function getPhysicalMeasures()
                 ],
             ]
         ],
+        "weight" => [
+            "description" => "Waga",
+            "base_unit" => "kg",
+            "units" => [
+                [
+                    "id" => "mg",
+                    "name" => "mg",
+                    "factor" => 0.001 * 0.001
+                ], [
+                    "id" => "g",
+                    "name" => "g",
+                    "factor" => 0.001
+                ], [
+                    "id" => "dag",
+                    "name" => "dag",
+                    "factor" => 0.01
+                ], [
+                    "id" => "kg",
+                    "name" => "kg",
+                    "factor" => 1
+                ],  [
+                    "id" => "t",
+                    "name" => "t",
+                    "factor" => 1000
+                ],
+            ]
+        ],
         "digital_memory" => [
             "description" => "Pamięć cyfrowa",
             "base_unit" => "MB",
@@ -177,7 +204,7 @@ function getPhysicalMeasures()
                     "factor" => 1
                 ], [
                     "id" => "A",
-                    "name" => "cm²",
+                    "name" => "A",
                     "factor" => 1000
                 ],
             ]
