@@ -29,7 +29,9 @@ domload(() => {
 		});
 
 		$$(".cart_product_count").forEach((e) => {
-			e._set_content(user_cart.products.length);
+			let total_qty = 0;
+			user_cart.products.forEach((p) => (total_qty += p.qty));
+			e._set_content(total_qty);
 		});
 		$$(".cart_products_price").forEach((e) => {
 			e._set_content(user_cart.products_price + " zł");
