@@ -474,21 +474,47 @@ function ProductFeatureComp(comp, parent, data) {
 			});
 
 			comp._nodes.remove_parent_option_btn.addEventListener("click", () => {
-				if (comp._data.datatable.selection.length > 0) {
-					const selection = comp._data.datatable.selection;
-					comp._data.datatable.dataset.forEach((/** @type {ProductFeatureOptionData} */ e) => {
+				const data = comp._data;
+				if (data.datatable.selection.length > 0) {
+					const selection = data.datatable.selection;
+					data.datatable.dataset.forEach((/** @type {ProductFeatureOptionData} */ e) => {
 						// @ts-ignore
 						if (selection.includes(e._row_id)) {
 							e.parent_product_feature_option_id = -1;
 						}
 					});
-					comp._data.datatable.selection = [];
+					data.datatable.selection = [];
 					comp._render();
 				}
 			});
 
 			window.addEventListener("product_features_changed", () => {
 				comp._nodes.datatable._warmup_maps();
+			});
+
+			comp.addEventListener("click", (ev) => {
+				setTimeout(() => {
+					const data = comp._data;
+					const measure_data = physical_measures[data.physical_measure];
+					if (!measure_data || !measure_data.single_unit) {
+						return;
+					}
+
+					const target = $(ev.target);
+
+					/** @type {ProductFeature_UnitComp} */
+					// @ts-ignore
+					const unit_comp = target._parent("product-feature_unit-comp");
+					const unit_active = target._parent("p-checkbox.bind_active");
+					if (unit_comp && unit_active && unit_comp._data.active) {
+						data.units.forEach((u) => {
+							if (u.unit_id !== unit_comp._data.unit_id) {
+								u.active = 0;
+							}
+						});
+						comp._render();
+					}
+				});
 			});
 		},
 	});

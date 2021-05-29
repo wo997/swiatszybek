@@ -230,7 +230,7 @@ function getPhysicalMeasures()
             ]
         ],
         "temperature" => [
-            "description" => "Napięcie prądu",
+            "description" => "Temperatura",
             "base_unit" => "V",
             "single_unit" => true, // you can never tell when these are sorted, soooo maybe restrict to a single unit? :)
             "units" => [
@@ -240,12 +240,12 @@ function getPhysicalMeasures()
                     "multiply" => 1
                 ], [
                     "id" => "oC",
-                    "name" => "℃",
+                    "name" => "°C",
                     "multiply" => 1,
                     "add" => 273.15,
                 ], [
                     "id" => "oF",
-                    "name" => "℉",
+                    "name" => "°F",
                     "multiply" => 5 / 9,
                     "add" => 459.67,
                 ],
@@ -266,6 +266,7 @@ function getPhysicalMeasureUnitMap()
                 $physical_measure_unit_map[$unit["id"]] = [
                     "name" => $unit["name"],
                     "multiply" => $unit["multiply"],
+                    "add" => def($unit, "add", 0)
                 ];
             }
         }
@@ -307,8 +308,10 @@ function prettyPrintPhysicalMeasure($double_value, $units)
         }
 
         $accuracy = 100000;
+
+        $val = $double_value / $target_unit["multiply"] - def($target_unit, "add", 0);
         return [
-            "value" => round($accuracy * $double_value / $target_unit["multiply"]) / $accuracy,
+            "value" => round($accuracy * $val) / $accuracy,
             "unit_name" => $target_unit["name"],
             "unit_id" => $target_unit["id"],
         ];

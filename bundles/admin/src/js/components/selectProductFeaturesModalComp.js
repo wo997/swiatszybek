@@ -89,7 +89,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						},
 					},
 				],
-				pagination_data: { row_count: 50 },
+				pagination_data: { row_count: 20 },
 				primary_key: "product_feature_id",
 				empty_html: html`Brak cech`,
 				label: "Cechy produktów",
@@ -203,6 +203,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 									comp._render();
 								}
 							}
+							comp._nodes.datatable._render();
 						}
 					}
 
