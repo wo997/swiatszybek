@@ -124,6 +124,8 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
 
         $classes = "option_row";
         if (!$count) {
+            // hide unnecessary options cause there were just too many of these
+            continue;
             $classes .= " empty";
         }
 

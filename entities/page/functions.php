@@ -485,11 +485,12 @@ function generateSitemap()
             }
             $prio = 0.8;
         } else if ($page_type === "product_category") {
-            $url = DB::fetchVal("SELECT __url FROM product_category WHERE product_category_id = ?", [$page["link_what_id"]]);
-            if (!$url) {
+            $product_category = DB::fetchRow("SELECT __url, __level FROM product_category WHERE product_category_id = ?", [$page["link_what_id"]]);
+            if (!$product_category) {
                 continue;
             }
-            $prio = 1 - 0.2 * (substr_count($url, "/"));
+            $url =  $product_category["__url"];
+            $prio = 1 - 0.2 * $product_category["__level"];
         } else {
             continue;
         }
@@ -506,10 +507,10 @@ XML;
     }
 
     // TODO: categories temporary?
-    $product_categories = DB::fetchArr("SELECT product_category_id, __url, __category_path_names_csv FROM product_category");
+    $product_categories = DB::fetchArr("SELECT product_category_id, __url, __level FROM product_category");
     foreach ($product_categories as $product_category) {
         $url = SITE_URL . $product_category["__url"];
-        $prio = 1 - 0.2 * (substr_count($product_category["__category_path_names_csv"], ",") + 1);
+        $prio = 1 - 0.2 * $product_category["__level"];
         $pages_xml .= <<<XML
 <url>
     <loc>$url</loc>

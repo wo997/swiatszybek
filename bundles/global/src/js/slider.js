@@ -131,7 +131,11 @@ function animateSliders() {
 			slider.scroll += slider.velocity;
 		}
 
-		slides_wrapper.style.transform = `translateX(${Math.round(-slider.scroll * 10) * 0.1}px)`;
+		if (slider.max_scroll < 1) {
+			slides_wrapper.style.transform = `translateX(${Math.round(-slider.max_scroll * 0.5)}px)`;
+		} else {
+			slides_wrapper.style.transform = `translateX(${Math.round(-slider.scroll * 10) * 0.1}px)`;
+		}
 	});
 
 	requestAnimationFrame(animateSliders);

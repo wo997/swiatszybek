@@ -7,6 +7,7 @@ EntityManager::register("product_category", [
         "name" => ["type" => "string"],
         "pos" => ["type" => "number"],
         "__url" => ["type" => "string"],
+        "__level" => ["type" => "number"],
         "__category_path_json" => ["type" => "string"],
         "__category_path_names_csv" => ["type" => "string"],
         "__product_count" => ["type" => "number"],
@@ -48,6 +49,7 @@ EventListener::register("before_save_product_category_entity", function ($params
     $product_category->setProp("__url", $product_category_link);
     $product_category->setProp("__category_path_json", json_encode($category_path));
     $product_category->setProp("__category_path_names_csv", join(",", $category_path_names));
+    $product_category->setProp("__level", count($category_path_names));
 });
 
 EventListener::register("after_save_product_category_entity", function ($params) {

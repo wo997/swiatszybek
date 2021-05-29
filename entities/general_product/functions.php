@@ -162,12 +162,21 @@ function getGlobalProductsSearch($url)
 
 function renderGeneralProductsList($params)
 {
+    global $GENERAL_PRODUCT_ID;
+
     /** @var DatatableParams */
     $datatable_params = ["page_id" => $params["page_id"], "row_count" => $params["row_count"], "filters" => []];
 
     $product_ids = def($params, "product_ids", null);
     $general_product_ids = def($params, "general_product_ids", null);
     $layout = def($params, "layout", "slider");
+
+    $from = "general_product gp
+        INNER JOIN product p USING (general_product_id)
+        LEFT JOIN product_to_variant_option ptvo USING(product_id)
+        LEFT JOIN product_variant_option pvo USING(product_variant_option_id)
+        LEFT JOIN product_variant pv USING(product_variant_id)
+        LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)";
 
     $where = "p.active AND gp.active"; // repeats but leave it like this ;)
 
@@ -179,15 +188,46 @@ function renderGeneralProductsList($params)
 
     $search_order = def($params, "search_order", "bestsellery");
 
-    $actual_order = "general_product_id DESC";
-    if ($search_order === "bestsellery") {
+    $actual_order = "gp.compare_sales DESC";
+    if ($search_order === "najnowsze") {
+        $actual_order = "gp.general_product_id DESC";
+    } else  if ($search_order === "bestsellery") {
         $actual_order = "gp.compare_sales DESC";
-    }
-    if ($search_order === "ceny-rosnaco") {
+    } else if ($search_order === "ceny-rosnaco") {
         $actual_order = "AVG(gross_price) ASC";
-    }
-    if ($search_order === "ceny-malejaco") {
+    } else if ($search_order === "ceny-malejaco") {
         $actual_order = "AVG(gross_price) DESC";
+    } else if ($search_order === "general_product" && $GENERAL_PRODUCT_ID) {
+        $actual_order = "gp.general_product_id ASC";
+
+        $general_product_categories = DB::fetchArr("SELECT product_category_id, __level FROM general_product_to_category INNER JOIN product_category USING(product_category_id) WHERE general_product_id = $GENERAL_PRODUCT_ID");
+
+        if ($general_product_categories) {
+            //$from .= " INNER JOIN general_product_to_category USING(general_product_id)";
+            $from .= " INNER JOIN general_product_to_category gptc ON gptc.general_product_id = gp.general_product_id";
+            $where .= " AND product_category_id IN (" . join(",", array_column($general_product_categories, "product_category_id")) . ")";
+
+            // a tiny factor usually
+            $actual_order = "gp.compare_sales";
+
+            foreach ($general_product_categories as $category) {
+                $product_category_id = $category["product_category_id"];
+                // * 100 cause it's important
+                $score = round($category["__level"] * 100);
+                // WELL, not sure of MAX, but even SUM works kinda :)
+                $actual_order .= " + MAX(CASE WHEN product_category_id = $product_category_id THEN $score ELSE 0 END)";
+            }
+
+            // if u wanna debug baby
+            if (User::getCurrent()->priveleges["backend_access"]) {
+                //$actual_order = "CASE WHEN gp.general_product_id = 152 THEN 2137 ELSE 0 END";
+                //die($actual_order);
+            }
+
+            $actual_order .= " DESC";
+        }
+
+        $where .= " AND gp.general_product_id <> $GENERAL_PRODUCT_ID";
     }
 
     /** @var PaginationParams */
@@ -200,12 +240,7 @@ function renderGeneralProductsList($params)
         COUNT(DISTINCT p.product_id) as product_count,
         __avg_rating, __rating_count
     ",
-        "from" => "general_product gp
-        INNER JOIN product p USING (general_product_id)
-        LEFT JOIN product_to_variant_option ptvo USING(product_id)
-        LEFT JOIN product_variant_option pvo USING(product_variant_option_id)
-        LEFT JOIN product_variant pv USING(product_variant_id)
-        LEFT JOIN product_variant_option_to_feature_option pvotfo USING(product_variant_option_id)",
+        "from" => $from,
         "group" => "gp.general_product_id",
         "order" => $actual_order,
         "where" => $where,

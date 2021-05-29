@@ -328,7 +328,7 @@ comment-comp.comp {
 
 .product_feature_list {
 	& {
-		max-width: var(--container_max_width);
+		max-width: min(1000px, var(--container_max_width));
 		margin: 0px auto;
 		padding: 10px;
 	}
