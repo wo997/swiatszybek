@@ -460,3 +460,90 @@ function renderPage($page_id, $data = [])
 
 <?php include "bundles/global/templates/blank.php";
 }
+
+function generateSitemap()
+{
+    global $build_info;
+
+    $pages_xml = "";
+    $now = date("Y-m-d");
+
+    $pages = DB::fetchArr("SELECT page_id, seo_title, url, page_type, link_what_id FROM page WHERE active = 1");
+    foreach ($pages as $page) {
+        $page_type = $page["page_type"];
+        if ($page_type === "page") {
+            $url = "/" . $page["url"];
+            if ($url == "/") {
+                $prio = 1;
+            } else {
+                $prio = 1 - 0.2 * (substr_count($url, "/"));
+            }
+        } else if ($page_type === "general_product") {
+            $url = DB::fetchVal("SELECT __url FROM general_product WHERE general_product_id = ?", [$page["link_what_id"]]);
+            if (!$url) {
+                continue;
+            }
+            $prio = 0.8;
+        } else if ($page_type === "product_category") {
+            $url = DB::fetchVal("SELECT __url FROM product_category WHERE product_category_id = ?", [$page["link_what_id"]]);
+            if (!$url) {
+                continue;
+            }
+            $prio = 1 - 0.2 * (substr_count($url, "/"));
+        } else {
+            continue;
+        }
+
+        $url = SITE_URL . $url;
+
+        $pages_xml .= <<<XML
+<url>
+    <loc>$url</loc>
+    <lastmod>$now</lastmod>
+    <priority>$prio</priority>
+</url>
+XML;
+    }
+
+    // TODO: categories temporary?
+    $product_categories = DB::fetchArr("SELECT product_category_id, __url, __category_path_names_csv FROM product_category");
+    foreach ($product_categories as $product_category) {
+        $url = SITE_URL . $product_category["__url"];
+        $prio = 1 - 0.2 * (substr_count($product_category["__category_path_names_csv"], ",") + 1);
+        $pages_xml .= <<<XML
+<url>
+    <loc>$url</loc>
+    <lastmod>$now</lastmod>
+    <priority>$prio</priority>
+</url>
+XML;
+    }
+
+    // looks baaaad dude
+    // foreach ($build_info["routes"] as $route => $path) {
+    //     foreach (Request::$static_urls as $static_url) {
+    //         if (startsWith($route, $static_url)) {
+    //             continue 2;
+    //         }
+    //     }
+
+    //     if (strpos($path, "/actions/") !== false) {
+    //         continue;
+    //     }
+
+    //     var_dump($route, $path, "<br>");
+    // }
+
+    $sitemap = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+$pages_xml
+</urlset>
+XML;
+
+    Files::save(BUILDS_PATH . "sitemap.xml", $sitemap);
+}
