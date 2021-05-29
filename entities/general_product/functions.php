@@ -97,7 +97,7 @@ function getGlobalProductsSearch($url)
                 $unit_id = substr($min, $matches[0][1]);
                 $unit_data = getPhysicalMeasureUnit($unit_id);
                 $double_base =  substr($min, 0, $matches[0][1]);
-                $min = $double_base * $unit_data["factor"];
+                $min = $double_base * $unit_data["multiply"];
             }
 
             $min -= 0.000001;
@@ -113,7 +113,7 @@ function getGlobalProductsSearch($url)
                 $unit_id = substr($max, $matches[0][1]);
                 $unit_data = getPhysicalMeasureUnit($unit_id);
                 $double_base = substr($max, 0, $matches[0][1]);
-                $max = $double_base * $unit_data["factor"];
+                $max = $double_base * $unit_data["multiply"];
             }
 
             $max += 0.000001;

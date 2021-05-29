@@ -280,18 +280,18 @@ function traverseFeatures()
                     $unit_count = count($units);
                     for ($i = 0; $i < $unit_count; $i++) {
                         $unit = $units[$i];
-                        $factor = $unit["factor"];
+                        $multiply = $unit["multiply"];
                         $unit_id = $unit["id"];
                         $name = $unit["name"];
 
                         $selected = $unit_id === $most_unit_id ? "selected" : "";
 
-                        if ($max_value + 0.000001 < $factor) {
+                        if ($max_value + 0.000001 < $multiply) {
                             continue;
                         }
 
                         $next_unit = def($units, $i + 1, null);
-                        if ($next_unit && $next_unit["factor"] + 0.000001 < $min_value) {
+                        if ($next_unit && $next_unit["multiply"] + 0.000001 < $min_value) {
                             continue;
                         }
 
