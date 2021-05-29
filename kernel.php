@@ -32,14 +32,12 @@ function secret($var, $default = "")
 
 include "scripts/db_connect.php";
 
-
 $build_info = json_decode(@file_get_contents(BUILD_INFO_PATH), true);
 if (!$build_info || def($_SESSION, "backend_access", false)) { // so a dev can work
     if (!isset($_GET["no_build"])) {
         include "deployment/automatic_build.php";
     }
 }
-
 
 // ssl redirect
 if (getSetting(["general", "advanced", "ssl"]) == 1 && def($_SERVER, "HTTPS", "on") == 'off') {
