@@ -1210,10 +1210,27 @@ function ProductComp(comp, parent, data = undefined) {
 
 				row_data.gross_price = round(row_data.gross_price, 2);
 				row_data.net_price = round(row_data.net_price, 2);
-				if (key === "gross_price") {
-					row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
+
+				let set_what = "";
+
+				if (key === "vat_id") {
+					// anything to rewrite?
+					if (numberFromStr(row_data.gross_price + "")) {
+						set_what = "net_price";
+					} else if (numberFromStr(row_data.net_price + "")) {
+						set_what = "gross_price";
+					}
+				} else {
+					if (key === "gross_price") {
+						set_what = "net_price";
+					} else if (key === "net_price") {
+						set_what = "gross_price";
+					}
 				}
-				if (key === "net_price" || key === "vat_id") {
+
+				if (set_what === "net_price") {
+					row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
+				} else if (set_what === "gross_price") {
 					row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
 				}
 			});
