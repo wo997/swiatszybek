@@ -1,7 +1,22 @@
 /* js[view] */
 
 domload(() => {
-	let current_view = def(localStorage.getItem("search_pages_view"), "pages");
+	let current_view = "pages";
+
+	try {
+		const search_pages_view = localStorage.getItem("search_pages_view");
+		const search_pages_now = localStorage.getItem("search_pages_now");
+
+		if (search_pages_now) {
+			if (Date.now() - numberFromStr(search_pages_now) < 1000 * 60 * 3) {
+				if (search_pages_view) {
+					current_view = search_pages_view;
+				}
+			}
+		}
+	} catch (e) {
+		console.error(e);
+	}
 
 	/** @type {DatatableComp} */
 	// @ts-ignore
@@ -215,6 +230,7 @@ domload(() => {
 	toggle_view.addEventListener("change", () => {
 		current_view = toggle_view._get_value();
 		localStorage.setItem("search_pages_view", current_view);
+		localStorage.setItem("search_pages_now", Date.now() + "");
 		pages_dt.classList.toggle("hidden", current_view !== "pages");
 		general_products_dt.classList.toggle("hidden", current_view !== "general_products");
 		product_categories_dt.classList.toggle("hidden", current_view !== "product_categories");

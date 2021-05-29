@@ -2,8 +2,27 @@
 
 domload(() => {
 	/** @type {number[]} */
-	let current_categories = JSON.parse(def(localStorage.getItem("search_products_categories"), "[]"));
-	let current_view = def(localStorage.getItem("search_products_view"), "general_products");
+	let current_categories = [];
+	let current_view = "general_products";
+
+	try {
+		const search_products_categories = localStorage.getItem("search_products_categories");
+		const search_products_view = localStorage.getItem("search_products_view");
+		const search_products_now = localStorage.getItem("search_products_now");
+
+		if (search_products_now) {
+			if (Date.now() - numberFromStr(search_products_now) < 1000 * 60 * 3) {
+				if (search_products_categories) {
+					current_categories = JSON.parse(search_products_categories);
+				}
+				if (search_products_view) {
+					current_view = search_products_view;
+				}
+			}
+		}
+	} catch (e) {
+		console.error(e);
+	}
 
 	/** @type {DatatableComp} */
 	// @ts-ignore
@@ -162,6 +181,7 @@ domload(() => {
 	toggle_view.addEventListener("change", () => {
 		current_view = toggle_view._get_value();
 		localStorage.setItem("search_products_view", current_view);
+		localStorage.setItem("search_products_now", Date.now() + "");
 		general_products_dt.classList.toggle("hidden", current_view !== "general_products");
 		products_dt.classList.toggle("hidden", current_view !== "products");
 	});
@@ -182,6 +202,8 @@ domload(() => {
 		if (chng) {
 			current_categories = category_ids;
 			localStorage.setItem("search_products_categories", JSON.stringify(current_categories));
+			localStorage.setItem("search_products_now", Date.now() + "");
+
 			quickTimeout(
 				() => {
 					general_products_dt._backend_search();

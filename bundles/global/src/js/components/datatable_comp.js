@@ -207,7 +207,6 @@ function DatatableComp(comp, parent, data) {
 		try {
 			const state = JSON.parse(state_json);
 			if (state.now) {
-				// after a minute
 				if (Date.now() - state.now > 1000 * 60 * 3) {
 					return;
 				}
