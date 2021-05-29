@@ -339,6 +339,7 @@ function traverseFeatures()
                     </div>
 HTML;
             } else {
+                //var_dump($product_feature);
                 //echo "need to add filter html";
                 continue;
             }
