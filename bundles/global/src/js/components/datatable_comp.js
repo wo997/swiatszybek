@@ -193,7 +193,7 @@ function DatatableComp(comp, parent, data) {
 	};
 
 	comp._save_state = () => {
-		const state = {};
+		const state = { now: Date.now() };
 		rewriteState(comp._data, state);
 		const state_json = JSON.stringify(state);
 		localStorage.setItem("datatable_" + data.save_state_name, state_json);
@@ -204,11 +204,21 @@ function DatatableComp(comp, parent, data) {
 		if (!state_json) {
 			return;
 		}
-		const state = JSON.parse(state_json);
-		rewriteState(state, data_obj);
-		data_obj.rows = data_obj.dataset.map((d) => {
-			return { row_data: d };
-		});
+		try {
+			const state = JSON.parse(state_json);
+			if (state.now) {
+				// after a minute
+				if (Date.now() - state.now > 1000 * 60 * 3) {
+					return;
+				}
+			}
+			rewriteState(state, data_obj);
+			data_obj.rows = data_obj.dataset.map((d) => {
+				return { row_data: d };
+			});
+		} catch (e) {
+			console.error(e);
+		}
 	};
 
 	comp._remove_column = (key) => {
