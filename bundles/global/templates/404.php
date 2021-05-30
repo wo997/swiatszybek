@@ -4,7 +4,7 @@ Templates::startSection("body_content");
 
 <div style="text-align: center;margin: 30vh 0 0;">
     <h1>Nie znaleźliśmy nic pod danym adresem</h1>
-    <p>Skorzystać z wyszukiwarki by sprawnie znaleźć produkt.</p>
+    <p>Skorzystaj z wyszukiwarki by sprawnie znaleźć produkt</p>
 </div>
 
 <?php
