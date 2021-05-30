@@ -19,7 +19,7 @@ let product_list;
 /** @type {PiepNode} */
 let search_phrase;
 /** @type {PiepNode} */
-let search_order;
+let search_order_input;
 /** @type {PiepNode} */
 let feature_filter_count;
 /** @type {PaginationComp} */
@@ -210,8 +210,8 @@ domload(() => {
 });
 
 domload(() => {
-	search_order = $(".search_order");
-	search_order.addEventListener("change", () => {
+	search_order_input = $(".search_order");
+	search_order_input.addEventListener("change", () => {
 		product_list_pagination_comp._data.page_id = 0;
 		product_list_pagination_comp._render();
 		delay("mainSearchProducts");
@@ -231,7 +231,7 @@ function setSearchOrderFromUrl() {
 
 	/** @type {string} */
 	const search_order_val = def(url_params.get("sortuj"), default_search_order);
-	search_order._set_value(search_order_val, { quiet: true });
+	search_order_input._set_value(search_order_val, { quiet: true });
 }
 
 function setRangesFromUrl() {
@@ -365,6 +365,12 @@ function updatePrettyCheckboxRanges() {
 	return ranges;
 }
 
+function updateSearchOrderSelect() {
+	const search_phrase_val = search_phrase._get_value();
+	products_all._child(".case_search").classList.toggle("hidden", !search_phrase_val);
+	products_all._child(".search_order").classList.toggle("hidden", !!search_phrase_val);
+}
+
 function setProductsFilterCountFromUrl() {
 	let filter_count = 0;
 
@@ -409,6 +415,7 @@ function productsPopState() {
 	setSearchOrderFromUrl();
 	setProductsFilterCountFromUrl();
 	updatePrettyCheckboxRanges();
+	updateSearchOrderSelect();
 	mainSearchProducts(true);
 }
 
@@ -532,7 +539,7 @@ function mainSearchProducts(force = false) {
 	}
 
 	/** @type {string} */
-	const search_order_val = search_order._get_value();
+	const search_order_val = search_order_input._get_value();
 	if (search_order_val.trim() !== default_search_order) {
 		url_params.append("sortuj", search_order_val);
 	}
@@ -613,6 +620,7 @@ function mainSearchProducts(force = false) {
 	}
 
 	setProductsFilterCountFromUrl();
+	updateSearchOrderSelect();
 
 	// !!! currently the name is just the one of the category
 	// workaround here

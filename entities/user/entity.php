@@ -14,6 +14,7 @@ EntityManager::register("user", [
         "remember_me_token" => ["type" => "string"],
         "visited_at" => ["type" => "string"],
         "created_at" => ["type" => "string"],
+        "last_active_at" => ["type" => "string"],
         "cart_json" => ["type" => "string"],
         "last_viewed_products_json" => ["type" => "string"],
         "role_id" => ["type" => "number"],
@@ -27,10 +28,10 @@ EventListener::register("before_save_user_entity", function ($params) {
     $user = $params["obj"];
 
     $search = "";
-    $search .= replacePolishLetters($user->getProp("first_name"));
-    $search .= replacePolishLetters($user->getProp("last_name"));
-    $search .= replacePolishLetters($user->getProp("email"));
-    $search .= replacePolishLetters($user->getProp("phone"));
+    $search .= " " . $user->getProp("first_name");
+    $search .= " " . $user->getProp("last_name");
+    $search .= " " . $user->getProp("email");
+    $search .= " " . $user->getProp("phone");
 
     $search = getSearchableString($search);
     $user->setProp("__search", $search);

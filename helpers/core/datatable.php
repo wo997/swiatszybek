@@ -218,25 +218,25 @@ function paginateData($params = [])
     $order = def($params, ["datatable_params", "order"], def($params, "order"));
 
     if ($search_query && $search_type == "extended") {
-        if ($order) {
-            [$order_key, $order_dir] = explode(" ", $order);
+        // if ($order) {
+        //     [$order_key, $order_dir] = explode(" ", $order);
 
-            $test_order_key = $order_key == "RAND()" ? "1" : $order_key;
+        //     $test_order_key = $order_key == "RAND()" ? "1" : $order_key;
 
-            $frmq = "$from WHERE $where $group";
-            if ($group) {
-                $frmq = "(SELECT $order_key, " . join(",", $quick_search_fields) . " FROM $frmq) t";
-            }
-            $order_info = DB::fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
+        //     $frmq = "$from WHERE $where $group";
+        //     if ($group) {
+        //         $frmq = "(SELECT $order_key, " . join(",", $quick_search_fields) . " FROM $frmq) t";
+        //     }
+        //     $order_info = DB::fetchRow("SELECT MAX($test_order_key) as order_max, MIN($test_order_key) as order_min, MAX($search_query) as relevance_max FROM $from WHERE $where");
 
-            $ratio = round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
+        //     $ratio = round(30 * $order_info["relevance_max"] / max(abs($order_info["order_max"] - $order_info["order_min"]), 5)) / 100; // 30 % care about the order key, we want a match right?
 
-            $order = "(SELECT $search_query"
-                . ($order_dir == "DESC" ? "+" : "-")
-                . " $ratio * $order_key) DESC";
-        } else {
-            $order = "$search_query DESC";
-        }
+        //     $order = "(SELECT $search_query"
+        //         . ($order_dir == "DESC" ? "+" : "-")
+        //         . " $ratio * $order_key) DESC";
+        // } else {
+        // }
+        $order = "$search_query DESC";
     }
 
     $countQuery = "SELECT COUNT(1) FROM $from WHERE $where $group";

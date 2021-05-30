@@ -324,11 +324,13 @@ class User
 
             $_SESSION["user_id"] = $user_id;
 
-            self::$current_user = new User($user_id);
-            if (!self::$current_user->entity) {
+            $user_entity = new User($user_id);
+            if ($user_entity->entity) {
+                self::$current_user = $user_entity;
+                DB::update("user", ["last_active_at" => date("Y-m-d H:i:s")], "user_id = $user_id");
+            } else {
                 // just in case
                 unset($_SESSION["user_id"]);
-                self::$current_user = null;
                 return self::getCurrent();
             }
         }

@@ -486,6 +486,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
                 <option value="ceny-rosnaco">Ceny rosnąco</option>
                 <option value="ceny-malejaco">Ceny malejąco</option>
             </select>
+            <input class="case_search field inline" value="Trafność" readonly style="width: 82px;pointer-events:none">
         </div>
 
         <div class="product_list"><?= $products_search_data["html"] ?></div>

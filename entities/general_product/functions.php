@@ -129,31 +129,20 @@ function getGlobalProductsSearch($url)
     }
     //die;
 
-    // and text search at the end
-    if ($search_phrase) {
-        $datatable_params["quick_search"] = $search_phrase;
-
-        $product_ids_csv = $product_ids ? join(",", $product_ids) : "-1";
-
-        $from = "general_product gp INNER JOIN product p USING (general_product_id)";
-        $where = "p.product_id IN ($product_ids_csv)";
-        $where .= " AND " . getSearchQuery(["quick_search" => $search_phrase, "quick_search_fields" => ["gp.__search"], "search_type" => "extended"]);
-
-        $product_ids = DB::fetchCol("SELECT product_id
-            FROM general_product gp
-            INNER JOIN product p USING (general_product_id)
-            WHERE $where
-            GROUP BY product_id");
-    }
-
-    $search_order = def($get_vars, "sortuj", "bestsellery");
-
-    $products_data = renderGeneralProductsList([
+    $params = [
         "product_ids" => $product_ids,
         "page_id" => $page_id,
         "row_count" => $row_count,
         "search_order" => $search_order,
-    ]);
+    ];
+
+    // and text search at the end
+    if ($search_phrase) {
+        $params["quick_search"] = $search_phrase;
+        $params["search_order"] = "relevance";
+    }
+
+    $products_data = renderGeneralProductsList($params);
     $products_data["total_products"] = count($product_ids);
     $products_data["all_ids"] = $product_ids;
 
@@ -228,6 +217,8 @@ function renderGeneralProductsList($params)
         }
 
         $where .= " AND gp.general_product_id <> $GENERAL_PRODUCT_ID";
+    } else if ($search_order === "relevance") {
+        $datatable_params["quick_search"] = def($params, "quick_search", "");
     }
 
     /** @var PaginationParams */
@@ -245,7 +236,7 @@ function renderGeneralProductsList($params)
         "order" => $actual_order,
         "where" => $where,
         "datatable_params" => json_encode($datatable_params),
-        "search_type" => "extended",
+        "search_type" => $search_order === "relevance" ? "extended" : "regular",
         "quick_search_fields" => ["gp.__search"],
     ];
 
