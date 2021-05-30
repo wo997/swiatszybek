@@ -242,7 +242,8 @@ function traverseFeatures()
 
                 $feature_label .= " ($pretty_min[value] $pretty_min[unit_name] - $pretty_max[value] $pretty_max[unit_name])";
 
-                $quick_list_html =  "<ul data-product_feature_id=\"$product_feature_id\" class=\"double_value_quick_list\">";
+                $feature_key = $is_cena ? "cena" : "r$product_feature_id";
+                $quick_list_html =  "<ul data-feature_key=\"$feature_key\" class=\"double_value_quick_list\">";
 
                 setRangesFromLongDatasetWithIndices($double_values, 10);
 
@@ -333,7 +334,7 @@ function traverseFeatures()
                             $quick_list_html
                         </div>
                         <div class="tab_content animate_hidden hidden expand_y" data-tab_id="2">
-                            <div class="flex_children_width range_filter" data-product_feature_id="$product_feature_id">
+                            <div class="flex_children_width range_filter" data-feature_key="$feature_key">
                                 <div class="flex_column" style="margin-right:var(--form_spacing);">
                                     Od
                                     <div class="glue_children">

@@ -237,18 +237,16 @@ function setSearchOrderFromUrl() {
 function setRangesFromUrl() {
 	const url_params = new URLSearchParams(current_url_search);
 
-	for (const key of url_params.keys()) {
+	for (let key of url_params.keys()) {
 		if (!key.match(/^(r\d*|cena)$/)) {
 			continue;
 		}
 
-		const product_feature_id = numberFromStr(key);
-
 		let [from, to] = url_params.get(key).split("_do_");
-		const range_filter = $(`.range_filter[data-product_feature_id="${product_feature_id}"]`);
+		const range_filter = $(`.range_filter[data-feature_key="${key}"]`);
 
 		if (!range_filter) {
-			return;
+			continue;
 		}
 
 		const input_from = range_filter._child("input.from");
@@ -279,10 +277,10 @@ function setRangesFromUrl() {
 		setField(input_from, unit_from, from);
 		setField(input_to, unit_to, to);
 
-		const double_value_quick_list = $(`.double_value_quick_list[data-product_feature_id="${product_feature_id}"]`);
+		const double_value_quick_list = $(`.double_value_quick_list[data-feature_key="${key}"]`);
 
 		if (!double_value_quick_list) {
-			return;
+			continue;
 		}
 
 		/** @type {PiepNode} */
@@ -351,7 +349,7 @@ function updatePrettyCheckboxRanges() {
 		removeClasses(".angle_down", ["angle_down"], ul);
 
 		if (min_checkbox || max_checkbox) {
-			ranges[ul.dataset.product_feature_id] = [r_min, r_max];
+			ranges[ul.dataset.feature_key] = [r_min, r_max];
 		}
 
 		if (max_checkbox && max_checkbox && min_checkbox !== max_checkbox) {
@@ -556,7 +554,7 @@ function mainSearchProducts(force = false) {
 		const unit_from = range_filter._child("select.from");
 		const input_to = range_filter._child("input.to");
 		const unit_to = range_filter._child("select.to");
-		const product_feature_id = range_filter.dataset.product_feature_id;
+		const feature_key = range_filter.dataset.feature_key;
 
 		let from = input_from._get_value();
 		let to = input_to._get_value();
@@ -578,24 +576,23 @@ function mainSearchProducts(force = false) {
 
 		if (from_selected || to_selected) {
 			const values = (from_selected ? from : "") + "_do_" + (to_selected ? to : "");
-			url_from_ranges[product_feature_id] = values;
+			url_from_ranges[feature_key] = values;
 		}
 	});
 
 	const feature_list_ranges = updatePrettyCheckboxRanges();
 
-	Object.entries(feature_list_ranges).forEach(([product_feature_id, minmax]) => {
-		if (url_from_ranges[product_feature_id]) {
+	Object.entries(feature_list_ranges).forEach(([feature_key, minmax]) => {
+		if (url_from_ranges[feature_key]) {
 			return;
 		}
 		const values = minmax[0] + "_do_" + minmax[1];
-		url_from_ranges[product_feature_id] = values;
+		url_from_ranges[feature_key] = values;
 	});
 
 	if (Object.keys(url_from_ranges).length > 0) {
-		Object.entries(url_from_ranges).forEach(([product_feature_id, values]) => {
-			const name = product_feature_id === "cena" ? "cena" : `r${product_feature_id}`;
-			url_params.append(name, values);
+		Object.entries(url_from_ranges).forEach(([feature_key, values]) => {
+			url_params.append(feature_key, values);
 		});
 	}
 

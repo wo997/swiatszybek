@@ -20,33 +20,33 @@
 	display: none;
 }
 
-.price_diff_1 {
+//.price_diff_1 {
+.price_diff {
+	display: block;
+}
+
+.price_diff,
+.price_diff_before {
+	width: 100%;
+	font-size: 0.8em;
+}
+
+.variant_option.has_price_diff {
 	.price_diff {
-		display: block;
+		height: 1.5em;
 	}
-
-	.price_diff,
 	.price_diff_before {
-		width: 100%;
-		font-size: 0.8em;
-	}
-
-	.variant_option.has_price_diff {
-		.price_diff {
-			height: 1.5em;
-		}
-		.price_diff_before {
-			height: 0;
-		}
-	}
-	.variant_option:not(.has_price_diff) {
-		.price_diff,
-		.price_diff_before {
-			opacity: 0;
-			height: 0.75em;
-		}
+		height: 0;
 	}
 }
+.variant_option:not(.has_price_diff) {
+	.price_diff,
+	.price_diff_before {
+		opacity: 0;
+		height: 0.75em;
+	}
+}
+//}
 
 .price_diff_2,
 .price_diff_3 {
