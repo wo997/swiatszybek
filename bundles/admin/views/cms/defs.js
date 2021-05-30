@@ -148,12 +148,15 @@
  * tooltip?: string
  * page_type?: string
  * nonclickable?: boolean
+ * standalone?: boolean
  * priority?: number
  * render?(v_node?: vDomNode): string
  * rerender_on?: string[]
  * backend_render?: boolean
  * is_advanced?: boolean
  * }} BlockSchema
+ *
+ * standalone stands for the blc not requiring a parent container that is responsible for width etc
  */
 
 /**

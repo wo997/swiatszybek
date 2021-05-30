@@ -3624,6 +3624,8 @@ class PiepCMS {
 
 		const content_scroll_rect = piep_cms.content_scroll.getBoundingClientRect();
 
+		const grabbed_blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === this.grabbed_v_node.module_name);
+
 		/**
 		 *
 		 * @returns {insertBlc}
@@ -3721,28 +3723,33 @@ class PiepCMS {
 
 				let insert_v_node = grabbed_node_copy;
 
-				let suggest_wrapping_with_container_module = false;
+				// let the user do it manually?
+				// let suggest_wrapping_with_container_module = false;
 
-				const is_node_container =
-					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				if (is_parent_root) {
-					if (!is_node_container) {
-						suggest_wrapping_with_container_module = true;
-					}
-				}
+				// const is_node_container =
+				// 	this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
+				// if (is_parent_root) {
+				// 	if (!is_node_container) {
+				// 		suggest_wrapping_with_container_module = true;
+				// 	}
+				// }
 
-				if (suggest_wrapping_with_container_module) {
-					let new_vid = this.getNewBlcId();
+				// if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
+				// 	suggest_wrapping_with_container_module = false;
+				// }
 
-					insert_v_node = {
-						id: new_vid++,
-						tag: "div",
-						styles: { df: {} },
-						attrs: {},
-						classes: ["vertical_container"],
-						children: [grabbed_node_copy],
-					};
-				}
+				// if (suggest_wrapping_with_container_module) {
+				// 	let new_vid = this.getNewBlcId();
+
+				// 	insert_v_node = {
+				// 		id: new_vid++,
+				// 		tag: "div",
+				// 		styles: { df: {} },
+				// 		attrs: {},
+				// 		classes: ["vertical_container"],
+				// 		children: [grabbed_node_copy],
+				// 	};
+				// }
 
 				return insert_v_node;
 			};
