@@ -1,11 +1,11 @@
 /* js[piep_cms_dependencies] */
 {
+	// maybe include inline blocks later ;)
+	const layout_blc_groups = [{ match_tag: piep_cms_manager.match_textables, priority: 0, exclude: true }];
+
 	piep_cms_manager.registerProp({
 		name: "width",
-		blc_groups: [
-			{ match_tag: piep_cms_manager.match_media_tags, priority: 10 },
-			{ match_tag: /.*/, priority: 0 },
-		],
+		blc_groups: layout_blc_groups,
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Szerokość</div>
@@ -49,7 +49,7 @@
 	piep_cms_manager.registerProp({
 		name: "height",
 		type_groups: ["layout"],
-		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		blc_groups: layout_blc_groups,
 		menu_html: html`
 			<div class="label">Wysokość</div>
 			<unit-input data-blc_prop="styles.height">
@@ -90,7 +90,7 @@
 	piep_cms_manager.registerProp({
 		name: "margin",
 		type_groups: ["layout"],
-		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		blc_groups: layout_blc_groups,
 		menu_html: html` <div class="label">
 				<div class="layout_info_rect" style="background: var(--margin_control_clr);"></div>
 				Margines zewnętrzny
@@ -161,7 +161,7 @@
 	piep_cms_manager.registerProp({
 		name: "padding",
 		type_groups: ["layout"],
-		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		blc_groups: layout_blc_groups,
 		menu_html: html`
 			<div class="label">
 				<div class="layout_info_rect" style="background: var(--padding_control_clr);"></div>
@@ -234,7 +234,7 @@
 	piep_cms_manager.registerProp({
 		name: "border_color",
 		type_groups: ["appearance"],
-		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		blc_groups: layout_blc_groups,
 		menu_html: html`
 			<div class="label">Kolor krawędzi / obramowania</div>
 
@@ -272,7 +272,7 @@
 	piep_cms_manager.registerProp({
 		name: "border_width",
 		type_groups: ["appearance", "layout"],
-		//blc_groups: [{ match_tag: /.*/, priority: layout_priority }],
+		blc_groups: layout_blc_groups,
 		menu_html: html`
 			<div class="label">
 				<div class="layout_info_rect" style="background: var(--border_control_clr);"></div>
@@ -332,10 +332,5 @@
 				</div>
 			</div>
 		`,
-		// init: (piep_cms) => {
-		// 	piep_cms.side_menu._children(".center_fields unit-input input, .center_fields unit-input select").forEach((e) => {
-		// 		e.classList.add("small");
-		// 	});
-		// },
 	});
 }

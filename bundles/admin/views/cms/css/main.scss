@@ -94,10 +94,6 @@
 		.piep_editor_float_menu {
 			display: none !important;
 		}
-
-		& .piep_editor_inspector {
-			display: none !important;
-		}
 	}
 
 	&.grabbed_block {
@@ -111,6 +107,10 @@
 		}
 
 		.piep_editor_cursor {
+			display: none !important;
+		}
+
+		.piep_editor_inspector {
 			display: none !important;
 		}
 	}

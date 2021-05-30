@@ -426,6 +426,7 @@ class PiepCMS {
 		};
 
 		this.grabbed_block_wrapper = container_node("piep_editor_grabbed_block_wrapper");
+		this.grabbed_block_wrapper.classList.add("focus_rect");
 		this.add_block_menu = container_node("piep_editor_add_block_menu");
 		this.side_menu = this.container._child(".piep_editor_side_menu");
 		this.paste_html = container_node("piep_editor_paste_html");
@@ -1416,6 +1417,14 @@ class PiepCMS {
 		};
 	}
 
+	getSelectableBlcSelector() {
+		let blc_selector = ".piep_editor_content .blc:not(.editor_disabled)";
+		// if (this.editing_layout) {
+		// 	blc_selector += ":not(.textable)";
+		// }
+		return blc_selector;
+	}
+
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
 			if (!this.content_active) {
@@ -1474,7 +1483,7 @@ class PiepCMS {
 				ev.preventDefault();
 			}
 
-			const click_blc = target._parent(".blc");
+			const click_blc = target._parent(this.getSelectableBlcSelector());
 			if (click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node_data = this.getVNodeDataById(click_blc_vid);
@@ -1484,7 +1493,7 @@ class PiepCMS {
 
 				// let selection propagate basically
 				setTimeout(() => {
-					if (click_v_node && !click_blc.classList.contains("editor_disabled")) {
+					if (click_v_node) {
 						if (this.text_selection) {
 							const text_focus_node = this.getNode(this.text_selection.focus_vid);
 							if (click_blc.classList.contains("textable")) {
@@ -1897,9 +1906,7 @@ class PiepCMS {
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
 			if (this.filter_blc_menu._get_value() === "layout") {
-				if (!this.text_selection) {
-					this.editLayout();
-				}
+				this.editLayout();
 			} else {
 				this.finishEditingLayout();
 			}
@@ -2768,7 +2775,10 @@ class PiepCMS {
 
 		this.collapseSelection();
 
-		this.recreateDom();
+		this.removeVNodes(remove_vids);
+
+		this.update();
+		//this.recreateDom();
 
 		this.pushHistory("delete_text");
 	}
@@ -2921,7 +2931,7 @@ class PiepCMS {
 		}
 
 		if (!this.layout_control_prop && !this.grabbed_v_node) {
-			const blc = mouse.target ? mouse.target._parent(".piep_editor_content .blc:not(.editor_disabled)") : undefined;
+			const blc = mouse.target ? mouse.target._parent(this.getSelectableBlcSelector()) : undefined;
 			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
 
 			if (blc) {
@@ -3230,6 +3240,15 @@ class PiepCMS {
 	editLayout() {
 		this.editing_layout = true;
 
+		if (this.text_selection) {
+			const v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
+			const parent = v_node_data.parent_v_nodes[0];
+			if (parent) {
+				this.setFocusNode(parent.id);
+				this.text_selection = undefined;
+			}
+		}
+
 		this.container.classList.add("editing_layout");
 		this.container.classList.add("disable_editing");
 
@@ -3250,10 +3269,9 @@ class PiepCMS {
 		const edit_node = this.getNode(this.focus_node_vid);
 
 		const can_edit_layout = edit_node && !edit_node.classList.contains("textable");
+		const edit_node_rect = edit_node ? edit_node.getBoundingClientRect() : undefined;
 
 		if (can_edit_layout) {
-			const edit_node_rect = edit_node.getBoundingClientRect();
-
 			const focus_node_style = window.getComputedStyle(edit_node);
 
 			const orange = "#d806";
@@ -3394,6 +3412,21 @@ class PiepCMS {
 			 * @param {string} tooltip
 			 */
 			const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
+				// prevent overlapping
+				const min_size = 70;
+				if (dir === "top") {
+					top -= Math.max(0, min_size - edit_node_rect.height) / 2;
+				}
+				if (dir === "bottom") {
+					top += Math.max(0, min_size - edit_node_rect.height) / 2;
+				}
+				if (dir === "left") {
+					left -= Math.max(0, min_size - edit_node_rect.width) / 2;
+				}
+				if (dir === "right") {
+					left += Math.max(0, min_size - edit_node_rect.width) / 2;
+				}
+
 				layout_html += html`<div
 					class="layout_control ${gener_prop}_control"
 					data-layout_prop="${spec_prop}"
@@ -3402,6 +3435,7 @@ class PiepCMS {
 					data-tooltip="${tooltip}"
 				></div>`;
 			};
+
 			{
 				// left bottom
 				let left = edit_node_rect.left;
@@ -3681,19 +3715,7 @@ class PiepCMS {
 
 			const blc_vid = +blc.dataset.vid;
 
-			/**
-			 *
-			 * @param {Direction} dir
-			 */
-			const insertAboveOrBelow = (dir) => {
-				const near_v_node_data = this.getVNodeDataById(blc_vid);
-				//const near_v_node = near_v_node_data.v_node;
-
-				let ind = near_v_node_data.index;
-				if (dir === 1) {
-					ind++;
-				}
-
+			const getInsertVNode = () => {
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
 
@@ -3722,7 +3744,28 @@ class PiepCMS {
 					};
 				}
 
+				return insert_v_node;
+			};
+
+			/**
+			 *
+			 * @param {Direction} dir
+			 */
+			const insertAboveOrBelow = (dir) => {
+				const near_v_node_data = this.getVNodeDataById(blc_vid);
+
+				let ind = near_v_node_data.index;
+				if (dir === 1) {
+					ind++;
+				}
+
+				const insert_v_node = getInsertVNode();
 				near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
+			};
+
+			const insertInside = () => {
+				const insert_v_node = getInsertVNode();
+				this.getVNodeById(blc_vid).children.push(insert_v_node);
 			};
 
 			/**
@@ -3836,38 +3879,6 @@ class PiepCMS {
 					}
 					insert_v_node.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
 				}
-			};
-
-			const insertInside = () => {
-				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-
-				let insert_v_node = grabbed_node_copy;
-
-				let suggest_wrapping_with_container_module = false;
-
-				const is_node_container =
-					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				if (is_parent_root) {
-					if (!is_node_container) {
-						suggest_wrapping_with_container_module = true;
-					}
-				}
-
-				if (suggest_wrapping_with_container_module) {
-					let new_vid = this.getNewBlcId();
-
-					insert_v_node = {
-						id: new_vid++,
-						tag: "div",
-						styles: { df: {} },
-						attrs: {},
-						classes: ["vertical_container"],
-						children: [grabbed_node_copy],
-					};
-				}
-
-				this.getVNodeById(blc_vid).children.push(insert_v_node);
 			};
 
 			/**
