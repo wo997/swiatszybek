@@ -212,6 +212,8 @@ domload(() => {
 domload(() => {
 	search_order = $(".search_order");
 	search_order.addEventListener("change", () => {
+		product_list_pagination_comp._data.page_id = 0;
+		product_list_pagination_comp._render();
 		delay("mainSearchProducts");
 	});
 });

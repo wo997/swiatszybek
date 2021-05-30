@@ -14,3 +14,5 @@ define("GENERAL_SETTINGS_PATH", SETTINGS_PATH . "general/");
 define("BUILD_INFO_PATH", BUILDS_PATH . "build_info.json");
 
 define("PREBUILDS_PATH", "prebuilds/");
+
+define("CRON_INFO_PATH", BUILDS_PATH . "cron_info.json");
