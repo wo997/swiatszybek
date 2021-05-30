@@ -2,15 +2,15 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Pliki / Zdięcia</title>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <file-manager-comp class="files"></file-manager-comp>
 

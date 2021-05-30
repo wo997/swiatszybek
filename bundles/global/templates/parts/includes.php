@@ -1,6 +1,6 @@
 <?php
 
-if (defined("ROUTE")) {
+if (defined("ROUTE") && Request::$found) {
     // TODO: read from bulds info, but doesnt matter rly
     $has_js = true;
     $has_css = true;

@@ -1,10 +1,10 @@
 <?php
 
-endSection();
+Templates::endSection();
 
 ?>
 
-<?php startSection("body"); ?>
+<?php Templates::startSection("body"); ?>
 
 <div class="admin_layout admin_root">
     <div class="navbar_admin_mobile">
@@ -44,10 +44,10 @@ endSection();
 
     <div class="content">
         <div class="main_header">
-            <?= def($sections, "header", ""); ?>
+            <?= def(Templates::$sections, "header", ""); ?>
         </div>
         <?php
-        if (!isset($sections["header"])) {
+        if (!isset(Templates::$sections["header"])) {
         ?>
             <style>
                 .main_admin_scroll {
@@ -59,7 +59,7 @@ endSection();
         ?>
         <div class="scroll_panel scroll_shadow main_admin_scroll">
             <div class="panel_padding actual_content">
-                <?= def($sections, "admin_page_body", ""); ?>
+                <?= def(Templates::$sections, "admin_page_body", ""); ?>
             </div>
             <footer>Piepsklep <?= date("Y") ?></footer>
         </div>

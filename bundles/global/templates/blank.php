@@ -1,6 +1,6 @@
 <?php
 
-endSection();
+Templates::endSection();
 
 ?>
 <!DOCTYPE html>
@@ -9,11 +9,11 @@ endSection();
 <head>
     <?php include "bundles/global/templates/parts/includes.php";
     ?>
-    <?= def($sections, "head_content", ""); ?>
+    <?= def(Templates::$sections, "head_content", ""); ?>
 </head>
 
 <body class="freeze" id="p">
-    <?= def($sections, "body", ""); ?>
+    <?= def(Templates::$sections, "body", ""); ?>
     <?php include "bundles/global/templates/parts/footer.php"; // not layout tho 
     ?>
 </body>

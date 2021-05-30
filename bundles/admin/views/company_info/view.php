@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <script>
     const company_info = <?= json_encode(getSetting(["general", "company"])); ?>
@@ -10,7 +10,7 @@
 
 <title>Dane firmy</title>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div id="companyInfoForm" class="desktop_row space_columns">
     <div>

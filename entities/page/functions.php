@@ -232,8 +232,6 @@ function updatePageableMetadata($entity_name, $id)
 
 function renderPage($page_id, $data = [])
 {
-    global $sections;
-
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
     if ($page_data["active"] !== 1 && $page_data["url"] !== "" && !User::getCurrent()->priveleges["backend_access"]) {
@@ -361,7 +359,7 @@ function renderPage($page_id, $data = [])
     $page_release = $page_data["version"];
 ?>
 
-    <?php startSection("head_content"); ?>
+    <?php Templates::startSection("head_content"); ?>
 
     <title><?= $seo_title ?></title>
     <meta name="description" content="<?= $seo_description ?>">
@@ -394,9 +392,9 @@ function renderPage($page_id, $data = [])
         <link href="/<?= BUILDS_PATH . "page/css/page_$page_id.css?v=$page_release" ?>" rel="stylesheet">
     <?php endif ?>
 
-    <?= def($sections, "page_type_specific_head", ""); ?>
+    <?= def(Templates::$sections, "page_type_specific_head", ""); ?>
 
-    <?php startSection("body"); ?>
+    <?php Templates::startSection("body"); ?>
 
     <div class="main_wrapper global_root">
         <?= $full_dom_data["content_html"] ?>

@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/pulpit] 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Pulpit</title>
 
@@ -10,7 +10,7 @@
     ?>
 </script>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div style="max-width: 1000px;margin: auto">
     <div class="label big">Statystyki sprzedaży</div>

@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Ustawienia motywu</title>
 
@@ -10,7 +10,7 @@
     <?= Theme::preloadThemeSettings() ?>
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs mra">
@@ -20,7 +20,7 @@
     </span>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <theme-settings-comp class="main"></theme-settings-comp>
 

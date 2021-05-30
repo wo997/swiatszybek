@@ -32,6 +32,7 @@ class Request
     public static $is_deployment_url = null;
     public static $static_urls = ["ADMIN" => "/admin", "USER" => "/uzytkownik"];
     public static $full_url;
+    public static $found = true;
 
     public static function init()
     {
@@ -122,7 +123,7 @@ class Request
 
     public static function notFound()
     {
-        global $sections;
+        self::$found = false;
         include "bundles/global/templates/404.php";
         die;
     }

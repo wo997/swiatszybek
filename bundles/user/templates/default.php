@@ -1,10 +1,10 @@
 <?php
 
-endSection();
+Templates::endSection();
 
 ?>
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <div class="user_nav">
     <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
@@ -16,7 +16,7 @@ endSection();
     <a class="gray_hover" onclick="return logout()"> <i class="fa fa-sign-out-alt"></i> Wyloguj się </a>
 </div>
 <div class="user_page_body">
-    <?= def($sections, "user_page_body", ""); ?>
+    <?= def(Templates::$sections, "user_page_body", ""); ?>
 </div>
 
 <?php include "bundles/global/templates/default.php"; ?>

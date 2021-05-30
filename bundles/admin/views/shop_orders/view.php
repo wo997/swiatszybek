@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/zamowienia] 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Zamówienia</title>
 
@@ -11,7 +11,7 @@
     <?= preloadCarriers() ?>
 </script>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <datatable-comp class="shop_orders"></datatable-comp>
 

@@ -18,11 +18,11 @@ if ($force_payment) {
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Zamówienie #<?= $shop_order->getId() ?></title>
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <?php
 //oplacono

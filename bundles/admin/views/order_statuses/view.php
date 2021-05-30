@@ -1,12 +1,12 @@
 <?php //route[{ADMIN}/statusy]
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Statusy</title>
 
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <h1>Statusy</h1>
 

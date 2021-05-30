@@ -1,5 +1,5 @@
 <?php
-startSection("body_content");
+Templates::startSection("body_content");
 ?>
 
 <div style="text-align: center;margin: 30vh 0 0;">

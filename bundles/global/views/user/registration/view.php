@@ -8,7 +8,7 @@ if (Request::getSingleUsageSessionVar("just_logged_in")) {
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Rejestracja</title>
 
@@ -16,7 +16,7 @@ if (Request::getSingleUsageSessionVar("just_logged_in")) {
     const register_email = `<?= $register_email ?>`;
 </script>
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <form id="registerForm" style="margin: auto auto 0;padding:20px 10px 80px;width:100%;max-width:500px" onsubmit="return false;">
     <h1 class="h1 center mb2">Rejestracja</h1>

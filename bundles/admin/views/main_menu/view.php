@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/menu-glowne] 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Menu główne</title>
 
@@ -12,7 +12,7 @@
     <?= preloadPages() ?>
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -25,7 +25,7 @@
     <div class="save_btn_wrapper ml1"></div>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <menus-comp class="main"></menus-comp>
 

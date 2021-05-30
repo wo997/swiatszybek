@@ -20,11 +20,11 @@ if (!$user_email) {
 ?>
 
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Resetowanie hasła</title>
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <form id="resetPasswordForm" style="margin: auto auto 0;padding: 20px 10px 80px;width: 100%;max-width: 414px;" onsubmit="return false">
     <h1 class="h1" style="text-align:center">Zresetuj hasło</h1>

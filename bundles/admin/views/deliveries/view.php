@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Wysyłki</title>
 
@@ -12,7 +12,7 @@
     const deliveries_config = <?= json_encode(getSetting(["general", "deliveries"])) ?>;
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -25,7 +25,7 @@
     </div>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <deliveries-config-comp class="main"></deliveries-config-comp>
 

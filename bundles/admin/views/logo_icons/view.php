@@ -2,11 +2,11 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Logo / ikony</title>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -16,7 +16,7 @@
     </span>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div class="label mb2 first">
     <span class="medium">Logo sklepu</span>

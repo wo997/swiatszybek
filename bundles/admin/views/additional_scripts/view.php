@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Dodatkowe skrypty</title>
 
@@ -10,7 +10,7 @@
     const additional_scripts = <?= json_encode(getSetting(["general", "additional_scripts"])); ?>
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -21,7 +21,7 @@
     <button class="btn primary save_btn mla">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div id="additionalScriptsForm">
     <span class="label">Skrypty w headerze</span>

@@ -1,8 +1,8 @@
 <?php
 
-endSection();
+Templates::endSection();
 
-$body_content =  def($sections, "body_content", "");
+$body_content =  def(Templates::$sections, "body_content", "");
 
 $global_template_id = DB::fetchVal("SELECT template_id FROM template WHERE is_global");
 if ($global_template_id) {
@@ -25,11 +25,11 @@ if ($global_template_id) {
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <link href="/<?= BUILDS_PATH . "template/css/template_$global_template_id.css?v=$template_release" ?>" rel="stylesheet">
 
-<?php startSection("body"); ?>
+<?php Templates::startSection("body"); ?>
 
 <div class="main_wrapper global_root">
     <?= $content_html ?>

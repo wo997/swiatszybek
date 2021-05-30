@@ -2,11 +2,11 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Oczekujący na produkty</title>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <datatable-comp class="product_queue"></datatable-comp>
 

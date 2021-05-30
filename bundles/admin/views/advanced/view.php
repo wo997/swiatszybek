@@ -2,7 +2,7 @@
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Zaawansowane</title>
 
@@ -10,7 +10,7 @@
     const advanced_settings = <?= json_encode(getSetting(["general", "advanced"])); ?>
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -21,7 +21,7 @@
     <button class="btn primary save_btn mla">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div id="advancedSettingsForm">
     <span class="label first">Certyfikat SSL</span>

@@ -72,7 +72,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Strona</title>
 
@@ -91,7 +91,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 <script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . version("piep_cms") ?>"></script>
 <link href="/<?= BUILDS_PATH . "piep_cms.css?v=" . version("piep_cms") ?>" rel="stylesheet">
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div class="piep_editor">
     <div class="piep_editor_header custom_toolbar">

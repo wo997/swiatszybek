@@ -57,7 +57,7 @@ if (!$general_product_data) {
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Produkt</title>
 
@@ -80,7 +80,7 @@ if (!$general_product_data) {
     ];
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -95,7 +95,7 @@ if (!$general_product_data) {
     <div class="inject_header_nodes mla"></div>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <product-comp></product-comp>
 

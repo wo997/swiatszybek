@@ -9,7 +9,19 @@ $default_category_data = [
 $product_category_id = Request::urlParam(1, -1);
 if ($product_category_id !== -1) {
     $product_category_id = intval($product_category_id);
-    $product_category_data = DB::fetchRow("SELECT name, __category_path_json FROM product_category WHERE product_category_id = $product_category_id");
+    $product_category_data = DB::fetchRow("SELECT name, __category_path_json, __url FROM product_category WHERE product_category_id = $product_category_id");
+    if (!$product_category_data) {
+        Request::notFound();
+    }
+
+    $category_link_base = explode("?", $product_category_data["__url"])[0];
+    if ($category_link_base !== Request::$url) {
+        $true_category_link = $category_link_base;
+        if ($_GET) {
+            $true_category_link .= "?" . http_build_query($_GET);
+        }
+        Request::redirectPermanent($true_category_link);
+    }
 } else {
     $product_category_data = $default_category_data;
 }
@@ -152,7 +164,7 @@ function traverseFeatures()
     }
     $html = "";
 
-    $product_features[] = [
+    array_unshift($product_features, [
         "product_feature_id" => "cena",
         "name" => "Cena",
         "data_type" => "double_value",
@@ -160,7 +172,7 @@ function traverseFeatures()
         "list_type" => "",
         "extra" => "[]",
         "units_json" => "[]"
-    ];
+    ]);
 
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
@@ -392,7 +404,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <link rel="canonical" href="<?= SITE_URL . getProductCategoryLink($category_path) ?>" />
 
@@ -405,7 +417,7 @@ $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
     const products_total_rows = <?= $products_search_data["total_rows"] ?>;
 </script>
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <div class="products_all">
     <div class="mobile_searching">

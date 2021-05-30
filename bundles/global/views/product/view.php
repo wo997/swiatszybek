@@ -125,7 +125,7 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 ?>
 
-<?php startSection("page_type_specific_head"); ?>
+<?php Templates::startSection("page_type_specific_head"); ?>
 
 <title><?= $full_product_name ?> - <?= getShopName() ?></title>
 
@@ -147,7 +147,7 @@ $user_email = $user_data ? $user_data["email"] : "";
     <?php } ?>
 </script>
 
-<?php startSection("view_product_images_variants_buy"); ?>
+<?php Templates::startSection("view_product_images_variants_buy"); ?>
 
 <div class="sticky_product">
     <span class="clamp_lines clamp_2 full_product_name"><?= $full_product_name ?></span>
@@ -359,7 +359,7 @@ if ($main_img) {
     </div>
 </div>
 
-<?php startSection("view_product_feature_list"); ?>
+<?php Templates::startSection("view_product_feature_list"); ?>
 
 <div class="product_feature_list">
     <?php
@@ -402,7 +402,7 @@ if ($main_img) {
     <?php } ?>
 </div>
 
-<?php startSection("view_product_comments"); ?>
+<?php Templates::startSection("view_product_comments"); ?>
 
 <div class="product_comments">
     <div class="mb1">
@@ -546,7 +546,7 @@ foreach ($general_product_products as $product) {
 
 <?php
 
-endSection();
+Templates::endSection();
 
 renderPage(
     $page_data["page_id"],

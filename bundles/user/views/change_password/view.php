@@ -3,11 +3,11 @@
 ?>
 
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Zmień hasło</title>
 
-<?php startSection("user_page_body"); ?>
+<?php Templates::startSection("user_page_body"); ?>
 
 <form id="changePasswordForm" style="margin: 0 auto 0;padding: 20px 10px 80px;width: 100%;max-width: 414px;" onsubmit="return false">
     <h1 class="h1 center">Zmień hasło</h1>

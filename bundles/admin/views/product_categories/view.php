@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/kategorie-produktow] 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Kategorie produktów</title>
 
@@ -9,7 +9,7 @@
     <?= preloadProductCategories() ?>
 </script>
 
-<?php startSection("header"); ?>
+<?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
@@ -21,7 +21,7 @@
     <div class="save_btn_wrapper ml1"></div>
 </div>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div>
     <p class="user_info" style="margin-bottom:20px">

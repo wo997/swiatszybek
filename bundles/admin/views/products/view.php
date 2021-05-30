@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/produkty] 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Produkty</title>
 
@@ -14,7 +14,7 @@
     <?php } ?>
 </script>
 
-<?php startSection("admin_page_body"); ?>
+<?php Templates::startSection("admin_page_body"); ?>
 
 <div class="products_view_header">
     <div class="pretty_radio semi_bold toggle_view">

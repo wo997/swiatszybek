@@ -6,7 +6,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <title>Kup teraz</title>
 
@@ -18,7 +18,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 <script async src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
 <link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css" />
 
-<?php startSection("body_content"); ?>
+<?php Templates::startSection("body_content"); ?>
 
 <div class="buy_now_container">
     <h1 class="h1 mobile_view center">Kup teraz</h1>

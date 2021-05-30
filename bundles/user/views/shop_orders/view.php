@@ -1,7 +1,7 @@
 <?php //route[{USER}/zamowienia]
 ?>
 
-<?php startSection("head_content"); ?>
+<?php Templates::startSection("head_content"); ?>
 
 <script>
     <?= preloadOrderStatuses() ?>
@@ -9,7 +9,7 @@
 
 <title>Moje zamówienia</title>
 
-<?php startSection("user_page_body"); ?>
+<?php Templates::startSection("user_page_body"); ?>
 
 <datatable-comp class="shop_orders"></datatable-comp>
 
