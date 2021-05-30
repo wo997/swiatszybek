@@ -9,6 +9,10 @@
 		margin: 0;
 		padding: 0;
 	}
+	&.vertical_container,
+	&.columns_container {
+		max-width: min(100%, var(--container_max_width));
+	}
 	h1& {
 		font-size: var(--size_h1);
 		font-weight: var(--bold);

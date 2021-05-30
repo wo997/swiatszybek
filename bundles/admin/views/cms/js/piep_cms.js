@@ -4158,6 +4158,8 @@ class PiepCMS {
 
 			this.update({ all: true });
 		}
+
+		this.displaySelectionBreadcrumbs();
 	}
 
 	/**

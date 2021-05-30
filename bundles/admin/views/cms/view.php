@@ -74,7 +74,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 <?php Templates::startSection("head_content"); ?>
 
-<title>Strona</title>
+<title>Edytor stron</title>
 
 <script>
     <?= Theme::preloadThemeSettings() ?>
