@@ -108,8 +108,22 @@ class Request
         }
     }
 
+    public static function redirectPermanent($url)
+    {
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: ' . $url);
+        die;
+    }
+
     public static function jsonResponse($response)
     {
         die(json_encode($response));
+    }
+
+    public static function notFound()
+    {
+        global $sections;
+        include "bundles/global/templates/404.php";
+        die;
     }
 }

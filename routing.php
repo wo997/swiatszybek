@@ -5,41 +5,29 @@ define("time", microtime(true));
 require_once 'kernel.php';
 
 // final conclusion - no need to fix in case ssl is inactive, connection is marked as unsafe, but still can enter the page
+$is_https = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off";
 if (getSetting(["general", "advanced", "ssl"])) {
-    if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
-        $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $location);
-        exit;
+    if ($is_https) {
+        Request::redirectPermanent('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
 } else {
-    if (!(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off")) {
-        $location = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $location);
-        exit;
+    if (!$is_https) {
+        Request::redirectPermanent('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
 }
-
 
 $www_redirect = getSetting(["general", "advanced", "www_redirect"]);
 
 if ($www_redirect) {
-    $protocol = (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") ? "http://" : "https://";
+    $protocol = $is_https ? "http://" : "https://";
 
     if ($www_redirect === "www" && substr($_SERVER['HTTP_HOST'], 0, 4) !== 'www.') {
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $protocol . 'www.' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-        exit;
+        Request::redirectPermanent($protocol . 'www.' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
     if ($www_redirect === "nowww" && substr($_SERVER['HTTP_HOST'], 0, 4) === 'www.') {
-        header('HTTP/1.1 301 Moved Permanently');
-        header('Location: ' . $protocol . substr($_SERVER['HTTP_HOST'], 4) . $_SERVER['REQUEST_URI']);
-        exit;
+        Request::redirectPermanent($protocol . substr($_SERVER['HTTP_HOST'], 4) . $_SERVER['REQUEST_URI']);
     }
 }
-
-
 
 function getAdminNavitationTree()
 {
@@ -253,5 +241,4 @@ if (Request::$url == "/") {
     die;
 }
 
-header("Location: /");
-die;
+Request::notFound();

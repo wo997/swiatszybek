@@ -237,7 +237,7 @@ function renderPage($page_id, $data = [])
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
     if ($page_data["active"] !== 1 && $page_data["url"] !== "" && !User::getCurrent()->priveleges["backend_access"]) {
-        Request::redirect("/");
+        Request::notFound();
     }
 
     $v_dom_json = $page_data["v_dom_json"];

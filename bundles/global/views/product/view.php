@@ -9,13 +9,13 @@ if ($general_product_id) {
     $GENERAL_PRODUCT_ID = $general_product_id;
     $general_product_data = DB::fetchRow("SELECT * FROM general_product WHERE general_product_id = $general_product_id");
 } else {
-    Request::redirect("/");
+    Request::notFound();
 }
 
 $page_data = DB::fetchRow("SELECT seo_title, seo_description, page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
 
 if (!$page_data) {
-    Request::redirect("/");
+    Request::notFound();
 }
 
 $option_ids_str = def($_GET, "v");
@@ -35,7 +35,7 @@ foreach ($option_names as $option_name) {
 $product_link = getProductLink($general_product_id, $general_product_data["name"], $option_ids, $option_names);
 
 if (!$general_product_data) {
-    Request::redirect("/");
+    Request::notFound();
 }
 
 $product_link_base = explode("?", $product_link)[0];
@@ -44,7 +44,7 @@ if ($product_link_base !== Request::$url) {
     if ($_GET) {
         $true_product_link .= "?" . http_build_query($_GET);
     }
-    Request::redirect($true_product_link);
+    Request::redirectPermanent($true_product_link);
 }
 
 $general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants FROM product WHERE general_product_id = $general_product_id AND active = 1");
