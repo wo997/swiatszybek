@@ -1,9 +1,9 @@
 /* css[global] */
 
 .blc {
-	// &.vertical_container:not(.template_hook_root) {
-	// 	padding: 10px; // default yay
-	// }
+	&.vertical_container:not(.template_hook_root) {
+		padding: 10px 0; // default yay
+	}
 
 	// &.vertical_container,
 	// &.columns_container {

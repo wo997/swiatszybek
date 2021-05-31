@@ -3744,33 +3744,41 @@ class PiepCMS {
 
 				let insert_v_node = grabbed_node_copy;
 
-				// let the user do it manually?
-				let suggest_wrapping_with_container_module = false;
-
 				const is_node_container =
 					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
 				if (is_parent_root) {
-					if (!is_node_container) {
-						suggest_wrapping_with_container_module = true;
+					if (is_node_container) {
+						insert_v_node.settings.width_type = "default_container";
 					}
 				}
 
-				if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
-					suggest_wrapping_with_container_module = false;
-				}
+				// let the user do it manually?
+				// let suggest_wrapping_with_container_module = false;
 
-				if (suggest_wrapping_with_container_module) {
-					let new_vid = this.getNewBlcId();
+				// const is_node_container =
+				// 	this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
+				// if (is_parent_root) {
+				// 	if (!is_node_container) {
+				// 		suggest_wrapping_with_container_module = true;
+				// 	}
+				// }
 
-					insert_v_node = {
-						id: new_vid++,
-						tag: "div",
-						styles: { df: {} },
-						attrs: {},
-						classes: ["vertical_container"],
-						children: [grabbed_node_copy],
-					};
-				}
+				// if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
+				// 	suggest_wrapping_with_container_module = false;
+				// }
+
+				// if (suggest_wrapping_with_container_module) {
+				// 	let new_vid = this.getNewBlcId();
+
+				// 	insert_v_node = {
+				// 		id: new_vid++,
+				// 		tag: "div",
+				// 		styles: { df: {} },
+				// 		attrs: {},
+				// 		classes: ["vertical_container"],
+				// 		children: [grabbed_node_copy],
+				// 	};
+				// }
 
 				return insert_v_node;
 			};
