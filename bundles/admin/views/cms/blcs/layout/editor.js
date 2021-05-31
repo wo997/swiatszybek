@@ -4,8 +4,22 @@
 	const layout_blc_groups = [{ match_tag: piep_cms_manager.match_textables, priority: 15, exclude: true }];
 
 	piep_cms_manager.registerProp({
-		name: "width",
-		blc_groups: layout_blc_groups,
+		name: "width_type",
+		blc_groups: [
+			{
+				matcher: (v_node_data) => {
+					if (v_node_data.v_node.tag.match(piep_cms_manager.match_textables)) {
+						return false;
+					}
+					const parent = v_node_data.parent_v_nodes[0];
+					if (parent && parent.classes.includes("columns_container")) {
+						return false;
+					}
+					return true;
+				},
+				priority: 15,
+			},
+		],
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Typ wyznaczania szerokości</div>
@@ -36,56 +50,84 @@
 					Dowolna
 				</div>
 			</div>
-
-			<div class="case_custom">
-				<div class="label">Szerokość</div>
-				<unit-input data-blc_prop="styles.width">
-					<input />
-					<select>
-						<option value="%">%</option>
-						<option value="px">px</option>
-						<option value=""></option>
-					</select>
-				</unit-input>
-
-				<div class="glue_children">
-					<div class="mr2 case_advanced">
-						<div class="label">Minimalna</div>
-						<unit-input data-blc_prop="styles.minWidth">
-							<input />
-							<select>
-								<option value="px">px</option>
-								<option value="%">%</option>
-								<option value=""></option>
-							</select>
-						</unit-input>
-					</div>
-
-					<div>
-						<div class="label">Maksymalna</div>
-						<unit-input data-blc_prop="styles.maxWidth">
-							<input />
-							<select>
-								<option value="px">px</option>
-								<option value="%">%</option>
-								<option value=""></option>
-							</select>
-						</unit-input>
-					</div>
-				</div>
-			</div>
 		`,
 		init: (piep_cms) => {
+			const width_type_wrapper = piep_cms.side_menu._child(".prop_width_type");
 			const width_wrapper = piep_cms.side_menu._child(".prop_width");
-			const case_custom = width_wrapper._child(".case_custom");
-			const width_type_input = width_wrapper._child(`[data-blc_prop="settings.width_type"]`);
+			const min_max_width_wrapper = piep_cms.side_menu._child(".prop_min_max_width");
+			const width_type_input = width_type_wrapper._child(`[data-blc_prop="settings.width_type"]`);
 			const align_self_horizontally_wrapper = piep_cms.side_menu._child(".prop_align_self_horizontally");
 			width_type_input.addEventListener("value_set", () => {
 				const width_type = width_type_input._get_value();
-				case_custom.classList.toggle("hidden", width_type !== "custom");
 				align_self_horizontally_wrapper.classList.toggle("hidden_completely", width_type === "full");
+				width_wrapper.classList.toggle("hidden_completely", width_type !== "custom");
+				min_max_width_wrapper.classList.toggle("hidden_completely", width_type !== "custom");
 			});
 		},
+	});
+
+	piep_cms_manager.registerProp({
+		name: "width",
+		blc_groups: layout_blc_groups,
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="label">Szerokość</div>
+			<unit-input data-blc_prop="styles.width">
+				<input />
+				<select>
+					<option value="%">%</option>
+					<option value="px">px</option>
+					<option value=""></option>
+				</select>
+			</unit-input>
+		`,
+	});
+
+	piep_cms_manager.registerProp({
+		name: "min_max_width",
+		blc_groups: [
+			{
+				matcher: (v_node_data) => {
+					if (v_node_data.v_node.tag.match(piep_cms_manager.match_textables)) {
+						return false;
+					}
+					const parent = v_node_data.parent_v_nodes[0];
+					if (parent && parent.classes.includes("columns_container")) {
+						return false;
+					}
+					return true;
+				},
+				priority: 15,
+			},
+		],
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="glue_children max_min_options">
+				<div class="mr2 case_advanced">
+					<div class="label">Szerokość min.</div>
+					<unit-input data-blc_prop="styles.minWidth">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
+				</div>
+
+				<div>
+					<div class="label">Szerokość max.</div>
+					<unit-input data-blc_prop="styles.maxWidth">
+						<input />
+						<select>
+							<option value="px">px</option>
+							<option value="%">%</option>
+							<option value=""></option>
+						</select>
+					</unit-input>
+				</div>
+			</div>
+		`,
 	});
 
 	piep_cms_manager.registerProp({
@@ -102,10 +144,17 @@
 					<option value=""></option>
 				</select>
 			</unit-input>
+		`,
+	});
 
+	piep_cms_manager.registerProp({
+		name: "min_max_height",
+		type_groups: ["layout"],
+		blc_groups: [{ match_tag: piep_cms_manager.match_textables, priority: 5, exclude: true }],
+		menu_html: html`
 			<div class="glue_children">
 				<div class="mr2">
-					<div class="label">Minimalna</div>
+					<div class="label">Wysokość min.</div>
 					<unit-input data-blc_prop="styles.minHeight">
 						<input />
 						<select>
@@ -116,7 +165,7 @@
 				</div>
 
 				<div class="case_advanced">
-					<div class="label">Maksymalna</div>
+					<div class="label">Maksymalna max.</div>
 					<unit-input data-blc_prop="styles.maxHeight">
 						<input />
 						<select>

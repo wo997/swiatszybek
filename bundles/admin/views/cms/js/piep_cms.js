@@ -2200,6 +2200,9 @@ class PiepCMS {
 					if (parent.tag !== "ul" && v_node.tag === "li") {
 						v_node.tag = "p";
 					}
+					if (parent.classes.includes("columns_container")) {
+						v_node.settings.width_type = "custom";
+					}
 				}
 
 				const children = v_node.children;
@@ -3565,15 +3568,20 @@ class PiepCMS {
 		this.grabbed_block_wrapper.style.left = "0";
 		this.grabbed_block_wrapper.style.width = "";
 
-		let ok_width;
+		let base_width = this.grabbed_block_wrapper.offsetWidth;
+		if (!this.grabbed_block_wrapper.matches(".text_container, .textable")) {
+			base_width = Math.max(500, this.grabbed_block_wrapper.offsetWidth);
+		}
+
+		let ok_width = base_width;
+
 		if (this.grabbed_block_wrapper.offsetWidth > 500) {
 			// wrap
 			ok_width = Math.sqrt(2 * this.grabbed_block_wrapper.offsetWidth * this.grabbed_block_wrapper.offsetHeight);
 			// let pretty_width = Math.sqrt(2 * this.grabbed_block_wrapper.offsetWidth * this.grabbed_block_wrapper.offsetHeight);
 			// ok_width = Math.min(800, pretty_width);
-		} else {
-			ok_width = this.grabbed_block_wrapper.offsetWidth;
 		}
+
 		this.grabbed_block_wrapper.style.width = ok_width.toPrecision(5) + "px";
 		const scale = 1 / (1 + ok_width * 0.001);
 		this.grabbed_block_wrapper.style.transform = `scale(${scale.toPrecision(5)})`;
@@ -3746,10 +3754,8 @@ class PiepCMS {
 
 				const is_node_container =
 					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				if (is_parent_root) {
-					if (is_node_container) {
-						insert_v_node.settings.width_type = "default_container";
-					}
+				if (is_parent_root && is_node_container) {
+					insert_v_node.settings.width_type = "default_container";
 				}
 
 				// let the user do it manually?
@@ -3854,6 +3860,9 @@ class PiepCMS {
 					/** @type {vDomNode[]} */
 					const just_columns = [near_column];
 
+					if (!insert_v_node.styles.df) {
+						insert_v_node.styles.df = {};
+					}
 					insert_v_node.styles.df.width = "50%";
 
 					if (dir === 1) {
