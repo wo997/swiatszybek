@@ -71,6 +71,9 @@
 				margin-top: calc(-1 * var(--form_spacing));
 			}
 		}
+		.hidden_completely {
+			display: none !important;
+		}
 	}
 }
 

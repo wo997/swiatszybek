@@ -135,6 +135,8 @@ domload(() => {
 		page_publish._child(".page_unpublished_btn").addEventListener("click", () => {
 			setPagePublished(page_data.page_id, 1);
 		});
+
+		setPagePublishedCallback(page_data.active);
 	}
 
 	const edit_seo_btn = $(".edit_seo_btn");

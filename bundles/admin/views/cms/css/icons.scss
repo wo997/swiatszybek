@@ -111,3 +111,33 @@
 		}
 	}
 }
+
+.container_layout_type_icon {
+	& {
+		font-size: 2em;
+		display: flex;
+		height: 1.3em;
+		width: 2em;
+		border: 1px solid #bbb;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.b {
+		content: "";
+		min-height: 0.8em;
+		width: 1.2em;
+		border: 1px solid #03f7;
+		background: #03f2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.a,
+	.c {
+		height: 100%;
+		flex-grow: 1;
+		background-image: repeating-linear-gradient(45deg, #fff, #fff 3px, #ccc 3px, #ccc 6px);
+	}
+}

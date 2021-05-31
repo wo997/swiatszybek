@@ -1,0 +1,37 @@
+/* css[global] */
+
+.blc {
+	h1& {
+		font-size: var(--size_h1);
+		font-weight: var(--bold);
+		text-align: center;
+	}
+	h2& {
+		font-size: var(--size_h2);
+		font-weight: var(--bold);
+	}
+	h3& {
+		font-size: var(--size_h3);
+		font-weight: var(--semi_bold);
+	}
+}
+
+.blc + h1.blc,
+#p h1.blc + .blc {
+	margin-top: 1.5em;
+}
+
+.blc:not(.h1) + h2.blc,
+#p h2.blc + .blc {
+	margin-top: 1.1em;
+}
+
+.blc:not(.h1):not(.h2) + h3.blc,
+#p h3.blc + .blc {
+	margin-top: 0.7em;
+}
+
+.blc + p.blc,
+.blc + li.blc {
+	margin-top: 0.5em;
+}

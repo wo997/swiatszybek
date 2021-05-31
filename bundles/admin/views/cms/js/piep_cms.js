@@ -2187,6 +2187,9 @@ class PiepCMS {
 				if (!v_node.settings.bind_borderColors) {
 					v_node.settings.bind_borderColors = "all";
 				}
+				if (!v_node.settings.width_type) {
+					v_node.settings.width_type = "full";
+				}
 
 				const parent = parents[0];
 
@@ -2418,8 +2421,22 @@ class PiepCMS {
 		 */
 		const traverseVDom = (v_nodes) => {
 			for (const v_node of v_nodes) {
+				let node_styles = "";
+
+				let width_type = "custom";
+
+				if (v_node.settings) {
+					width_type = v_node.settings.width_type;
+
+					if (width_type === "full") {
+						node_styles += `width: 100%;`;
+					}
+					if (width_type === "default_container") {
+						node_styles += `width: 100%;max-width: var(--container_max_width);`;
+					}
+				}
+
 				if (v_node.styles) {
-					let node_styles = "";
 					for (const res_name of care_about_resolutions) {
 						const res_styles = v_node.styles[res_name];
 						if (!res_styles) {
@@ -2430,14 +2447,18 @@ class PiepCMS {
 							continue;
 						}
 						styles.forEach(([prop, val]) => {
+							if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
+								return;
+							}
 							node_styles += `${kebabCase(prop)}: ${val};`;
 						});
 					}
-					if (node_styles) {
-						// #p is stroner than just a class
-						node_styles = `#p ${this.getNodeSelector(v_node.id)} { ${node_styles} }`;
-						styles_css += node_styles;
-					}
+				}
+
+				if (node_styles) {
+					// #p is stroner than just a class
+					node_styles = `#p ${this.getNodeSelector(v_node.id)} { ${node_styles} }`;
+					styles_css += node_styles;
 				}
 
 				const children = v_node.children;
@@ -3724,32 +3745,32 @@ class PiepCMS {
 				let insert_v_node = grabbed_node_copy;
 
 				// let the user do it manually?
-				// let suggest_wrapping_with_container_module = false;
+				let suggest_wrapping_with_container_module = false;
 
-				// const is_node_container =
-				// 	this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				// if (is_parent_root) {
-				// 	if (!is_node_container) {
-				// 		suggest_wrapping_with_container_module = true;
-				// 	}
-				// }
+				const is_node_container =
+					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
+				if (is_parent_root) {
+					if (!is_node_container) {
+						suggest_wrapping_with_container_module = true;
+					}
+				}
 
-				// if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
-				// 	suggest_wrapping_with_container_module = false;
-				// }
+				if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
+					suggest_wrapping_with_container_module = false;
+				}
 
-				// if (suggest_wrapping_with_container_module) {
-				// 	let new_vid = this.getNewBlcId();
+				if (suggest_wrapping_with_container_module) {
+					let new_vid = this.getNewBlcId();
 
-				// 	insert_v_node = {
-				// 		id: new_vid++,
-				// 		tag: "div",
-				// 		styles: { df: {} },
-				// 		attrs: {},
-				// 		classes: ["vertical_container"],
-				// 		children: [grabbed_node_copy],
-				// 	};
-				// }
+					insert_v_node = {
+						id: new_vid++,
+						tag: "div",
+						styles: { df: {} },
+						attrs: {},
+						classes: ["vertical_container"],
+						children: [grabbed_node_copy],
+					};
+				}
 
 				return insert_v_node;
 			};

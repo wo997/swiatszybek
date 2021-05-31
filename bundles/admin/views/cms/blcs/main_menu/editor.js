@@ -7,7 +7,7 @@
 		label: html`Menu główne`,
 		single_usage: true,
 		nonclickable: true,
-		//standalone: true,
+		standalone: true,
 		v_node: {
 			tag: "header",
 			id: -1,

@@ -114,6 +114,15 @@ function traverseVDom($v_dom, $options = [])
             $content_html .= ">$body</$tag>";
         }
 
+        $width_type = def($v_node, ["settings", "width_type"], "custom");
+
+        if ($width_type === "full") {
+            $styles_css .= "#p .$base_class { width: 100%; }";
+        }
+        if ($width_type === "default_container") {
+            $styles_css .= "#p .$base_class { width: 100%;max-width: var(--container_max_width); }";
+        }
+
         if (!$html_only && isset($v_node["styles"])) {
             foreach ($v_node["styles"] as $res_name => $styles) {
                 $node_styles = "";
@@ -234,7 +243,7 @@ function renderPage($page_id, $data = [])
 {
     $page_data = DB::fetchRow("SELECT * FROM page WHERE page_id = ?", [$page_id]);
 
-    if ($page_data["active"] !== 1 && $page_data["url"] !== "" && !User::getCurrent()->priveleges["backend_access"]) {
+    if ($page_data["active"] !== 1 && !User::getCurrent()->priveleges["backend_access"]) {
         Request::notFound();
     }
 
@@ -287,6 +296,7 @@ function renderPage($page_id, $data = [])
                 if (def($base_v_node, ["module_name"]) === "template_hook" && $template_hook_id) {
                     unset($base_v_node["module_name"]);
                     $base_v_node["classes"][] = "vertical_container";
+                    $base_v_node["classes"][] = "template_hook_root";
                     // just remove a class
                     $module_template_hook_index = array_search("module_template_hook", $base_v_node["classes"]);
                     if ($module_template_hook_index !== false) {
