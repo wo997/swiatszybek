@@ -1,0 +1,7 @@
+/* css[global] */
+
+.blc {
+	&.columns_container:not(.template_hook_root) {
+		padding: 10px 0; // default yay
+	}
+}

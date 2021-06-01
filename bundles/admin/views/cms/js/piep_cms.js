@@ -4205,6 +4205,7 @@ class PiepCMS {
 		}
 
 		this.displaySelectionBreadcrumbs();
+		this.setBlcMenuFromFocusedNode();
 	}
 
 	/**
