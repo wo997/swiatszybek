@@ -127,7 +127,7 @@ function addressComp(comp, parent, data = undefined) {
 				<input class="field pretty_errors" autocomplete="address-line1" data-bind="{${data.street}}" data-validate="" />
 
 				<div class="form_columns">
-					<div class="form_column first">
+					<div class="form_column">
 						<div class="label">Nr domu</div>
 						<input class="field pretty_errors" autocomplete="address-line2" data-bind="{${data.building_number}}" data-validate="" />
 					</div>

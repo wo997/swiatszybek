@@ -15,6 +15,8 @@
  * dataset: SelectableOptionData[]
  * selection?: string[]
  * parent_variable?: string
+ * custom_select_callback?(value: string)
+ * get_custom_selection?(): string[]
  * }} SelectableCompData
  *
  * @typedef {{
@@ -50,7 +52,7 @@ function SelectableComp(comp, parent, data = undefined) {
 		let suggestions_html = "";
 		let count = 0;
 		for (const datapart of data.dataset) {
-			if (data.selection.includes(datapart.value)) {
+			if (getSelection().includes(datapart.value)) {
 				continue;
 			}
 			let match = true;
@@ -76,7 +78,9 @@ function SelectableComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
-		data.selection = data.selection.filter((s) => data.dataset.map((d) => d.value).includes(s));
+		if (data.selection) {
+			data.selection = data.selection.filter((s) => data.dataset.map((d) => d.value).includes(s));
+		}
 
 		if (data.dataset.length === 1 && data.selection.length === 0) {
 			data.selection.push(data.dataset[0].value);
@@ -124,7 +128,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 		if (parent) {
 			const parent_data = parent._data;
-			if (parent_data) {
+			if (parent_data && data.parent_variable) {
 				const val = data.options.single ? def(data.selection[0], null) : data.selection;
 				if (parent_data[data.parent_variable] !== val) {
 					setTimeout(() => {
@@ -135,6 +139,14 @@ function SelectableComp(comp, parent, data = undefined) {
 				}
 			}
 		}
+	};
+
+	const getSelection = () => {
+		const data = comp._data;
+		if (data.get_custom_selection) {
+			return data.get_custom_selection();
+		}
+		return data.selection;
 	};
 
 	createComp(comp, parent, data, {
@@ -152,7 +164,7 @@ function SelectableComp(comp, parent, data = undefined) {
 					receiver: comp,
 					fetch: () => {
 						const parent_data = parent._data;
-						if (parent_data) {
+						if (parent_data && data.parent_variable) {
 							setTimeout(() => {
 								comp._receive_selection(parent_data[data.parent_variable]);
 							});
@@ -175,11 +187,16 @@ function SelectableComp(comp, parent, data = undefined) {
 				if (target._parent(comp)) {
 					const suggestion = target._parent(".suggestion");
 					if (suggestion) {
-						if (data.options.single) {
-							data.selection = [];
+						const value = suggestion.dataset.value;
+						if (data.custom_select_callback) {
+							data.custom_select_callback(value);
+						} else {
+							if (data.options.single) {
+								data.selection = [];
+							}
+							data.selection.push(suggestion.dataset.value);
+							comp._render();
 						}
-						data.selection.push(suggestion.dataset.value);
-						comp._render();
 						comp._nodes.input._set_value("");
 					}
 					const selection = target._parent(".selection");

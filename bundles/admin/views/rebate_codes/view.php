@@ -6,6 +6,8 @@
 <title>Kody rabatowe</title>
 
 <script>
+    <?= preloadGeneralProducts() ?>
+    <?= preloadUsers() ?>
     <?php if (isset($_GET["utworz"])) { ?>
         domload(() => {
             getRebateCodeModal()._show(-1);

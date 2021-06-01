@@ -34,6 +34,7 @@ label {
 .form_columns {
 	& {
 		display: flex;
+		margin-left: calc(-1 * var(--form_spacing));
 	}
 }
 
@@ -41,8 +42,6 @@ label {
 	& {
 		flex-grow: 1;
 		flex-shrink: 1;
-	}
-	&:not(.first) {
 		margin-left: var(--form_spacing);
 	}
 }

@@ -7,4 +7,6 @@ DB::createTable("rebate_code", [
     ["name" => "qty", "type" => "INT"],
     ["name" => "available_from", "type" => "DATE", "null" => true],
     ["name" => "available_till", "type" => "DATE", "null" => true],
+    ["name" => "general_products_json", "type" => "TEXT"],
+    ["name" => "users_json", "type" => "TEXT"],
 ]);

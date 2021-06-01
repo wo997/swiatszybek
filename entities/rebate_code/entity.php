@@ -7,6 +7,8 @@ EntityManager::register("rebate_code", [
         "qty" => ["type" => "string"],
         "available_from" => ["type" => "string"],
         "available_till" => ["type" => "string"],
+        "general_products_json" => ["type" => "string"],
+        "users_json" => ["type" => "string"],
     ],
 ]);
 

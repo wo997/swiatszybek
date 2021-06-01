@@ -214,16 +214,14 @@ function getInputValidationErrors(input) {
 			}
 			if (what === "value") {
 				if (extra_val.match(/\{.*?\}/)) {
-					let [min, max] = extra_val.split(",");
-					// @ts-ignore
-					min = numberFromStr(min);
-					// @ts-ignore
-					max = numberFromStr(max);
+					let [min_str, max_str] = extra_val.split(",");
+					const min = numberFromStr(min_str);
+					const max = numberFromStr(max_str);
 
-					if (min !== "" && value < min) {
+					if (min_str !== "" && value < min) {
 						errors.push(`Minimalna wartość: ${min}`);
 					}
-					if (max !== "" && value > max) {
+					if (max_str !== "" && value > max) {
 						errors.push(`Maksymalna wartość: ${max}`);
 					}
 				}
