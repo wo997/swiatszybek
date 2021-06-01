@@ -116,7 +116,73 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn primary save ml1"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
-    <div class="piep_editor_side_menu"></div>
+    <div class="piep_editor_side_menu">
+        <div class="filter_blc_menu radio_group hide_checks">
+            <div class="checkbox_area">
+                <div>
+                    <p-checkbox data-value="all"></p-checkbox>
+                    <i class="fas fa-th-large filter_icon"></i>
+                </div>
+                <span>Wszystko</span>
+            </div>
+
+            <div class="checkbox_area">
+                <div>
+                    <p-checkbox data-value="appearance"></p-checkbox>
+                    <span> <i class="fas fa-palette filter_icon"></i></span>
+                </div>
+                <span>Wygląd</span>
+            </div>
+
+            <div class="checkbox_area">
+                <div>
+                    <p-checkbox data-value="layout"></p-checkbox>
+                    <span> <i class="fas fa-ruler-combined filter_icon"></i> </span>
+                </div>
+                <span>Układ</span>
+            </div>
+
+            <div class="checkbox_area">
+                <div>
+                    <p-checkbox data-value="advanced"></p-checkbox>
+                    <span> <i class="fas fa-cog filter_icon"></i></span>
+                </div>
+                <span>Więcej</span>
+            </div>
+        </div>
+
+        <!-- <div class="pa1" style="border-bottom:1px solid #ccc">
+				<div class="float_icon">
+					<input class="field" placeholder="Filtruj opcje" />
+					<i class="fas fa-search"></i>
+				</div>
+			</div> -->
+
+        <div class="center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
+
+        <div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
+            <!-- place for blc props etc. -->
+        </div>
+
+        <div class="pretty_radio semi_bold select_resolution mla mra">
+            <div class="checkbox_area" data-tooltip="Komputer">
+                <p-checkbox data-value="df"></p-checkbox>
+                <span> <i class="fas fa-desktop"></i> </span>
+            </div>
+            <div class="checkbox_area" data-tooltip="Tablet poziomo">
+                <p-checkbox data-value="bg"></p-checkbox>
+                <span> <i class="fas fa-tablet-alt" style="transform:rotate(90deg) scale(0.9,1)"></i> </span>
+            </div>
+            <div class="checkbox_area" data-tooltip="Tablet pionowo">
+                <p-checkbox data-value="md"></p-checkbox>
+                <span> <i class="fas fa-tablet-alt" style="transform:scale(0.9,1)"></i> </span>
+            </div>
+            <div class="checkbox_area" data-tooltip="Telefon">
+                <p-checkbox data-value="sm"></p-checkbox>
+                <span> <i class="fas fa-mobile-alt"></i> </span>
+            </div>
+        </div>
+    </div>
 
     <div class="piep_editor_center_column">
         <div class="piep_editor_selection_breadcrumbs"></div>

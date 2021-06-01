@@ -26,11 +26,11 @@ class PiepCMS {
 		this.initSelectionBreadcrumbs();
 		this.initSideMenu();
 		this.initFloatMenu();
-		this.initSelectResolution();
 		this.initRightMenu();
 		this.initAddBlockMenu();
 		this.initLayoutEdit();
 		this.initInserting();
+		this.initSelectResolution();
 
 		this.initEditables();
 		this.initEditingColors();
@@ -414,6 +414,7 @@ class PiepCMS {
 		this.content = this.container._child(".piep_editor_content");
 		this.content_wrapper = this.container._child(".piep_editor_content_wrapper");
 		this.content_scroll = this.container._child(".piep_editor_content_scroll");
+		this.right_menu = this.container._child(".piep_editor_right_menu");
 
 		const container_node = (class_name) => {
 			this.container.insertAdjacentHTML("beforeend", html`<div class="${class_name}"></div>`);
@@ -541,11 +542,16 @@ class PiepCMS {
 			}
 			/** @type {string} */
 			this.selected_resolution = r;
-			if (this.selected_resolution === "df") {
-				this.content_scroll.style.maxWidth = "";
-			} else {
-				this.content_scroll.style.maxWidth = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
+			let max_width = "";
+			const is_df = this.selected_resolution === "df";
+			if (!is_df) {
+				max_width = responsive_preview_sizes[this.selected_resolution] + 20 + "px"; // 20 for scrollbar
 			}
+
+			this.content_scroll.style.maxWidth = max_width;
+
+			this.add_block_btn_wrapper.dataset.tooltip = is_df ? "" : "Dodawanie bloków jest możliwe tylko w widoku dla komputerów";
+			this.add_block_btn.classList.toggle("disabled", !is_df);
 
 			this.update({ all: true });
 			this.setBlcMenuFromFocusedNode();
@@ -785,8 +791,8 @@ class PiepCMS {
 	}
 
 	initRightMenu() {
-		this.add_block_btn = this.container._child(".add_block_btn");
-		this.add_block_btn_wrapper = this.container._child(".add_block_btn_wrapper");
+		this.add_block_btn = this.right_menu._child(".add_block_btn");
+		this.add_block_btn_wrapper = this.right_menu._child(".add_block_btn_wrapper");
 
 		this.advanced_mode = false;
 
@@ -1823,74 +1829,6 @@ class PiepCMS {
 	}
 
 	initSideMenu() {
-		this.side_menu._set_content(html`
-			<div class="filter_blc_menu radio_group hide_checks">
-				<div class="checkbox_area">
-					<div>
-						<p-checkbox data-value="all"></p-checkbox>
-						<i class="fas fa-th-large filter_icon"></i>
-					</div>
-					<span>Wszystko</span>
-				</div>
-
-				<div class="checkbox_area">
-					<div>
-						<p-checkbox data-value="appearance"></p-checkbox>
-						<span> <i class="fas fa-palette filter_icon"></i></span>
-					</div>
-					<span>Wygląd</span>
-				</div>
-
-				<div class="checkbox_area">
-					<div>
-						<p-checkbox data-value="layout"></p-checkbox>
-						<span> <i class="fas fa-ruler-combined filter_icon"></i> </span>
-					</div>
-					<span>Układ</span>
-				</div>
-
-				<div class="checkbox_area">
-					<div>
-						<p-checkbox data-value="advanced"></p-checkbox>
-						<span> <i class="fas fa-cog filter_icon"></i></span>
-					</div>
-					<span>Więcej</span>
-				</div>
-			</div>
-
-			<!-- <div class="pa1" style="border-bottom:1px solid #ccc">
-				<div class="float_icon">
-					<input class="field" placeholder="Filtruj opcje" />
-					<i class="fas fa-search"></i>
-				</div>
-			</div> -->
-
-			<div class="center flex align_center justify_center case_blc_menu_empty">Nie zaznaczono<br />bloku do edycji</div>
-
-			<div class="scroll_panel scroll_shadow panel_padding blc_menu_scroll_panel">
-				<!-- place for blc props etc. -->
-			</div>
-
-			<div class="pretty_radio semi_bold select_resolution mla mra">
-				<div class="checkbox_area" data-tooltip="Komputer">
-					<p-checkbox data-value="df"></p-checkbox>
-					<span> <i class="fas fa-desktop"></i> </span>
-				</div>
-				<div class="checkbox_area" data-tooltip="Tablet poziomo">
-					<p-checkbox data-value="bg"></p-checkbox>
-					<span> <i class="fas fa-tablet-alt" style="transform:rotate(90deg) scale(0.9,1)"></i> </span>
-				</div>
-				<div class="checkbox_area" data-tooltip="Tablet pionowo">
-					<p-checkbox data-value="md"></p-checkbox>
-					<span> <i class="fas fa-tablet-alt" style="transform:scale(0.9,1)"></i> </span>
-				</div>
-				<div class="checkbox_area" data-tooltip="Telefon">
-					<p-checkbox data-value="sm"></p-checkbox>
-					<span> <i class="fas fa-mobile-alt"></i> </span>
-				</div>
-			</div>
-		`);
-
 		this.blc_menu_scroll_panel = this.side_menu._child(".blc_menu_scroll_panel");
 		this.case_blc_menu_empty = this.side_menu._child(".case_blc_menu_empty");
 
@@ -3030,8 +2968,8 @@ class PiepCMS {
 
 		if (mouse.target) {
 			if (!this.grabbed_v_node) {
-				const sabm = !!mouse.target._parent(this.add_block_btn_wrapper) || !!mouse.target._parent(this.add_block_menu);
-				if (sabm) {
+				const hover = !!mouse.target._parent(this.add_block_btn_wrapper) || !!mouse.target._parent(this.add_block_menu);
+				if (this.selected_resolution === "df" && hover) {
 					show_add_block_menu = true;
 
 					if (this.hide_add_block_menu_timeout) {
@@ -3113,6 +3051,12 @@ class PiepCMS {
 	}
 
 	layoutEditMove() {
+		const layout_hash = this.content_scroll.offsetWidth + "_" + this.content_scroll.offsetLeft;
+		if (layout_hash !== this.last_content_scroll_layout_hash) {
+			this.last_content_scroll_layout_hash = layout_hash;
+			this.displayNodeLayout();
+		}
+
 		if (this.layout_control_prop && !mouse.down) {
 			this.layout_control_prop = undefined;
 			this.layout_control_base_value = undefined;
