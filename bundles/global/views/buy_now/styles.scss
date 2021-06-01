@@ -95,6 +95,12 @@
 			}
 		}
 	}
+
+	.empty_cart_btn.transparent {
+		font-size: 14px;
+		--btn-font-clr: #777;
+		font-weight: var(--normal);
+	}
 }
 
 @media (max-width: 999px), (max-height: 599px) {

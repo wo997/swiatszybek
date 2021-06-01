@@ -214,7 +214,7 @@ function getInputValidationErrors(input) {
 			}
 			if (what === "value") {
 				if (extra_val.match(/\{.*?\}/)) {
-					let [min_str, max_str] = extra_val.split(",");
+					let [min_str, max_str] = extra_val.replace(/[\{|\}]/g, "").split(",");
 					const min = numberFromStr(min_str);
 					const max = numberFromStr(max_str);
 

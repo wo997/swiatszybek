@@ -102,7 +102,7 @@ function SelectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_features_changed", () => {
-				comp._nodes.datatable._warmup_maps();
+				comp._nodes.datatable._warmup_maps(true);
 			});
 		},
 	});

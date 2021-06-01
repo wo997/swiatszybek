@@ -281,6 +281,18 @@ domload(() => {
 	});
 	courier_address_different_input._set_value(0);
 
+	$(".empty_cart_btn").addEventListener("click", () => {
+		if (confirm("Czy aby na pewno chcesz usunąć wszystkie produkty z koszyka?")) {
+			xhr({
+				url: "/cart/empty",
+				success: (res) => {
+					user_cart = res.user_cart;
+					loadedUserCart();
+				},
+			});
+		}
+	});
+
 	confirm_order_btn.addEventListener("click", () => {
 		let valid = true;
 

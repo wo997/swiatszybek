@@ -8,6 +8,7 @@
 <script>
     <?= preloadGeneralProducts() ?>
     <?= preloadUsers() ?>
+    <?= preloadRebateCodes() ?>
     <?php if (isset($_GET["utworz"])) { ?>
         domload(() => {
             getRebateCodeModal()._show(-1);

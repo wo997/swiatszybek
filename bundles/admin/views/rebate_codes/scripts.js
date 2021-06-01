@@ -6,10 +6,20 @@ domload(() => {
 	const datatable_comp = $("datatable-comp.rebate_codes");
 
 	DatatableComp(datatable_comp, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "/rebate_code/search",
+		dataset: rebate_codes,
+		//search_url: STATIC_URLS["ADMIN"] + "/rebate_code/search",
 		columns: [
 			{ label: "Kod", key: "code", width: "1", sortable: true, searchable: "string" },
-			{ label: "Wartość", key: "value", width: "1", sortable: true, searchable: "number" },
+			{
+				label: "Wartość",
+				key: "value",
+				width: "1",
+				sortable: true,
+				searchable: "number",
+				render: (data) => {
+					return data.value + (data.value.includes("%") ? "" : " zł");
+				},
+			},
 			{ label: "Ilość", key: "qty", width: "1", sortable: true, searchable: "number" },
 			{ label: "Od", key: "available_from", width: "1", sortable: true, searchable: "date" },
 			{ label: "Do", key: "available_till", width: "1", sortable: true, searchable: "date" },
@@ -30,7 +40,6 @@ domload(() => {
 		after_label: html`<button class="btn primary edit_rebate_code" data-rebate_code_id="-1">
 			Utwórz kod rabatowy <i class="fas fa-plus"></i>
 		</button> `,
-		save_state_name: "admin_rebate_codes",
 	});
 
 	datatable_comp.addEventListener("click", (ev) => {
@@ -42,6 +51,7 @@ domload(() => {
 	});
 
 	window.addEventListener("rebate_codes_changed", () => {
-		datatable_comp._backend_search();
+		datatable_comp._data.dataset = rebate_codes;
+		datatable_comp._render();
 	});
 });

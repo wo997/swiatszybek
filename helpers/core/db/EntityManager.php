@@ -104,7 +104,7 @@ class EntityManager
             if (isset(self::$objects[$global_id])) {
                 /** @var Entity */
                 $entity = self::$objects[$global_id];
-                $entity->setProps($props, true);
+                $entity->setProps($props);
 
                 return $entity;
             }

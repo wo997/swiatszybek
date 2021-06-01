@@ -463,11 +463,17 @@ class Cart
 
         if ($rebate_code->getProp("qty") <= 0) {
             $res["errors"][] = "Kod nie jest już dostępny";
+        } else {
+            $now = strtotime(date("Y-m-d"));
+            $available_from = $rebate_code->getProp("available_from");
+            if ($available_from && $now < strtotime($available_from)) {
+                $res["errors"][] = "Kod będzie dostępny od $available_from";
+            }
+            $available_till = $rebate_code->getProp("available_till");
+            if ($available_till && $now > strtotime($available_till)) {
+                $res["errors"][] = "Kod utracił ważność $available_till";
+            }
         }
-
-        // TODO: limit by price etc ezy
-
-        // ...
 
         if (!count($res["errors"])) {
             $res["success"] = true;

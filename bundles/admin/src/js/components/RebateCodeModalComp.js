@@ -21,6 +21,7 @@
  * _nodes: {
  *  value: PiepNode
  *  save_btn: PiepNode
+ *  delete_btn: PiepNode
  * }
  * _show(rebate_code_id: number, options?: ShowModalParams)
  * } & BaseComp} RebateCodeModalComp
@@ -87,21 +88,17 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 			});
 			comp._render();
 		} else {
-			xhr({
-				url: `${STATIC_URLS["ADMIN"]}/rebate_code/get/${rebate_code_id}`,
-				success: (res) => {
-					Object.assign(comp._data, res.rebate_code);
-					comp._data.general_products = [];
-					try {
-						comp._data.general_products = JSON.parse(res.rebate_code.general_products_json);
-					} catch (e) {}
-					comp._data.user_ids = [];
-					try {
-						comp._data.user_ids = JSON.parse(res.rebate_code.users_json).map((e) => +e.user_id);
-					} catch (e) {}
-					comp._render();
-				},
-			});
+			const rebate_code = rebate_codes.find((r) => r.rebate_code_id === rebate_code_id);
+			Object.assign(comp._data, rebate_code);
+			comp._data.general_products = [];
+			try {
+				comp._data.general_products = JSON.parse(rebate_code.general_products_json);
+			} catch (e) {}
+			comp._data.user_ids = [];
+			try {
+				comp._data.user_ids = JSON.parse(rebate_code.users_json).map((e) => +e.user_id);
+			} catch (e) {}
+			comp._render();
 		}
 	};
 
@@ -173,6 +170,12 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 
 				<div class="label">Użytkownicy</div>
 				<selectable-comp data-bind="{${data.select_user}}"></selectable-comp>
+
+				<div class="mta pt2" style="text-align: right;">
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">
+						<span>Usuń kod rabatowy</span> <i class="fas fa-trash"></i>
+					</button>
+				</div>
 			</div>
 		`,
 		ready: () => {
@@ -184,10 +187,14 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 				}
 
 				/** @type {any} */
-				const rebate_code = data;
-				rebate_code.available_from = rebate_code.available_from ? rebate_code.available_from : null;
-				rebate_code.available_till = rebate_code.available_till ? rebate_code.available_till : null;
-				if (rebate_code.discount_type === "relative") {
+				const rebate_code = {};
+				rebate_code.rebate_code_id = data.rebate_code_id;
+				rebate_code.code = data.code;
+				rebate_code.qty = data.qty;
+				rebate_code.available_from = data.available_from ? data.available_from : null;
+				rebate_code.available_till = data.available_till ? data.available_till : null;
+				rebate_code.value = data.value;
+				if (data.discount_type === "relative") {
 					rebate_code.value += "%";
 				}
 				rebate_code.general_products_json = JSON.stringify(data.general_products);
@@ -199,7 +206,22 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 						rebate_code,
 					},
 					success: (res) => {
-						window.dispatchEvent(new CustomEvent("rebate_codes_changed"));
+						showNotification("Zapisano zmiany", { one_line: true, type: "success" });
+						refreshRebateCodes();
+					},
+				});
+				hideParentModal(comp._nodes.save_btn);
+			});
+
+			comp._nodes.delete_btn.addEventListener("click", () => {
+				if (!confirm(`Czy aby na pewno chcesz usunąć kod rabatowy?`)) {
+					return;
+				}
+
+				xhr({
+					url: `${STATIC_URLS["ADMIN"]}/rebate_code/delete/${comp._data.rebate_code_id}`,
+					success: (res) => {
+						refreshRebateCodes();
 					},
 				});
 				hideParentModal(comp._nodes.save_btn);

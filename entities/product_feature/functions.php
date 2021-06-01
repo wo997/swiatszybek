@@ -229,6 +229,25 @@ function getPhysicalMeasures()
                 ],
             ]
         ],
+        "power" => [
+            "description" => "Moc",
+            "base_unit" => "W",
+            "units" => [
+                [
+                    "id" => "W",
+                    "name" => "W",
+                    "multiply" => 1
+                ], [
+                    "id" => "KW",
+                    "name" => "KW",
+                    "multiply" => 1000
+                ], [
+                    "id" => "MW",
+                    "name" => "MW",
+                    "multiply" => 1000 * 1000
+                ],
+            ]
+        ],
         "temperature" => [
             "description" => "Temperatura",
             "base_unit" => "V",

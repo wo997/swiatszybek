@@ -27,6 +27,8 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <div class="label big first">
             Koszyk
             (<span class="cart_product_count"></span>)
+
+            <button class="btn transparent empty_cart_btn small">Usuń wszystko</button>
         </div>
 
         <div class="products_cart_panel scroll_panel scroll_shadow">
