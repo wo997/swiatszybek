@@ -2107,6 +2107,9 @@ class PiepCMS {
 	}
 
 	preRecreateDom() {
+		/** @type {number[]} */
+		const remove_vids = [];
+
 		/**
 		 * @param {vDomNode[]} v_nodes
 		 * @param {vDomNode[]} parents
@@ -2149,12 +2152,17 @@ class PiepCMS {
 
 				const children = v_node.children;
 				if (children) {
+					if (children.length === 0 && (v_node.tag === "ul" || v_node.tag.match(piep_cms_manager.match_text_containers))) {
+						remove_vids.push(v_node.id);
+					}
+
 					traverseSettings(children, [v_node, ...parents]);
 				}
 			}
 		};
 
 		traverseSettings(this.v_dom);
+		this.removeVNodes(remove_vids);
 	}
 
 	/**

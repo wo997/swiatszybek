@@ -178,13 +178,14 @@ function traverseFeatures()
 
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
+        $is_cena = $product_feature_id === "cena";
 
         $general_product_count = def($feature_general_product_count_map, $product_feature_id, 0);
         // if (User::getCurrent()->priveleges["backend_access"]) {
         //     var_dump();
         // }
 
-        if ($general_product_count / $general_products_count < 0.3) {
+        if (!$is_cena && $general_product_count / $general_products_count < 0.3) {
             continue;
         }
 
@@ -199,7 +200,6 @@ function traverseFeatures()
             }
         } else {
             if ($product_feature["data_type"] === "double_value") {
-                $is_cena = $product_feature["product_feature_id"] === "cena";
                 if ($is_cena) {
                     $double_values = DB::fetchArr("SELECT p.gross_price as v, JSON_ARRAYAGG(product_id) as i FROM product p
                         WHERE $where_products_0 GROUP BY p.gross_price ORDER BY p.gross_price DESC");
