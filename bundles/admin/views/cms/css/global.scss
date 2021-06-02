@@ -22,14 +22,14 @@
 	align-items: center;
 }
 
-// .main_wrapper,
-// .piep_editor_content,
-// .vertical_container {
-// 	> * {
-// 		width: 100%;
-// 		align-self: center;
-// 	}
-// }
+.main_wrapper,
+.piep_editor_content,
+.vertical_container {
+	> * {
+		width: 100%;
+		// align-self: center;
+	}
+}
 
 .columns_container {
 	display: flex;
