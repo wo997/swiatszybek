@@ -428,6 +428,9 @@ function ProductComp(comp, parent, data = undefined) {
 			if (common_variant) {
 				const variant_used_fids = [];
 				data.variants.forEach((variant) => {
+					if (variant.common) {
+						return;
+					}
 					variant.options.forEach((option) => {
 						option.selected_product_feature_options = option.selected_product_feature_options.filter((e) =>
 							data.product_feature_option_ids.includes(e)
@@ -439,8 +442,16 @@ function ProductComp(comp, parent, data = undefined) {
 				const first_option = common_variant.options[0];
 				if (first_option && first_option.selected_product_feature_options) {
 					data.product_feature_option_ids.forEach((pfoid) => {
+						const ind = first_option.selected_product_feature_options.indexOf(pfoid);
+						const first_option_has = ind !== -1;
 						if (!variant_used_fids.includes(pfoid)) {
-							first_option.selected_product_feature_options.push(pfoid);
+							if (!first_option_has) {
+								first_option.selected_product_feature_options.push(pfoid);
+							}
+						} else {
+							if (first_option_has) {
+								first_option.selected_product_feature_options.splice(ind, 1);
+							}
 						}
 					});
 

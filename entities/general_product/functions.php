@@ -134,6 +134,7 @@ function getGlobalProductsSearch($url)
         "page_id" => $page_id,
         "row_count" => $row_count,
         "search_order" => $search_order,
+        "layout" => "grid"
     ];
 
     // and text search at the end
