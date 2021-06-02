@@ -63,11 +63,11 @@
 
 	.blc_menu_scroll_panel {
 		& > * {
-			&:not(.first) {
+			&:not(.first_visible) {
 				border-top: 1px solid #ccc;
 				margin-top: var(--form_spacing);
 			}
-			&.first {
+			&.first_visible {
 				margin-top: calc(-1 * var(--form_spacing));
 			}
 		}

@@ -91,6 +91,9 @@
 				</div>
 			</div>
 		`,
+		init: (piep_cms) => {
+			piep_cms.side_menu._child(".prop_align_self_vertically").classList.add("case_advanced");
+		},
 	});
 
 	piep_cms_manager.registerProp({

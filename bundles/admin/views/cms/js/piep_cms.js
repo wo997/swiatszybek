@@ -808,6 +808,8 @@ class PiepCMS {
 				this.container.classList.toggle("advanced_mode", this.advanced_mode);
 				advanced_mode_btn.classList.toggle("important", this.advanced_mode);
 				advanced_mode_btn.classList.toggle("transparent", !this.advanced_mode);
+
+				this.updatedSideMenu();
 			}
 		});
 	}
@@ -2969,23 +2971,21 @@ class PiepCMS {
 		const was_visible = this.add_block_menu.classList.contains("visible");
 
 		if (mouse.target) {
-			if (!this.grabbed_v_node) {
-				const hover = !!mouse.target._parent(this.add_block_btn_wrapper) || !!mouse.target._parent(this.add_block_menu);
-				if (this.selected_resolution === "df" && hover) {
-					show_add_block_menu = true;
+			const hover = !!mouse.target._parent(this.add_block_btn_wrapper) || !!mouse.target._parent(this.add_block_menu);
+			if (this.selected_resolution === "df" && hover && !this.grabbed_v_node) {
+				show_add_block_menu = true;
 
-					if (this.hide_add_block_menu_timeout) {
-						clearTimeout(this.hide_add_block_menu_timeout);
+				if (this.hide_add_block_menu_timeout) {
+					clearTimeout(this.hide_add_block_menu_timeout);
+					this.hide_add_block_menu_timeout = undefined;
+				}
+			} else {
+				if (!this.hide_add_block_menu_timeout && was_visible) {
+					this.hide_add_block_menu_timeout = setTimeout(() => {
+						show_add_block_menu = false;
 						this.hide_add_block_menu_timeout = undefined;
-					}
-				} else {
-					if (!this.hide_add_block_menu_timeout && was_visible) {
-						this.hide_add_block_menu_timeout = setTimeout(() => {
-							show_add_block_menu = false;
-							this.hide_add_block_menu_timeout = undefined;
-							this.add_block_menu.classList.remove("visible");
-						}, 300);
-					}
+						this.add_block_menu.classList.remove("visible");
+					}, 300);
 				}
 			}
 		}
@@ -4312,6 +4312,18 @@ class PiepCMS {
 		}
 	}
 
+	updatedSideMenu() {
+		let visible = false;
+		for (const child of this.blc_menu_scroll_panel._direct_children()) {
+			if (!visible && !isHidden(child)) {
+				child.classList.add("first_visible");
+				visible = true;
+			} else {
+				child.classList.remove("first_visible");
+			}
+		}
+	}
+
 	/**
 	 *
 	 * @param {{
@@ -4393,7 +4405,6 @@ class PiepCMS {
 				.filter((x) => x.visible)
 				.sort((a, b) => Math.sign(b.priority - a.priority))
 				.forEach((x, index) => {
-					x.blc_prop_wrapper.classList.toggle("first", index === 0);
 					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
 				});
 
@@ -4464,6 +4475,8 @@ class PiepCMS {
 		}
 
 		this.setBlcMenuFromFocusedNode({ from_blc_menu_name: options.from_blc_menu_name });
+
+		this.updatedSideMenu();
 	}
 
 	/**
