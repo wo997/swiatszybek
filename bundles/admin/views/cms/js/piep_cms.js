@@ -969,6 +969,8 @@ class PiepCMS {
 			}
 			prop_ref = v_node.styles[this.selected_resolution];
 			prop_str = prop_str.substring("styles.".length);
+
+			val = escapeCSS(prop_str, val);
 		} else if (prop_str.startsWith("attrs.")) {
 			if (!v_node.attrs) {
 				v_node.attrs = {};

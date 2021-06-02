@@ -127,6 +127,9 @@ function traverseVDom($v_dom, $options = [])
             foreach ($v_node["styles"] as $res_name => $styles) {
                 $node_styles = "";
                 foreach ($styles as $prop => $val) {
+                    if ($width_type !== "custom" && in_array($prop, ["width", "minWidth", "maxWidth"])) {
+                        continue;
+                    }
                     $node_styles .= camelToKebabCase($prop) . ": $val;";
                 }
                 $node_styles = "#p .$base_class { $node_styles }";

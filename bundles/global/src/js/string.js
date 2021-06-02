@@ -58,12 +58,11 @@ function escapeHTML(unsafeText) {
 	return div.innerText;
 }
 
-// function escapeCSS(prop, val) {
-// 	const prop_css = snakeCase(prop);
-// 	let div = document.createElement("div");
-// 	div.style[prop_css] = val;
-// 	return div.style[prop_css];
-// }
+function escapeCSS(prop, val) {
+	let div = document.createElement("div");
+	div.style[prop] = val;
+	return div.style[prop];
+}
 
 function escapeNumericalExpression(str) {
 	return str.replace(/[^\d,.\*\-\+\/\(\)]*/g, "");

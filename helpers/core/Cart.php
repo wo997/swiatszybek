@@ -231,7 +231,6 @@ class Cart
 
     public function getAllData()
     {
-        // this function might return if anything is missing etc
         $cart_product_ids = array_column($this->products, "product_id");
 
         $products_price = 0;
@@ -472,6 +471,41 @@ class Cart
             $available_till = $rebate_code->getProp("available_till");
             if ($available_till && $now > strtotime($available_till)) {
                 $res["errors"][] = "Kod utracił ważność $available_till";
+            }
+            $general_products = json_decode($rebate_code->getProp("general_products_json"), 1);
+            if ($general_products) {
+                $required_products_html = [];
+                foreach ($general_products as $general_product) {
+                    $general_product_id = $general_product["general_product_id"];
+                    $qty = $general_product["qty"];
+
+                    $sum_products = 0;
+                    $product_ids = DB::fetchCol("SELECT product_id FROM product WHERE general_product_id = ?", [$general_product_id]);
+
+                    foreach ($this->products as
+                        /** @var CartProduct */
+                        $product) {
+                        if (in_array($product["product_id"], $product_ids)) {
+                            $sum_products += intval($product["qty"]);
+                        }
+                    }
+
+                    if ($sum_products < $qty) {
+                        $general_product_data = DB::fetchRow("SELECT name, __url FROM general_product WHERE general_product_id = ?", [$general_product_id]);
+                        $required_products_html[] = "<a class=\"link\" href=\"" . $general_product_data["__url"] . "\">"
+                            . $general_product_data["name"] . ($qty ? " × $qty szt." : "")
+                            . "  </a>";
+                    }
+                }
+
+                if ($required_products_html) {
+                    $cnt = count($required_products_html);
+                    if ($cnt === 1) {
+                        $res["errors"][] = "Wymagany produkt:<br>" . $required_products_html[0];
+                    } else {
+                        $res["errors"][] = "Wymagane produkty:<br>" . join("<br>", $required_products_html);
+                    }
+                }
             }
         }
 
