@@ -156,7 +156,7 @@ function traverseFeatureOptions($feature_id, $list_type, $feature_extra, $parent
 
 function traverseFeatures()
 {
-    global $where_products_0;
+    global $where_products_0, $feature_general_product_count_map, $general_product_ids;
 
     $product_features = DB::fetchArr("SELECT product_feature_id, name, data_type, physical_measure, list_type, extra, units_json FROM product_feature ORDER BY pos ASC");
     if (!$product_features) {
@@ -174,8 +174,19 @@ function traverseFeatures()
         "units_json" => "[]"
     ]);
 
+    $general_products_count = count($general_product_ids);
+
     foreach ($product_features as $product_feature) {
         $product_feature_id = $product_feature["product_feature_id"];
+
+        $general_product_count = def($feature_general_product_count_map, $product_feature_id, 0);
+        // if (User::getCurrent()->priveleges["backend_access"]) {
+        //     var_dump();
+        // }
+
+        if ($general_product_count / $general_products_count < 0.3) {
+            continue;
+        }
 
         $feature_body = "";
         $feature_label = $product_feature["name"];
@@ -375,6 +386,13 @@ $products_search_data_0 = getGlobalProductsSearch(getProductCategoryLink($catego
 $products_ids_csv = implode(",", $products_search_data_0["all_ids"]);
 $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-1";
 
+$general_product_ids = DB::fetchCol("SELECT DISTINCT general_product_id
+    FROM product
+    WHERE $where_products_0");
+
+$general_products_ids_csv = implode(",", $general_product_ids);
+$where_general_products_0 = $general_products_ids_csv ? "general_product_id IN ($general_products_ids_csv)" : "-1";
+
 $options_data = DB::fetchArr("SELECT COUNT(DISTINCT product_id) count, pfo.product_feature_option_id option_id
     FROM product p
     INNER JOIN product_to_variant_option ptvo USING(product_id)
@@ -398,6 +416,15 @@ foreach ($options_data as $option_data) {
 }
 $option_ids_desc_csv = join(",", array_reverse($option_ids_desc));
 
+$feature_general_product_count = DB::fetchArr("SELECT product_feature_id id, COUNT(DISTINCT general_product_id) count
+    FROM general_product_to_feature
+    WHERE $where_general_products_0
+    GROUP BY product_feature_id");
+
+$feature_general_product_count_map = [];
+foreach ($feature_general_product_count as $x) {
+    $feature_general_product_count_map[$x["id"]] = $x["count"];
+}
 
 //var_dump("TIME" . ((microtime(true) - $time) * 1000) . "<br>\n");
 
