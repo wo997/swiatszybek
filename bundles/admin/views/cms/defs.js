@@ -67,7 +67,7 @@
  * matcher?(v_node_data: vDomNodeData, piep_cms: PiepCMS): boolean
  * priority?: number
  * exclude?: boolean
- * }} BlcGroup
+ * }} EditBlcGroup
  */
 
 /**
@@ -98,7 +98,7 @@
 /**
  * @typedef {{
  * name: string
- * blc_groups?: BlcGroup[]
+ * blc_groups?: EditBlcGroup[]
  * menu_html: string
  * affects_selection?: boolean
  * init?(piep_cms: PiepCMS)

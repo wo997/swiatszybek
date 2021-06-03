@@ -916,14 +916,29 @@ class PiepCMS {
 		});
 		piep_cms_manager.blcs_schema.sort((a, b) => Math.sign(b.priority - a.priority));
 
-		for (const blc_schema of piep_cms_manager.blcs_schema) {
-			const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
-			let classes = "btn transparent block_to_add";
-			if (blc_schema.is_advanced) {
-				classes += " case_advanced";
+		/**
+		 *
+		 * @param {CmsBlockGroup} group
+		 * @param {string} label
+		 */
+		const displayGroup = (group, label) => {
+			let blocks_html = "";
+			for (const blc_schema of piep_cms_manager.blcs_schema.filter((b) => b.group === group)) {
+				const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
+				let classes = "btn subtle block_to_add";
+				if (blc_schema.is_advanced) {
+					classes += " case_advanced";
+				}
+				blocks_html += html` <div class="${classes}" data-id="${blc_schema.id}" ${tooltip}>${blc_schema.icon} ${blc_schema.label}</div> `;
 			}
-			menu_html += html` <div class="${classes}" data-id="${blc_schema.id}" ${tooltip}>${blc_schema.icon} ${blc_schema.label}</div> `;
-		}
+			menu_html += html`<div class="label">${label}</div>
+				<div class="blocks">${blocks_html}</div>`;
+		};
+
+		displayGroup("container", "Kontenery");
+		displayGroup("text", "Tekst");
+		displayGroup("media", "Media");
+		displayGroup("module", "Moduły");
 
 		this.add_block_menu._set_content(menu_html);
 	}
@@ -2223,14 +2238,14 @@ class PiepCMS {
 	update(options = {}) {
 		this.content.style.minHeight = this.content.offsetHeight + "px";
 
-		if (options.all || options.styles) {
-			this.recalculateStyles();
-		}
 		if (options.all || options.dom) {
 			this.recreateDom();
 		}
 		if (options.all || options.selection) {
 			this.displayInspectorTree();
+		}
+		if (options.all || options.styles) {
+			this.recalculateStyles();
 		}
 
 		registerForms();
@@ -3930,8 +3945,9 @@ class PiepCMS {
 			/**
 			 * @param {insertPosEnum} pos_str
 			 * @param {any} action
+			 * @param {boolean} ask_container
 			 */
-			const addInsertBlc = (pos_str, action) => {
+			const addInsertBlc = (pos_str, action, ask_container = true) => {
 				let pos = getInsertBlcPos(blc, pos_str);
 
 				// we dont truly care anymore
@@ -3964,9 +3980,11 @@ class PiepCMS {
 					on_sides = false;
 				}
 
-				if (!(grabbed_blc_schema && grabbed_blc_schema.standalone) && is_parent_root) {
-					insert_blc.classList.add("warning");
-					insert_blc.dataset.tooltip = "Zalecamy umieścić ten element w dowolnym kontenerze";
+				if (ask_container) {
+					if (!(grabbed_blc_schema && grabbed_blc_schema.standalone) && is_parent_root) {
+						insert_blc.classList.add("warning");
+						insert_blc.dataset.tooltip = "Zalecamy umieścić ten element w dowolnym kontenerze";
+					}
 				}
 
 				insert_blc._insert_action = action;
@@ -4012,13 +4030,21 @@ class PiepCMS {
 			}
 
 			if (on_sides) {
-				addInsertBlc("left", () => {
-					insertOnSides(-1);
-				});
+				addInsertBlc(
+					"left",
+					() => {
+						insertOnSides(-1);
+					},
+					false
+				);
 
-				addInsertBlc("right", () => {
-					insertOnSides(1);
-				});
+				addInsertBlc(
+					"right",
+					() => {
+						insertOnSides(1);
+					},
+					false
+				);
 			}
 
 			if (above_or_below) {
