@@ -1605,7 +1605,14 @@ class PiepCMS {
 		});
 	}
 
-	copyTextSelection() {
+	/**
+	 *
+	 * @param {{
+	 * restore_selection?: boolean
+	 * }} options
+	 * @returns
+	 */
+	copyTextSelection(options = {}) {
 		if (!this.text_selection) {
 			return;
 		}
@@ -1639,10 +1646,12 @@ class PiepCMS {
 		range.setEnd(getTextNode(this.getNode(end_vid)), end_offset);
 		copyRangeToClipboard(range);
 
-		setTimeout(() => {
-			this.text_selection = text_selection_copy;
-			this.setDummySelection();
-		});
+		if (options.restore_selection) {
+			setTimeout(() => {
+				this.text_selection = text_selection_copy;
+				this.setDummySelection();
+			});
+		}
 	}
 
 	initKeyDown() {
@@ -1673,7 +1682,7 @@ class PiepCMS {
 					if (ev.ctrlKey) {
 						if (lower_key === "c") {
 							ev.preventDefault();
-							this.copyTextSelection();
+							this.copyTextSelection({ restore_selection: true });
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();
@@ -1682,6 +1691,11 @@ class PiepCMS {
 						if (lower_key == "y") {
 							ev.preventDefault();
 							this.redoHistory();
+						}
+						if (lower_key == "x") {
+							ev.preventDefault();
+							this.copyTextSelection();
+							this.removeTextInSelection();
 						}
 					}
 				}
