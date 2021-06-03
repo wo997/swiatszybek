@@ -3,7 +3,7 @@
 {
 	const link_priority = 5;
 
-	/** @type {BlcGroup[]} */
+	/** @type {EditBlcGroup[]} */
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: link_priority },
 		{ match_tag: piep_cms_manager.match_textables, priority: link_priority },

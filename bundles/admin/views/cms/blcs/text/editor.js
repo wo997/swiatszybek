@@ -2,7 +2,7 @@
 {
 	const text_priority = 15;
 
-	/** @type {BlcGroup[]} */
+	/** @type {EditBlcGroup[]} */
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
 		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
