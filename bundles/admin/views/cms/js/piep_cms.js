@@ -3192,6 +3192,8 @@ class PiepCMS {
 						set_val = Math.round(set_val);
 						set_val_pretty = set_val + "%";
 					}
+				} else {
+					set_val = Math.round(set_val);
 				}
 				set_val_pretty = floor(set_val, 4) + "%";
 			} else {
@@ -3912,6 +3914,8 @@ class PiepCMS {
 
 					near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
 
+					let columns_in_a_row = 1;
+
 					const columns_container = near_v_node_data.parent_v_nodes[0];
 					if (columns_container && columns_container.settings && columns_container.settings.layout_type === "basic") {
 						let percentage_sum = 0;
@@ -3926,6 +3930,7 @@ class PiepCMS {
 
 						// TODO: TEMPORARY solution here, assuming 1 row
 						if (Math.abs(percentage_sum - 100) < 2) {
+							columns_in_a_row = near_v_node_data.v_nodes.length;
 							// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
 
 							// will be just below 1
@@ -3941,7 +3946,7 @@ class PiepCMS {
 					if (!insert_v_node.styles.df) {
 						insert_v_node.styles.df = {};
 					}
-					insert_v_node.styles.df.width = floor(100 / near_v_node_data.v_nodes.length, 4) + "%";
+					insert_v_node.styles.df.width = floor(100 / columns_in_a_row, 4) + "%";
 				}
 			};
 
