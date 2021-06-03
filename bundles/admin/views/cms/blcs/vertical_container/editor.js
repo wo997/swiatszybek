@@ -49,7 +49,7 @@
 					<p-checkbox data-value="flex-end"></p-checkbox>
 					<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
 				</div>
-				<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona szerokość">
+				<div class="checkbox_area">
 					<p-checkbox data-value="stretch"></p-checkbox>
 					<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
 				</div>
@@ -85,7 +85,7 @@
 					<p-checkbox data-value="flex-end"></p-checkbox>
 					<div class="flex_align_self_vertical_icon" style="align-items:flex-end"></div>
 				</div>
-				<div class="checkbox_area" data-tooltip="Efekt widoczny jeśli nie została określona wysokość">
+				<div class="checkbox_area">
 					<p-checkbox data-value="stretch"></p-checkbox>
 					<div class="flex_align_self_vertical_icon" style="align-items:stretch"></div>
 				</div>

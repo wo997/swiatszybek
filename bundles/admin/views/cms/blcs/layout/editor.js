@@ -23,13 +23,13 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Typ wyznaczania szerokości</div>
-			<div class="pretty_radio pretty_blue flex columns_3 spiky" data-blc_prop="settings.width_type">
+			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="settings.width_type">
 				<div class="checkbox_area">
 					<p-checkbox data-value="full"></p-checkbox>
 					<div class="container_layout_type_icon">
 						<div class="b" style="flex-grow:1"></div>
 					</div>
-					100%
+					<span>100%</span>
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="default_container"></p-checkbox>
@@ -38,7 +38,14 @@
 						<div class="b"></div>
 						<div class="c"></div>
 					</div>
-					Domyślna
+					<span>Domyślna</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="auto"></p-checkbox>
+					<div class="container_layout_type_icon">
+						<div class="b" style="width:auto;font-size: 0.5em;">Abc</div>
+					</div>
+					<span>Zawartość</span>
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="custom"></p-checkbox>
@@ -47,7 +54,7 @@
 							<i class="fas fa-cog" style="font-size: 0.5em;"></i>
 						</div>
 					</div>
-					Dowolna
+					<span>Dowolna</span>
 				</div>
 			</div>
 		`,

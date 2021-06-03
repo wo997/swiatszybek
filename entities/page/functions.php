@@ -119,6 +119,9 @@ function traverseVDom($v_dom, $options = [])
         if ($width_type === "full") {
             $styles_css .= "#p .$base_class { width: 100%; }";
         }
+        if ($width_type === "auto") {
+            $styles_css .= "#p .$base_class { width: auto; }";
+        }
         if ($width_type === "default_container") {
             $styles_css .= "#p .$base_class { width: 100%;max-width: var(--container_max_width); }";
         }

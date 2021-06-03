@@ -2446,6 +2446,9 @@ class PiepCMS {
 					if (width_type === "full") {
 						node_styles += `width: 100%;`;
 					}
+					if (width_type === "auto") {
+						node_styles += `width: auto;`;
+					}
 					if (width_type === "default_container") {
 						node_styles += `width: 100%;max-width: var(--container_max_width);`;
 					}
