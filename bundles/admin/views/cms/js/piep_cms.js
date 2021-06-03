@@ -1271,39 +1271,37 @@ class PiepCMS {
 							// span wants to go into last text block, find it!
 
 							const plain_text = child.textContent.replace(/\n\r/g, "");
-							if (plain_text.replace(/\s/g, "") !== "") {
-								let success = false;
+							let success = false;
 
-								const insert_span = {
-									id: new_id++,
-									classes: [],
-									attrs: {},
-									styles: {},
-									tag: "span",
-									text: plain_text,
-								};
+							const insert_span = {
+								id: new_id++,
+								classes: [],
+								attrs: {},
+								styles: {},
+								tag: "span",
+								text: plain_text,
+							};
 
-								/**
-								 *
-								 * @param {vDomNode[]} v_nodes
-								 */
-								const traverseInsert = (v_nodes) => {
-									const last_v_node = v_nodes[v_nodes.length - 1];
-									if (!last_v_node) {
-										return;
-									}
-									if (available_text_blocks.includes(last_v_node.tag)) {
-										last_v_node.children.push(insert_span);
-										success = true;
-									} else if (last_v_node.children) {
-										traverseInsert(last_v_node.children);
-									}
-								};
-								traverseInsert(insert);
-
-								if (!success) {
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
+							/**
+							 *
+							 * @param {vDomNode[]} v_nodes
+							 */
+							const traverseInsert = (v_nodes) => {
+								const last_v_node = v_nodes[v_nodes.length - 1];
+								if (!last_v_node) {
+									return;
 								}
+								if (available_text_blocks.includes(last_v_node.tag)) {
+									last_v_node.children.push(insert_span);
+									success = true;
+								} else if (last_v_node.children) {
+									traverseInsert(last_v_node.children);
+								}
+							};
+							traverseInsert(insert);
+
+							if (!success) {
+								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
 							}
 						} else if (child.nodeType === Node.ELEMENT_NODE) {
 							const sub_node = $(child);
