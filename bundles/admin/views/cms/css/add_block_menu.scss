@@ -14,7 +14,7 @@
 	}
 	.blocks {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: repeat(4, 1fr);
 		gap: 5px;
 	}
 	&:not(.visible) {
@@ -23,12 +23,20 @@
 	}
 	.block_to_add {
 		& {
-			text-align: left;
 			--hover-shadow: none;
+			display: flex;
+			align-items: center;
+			width: 150px;
+			text-align: left;
+			line-height: 1.2;
 		}
 		i {
 			font-size: 1.25em;
-			transform: translateY(2px);
+			transform: translateY(1px);
+		}
+		& > *:first-child {
+			margin-right: 10px;
+			flex-shrink: 0;
 		}
 	}
 	.label {
