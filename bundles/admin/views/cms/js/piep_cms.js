@@ -3667,6 +3667,15 @@ class PiepCMS {
 		return "column";
 	};
 
+	/**
+	 *
+	 * @param {*} node
+	 * @returns
+	 */
+	isNodeRoot(node) {
+		return node.classList.contains("template_hook_root") || node === this.content;
+	}
+
 	displayInsertPositions() {
 		this.insert_blcs._empty();
 
@@ -3758,7 +3767,8 @@ class PiepCMS {
 			}
 
 			const blc_parent = blc._parent();
-			const is_parent_root = blc_parent.classList.contains("template_hook_root") || blc_parent === this.content;
+			const is_blc_root = this.isNodeRoot(blc);
+			const is_blc_parent_root = this.isNodeRoot(blc_parent);
 
 			const getNearVNodeData = () => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
@@ -3775,37 +3785,9 @@ class PiepCMS {
 
 				const is_node_container =
 					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				if (is_parent_root && is_node_container) {
+				if (is_blc_parent_root && is_node_container) {
 					insert_v_node.settings.width_type = "default_container";
 				}
-
-				// let the user do it manually?
-				// let suggest_wrapping_with_container_module = false;
-
-				// const is_node_container =
-				// 	this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
-				// if (is_parent_root) {
-				// 	if (!is_node_container) {
-				// 		suggest_wrapping_with_container_module = true;
-				// 	}
-				// }
-
-				// if (grabbed_blc_schema && grabbed_blc_schema.standalone) {
-				// 	suggest_wrapping_with_container_module = false;
-				// }
-
-				// if (suggest_wrapping_with_container_module) {
-				// 	let new_vid = this.getNewBlcId();
-
-				// 	insert_v_node = {
-				// 		id: new_vid++,
-				// 		tag: "div",
-				// 		styles: { df: {} },
-				// 		attrs: {},
-				// 		classes: ["vertical_container"],
-				// 		children: [grabbed_node_copy],
-				// 	};
-				// }
 
 				return insert_v_node;
 			};
@@ -3989,7 +3971,8 @@ class PiepCMS {
 				}
 
 				if (ask_container) {
-					if (!(grabbed_blc_schema && grabbed_blc_schema.standalone) && is_parent_root) {
+					const place_in_root = pos_str === "center" ? is_blc_root : is_blc_parent_root;
+					if (!(grabbed_blc_schema && grabbed_blc_schema.standalone) && place_in_root) {
 						insert_blc.classList.add("warning");
 						insert_blc.dataset.tooltip = "Zalecamy umieścić ten element w dowolnym kontenerze";
 					}
