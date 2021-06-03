@@ -3945,6 +3945,20 @@ class PiepCMS {
 
 				const insert_blc = getInsertBlc();
 
+				if (on_sides && blc._parent(".columns_container", { skip: 2 })) {
+					on_sides = false;
+				}
+
+				const standalone =
+					this.grabbed_v_node.classes.includes("columns_container") ||
+					this.grabbed_v_node.classes.includes("vertical_container") ||
+					this.grabbed_v_node.module_name === "template_hook";
+
+				if (is_parent_root && !standalone) {
+					insert_blc.classList.add("warning");
+					insert_blc.dataset.tooltip = "Zalecamy umieścić ten element w dowolnym kontenerze";
+				}
+
 				insert_blc._insert_action = action;
 
 				insert_blc._set_absolute_pos(pos.left, pos.top);

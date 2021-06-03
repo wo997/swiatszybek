@@ -23,6 +23,9 @@
 		&.over {
 			z-index: 1120;
 		}
+		&.warning {
+			--insert_blc_clr: var(--warning-clr);
+		}
 		&.multiple {
 			font-size: 1.1em;
 			--insert_blc_clr: var(--important-clr);
