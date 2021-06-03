@@ -1435,6 +1435,11 @@ class PiepCMS {
 		return blc_selector;
 	}
 
+	setDummySelection() {
+		this.removing_selection = true;
+		setSelectionByIndex($(".piep_editor_header"), 0);
+	}
+
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
 			if (!this.content_active) {
@@ -1442,17 +1447,13 @@ class PiepCMS {
 			}
 			// why? so the change actually happens next time we click something
 
-			if (this.remove_seleciton_timeout) {
-				clearTimeout(this.remove_seleciton_timeout);
-				this.remove_seleciton_timeout = undefined;
+			if (this.remove_selection_timeout) {
+				clearTimeout(this.remove_selection_timeout);
+				this.remove_selection_timeout = undefined;
 			}
-			this.remove_seleciton_timeout = setTimeout(() => {
-				this.remove_seleciton_timeout = undefined;
-				this.removing_selection = true;
-
-				// cant be empty cause pasting wouldn't work dude
-				//removeSelection();
-				setSelectionByIndex($(".piep_editor_header"), 0);
+			this.remove_selection_timeout = setTimeout(() => {
+				this.remove_selection_timeout = undefined;
+				this.setDummySelection();
 			}, 200);
 		});
 
@@ -1476,9 +1477,9 @@ class PiepCMS {
 				return;
 			}
 
-			if (this.remove_seleciton_timeout) {
-				clearTimeout(this.remove_seleciton_timeout);
-				this.remove_seleciton_timeout = undefined;
+			if (this.remove_selection_timeout) {
+				clearTimeout(this.remove_selection_timeout);
+				this.remove_selection_timeout = undefined;
 			}
 
 			if (this.content_active && this.text_selection && ev.detail > 1) {
@@ -1604,6 +1605,46 @@ class PiepCMS {
 		});
 	}
 
+	copyTextSelection() {
+		if (!this.text_selection) {
+			return;
+		}
+
+		const text_selection_copy = cloneObject(this.text_selection);
+
+		const range = document.createRange();
+
+		/** @type {number} */
+		let start_vid;
+		/** @type {number} */
+		let start_offset;
+		/** @type {number} */
+		let end_vid;
+		/** @type {number} */
+		let end_offset;
+
+		if (this.text_selection.direction === 1) {
+			start_vid = this.text_selection.anchor_vid;
+			start_offset = this.text_selection.anchor_offset;
+			end_vid = this.text_selection.focus_vid;
+			end_offset = this.text_selection.focus_offset;
+		} else {
+			start_vid = this.text_selection.focus_vid;
+			start_offset = this.text_selection.focus_offset;
+			end_vid = this.text_selection.anchor_vid;
+			end_offset = this.text_selection.anchor_offset;
+		}
+
+		range.setStart(getTextNode(this.getNode(start_vid)), start_offset);
+		range.setEnd(getTextNode(this.getNode(end_vid)), end_offset);
+		copyRangeToClipboard(range);
+
+		setTimeout(() => {
+			this.text_selection = text_selection_copy;
+			this.setDummySelection();
+		});
+	}
+
 	initKeyDown() {
 		document.addEventListener("keydown", (ev) => {
 			if (!this.content_active) {
@@ -1632,11 +1673,7 @@ class PiepCMS {
 					if (ev.ctrlKey) {
 						if (lower_key === "c") {
 							ev.preventDefault();
-
-							const range = document.createRange();
-							range.setStart(getTextNode(this.getNode(this.text_selection.anchor_vid)), this.text_selection.anchor_offset);
-							range.setEnd(getTextNode(this.getNode(this.text_selection.focus_vid)), this.text_selection.focus_offset);
-							copyRangeToClipboard(range);
+							this.copyTextSelection();
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();
@@ -1652,12 +1689,10 @@ class PiepCMS {
 					ev.preventDefault();
 					this.deleteAction(-1);
 				}
-
 				if (ev.key === "Delete") {
 					ev.preventDefault();
 					this.deleteAction(1);
 				}
-
 				if (ev.key === "ArrowLeft") {
 					ev.preventDefault();
 					this.moveCursorSideways(-1);
@@ -1666,25 +1701,22 @@ class PiepCMS {
 					ev.preventDefault();
 					this.moveCursorSideways(1);
 				}
-				if (ev.key === "Home") {
-					ev.preventDefault();
-					this.moveCursorSideways(-1);
-				}
-				if (ev.key === "End") {
-					ev.preventDefault();
-					this.moveCursorSideways(1);
-				}
-
+				// if (ev.key === "Home") {
+				// 	ev.preventDefault();
+				// 	this.moveCursorSideways(-1);
+				// }
+				// if (ev.key === "End") {
+				// 	ev.preventDefault();
+				// 	this.moveCursorSideways(1);
+				// }
 				if (ev.key === "ArrowUp") {
 					ev.preventDefault();
 					this.moveCursorFromAnywhere(0, -1);
 				}
-
 				if (ev.key === "ArrowDown") {
 					ev.preventDefault();
 					this.moveCursorFromAnywhere(0, 1);
 				}
-
 				if (ev.key === "Enter") {
 					ev.preventDefault();
 					this.breakTextAtCursor();
