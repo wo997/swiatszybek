@@ -43,7 +43,8 @@
 		icon: html`<i class="fas fa-anchor"></i>`,
 		label: html`Sekcja szablonu`,
 		page_type: "template",
-		//standalone: true,
+		group: "container",
+		standalone: true,
 		v_node: {
 			tag: "div",
 			id: -1,

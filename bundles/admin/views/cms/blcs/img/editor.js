@@ -70,6 +70,7 @@
 		icon: html`<i class="far fa-image"></i>`,
 		label: html`Zdjęcie`,
 		priority: 90,
+		group: "media",
 		v_node: {
 			tag: "div",
 			id: -1,

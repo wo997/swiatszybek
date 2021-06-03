@@ -135,6 +135,10 @@
  */
 
 /**
+ * @typedef {"text" | "container" | "media" | "module"} CmsBlockGroup
+ */
+
+/**
  * @typedef {"column" | "row" | "inline" | "text_list"} FlowDirectionEnum
  */
 
@@ -154,6 +158,7 @@
  * rerender_on?: string[]
  * backend_render?: boolean
  * is_advanced?: boolean
+ * group: CmsBlockGroup
  * }} BlockSchema
  *
  * standalone stands for the blc not requiring a parent container that is responsible for width etc

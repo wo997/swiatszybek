@@ -5,7 +5,8 @@
 		id: "product_list",
 		icon: html`<i class="fas fa-cubes"></i>`,
 		label: html`Lista produktów`,
-		//standalone: true,
+		standalone: true,
+		group: "module",
 		v_node: {
 			tag: "div",
 			id: -1,

@@ -224,6 +224,8 @@
 			<div></div>
 		</i>`,
 		label: html`Kontener pionowy`,
+		group: "container",
+		standalone: true,
 		priority: 80,
 		v_node: {
 			tag: "div",

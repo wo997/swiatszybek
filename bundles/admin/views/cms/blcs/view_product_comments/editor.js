@@ -6,6 +6,7 @@
 		icon: html`<i class="fas fa-comments"></i>`,
 		label: html`Komentarze produktu`,
 		single_usage: true,
+		group: "module",
 		nonclickable: true,
 		page_type: "general_product",
 		v_node: {

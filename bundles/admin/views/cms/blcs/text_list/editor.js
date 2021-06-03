@@ -26,6 +26,7 @@
 		icon: html`<i class="fas fa-list-ul"></i>`,
 		label: html`Lista`,
 		priority: 30,
+		group: "text",
 		v_node: {
 			tag: "ul",
 			id: -1,

@@ -163,6 +163,8 @@
 			<div></div>
 		</i>`,
 		label: html`Kontener z kolumnami`,
+		group: "container",
+		standalone: true,
 		priority: 80,
 		v_node: {
 			tag: "div",

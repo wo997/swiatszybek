@@ -64,6 +64,23 @@ class PiepCMSManager {
 		this.piep_cms = piep_cms;
 	}
 
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 * @returns
+	 */
+	getVNodeSchema(v_node) {
+		return this.blcs_schema.find((b) => {
+			if (v_node.classes.includes("vertical_container")) {
+				return b.id === "vertical_container";
+			} else if (v_node.classes.includes("columns_container")) {
+				return b.id === "columns_container";
+			} else {
+				return b.id === v_node.module_name;
+			}
+		});
+	}
+
 	editorReady() {
 		this.piep_cms.container.insertAdjacentHTML("beforeend", html`<style class="modules_css"></style>`);
 		this.modules_css_node = this.piep_cms.container._child(".modules_css");

@@ -375,6 +375,7 @@
 			id: data.tag,
 			icon: data.icon,
 			label: data.label,
+			group: "text",
 			priority: 100,
 			v_node: {
 				tag: data.tag,

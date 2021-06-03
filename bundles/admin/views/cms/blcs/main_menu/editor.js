@@ -8,6 +8,7 @@
 		single_usage: true,
 		nonclickable: true,
 		standalone: true,
+		group: "module",
 		v_node: {
 			tag: "header",
 			id: -1,

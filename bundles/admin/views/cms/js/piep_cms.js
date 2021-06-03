@@ -2280,6 +2280,7 @@ class PiepCMS {
 
 		if (!display_name) {
 			const tag = v_node.tag;
+			// piep_cms_manager.getVNodeSchema didnt use it cause of naming probably, kontener etc
 			const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
 
 			const map_tag_display_name = {
@@ -2477,7 +2478,7 @@ class PiepCMS {
 			v_nodes.forEach((v_node, index) => {
 				const vid = v_node.id;
 				included_vids.push(vid);
-				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
 				const children = v_node.children;
 				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
 				const text = v_node.text;
@@ -3040,7 +3041,7 @@ class PiepCMS {
 				 */
 				const traverseVDom = (v_nodes) => {
 					for (const v_node of v_nodes) {
-						const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+						const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
 						if (blc_schema) {
 							if (!blc_ids_we_have.includes(blc_schema.id)) {
 								blc_ids_we_have.push(blc_schema.id);
@@ -3639,7 +3640,7 @@ class PiepCMS {
 
 		const content_scroll_rect = piep_cms.content_scroll.getBoundingClientRect();
 
-		const grabbed_blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === this.grabbed_v_node.module_name);
+		const grabbed_blc_schema = piep_cms_manager.getVNodeSchema(this.grabbed_v_node);
 
 		/**
 		 *
@@ -3949,12 +3950,7 @@ class PiepCMS {
 					on_sides = false;
 				}
 
-				const standalone =
-					this.grabbed_v_node.classes.includes("columns_container") ||
-					this.grabbed_v_node.classes.includes("vertical_container") ||
-					this.grabbed_v_node.module_name === "template_hook";
-
-				if (is_parent_root && !standalone) {
+				if (!(grabbed_blc_schema && grabbed_blc_schema.standalone) && is_parent_root) {
 					insert_blc.classList.add("warning");
 					insert_blc.dataset.tooltip = "Zalecamy umieścić ten element w dowolnym kontenerze";
 				}

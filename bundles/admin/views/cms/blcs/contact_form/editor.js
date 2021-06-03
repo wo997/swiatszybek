@@ -5,6 +5,7 @@
 		id: "contact_form",
 		icon: html`<i class="fas fa-envelope"></i>`,
 		label: html`Formularz kontaktowy`,
+		group: "module",
 		nonclickable: true,
 		single_usage: true,
 		v_node: {

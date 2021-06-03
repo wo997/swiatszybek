@@ -21,6 +21,7 @@
 		id: "google_map",
 		icon: html`<i class="fas fa-map-marked-alt"></i>`,
 		label: html`Mapa Google`,
+		group: "module",
 		nonclickable: true,
 		v_node: {
 			tag: "div",
