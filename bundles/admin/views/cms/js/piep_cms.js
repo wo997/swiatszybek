@@ -2484,7 +2484,7 @@ class PiepCMS {
 		};
 
 		traverseVDom(this.v_dom);
-		if (this.grabbed_v_node) {
+		if (this.grabbed_v_node && !this.current_insert_blc) {
 			traverseVDom([this.grabbed_v_node]);
 		}
 
