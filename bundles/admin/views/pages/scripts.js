@@ -33,7 +33,8 @@ domload(() => {
 	const common_columns = [
 		{ label: "Tytuł", key: "seo_title", width: "0.8", searchable: "string" },
 		{ label: "Opis", key: "seo_description", width: "0.8", searchable: "string" },
-		{ label: "Data utworzenia", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+		{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+		{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true },
 		{ label: "Szablon", key: "template_id", width: "0.6", searchable: "select", map_name: "template" },
 	];
 

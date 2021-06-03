@@ -37,7 +37,8 @@ domload(() => {
 			},
 			{ label: "Szablon nadrzędny", key: "parent_template_id", width: "1", searchable: "select", map_name: "template" },
 			{ label: "Typ strony", key: "page_type", width: "1", searchable: "select", map_name: "page_type" },
-			{ label: "Data utworzenia", key: "created_at", width: "1", searchable: "date" },
+			{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true },
+			{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true },
 			{
 				label: "Akcja",
 				key: "",

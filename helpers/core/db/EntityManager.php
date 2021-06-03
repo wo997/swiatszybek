@@ -163,6 +163,11 @@ class EntityManager
         return self::getEntity($name, $props);
     }
 
+    /**
+     *
+     * @param  string $name !entity_name
+     * @return string
+     */
     public static function getEntityIdColumn($name)
     {
         return $name . "_id";

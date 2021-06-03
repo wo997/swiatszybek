@@ -12,6 +12,10 @@ if ($general_product_id) {
     Request::notFound();
 }
 
+if (!$general_product_data) {
+    Request::notFound();
+}
+
 $page_data = DB::fetchRow("SELECT seo_title, seo_description, page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
 
 if (!$page_data) {

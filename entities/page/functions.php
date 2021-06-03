@@ -480,11 +480,11 @@ function generateSitemap()
     global $build_info;
 
     $pages_xml = "";
-    $now = date("Y-m-d");
 
-    $pages = DB::fetchArr("SELECT page_id, seo_title, url, page_type, link_what_id FROM page WHERE active = 1");
+    $pages = DB::fetchArr("SELECT page_id, seo_title, url, page_type, link_what_id, modified_at FROM page WHERE active = 1");
     foreach ($pages as $page) {
         $page_type = $page["page_type"];
+        $modified_at = date("Y-m-d", strtotime($page["modified_at"]));
         if ($page_type === "page") {
             $url = "/" . $page["url"];
             if ($url == "/") {
@@ -514,7 +514,7 @@ function generateSitemap()
         $pages_xml .= <<<XML
 <url>
     <loc>$url</loc>
-    <lastmod>$now</lastmod>
+    <lastmod>$modified_at</lastmod>
     <priority>$prio</priority>
 </url>
 XML;
@@ -528,7 +528,6 @@ XML;
         $pages_xml .= <<<XML
 <url>
     <loc>$url</loc>
-    <lastmod>$now</lastmod>
     <priority>$prio</priority>
 </url>
 XML;
