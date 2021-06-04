@@ -231,7 +231,12 @@
 			tag: "div",
 			id: -1,
 			children: [],
-			styles: {},
+			styles: {
+				df: {
+					paddingTop: "var(--default_padding)",
+					paddingBottom: "var(--default_padding)",
+				},
+			},
 			classes: ["vertical_container"],
 			attrs: {},
 		},
