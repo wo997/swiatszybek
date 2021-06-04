@@ -276,12 +276,12 @@
 			</div>
 			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.hor_padding_type">
 				<div class="checkbox_area empty">
-					<p-checkbox data-value=""></p-checkbox>
+					<p-checkbox data-value="custom"></p-checkbox>
 					-
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="default"></p-checkbox>
-					Domyślny odstęp
+					Domyślne
 				</div>
 			</div>
 
@@ -291,12 +291,12 @@
 			</div>
 			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.ver_padding_type">
 				<div class="checkbox_area empty">
-					<p-checkbox data-value=""></p-checkbox>
+					<p-checkbox data-value="custom"></p-checkbox>
 					-
 				</div>
 				<div class="checkbox_area">
 					<p-checkbox data-value="default"></p-checkbox>
-					Domyślny odstęp
+					Domyślne
 				</div>
 			</div>
 

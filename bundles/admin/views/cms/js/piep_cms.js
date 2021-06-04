@@ -2208,11 +2208,15 @@ class PiepCMS {
 				if (!v_node.responsive_settings.df.width_type) {
 					v_node.responsive_settings.df.width_type = "full";
 				}
-				if (!v_node.responsive_settings.df.hor_padding_type) {
-					v_node.responsive_settings.df.hor_padding_type = "";
+				if (v_node.responsive_settings.df.hor_padding_type === undefined) {
+					v_node.responsive_settings.df.hor_padding_type = "custom";
 				}
-				if (!v_node.responsive_settings.df.ver_padding_type) {
-					v_node.responsive_settings.df.ver_padding_type = "";
+				if (v_node.responsive_settings.df.ver_padding_type === undefined) {
+					let ver_padding_type = "custom";
+					if (v_node.classes.includes("vertical_container") || v_node.tag === "ul") {
+						ver_padding_type = "default";
+					}
+					v_node.responsive_settings.df.ver_padding_type = ver_padding_type;
 				}
 
 				const parent = parents[0];
@@ -2462,7 +2466,8 @@ class PiepCMS {
 
 				for (const res_name of care_about_resolutions) {
 					if (v_node.responsive_settings && v_node.responsive_settings[res_name]) {
-						const wt = v_node.responsive_settings[res_name].width_type;
+						const ress = v_node.responsive_settings[res_name];
+						const wt = ress.width_type;
 						if (wt) {
 							width_type = wt;
 
@@ -2476,16 +2481,16 @@ class PiepCMS {
 								node_styles += `width: 100%;max-width: var(--container_max_width);`;
 							}
 						}
-						const hpt = v_node.responsive_settings[res_name].hor_padding_type;
+						const hpt = ress.hor_padding_type;
 						if (hpt !== undefined) {
 							hor_padding_type = hpt;
 							if (hor_padding_type === "default") {
 								node_styles += `padding-left:var(--default_padding);padding-right:var(--default_padding);`;
 							}
 						}
-						const vpt = v_node.responsive_settings[res_name].ver_padding_type;
+						const vpt = ress.ver_padding_type;
 						if (vpt !== undefined) {
-							ver_padding_type = hpt;
+							ver_padding_type = vpt;
 							if (ver_padding_type === "default") {
 								node_styles += `padding-top:var(--default_padding);padding-bottom:var(--default_padding);`;
 							}
