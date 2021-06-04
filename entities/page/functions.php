@@ -116,6 +116,8 @@ function traverseVDom($v_dom, $options = [])
 
         if (!$html_only) {
             $width_type = "custom";
+            $hor_padding_type = "";
+            $ver_padding_type = "";
 
             foreach (Theme::$responsive_breakpoints as $res_name => $width) {
                 $node_styles = "";
@@ -134,6 +136,22 @@ function traverseVDom($v_dom, $options = [])
                         }
                         if ($width_type === "default_container") {
                             $node_styles .= "width: 100%;max-width: var(--container_max_width);";
+                        }
+                    }
+
+                    $hpt = def($responsive_settings, "hor_padding_type");
+                    if ($hpt !== null) {
+                        $hor_padding_type = $hpt;
+                        if ($hor_padding_type === "default") {
+                            $node_styles .= "padding-left:var(--default_padding);padding-right:var(--default_padding);";
+                        }
+                    }
+
+                    $vpt = def($responsive_settings, "ver_padding_type");
+                    if ($vpt !== null) {
+                        $ver_padding_type = $vpt;
+                        if ($ver_padding_type === "default") {
+                            $node_styles .= "padding-top:var(--default_padding);padding-bottom:var(--default_padding);";
                         }
                     }
                 }
