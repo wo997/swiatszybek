@@ -56,7 +56,7 @@
 					</div>
 					<span>Dowolna</span>
 				</div>
-				<div class="checkbox_area case_non_desktop">
+				<div class="checkbox_area empty case_non_desktop">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
 				</div>
@@ -270,17 +270,6 @@
 				Margines wewnętrzny (padding)
 			</div>
 
-			<!-- <div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="settings.layout_type">
-				<div class="checkbox_area" data-tooltip="Typ zalecany.<br>Szerokości kolumn wyrażone procentowo.">
-					<p-checkbox data-value="basic"></p-checkbox>
-					Podstawowy
-				</div>
-				<div class="checkbox_area" data-tooltip="Dowolne szerokości kolumn">
-					<p-checkbox data-value="advanced"></p-checkbox>
-					Zaawansowany
-				</div>
-			</div> -->
-
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_paddings">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
@@ -293,6 +282,30 @@
 				<div class="checkbox_area" data-tooltip="Każdy margines może mieć inną długość">
 					<p-checkbox data-value="none"></p-checkbox>
 					<img src="/src/img/bind_none.svg" class="bind_directions_icon" />
+				</div>
+			</div>
+
+			<div class="label">Typ marginesów poziomych</div>
+			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.hor_padding_type">
+				<div class="checkbox_area">
+					<p-checkbox data-value="custom"></p-checkbox>
+					Dowolny
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="default"></p-checkbox>
+					Domyślny
+				</div>
+			</div>
+
+			<div class="label">Typ marginesów pionowych</div>
+			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.ver_padding_type">
+				<div class="checkbox_area">
+					<p-checkbox data-value="custom"></p-checkbox>
+					Dowolny
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="default"></p-checkbox>
+					Domyślny
 				</div>
 			</div>
 

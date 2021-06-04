@@ -2208,6 +2208,12 @@ class PiepCMS {
 				if (!v_node.responsive_settings.df.width_type) {
 					v_node.responsive_settings.df.width_type = "full";
 				}
+				if (!v_node.responsive_settings.df.hor_padding_type) {
+					v_node.responsive_settings.df.hor_padding_type = "custom";
+				}
+				if (!v_node.responsive_settings.df.ver_padding_type) {
+					v_node.responsive_settings.df.ver_padding_type = "custom";
+				}
 
 				const parent = parents[0];
 
@@ -3223,10 +3229,43 @@ class PiepCMS {
 			prop_input.classList.add("editing_now");
 
 			if (change) {
+				if (this.layout_control_prop === "width") {
+					const v_node = this.getVNodeById(this.focus_node_vid);
+
+					const width_type = this.getCurrentVNodeResponsiveSetting(v_node, "width_type");
+					if (width_type !== "custom") {
+						if (!v_node.responsive_settings[this.selected_resolution]) {
+							v_node.responsive_settings[this.selected_resolution] = {};
+						}
+						v_node.responsive_settings[this.selected_resolution].width_type = "custom";
+						this.setBlcMenuFromFocusedNode();
+					}
+				}
+
 				prop_input._set_value(set_val_pretty);
 				this.displayNodeLayout();
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 */
+	getCurrentVNodeResponsiveSetting(v_node, prop_name) {
+		const care_about_resolutions = this.getResolutionsWeCareAbout();
+		let prop_val;
+		care_about_resolutions.forEach((res_name) => {
+			const res_settings = v_node.responsive_settings[res_name];
+			if (!res_settings) {
+				return;
+			}
+			const v = res_settings[prop_name];
+			if (v) {
+				prop_val = v;
+			}
+		});
+		return prop_val;
 	}
 
 	inspectorMove() {
@@ -3797,7 +3836,7 @@ class PiepCMS {
 				const is_node_container =
 					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
 				if (is_blc_parent_root && is_node_container) {
-					insert_v_node.settings.width_type = "default_container";
+					insert_v_node.responsive_settings.df.width_type = "default_container";
 				}
 
 				return insert_v_node;
