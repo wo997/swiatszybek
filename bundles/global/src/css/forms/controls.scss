@@ -233,9 +233,10 @@ select.field.unit_picker {
 	& {
 		flex-shrink: 0;
 		margin-left: -1px;
-		padding: 0 6px;
+		padding-left: 6px;
+		padding-right: 6px;
 		text-align: center;
-		background: #e5e5e5;
+		background-color: #e5e5e5;
 	}
 	&:hover,
 	&:focus {

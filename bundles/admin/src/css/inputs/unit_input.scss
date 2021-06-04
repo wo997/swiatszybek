@@ -1,0 +1,12 @@
+/* css[global] */
+
+unit-input {
+	&.novalue {
+		input {
+			display: none !important;
+		}
+		select {
+			width: 100%;
+		}
+	}
+}

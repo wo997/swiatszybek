@@ -189,6 +189,35 @@
 		`,
 	});
 
+	const margin_unit_input = html`
+		<input />
+		<select>
+			<option value="px">px</option>
+			<option value="%">%</option>
+			<option value="var(--default_padding)" class="novalue">Domyślny</option>
+			<option value="auto" class="novalue">Automatyczny</option>
+			<option value="">*</option>
+		</select>
+	`;
+
+	const padding_unit_input = html`
+		<input />
+		<select>
+			<option value="px">px</option>
+			<option value="%">%</option>
+			<option value="var(--default_padding)" class="novalue">Domyślny</option>
+			<option value="">*</option>
+		</select>
+	`;
+
+	const border_width_unit_input = html`
+		<input />
+		<select>
+			<option value="px">px</option>
+			<option value=""></option>
+		</select>
+	`;
+
 	piep_cms_manager.registerProp({
 		name: "margin",
 		type_groups: ["layout"],
@@ -213,50 +242,11 @@
 				</div>
 			</div>
 
-			<div class="flex align_center center center_fields" data-bind_wrapper="margins">
-				<div>
-					<unit-input data-blc_prop="styles.marginLeft" data-bind_dir="left">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↔</option>
-						</select>
-					</unit-input>
-				</div>
-				<div class="ml2 mr2">
-					<unit-input class="mb4" data-blc_prop="styles.marginTop" data-bind_dir="top">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↕</option>
-						</select>
-					</unit-input>
-
-					<unit-input data-blc_prop="styles.marginBottom" data-bind_dir="bottom">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↕</option>
-						</select>
-					</unit-input>
-				</div>
-				<div>
-					<unit-input data-blc_prop="styles.marginRight" data-bind_dir="right">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↔</option>
-						</select>
-					</unit-input>
-				</div>
+			<div class="combo_directions" data-bind_wrapper="margins">
+				<unit-input data-blc_prop="styles.marginLeft" data-bind_dir="left"> ${margin_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.marginTop" data-bind_dir="top"> ${margin_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.marginBottom" data-bind_dir="bottom"> ${margin_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.marginRight" data-bind_dir="right"> ${margin_unit_input} </unit-input>
 			</div>`,
 	});
 
@@ -268,36 +258,6 @@
 			<div class="label">
 				<div class="layout_info_rect" style="background: var(--padding_control_clr);"></div>
 				Margines wewnętrzny (padding)
-			</div>
-
-			<div class="label">
-				Marginesy poziome
-				<i class="fas fa-arrows-alt-h"></i>
-			</div>
-			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.hor_padding_type">
-				<div class="checkbox_area empty">
-					<p-checkbox data-value="custom"></p-checkbox>
-					-
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="default"></p-checkbox>
-					Domyślne
-				</div>
-			</div>
-
-			<div class="label">
-				Marginesy pionowe
-				<i class="fas fa-arrows-alt-v"></i>
-			</div>
-			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.ver_padding_type">
-				<div class="checkbox_area empty">
-					<p-checkbox data-value="custom"></p-checkbox>
-					-
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="default"></p-checkbox>
-					Domyślne
-				</div>
 			</div>
 
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="responsive_settings.bind_paddings">
@@ -315,50 +275,11 @@
 				</div>
 			</div>
 
-			<div class="flex align_center center center_fields" data-bind_wrapper="paddings">
-				<div>
-					<unit-input data-blc_prop="styles.paddingLeft" data-bind_dir="left">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↔</option>
-						</select>
-					</unit-input>
-				</div>
-				<div class="ml2 mr2">
-					<unit-input class="mb4" data-blc_prop="styles.paddingTop" data-bind_dir="top">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↕</option>
-						</select>
-					</unit-input>
-
-					<unit-input data-blc_prop="styles.paddingBottom" data-bind_dir="bottom">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↕</option>
-						</select>
-					</unit-input>
-				</div>
-				<div>
-					<unit-input data-blc_prop="styles.paddingRight" data-bind_dir="right">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value="%">%</option>
-							<option value=""></option>
-							<option value="auto">↔</option>
-						</select>
-					</unit-input>
-				</div>
+			<div class="combo_directions" data-bind_wrapper="paddings">
+				<unit-input data-blc_prop="styles.paddingLeft" data-bind_dir="left"> ${padding_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.paddingTop" data-bind_dir="top"> ${padding_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.paddingBottom" data-bind_dir="bottom"> ${padding_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.paddingRight" data-bind_dir="right"> ${padding_unit_input} </unit-input>
 			</div>
 		`,
 	});
@@ -385,18 +306,11 @@
 				</div>
 			</div>
 
-			<div class="flex align_center center center_fields" data-bind_wrapper="borderColors">
-				<div>
-					<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
-				</div>
-				<div class="ml2 mr2">
-					<color-picker class="NOalpha mb4" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
-
-					<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
-				</div>
-				<div>
-					<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
-				</div>
+			<div class="combo_directions" data-bind_wrapper="borderColors">
+				<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
+				<color-picker class="NOalpha" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
+				<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
+				<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
 			</div>
 		`,
 	});
@@ -426,42 +340,11 @@
 				</div>
 			</div>
 
-			<div class="flex align_center center center_fields" data-bind_wrapper="borderWidths">
-				<div>
-					<unit-input data-blc_prop="styles.borderLeftWidth" data-bind_dir="left">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value=""></option>
-						</select>
-					</unit-input>
-				</div>
-				<div class="ml2 mr2">
-					<unit-input class="mb4" data-blc_prop="styles.borderTopWidth" data-bind_dir="top">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value=""></option>
-						</select>
-					</unit-input>
-
-					<unit-input data-blc_prop="styles.borderBottomWidth" data-bind_dir="bottom">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value=""></option>
-						</select>
-					</unit-input>
-				</div>
-				<div>
-					<unit-input data-blc_prop="styles.borderRightWidth" data-bind_dir="right">
-						<input />
-						<select>
-							<option value="px">px</option>
-							<option value=""></option>
-						</select>
-					</unit-input>
-				</div>
+			<div class="combo_directions" data-bind_wrapper="borderWidths">
+				<unit-input data-blc_prop="styles.borderLeftWidth" data-bind_dir="left"> ${border_width_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.borderTopWidth" data-bind_dir="top"> ${border_width_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.borderBottomWidth" data-bind_dir="bottom"> ${border_width_unit_input} </unit-input>
+				<unit-input data-blc_prop="styles.borderRightWidth" data-bind_dir="right"> ${border_width_unit_input} </unit-input>
 			</div>
 		`,
 	});

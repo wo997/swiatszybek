@@ -22,6 +22,18 @@ function registerUnitInputs(parent) {
 
 		let last_val;
 
+		const valueSet = () => {
+			const novalue = select.options[select.selectedIndex].classList.contains("novalue");
+			container.classList.toggle("glue_children", !novalue);
+			container.classList.toggle("novalue", novalue);
+
+			if (novalue && input._get_value() !== "") {
+				input._set_value("");
+			}
+		};
+		select.addEventListener("change", valueSet);
+		select.addEventListener("value_set", valueSet);
+
 		/**
 		 *
 		 * @param {string} value
