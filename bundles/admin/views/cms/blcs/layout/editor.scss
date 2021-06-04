@@ -27,9 +27,8 @@
 	[data-bind_dir="bottom"] {
 		grid-area: 3 / 2 / 4 / 4;
 	}
-	.field {
-		padding-left: 3px;
-		padding-right: 3px;
+	.glue_children {
+		--field_padding_hor: 3px;
 	}
 	input {
 		text-align: center;

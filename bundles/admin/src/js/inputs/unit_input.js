@@ -26,6 +26,7 @@ function registerUnitInputs(parent) {
 			const novalue = select.options[select.selectedIndex].classList.contains("novalue");
 			container.classList.toggle("glue_children", !novalue);
 			container.classList.toggle("novalue", novalue);
+			select.classList.toggle("unit_picker", !novalue);
 
 			if (novalue && input._get_value() !== "") {
 				input._set_value("");

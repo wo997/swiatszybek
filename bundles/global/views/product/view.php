@@ -505,7 +505,7 @@ foreach ($general_product_products as $product) {
     $name = htmlspecialchars($product["__name"]);
     $gross_price = $product["gross_price"];
     $url = $product["__url"];
-    $img_url = $product["__img_url"];
+    $img_url = SITE_URL . $product["__img_url"];
     $stockSchema = $product["stock"] > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
     if ($product["active"] && floatval($product["gross_price"])) {
@@ -535,7 +535,7 @@ foreach ($general_product_products as $product) {
                     "url": "<?= SITE_URL . $url ?>",
                     "priceCurrency": "PLN",
                     "price": "<?= $gross_price ?>",
-                    "itemCondition": "https://schema.org/UsedCondition",
+                    "itemCondition": "https://schema.org/NewCondition",
                     "availability": "<?= $stockSchema ?>",
                     "seller": {
                         "@type": "Organization",
