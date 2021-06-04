@@ -2,6 +2,8 @@
 
 let fonts = {};
 let main_font_family = "";
+let container_max_width = "";
+let default_padding = "";
 
 /**
  * @typedef {{

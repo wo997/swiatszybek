@@ -17,6 +17,7 @@
  * attrs: object
  * classes: string[]
  * settings?: object
+ * responsive_settings?: object
  * module_name?: string
  * module_children?: vDomNode[]
  * template_hook_id?: string

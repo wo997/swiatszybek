@@ -125,6 +125,12 @@
 		}
 	}
 
+	&:not(.is_desktop) {
+		.case_non_desktop {
+			display: none !important;
+		}
+	}
+
 	.edit_pageable_btn {
 		--btn-font-clr: var(--clr_primary);
 	}

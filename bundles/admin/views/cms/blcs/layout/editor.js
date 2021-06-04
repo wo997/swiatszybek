@@ -23,7 +23,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Typ wyznaczania szerokości</div>
-			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="settings.width_type">
+			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.width_type">
 				<div class="checkbox_area">
 					<p-checkbox data-value="full"></p-checkbox>
 					<div class="container_layout_type_icon">
@@ -56,13 +56,17 @@
 					</div>
 					<span>Dowolna</span>
 				</div>
+				<div class="checkbox_area case_non_desktop">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
 			</div>
 		`,
 		init: (piep_cms) => {
 			const width_type_wrapper = piep_cms.side_menu._child(".prop_width_type");
 			const width_wrapper = piep_cms.side_menu._child(".prop_width");
 			const min_max_width_wrapper = piep_cms.side_menu._child(".prop_min_max_width");
-			const width_type_input = width_type_wrapper._child(`[data-blc_prop="settings.width_type"]`);
+			const width_type_input = width_type_wrapper._child(`[data-blc_prop="responsive_settings.width_type"]`);
 			const align_self_horizontally_wrapper = piep_cms.side_menu._child(".prop_align_self_horizontally");
 			width_type_input.addEventListener("value_set", () => {
 				const width_type = width_type_input._get_value();
@@ -265,6 +269,17 @@
 				<div class="layout_info_rect" style="background: var(--padding_control_clr);"></div>
 				Margines wewnętrzny (padding)
 			</div>
+
+			<!-- <div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="settings.layout_type">
+				<div class="checkbox_area" data-tooltip="Typ zalecany.<br>Szerokości kolumn wyrażone procentowo.">
+					<p-checkbox data-value="basic"></p-checkbox>
+					Podstawowy
+				</div>
+				<div class="checkbox_area" data-tooltip="Dowolne szerokości kolumn">
+					<p-checkbox data-value="advanced"></p-checkbox>
+					Zaawansowany
+				</div>
+			</div> -->
 
 			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_paddings">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">

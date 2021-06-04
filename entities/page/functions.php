@@ -114,30 +114,44 @@ function traverseVDom($v_dom, $options = [])
             $content_html .= ">$body</$tag>";
         }
 
-        $width_type = def($v_node, ["settings", "width_type"], "custom");
+        if (!$html_only) {
+            $width_type = "custom";
 
-        if ($width_type === "full") {
-            $styles_css .= "#p .$base_class { width: 100%; }";
-        }
-        if ($width_type === "auto") {
-            $styles_css .= "#p .$base_class { width: auto; }";
-        }
-        if ($width_type === "default_container") {
-            $styles_css .= "#p .$base_class { width: 100%;max-width: var(--container_max_width); }";
-        }
-
-        if (!$html_only && isset($v_node["styles"])) {
-            foreach ($v_node["styles"] as $res_name => $styles) {
+            foreach (Theme::$responsive_breakpoints as $res_name => $width) {
                 $node_styles = "";
-                foreach ($styles as $prop => $val) {
-                    if ($width_type !== "custom" && in_array($prop, ["width", "minWidth", "maxWidth"])) {
-                        continue;
-                    }
-                    $node_styles .= camelToKebabCase($prop) . ": $val;";
-                }
-                $node_styles = "#p .$base_class { $node_styles }";
 
-                $styles_css_responsive[$res_name] .= " " . $node_styles;
+                $responsive_settings = def($v_node, ["responsive_settings", $res_name]);
+                if ($responsive_settings) {
+                    $wt = def($responsive_settings, "width_type");
+                    if ($wt) {
+                        $width_type = $wt;
+
+                        if ($width_type === "full") {
+                            $node_styles .= "width: 100%;";
+                        }
+                        if ($width_type === "auto") {
+                            $node_styles .= "width: auto;";
+                        }
+                        if ($width_type === "default_container") {
+                            $node_styles .= "width: 100%;max-width: var(--container_max_width);";
+                        }
+                    }
+                }
+
+                $styles = def($v_node, ["styles", $res_name]);
+                if ($styles) {
+                    foreach ($styles as $prop => $val) {
+                        if ($width_type !== "custom" && in_array($prop, ["width", "minWidth", "maxWidth"])) {
+                            continue;
+                        }
+                        $node_styles .= camelToKebabCase($prop) . ": $val;";
+                    }
+                }
+
+                if ($node_styles) {
+                    $node_styles = "#p .$base_class { $node_styles }";
+                    $styles_css_responsive[$res_name] .= " " . $node_styles;
+                }
             }
         }
     }

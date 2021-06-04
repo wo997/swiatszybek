@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * container_max_width: string
+ * default_padding: string
  * colors: ThemeSettings_ColorCompData[]
  * font_sizes: ThemeSettings_FontSizeCompData[]
  * font_family: string
@@ -27,7 +28,7 @@
  */
 function ThemeSettingsComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { colors: [], font_sizes: [], font_family: "", container_max_width: "1300px" };
+		data = { colors: [], font_sizes: [], font_family: "", container_max_width: "1300px", default_padding: "10px" };
 	}
 
 	comp._show = (options = {}) => {
@@ -53,8 +54,17 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 				<div class="mtfn">
 					<!-- <div class="hover_info">Uwaga - wszystkie zmiany wprowadzane tutaj są globalne!</div> -->
 
-					<div class="label">Maksymalna szerkość sekcji</div>
-					<input class="field" data-bind="{${data.container_max_width}}" />
+					<div class="label">Maksymalna szerkość kontenera / sekcji (px)</div>
+					<div class="glue_children">
+						<input class="field" data-bind="{${data.container_max_width}}" />
+						<div class="field_desc">px</div>
+					</div>
+
+					<div class="label">Domyślny odstęp</div>
+					<div class="glue_children">
+						<input class="field" data-bind="{${data.default_padding}}" />
+						<div class="field_desc">px</div>
+					</div>
 
 					<div class="label">Główna czcionka</div>
 					<div class="pretty_radio semi_bold columns_3 spiky" data-bind="{${data.font_family}}" style="max-width: 500px">
@@ -133,6 +143,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 						font_family: data.font_family,
 						font_sizes: save_font_sizes,
 						container_max_width: data.container_max_width,
+						default_padding: data.default_padding,
 					},
 					success: (res) => {
 						colors_palette = res.colors_palette;
@@ -151,6 +162,22 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 		},
 		ready: () => {},
 	});
+}
+
+/**
+ *
+ * @param {ThemeSettingsComp} theme_settings_comp
+ */
+function setThemeSettingsCompData(theme_settings_comp) {
+	const data = theme_settings_comp._data;
+
+	data.colors = colors_palette;
+	data.font_family = main_font_family;
+	data.font_sizes = font_sizes;
+	data.container_max_width = container_max_width;
+	data.default_padding = default_padding;
+
+	theme_settings_comp._render();
 }
 
 function getThemeSettingsModal() {
@@ -176,13 +203,7 @@ function getThemeSettingsModal() {
 		ThemeSettingsComp(theme_settings_comp, undefined);
 	}
 
-	const data = theme_settings_comp._data;
-
-	data.colors = colors_palette;
-	data.font_family = main_font_family;
-	data.font_sizes = font_sizes;
-	data.container_max_width = container_max_width;
-	theme_settings_comp._render();
+	setThemeSettingsCompData(theme_settings_comp);
 
 	$("#ThemeSettings .custom_toolbar").append(theme_settings_comp._nodes.save_btn);
 

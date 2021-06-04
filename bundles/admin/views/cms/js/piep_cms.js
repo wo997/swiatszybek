@@ -555,6 +555,8 @@ class PiepCMS {
 
 			this.update({ all: true });
 			this.setBlcMenuFromFocusedNode();
+
+			this.container.classList.toggle("is_desktop", !is_df);
 		});
 
 		this.select_resolution._set_value("df");
@@ -981,13 +983,19 @@ class PiepCMS {
 		let prop_ref = v_node;
 
 		if (prop_str.startsWith("styles.")) {
-			if (v_node.styles[this.selected_resolution] === undefined) {
+			if (!v_node.styles[this.selected_resolution]) {
 				v_node.styles[this.selected_resolution] = {};
 			}
 			prop_ref = v_node.styles[this.selected_resolution];
 			prop_str = prop_str.substring("styles.".length);
 
 			val = escapeCSS(prop_str, val);
+		} else if (prop_str.startsWith("responsive_settings.")) {
+			if (!v_node.responsive_settings[this.selected_resolution]) {
+				v_node.responsive_settings[this.selected_resolution] = {};
+			}
+			prop_ref = v_node.responsive_settings[this.selected_resolution];
+			prop_str = prop_str.substring("responsive_settings.".length);
 		} else if (prop_str.startsWith("attrs.")) {
 			if (!v_node.attrs) {
 				v_node.attrs = {};
@@ -1270,7 +1278,7 @@ class PiepCMS {
 						if (child.nodeType === Node.TEXT_NODE) {
 							// span wants to go into last text block, find it!
 
-							const plain_text = child.textContent.replace(/\n\r/g, "");
+							const plain_text = child.textContent.replace(/[\n\r]/g, "");
 							let success = false;
 
 							const insert_span = {
@@ -2178,6 +2186,12 @@ class PiepCMS {
 				if (!v_node.settings) {
 					v_node.settings = {};
 				}
+				if (!v_node.responsive_settings) {
+					v_node.responsive_settings = {};
+				}
+				if (!v_node.responsive_settings.df) {
+					v_node.responsive_settings.df = {};
+				}
 
 				if (!v_node.settings.bind_margins) {
 					v_node.settings.bind_margins = "none";
@@ -2191,8 +2205,8 @@ class PiepCMS {
 				if (!v_node.settings.bind_borderColors) {
 					v_node.settings.bind_borderColors = "all";
 				}
-				if (!v_node.settings.width_type) {
-					v_node.settings.width_type = "full";
+				if (!v_node.responsive_settings.df.width_type) {
+					v_node.responsive_settings.df.width_type = "full";
 				}
 
 				const parent = parents[0];
@@ -2205,7 +2219,7 @@ class PiepCMS {
 						v_node.tag = "p";
 					}
 					if (parent.classes.includes("columns_container")) {
-						v_node.settings.width_type = "custom";
+						v_node.responsive_settings.df.width_type = "custom";
 					}
 				}
 
@@ -2438,36 +2452,35 @@ class PiepCMS {
 
 				let width_type = "custom";
 
-				if (v_node.settings) {
-					width_type = v_node.settings.width_type;
+				for (const res_name of care_about_resolutions) {
+					if (v_node.responsive_settings && v_node.responsive_settings[res_name]) {
+						const wt = v_node.responsive_settings[res_name].width_type;
+						if (wt) {
+							width_type = wt;
 
-					if (width_type === "full") {
-						node_styles += `width: 100%;`;
-					}
-					if (width_type === "auto") {
-						node_styles += `width: auto;`;
-					}
-					if (width_type === "default_container") {
-						node_styles += `width: 100%;max-width: var(--container_max_width);`;
-					}
-				}
-
-				if (v_node.styles) {
-					for (const res_name of care_about_resolutions) {
-						const res_styles = v_node.styles[res_name];
-						if (!res_styles) {
-							continue;
-						}
-						const styles = Object.entries(res_styles);
-						if (styles.length === 0) {
-							continue;
-						}
-						styles.forEach(([prop, val]) => {
-							if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
-								return;
+							if (width_type === "full") {
+								node_styles += `width: 100%;`;
 							}
-							node_styles += `${kebabCase(prop)}: ${val};`;
-						});
+							if (width_type === "auto") {
+								node_styles += `width: auto;`;
+							}
+							if (width_type === "default_container") {
+								node_styles += `width: 100%;max-width: var(--container_max_width);`;
+							}
+						}
+					}
+
+					if (v_node.styles && v_node.styles[res_name]) {
+						const res_styles = v_node.styles[res_name];
+						const styles = Object.entries(res_styles);
+						if (styles) {
+							styles.forEach(([prop, val]) => {
+								if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
+									return;
+								}
+								node_styles += `${kebabCase(prop)}: ${val};`;
+							});
+						}
 					}
 				}
 
@@ -4349,6 +4362,11 @@ class PiepCMS {
 						const res_styles = v_node_ref.styles[this.selected_resolution];
 						if (res_styles) {
 							prop_val = res_styles[prop_str.substring("styles.".length)];
+						}
+					} else if (prop_str.startsWith("responsive_settings.")) {
+						const res_settings = v_node_ref.responsive_settings[this.selected_resolution];
+						if (res_settings) {
+							prop_val = res_settings[prop_str.substring("responsive_settings.".length)];
 						}
 					} else if (prop_str.startsWith("attrs.")) {
 						if (!v_node_ref.attrs) {
