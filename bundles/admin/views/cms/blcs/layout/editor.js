@@ -198,7 +198,7 @@
 				Margines zewnętrzny
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_margins">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="responsive_settings.bind_margins">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -300,7 +300,7 @@
 				</div>
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="settings.bind_paddings">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="responsive_settings.bind_paddings">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -370,7 +370,7 @@
 		menu_html: html`
 			<div class="label">Kolor krawędzi / obramowania</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderColors">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="responsive_settings.bind_borderColors">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -411,7 +411,7 @@
 				Grubość krawędzi / obramowania
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="settings.bind_borderWidths">
+			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="responsive_settings.bind_borderWidths">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />

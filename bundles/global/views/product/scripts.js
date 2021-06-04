@@ -149,7 +149,7 @@ domload(() => {
 
 				const last = cart_products_comp._child(".bind_products > .list_row:last-child");
 				if (last) {
-					scrollIntoView(last, { offset });
+					scrollIntoView(last, { offset, direction: "down" });
 				}
 
 				const product_in_cart = user_cart.products.find((e) => e.product_id === product_id);

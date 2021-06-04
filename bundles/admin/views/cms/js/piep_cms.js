@@ -2193,30 +2193,32 @@ class PiepCMS {
 					v_node.responsive_settings.df = {};
 				}
 
-				if (!v_node.settings.bind_margins) {
-					v_node.settings.bind_margins = "none";
+				const ressdf = v_node.responsive_settings.df;
+
+				if (!ressdf.bind_margins) {
+					ressdf.bind_margins = "none";
 				}
-				if (!v_node.settings.bind_paddings) {
-					v_node.settings.bind_paddings = "opposite";
+				if (!ressdf.bind_paddings) {
+					ressdf.bind_paddings = "opposite";
 				}
-				if (!v_node.settings.bind_borderWidths) {
-					v_node.settings.bind_borderWidths = "all";
+				if (!ressdf.bind_borderWidths) {
+					ressdf.bind_borderWidths = "all";
 				}
-				if (!v_node.settings.bind_borderColors) {
-					v_node.settings.bind_borderColors = "all";
+				if (!ressdf.bind_borderColors) {
+					ressdf.bind_borderColors = "all";
 				}
-				if (!v_node.responsive_settings.df.width_type) {
-					v_node.responsive_settings.df.width_type = "full";
+				if (!ressdf.width_type) {
+					ressdf.width_type = "full";
 				}
-				if (v_node.responsive_settings.df.hor_padding_type === undefined) {
-					v_node.responsive_settings.df.hor_padding_type = "custom";
+				if (ressdf.hor_padding_type === undefined) {
+					ressdf.hor_padding_type = "custom";
 				}
-				if (v_node.responsive_settings.df.ver_padding_type === undefined) {
+				if (ressdf.ver_padding_type === undefined) {
 					let ver_padding_type = "custom";
 					if (v_node.classes.includes("vertical_container") || v_node.tag === "ul") {
 						ver_padding_type = "default";
 					}
-					v_node.responsive_settings.df.ver_padding_type = ver_padding_type;
+					ressdf.ver_padding_type = ver_padding_type;
 				}
 
 				const parent = parents[0];
@@ -2229,7 +2231,7 @@ class PiepCMS {
 						v_node.tag = "p";
 					}
 					if (parent.classes.includes("columns_container")) {
-						v_node.responsive_settings.df.width_type = "custom";
+						ressdf.width_type = "custom";
 					}
 				}
 
