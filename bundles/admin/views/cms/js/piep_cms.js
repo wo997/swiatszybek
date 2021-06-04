@@ -979,6 +979,7 @@ class PiepCMS {
 			return;
 		}
 
+		/** @type {string} */
 		let val = input._get_value();
 		let prop_ref = v_node;
 
@@ -989,7 +990,12 @@ class PiepCMS {
 			prop_ref = v_node.styles[this.selected_resolution];
 			prop_str = prop_str.substring("styles.".length);
 
-			val = escapeCSS(prop_str, val);
+			if (val.endsWith("*")) {
+				// maintain * at the end and trim later
+				val = escapeCSS(prop_str, val.substring(0, val.length - 1)) + "*";
+			} else {
+				val = escapeCSS(prop_str, val);
+			}
 		} else if (prop_str.startsWith("responsive_settings.")) {
 			if (!v_node.responsive_settings[this.selected_resolution]) {
 				v_node.responsive_settings[this.selected_resolution] = {};
@@ -1018,7 +1024,7 @@ class PiepCMS {
 			const bind_what = bind_wrapper.dataset.bind_wrapper;
 
 			if (v_node.settings) {
-				const bind_type = v_node.settings[`bind_${bind_what}`];
+				const bind_type = this.getCurrentVNodeResponsiveSetting(v_node, `bind_${bind_what}`);
 
 				if (bind_dir === "left") {
 					if (bind_type === "opposite" || bind_type === "all") {
@@ -2481,7 +2487,7 @@ class PiepCMS {
 								if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
 									return;
 								}
-								node_styles += `${kebabCase(prop)}: ${val};`;
+								node_styles += `${kebabCase(prop)}: ${val.replace(/\*$/, "")};`;
 							});
 						}
 					}

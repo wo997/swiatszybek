@@ -59,6 +59,9 @@ function escapeHTML(unsafeText) {
 }
 
 function escapeCSS(prop, val) {
+	if (val === "0") {
+		return "0";
+	}
 	let div = document.createElement("div");
 	div.style[prop] = val;
 	return div.style[prop];

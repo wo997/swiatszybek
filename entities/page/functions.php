@@ -144,6 +144,7 @@ function traverseVDom($v_dom, $options = [])
                         if ($width_type !== "custom" && in_array($prop, ["width", "minWidth", "maxWidth"])) {
                             continue;
                         }
+                        $val = rtrim($val, "*");
                         $node_styles .= camelToKebabCase($prop) . ": $val;";
                     }
                 }

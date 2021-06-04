@@ -53,11 +53,19 @@ function registerUnitInputs(parent) {
 				}
 			}
 
-			// no unit and no char that aint a number, then give default - first
-			if (!unit && !value.match(/[^\d]/)) {
-				for (const option of select.options) {
-					unit = option.value;
-					break;
+			if (unit === "") {
+				if (!value.match(/[^\d]/)) {
+					// first as default
+					for (const option of select.options) {
+						unit = option.value;
+						break;
+					}
+				} else {
+					const custom = select._child(".custom");
+					if (custom) {
+						// @ts-ignore
+						unit = custom.value;
+					}
 				}
 			}
 
