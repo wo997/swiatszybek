@@ -193,12 +193,12 @@
 		<input />
 		<select>
 			<option value="" class="novalue">-</option>
-			<option value="0" class="novalue">Brak</option>
 			<option value="px">px</option>
 			<option value="%">%</option>
 			<option value="var(--default_padding)" class="novalue">Domyślny</option>
 			<option value="auto" class="novalue">Automatyczny</option>
-			<option value="*">*</option>
+			<option value="0" class="novalue">Brak</option>
+			<option value="*" class="case_advanced">*</option>
 		</select>
 	`;
 
@@ -206,11 +206,11 @@
 		<input />
 		<select>
 			<option value="" class="novalue">-</option>
-			<option value="0" class="novalue">Brak</option>
 			<option value="px">px</option>
 			<option value="%">%</option>
 			<option value="var(--default_padding)" class="novalue">Domyślny</option>
-			<option value="*">*</option>
+			<option value="0" class="novalue">Brak</option>
+			<option value="*" class="case_advanced">*</option>
 		</select>
 	`;
 
@@ -218,9 +218,9 @@
 		<input />
 		<select>
 			<option value="" class="novalue">-</option>
-			<option value="0" class="novalue">Brak</option>
 			<option value="px">px</option>
-			<option value="*">*</option>
+			<option value="0" class="novalue">Brak</option>
+			<option value="*" class="case_advanced">*</option>
 		</select>
 	`;
 

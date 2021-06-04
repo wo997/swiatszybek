@@ -60,12 +60,6 @@ function registerUnitInputs(parent) {
 						unit = option.value;
 						break;
 					}
-				} else {
-					const custom = select._child(".custom");
-					if (custom) {
-						// @ts-ignore
-						unit = custom.value;
-					}
 				}
 			}
 
