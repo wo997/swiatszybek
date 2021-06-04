@@ -27,11 +27,8 @@
 	[data-bind_dir="bottom"] {
 		grid-area: 3 / 2 / 4 / 4;
 	}
-	.glue_children {
+	.glue_children select {
 		--field_padding_hor: 3px;
-	}
-	input {
-		text-align: center;
 	}
 	select {
 		width: 30px;

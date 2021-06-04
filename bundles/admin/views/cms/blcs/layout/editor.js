@@ -196,8 +196,8 @@
 			<option value="px">px</option>
 			<option value="%">%</option>
 			<option value="var(--default_padding)" class="novalue">Domyślny</option>
-			<option value="auto" class="novalue">Automatyczny</option>
-			<option value="0" class="novalue case_advanced">Brak</option>
+			<option value="auto" class="novalue case_advanced">Automatyczny</option>
+			<option value="0" class="novalue">Brak</option>
 			<option value="*" class="case_advanced">*</option>
 		</select>
 	`;
