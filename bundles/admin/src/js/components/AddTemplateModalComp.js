@@ -78,7 +78,7 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 				<input class="field" data-bind="{${data.name}}" />
 
 				<div class="label">Typ strony</div>
-				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.page_type}}" data-validate="">
+				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="page"></p-checkbox>
 						<span>Zwykła strona</span>

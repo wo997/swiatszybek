@@ -142,7 +142,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first">Typ strony</div>
-				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.page_type}}" data-validate="">
+				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="page"></p-checkbox>
 						<span>Zwykła strona</span>

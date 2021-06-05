@@ -832,7 +832,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Widoczność w sklepie</div>
-				<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">
+				<div class="radio_group boxes hide_checks number flex" data-bind="{${data.active}}">
 					<div class="checkbox_area error">
 						<div>
 							<p-checkbox data-value="0"></p-checkbox>
@@ -848,7 +848,7 @@ function ProductComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="label">Typ produktu</div>
-				<div class="radio_group boxes hide_checks" data-bind="{${data.product_type}}">
+				<div class="radio_group boxes hide_checks flex" data-bind="{${data.product_type}}">
 					<div class="checkbox_area" data-tooltip="Do wysyłki">
 						<div>
 							<p-checkbox data-value="normal"></p-checkbox>

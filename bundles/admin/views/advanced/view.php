@@ -37,7 +37,7 @@
     <input type="text" class="field" data-name="domain">
 
     <span class="label">Przekierowanie WWW</span>
-    <div class="radio_group boxes hide_checks semi_bold" data-name="www_redirect">
+    <div class="radio_group boxes hide_checks semi_bold flex" data-name="www_redirect">
         <div class="checkbox_area">
             <p-checkbox data-value=""></p-checkbox>
             <span>Brak przekierowania</span>

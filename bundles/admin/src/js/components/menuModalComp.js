@@ -221,7 +221,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Typ linku</div>
-				<div class="radio_group boxes hide_checks semi_bold" data-bind="{${data.link_what}}" data-validate="">
+				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.link_what}}" data-validate="">
 					<div class="checkbox_area">
 						<p-checkbox data-value="product_category"></p-checkbox>
 						<span>Kategoria produktów</span>

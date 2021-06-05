@@ -135,7 +135,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 						<input class="field small" data-bind="{${data.name}}" />
 
 						<div class="label">Widoczność w sklepie</div>
-						<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">
+						<div class="radio_group boxes hide_checks number flex" data-bind="{${data.active}}">
 							<div class="checkbox_area error">
 								<div>
 									<p-checkbox data-value="0"></p-checkbox>

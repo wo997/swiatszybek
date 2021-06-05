@@ -117,7 +117,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
     </div>
 
     <div class="piep_editor_side_menu">
-        <div class="filter_blc_menu radio_group hide_checks">
+        <div class="filter_blc_menu radio_group hide_checks flex">
             <div class="checkbox_area">
                 <div>
                     <p-checkbox data-value="all"></p-checkbox>

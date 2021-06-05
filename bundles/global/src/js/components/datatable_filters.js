@@ -76,7 +76,7 @@ let filter_menus = [
 	{
 		name: "boolean",
 		getHtml: (column, data) => html`
-			<div style="display:flex;justify-content:space-around" class="radio_group unselectable" data-validate="radio">
+			<div style="display:flex;justify-content:space-around" class="radio_group unselectable flex" data-validate="radio">
 				<div class="inline checkbox_area">
 					<p-checkbox data-value="1"></p-checkbox>
 					<span class="semi_bold">Tak</span>
