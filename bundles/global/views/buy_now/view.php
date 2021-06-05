@@ -91,7 +91,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>
-            <div class="radio_group boxes big_boxes columns_3 hide_checks delivery number" data-validate="">
+            <div class="radio_group boxes big_boxes hide_checks delivery number" style="--columns:3" data-validate="">
                 <div class="checkbox_area">
                     <div>
                         <p-checkbox data-value="1"></p-checkbox>
@@ -116,7 +116,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             </div>
 
             <div class="expand_y animate_hidden hidden case_courier_above">
-                <div class="radio_group boxes big_boxes hide_checks payment_time columns_2 pt4">
+                <div class="radio_group boxes big_boxes hide_checks payment_time pt4" style="--columns:2">
                     <div class="checkbox_area">
                         <div>
                             <p-checkbox data-value="prepayment"></p-checkbox>
@@ -143,7 +143,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     <div class="label big">Adres wysyłki</div>
 
                     <span class="label">Chcę użyć innego adresu do wysyłki</span>
-                    <div class="radio_group boxes big_boxes hide_checks courier_address_different columns_2 number">
+                    <div class="radio_group boxes big_boxes hide_checks courier_address_different number" style="--columns:2">
                         <div class="checkbox_area">
                             <div>
                                 <p-checkbox data-value="0"></p-checkbox>

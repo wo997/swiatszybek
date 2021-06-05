@@ -832,7 +832,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="label">Widoczność w sklepie</div>
-				<div class="radio_group boxes hide_checks number flex" data-bind="{${data.active}}">
+				<div class="radio_group boxes hide_checks number" data-bind="{${data.active}}">
 					<div class="checkbox_area error">
 						<div>
 							<p-checkbox data-value="0"></p-checkbox>
@@ -848,7 +848,7 @@ function ProductComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="label">Typ produktu</div>
-				<div class="radio_group boxes hide_checks flex" data-bind="{${data.product_type}}">
+				<div class="radio_group boxes hide_checks" data-bind="{${data.product_type}}">
 					<div class="checkbox_area" data-tooltip="Do wysyłki">
 						<div>
 							<p-checkbox data-value="normal"></p-checkbox>
@@ -995,7 +995,7 @@ function ProductComp(comp, parent, data = undefined) {
 				<br />
 
 				<div data-node="{${comp._nodes.products_dt_wrapper}}" data-tooltip_position="over">
-					<div class="pretty_radio semi_bold mt2" data-bind="{${data.product_list_view}}">
+					<div class="pretty_radio glue_children semi_bold mt2" data-bind="{${data.product_list_view}}">
 						<div class="checkbox_area">
 							<p-checkbox data-value="active"></p-checkbox>
 							<span> <i class="fas fa-check"></i> Aktywne </span>

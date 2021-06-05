@@ -67,7 +67,7 @@ function ThemeSettingsComp(comp, parent, data = undefined) {
 					</div>
 
 					<div class="label">Główna czcionka</div>
-					<div class="pretty_radio semi_bold columns_3 spiky" data-bind="{${data.font_family}}" style="max-width: 500px">
+					<div class="pretty_radio semi_bold" data-bind="{${data.font_family}}" style="max-width: 500px;--columns:3">
 						${Object.entries(fonts)
 							.map(
 								([font_family, data]) =>

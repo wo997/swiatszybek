@@ -20,7 +20,7 @@
 		// ],
 		menu_html: html`
 			<div class="label">Typ tekstu</div>
-			<div class="pretty_radio flex columns_1 global_root spiky box_align_left" data-blc_prop="tag">
+			<div class="pretty_radio global_root box_align_left" data-blc_prop="tag" class="--columns:1">
 				<div class="checkbox_area">
 					<p-checkbox data-value="h1"></p-checkbox>
 					<div style="font-size:var(--size_h1);line-height: 1.2;">Nagłówek H1</div>
@@ -53,7 +53,7 @@
 				<span class="case_palette">Rozmiar z listy</span>
 				<span class="edit_theme_btn normal link">Zarządzaj</span>
 			</div>
-			<div class="pretty_radio flex columns_6 global_root spiky"></div>
+			<div class="pretty_radio global_root" style="--columns:6"></div>
 
 			<div class="label normal">Inny rozmiar</div>
 			<unit-input>
@@ -74,7 +74,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
-			<div class="pretty_radio pretty_blue flex columns_4 spiky" data-blc_prop="styles.fontWeight">
+			<div class="pretty_radio pretty_blue" data-blc_prop="styles.fontWeight" style="--columns:4">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -107,7 +107,7 @@
 		// ],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textAlign">
+			<div class="pretty_radio pretty_blue" data-blc_prop="styles.textAlign" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -138,7 +138,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Kursywa (pochylenie czcionki)</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.fontStyle">
+			<div class="pretty_radio pretty_blue" data-blc_prop="styles.fontStyle" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -161,7 +161,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Zdobienie czcionki</div>
-			<div class="pretty_radio pretty_blue flex columns_5 spiky" data-blc_prop="styles.textDecoration">
+			<div class="pretty_radio pretty_blue" data-blc_prop="styles.textDecoration" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -191,7 +191,7 @@
 				<span class="case_palette">Kolor z palety</span>
 				<span class="edit_theme_btn normal link">Zarządzaj</span>
 			</div>
-			<div class="pretty_radio flex columns_6 global_root spiky"></div>
+			<div class="pretty_radio global_root" style="--columns:6"></div>
 
 			<div class="label normal">Inny kolor</div>
 			<color-picker class="inline NOalpha"></color-picker>
@@ -211,7 +211,7 @@
 				<span class="case_palette">Kolor z palety</span>
 				<span class="edit_theme_btn normal link">Zarządzaj</span>
 			</div>
-			<div class="pretty_radio flex columns_6 global_root spiky"></div>
+			<div class="pretty_radio global_root" style="--columns:6"></div>
 
 			<div class="label normal">Inny kolor</div>
 			<color-picker class="inline NOalpha"></color-picker>

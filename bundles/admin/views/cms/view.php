@@ -117,7 +117,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
     </div>
 
     <div class="piep_editor_side_menu">
-        <div class="filter_blc_menu radio_group hide_checks flex">
+        <div class="filter_blc_menu radio_group hide_checks">
             <div class="checkbox_area">
                 <div>
                     <p-checkbox data-value="all"></p-checkbox>
@@ -164,7 +164,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
             <!-- place for blc props etc. -->
         </div>
 
-        <div class="pretty_radio semi_bold select_resolution mla mra">
+        <div class="pretty_radio glue_children semi_bold select_resolution mla mra">
             <div class="checkbox_area" data-tooltip="Komputer">
                 <p-checkbox data-value="df"></p-checkbox>
                 <span> <i class="fas fa-desktop"></i> </span>

@@ -10,13 +10,15 @@
 		gap: var(--box_margin);
 		--box-width: auto;
 		--box-padding: 10px;
+		--columns: 1;
+		grid-template-columns: repeat(var(--columns), 1fr);
 	}
 	&.big_boxes {
 		--box_height: 0;
 		--box_height: 80px;
 	}
 	&.small_boxes {
-		--box-padding: 6px 10px;
+		--box-padding: 6px 8px;
 	}
 	> * {
 		& {
@@ -95,40 +97,19 @@
 		justify-content: flex-start;
 	}
 
-	&.columns_1,
-	&.columns_2,
-	&.columns_3,
-	&.columns_4,
-	&.columns_5,
-	&.columns_6 {
-		--box-padding: 5px;
-	}
-
-	&.columns_1 {
-		grid-template-columns: repeat(1, 1fr);
-	}
-	&.columns_2 {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	&.columns_3 {
-		grid-template-columns: repeat(3, 1fr);
-	}
-	&.columns_4 {
-		grid-template-columns: repeat(4, 1fr);
-	}
-	&.columns_5 {
-		grid-template-columns: repeat(5, 1fr);
-	}
-	&.columns_6 {
-		grid-template-columns: repeat(6, 1fr);
-	}
-
 	&.pretty_blue {
 		& {
-			--box_margin: -1px;
+			--box_margin: 0;
+			margin-top: 1px;
+			margin-left: 1px;
+		}
+		&:not(.glue_children) > * {
+			border-radius: 0;
 		}
 		& > * {
 			box-shadow: none !important;
+			margin-left: -1px;
+			margin-top: -1px;
 		}
 		& > *.attention:not(.empty) {
 			background: var(--pretty_error_background);
@@ -160,8 +141,7 @@
 	}
 }
 
-.hide_checks,
-.boxes .pretty_blue {
+.hide_checks {
 	p-checkbox {
 		display: none !important;
 	}

@@ -17,7 +17,7 @@
 <?php Templates::startSection("admin_page_body"); ?>
 
 <div class="products_view_header">
-    <div class="pretty_radio semi_bold toggle_view">
+    <div class="pretty_radio semi_bold toggle_view glue_children inline_flex">
         <div class="checkbox_area">
             <p-checkbox data-value="general_products"></p-checkbox>
             <span>

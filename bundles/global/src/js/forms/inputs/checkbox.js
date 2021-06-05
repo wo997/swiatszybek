@@ -38,10 +38,14 @@ function onRadioGroupValueSet(radio_group) {
  */
 function registerCheckboxes(parent) {
 	parent._children(".pretty_radio:not(.pr_rgstd)").forEach((rad) => {
-		rad.classList.add("pr_rgstd", "radio_group", "hide_checks", "glue_children", "boxes", "pretty_blue", "small_boxes");
-		if (!rad.classList.contains("flex")) {
-			rad.classList.add("inline_flex");
-		}
+		rad.classList.add("pr_rgstd", "radio_group", "hide_checks", "boxes", "pretty_blue", "small_boxes");
+		// if (!rad.classList.contains("flex")) {
+		// 	rad.classList.add("inline_flex");
+		// }
+		// TODO:
+		// if (!rad.classList.contains("flex")) {
+		// 	rad.classList.add("inline_grid");
+		// }
 	});
 
 	parent._children("p-checkbox:not(.checkbox_rgstrd)").forEach((input) => {

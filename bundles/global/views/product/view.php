@@ -198,7 +198,7 @@ if ($main_img) {
 
         <!-- <div style="display:none">
             <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-            <div class="vdo radio_group columns_1">
+            <div class="vdo radio_group --columns:1">
                 <div class="checkbox_area">
                     <p-checkbox data-value="1"></p-checkbox>
                     Subtelny napis
@@ -223,7 +223,7 @@ if ($main_img) {
             foreach ($general_product_variants as $general_product_variant) {
             ?>
                 <span class="label"><?= $general_product_variant["name"] ?></span>
-                <div class="variants radio_group boxes number big_boxes unselectable hide_checks columns_<?= def($general_product_variant, "columns", "2") ?>" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>'>
+                <div class="variants radio_group boxes number big_boxes unselectable hide_checks" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>;--columns:<?= def($general_product_variant, "columns", "2") ?>'>
                     <?php
                     foreach ($general_product_variant["options"] as $variant_option) {
                     ?>

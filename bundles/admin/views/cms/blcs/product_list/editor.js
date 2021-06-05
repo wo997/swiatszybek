@@ -28,7 +28,7 @@
 		blc_groups: [{ module_names: ["product_list"], priority: 100 }],
 		menu_html: html`
 			<span class="label">Wyświetlaj produkty</span>
-			<div class="pretty_radio columns_1" data-blc_prop="settings.product_list_display_what">
+			<div class="pretty_radio" data-blc_prop="settings.product_list_display_what" style="--columns:1">
 				<div class="checkbox_area">
 					<p-checkbox data-value="custom"></p-checkbox>
 					<span>Dowolne kategorie i sortowanie</span>

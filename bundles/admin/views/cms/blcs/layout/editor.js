@@ -23,7 +23,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Typ wyznaczania szerokości</div>
-			<div class="pretty_radio pretty_blue flex columns_2 spiky" data-blc_prop="responsive_settings.width_type">
+			<div class="pretty_radio pretty_blue" data-blc_prop="responsive_settings.width_type" style="--columns:2">
 				<div class="checkbox_area">
 					<p-checkbox data-value="full"></p-checkbox>
 					<div class="container_layout_type_icon">
@@ -233,7 +233,7 @@
 				Margines zewnętrzny
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="responsive_settings.bind_margins">
+			<div class="pretty_radio pretty_blue mb2" data-blc_prop="responsive_settings.bind_margins" style="--columns:3">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -278,7 +278,7 @@
 				Margines wewnętrzny (padding)
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mt2 mb2" data-blc_prop="responsive_settings.bind_paddings">
+			<div class="pretty_radio pretty_blue mb2" data-blc_prop="responsive_settings.bind_paddings" style="--columns:3">
 				<div class="checkbox_area" data-tooltip="Wszystkie marginesy są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -321,7 +321,7 @@
 		menu_html: html`
 			<div class="label">Kolor krawędzi / obramowania</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="responsive_settings.bind_borderColors">
+			<div class="pretty_radio pretty_blue mb2" data-blc_prop="responsive_settings.bind_borderColors" style="--columns:3">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tego samego koloru">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
@@ -367,7 +367,7 @@
 				Grubość krawędzi / obramowania
 			</div>
 
-			<div class="pretty_radio pretty_blue flex columns_3 spiky mb2" data-blc_prop="responsive_settings.bind_borderWidths">
+			<div class="pretty_radio pretty_blue mb2" data-blc_prop="responsive_settings.bind_borderWidths" style="--columns:3">
 				<div class="checkbox_area" data-tooltip="Wszystkie krawędzie są tej samej długości">
 					<p-checkbox data-value="all"></p-checkbox>
 					<img src="/src/img/bind_all_directions.svg" class="bind_directions_icon" />
