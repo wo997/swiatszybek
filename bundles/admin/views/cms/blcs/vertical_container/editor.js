@@ -218,15 +218,16 @@
 
 	piep_cms_manager.registerBlcSchema({
 		id: "vertical_container",
-		icon: html`<i class="vertical_container_icon">
-			<div></div>
-			<div></div>
-			<div></div>
-		</i>`,
+		// <i class="vertical_container_icon">
+		//     <div></div>
+		//     <div></div>
+		//     <div></div>
+		// </i>
+		icon: html`<i class="far fa-square"></i>`,
 		label: html`Kontener pionowy`,
 		group: "container",
 		standalone: true,
-		priority: 80,
+		priority: 50,
 		v_node: {
 			tag: "div",
 			id: -1,

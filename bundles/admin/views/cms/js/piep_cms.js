@@ -3941,9 +3941,7 @@ class PiepCMS {
 						id: new_vid++,
 						styles: {},
 						module_name: "columns",
-						settings: {
-							layout_type: "basic",
-						},
+						settings: {},
 					};
 
 					near_v_node_data.v_nodes.splice(ind, 1, columns_container);
@@ -3957,7 +3955,7 @@ class PiepCMS {
 					let columns_in_a_row = 1;
 
 					const columns_container = near_v_node_data.parent_v_nodes[0];
-					if (columns_container && columns_container.settings && columns_container.settings.layout_type === "basic") {
+					if (columns_container && columns_container.settings) {
 						let percentage_sum = 0;
 						near_v_node_data.v_nodes.forEach((v_node) => {
 							if (!v_node.styles.df) {
