@@ -141,12 +141,6 @@ textarea {
 		filter: contrast(0.5);
 	}
 
-	&.fill {
-		display: block;
-		flex-grow: 1;
-		width: 100%;
-	}
-
 	&.no_hover_shadow {
 		--hover-shadow: none;
 	}

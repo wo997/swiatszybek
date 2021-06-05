@@ -346,3 +346,9 @@
 .text_link {
 	color: var(--clr_link);
 }
+
+.fill {
+	display: block;
+	flex-grow: 1;
+	width: 100%;
+}

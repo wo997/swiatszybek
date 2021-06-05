@@ -256,7 +256,7 @@ function traverseFeatures()
                 $feature_key = $is_cena ? "cena" : "r$product_feature_id";
                 $quick_list_html =  "<ul data-feature_key=\"$feature_key\" class=\"double_value_quick_list\">";
 
-                setRangesFromLongDatasetWithIndices($double_values, 10);
+                setRangesFromLongDatasetWithIndices($double_values, 8);
 
                 $unit_map = [];
 

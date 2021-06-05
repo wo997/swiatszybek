@@ -3,5 +3,12 @@
 .module_grid {
 	.cell_float {
 		border: 1px solid #ccc;
+		pointer-events: none;
+	}
+}
+
+.prop_grid_gap {
+	select {
+		width: 30px;
 	}
 }
