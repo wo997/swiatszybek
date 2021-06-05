@@ -34,7 +34,7 @@ label {
 .form_columns {
 	& {
 		display: flex;
-		margin-left: calc(-1 * var(--form_spacing));
+		margin-left: -10px;
 	}
 }
 
@@ -42,7 +42,7 @@ label {
 	& {
 		flex-grow: 1;
 		flex-shrink: 1;
-		margin-left: var(--form_spacing);
+		margin-left: 10px;
 	}
 }
 
