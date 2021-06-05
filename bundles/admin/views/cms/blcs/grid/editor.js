@@ -12,7 +12,11 @@
 		v_node: {
 			tag: "div",
 			id: -1,
-			styles: {},
+			styles: {
+				df: {
+					gridTemplateColumns: "1fr 1fr",
+				},
+			},
 			classes: [],
 			attrs: {},
 			settings: {},
@@ -21,7 +25,11 @@
 				{
 					id: -1,
 					tag: "div",
-					styles: {},
+					styles: {
+						df: {
+							gridArea: "1 / 1 / 2 / 2",
+						},
+					},
 					attrs: {},
 					classes: ["vertical_container"],
 					children: [],
@@ -29,7 +37,11 @@
 				{
 					id: -1,
 					tag: "div",
-					styles: {},
+					styles: {
+						df: {
+							gridArea: "1 / 2 / 2 / 3",
+						},
+					},
 					attrs: {},
 					classes: ["vertical_container"],
 					children: [],

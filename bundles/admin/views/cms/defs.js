@@ -140,7 +140,7 @@
  */
 
 /**
- * @typedef {"column" | "row" | "inline" | "text_list"} FlowDirectionEnum
+ * @typedef {"column" | "row" | "inline" | "text_list" | "grid"} FlowDirectionEnum
  */
 
 /**

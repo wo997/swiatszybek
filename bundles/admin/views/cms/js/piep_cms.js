@@ -2231,9 +2231,6 @@ class PiepCMS {
 					if (parent.tag !== "ul" && v_node.tag === "li") {
 						v_node.tag = "p";
 					}
-					if (parent.classes.includes("columns_container")) {
-						ressdf.width_type = "custom";
-					}
 				}
 
 				const children = v_node.children;
@@ -2364,8 +2361,6 @@ class PiepCMS {
 
 			if (v_node.classes.includes("vertical_container")) {
 				display_name = "Kontener";
-			} else if (v_node.classes.includes("columns_container")) {
-				display_name = "Kolumny";
 			}
 		}
 
@@ -2512,7 +2507,7 @@ class PiepCMS {
 		};
 
 		traverseVDom(this.v_dom);
-		if (this.grabbed_v_node && !this.current_insert_blc) {
+		if (this.grabbed_v_node && !this.has_insert_pos) {
 			traverseVDom([this.grabbed_v_node]);
 		}
 
@@ -2924,11 +2919,13 @@ class PiepCMS {
 
 		if (this.current_insert_blc !== insert_blc) {
 			this.current_insert_blc = insert_blc;
+			this.has_insert_pos = false;
 
 			this.v_dom.splice(0, this.v_dom.length);
 			deepAssign(this.v_dom, this.after_grab_v_dom);
 
 			if (insert_blc && insert_blc._insert_action) {
+				this.has_insert_pos = true;
 				insert_blc._insert_action();
 
 				this.update({ dom: true, styles: true });
@@ -2947,7 +2944,6 @@ class PiepCMS {
 			}
 		}
 
-		this.has_insert_pos = !!(this.current_insert_blc && !this.current_insert_blc.classList.contains("multiple"));
 		this.grabbed_block_wrapper.classList.toggle("visible", !this.has_insert_pos);
 		this.container.classList.toggle("has_insert_pos", this.has_insert_pos);
 	}
@@ -3633,6 +3629,8 @@ class PiepCMS {
 		/** @type {insertBlc} */
 		this.current_insert_blc = undefined;
 
+		this.has_insert_pos = false;
+
 		const grabbed_node = this.getNode(this.grabbed_block_vid);
 		this.grabbed_block_wrapper._set_content(grabbed_node.outerHTML);
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
@@ -3716,8 +3714,8 @@ class PiepCMS {
 		if (parent_v_node) {
 			if (this.isTextContainer(parent_v_node)) {
 				return "inline";
-			} else if (parent_v_node.classes.includes("columns_container")) {
-				return "row";
+			} else if (parent_v_node.module_name === "grid") {
+				return "grid";
 			} else if (parent_v_node.tag === "ul") {
 				return "text_list";
 			}
@@ -3841,8 +3839,7 @@ class PiepCMS {
 
 				let insert_v_node = grabbed_node_copy;
 
-				const is_node_container =
-					this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.classes.includes("columns_container");
+				const is_node_container = this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.module_name === "grid";
 				if (is_blc_parent_root && is_node_container) {
 					insert_v_node.responsive_settings.df.width_type = "default_container";
 				}
@@ -3887,17 +3884,17 @@ class PiepCMS {
 
 				/** @type {vDomNode} */
 				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-				let suggest_wrapping_with_columns_module = false;
+				let suggest_wrapping_with_grid = false;
 
 				if (flow_direction === "column") {
-					suggest_wrapping_with_columns_module = true;
+					suggest_wrapping_with_grid = true;
 				}
 
 				let new_vid = this.getNewBlcId();
 
 				let insert_v_node = grabbed_node_copy;
 
-				if (suggest_wrapping_with_columns_module && !grabbed_node_copy.classes.includes("vertical_container")) {
+				if (suggest_wrapping_with_grid && !grabbed_node_copy.classes.includes("vertical_container")) {
 					insert_v_node = {
 						id: new_vid++,
 						tag: "div",
@@ -3908,11 +3905,11 @@ class PiepCMS {
 					};
 				}
 
-				if (suggest_wrapping_with_columns_module) {
+				if (suggest_wrapping_with_grid) {
 					const near_column = {
 						id: new_vid++,
 						tag: "div",
-						styles: { df: { width: "50%" } },
+						styles: {},
 						attrs: {},
 						classes: ["vertical_container"],
 						children: [near_v_node],
@@ -3921,30 +3918,27 @@ class PiepCMS {
 					/** @type {vDomNode[]} */
 					const just_columns = [near_column];
 
-					if (!insert_v_node.styles.df) {
-						insert_v_node.styles.df = {};
-					}
-					insert_v_node.styles.df.width = "50%";
-
-					if (dir === 1) {
-						just_columns.push(insert_v_node);
-					} else {
-						just_columns.unshift(insert_v_node);
-					}
+					// TODO: instead of caring what the order should be (well, for copying text it does matter?) we could just set grid-area
+					// well, isn't it just better to set position on render later based on the grid-area approx order?
+					just_columns.push(insert_v_node);
+					// if (dir === 1) {
+					// } else {
+					// 	just_columns.unshift(insert_v_node);
+					// }
 
 					/** @type {vDomNode} */
-					const columns_container = {
+					const grid = {
 						tag: "div",
 						attrs: {},
 						children: just_columns,
-						classes: ["columns_container"],
+						classes: [],
 						id: new_vid++,
 						styles: {},
-						module_name: "columns",
+						module_name: "grid",
 						settings: {},
 					};
 
-					near_v_node_data.v_nodes.splice(ind, 1, columns_container);
+					near_v_node_data.v_nodes.splice(ind, 1, grid);
 				} else {
 					if (dir === 1) {
 						ind++;
@@ -3952,39 +3946,40 @@ class PiepCMS {
 
 					near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
 
-					let columns_in_a_row = 1;
+					// TODO: completely redo this part
+					// let columns_in_a_row = 1;
 
-					const columns_container = near_v_node_data.parent_v_nodes[0];
-					if (columns_container && columns_container.settings) {
-						let percentage_sum = 0;
-						near_v_node_data.v_nodes.forEach((v_node) => {
-							if (!v_node.styles.df) {
-								v_node.styles.df = {};
-							}
-							const df = v_node.styles.df;
-							percentage_sum += numberFromStr(df.width);
-						});
-						console.log(percentage_sum);
+					// const grid = near_v_node_data.parent_v_nodes[0];
+					// if (grid && grid.settings) {
+					// 	let percentage_sum = 0;
+					// 	near_v_node_data.v_nodes.forEach((v_node) => {
+					// 		if (!v_node.styles.df) {
+					// 			v_node.styles.df = {};
+					// 		}
+					// 		const df = v_node.styles.df;
+					// 		percentage_sum += numberFromStr(df.width);
+					// 	});
+					// 	console.log(percentage_sum);
 
-						// TODO: TEMPORARY solution here, assuming 1 row
-						if (Math.abs(percentage_sum - 100) < 2) {
-							columns_in_a_row = near_v_node_data.v_nodes.length;
-							// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
+					// 	// TODO: TEMPORARY solution here, assuming 1 row
+					// 	if (Math.abs(percentage_sum - 100) < 2) {
+					// 		columns_in_a_row = near_v_node_data.v_nodes.length;
+					// 		// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
 
-							// will be just below 1
-							let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
-							near_v_node_data.v_nodes.forEach((v_node) => {
-								const df = v_node.styles.df;
-								v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
-							});
-						}
-					}
+					// 		// will be just below 1
+					// 		let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
+					// 		near_v_node_data.v_nodes.forEach((v_node) => {
+					// 			const df = v_node.styles.df;
+					// 			v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
+					// 		});
+					// 	}
+					// }
 
-					// WORKS WELL ALREADY, look at the others now
-					if (!insert_v_node.styles.df) {
-						insert_v_node.styles.df = {};
-					}
-					insert_v_node.styles.df.width = floor(100 / columns_in_a_row, 4) + "%";
+					// // WORKS WELL ALREADY, look at the others now
+					// if (!insert_v_node.styles.df) {
+					// 	insert_v_node.styles.df = {};
+					// }
+					// insert_v_node.styles.df.width = floor(100 / columns_in_a_row, 4) + "%";
 				}
 			};
 
@@ -4022,7 +4017,7 @@ class PiepCMS {
 
 				const insert_blc = getInsertBlc();
 
-				if (on_sides && blc._parent(".columns_container", { skip: 2 })) {
+				if (on_sides && blc._parent(".grid", { skip: 2 })) {
 					on_sides = false;
 				}
 
@@ -4047,7 +4042,7 @@ class PiepCMS {
 			let above_or_below = true;
 			let inside = true;
 
-			if (near_v_node.classes.includes("columns_container")) {
+			if (near_v_node.module_name === "grid") {
 				on_sides = false;
 			}
 
@@ -4055,7 +4050,7 @@ class PiepCMS {
 				on_sides = false;
 			}
 
-			if (on_sides && blc._parent(".columns_container", { skip: 2 })) {
+			if (on_sides && blc._parent(".grid", { skip: 2 })) {
 				on_sides = false;
 			}
 
