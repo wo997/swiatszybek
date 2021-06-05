@@ -47,6 +47,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Rozmiar czcionki</div>
+			<input class="field hidden" data-blc_prop="styles.fontSize" />
 
 			<div class="label normal">
 				<span class="case_palette">Rozmiar z listy</span>
@@ -64,9 +65,6 @@
 					<option value=""></option>
 				</select>
 			</unit-input>
-
-			<input class="field hidden" data-blc_prop="styles.fontSize" />
-			<div class="responsive_info"></div>
 		`,
 	});
 
