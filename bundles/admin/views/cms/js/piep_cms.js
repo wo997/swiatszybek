@@ -2053,9 +2053,10 @@ class PiepCMS {
 
 	/**
 	 *
+	 * @param {boolean} above
 	 * @returns {string[]}
 	 */
-	getResolutionsWeCareAbout() {
+	getResolutionsWeCareAbout(above = false) {
 		/** @type {string[]} */
 		const care_about_resolutions = [];
 		for (const [key, width] of Object.entries(responsive_breakpoints).sort((a, b) => {
@@ -2063,8 +2064,12 @@ class PiepCMS {
 			const comp_b = b[1] ? b[1] : 10000;
 			return Math.sign(comp_b - comp_a);
 		})) {
+			const eq = key === this.selected_resolution;
+			if (above && eq) {
+				break;
+			}
 			care_about_resolutions.push(key);
-			if (key === this.selected_resolution) {
+			if (eq) {
 				break;
 			}
 		}
@@ -4345,6 +4350,8 @@ class PiepCMS {
 	 * @returns
 	 */
 	setBlcMenuFromFocusedNode(options = {}) {
+		const resolutions_above_rev = this.getResolutionsWeCareAbout(true).reverse();
+
 		/** @type {number[]} */
 		const from_vids = [];
 
@@ -4379,6 +4386,13 @@ class PiepCMS {
 		 */
 		const setPropsOfInputs = (inputs) => {
 			inputs.forEach((input) => {
+				const next = input._next();
+				let responsive_info;
+				let res_val;
+				if (next && next.classList.contains("responsive_info")) {
+					responsive_info = next;
+				}
+
 				const prop_str = input.dataset.blc_prop;
 				const is_text_container_prop = piep_cms_manager.text_container_props.includes(prop_str);
 				let val = "";
@@ -4401,14 +4415,35 @@ class PiepCMS {
 					}
 
 					if (prop_str.startsWith("styles.")) {
-						const res_styles = v_node_ref.styles[this.selected_resolution];
+						const prop_key = prop_str.substring("styles.".length);
+						const styles = v_node_ref.styles;
+
+						const res_styles = styles[this.selected_resolution];
 						if (res_styles) {
-							prop_val = res_styles[prop_str.substring("styles.".length)];
+							prop_val = res_styles[prop_key];
+						}
+
+						for (const res_name of resolutions_above_rev) {
+							const res_styles = styles[res_name];
+							if (res_styles && res_styles[prop_key]) {
+								res_val = res_styles[prop_key];
+								break;
+							}
 						}
 					} else if (prop_str.startsWith("responsive_settings.")) {
-						const res_settings = v_node_ref.responsive_settings[this.selected_resolution];
+						const prop_key = prop_str.substring("responsive_settings.".length);
+						const settings = v_node_ref.responsive_settings;
+
+						const res_settings = settings[this.selected_resolution];
 						if (res_settings) {
-							prop_val = res_settings[prop_str.substring("responsive_settings.".length)];
+							prop_val = res_settings[prop_key];
+						}
+						for (const res_name of resolutions_above_rev) {
+							const res_settings = settings[res_name];
+							if (res_settings && res_settings[prop_key]) {
+								res_val = res_settings[prop_key];
+								break;
+							}
 						}
 					} else if (prop_str.startsWith("attrs.")) {
 						if (!v_node_ref.attrs) {
@@ -4440,6 +4475,22 @@ class PiepCMS {
 				}
 
 				input._set_value(val, { quiet: true });
+
+				if (responsive_info) {
+					responsive_info._set_content(piep_cms_manager.translatePropVal(res_val));
+					responsive_info.dataset.tooltip = res_val ? "Odziedziczona domyślna wartość" : "";
+				} else if (input.classList.contains("radio_group")) {
+					input._children(".inherited").forEach((e) => {
+						e.classList.remove("inherited");
+						e.dataset.tooltip = "";
+					});
+					const checkbox = input._child(`[data-value="${res_val}"]`);
+					if (checkbox) {
+						const checkbox_area = checkbox._parent(".checkbox_area");
+						checkbox_area.classList.add("inherited");
+						checkbox_area.dataset.tooltip = "Odziedziczona domyślna opcja";
+					}
+				}
 			});
 		};
 

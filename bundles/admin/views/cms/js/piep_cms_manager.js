@@ -27,6 +27,11 @@ class PiepCMSManager {
 
 		this.single_tags = ["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"];
 
+		this.translate_prop_val_map = {
+			"var(--default_padding)": "Domyślny",
+			auto: "Automatyczny",
+		};
+
 		this.match_linkables = new RegExp(`^(?!${this.single_tags.map((e) => e + "$").join("|")})`);
 
 		/** @type {number[]} */
@@ -79,6 +84,10 @@ class PiepCMSManager {
 				return b.id === v_node.module_name;
 			}
 		});
+	}
+
+	translatePropVal(val) {
+		return def(this.translate_prop_val_map[val], val);
 	}
 
 	editorReady() {

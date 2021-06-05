@@ -249,10 +249,22 @@
 			</div>
 
 			<div class="combo_directions" data-bind_wrapper="margins">
-				<unit-input data-blc_prop="styles.marginLeft" data-bind_dir="left"> ${margin_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.marginTop" data-bind_dir="top"> ${margin_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.marginBottom" data-bind_dir="bottom"> ${margin_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.marginRight" data-bind_dir="right"> ${margin_unit_input} </unit-input>
+				<div class="top">
+					<unit-input data-blc_prop="styles.marginTop" data-bind_dir="top"> ${margin_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="left">
+					<unit-input data-blc_prop="styles.marginLeft" data-bind_dir="left"> ${margin_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="right">
+					<unit-input data-blc_prop="styles.marginRight" data-bind_dir="right"> ${margin_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="bottom">
+					<unit-input data-blc_prop="styles.marginBottom" data-bind_dir="bottom"> ${margin_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
 			</div>`,
 	});
 
@@ -282,10 +294,22 @@
 			</div>
 
 			<div class="combo_directions" data-bind_wrapper="paddings">
-				<unit-input data-blc_prop="styles.paddingLeft" data-bind_dir="left"> ${padding_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.paddingTop" data-bind_dir="top"> ${padding_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.paddingBottom" data-bind_dir="bottom"> ${padding_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.paddingRight" data-bind_dir="right"> ${padding_unit_input} </unit-input>
+				<div class="top">
+					<unit-input data-blc_prop="styles.paddingTop" data-bind_dir="top"> ${padding_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="left">
+					<unit-input data-blc_prop="styles.paddingLeft" data-bind_dir="left"> ${padding_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="right">
+					<unit-input data-blc_prop="styles.paddingRight" data-bind_dir="right"> ${padding_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="bottom">
+					<unit-input data-blc_prop="styles.paddingBottom" data-bind_dir="bottom"> ${padding_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
 			</div>
 		`,
 	});
@@ -313,10 +337,22 @@
 			</div>
 
 			<div class="combo_directions" data-bind_wrapper="borderColors">
-				<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
-				<color-picker class="NOalpha" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
-				<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
-				<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
+				<div class="top">
+					<color-picker class="NOalpha" data-blc_prop="styles.borderTopColor" data-bind_dir="top"></color-picker>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="left">
+					<color-picker class="NOalpha" data-blc_prop="styles.borderLeftColor" data-bind_dir="left"></color-picker>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="right">
+					<color-picker class="NOalpha" data-blc_prop="styles.borderRightColor" data-bind_dir="right"></color-picker>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="bottom">
+					<color-picker class="NOalpha" data-blc_prop="styles.borderBottomColor" data-bind_dir="bottom"></color-picker>
+					<div class="responsive_info"></div>
+				</div>
 			</div>
 		`,
 	});
@@ -347,10 +383,22 @@
 			</div>
 
 			<div class="combo_directions" data-bind_wrapper="borderWidths">
-				<unit-input data-blc_prop="styles.borderLeftWidth" data-bind_dir="left"> ${border_width_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.borderTopWidth" data-bind_dir="top"> ${border_width_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.borderBottomWidth" data-bind_dir="bottom"> ${border_width_unit_input} </unit-input>
-				<unit-input data-blc_prop="styles.borderRightWidth" data-bind_dir="right"> ${border_width_unit_input} </unit-input>
+				<div class="top">
+					<unit-input data-blc_prop="styles.borderTopWidth" data-bind_dir="top"> ${border_width_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="left">
+					<unit-input data-blc_prop="styles.borderLeftWidth" data-bind_dir="left"> ${border_width_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="right">
+					<unit-input data-blc_prop="styles.borderRightWidth" data-bind_dir="right"> ${border_width_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="bottom">
+					<unit-input data-blc_prop="styles.borderBottomWidth" data-bind_dir="bottom"> ${border_width_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
 			</div>
 		`,
 	});
