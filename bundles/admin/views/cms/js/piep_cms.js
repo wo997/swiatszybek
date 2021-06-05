@@ -1024,7 +1024,7 @@ class PiepCMS {
 			const bind_what = bind_wrapper.dataset.bind_wrapper;
 
 			if (v_node.settings) {
-				const bind_type = this.getCurrentVNodeResponsiveSetting(v_node, `bind_${bind_what}`);
+				const bind_type = this.getVNodeResponsiveProp("responsive_settings", v_node, `bind_${bind_what}`);
 
 				if (bind_dir === "left") {
 					if (bind_type === "opposite" || bind_type === "all") {
@@ -2642,6 +2642,34 @@ class PiepCMS {
 					}
 				}
 
+				if (v_node.module_name === "grid") {
+					/** @type {string} */
+					const grid_template_columns = def(this.getVNodeResponsiveProp("styles", v_node, "gridTemplateColumns"), "");
+					/** @type {string} */
+					const grid_template_rows = def(this.getVNodeResponsiveProp("styles", v_node, "gridTemplateRows"), "");
+					const columns = grid_template_columns.split(" ");
+					const rows = grid_template_rows.split(" ");
+					/** @type {string[]} */
+					const classes = [];
+					for (let r = 1; r < rows.length + 1; r++) {
+						for (let c = 1; c < columns.length + 1; c++) {
+							let cls = `cell_${r}_${c}`;
+							classes.push(cls);
+							if (!node._child("." + cls)) {
+								node.insertAdjacentHTML(
+									"afterbegin",
+									html`<div class="cell_float ${cls}" style="grid-area:${r}/${c}/${r + 1}/${c + 1}"></div>`
+								);
+							}
+						}
+					}
+
+					const select_cells_to_remove = ".cell_float" + classes.map((e) => `:not(.${e})`).join("");
+					node._children(select_cells_to_remove).forEach((r) => {
+						r.remove();
+					});
+				}
+
 				if (children) {
 					if (classes.includes("vertical_container")) {
 						displayEmptyVerticalContainer(node, children.length === 0);
@@ -2673,8 +2701,8 @@ class PiepCMS {
 
 		displayEmptyVerticalContainer(this.content, this.v_dom.length === 0);
 
-		const select_bls_to_remove = ".blc" + included_vids.map((e) => `:not(.blc_${e})`).join("");
-		this.content._children(select_bls_to_remove).forEach((r) => {
+		const select_blcs_to_remove = ".blc" + included_vids.map((e) => `:not(.blc_${e})`).join("");
+		this.content._children(select_blcs_to_remove).forEach((r) => {
 			//console.log("REMOVE", r);
 			r.remove();
 		});
@@ -3236,7 +3264,7 @@ class PiepCMS {
 				if (this.layout_control_prop === "width") {
 					const v_node = this.getVNodeById(this.focus_node_vid);
 
-					const width_type = this.getCurrentVNodeResponsiveSetting(v_node, "width_type");
+					const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
 					if (width_type !== "custom") {
 						if (!v_node.responsive_settings[this.selected_resolution]) {
 							v_node.responsive_settings[this.selected_resolution] = {};
@@ -3256,7 +3284,7 @@ class PiepCMS {
 	 *
 	 * @param {vDomNode} v_node
 	 */
-	getCurrentVNodeResponsiveSetting(v_node, prop_name) {
+	getCurrentVNodeResponsiveStyle(v_node, prop_name) {
 		const care_about_resolutions = this.getResolutionsWeCareAbout();
 		let prop_val;
 		care_about_resolutions.forEach((res_name) => {
@@ -3265,6 +3293,28 @@ class PiepCMS {
 				return;
 			}
 			const v = res_settings[prop_name];
+			if (v) {
+				prop_val = v;
+			}
+		});
+		return prop_val;
+	}
+
+	/**
+	 *
+	 * @param {"responsive_settings" | "styles"} prop_group
+	 * @param {vDomNode} v_node
+	 * @returns {string}
+	 */
+	getVNodeResponsiveProp(prop_group, v_node, prop_name) {
+		const care_about_resolutions = this.getResolutionsWeCareAbout();
+		let prop_val;
+		care_about_resolutions.forEach((res_name) => {
+			const res = v_node[prop_group][res_name];
+			if (!res) {
+				return;
+			}
+			const v = res[prop_name];
 			if (v) {
 				prop_val = v;
 			}
