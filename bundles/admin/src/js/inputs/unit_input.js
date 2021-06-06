@@ -17,7 +17,7 @@ function registerUnitInputs(parent) {
 		// @ts-ignore
 		const select = container._child("select");
 
-		input.classList.add("field", "number");
+		input.classList.add("field");
 		select.classList.add("field", "inline", "blank", "unit_picker");
 
 		let last_val;

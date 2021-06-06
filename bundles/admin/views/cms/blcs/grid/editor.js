@@ -57,12 +57,13 @@
 								<input class="small" />
 								<select class="small">
 									<option value="fr">fr</option>
+									<option value="auto" class="novalue">Automatyczny</option>
 									<option value="px">px</option>
 									<option value="%">%</option>
 									<option value="*" class="case_advanced">*</option>
 								</select>
 							</unit-input>
-							<button class="btn subtle small remove_btn">
+							<button class="btn subtle small remove_btn" ${template.length === 1 ? "disabled" : ""}>
 								<i class="fas fa-times"></i>
 							</button>
 						</div>

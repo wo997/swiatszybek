@@ -20,6 +20,19 @@
 
 .prop_grid_template {
 	.template_row {
-		padding: 2px 0;
+		& {
+			padding: 2px 0;
+			display: flex;
+		}
+		unit-input {
+			& {
+				flex-grow: 1;
+				margin-right: 4px;
+			}
+
+			&.glue_children select {
+				width: 30px;
+			}
+		}
 	}
 }
