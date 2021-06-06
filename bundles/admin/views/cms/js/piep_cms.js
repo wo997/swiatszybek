@@ -33,7 +33,6 @@ class PiepCMS {
 		this.initSelectResolution();
 
 		this.initEditables();
-		this.initEditingColors();
 		this.initEditingFontSize();
 
 		this.focus_node_vid = -1;
@@ -574,6 +573,13 @@ class PiepCMS {
 			</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
+		registerForms();
+
+		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
+			if (blc_prop.init) {
+				blc_prop.init(this, this.float_menu._child(`.prop_${blc_prop.name}`));
+			}
+		});
 	}
 
 	initEditingFontSize() {
@@ -681,114 +687,6 @@ class PiepCMS {
 		const themeSettingsChanged = () => {
 			updateFontSizeDropdown(this.float_menu._child(`[data-blc_prop="styles.fontSize"]`));
 			updateFontSizeWrapper(this.side_menu._child(`.prop_font_size`));
-		};
-		window.addEventListener("theme_settings_changed", themeSettingsChanged);
-		themeSettingsChanged();
-	}
-
-	// TODO: move to the props instead
-	initEditingColors() {
-		/**
-		 *
-		 * @param {PiepNode} color_wrapper
-		 */
-		const updateColorWrapper = (color_wrapper) => {
-			registerForms();
-
-			const middle_input = color_wrapper._child("input");
-			const radio_group = color_wrapper._child(".radio_group");
-			const color_picker = color_wrapper._child("color-picker");
-
-			let color_options_html = html`
-				<div class="checkbox_area empty">
-					<p-checkbox data-value=""></p-checkbox>
-					<span>-</span>
-				</div>
-			`;
-			colors_palette.forEach((color) => {
-				color_options_html += html`
-					<div class="checkbox_area">
-						<p-checkbox data-value="var(--${color.name})"></p-checkbox>
-						<div class="color_circle" style="background:var(--${color.name});"></div>
-					</div>
-				`;
-			});
-
-			radio_group._set_content(color_options_html);
-
-			registerForms();
-
-			if (!middle_input.classList.contains("wrrgstrd")) {
-				middle_input.classList.add("wrrgstrd");
-				middle_input.addEventListener("value_set", () => {
-					/** @type {string} */
-					const color = middle_input._get_value();
-					let radio_value, picker_value;
-					if (color.match(/#\w{3,}/)) {
-						radio_value = false;
-						picker_value = color;
-					} else {
-						radio_value = color;
-						picker_value = "";
-					}
-					radio_group._set_value(radio_value, { quiet: true });
-					color_picker._set_value(picker_value, { quiet: true });
-				});
-			}
-
-			radio_group.addEventListener("change", () => {
-				middle_input._set_value(radio_group._get_value());
-			});
-			color_picker.addEventListener("change", () => {
-				middle_input._set_value(color_picker._get_value());
-			});
-		};
-
-		/**
-		 *
-		 * @param {PiepNode} color_wrapper
-		 */
-		const updateColorDropdown = (color_wrapper) => {
-			const color_dropdown = color_wrapper._child("p-dropdown");
-
-			registerForms(); // let the options_wrapper appear
-
-			const options_wrapper = color_dropdown._child(".options_wrapper");
-
-			let color_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
-			colors_palette.forEach((color) => {
-				color_options_html += html`
-					<p-option data-value="var(--${color.name})">
-						<div class="color_circle" style="background:var(--${color.name});"></div>
-					</p-option>
-				`;
-			});
-
-			color_options_html += html`
-				<p-option data-tooltip="Inny kolor" data-match="#\\w{3,}" class="other_color">
-					<i class="fas fa-eye-dropper"></i>
-				</p-option>
-				<p-option class="edit_theme_btn" data-tooltip="Zarządzaj paletą kolorów"> <i class="fas fa-cog"></i> </p-option>
-			`;
-
-			options_wrapper._set_content(color_options_html);
-
-			color_dropdown._child(".other_color").addEventListener("click", () => {
-				this.filter_blc_menu._set_value("appearance");
-				let match = color_wrapper.classList.contains("prop_background_color") ? ".prop_background_color" : ".prop_color";
-				match += " color-picker";
-				const color_picker = this.side_menu._child(match);
-				color_picker.click();
-				color_picker.focus();
-				scrollIntoView(color_picker, { duration: 0, offset: this.blc_menu_scroll_panel.offsetHeight * 0.5 });
-			});
-		};
-
-		const themeSettingsChanged = () => {
-			updateColorDropdown(this.float_menu._child(`.prop_color`));
-			updateColorDropdown(this.float_menu._child(`.prop_background_color`));
-			updateColorWrapper(this.side_menu._child(`.prop_color`));
-			updateColorWrapper(this.side_menu._child(`.prop_background_color`));
 		};
 		window.addEventListener("theme_settings_changed", themeSettingsChanged);
 		themeSettingsChanged();
@@ -1919,7 +1817,6 @@ class PiepCMS {
 			blc_props_menu_html += html`<div class="prop_wrapper prop_${blc_prop.name}" data-prop="${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.blc_menu_scroll_panel._set_content(blc_props_menu_html);
-
 		registerForms();
 
 		this.filter_blc_menu = this.side_menu._child(".filter_blc_menu");
@@ -1934,7 +1831,7 @@ class PiepCMS {
 			this.filterMenu({ scroll_to_top: true });
 		});
 
-		[...piep_cms_manager.blc_props, ...piep_cms_manager.floating_blc_props].forEach((blc_prop) => {
+		piep_cms_manager.blc_props.forEach((blc_prop) => {
 			if (blc_prop.init) {
 				blc_prop.init(this, this.side_menu._child(`.prop_${blc_prop.name}`));
 			}
