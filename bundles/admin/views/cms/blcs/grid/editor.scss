@@ -19,6 +19,9 @@
 }
 
 .prop_grid_template {
+	.grid_template {
+		padding: 2px 0;
+	}
 	.template_row {
 		& {
 			padding: 2px 0;
@@ -27,12 +30,14 @@
 		unit-input {
 			& {
 				flex-grow: 1;
-				margin-right: 4px;
 			}
 
 			&.glue_children select {
 				width: 30px;
 			}
+		}
+		.btn {
+			margin-left: 4px;
 		}
 	}
 }

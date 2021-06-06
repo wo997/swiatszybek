@@ -22,11 +22,13 @@
 		menu_html: html`
 			<div class="label">Kolumny siatki</div>
 			<input class="hidden" data-blc_prop="styles.gridTemplateColumns" />
-			<div class="grid_columns"></div>
+			<div class="grid_template grid_columns"></div>
+			<button class="btn primary small add_btn" data-template="columns">Dodaj kolumnę <i class="fas fa-plus"></i></button>
 
 			<div class="label">Wiersze siatki</div>
 			<input class="hidden" data-blc_prop="styles.gridTemplateRows" />
-			<div class="grid_rows"></div>
+			<div class="grid_template grid_rows"></div>
+			<button class="btn primary small add_btn" data-template="rows">Dodaj wiersz <i class="fas fa-plus"></i></button>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const grid_columns = menu_wrapper._child(".grid_columns");
@@ -63,6 +65,12 @@
 									<option value="*" class="case_advanced">*</option>
 								</select>
 							</unit-input>
+							<button class="btn subtle small move_btn" ${index === template.length - 1 ? "disabled" : ""} data-dir="1">
+								<i class="fas fa-chevron-down"></i>
+							</button>
+							<button class="btn subtle small move_btn" ${index === 0 ? "disabled" : ""} data-dir="-1">
+								<i class="fas fa-chevron-up"></i>
+							</button>
 							<button class="btn subtle small remove_btn" ${template.length === 1 ? "disabled" : ""}>
 								<i class="fas fa-times"></i>
 							</button>
@@ -100,11 +108,34 @@
 
 				const template_row = target._parent(".template_row");
 				const remove_btn = target._parent(".remove_btn");
+
+				const template_id = template_row ? +template_row.dataset.index : undefined;
+
 				if (remove_btn) {
 					const input = template_row.dataset.template === "columns" ? columns_input : rows_input;
 					/** @type {string[]} */
 					const template = input._get_value().split(" ");
-					template.splice(+template_row.dataset.index, 1);
+					template.splice(template_id, 1);
+					input._set_value(template.join(" "));
+				}
+				const add_btn = target._parent(".add_btn");
+				if (add_btn) {
+					const input = add_btn.dataset.template === "columns" ? columns_input : rows_input;
+					/** @type {string[]} */
+					const template = input._get_value().split(" ");
+					template.push(add_btn.dataset.template === "columns" ? "1fr" : "auto");
+					input._set_value(template.join(" "));
+				}
+
+				const move_btn = target._parent(".move_btn");
+				if (move_btn) {
+					const input = template_row.dataset.template === "columns" ? columns_input : rows_input;
+					/** @type {string[]} */
+					const template = input._get_value().split(" ");
+					const next_id = +move_btn.dataset.dir + template_id;
+					const next_ref = template[next_id];
+					template[next_id] = template[template_id];
+					template[template_id] = next_ref;
 					input._set_value(template.join(" "));
 				}
 			});

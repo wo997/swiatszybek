@@ -116,7 +116,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn primary save ml1"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
-    <div class="piep_editor_side_menu">
+    <div class="piep_editor_side_menu freeze">
         <div class="filter_blc_menu radio_group hide_checks">
             <div class="checkbox_area">
                 <div>
