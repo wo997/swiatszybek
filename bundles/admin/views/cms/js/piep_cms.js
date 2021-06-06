@@ -523,7 +523,8 @@ class PiepCMS {
 		if (history_entry.resolution !== this.select_resolution._get_value()) {
 			this.select_resolution._set_value(history_entry.resolution);
 		}
-		piep_cms.setBlcMenuFromFocusedNode();
+		this.setBlcMenuFromFocusedNode();
+		this.displayNodeLayout();
 	}
 
 	renderHistory() {
