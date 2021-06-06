@@ -2658,7 +2658,7 @@ class PiepCMS {
 							if (!node._child("." + cls)) {
 								node.insertAdjacentHTML(
 									"beforeend",
-									html`<div class="cell_float ${cls}" style="grid-area:${r}/${c}/${r + 1}/${c + 1}"></div>`
+									html`<div class="cell_float ${cls}" style="grid-area:${r}/${c}/${r + 1}/${c + 1}" data-r="${r}" data-c="${c}"></div>`
 								);
 							}
 						}
@@ -3815,25 +3815,25 @@ class PiepCMS {
 			let left, top;
 
 			const off = 10;
-			const off_x = blc_rect.width > 50 ? off : 0;
-			const off_y = blc_rect.height > 50 ? off : 0;
+			// const off_x = blc_rect.width > 50 ? off : 0;
+			// const off_y = blc_rect.height > 50 ? off : 0;
 
 			switch (pos) {
 				case "left":
-					left = blc_rect.left + off_x;
+					left = blc_rect.left; // + off_x;
 					top = blc_rect.top + blc_rect.height * 0.5;
 					break;
 				case "right":
-					left = blc_rect.left + blc_rect.width - off_x;
+					left = blc_rect.left + blc_rect.width; // - off_x;
 					top = blc_rect.top + blc_rect.height * 0.5;
 					break;
 				case "top":
 					left = blc_rect.left + blc_rect.width * 0.5;
-					top = blc_rect.top + off_y;
+					top = blc_rect.top; // + off_y;
 					break;
 				case "bottom":
 					left = blc_rect.left + blc_rect.width * 0.5;
-					top = blc_rect.top + blc_rect.height - off_y;
+					top = blc_rect.top + blc_rect.height; // - off_y;
 					break;
 				case "center":
 					left = blc_rect.left + blc_rect.width * 0.5;
@@ -3896,6 +3896,23 @@ class PiepCMS {
 				return insert_v_node;
 			};
 
+			const getInsertVContainer = () => {
+				const insert_v_node = getInsertVNode();
+				let insert_v_container = insert_v_node;
+				if (!insert_v_node.classes.includes("vertical_container")) {
+					insert_v_container = {
+						id: this.getNewBlcId(),
+						tag: "div",
+						styles: { df: {} },
+						attrs: {},
+						classes: ["vertical_container"],
+						children: [insert_v_node],
+					};
+				}
+
+				return insert_v_container;
+			};
+
 			/**
 			 *
 			 * @param {Direction} dir
@@ -3941,20 +3958,9 @@ class PiepCMS {
 
 				let new_vid = this.getNewBlcId();
 
-				let insert_v_container = grabbed_v_node_copy;
-
-				if (suggest_wrapping_with_grid && !grabbed_v_node_copy.classes.includes("vertical_container")) {
-					insert_v_container = {
-						id: new_vid++,
-						tag: "div",
-						styles: { df: {} },
-						attrs: {},
-						classes: ["vertical_container"],
-						children: [grabbed_v_node_copy],
-					};
-				}
-
 				if (suggest_wrapping_with_grid) {
+					const insert_v_container = getInsertVContainer();
+
 					const near_v_container = {
 						id: new_vid++,
 						tag: "div",
@@ -3968,7 +3974,7 @@ class PiepCMS {
 					insert_v_container.styles.df.gridColumnStart = dir === 1 ? "2" : "1";
 					insert_v_container.styles.df.gridRowEnd = "2";
 					insert_v_container.styles.df.gridColumnEnd = dir === 1 ? "3" : "2";
-					// insert_v_container.styles.df.paddingTop = "var(--default_padding)";
+					// insert_v_container.styles.df.paddingTop = "var(--default_padding)"; // optional
 					// insert_v_container.styles.df.paddingBottom = "var(--default_padding)";
 
 					near_v_container.styles.df.gridRowStart = "1";
@@ -3983,7 +3989,7 @@ class PiepCMS {
 						styles: {
 							df: {
 								gridTemplateColumns: "1fr 1fr",
-								gridTemplateRows: "1fr",
+								gridTemplateRows: "auto",
 								columnGap: "var(--default_padding)",
 								rowGap: "var(--default_padding)",
 								paddingLeft: "var(--default_padding)",
@@ -4000,48 +4006,14 @@ class PiepCMS {
 					};
 
 					near_v_node_data.v_nodes.splice(ind, 1, grid);
-				} else {
-					if (dir === 1) {
-						ind++;
-					}
-
-					near_v_node_data.v_nodes.splice(ind, 0, insert_v_container);
-
-					// TODO: completely redo this part
-					// let columns_in_a_row = 1;
-
-					// const grid = near_v_node_data.parent_v_nodes[0];
-					// if (grid && grid.settings) {
-					// 	let percentage_sum = 0;
-					// 	near_v_node_data.v_nodes.forEach((v_node) => {
-					// 		if (!v_node.styles.df) {
-					// 			v_node.styles.df = {};
-					// 		}
-					// 		const df = v_node.styles.df;
-					// 		percentage_sum += numberFromStr(df.width);
-					// 	});
-					// 	console.log(percentage_sum);
-
-					// 	// TODO: TEMPORARY solution here, assuming 1 row
-					// 	if (Math.abs(percentage_sum - 100) < 2) {
-					// 		columns_in_a_row = near_v_node_data.v_nodes.length;
-					// 		// if it's above 101 make sure u split it, well even margins should add up, that's ticky as hell broo
-
-					// 		// will be just below 1
-					// 		let scale = ((100 / percentage_sum) * (near_v_node_data.v_nodes.length - 1)) / near_v_node_data.v_nodes.length;
-					// 		near_v_node_data.v_nodes.forEach((v_node) => {
-					// 			const df = v_node.styles.df;
-					// 			v_node.styles.df.width = floor(numberFromStr(df.width) * scale, 4) + "%";
-					// 		});
-					// 	}
-					// }
-
-					// // WORKS WELL ALREADY, look at the others now
-					// if (!insert_v_node.styles.df) {
-					// 	insert_v_node.styles.df = {};
-					// }
-					// insert_v_node.styles.df.width = floor(100 / columns_in_a_row, 4) + "%";
 				}
+				//  else {
+				// 	if (dir === 1) {
+				// 		ind++;
+				// 	}
+
+				// 	near_v_node_data.v_nodes.splice(ind, 0, insert_v_container);
+				// }
 			};
 
 			/**
@@ -4107,6 +4079,173 @@ class PiepCMS {
 
 			if (!isEquivalent(near_v_node_data.v_node.children, [])) {
 				inside = false;
+			}
+
+			if (near_v_node.module_name === "grid") {
+				const cells = this.content._children(".cell_float");
+				const cell_map = {};
+				let columns = 0;
+				let rows = 0;
+				cells.forEach((cell) => {
+					const rect = cell.getBoundingClientRect();
+					const row = +cell.dataset.r;
+					const column = +cell.dataset.c;
+					cell_map[`${row}_${column}`] = {
+						row,
+						column,
+						rect,
+					};
+					columns = Math.max(columns, column);
+					rows = Math.max(rows, row);
+				});
+				Object.values(cell_map).forEach((cell_data) => {
+					/** @type {number} */
+					const row = cell_data.row;
+					/** @type {number} */
+					const column = cell_data.column;
+					/** @type {DOMRect} */
+					const rect = cell_data.rect;
+
+					// center
+					const insert_blc = getInsertBlc();
+
+					insert_blc._insert_action = () => {
+						const grid_v_node = this.getVNodeById(blc_vid);
+						const insert_v_container = getInsertVContainer();
+						insert_v_container.styles.df.gridRowStart = row + "";
+						insert_v_container.styles.df.gridColumnStart = column + "";
+						insert_v_container.styles.df.gridRowEnd = row + 1 + "";
+						insert_v_container.styles.df.gridColumnEnd = column + 1 + "";
+
+						grid_v_node.children.push(insert_v_container);
+					};
+
+					insert_blc._set_absolute_pos(rect.left + rect.width * 0.5, rect.top + rect.height * 0.5 + this.content_scroll.scrollTop);
+
+					// left
+					const left_insert_blc = getInsertBlc();
+
+					left_insert_blc._insert_action = () => {
+						const grid_v_node = this.getVNodeById(blc_vid);
+						const insert_v_container = getInsertVContainer();
+						insert_v_container.styles.df.gridRowStart = row + "";
+						insert_v_container.styles.df.gridColumnStart = column + "";
+						insert_v_container.styles.df.gridRowEnd = row + 1 + "";
+						insert_v_container.styles.df.gridColumnEnd = column + 1 + "";
+
+						const styles = grid_v_node.styles[this.selected_resolution];
+
+						/** @type {string[]} */
+						const gtc = styles.gridTemplateColumns.split(" ");
+						gtc.splice(column - 1, 0, "1fr");
+						styles.gridTemplateColumns = gtc.join(" ");
+
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[this.selected_resolution];
+							if (+styles.gridColumnStart >= column) {
+								styles.gridColumnStart = +styles.gridColumnStart + 1 + "";
+							}
+							if (+styles.gridColumnEnd > column) {
+								styles.gridColumnEnd = +styles.gridColumnEnd + 1 + "";
+							}
+						});
+
+						grid_v_node.children.push(insert_v_container);
+					};
+
+					if (column > 1) {
+						/** @type {DOMRect} */
+						const left_rect = cell_map[`${row}_${column - 1}`].rect;
+						left_insert_blc._set_absolute_pos(
+							(rect.left + left_rect.left + left_rect.width) * 0.5,
+							rect.top + rect.height * 0.5 + this.content_scroll.scrollTop
+						);
+					} else {
+						left_insert_blc._set_absolute_pos(rect.left, rect.top + rect.height * 0.5 + this.content_scroll.scrollTop);
+					}
+
+					// top
+					const top_insert_blc = getInsertBlc();
+
+					top_insert_blc._insert_action = () => {
+						const grid_v_node = this.getVNodeById(blc_vid);
+						const insert_v_container = getInsertVContainer();
+						insert_v_container.styles.df.gridRowStart = row + "";
+						insert_v_container.styles.df.gridColumnStart = column + "";
+						insert_v_container.styles.df.gridRowEnd = row + 1 + "";
+						insert_v_container.styles.df.gridColumnEnd = column + 1 + "";
+
+						const styles = grid_v_node.styles[this.selected_resolution];
+
+						/** @type {string[]} */
+						const gtr = styles.gridTemplateRows.split(" ");
+						gtr.splice(row - 1, 0, "1fr");
+						styles.gridTemplateRows = gtr.join(" ");
+
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[this.selected_resolution];
+							if (+styles.gridRowStart >= row) {
+								styles.gridRowStart = +styles.gridRowStart + 1 + "";
+							}
+							if (+styles.gridRowEnd > row) {
+								styles.gridRowEnd = +styles.gridRowEnd + 1 + "";
+							}
+						});
+
+						grid_v_node.children.push(insert_v_container);
+					};
+
+					if (row > 1) {
+						/** @type {DOMRect} */
+						const top_rect = cell_map[`${row - 1}_${column}`].rect;
+						top_insert_blc._set_absolute_pos(
+							rect.left + rect.width * 0.5,
+							(rect.top + top_rect.top + top_rect.height) * 0.5 + this.content_scroll.scrollTop
+						);
+					} else {
+						top_insert_blc._set_absolute_pos(rect.left + rect.width * 0.5, rect.top + this.content_scroll.scrollTop);
+					}
+
+					// right
+					if (column === columns) {
+						const right_insert_blc = getInsertBlc();
+
+						right_insert_blc._insert_action = () => {
+							const grid_v_node = this.getVNodeById(blc_vid);
+							const insert_v_container = getInsertVContainer();
+							insert_v_container.styles.df.gridRowStart = row + "";
+							insert_v_container.styles.df.gridColumnStart = column + 1 + "";
+							insert_v_container.styles.df.gridRowEnd = row + 1 + "";
+							insert_v_container.styles.df.gridColumnEnd = column + 2 + "";
+
+							const styles = grid_v_node.styles[this.selected_resolution];
+							styles.gridTemplateColumns += " 1fr";
+							grid_v_node.children.push(insert_v_container);
+						};
+
+						right_insert_blc._set_absolute_pos(rect.left + rect.width, rect.top + rect.height * 0.5 + this.content_scroll.scrollTop);
+					}
+
+					// bottom
+					if (row === rows) {
+						const bottom_insert_blc = getInsertBlc();
+
+						bottom_insert_blc._insert_action = () => {
+							const grid_v_node = this.getVNodeById(blc_vid);
+							const insert_v_container = getInsertVContainer();
+							insert_v_container.styles.df.gridRowStart = row + 1 + "";
+							insert_v_container.styles.df.gridColumnStart = column + "";
+							insert_v_container.styles.df.gridRowEnd = row + 2 + "";
+							insert_v_container.styles.df.gridColumnEnd = column + 1 + "";
+
+							const styles = grid_v_node.styles[this.selected_resolution];
+							styles.gridTemplateRows += " auto";
+							grid_v_node.children.push(insert_v_container);
+						};
+
+						bottom_insert_blc._set_absolute_pos(rect.left + rect.width * 0.5, rect.top + rect.height + this.content_scroll.scrollTop);
+					}
+				});
 			}
 
 			if (inside && near_v_node.module_name === "template_hook") {

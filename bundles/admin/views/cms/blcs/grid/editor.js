@@ -103,7 +103,7 @@
 			styles: {
 				df: {
 					gridTemplateColumns: "1fr 1fr",
-					gridTemplateRows: "1fr",
+					gridTemplateRows: "auto",
 					columnGap: "var(--default_padding)",
 					rowGap: "var(--default_padding)",
 					paddingLeft: "var(--default_padding)",
