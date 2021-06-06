@@ -38,11 +38,14 @@ domload(() => {
 				let top = target_rect.top + target_rect.height + 1 - scp_rect.top + parent.scrollTop;
 				const off = 5;
 				left = clamp(off, left, parent.scrollWidth - any_picker_wrapper.offsetWidth - off);
-				if (top > parent.scrollHeight - any_picker_wrapper.offsetHeight - 1 - off) {
+				const above = top > parent.scrollHeight - any_picker_wrapper.offsetHeight - 1 - off;
+				if (above) {
 					top = target_rect.top - any_picker_wrapper.offsetHeight - 1 - scp_rect.top + parent.scrollTop;
 				}
 
 				any_picker_wrapper._set_absolute_pos(left, top);
+
+				any_picker_wrapper.classList.toggle("above", above);
 
 				any_picker_wrapper._animate(
 					`0%{transform:scale(0.8);opacity:0}

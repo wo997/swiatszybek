@@ -4,9 +4,14 @@
 	& {
 		position: absolute;
 		z-index: 1600;
-		transform-origin: 50% 0;
 	}
 	&:not(.visible) {
 		display: none !important;
+	}
+	&:not(.above) {
+		transform-origin: 50% 0;
+	}
+	&.above {
+		transform-origin: 50% 100%;
 	}
 }

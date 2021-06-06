@@ -66,9 +66,10 @@
 
 	/**
 	 *
+	 * @param {PiepCMS} piep_cms
 	 * @param {PiepNode} color_wrapper
 	 */
-	const updateColorDropdown = (color_wrapper) => {
+	const updateColorDropdown = (piep_cms, color_wrapper) => {
 		const color_dropdown = color_wrapper._child("p-dropdown");
 
 		registerForms(); // let the options_wrapper appear
@@ -94,13 +95,111 @@
 		options_wrapper._set_content(color_options_html);
 
 		color_dropdown._child(".other_color").addEventListener("click", () => {
-			this.filter_blc_menu._set_value("appearance");
+			piep_cms.filter_blc_menu._set_value("appearance");
 			let match = color_wrapper.classList.contains("prop_background_color") ? ".prop_background_color" : ".prop_color";
 			match += " color-picker";
-			const color_picker = this.side_menu._child(match);
+			const color_picker = piep_cms.side_menu._child(match);
 			color_picker.click();
 			color_picker.focus();
-			scrollIntoView(color_picker, { duration: 0, offset: this.blc_menu_scroll_panel.offsetHeight * 0.5 });
+			scrollIntoView(color_picker, { duration: 0, offset: piep_cms.blc_menu_scroll_panel.offsetHeight * 0.5 });
+		});
+	};
+
+	/**
+	 *
+	 * @param {PiepNode} font_size_wrapper
+	 */
+	const updateFontSizeWrapper = (font_size_wrapper) => {
+		const middle_input = font_size_wrapper._child("input.hidden");
+
+		const radio_group = font_size_wrapper._child(".radio_group");
+		let font_size_options_html = html`
+			<div class="checkbox_area empty">
+				<p-checkbox data-value=""></p-checkbox>
+				<span>-</span>
+			</div>
+		`;
+
+		font_sizes.forEach((font_size) => {
+			font_size_options_html += html`
+				<div class="checkbox_area">
+					<p-checkbox data-value="var(--${font_size.name})"></p-checkbox>
+					<div style="font-size:var(--${font_size.name});line-height: 1;">A</div>
+				</div>
+			`;
+		});
+
+		radio_group._set_content(font_size_options_html);
+
+		registerForms();
+
+		const unit_input = font_size_wrapper._child("unit-input");
+
+		if (!middle_input.classList.contains("wrrgstrd")) {
+			middle_input.classList.add("wrrgstrd");
+
+			// TODO: remove?
+			let middle_input_setting_val_user = false;
+			middle_input.addEventListener("value_set", () => {
+				if (middle_input_setting_val_user) {
+					return;
+				}
+
+				/** @type {string} */
+				const get_value = middle_input._get_value();
+				const on_the_list = !!font_sizes.find((f) => `var(--${f.name})` === get_value);
+
+				unit_input._set_value(on_the_list ? "" : get_value, { quiet: true });
+
+				radio_group._set_value(on_the_list ? get_value : "", { quiet: true });
+			});
+
+			const change = () => {
+				middle_input_setting_val_user = true;
+				middle_input._set_value(unit_input._get_value());
+				middle_input_setting_val_user = false;
+			};
+			unit_input.addEventListener("change", change);
+
+			radio_group.addEventListener("change", () => {
+				middle_input._set_value(radio_group._get_value());
+			});
+		}
+	};
+
+	/**
+	 *
+	 * @param {PiepCMS} piep_cms
+	 * @param {PiepNode} font_size_dropdown
+	 */
+	const updateFontSizeDropdown = (piep_cms, font_size_dropdown) => {
+		const options_wrapper = font_size_dropdown._child(".options_wrapper");
+
+		let font_size_options_html = options_wrapper._child(`[data-value=""]`).outerHTML;
+
+		font_sizes.forEach((font_size) => {
+			font_size_options_html += html`
+				<p-option data-value="var(--${font_size.name})">
+					<div style="font-size:var(--${font_size.name});">A</div>
+				</p-option>
+			`;
+		});
+
+		font_size_options_html += html`<p-option data-tooltip="Inny rozmiar" class="different_size" data-match=".*">
+				<div class="input_icon">|</div>
+			</p-option>
+			<p-option class="edit_theme_btn" data-tooltip="Zarządzaj listą rozmiarów"> <i class="fas fa-cog"></i> </p-option>`;
+
+		options_wrapper._set_content(font_size_options_html);
+
+		registerForms();
+
+		const different_size = options_wrapper._child(".different_size");
+		different_size.addEventListener("click", () => {
+			piep_cms.filter_blc_menu._set_value("appearance");
+			const value_input = piep_cms.side_menu._child(".prop_font_size unit-input input");
+			value_input.click();
+			value_input.focus();
 		});
 	};
 
@@ -162,6 +261,14 @@
 				</select>
 			</unit-input>
 		`,
+		init: (piep_cms, menu_wrapper) => {
+			const themeSettingsChanged = () => {
+				registerForms();
+				updateFontSizeWrapper(menu_wrapper);
+			};
+			window.addEventListener("theme_settings_changed", themeSettingsChanged);
+			themeSettingsChanged();
+		},
 	});
 
 	piep_cms_manager.registerProp({
@@ -373,6 +480,14 @@
 				</p-option>
 			</p-dropdown>
 		`,
+		init: (piep_cms, menu_wrapper) => {
+			const themeSettingsChanged = () => {
+				registerForms();
+				updateFontSizeDropdown(piep_cms, menu_wrapper);
+			};
+			window.addEventListener("theme_settings_changed", themeSettingsChanged);
+			themeSettingsChanged();
+		},
 	});
 
 	piep_cms_manager.registerFloatingProp({
@@ -426,7 +541,7 @@
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
-				updateColorDropdown(menu_wrapper);
+				updateColorDropdown(piep_cms, menu_wrapper);
 			};
 			window.addEventListener("theme_settings_changed", themeSettingsChanged);
 			themeSettingsChanged();
@@ -453,7 +568,7 @@
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
-				updateColorDropdown(menu_wrapper);
+				updateColorDropdown(piep_cms, menu_wrapper);
 			};
 			window.addEventListener("theme_settings_changed", themeSettingsChanged);
 			themeSettingsChanged();
@@ -472,8 +587,8 @@
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				if (target._parent(".remove_format_btn") && piep_cms.text_selection) {
-					const vids = [...piep_cms.text_selection.middle_vids, piep_cms.text_selection.focus_vid, piep_cms.text_selection.anchor_vid];
-					vids.filter(onlyUnique).forEach((vid) => {
+					const vids = piep_cms.getAllTextSelectionVids();
+					vids.forEach((vid) => {
 						const v_node = piep_cms.getVNodeById(vid);
 						v_node.styles = {};
 						v_node.attrs = {};
