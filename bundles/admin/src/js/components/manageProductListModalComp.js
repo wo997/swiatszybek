@@ -45,7 +45,7 @@ function ManageProductListModalComp(comp, parent, data = undefined) {
 		template: html`
 			<div class="custom_toolbar">
 				<span class="title medium">Zarządzanie listą produktów</span>
-				<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="label first semi_medium">

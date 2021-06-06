@@ -32,7 +32,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj blok poziomo</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignSelf" style="--columns:5">
+			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignSelf" style="--columns:4">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -49,10 +49,10 @@
 					<p-checkbox data-value="flex-end"></p-checkbox>
 					<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
 				</div>
-				<div class="checkbox_area">
+				<!-- <div class="checkbox_area case_advanced">
 					<p-checkbox data-value="stretch"></p-checkbox>
 					<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
-				</div>
+				</div> -->
 			</div>
 		`,
 	});

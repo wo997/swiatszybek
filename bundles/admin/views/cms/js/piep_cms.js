@@ -672,7 +672,7 @@ class PiepCMS {
 			const different_size = options_wrapper._child(".different_size");
 			different_size.addEventListener("click", () => {
 				this.filter_blc_menu._set_value("appearance");
-				const value_input = this.side_menu._child(".prop_font_size .value_input");
+				const value_input = this.side_menu._child(".prop_font_size unit-input input");
 				value_input.click();
 				value_input.focus();
 			});
@@ -3263,7 +3263,10 @@ class PiepCMS {
 			const prop_input = this.side_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
 			const change = set_val_pretty !== prop_input._get_value();
 			scrollIntoView(prop_input);
-			prop_input.classList.add("editing_now");
+			const input = prop_input._child("input");
+			if (input) {
+				input.classList.add("editing_now");
+			}
 
 			if (change) {
 				if (this.layout_control_prop === "width") {
