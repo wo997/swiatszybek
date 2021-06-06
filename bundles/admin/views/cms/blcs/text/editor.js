@@ -244,13 +244,13 @@
 			<div class="label">Rozmiar czcionki</div>
 			<input class="field hidden" data-blc_prop="styles.fontSize" />
 
-			<div class="label normal">
-				<span class="case_palette">Rozmiar z listy</span>
+			<div class="label ">
+				<span class="case_palette">Z listy</span>
 				<span class="edit_theme_btn normal link">Zarządzaj</span>
 			</div>
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
-			<div class="label normal">Inny rozmiar</div>
+			<div class="label normal">Inny</div>
 			<unit-input>
 				<input />
 				<select>
@@ -409,22 +409,25 @@
 	});
 
 	piep_cms_manager.registerProp({
-		name: "background_color",
+		name: "background",
 		type_groups: ["appearance"],
 		//blc_groups: text_groups,
 		menu_html: html`
-			<div class="label">Kolor tła</div>
+			<div class="label">Tło</div>
 
 			<input class="field hidden" data-blc_prop="styles.backgroundColor" />
 
-			<div class="label normal">
+			<div class="label">
 				<span class="case_palette">Kolor z palety</span>
-				<span class="edit_theme_btn normal link">Zarządzaj</span>
+				<span class="edit_theme_btn link">Zarządzaj</span>
 			</div>
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
-			<div class="label normal">Inny kolor</div>
+			<div class="label ">Inny kolor</div>
 			<color-picker class="inline NOalpha"></color-picker>
+
+			<div class="label ">Zdjęcie</div>
+			<image-picker style="width:100px;height:100px"></image-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
