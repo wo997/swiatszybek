@@ -2657,7 +2657,7 @@ class PiepCMS {
 							classes.push(cls);
 							if (!node._child("." + cls)) {
 								node.insertAdjacentHTML(
-									"afterbegin",
+									"beforeend",
 									html`<div class="cell_float ${cls}" style="grid-area:${r}/${c}/${r + 1}/${c + 1}"></div>`
 								);
 							}
@@ -3855,8 +3855,8 @@ class PiepCMS {
 			insert_blc._set_absolute_pos(content_wrapper_rect.left + content_wrapper_rect.width * 0.5, content_wrapper_rect.top + 30);
 			insert_blc._insert_action = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-				this.v_dom.push(grabbed_node_copy);
+				const grabbed_v_node_copy = cloneObject(this.grabbed_v_node);
+				this.v_dom.push(grabbed_v_node_copy);
 			};
 		}
 
@@ -3885,9 +3885,8 @@ class PiepCMS {
 
 			const getInsertVNode = () => {
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
-
-				let insert_v_node = grabbed_node_copy;
+				const grabbed_v_node_copy = cloneObject(this.grabbed_v_node);
+				let insert_v_node = grabbed_v_node_copy;
 
 				const is_node_container = this.grabbed_v_node.classes.includes("vertical_container") || this.grabbed_v_node.module_name === "grid";
 				if (is_blc_parent_root && is_node_container) {
@@ -3933,7 +3932,7 @@ class PiepCMS {
 				let ind = near_v_node_data.index;
 
 				/** @type {vDomNode} */
-				const grabbed_node_copy = cloneObject(this.grabbed_v_node);
+				const grabbed_v_node_copy = cloneObject(this.grabbed_v_node);
 				let suggest_wrapping_with_grid = false;
 
 				if (flow_direction === "column") {
@@ -3942,50 +3941,62 @@ class PiepCMS {
 
 				let new_vid = this.getNewBlcId();
 
-				let insert_v_node = grabbed_node_copy;
+				let insert_v_container = grabbed_v_node_copy;
 
-				if (suggest_wrapping_with_grid && !grabbed_node_copy.classes.includes("vertical_container")) {
-					insert_v_node = {
+				if (suggest_wrapping_with_grid && !grabbed_v_node_copy.classes.includes("vertical_container")) {
+					insert_v_container = {
 						id: new_vid++,
 						tag: "div",
 						styles: { df: {} },
 						attrs: {},
 						classes: ["vertical_container"],
-						children: [grabbed_node_copy],
+						children: [grabbed_v_node_copy],
 					};
 				}
 
 				if (suggest_wrapping_with_grid) {
-					const near_column = {
+					const near_v_container = {
 						id: new_vid++,
 						tag: "div",
-						styles: {},
+						styles: { df: {} },
 						attrs: {},
 						classes: ["vertical_container"],
 						children: [near_v_node],
 					};
 
-					/** @type {vDomNode[]} */
-					const just_columns = [near_column];
+					insert_v_container.styles.df.gridRowStart = "1";
+					insert_v_container.styles.df.gridColumnStart = dir === 1 ? "2" : "1";
+					insert_v_container.styles.df.gridRowEnd = "2";
+					insert_v_container.styles.df.gridColumnEnd = dir === 1 ? "3" : "2";
+					// insert_v_container.styles.df.paddingTop = "var(--default_padding)";
+					// insert_v_container.styles.df.paddingBottom = "var(--default_padding)";
 
-					// TODO: instead of caring what the order should be (well, for copying text it does matter?) we could just set grid-area
-					// well, isn't it just better to set position on render later based on the grid-area approx order?
-					just_columns.push(insert_v_node);
-					// if (dir === 1) {
-					// } else {
-					// 	just_columns.unshift(insert_v_node);
-					// }
+					near_v_container.styles.df.gridRowStart = "1";
+					near_v_container.styles.df.gridColumnStart = dir === 1 ? "1" : "2";
+					near_v_container.styles.df.gridRowEnd = "2";
+					// near_v_container.styles.df.paddingTop = "var(--default_padding)";
+					// near_v_container.styles.df.paddingBottom = "var(--default_padding)";
 
-					/** @type {vDomNode} */
 					const grid = {
 						tag: "div",
-						attrs: {},
-						children: just_columns,
-						classes: [],
 						id: new_vid++,
-						styles: {},
-						module_name: "grid",
+						styles: {
+							df: {
+								gridTemplateColumns: "1fr 1fr",
+								gridTemplateRows: "1fr",
+								columnGap: "var(--default_padding)",
+								rowGap: "var(--default_padding)",
+								paddingLeft: "var(--default_padding)",
+								paddingTop: "var(--default_padding)",
+								paddingRight: "var(--default_padding)",
+								paddingBottom: "var(--default_padding)",
+							},
+						},
+						classes: [],
+						attrs: {},
 						settings: {},
+						module_name: "grid",
+						children: [near_v_container, insert_v_container],
 					};
 
 					near_v_node_data.v_nodes.splice(ind, 1, grid);
@@ -3994,7 +4005,7 @@ class PiepCMS {
 						ind++;
 					}
 
-					near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
+					near_v_node_data.v_nodes.splice(ind, 0, insert_v_container);
 
 					// TODO: completely redo this part
 					// let columns_in_a_row = 1;
@@ -4041,12 +4052,6 @@ class PiepCMS {
 			const addInsertBlc = (pos_str, action, ask_container = true) => {
 				let pos = getInsertBlcPos(blc, pos_str);
 
-				// we dont truly care anymore
-				// if (pos.top < content_scroll_rect.top || pos.top + insert_blc_size > content_scroll_rect.top + content_scroll_rect.height) {
-				// 	// off just a bit
-				// 	return;
-				// }
-
 				const prev_blc = blc._prev();
 
 				if (prev_blc) {
@@ -4066,10 +4071,6 @@ class PiepCMS {
 				}
 
 				const insert_blc = getInsertBlc();
-
-				if (on_sides && blc._parent(".grid", { skip: 2 })) {
-					on_sides = false;
-				}
 
 				if (ask_container) {
 					const place_in_root = pos_str === "center" ? is_blc_root : is_blc_parent_root;
@@ -4092,15 +4093,11 @@ class PiepCMS {
 			let above_or_below = true;
 			let inside = true;
 
-			if (near_v_node.module_name === "grid") {
-				on_sides = false;
-			}
-
 			if (on_sides && (flow_direction === "inline" || flow_direction === "text_list")) {
 				on_sides = false;
 			}
 
-			if (on_sides && blc._parent(".grid", { skip: 2 })) {
+			if (on_sides && blc._parent(".module_grid")) {
 				on_sides = false;
 			}
 
