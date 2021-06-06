@@ -4,6 +4,8 @@
 	.cell_float {
 		border: 1px solid #0005;
 		pointer-events: none;
+		min-height: 75px;
+		min-width: 75px;
 	}
 	&:not(:hover) .cell_float {
 		opacity: 0;
