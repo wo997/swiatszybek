@@ -61,8 +61,7 @@
 				<div class="scroll_panel scroll_preview categories_label" style="max-height:200px;cursor:pointer"></div>
 			</div>
 		`,
-		init: (piep_cms) => {
-			const product_list_wrapper = piep_cms.side_menu._child(".prop_product_list");
+		init: (piep_cms, product_list_wrapper) => {
 			const categories_input = product_list_wrapper._child(`[data-blc_prop="settings.product_list_category_ids_csv"]`);
 			const what_categories_label = product_list_wrapper._child(`.categories_label`);
 			const choose_product_categories_btn = product_list_wrapper._child(".choose_product_categories_btn");

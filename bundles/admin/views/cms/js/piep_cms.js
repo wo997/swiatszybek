@@ -1931,7 +1931,7 @@ class PiepCMS {
 
 		[...piep_cms_manager.blc_props, ...piep_cms_manager.floating_blc_props].forEach((blc_prop) => {
 			if (blc_prop.init) {
-				blc_prop.init(this);
+				blc_prop.init(this, this.side_menu._child(`.prop_${blc_prop.name}`));
 			}
 		});
 	}
@@ -4679,6 +4679,8 @@ class PiepCMS {
 		if (options.from_blc_menu_name !== "side") {
 			setPropsOfInputs(this.side_menu._children("[data-blc_prop]"));
 		}
+
+		registerForms();
 	}
 
 	updatedSideMenu() {

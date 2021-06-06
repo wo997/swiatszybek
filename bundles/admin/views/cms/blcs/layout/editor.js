@@ -62,8 +62,7 @@
 				</div>
 			</div>
 		`,
-		init: (piep_cms) => {
-			const width_type_wrapper = piep_cms.side_menu._child(".prop_width_type");
+		init: (piep_cms, width_type_wrapper) => {
 			const width_wrapper = piep_cms.side_menu._child(".prop_width");
 			const min_max_width_wrapper = piep_cms.side_menu._child(".prop_min_max_width");
 			const width_type_input = width_type_wrapper._child(`[data-blc_prop="responsive_settings.width_type"]`);
@@ -88,7 +87,7 @@
 				<select>
 					<option value="%">%</option>
 					<option value="px">px</option>
-					<option value=""></option>
+					<option value="*" class="case_advanced">*</option>
 				</select>
 			</unit-input>
 		`,
@@ -121,7 +120,7 @@
 						<select>
 							<option value="px">px</option>
 							<option value="%">%</option>
-							<option value=""></option>
+							<option value="*" class="case_advanced">*</option>
 						</select>
 					</unit-input>
 				</div>
@@ -133,7 +132,7 @@
 						<select>
 							<option value="px">px</option>
 							<option value="%">%</option>
-							<option value=""></option>
+							<option value="*" class="case_advanced">*</option>
 						</select>
 					</unit-input>
 				</div>
@@ -152,7 +151,7 @@
 				<select>
 					<option value="px">px</option>
 					<option value="%">%</option>
-					<option value=""></option>
+					<option value="*" class="case_advanced">*</option>
 				</select>
 			</unit-input>
 		`,
@@ -170,7 +169,7 @@
 						<input />
 						<select>
 							<option value="px">px</option>
-							<option value=""></option>
+							<option value="*" class="case_advanced">*</option>
 						</select>
 					</unit-input>
 				</div>
@@ -181,7 +180,7 @@
 						<input />
 						<select>
 							<option value="px">px</option>
-							<option value=""></option>
+							<option value="*" class="case_advanced">*</option>
 						</select>
 					</unit-input>
 				</div>

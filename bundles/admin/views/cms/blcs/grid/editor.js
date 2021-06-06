@@ -16,23 +16,98 @@
 	};
 
 	piep_cms_manager.registerProp({
-		name: "grid_template_columns",
+		name: "grid_template",
 		blc_groups: [{ module_names: ["grid"], priority: grid_priority }],
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Kolumny siatki</div>
-			<input class="field" data-blc_prop="styles.gridTemplateColumns" />
-		`,
-	});
+			<input class="hidden" data-blc_prop="styles.gridTemplateColumns" />
+			<div class="grid_columns"></div>
 
-	piep_cms_manager.registerProp({
-		name: "grid_template_rows",
-		blc_groups: [{ module_names: ["grid"], priority: grid_priority }],
-		type_groups: ["layout"],
-		menu_html: html`
 			<div class="label">Wiersze siatki</div>
-			<input class="field" data-blc_prop="styles.gridTemplateRows" />
+			<input class="hidden" data-blc_prop="styles.gridTemplateRows" />
+			<div class="grid_rows"></div>
 		`,
+		init: (piep_cms, menu_wrapper) => {
+			const grid_columns = menu_wrapper._child(".grid_columns");
+			const grid_rows = menu_wrapper._child(".grid_rows");
+			const columns_input = menu_wrapper._child(`[data-blc_prop="styles.gridTemplateColumns"]`);
+			const rows_input = menu_wrapper._child(`[data-blc_prop="styles.gridTemplateRows"]`);
+
+			let ignore_render = false;
+
+			/**
+			 *
+			 * @param {PiepNode} input
+			 * @param {string} name
+			 * @param {PiepNode} display
+			 */
+			const render_template = (input, name, display) => {
+				if (ignore_render) {
+					return;
+				}
+
+				/** @type {string[]} */
+				const template = input._get_value().split(" ");
+				let grid_html = "";
+				template.forEach((column, index) => {
+					grid_html += html`
+						<div class="template_row" data-index="${index}" data-template="${name}">
+							<unit-input class="inline_flex">
+								<input class="small" />
+								<select class="small">
+									<option value="fr">fr</option>
+									<option value="px">px</option>
+									<option value="%">%</option>
+									<option value="*" class="case_advanced">*</option>
+								</select>
+							</unit-input>
+							<button class="btn subtle small remove_btn">
+								<i class="fas fa-times"></i>
+							</button>
+						</div>
+					`;
+				});
+				display._set_content(grid_html);
+				registerForms();
+
+				display._children(".template_row").forEach((e, index) => {
+					const ui = e._child("unit-input");
+					ui._set_value(template[index], { quiet: true });
+
+					const upd = () => {
+						template[index] = ui._get_value();
+						ignore_render = true;
+						input._set_value(template.join(" "));
+						ignore_render = false;
+					};
+					ui.addEventListener("input", upd);
+					ui.addEventListener("change", upd);
+				});
+			};
+
+			columns_input.addEventListener("value_set", () => {
+				render_template(columns_input, "columns", grid_columns);
+			});
+
+			rows_input.addEventListener("value_set", () => {
+				render_template(rows_input, "rows", grid_rows);
+			});
+
+			menu_wrapper.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+
+				const template_row = target._parent(".template_row");
+				const remove_btn = target._parent(".remove_btn");
+				if (remove_btn) {
+					const input = template_row.dataset.template === "columns" ? columns_input : rows_input;
+					/** @type {string[]} */
+					const template = input._get_value().split(" ");
+					template.splice(+template_row.dataset.index, 1);
+					input._set_value(template.join(" "));
+				}
+			});
+		},
 	});
 
 	const gap_unit_input = html`

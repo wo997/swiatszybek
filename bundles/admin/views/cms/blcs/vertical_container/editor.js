@@ -91,8 +91,8 @@
 				</div>
 			</div>
 		`,
-		init: (piep_cms) => {
-			piep_cms.side_menu._child(".prop_align_self_vertically").classList.add("case_advanced");
+		init: (piep_cms, menu_wrapper) => {
+			menu_wrapper.classList.add("case_advanced");
 		},
 	});
 

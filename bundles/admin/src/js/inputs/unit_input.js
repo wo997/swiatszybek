@@ -17,7 +17,7 @@ function registerUnitInputs(parent) {
 		// @ts-ignore
 		const select = container._child("select");
 
-		input.classList.add("field");
+		input.classList.add("field", "number");
 		select.classList.add("field", "inline", "blank", "unit_picker");
 
 		let last_val;
@@ -54,13 +54,20 @@ function registerUnitInputs(parent) {
 				}
 			}
 
-			if (unit === "") {
-				if (!value.match(/[^\d]/)) {
-					// first as default
-					for (const option of select.options) {
-						unit = option.value;
-						break;
-					}
+			// if (unit === "") {
+			// 	if (!value.match(/[^\d]/)) {
+			// 		// first as default
+			// 		for (const option of select.options) {
+			// 			unit = option.value;
+			// 			break;
+			// 		}
+			// 	}
+			// }
+
+			if (!unit) {
+				for (const option of select.options) {
+					unit = option.value;
+					break;
 				}
 			}
 

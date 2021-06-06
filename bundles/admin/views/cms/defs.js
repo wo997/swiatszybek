@@ -102,7 +102,7 @@
  * blc_groups?: EditBlcGroup[]
  * menu_html: string
  * affects_selection?: boolean
- * init?(piep_cms: PiepCMS)
+ * init?(piep_cms: PiepCMS, menu_wrapper: PiepNode)
  * }} cmsEditablePropBase
  */
 

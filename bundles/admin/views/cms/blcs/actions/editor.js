@@ -62,14 +62,14 @@
 		name: "remove_btn",
 		blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
 		menu_html: html`
-			<button class="btn transparent small remove_btn" data-tooltip="Usuń blok">
+			<button class="btn transparent small remove_blc_btn" data-tooltip="Usuń blok">
 				<i class="fas fa-trash"></i>
 			</button>
 		`,
 		init: (piep_cms) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
-				if (target._parent(".remove_btn")) {
+				if (target._parent(".remove_blc_btn")) {
 					const remove_vids = [piep_cms.focus_node_vid];
 
 					for (const vid of piep_cms.getAllTextSelectionVids()) {
