@@ -523,6 +523,7 @@ class PiepCMS {
 		if (history_entry.resolution !== this.select_resolution._get_value()) {
 			this.select_resolution._set_value(history_entry.resolution);
 		}
+		piep_cms.setBlcMenuFromFocusedNode();
 	}
 
 	renderHistory() {
@@ -1543,14 +1544,17 @@ class PiepCMS {
 								}
 
 								this.setFocusNode(click_v_node.id);
+								this.pushHistory("set_focus_node");
 							} else {
 								if (ev.detail > 1 || !click_blc.classList.contains("text_container")) {
 									this.setFocusNode(click_v_node.id);
 									this.text_selection = undefined;
+									this.pushHistory("set_focus_node");
 								}
 							}
 						} else {
 							this.setFocusNode(click_v_node.id);
+							this.pushHistory("set_focus_node");
 						}
 					}
 				});
