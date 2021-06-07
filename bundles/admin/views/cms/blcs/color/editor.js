@@ -62,10 +62,6 @@
 				if (sc) {
 					sc.classList.toggle("hidden", !picker_value);
 				}
-				const si = color_wrapper._child(".selected_img");
-				if (si) {
-					si.classList.toggle("hidden", true);
-				}
 			});
 		}
 
@@ -128,12 +124,12 @@
 			<input class="field hidden" data-blc_prop="styles.color" />
 
 			<div class="label">
-				<span class="case_palette">Z palety</span>
+				<span class="case_palette"> <i class="fas fa-check selected_palette"></i> Z palety</span>
 				<span class="edit_theme_btn link">Zarządzaj</span>
 			</div>
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
-			<div class="label">Inny</div>
+			<div class="label"><i class="fas fa-check selected_color"></i> Inny</div>
 			<color-picker class="inline NOalpha"></color-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
@@ -146,25 +142,20 @@
 	});
 
 	piep_cms_manager.registerProp({
-		name: "background",
+		name: "background_color",
 		type_groups: ["appearance"],
-		//blc_groups: text_groups,
 		menu_html: html`
-			<div class="label">Tło</div>
-
+			<div class="label">Kolor tła</div>
 			<input class="field hidden" data-blc_prop="styles.backgroundColor" />
 
 			<div class="label">
-				<span class="case_palette"> <i class="fas fa-check selected_palette"></i> Kolor z palety </span>
+				<span class="case_palette"> <i class="fas fa-check selected_palette"></i> Z palety </span>
 				<span class="edit_theme_btn link">Zarządzaj</span>
 			</div>
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
-			<div class="label"><i class="fas fa-check selected_color"></i> Inny kolor</div>
+			<div class="label"><i class="fas fa-check selected_color"></i> Inny</div>
 			<color-picker class="inline NOalpha"></color-picker>
-
-			<div class="label"><i class="fas fa-check selected_img"></i> Zdjęcie</div>
-			<image-picker style="width:100px;height:100px"></image-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
@@ -172,6 +163,22 @@
 			};
 			window.addEventListener("theme_settings_changed", themeSettingsChanged);
 			themeSettingsChanged();
+		},
+	});
+
+	piep_cms_manager.registerProp({
+		name: "background_img",
+		type_groups: ["appearance"],
+		menu_html: html`
+			<div class="label">Zdjęcie tła</div>
+			<image-picker style="width:100px;height:100px" data-blc_prop="attrs.data-bckg_src"></image-picker>
+		`,
+		init: (piep_cms, menu_wrapper) => {
+			// const middle_input = menu_wrapper._child("input");
+			// const image_picker = menu_wrapper._child("image-picker");
+			// image_picker.addEventListener("change", () => {
+			// 	middle_input._set_value(`url(${image_picker._get_value()})`);
+			// });
 		},
 	});
 
