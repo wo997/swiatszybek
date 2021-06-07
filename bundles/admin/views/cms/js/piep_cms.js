@@ -2027,6 +2027,15 @@ class PiepCMS {
 					}
 				}
 
+				if (v_node.attrs["data-bckg_src"]) {
+					v_node.classes.push("wo997_bckg_img");
+				} else {
+					const ind = v_node.classes.indexOf("wo997_bckg_img");
+					if (ind !== -1) {
+						v_node.classes.splice(ind, 1);
+					}
+				}
+
 				const children = v_node.children;
 				if (children) {
 					if (children.length === 0 && (v_node.tag === "ul" || v_node.tag.match(piep_cms_manager.match_text_containers))) {
