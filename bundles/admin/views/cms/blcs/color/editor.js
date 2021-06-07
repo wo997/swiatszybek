@@ -44,7 +44,7 @@
 				/** @type {string} */
 				const color = middle_input._get_value();
 				let radio_value, picker_value;
-				if (color.match(/#\w{3,}/)) {
+				if (color.match(/#\w{3,}/) || color.match(/rgb/)) {
 					radio_value = false;
 					picker_value = color;
 				} else {
@@ -54,6 +54,7 @@
 				radio_group._set_value(radio_value, { quiet: true });
 				color_picker._set_value(picker_value, { quiet: true });
 
+				console.log(radio_value, picker_value);
 				const sp = color_wrapper._child(".selected_palette");
 				if (sp) {
 					sp.classList.toggle("hidden", !radio_value);
