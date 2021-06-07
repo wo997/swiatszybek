@@ -66,6 +66,7 @@
 			},
 		],
 		type_groups: ["layout"],
+		advanced: true,
 		menu_html: html`
 			<div class="label">Wyrównaj blok pionowo</div>
 			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignSelf" style="--columns:5">
@@ -91,9 +92,6 @@
 				</div>
 			</div>
 		`,
-		init: (piep_cms, menu_wrapper) => {
-			menu_wrapper.classList.add("case_advanced");
-		},
 	});
 
 	piep_cms_manager.registerProp({

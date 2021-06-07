@@ -566,7 +566,10 @@ class PiepCMS {
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
 		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
-			floating_blc_props_menu_html += html`<div class="prop_wrapper prop_${blc_prop.name}" data-prop="${blc_prop.name}">
+			floating_blc_props_menu_html += html`<div
+				class="prop_wrapper prop_${blc_prop.name} ${blc_prop.advanced ? "case_advanced" : ""}"
+				data-prop="${blc_prop.name}"
+			>
 				${blc_prop.menu_html}
 			</div>`;
 		});
@@ -1707,7 +1710,12 @@ class PiepCMS {
 
 		let blc_props_menu_html = "";
 		piep_cms_manager.blc_props.forEach((blc_prop) => {
-			blc_props_menu_html += html`<div class="prop_wrapper prop_${blc_prop.name}" data-prop="${blc_prop.name}">${blc_prop.menu_html}</div>`;
+			blc_props_menu_html += html`<div
+				class="prop_wrapper prop_${blc_prop.name} ${blc_prop.advanced ? "case_advanced" : ""}"
+				data-prop="${blc_prop.name}"
+			>
+				${blc_prop.menu_html}
+			</div>`;
 		});
 		this.blc_menu_scroll_panel._set_content(blc_props_menu_html);
 		registerForms();
