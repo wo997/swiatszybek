@@ -162,20 +162,56 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Szybka modyfikacja siatki</div>
-			<button class="btn primary" data-tooltip="Obróć w lewo o 90°">
+			<button class="btn primary quick_edit_btn" data-tooltip="Obróć w lewo o 90°" data-action="left">
 				<i class="fas fa-undo"></i>
 			</button>
-			<button class="btn primary" data-tooltip="Obróć w prawo o 90°">
+			<button class="btn primary quick_edit_btn" data-tooltip="Obróć w prawo o 90°" data-action="right">
 				<i class="fas fa-redo"></i>
 			</button>
-			<button class="btn primary" data-tooltip="Obróć w poziomie">
+			<button class="btn primary quick_edit_btn" data-tooltip="Obróć w poziomie" data-action="horizontal">
 				<i class="fas fa-arrows-alt-h flip_icon"></i>
 			</button>
-			<button class="btn primary" data-tooltip="Obróć w pionie">
+			<button class="btn primary quick_edit_btn" data-tooltip="Obróć w pionie" data-action="vertical">
 				<i class="fas fa-arrows-alt-v flip_icon"></i>
 			</button>
 		`,
-		init: (piep_cms, menu_wrapper) => {},
+		init: (piep_cms, menu_wrapper) => {
+			menu_wrapper.addEventListener("click", (ev) => {
+				const target = $(ev.target);
+				const quick_edit_btn = target._parent(".quick_edit_btn");
+				if (quick_edit_btn) {
+					const action = quick_edit_btn.dataset.action;
+					const grid_v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+					const grid_styles = grid_v_node.styles[piep_cms.selected_resolution];
+					if (action === "horizontal") {
+						/** @type {string[]} */
+						const gtc = grid_styles.gridTemplateColumns.split(" ").reverse();
+						grid_styles.gridTemplateColumns = gtc.join(" ");
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[piep_cms.selected_resolution];
+							const was_start = +styles.gridColumnStart;
+							const was_end = +styles.gridColumnEnd;
+							styles.gridColumnStart = gtc.length + 2 - was_end + "";
+							styles.gridColumnEnd = gtc.length + 2 - was_start + "";
+						});
+					} else if (action === "vertical") {
+						/** @type {string[]} */
+						const gtr = grid_styles.gridTemplateRows.split(" ").reverse();
+						grid_styles.gridTemplateRows = gtr.join(" ");
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[piep_cms.selected_resolution];
+							const was_start = +styles.gridRowStart;
+							const was_end = +styles.gridRowEnd;
+							styles.gridRowStart = gtr.length + 2 - was_end + "";
+							styles.gridRowEnd = gtr.length + 2 - was_start + "";
+						});
+					}
+
+					piep_cms.update({ all: true });
+					piep_cms.setBlcMenuFromFocusedNode();
+				}
+			});
+		},
 	});
 
 	const gap_unit_input = html`
