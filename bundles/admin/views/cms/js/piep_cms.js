@@ -1637,8 +1637,39 @@ class PiepCMS {
 		const focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
 		const focus_offset = this.text_selection.focus_offset;
 
+		const parent_v_node = focus_v_node_data.parent_v_nodes[0];
+		const grand_parent_v_node = focus_v_node_data.parent_v_nodes[1];
+
 		const ret_vid = this.getNewBlcId();
 		let new_vid = ret_vid;
+
+		if (grand_parent_v_node && grand_parent_v_node.module_name === "grid") {
+			const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
+			parent_v_node_data.v_nodes.splice(parent_v_node_data.index, 1, {
+				id: new_vid++,
+				tag: "div",
+				styles: {
+					df: {
+						gridRowStart: parent_v_node.styles.df.gridRowStart,
+						gridColumnStart: parent_v_node.styles.df.gridColumnStart,
+						gridRowEnd: parent_v_node.styles.df.gridRowEnd,
+						gridColumnEnd: parent_v_node.styles.df.gridColumnEnd,
+					},
+				},
+				attrs: {},
+				classes: ["vertical_container"],
+				children: [parent_v_node],
+			});
+
+			delete parent_v_node.styles.df.gridRowStart;
+			delete parent_v_node.styles.df.gridColumnStart;
+			delete parent_v_node.styles.df.gridRowEnd;
+			delete parent_v_node.styles.df.gridColumnEnd;
+
+			this.update({ all: true });
+
+			return this.breakTextAtCursor();
+		}
 
 		const text = focus_v_node.text;
 		if (text !== undefined) {
@@ -3724,6 +3755,13 @@ class PiepCMS {
 
 			const getInsertVContainer = () => {
 				const insert_v_node = getInsertVNode();
+
+				if (!insert_v_node.styles.df) {
+					insert_v_node.styles.df = {};
+				}
+
+				return insert_v_node;
+
 				let insert_v_container = insert_v_node;
 				if (!insert_v_node.classes.includes("vertical_container")) {
 					insert_v_container = {
@@ -3787,14 +3825,20 @@ class PiepCMS {
 				if (suggest_wrapping_with_grid) {
 					const insert_v_container = getInsertVContainer();
 
-					const near_v_container = {
-						id: new_vid++,
-						tag: "div",
-						styles: { df: {} },
-						attrs: {},
-						classes: ["vertical_container"],
-						children: [near_v_node],
-					};
+					// const near_v_container = {
+					// 	id: new_vid++,
+					// 	tag: "div",
+					// 	styles: { df: {} },
+					// 	attrs: {},
+					// 	classes: ["vertical_container"],
+					// 	children: [near_v_node],
+					// };
+
+					const near_v_container = near_v_node;
+
+					if (!near_v_container.styles.df) {
+						near_v_container.styles.df = {};
+					}
 
 					insert_v_container.styles.df.gridRowStart = "1";
 					insert_v_container.styles.df.gridColumnStart = dir === 1 ? "2" : "1";
