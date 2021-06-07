@@ -20,12 +20,26 @@
 		blc_groups: [{ module_names: ["grid"], priority: grid_priority }],
 		type_groups: ["layout"],
 		menu_html: html`
-			<div class="label">Kolumny siatki</div>
+			<div class="label">
+				Kolumny siatki
+				<div class="columns_icon">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
 			<input class="hidden" data-blc_prop="styles.gridTemplateColumns" />
 			<div class="grid_template grid_columns"></div>
 			<button class="btn primary small add_btn" data-template="columns">Dodaj kolumnę <i class="fas fa-plus"></i></button>
 
-			<div class="label">Wiersze siatki</div>
+			<div class="label">
+				Wiersze siatki
+				<div class="columns_icon vertical">
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			</div>
 			<input class="hidden" data-blc_prop="styles.gridTemplateRows" />
 			<div class="grid_template grid_rows"></div>
 			<button class="btn primary small add_btn" data-template="rows">Dodaj wiersz <i class="fas fa-plus"></i></button>
