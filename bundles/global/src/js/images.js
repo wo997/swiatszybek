@@ -131,6 +131,11 @@ function onScrollImages(options = {}) {
 		}
 	});
 
+	$$(".wo997_bckg_img_shown:not(.wo997_bckg_img)").forEach((node) => {
+		node.style.backgroundImage = "";
+		node.classList.remove("wo997_bckg_img_shown");
+	});
+
 	$$(".wo997_img_waiting").forEach((img) => {
 		if (exclude(img)) {
 			return;

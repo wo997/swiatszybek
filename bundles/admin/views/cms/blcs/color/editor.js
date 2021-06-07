@@ -174,11 +174,15 @@
 			<image-picker style="width:120px;height:120px" data-blc_prop="attrs.data-bckg_src"></image-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
-			// const middle_input = menu_wrapper._child("input");
-			// const image_picker = menu_wrapper._child("image-picker");
-			// image_picker.addEventListener("change", () => {
-			// 	middle_input._set_value(`url(${image_picker._get_value()})`);
-			// });
+			//const middle_input = menu_wrapper._child("input");
+			const image_picker = menu_wrapper._child("image-picker");
+			image_picker.addEventListener("change", () => {
+				//middle_input._set_value(`url(${image_picker._get_value()})`);
+				const focus_node = piep_cms.getNode(piep_cms.focus_node_vid);
+				if (focus_node) {
+					focus_node.classList.remove("wo997_bckg_img_shown");
+				}
+			});
 		},
 	});
 

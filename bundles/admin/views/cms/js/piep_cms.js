@@ -771,6 +771,11 @@ class PiepCMS {
 		let val = input._get_value();
 		let prop_ref = v_node;
 
+		if (prop_str === "attrs.data-bckg_src" && val) {
+			const focus_node = piep_cms.getNode(vid);
+			focus_node.classList.remove("wo997_bckg_img_shown");
+		}
+
 		if (prop_str.startsWith("styles.")) {
 			if (!v_node.styles[this.selected_resolution]) {
 				v_node.styles[this.selected_resolution] = {};
@@ -2404,6 +2409,10 @@ class PiepCMS {
 					classes.push("link");
 				}
 
+				if (node.classList.contains("wo997_bckg_img_shown")) {
+					// performance boost?
+					classes.push("wo997_bckg_img_shown");
+				}
 				setNodeClasses(node, classes);
 
 				// attrs
@@ -2420,7 +2429,8 @@ class PiepCMS {
 					if (attr.name === "class") {
 						continue;
 					}
-					if (!attr_names.includes(attr.name)) {
+					// background img is held here so skip it baby
+					if (attr.name !== "style" && !attr_names.includes(attr.name)) {
 						node.removeAttribute(attr.name);
 					}
 				}
