@@ -27,6 +27,33 @@
 	}
 }
 
+.flip_icon {
+	& {
+		position: relative;
+	}
+	&::before {
+		transform: scale(1.3);
+		display: block;
+	}
+	&::after {
+		content: "";
+		background: #fff;
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+	&.fa-arrows-alt-h::after {
+		width: 2px;
+		height: 1.3em;
+	}
+	&.fa-arrows-alt-v::after {
+		width: 1.3em;
+		height: 2px;
+	}
+}
+
 .flex_align_self_horizontal_icon {
 	transform: rotate(-90deg);
 }

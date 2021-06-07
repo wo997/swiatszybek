@@ -156,6 +156,28 @@
 		},
 	});
 
+	piep_cms_manager.registerProp({
+		name: "grid_actions",
+		blc_groups: [{ module_names: ["grid"], priority: grid_priority }],
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="label">Szybka modyfikacja siatki</div>
+			<button class="btn primary" data-tooltip="Obróć w lewo o 90°">
+				<i class="fas fa-undo"></i>
+			</button>
+			<button class="btn primary" data-tooltip="Obróć w prawo o 90°">
+				<i class="fas fa-redo"></i>
+			</button>
+			<button class="btn primary" data-tooltip="Obróć w poziomie">
+				<i class="fas fa-arrows-alt-h flip_icon"></i>
+			</button>
+			<button class="btn primary" data-tooltip="Obróć w pionie">
+				<i class="fas fa-arrows-alt-v flip_icon"></i>
+			</button>
+		`,
+		init: (piep_cms, menu_wrapper) => {},
+	});
+
 	const gap_unit_input = html`
 		<input />
 		<select>
