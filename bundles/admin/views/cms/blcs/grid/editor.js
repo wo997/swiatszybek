@@ -205,6 +205,42 @@
 							styles.gridRowStart = gtr.length + 2 - was_end + "";
 							styles.gridRowEnd = gtr.length + 2 - was_start + "";
 						});
+					} else if (action === "left") {
+						/** @type {string[]} */
+						const gtr = grid_styles.gridTemplateColumns.split(" ").reverse();
+						/** @type {string[]} */
+						const gtc = grid_styles.gridTemplateRows.split(" ");
+						grid_styles.gridTemplateRows = gtr.join(" ");
+						grid_styles.gridTemplateColumns = gtc.join(" ");
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[piep_cms.selected_resolution];
+							const was_col_start = +styles.gridColumnStart;
+							const was_col_end = +styles.gridColumnEnd;
+							const was_row_start = +styles.gridRowStart;
+							const was_row_end = +styles.gridRowEnd;
+							styles.gridColumnStart = was_row_start + "";
+							styles.gridColumnEnd = was_row_end + "";
+							styles.gridRowStart = gtr.length + 2 - was_col_end + "";
+							styles.gridRowEnd = gtr.length + 2 - was_col_start + "";
+						});
+					} else if (action === "right") {
+						/** @type {string[]} */
+						const gtr = grid_styles.gridTemplateColumns.split(" ");
+						/** @type {string[]} */
+						const gtc = grid_styles.gridTemplateRows.split(" ").reverse();
+						grid_styles.gridTemplateRows = gtr.join(" ");
+						grid_styles.gridTemplateColumns = gtc.join(" ");
+						grid_v_node.children.forEach((child) => {
+							const styles = child.styles[piep_cms.selected_resolution];
+							const was_col_start = +styles.gridColumnStart;
+							const was_col_end = +styles.gridColumnEnd;
+							const was_row_start = +styles.gridRowStart;
+							const was_row_end = +styles.gridRowEnd;
+							styles.gridColumnStart = gtc.length + 2 - was_row_start + "";
+							styles.gridColumnEnd = gtc.length + 2 - was_row_end + "";
+							styles.gridRowStart = was_col_end + "";
+							styles.gridRowEnd = was_col_start + "";
+						});
 					}
 
 					piep_cms.update({ all: true });
