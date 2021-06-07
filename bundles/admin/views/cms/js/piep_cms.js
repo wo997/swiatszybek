@@ -3540,6 +3540,7 @@ class PiepCMS {
 
 		const grabbed_node = this.getNode(this.grabbed_block_vid);
 		this.grabbed_block_wrapper._set_content(grabbed_node.outerHTML);
+		this.grabbed_block_parent = grabbed_node._parent();
 		removeClasses(".wo997_img_shown", ["wo997_img_shown"], this.grabbed_block_wrapper);
 		removeClasses(".wo997_img_waiting", ["wo997_img_waiting"], this.grabbed_block_wrapper);
 		lazyLoadImages({ duration: 0 });
@@ -3703,18 +3704,30 @@ class PiepCMS {
 			return { left, top };
 		};
 
-		const blcs = this.content._children(".blc:not(.textable)");
+		/** @type {PiepNode[]} */
+		let blcs = [];
 
-		if (blcs.length === 0) {
-			// left
-			const insert_blc = getInsertBlc();
-			const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
-			insert_blc._set_absolute_pos(content_wrapper_rect.left + content_wrapper_rect.width * 0.5, content_wrapper_rect.top + 30);
-			insert_blc._insert_action = () => {
-				/** @type {vDomNode} */
-				const grabbed_v_node_copy = cloneObject(this.grabbed_v_node);
-				this.v_dom.push(grabbed_v_node_copy);
-			};
+		let force_in_grid = false;
+
+		if (this.selected_resolution !== "df") {
+			if (this.grabbed_block_parent && this.grabbed_block_parent.classList.contains("module_grid")) {
+				force_in_grid = true;
+				blcs = [this.grabbed_block_parent];
+			}
+		} else {
+			blcs = this.content._children(".blc:not(.textable)");
+
+			if (blcs.length === 0) {
+				// left
+				const insert_blc = getInsertBlc();
+				const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
+				insert_blc._set_absolute_pos(content_wrapper_rect.left + content_wrapper_rect.width * 0.5, content_wrapper_rect.top + 30);
+				insert_blc._insert_action = () => {
+					/** @type {vDomNode} */
+					const grabbed_v_node_copy = cloneObject(this.grabbed_v_node);
+					this.v_dom.push(grabbed_v_node_copy);
+				};
+			}
 		}
 
 		blcs.forEach((blc) => {
@@ -3877,13 +3890,6 @@ class PiepCMS {
 
 					near_v_node_data.v_nodes.splice(ind, 1, grid);
 				}
-				//  else {
-				// 	if (dir === 1) {
-				// 		ind++;
-				// 	}
-
-				// 	near_v_node_data.v_nodes.splice(ind, 0, insert_v_container);
-				// }
 			};
 
 			/**
@@ -3931,9 +3937,11 @@ class PiepCMS {
 			const near_v_node_data = getNearVNodeData();
 			const near_v_node = near_v_node_data.v_node;
 
-			let on_sides = true;
-			let above_or_below = true;
-			let inside = true;
+			let can_actually_move = !force_in_grid;
+
+			let on_sides = can_actually_move;
+			let above_or_below = can_actually_move;
+			let inside = can_actually_move;
 
 			if (on_sides && (flow_direction === "inline" || flow_direction === "text_list")) {
 				on_sides = false;
@@ -4003,14 +4011,21 @@ class PiepCMS {
 						insert_v_container.styles.df.gridRowEnd = row + 1 + "";
 						insert_v_container.styles.df.gridColumnEnd = column + 1 + "";
 
+						//this.getVNodeResponsiveProp("styles",grid_v_node,"gridTemplateColumns");
+						if (!grid_v_node.styles[this.selected_resolution]) {
+							grid_v_node.styles[this.selected_resolution] = {};
+						}
 						const styles = grid_v_node.styles[this.selected_resolution];
 
 						/** @type {string[]} */
-						const gtc = styles.gridTemplateColumns.split(" ");
+						const gtc = def(styles.gridTemplateColumns, "").split(" ");
 						gtc.splice(column - 1, 0, "1fr");
 						styles.gridTemplateColumns = gtc.join(" ");
 
 						grid_v_node.children.forEach((child) => {
+							if (!child.styles[this.selected_resolution]) {
+								child.styles[this.selected_resolution] = {};
+							}
 							const styles = child.styles[this.selected_resolution];
 							if (+styles.gridColumnStart >= column) {
 								styles.gridColumnStart = +styles.gridColumnStart + 1 + "";
@@ -4054,6 +4069,10 @@ class PiepCMS {
 
 						grid_v_node.children.forEach((child) => {
 							const styles = child.styles[this.selected_resolution];
+							if (!styles) {
+								console.error("TODO: do that shit dude");
+								return;
+							}
 							if (+styles.gridRowStart >= row) {
 								styles.gridRowStart = +styles.gridRowStart + 1 + "";
 							}

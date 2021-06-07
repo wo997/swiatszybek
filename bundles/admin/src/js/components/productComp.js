@@ -63,7 +63,7 @@
  * } & BaseComp} ProductComp
  */
 
-const product_copy_keys = ["net_price", "vat", "gross_price", "active", ""];
+const product_copy_keys = ["net_price", "vat", "gross_price", "active", "weight", "length", "width", "height"];
 
 /**
  *
