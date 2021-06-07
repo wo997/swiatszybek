@@ -3900,7 +3900,7 @@ class PiepCMS {
 			}
 
 			if (near_v_node.module_name === "grid") {
-				const cells = this.content._children(".cell_float");
+				const cells = blc._children(".cell_float");
 				const cell_map = {};
 				let columns = 0;
 				let rows = 0;

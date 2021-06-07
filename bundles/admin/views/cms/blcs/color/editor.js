@@ -55,7 +55,6 @@
 				radio_group._set_value(radio_value, { quiet: true });
 				color_picker._set_value(picker_value, { quiet: true });
 
-				console.log(radio_value, picker_value);
 				const sp = color_wrapper._child(".selected_palette");
 				if (sp) {
 					sp.classList.toggle("hidden", !radio_value);
