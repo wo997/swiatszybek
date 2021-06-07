@@ -120,6 +120,17 @@ function onScrollImages(options = {}) {
 		}
 	});
 
+	$$(".wo997_bckg_img:not(.wo997_bckg_img_shown)").forEach((node) => {
+		if (isNodeOnScreen(node, lazy_off, lazy_off) && node.dataset.bckg_src) {
+			// TODO: isn't it just an approx?
+			const src = getResponsiveBckgImageRealUrl(node);
+			if (src) {
+				node.style.backgroundImage = `url(${src})`;
+				node.classList.add("wo997_bckg_img_shown");
+			}
+		}
+	});
+
 	$$(".wo997_img_waiting").forEach((img) => {
 		if (exclude(img)) {
 			return;
@@ -147,6 +158,59 @@ function onScrollImages(options = {}) {
  */
 function getResponsiveImageRealUrl(img, options = {}) {
 	const base_url = def(options.base_url, img.dataset.src);
+	const img_data = getResponsiveImageData(base_url);
+	const fixed_resolution = img.dataset.resolution;
+
+	if (!img_data || !img_data.responsive) {
+		return base_url;
+	}
+
+	const image_dimension = def(options.image_dimension, Math.max(img.offsetWidth, img.offsetHeight));
+	// @ts-ignore
+	img._last_dimension = image_dimension;
+
+	if (!image_dimension && !fixed_resolution) {
+		return;
+	}
+
+	const natural_image_dimension = Math.max(img_data.w, img_data.h);
+	let target_size_name = def(fixed_resolution, "df");
+
+	if (!fixed_resolution && image_dimension < natural_image_dimension + 1) {
+		const pixelDensityFactor = window.devicePixelRatio * 0.3 + 0.7; // compromise quality and performance
+		Object.entries(image_fixed_dimensions).forEach(([size_name, size_dimension]) => {
+			if (size_name == "df") {
+				return;
+			}
+			if (image_dimension < size_dimension / pixelDensityFactor + 1 && size_dimension < natural_image_dimension) {
+				target_size_name = size_name;
+			}
+		});
+	}
+
+	let url = "/" + UPLOADS_PATH + target_size_name + "/" + img_data.file_name;
+
+	if (img.hasAttribute("data-same-ext") && same_ext_image_allowed_types.indexOf(img_data.extension) !== -1) {
+		url += "." + img_data.extension;
+	} else if (WEBP_SUPPORT) {
+		url += ".webp";
+	} else {
+		url += ".jpg";
+	}
+
+	return url;
+}
+
+/**
+ * @param {PiepNode} img
+ * @param {{
+ * base_url?: string
+ * image_dimension?: number
+ * }} options
+ * @returns {string}
+ */
+function getResponsiveBckgImageRealUrl(img, options = {}) {
+	const base_url = def(options.base_url, img.dataset.bckg_src);
 	const img_data = getResponsiveImageData(base_url);
 	const fixed_resolution = img.dataset.resolution;
 

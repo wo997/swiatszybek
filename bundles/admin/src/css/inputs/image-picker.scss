@@ -44,7 +44,8 @@ image-picker {
 	&:not(.selected) {
 		& {
 			.change_btn,
-			.preview_btn {
+			.preview_btn,
+			.empty_btn {
 				display: none;
 			}
 		}

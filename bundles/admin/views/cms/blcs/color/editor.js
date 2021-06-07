@@ -171,7 +171,7 @@
 		type_groups: ["appearance"],
 		menu_html: html`
 			<div class="label">Zdjęcie tła</div>
-			<image-picker style="width:100px;height:100px" data-blc_prop="attrs.data-bckg_src"></image-picker>
+			<image-picker style="width:120px;height:120px" data-blc_prop="attrs.data-bckg_src"></image-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			// const middle_input = menu_wrapper._child("input");

@@ -20,6 +20,7 @@ function registerImageInputs(parent) {
 				<div class="controls">
 					<button class="btn subtle change_btn" data-tooltip="Zmień"><i class="fas fa-cog"></i></button>
 					<button class="btn subtle preview_btn" data-tooltip="Podgląd"><i class="fas fa-eye"></i></button>
+					<button class="btn subtle empty_btn" data-tooltip="Wyczyść"><i class="fas fa-eraser"></i></button>
 					<button class="btn primary select_btn"><i class="fas fa-image"></i> <i class="fas fa-plus"></i></button>
 				</div>
 			`
@@ -29,6 +30,7 @@ function registerImageInputs(parent) {
 		const select_btn = input._child(".select_btn");
 		const change_btn = input._child(".change_btn");
 		const preview_btn = input._child(".preview_btn");
+		const empty_btn = input._child(".empty_btn");
 
 		let setting_value = false;
 
@@ -54,6 +56,10 @@ function registerImageInputs(parent) {
 
 		change_btn.addEventListener("click", () => {
 			select();
+		});
+
+		empty_btn.addEventListener("click", () => {
+			input._set_value("");
 		});
 
 		preview_btn.addEventListener("click", () => {

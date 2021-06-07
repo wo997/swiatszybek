@@ -74,7 +74,7 @@ function Product_ImgComp(comp, parent, data = { product_img_id: -1, img_url: "",
 
 	createComp(comp, parent, data, {
 		template: html`
-			<image-picker data-bind="{${data.img_url}}" style="width:100px;height:100px"></image-picker>
+			<image-picker data-bind="{${data.img_url}}" style="width:120px;height:120px"></image-picker>
 
 			<div data-node="{${comp._nodes.selected_options}}"></div>
 

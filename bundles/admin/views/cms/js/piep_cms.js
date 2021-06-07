@@ -2028,7 +2028,9 @@ class PiepCMS {
 				}
 
 				if (v_node.attrs["data-bckg_src"]) {
-					v_node.classes.push("wo997_bckg_img");
+					if (!v_node.classes.includes("wo997_bckg_img")) {
+						v_node.classes.push("wo997_bckg_img");
+					}
 				} else {
 					const ind = v_node.classes.indexOf("wo997_bckg_img");
 					if (ind !== -1) {
