@@ -44,7 +44,8 @@
 				/** @type {string} */
 				const color = middle_input._get_value();
 				let radio_value, picker_value;
-				if (color.match(/#\w{3,}/) || color.match(/rgb/)) {
+				if (color.match(/#\w{3,}/)) {
+					// || color.match(/rgb/)
 					radio_value = false;
 					picker_value = color;
 				} else {

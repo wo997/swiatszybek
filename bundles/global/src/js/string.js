@@ -58,7 +58,16 @@ function escapeHTML(unsafeText) {
 	return div.innerText;
 }
 
+/**
+ *
+ * @param {string} prop
+ * @param {string} val
+ * @returns
+ */
 function escapeCSS(prop, val) {
+	if (val.match(/#\w{3,}/)) {
+		return val;
+	}
 	if (val === "0") {
 		return "0";
 	}
