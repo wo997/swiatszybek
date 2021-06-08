@@ -2071,6 +2071,18 @@ class PiepCMS {
 					}
 				}
 
+				if (parent && parent.module_name === "slider") {
+					ressdf.width_type = "custom";
+					if (!v_node.classes.includes("wo997_slide")) {
+						v_node.classes.push("wo997_slide");
+					}
+				} else {
+					const ind = v_node.classes.indexOf("wo997_slide");
+					if (ind !== -1) {
+						v_node.classes.splice(ind, 1);
+					}
+				}
+
 				if (v_node.attrs["data-bckg_src"]) {
 					if (!v_node.classes.includes("wo997_bckg_img")) {
 						v_node.classes.push("wo997_bckg_img");
@@ -2374,8 +2386,9 @@ class PiepCMS {
 		 * @param {PiepNode} put_in_node
 		 * @param {vDomNode[]} v_nodes
 		 * @param {number[]} indices
+		 * @param {BlockSchema} parent_blc_schema
 		 */
-		const traverseVDom = (put_in_node, v_nodes, indices = []) => {
+		const traverseVDom = (put_in_node, v_nodes, indices = [], parent_blc_schema = undefined) => {
 			v_nodes.forEach((v_node, index) => {
 				const vid = v_node.id;
 				included_vids.push(vid);
@@ -2479,7 +2492,8 @@ class PiepCMS {
 							this.last_map_vid_render_props[vid] = render_props;
 							if (blc_schema.render_html) {
 								node._set_content(blc_schema.render_html(v_node));
-							} else {
+							}
+							if (blc_schema.backend_render) {
 								piep_cms_manager.requestRender(vid);
 							}
 						}
@@ -2498,21 +2512,25 @@ class PiepCMS {
 					displayEmptyVerticalContainer(node, children.length === 0);
 				}
 
-				// place it in the DOM yay
-				const before_node = put_in_node._direct_children()[index];
-				if (node._parent() !== put_in_node || node !== before_node) {
-					put_in_node.insertBefore(node, before_node);
+				if (parent_blc_schema && parent_blc_schema.place_node) {
+					parent_blc_schema.place_node(v_node, node, put_in_node, this);
+				} else {
+					// place it in the DOM yay
+					const before_node = put_in_node._direct_children()[index];
+					if (node._parent() !== put_in_node || node !== before_node) {
+						put_in_node.insertBefore(node, before_node);
+					}
 				}
 
 				if (children) {
-					// clean up text nodes if any existed
+					// clean up text nodes if any existed - that might be... an unnecessary step?
 					node.childNodes.forEach((c) => {
 						if (c.nodeType === Node.TEXT_NODE) {
 							c.remove();
 						}
 					});
 
-					traverseVDom(node, children, curr_indices);
+					traverseVDom(node, children, curr_indices, blc_schema);
 				}
 			});
 		};

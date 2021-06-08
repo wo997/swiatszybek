@@ -19,7 +19,7 @@
  * settings?: object
  * responsive_settings?: object
  * module_name?: string
- * module_children?: vDomNode[]
+ * module_hook_id?: string
  * template_hook_id?: string
  * disabled?: boolean
  * rendered_body?: string
@@ -158,7 +158,7 @@
  * priority?: number
  * render_html?(v_node?: vDomNode): string
  * render?(v_node: vDomNode, node: PiepNode, piep_cms: PiepCMS)
- * place_nodes?(v_node: vDomNode)
+ * place_node?(v_node: vDomNode, node: PiepNode, parent_node: PiepNode, piep_cms: PiepCMS)
  * rerender_on?: string[]
  * backend_render?: boolean
  * is_advanced?: boolean
