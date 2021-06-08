@@ -270,7 +270,26 @@ function getPhysicalMeasures()
                 ],
 
             ]
-        ]
+        ],
+        "volume" => [
+            "description" => "Objętość",
+            "base_unit" => "cm2",
+            "units" => [
+                [
+                    "id" => "cm2",
+                    "name" => "cm²",
+                    "multiply" => 1
+                ], [
+                    "id" => "l",
+                    "name" => "l",
+                    "multiply" => 10 * 10 * 10
+                ], [
+                    "id" => "m2",
+                    "name" => "m²",
+                    "multiply" => 100 * 100 * 100
+                ],
+            ]
+        ],
     ];
 }
 

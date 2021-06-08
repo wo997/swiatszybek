@@ -1,1 +1,19 @@
 /* css[piep_cms_dependencies] */
+
+.prop_slider_settings {
+	.slides {
+		padding: 2px 0;
+	}
+	.slide_row {
+		& {
+			padding: 2px 0;
+			display: flex;
+		}
+		.name {
+			flex-grow: 1;
+		}
+		.btn {
+			margin-left: 4px;
+		}
+	}
+}
