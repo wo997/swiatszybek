@@ -2390,20 +2390,12 @@ class PiepCMS {
 				if (node && node.tagName.toLocaleLowerCase() !== v_node.tag.toLocaleLowerCase()) {
 					node.remove();
 					node = undefined;
-					//console.log("removed node");
 				}
 
 				let just_created = false;
 				if (!node) {
 					node = $(document.createElement(v_node.tag));
 					just_created = true;
-					//console.log("new", node);
-				}
-
-				const before_node = put_in_node._direct_children()[index];
-				if (node._parent() !== put_in_node || node !== before_node) {
-					put_in_node.insertBefore(node, before_node);
-					//console.log("insertBefore", node, before_node);
 				}
 
 				// classes
@@ -2474,61 +2466,45 @@ class PiepCMS {
 					}
 				}
 
-				if (blc_schema && (blc_schema.render || blc_schema.backend_render)) {
-					let render_props = {};
-					blc_schema.rerender_on.forEach((prop_str) => {
-						if (prop_str.startsWith("settings.")) {
-							render_props[prop_str] = v_node.settings[prop_str.substring("settings.".length)];
-						}
-					});
+				if (blc_schema) {
+					if (blc_schema.render_html || blc_schema.backend_render) {
+						let render_props = {};
+						blc_schema.rerender_on.forEach((prop_str) => {
+							if (prop_str.startsWith("settings.")) {
+								render_props[prop_str] = v_node.settings[prop_str.substring("settings.".length)];
+							}
+						});
 
-					if (just_created || !isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
-						this.last_map_vid_render_props[vid] = render_props;
-						if (blc_schema.render) {
-							node._set_content(blc_schema.render(v_node));
-						} else {
-							piep_cms_manager.requestRender(vid);
+						if (just_created || !isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
+							this.last_map_vid_render_props[vid] = render_props;
+							if (blc_schema.render_html) {
+								node._set_content(blc_schema.render_html(v_node));
+							} else {
+								piep_cms_manager.requestRender(vid);
+							}
+						}
+
+						if (node._is_empty() && v_node.rendered_body !== undefined) {
+							node._set_content(v_node.rendered_body);
 						}
 					}
 
-					if (node._is_empty() && v_node.rendered_body !== undefined) {
-						node._set_content(v_node.rendered_body);
+					if (blc_schema.render) {
+						blc_schema.render(v_node, node, this);
 					}
 				}
 
-				if (v_node.module_name === "grid") {
-					/** @type {string} */
-					const grid_template_columns = def(this.getVNodeResponsiveProp("styles", v_node, "gridTemplateColumns"), "");
-					/** @type {string} */
-					const grid_template_rows = def(this.getVNodeResponsiveProp("styles", v_node, "gridTemplateRows"), "");
-					const columns = grid_template_columns.split(" ");
-					const rows = grid_template_rows.split(" ");
-					/** @type {string[]} */
-					const classes = [];
-					for (let r = 1; r < rows.length + 1; r++) {
-						for (let c = 1; c < columns.length + 1; c++) {
-							let cls = `cell_${r}_${c}`;
-							classes.push(cls);
-							if (!node._child("." + cls)) {
-								node.insertAdjacentHTML(
-									"beforeend",
-									html`<div class="cell_float ${cls}" style="grid-area:${r}/${c}/${r + 1}/${c + 1}" data-r="${r}" data-c="${c}"></div>`
-								);
-							}
-						}
-					}
+				if (classes.includes("vertical_container")) {
+					displayEmptyVerticalContainer(node, children.length === 0);
+				}
 
-					const select_cells_to_remove = ".cell_float" + classes.map((e) => `:not(.${e})`).join("");
-					node._children(select_cells_to_remove).forEach((r) => {
-						r.remove();
-					});
+				// place it in the DOM yay
+				const before_node = put_in_node._direct_children()[index];
+				if (node._parent() !== put_in_node || node !== before_node) {
+					put_in_node.insertBefore(node, before_node);
 				}
 
 				if (children) {
-					if (classes.includes("vertical_container")) {
-						displayEmptyVerticalContainer(node, children.length === 0);
-					}
-
 					// clean up text nodes if any existed
 					node.childNodes.forEach((c) => {
 						if (c.nodeType === Node.TEXT_NODE) {

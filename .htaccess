@@ -12,5 +12,4 @@ RewriteRule ^([^\.]*)$ routing.php?url=$1 [QSA]
     Allow from all
 </FilesMatch>
 
-RedirectMatch 301 /www.prolit.pl /
 

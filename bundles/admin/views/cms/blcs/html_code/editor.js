@@ -33,7 +33,7 @@
 			module_name: "html_code",
 		},
 		rerender_on: ["settings.html_code"],
-		render: (v_node) => {
+		render_html: (v_node) => {
 			let body = html`<div class="empty_module">Pusty blok HTML</div>`;
 			if (v_node.settings.html_code) {
 				body = v_node.settings.html_code;

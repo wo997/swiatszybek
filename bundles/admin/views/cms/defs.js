@@ -156,7 +156,9 @@
  * nonclickable?: boolean
  * standalone?: boolean
  * priority?: number
- * render?(v_node?: vDomNode): string
+ * render_html?(v_node?: vDomNode): string
+ * render?(v_node: vDomNode, node: PiepNode, piep_cms: PiepCMS)
+ * place_nodes?(v_node: vDomNode)
  * rerender_on?: string[]
  * backend_render?: boolean
  * is_advanced?: boolean

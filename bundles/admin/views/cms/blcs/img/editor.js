@@ -83,7 +83,7 @@
 			module_name: "img",
 		},
 		rerender_on: ["settings.img_src"],
-		render: (v_node) => {
+		render_html: (v_node) => {
 			/** @type {string} */
 			const img_src = v_node.settings.img_src;
 			return html`<img class="wo997_img" data-src="${img_src}" />`;

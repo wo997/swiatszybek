@@ -19,7 +19,7 @@
 			module_name: "view_product_images_variants_buy",
 		},
 		rerender_on: [],
-		render: (v_node) => {
+		render_html: (v_node) => {
 			return html`<div class="empty_module">Galeria zdjęć produktu, wybór wariantów, przycisk "kup teraz"</div>`;
 		},
 	});

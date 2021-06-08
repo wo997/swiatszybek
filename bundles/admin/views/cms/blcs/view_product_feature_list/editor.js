@@ -18,7 +18,7 @@
 			module_name: "view_product_feature_list",
 		},
 		rerender_on: [],
-		render: (v_node) => {
+		render_html: (v_node) => {
 			return html`<div class="empty_module">Specyfikacja produktu</div>`;
 		},
 	});

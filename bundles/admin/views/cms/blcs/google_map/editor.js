@@ -32,7 +32,7 @@
 			module_name: "google_map",
 		},
 		rerender_on: ["settings.google_map_embed_code"],
-		render: (v_node) => {
+		render_html: (v_node) => {
 			let body = html`<div class="empty_module">Mapa google</div>`;
 
 			/** @type {string} */
