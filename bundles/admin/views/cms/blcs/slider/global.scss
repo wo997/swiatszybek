@@ -1,0 +1,25 @@
+/* css[global] */
+
+.module_slider {
+	& {
+		position: relative;
+	}
+	&::before {
+		content: "";
+		padding-top: 50%;
+		display: block;
+	}
+	.wo997_slider {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+	}
+	.wo997_slides_container {
+		height: 100%;
+	}
+	.wo997_slides_wrapper {
+		height: 100%;
+	}
+}

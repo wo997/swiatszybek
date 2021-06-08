@@ -8,6 +8,14 @@
 		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
 	];
 
+	const irrelevant_text_priority = 5;
+
+	/** @type {EditBlcGroup[]} */
+	const irrelevant_text_groups = [
+		{ match_tag: piep_cms_manager.match_text_containers, priority: irrelevant_text_priority },
+		{ match_tag: piep_cms_manager.match_textables, priority: irrelevant_text_priority },
+	];
+
 	/**
 	 *
 	 * @param {PiepNode} font_size_wrapper
@@ -110,12 +118,6 @@
 		name: "text_tag",
 		type_groups: ["appearance"],
 		blc_groups: text_groups,
-		// blc_groups: [
-		// 	{
-		// 		match_tag: piep_cms_manager.match_basic_text_containers,
-		// 		priority: text_priority,
-		// 	},
-		// ],
 		menu_html: html`
 			<div class="label">Typ tekstu</div>
 			<div class="pretty_radio global_root box_align_left" data-blc_prop="tag" class="--columns:1">
@@ -205,12 +207,6 @@
 		name: "text_align",
 		type_groups: ["appearance"],
 		blc_groups: text_groups,
-		// [
-		// 	{
-		// 		match_tag: piep_cms_manager.match_basic_text_containers,
-		// 		priority: text_priority,
-		// 	},
-		// ],
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
 			<div class="pretty_radio pretty_blue" data-blc_prop="styles.textAlign" style="--columns:5">
@@ -287,12 +283,6 @@
 	piep_cms_manager.registerFloatingProp({
 		name: "text_tag",
 		blc_groups: text_groups,
-		// blc_groups: [
-		// 	{
-		// 		match_tag: piep_cms_manager.match_basic_text_containers,
-		// 		priority: text_priority,
-		// 	},
-		// ],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid align_left" data-blc_prop="tag" data-tooltip="Typ tekstu">
 				<p-option data-value="h1" style="font-size:var(--size_h1);">
@@ -359,12 +349,6 @@
 	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
 		blc_groups: text_groups,
-		// blc_groups: [
-		// 	{
-		// 		match_tag: piep_cms_manager.match_basic_text_containers,
-		// 		priority: text_priority,
-		// 	},
-		// ],
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>
@@ -378,7 +362,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",
-		blc_groups: text_groups,
+		blc_groups: irrelevant_text_groups,
 		menu_html: html`
 			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
 				<i class="fas fa-remove-format"></i>

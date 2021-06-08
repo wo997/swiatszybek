@@ -151,6 +151,7 @@
 				<select>
 					<option value="px">px</option>
 					<option value="%">%</option>
+					<option value="vw">vw</option>
 					<option value="*" class="case_advanced">*</option>
 				</select>
 			</unit-input>

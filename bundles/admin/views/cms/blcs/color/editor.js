@@ -1,6 +1,6 @@
 /* js[piep_cms_dependencies] */
 {
-	const text_priority = 15;
+	const text_priority = 12;
 
 	/** @type {EditBlcGroup[]} */
 	const text_groups = [
