@@ -15,11 +15,17 @@
 			attrs: {},
 			module_name: "product_list",
 			settings: {
+				product_list_count: 30,
 				product_list_layout: "slider",
 				product_list_display_what: "custom",
 			},
 		},
-		rerender_on: ["settings.product_list_layout", "settings.product_list_sort", "settings.product_list_category_ids_csv"],
+		rerender_on: [
+			"settings.product_list_count",
+			"settings.product_list_layout",
+			"settings.product_list_sort",
+			"settings.product_list_category_ids_csv",
+		],
 		backend_render: true,
 	});
 
@@ -28,7 +34,10 @@
 		type_groups: ["advanced"],
 		blc_groups: [{ module_names: ["product_list"], priority: 100 }],
 		menu_html: html`
-			<span class="label">Wyświetlaj produkty</span>
+			<span class="label">Maksymalna ilość produktów</span>
+			<input class="field" data-blc_prop="settings.product_list_count" />
+
+			<span class="label">Układ produktów</span>
 			<div class="pretty_radio" data-blc_prop="settings.product_list_layout" style="--columns:2">
 				<div class="checkbox_area">
 					<p-checkbox data-value="slider"></p-checkbox>

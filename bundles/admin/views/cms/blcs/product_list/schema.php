@@ -7,11 +7,15 @@ PiepCMSManager::registerModule([
 
         $layout = def($params, ["v_node", "settings", "product_list_layout"], "slider");
         $display_what = def($params, ["v_node", "settings", "product_list_display_what"], "custom");
+        $count = intval(def($params, ["v_node", "settings", "product_list_count"], ""));
+        if (!$count) {
+            $count = 30;
+        }
 
         if ($display_what === "general_product") {
             $params = [
                 "page_id" => 0,
-                "row_count" => 30,
+                "row_count" => $count,
                 "search_order" => "general_product",
                 "general_product_id" => $GENERAL_PRODUCT_ID,
                 "layout" => $layout,
@@ -24,7 +28,7 @@ PiepCMSManager::registerModule([
 
             $params = [
                 "page_id" => 0,
-                "row_count" => 30,
+                "row_count" => $count,
                 "search_order" => $sort,
                 "layout" => $layout,
             ];
