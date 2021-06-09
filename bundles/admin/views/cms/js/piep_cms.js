@@ -4760,14 +4760,41 @@ class PiepCMS {
 				if (focus_node.classList.contains("textable")) {
 					vids.push(show_node.vid);
 				} else {
+					const content_scroll_rect = this.content_scroll.getBoundingClientRect();
 					const focus_node_rect = focus_node.getBoundingClientRect();
+					let width = focus_node_rect.width;
+					let height = focus_node_rect.height;
+					let x0 = focus_node_rect.left;
+					let y0 = focus_node_rect.top;
+					let x1 = x0 + width;
+					let y1 = y0 + height;
+
+					y0 = Math.max(y0, content_scroll_rect.top);
+					if (y1 <= content_scroll_rect.top + 1) {
+						continue;
+					}
+					x0 = Math.max(x0, content_scroll_rect.left);
+					if (x1 <= content_scroll_rect.left + 1) {
+						continue;
+					}
+					const topy = content_scroll_rect.top + content_scroll_rect.height;
+					y1 = Math.min(y1, topy);
+					if (y0 >= topy - 1) {
+						continue;
+					}
+					const topx = content_scroll_rect.left + content_scroll_rect.width;
+					x1 = Math.min(x1, topx);
+					if (x0 >= topx - 1) {
+						continue;
+					}
+
 					float_focuses_html += html`<div
 						class="focus_rect"
 						style="
-                            left:${focus_node_rect.left - 1}px;
-                            top:${focus_node_rect.top - 1 + this.content_scroll.scrollTop}px;
-                            width:${focus_node_rect.width + 2}px;
-                            height:${focus_node_rect.height + 2}px;
+                            left:${x0 - 1}px;
+                            top:${y0 - 1 + this.content_scroll.scrollTop}px;
+                            width:${x1 + 2 - x0}px;
+                            height:${y1 + 2 - y0}px;
                             opacity:${show_node.opacity};
                         "
 					></div>`;
