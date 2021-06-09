@@ -140,12 +140,24 @@ function traverseVDom($v_dom, $options = [])
 
                 $styles = def($v_node, ["styles", $res_name]);
                 if ($styles) {
+                    $ar = def($styles, "--aspect_ratio", "");
+                    if ($ar) {
+                        $node_styles .= `height: auto;max-height: auto;min-width: auto;`;
+                    }
+
                     foreach ($styles as $prop => $val) {
                         if ($width_type !== "custom" && in_array($prop, ["width", "minWidth", "maxWidth"])) {
                             continue;
                         }
+                        if ($ar && in_array($prop, ["height", "minHeight", "maxHeight"])) {
+                            continue;
+                        }
+
+                        if (!startsWith($prop, "--")) {
+                            $prop = camelToKebabCase($prop);
+                        }
                         $val = rtrim($val, "*");
-                        $node_styles .= camelToKebabCase($prop) . ": $val;";
+                        $node_styles .= "$prop: $val;";
                     }
                 }
 

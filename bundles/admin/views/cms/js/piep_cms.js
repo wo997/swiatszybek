@@ -2320,6 +2320,7 @@ class PiepCMS {
 				let node_styles = "";
 
 				let width_type = "custom";
+				let aspect_ratio = undefined;
 
 				for (const res_name of care_about_resolutions) {
 					if (v_node.responsive_settings && v_node.responsive_settings[res_name]) {
@@ -2344,18 +2345,29 @@ class PiepCMS {
 						const res_styles = v_node.styles[res_name];
 						const styles = Object.entries(res_styles);
 						if (styles) {
+							const ar = res_styles["--aspect_ratio"];
+							// if (ar) {
+							// 	aspect_ratio = ar;
+							// }
+							// wont truly work when padding gets huge
+							// if (aspect_ratio && ["height"].includes(prop)) {
+							// 	return;
+							// }
+							if (ar) {
+								node_styles += `height: auto;max-height: auto;min-width: auto;`;
+							}
 							styles.forEach(([prop, val]) => {
 								if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
 									return;
 								}
-								/** @type {string} */
-								let css_prop_name;
-								if (prop.startsWith("--")) {
-									css_prop_name = prop;
-								} else {
-									css_prop_name = kebabCase(prop);
+								if (ar && ["height", "minHeight", "maxHeight"].includes(prop)) {
+									return;
 								}
-								node_styles += `${css_prop_name}: ${val.replace(/\*$/, "")};`;
+
+								if (!prop.startsWith("--")) {
+									prop = kebabCase(prop);
+								}
+								node_styles += `${prop}: ${val.replace(/\*$/, "")};`;
 							});
 						}
 					}

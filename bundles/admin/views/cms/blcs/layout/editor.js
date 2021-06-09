@@ -169,7 +169,18 @@
 			const height_input = menu_wrapper._child(`[data-blc_prop="styles.height"]`);
 			const ratio_input = menu_wrapper._child(`[data-blc_prop="styles.--aspect_ratio"]`);
 
-			const render = () => {
+			const heightHasSomeValue = () => {
+				return numberFromStr(height_input._get_value());
+			};
+			const ratioHasSomeValue = () => {
+				return ratio_input._get_value();
+			};
+
+			/**
+			 *
+			 * @param {PiepNode} src_input
+			 */
+			const render = (src_input = undefined) => {
 				const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
 				const schema = piep_cms_manager.getVNodeSchema(v_node);
 
@@ -179,20 +190,42 @@
 
 				const sh = menu_wrapper._child(".selected_height");
 				if (sh) {
-					sh.classList.toggle("hidden", !can_have_aspect_ratio || !numberFromStr(height_input._get_value()));
+					sh.classList.toggle("hidden", !can_have_aspect_ratio || ratioHasSomeValue());
 				}
 				const sr = menu_wrapper._child(".selected_ratio");
 				if (sr) {
-					sr.classList.toggle("hidden", !can_have_aspect_ratio || !ratio_input._get_value());
+					sr.classList.toggle("hidden", !can_have_aspect_ratio || !ratioHasSomeValue());
 				}
+
+				// if (src_input === height_input) {
+				// 	if (ratioHasSomeValue()) {
+				// 		ratio_input._set_value("", { quiet: true });
+				// 	}
+				// } else if (src_input === ratio_input) {
+				// 	if (heightHasSomeValue()) {
+				// 		height_input._child("input")._set_value("", { quiet: true });
+				// 	}
+				// }
 			};
 
-			height_input.addEventListener("change", render);
-			height_input.addEventListener("input", render);
-			height_input.addEventListener("value_set", render);
-			ratio_input.addEventListener("change", render);
-			ratio_input.addEventListener("input", render);
-			ratio_input.addEventListener("value_set", render);
+			height_input.addEventListener("change", () => {
+				render(height_input);
+			});
+			height_input.addEventListener("input", () => {
+				render(height_input);
+			});
+			height_input.addEventListener("value_set", () => {
+				render();
+			});
+			ratio_input.addEventListener("change", () => {
+				render(ratio_input);
+			});
+			ratio_input.addEventListener("input", () => {
+				render(ratio_input);
+			});
+			ratio_input.addEventListener("value_set", () => {
+				render();
+			});
 		},
 	});
 
