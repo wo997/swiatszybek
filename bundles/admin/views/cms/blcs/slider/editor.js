@@ -71,7 +71,7 @@
 							<button class="btn subtle small move_btn" ${index === 0 ? "disabled" : ""} data-dir="-1">
 								<i class="fas fa-chevron-up"></i>
 							</button>
-							<button class="btn subtle small remove_btn" ${slides.length === 1 ? "disabled" : ""}>
+							<button class="btn subtle small remove_btn">
 								<i class="fas fa-times"></i>
 							</button>
 						</div>
@@ -111,8 +111,18 @@
 				}
 				const add_btn = target._parent(".add_btn");
 				if (add_btn) {
-					slides.push({ name: "Slajd 69", vid: 69 });
-					setSlides(slides, false);
+					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+					v_node.children.push({
+						tag: "div",
+						id: piep_cms.getNewBlcId(),
+						styles: {},
+						classes: ["vertical_container"],
+						attrs: {},
+						settings: {},
+						children: [],
+					});
+					piep_cms.update({ all: true });
+					piep_cms.setBlcMenuFromFocusedNode();
 				}
 
 				const move_btn = target._parent(".move_btn");
@@ -131,7 +141,6 @@
 						/** @type {PiepSliderNode} */
 						// @ts-ignore
 						const slider_node = slider_module_node._child(".wo997_slider");
-						console.log(slide_id, slider_node, slider_node._slider);
 						slider_node._slider.set_slide(slide_id);
 					}
 				}
@@ -149,7 +158,33 @@
 		group: "module",
 		standalone: true,
 		priority: 10,
-		rerender_on: [""],
+		rerender_on: [],
+		render: (v_node) => {
+			/** @type {CMSSliderSlide[]} */
+			let slides = [];
+			try {
+				slides = JSON.parse(v_node.settings.slider_slides);
+			} catch (e) {}
+
+			/** @type {number[]} */
+			let remove_slides = [];
+			slides.forEach((slide, index) => {
+				if (!v_node.children.find((child) => child.id === slide.vid)) {
+					remove_slides.push(index);
+				}
+			});
+			if (remove_slides.length > 0) {
+				slides = slides.filter((e, index) => !remove_slides.includes(index));
+			}
+			v_node.children.forEach((child, index) => {
+				if (!slides.find((slide) => slide.vid === child.id)) {
+					slides.push({ name: "", vid: child.id });
+				}
+				child.module_hook_id = `slide_${index}`;
+			});
+
+			v_node.settings.slider_slides = JSON.stringify(slides);
+		},
 		render_html: (v_node) => {
 			return html`
 				<div class="wo997_slider">
@@ -187,16 +222,15 @@
 			},
 			module_name: "slider",
 			children: [
-				// {
-				// 	tag: "div",
-				// 	id: -1,
-				// 	styles: {},
-				// 	classes: ["vertical_container"],
-				// 	attrs: {},
-				// 	settings: {},
-				// 	module_hook_id: "slide_1",
-				// 	children: [],
-				// },
+				{
+					tag: "div",
+					id: -1,
+					styles: {},
+					classes: ["vertical_container"],
+					attrs: {},
+					settings: {},
+					children: [],
+				},
 			],
 		},
 	});

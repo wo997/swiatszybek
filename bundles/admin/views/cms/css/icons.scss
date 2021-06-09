@@ -4,14 +4,16 @@
 	& {
 		display: inline-flex;
 		vertical-align: middle;
-		gap: 1px;
+		gap: 2px;
 		transform: translateY(-1px);
 	}
 	& > * {
 		& {
-			height: 1.4em;
-			width: 0.4em;
-			border: 1px solid #000;
+			height: 1.2em;
+			width: 0.3em;
+			//border: 1px solid #000;
+			//border-radius: 3px;
+			background: #aaa;
 		}
 	}
 	&.vertical {
@@ -20,8 +22,8 @@
 		}
 		& > * {
 			& {
-				height: 0.4em;
-				width: 1.4em;
+				height: 0.3em;
+				width: 1.2em;
 			}
 		}
 	}
