@@ -311,6 +311,7 @@
 		label: html`Siatka`,
 		group: "container",
 		standalone: true,
+		cannot_nest_in_itself: true,
 		priority: 10,
 		v_node: {
 			tag: "div",

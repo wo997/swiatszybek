@@ -3952,9 +3952,22 @@ class PiepCMS {
 
 			let can_actually_move = !force_in_grid;
 
+			const cannot_nest = grabbed_blc_schema && grabbed_blc_schema.cannot_nest_in_itself;
+			const cannot_place_nearby =
+				cannot_nest && !!near_v_node_data.parent_v_nodes.find((parent_v_node) => parent_v_node.module_name === grabbed_blc_schema.id);
+			const cannot_put_inside = cannot_place_nearby || near_v_node.module_name === grabbed_blc_schema.id;
+
 			let on_sides = can_actually_move;
 			let above_or_below = can_actually_move;
 			let inside = can_actually_move;
+
+			if (cannot_place_nearby) {
+				on_sides = false;
+				above_or_below = false;
+			}
+			if (cannot_put_inside) {
+				inside = false;
+			}
 
 			if (on_sides && (flow_direction === "inline" || flow_direction === "text_list")) {
 				on_sides = false;

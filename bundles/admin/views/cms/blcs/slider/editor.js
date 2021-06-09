@@ -164,6 +164,7 @@
 		group: "module",
 		standalone: true,
 		can_have_aspect_ratio: true,
+		cannot_nest_in_itself: true,
 		priority: 10,
 		rerender_on: [],
 		render: (v_node) => {
@@ -215,9 +216,9 @@
 			tag: "div",
 			id: -1,
 			styles: {
-				// df: {
-				// 	height: "40vw",
-				// },
+				df: {
+					"--aspect_ratio": "40",
+				},
 			},
 			classes: [],
 			attrs: {},
