@@ -15,10 +15,11 @@
 			attrs: {},
 			module_name: "product_list",
 			settings: {
+				product_list_layout: "slider",
 				product_list_display_what: "custom",
 			},
 		},
-		rerender_on: ["settings.product_list_sort", "settings.product_list_category_ids_csv"],
+		rerender_on: ["settings.product_list_layout", "settings.product_list_sort", "settings.product_list_category_ids_csv"],
 		backend_render: true,
 	});
 
@@ -27,6 +28,18 @@
 		type_groups: ["advanced"],
 		blc_groups: [{ module_names: ["product_list"], priority: 100 }],
 		menu_html: html`
+			<span class="label">Wyświetlaj produkty</span>
+			<div class="pretty_radio" data-blc_prop="settings.product_list_layout" style="--columns:2">
+				<div class="checkbox_area">
+					<p-checkbox data-value="slider"></p-checkbox>
+					<span>Slajder</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="grid"></p-checkbox>
+					<span>Siatka</span>
+				</div>
+			</div>
+
 			<span class="label">Wyświetlaj produkty</span>
 			<div class="pretty_radio" data-blc_prop="settings.product_list_display_what" style="--columns:1">
 				<div class="checkbox_area">

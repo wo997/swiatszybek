@@ -481,39 +481,41 @@ foreach ($feature_general_product_count as $x) {
     </div>
 
     <div class="product_list_wrapper">
-        <h1 class="h1 category_name">
-            <?php
-            $cats_so_far = [];
-            $len = count($category_path);
-            for ($i = 0; $i < $len; $i++) {
-                $cat = $category_path[$i];
-                $cats_so_far[] = $cat;
-                if ($i === $len - 1) {
-                    echo "<span>" . $cat["name"] . "</span>";
-                } else {
-                    echo "<a href=\"" . getProductCategoryLink($cats_so_far) . "\">" . $cat["name"] . "<i class=\"fas fa-chevron-right\"></i></a>";
+        <div class="product_list_wrapper_top">
+            <h1 class="h1 category_name">
+                <?php
+                $cats_so_far = [];
+                $len = count($category_path);
+                for ($i = 0; $i < $len; $i++) {
+                    $cat = $category_path[$i];
+                    $cats_so_far[] = $cat;
+                    if ($i === $len - 1) {
+                        echo "<span>" . $cat["name"] . "</span>";
+                    } else {
+                        echo "<a href=\"" . getProductCategoryLink($cats_so_far) . "\">" . $cat["name"] . "<i class=\"fas fa-chevron-right\"></i></a>";
+                    }
                 }
-            }
-            ?></h1>
-        <!-- <p class="filters_description"></p> -->
+                ?></h1>
+            <!-- <p class="filters_description"></p> -->
 
-        <div class="results_info">
-            Znaleziono wyników:
-            <div class="spinner_wrapper inline prod_search_spinner_wrapper" style="margin-left:1px">
-                <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
-                <div class="spinner overlay"></div>
+            <div class="results_info">
+                Znaleziono wyników:
+                <div class="spinner_wrapper inline prod_search_spinner_wrapper" style="margin-left:1px">
+                    <span class="products_total_rows"><?= $products_search_data["total_products"] ?></span>
+                    <div class="spinner overlay"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="sorting_wrapper">
-            <span class="semi_bold mr2">Sortuj</span>
-            <select class="field inline search_order">
-                <option value="bestsellery">Bestsellery</option>
-                <option value="najnowsze">Najnowsze</option>
-                <option value="ceny-rosnaco">Ceny rosnąco</option>
-                <option value="ceny-malejaco">Ceny malejąco</option>
-            </select>
-            <input class="case_search field inline" value="Trafność" readonly style="width: 82px;pointer-events:none">
+            <div class="sorting_wrapper">
+                <span class="semi_bold mr2">Sortuj</span>
+                <select class="field inline search_order">
+                    <option value="bestsellery">Bestsellery</option>
+                    <option value="najnowsze">Najnowsze</option>
+                    <option value="ceny-rosnaco">Ceny rosnąco</option>
+                    <option value="ceny-malejaco">Ceny malejąco</option>
+                </select>
+                <input class="case_search field inline" value="Trafność" readonly style="width: 82px;pointer-events:none">
+            </div>
         </div>
 
         <div class="product_list"><?= $products_search_data["html"] ?></div>

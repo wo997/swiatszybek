@@ -1,11 +1,16 @@
 /* css[global] */
 
+:root {
+	--product_list_padding: calc(10px + 1.5vw);
+}
+
 .product_list {
 	& {
 		--auto-grid-min-size: calc(170px + 0.12 * min(50%, 900px));
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
-		gap: calc(30px + 2vw) calc(20px + 1vw);
+		gap: calc(30px + 2vw) var(--product_list_padding);
+		padding: 0 var(--product_list_padding);
 	}
 	// .product_block {
 	// 	width: var(--product_width);

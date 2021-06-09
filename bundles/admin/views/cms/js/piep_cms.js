@@ -3955,7 +3955,7 @@ class PiepCMS {
 			const cannot_nest = grabbed_blc_schema && grabbed_blc_schema.cannot_nest_in_itself;
 			const cannot_place_nearby =
 				cannot_nest && !!near_v_node_data.parent_v_nodes.find((parent_v_node) => parent_v_node.module_name === grabbed_blc_schema.id);
-			const cannot_put_inside = cannot_place_nearby || near_v_node.module_name === grabbed_blc_schema.id;
+			const cannot_put_inside = cannot_nest && (cannot_place_nearby || near_v_node.module_name === grabbed_blc_schema.id);
 
 			let on_sides = can_actually_move;
 			let above_or_below = can_actually_move;
