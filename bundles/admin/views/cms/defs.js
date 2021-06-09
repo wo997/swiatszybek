@@ -163,6 +163,7 @@
  * backend_render?: boolean
  * is_advanced?: boolean
  * group: CmsBlockGroup
+ * can_have_aspect_ratio?: boolean
  * }} BlockSchema
  *
  * standalone stands for the blc not requiring a parent container that is responsible for width etc

@@ -75,6 +75,9 @@ class PiepCMSManager {
 	 * @returns
 	 */
 	getVNodeSchema(v_node) {
+		if (!v_node) {
+			return undefined;
+		}
 		return this.blcs_schema.find((b) => {
 			if (v_node.classes.includes("vertical_container")) {
 				return b.id === "vertical_container";

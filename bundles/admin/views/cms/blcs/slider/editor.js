@@ -163,6 +163,7 @@
 		label: html`Slajder`,
 		group: "module",
 		standalone: true,
+		can_have_aspect_ratio: true,
 		priority: 10,
 		rerender_on: [],
 		render: (v_node) => {
