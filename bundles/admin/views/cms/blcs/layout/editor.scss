@@ -34,3 +34,8 @@
 		width: 30px;
 	}
 }
+
+.case_no_aspect_ratio.inactive {
+	opacity: 0.4;
+	pointer-events: none;
+}

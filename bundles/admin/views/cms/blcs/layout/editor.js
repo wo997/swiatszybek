@@ -145,23 +145,25 @@
 		type_groups: ["layout"],
 		blc_groups: [{ match_tag: piep_cms_manager.match_textables, priority: 5, exclude: true }],
 		menu_html: html`
-			<div class="label"><i class="fas fa-check selected_height"></i> Wysokość</div>
-			<unit-input data-blc_prop="styles.height">
-				<input />
-				<select>
-					<option value="px">px</option>
-					<option value="%">%</option>
-					<option value="vw">vw</option>
-					<option value="*" class="case_advanced">*</option>
-				</select>
-			</unit-input>
-
 			<div class="case_has_aspect_ratio">
-				<div class="label"><i class="fas fa-check selected_ratio"></i> Stosunek wysokość / szerokość</div>
+				<div class="label">Stały stosunek szerokość / wysokość</div>
 				<div class="glue_children">
 					<input class="field" data-blc_prop="styles.--aspect_ratio" />
 					<div class="field_desc">% szerokości</div>
 				</div>
+			</div>
+
+			<div class="case_no_aspect_ratio">
+				<div class="label">Wysokość</div>
+				<unit-input data-blc_prop="styles.height">
+					<input />
+					<select>
+						<option value="px">px</option>
+						<option value="%">%</option>
+						<option value="vw">vw</option>
+						<option value="*" class="case_advanced">*</option>
+					</select>
+				</unit-input>
 			</div>
 		`,
 		init: (piep_cms, menu_wrapper) => {
@@ -169,18 +171,14 @@
 			const height_input = menu_wrapper._child(`[data-blc_prop="styles.height"]`);
 			const ratio_input = menu_wrapper._child(`[data-blc_prop="styles.--aspect_ratio"]`);
 
-			const heightHasSomeValue = () => {
-				return numberFromStr(height_input._get_value());
-			};
+			// const heightHasSomeValue = () => {
+			// 	return numberFromStr(height_input._get_value());
+			// };
 			const ratioHasSomeValue = () => {
 				return ratio_input._get_value();
 			};
 
-			/**
-			 *
-			 * @param {PiepNode} src_input
-			 */
-			const render = (src_input = undefined) => {
+			const render = () => {
 				const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
 				const schema = piep_cms_manager.getVNodeSchema(v_node);
 
@@ -188,44 +186,18 @@
 
 				case_has_aspect_ratio.classList.toggle("hidden", !can_have_aspect_ratio);
 
-				const sh = menu_wrapper._child(".selected_height");
-				if (sh) {
-					sh.classList.toggle("hidden", !can_have_aspect_ratio || ratioHasSomeValue());
-				}
-				const sr = menu_wrapper._child(".selected_ratio");
-				if (sr) {
-					sr.classList.toggle("hidden", !can_have_aspect_ratio || !ratioHasSomeValue());
-				}
-
-				// if (src_input === height_input) {
-				// 	if (ratioHasSomeValue()) {
-				// 		ratio_input._set_value("", { quiet: true });
-				// 	}
-				// } else if (src_input === ratio_input) {
-				// 	if (heightHasSomeValue()) {
-				// 		height_input._child("input")._set_value("", { quiet: true });
-				// 	}
-				// }
+				const rhsv = can_have_aspect_ratio ? ratioHasSomeValue() : false;
+				piep_cms.side_menu._children(".case_no_aspect_ratio").forEach((e) => {
+					e.classList.toggle("inactive", rhsv);
+				});
 			};
 
-			height_input.addEventListener("change", () => {
-				render(height_input);
-			});
-			height_input.addEventListener("input", () => {
-				render(height_input);
-			});
-			height_input.addEventListener("value_set", () => {
-				render();
-			});
-			ratio_input.addEventListener("change", () => {
-				render(ratio_input);
-			});
-			ratio_input.addEventListener("input", () => {
-				render(ratio_input);
-			});
-			ratio_input.addEventListener("value_set", () => {
-				render();
-			});
+			height_input.addEventListener("change", render);
+			height_input.addEventListener("input", render);
+			height_input.addEventListener("value_set", render);
+			ratio_input.addEventListener("change", render);
+			ratio_input.addEventListener("input", render);
+			ratio_input.addEventListener("value_set", render);
 		},
 	});
 
@@ -234,7 +206,7 @@
 		type_groups: ["layout"],
 		blc_groups: [{ match_tag: piep_cms_manager.match_textables, priority: 5, exclude: true }],
 		menu_html: html`
-			<div class="glue_children">
+			<div class="glue_children case_no_aspect_ratio">
 				<div class="mr2">
 					<div class="label">Wysokość min.</div>
 					<unit-input data-blc_prop="styles.minHeight">

@@ -142,7 +142,7 @@ function traverseVDom($v_dom, $options = [])
                 if ($styles) {
                     $ar = def($styles, "--aspect_ratio", "");
                     if ($ar) {
-                        $node_styles .= `height: auto;max-height: auto;min-width: auto;`;
+                        $node_styles .= "height: auto;max-height: auto;min-width: auto;";
                     }
 
                     foreach ($styles as $prop => $val) {
