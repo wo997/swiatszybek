@@ -88,6 +88,12 @@ function setImageSize(img) {
 	if (!img.offsetWidth && !isHidden(img)) {
 		img.style.width = `${data.w}px`;
 	}
+
+	if (!img.style.height && !img.offsetHeight) {
+		const suppose_height = Math.round((img.offsetWidth * data.h) / data.w);
+		img.style.height = `${suppose_height}px`;
+		img.classList.add("had_no_height");
+	}
 }
 
 /**
@@ -114,6 +120,9 @@ function onScrollImages(options = {}) {
 				// @ts-ignore
 				img.src = src;
 				img.classList.add("wo997_img_waiting");
+				if (img.classList.contains("had_no_height")) {
+					img.style.height = "";
+				}
 			}
 		} else {
 			setImageSize(img);

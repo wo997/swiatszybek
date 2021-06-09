@@ -232,7 +232,11 @@
 			children: [],
 			styles: {
 				df: {
+					// paddingTop: "var(--default_padding)",
+					// paddingBottom: "var(--default_padding)",
+					paddingLeft: "var(--default_padding)",
 					paddingTop: "var(--default_padding)",
+					paddingRight: "var(--default_padding)",
 					paddingBottom: "var(--default_padding)",
 				},
 			},
