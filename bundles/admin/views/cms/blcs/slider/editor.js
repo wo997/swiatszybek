@@ -104,14 +104,16 @@
 				const remove_btn = target._parent(".remove_btn");
 
 				const slide_id = slide_row ? +slide_row.dataset.index : undefined;
+				const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+
+				let update = false;
 
 				if (remove_btn) {
-					slides.splice(slide_id, 1);
-					setSlides(slides, false);
+					v_node.children.splice(slide_id, 1);
+					update = true;
 				}
 				const add_btn = target._parent(".add_btn");
 				if (add_btn) {
-					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
 					v_node.children.push({
 						tag: "div",
 						id: piep_cms.getNewBlcId(),
@@ -121,17 +123,21 @@
 						settings: {},
 						children: [],
 					});
-					piep_cms.update({ all: true });
-					piep_cms.setBlcMenuFromFocusedNode();
+					update = true;
 				}
 
 				const move_btn = target._parent(".move_btn");
 				if (move_btn) {
 					const next_id = +move_btn.dataset.dir + slide_id;
-					const next_ref = slides[next_id];
-					slides[next_id] = slides[slide_id];
-					slides[slide_id] = next_ref;
-					setSlides(slides, false);
+					const next_ref = v_node.children[next_id];
+					v_node.children[next_id] = v_node.children[slide_id];
+					v_node.children[slide_id] = next_ref;
+					update = true;
+				}
+
+				if (update) {
+					piep_cms.update({ all: true });
+					piep_cms.setBlcMenuFromFocusedNode();
 				}
 
 				const edit_btn = target._parent(".edit_btn");
@@ -154,31 +160,28 @@
 	piep_cms_manager.registerBlcSchema({
 		id: "slider",
 		icon: html`<i class="fas fa-images"></i>`,
-		label: html`Slider`,
+		label: html`Slajder`,
 		group: "module",
 		standalone: true,
 		priority: 10,
 		rerender_on: [],
 		render: (v_node) => {
 			/** @type {CMSSliderSlide[]} */
-			let slides = [];
+			let slides_data = [];
 			try {
-				slides = JSON.parse(v_node.settings.slider_slides);
+				slides_data = JSON.parse(v_node.settings.slider_slides);
 			} catch (e) {}
 
-			/** @type {number[]} */
-			let remove_slides = [];
-			slides.forEach((slide, index) => {
-				if (!v_node.children.find((child) => child.id === slide.vid)) {
-					remove_slides.push(index);
-				}
-			});
-			if (remove_slides.length > 0) {
-				slides = slides.filter((e, index) => !remove_slides.includes(index));
-			}
+			/** @type {CMSSliderSlide[]} */
+			const slides = [];
 			v_node.children.forEach((child, index) => {
-				if (!slides.find((slide) => slide.vid === child.id)) {
-					slides.push({ name: "", vid: child.id });
+				const slide = slides_data.find((slide) => slide.vid === child.id);
+				if (slide) {
+					slides.push(slide);
+				} else {
+					const max_id = Math.max(0, ...slides_data.map((slide) => +numberFromStr(slide.name)));
+
+					slides.push({ name: `Slajd ${max_id + 1}`, vid: child.id });
 				}
 				child.module_hook_id = `slide_${index}`;
 			});

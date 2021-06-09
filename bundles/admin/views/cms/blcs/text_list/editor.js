@@ -49,7 +49,12 @@
 					],
 				},
 			],
-			styles: {},
+			styles: {
+				df: {
+					paddingTop: "var(--default_padding)",
+					paddingBottom: "var(--default_padding)",
+				},
+			},
 			classes: [],
 			attrs: {},
 		},
