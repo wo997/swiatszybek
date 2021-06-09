@@ -3,7 +3,7 @@
 .vertical_container_placeholder {
 	& {
 		margin: 5px;
-		background: #eee;
+		background: #0002;
 		min-height: 65px;
 		padding: 10px;
 		border-radius: 5px;
@@ -16,5 +16,10 @@
 		align-self: stretch;
 		pointer-events: none;
 		flex-grow: 1;
+	}
+	span {
+		background: #fff5;
+		padding: 1px 3px;
+		display: block;
 	}
 }

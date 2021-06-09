@@ -155,6 +155,14 @@
 					<option value="*" class="case_advanced">*</option>
 				</select>
 			</unit-input>
+
+			<div class="case_has_aspect_ratio">
+				<div class="label">Stały stosunek wysokość / szerokość</div>
+				<div class="glue_children">
+					<input class="field aspect_ratio" data-blc_prop="styles.--aspect_ratio" />
+					<div class="field_desc">% szerokości</div>
+				</div>
+			</div>
 		`,
 	});
 

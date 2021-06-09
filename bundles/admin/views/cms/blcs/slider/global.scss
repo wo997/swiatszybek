@@ -6,7 +6,7 @@
 	}
 	&::before {
 		content: "";
-		padding-top: 35%;
+		padding-top: calc(1% * var(--aspect_ratio));
 		display: block;
 	}
 	.wo997_slider {

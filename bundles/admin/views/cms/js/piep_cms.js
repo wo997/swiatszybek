@@ -2348,7 +2348,14 @@ class PiepCMS {
 								if (width_type !== "custom" && ["width", "minWidth", "maxWidth"].includes(prop)) {
 									return;
 								}
-								node_styles += `${kebabCase(prop)}: ${val.replace(/\*$/, "")};`;
+								/** @type {string} */
+								let css_prop_name;
+								if (prop.startsWith("--")) {
+									css_prop_name = prop;
+								} else {
+									css_prop_name = kebabCase(prop);
+								}
+								node_styles += `${css_prop_name}: ${val.replace(/\*$/, "")};`;
 							});
 						}
 					}
@@ -2540,7 +2547,7 @@ class PiepCMS {
 				node,
 				empty,
 				".vertical_container_placeholder",
-				html`<div class="vertical_container_placeholder">Pusty kontener</div>`
+				html`<div class="vertical_container_placeholder"><span>Pusty kontener</span></div>`
 			);
 		};
 
