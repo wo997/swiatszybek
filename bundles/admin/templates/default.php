@@ -25,7 +25,7 @@ Templates::endSection();
                     <img class="logo" src="<?= LOGO_PATH_LOCAL_SM ?>" data-same-ext>
                     Przejdź do sklepu <i class="fas fa-chevron-right"></i>
                 </a>
-                <hr>
+                <!-- <hr> -->
 
                 <!-- <div style="padding:0 10px 10px">
                     <div class="label first">Wyszukaj w panelu admina</div>
