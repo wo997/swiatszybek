@@ -114,6 +114,7 @@ function onScrollImages(options = {}) {
 		if (exclude(img)) {
 			return;
 		}
+		setImageSize(img);
 		if (isNodeOnScreen(img, lazy_off, lazy_off) && img.dataset.src) {
 			const src = getResponsiveImageRealUrl(img);
 			if (src) {
@@ -124,9 +125,10 @@ function onScrollImages(options = {}) {
 					img.style.height = "";
 				}
 			}
-		} else {
-			setImageSize(img);
 		}
+		//  else {
+		// 	setImageSize(img);
+		// }
 	});
 
 	$$(".wo997_bckg_img:not(.wo997_bckg_img_shown)").forEach((node) => {
