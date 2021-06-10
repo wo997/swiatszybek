@@ -65,9 +65,9 @@ class Theme
         //     "link" => 'https://fonts.googleapis.com/css2?family=Signika:wght@400;600;700&display=swap'
         // ],
         "Prompt" => [
-            "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
+            "weights" => ["normal" => 400, "semi_bold" => 500, "bold" => 600],
             "use" => "'Prompt', sans-serif",
-            "link" => 'https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap'
+            "link" => 'https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap'
         ],
         "Krub" => [
             "weights" => ["normal" => 400, "semi_bold" => 600, "bold" => 700],
