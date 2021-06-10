@@ -25,6 +25,40 @@
 }
 
 .piep_editor {
+	.edit_page_link_wrapper {
+		& {
+			display: inline-block;
+			font-size: 1rem;
+		}
+		&:not(.active) {
+			.edit_page_link_input {
+				width: auto;
+				border-width: 0;
+				background: transparent;
+				pointer-events: none;
+				font-weight: var(--bold);
+				padding: 0;
+				font-size: 1.2rem;
+			}
+			.dismiss_btn,
+			.save_btn {
+				display: none;
+			}
+		}
+		&.active {
+			.edit_btn {
+				display: none;
+			}
+		}
+
+		.link_input {
+			width: auto;
+		}
+		.edit_btn {
+			font-size: 1rem;
+		}
+	}
+
 	// &::before,
 	// &::after {
 	// 	content: "";

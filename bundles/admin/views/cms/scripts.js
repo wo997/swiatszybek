@@ -83,7 +83,21 @@ domload(() => {
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
 			breadcrumbs += html`
-				<div class="crumb">${location.host}${page_data.url ? "/" : ""}<span class="current_page_url">${page_data.url}</span></div>
+				<div class="crumb">
+					${location.host}${page_data.url ? "/" : ""}
+					<div class="edit_page_link_wrapper">
+						<input class="field inline small edit_page_link_input" value="${page_data.url}" />
+						<button class="btn transparent small edit_btn">
+							<i class="fas fa-cog"></i>
+						</button>
+						<button class="btn transparent small dismiss_btn">
+							<i class="fas fa-times"></i>
+						</button>
+						<button class="btn transparent small save_btn">
+							<i class="fas fa-check"></i>
+						</button>
+					</div>
+				</div>
 			`;
 			preview_url = "/" + page_data.url;
 		}
@@ -137,6 +151,57 @@ domload(() => {
 		});
 
 		setPagePublishedCallback(page_data.active);
+	}
+
+	const edit_page_link_wrapper = $(".edit_page_link_wrapper");
+	if (edit_page_link_wrapper) {
+		const link_input = edit_page_link_wrapper._child(".edit_page_link_input");
+		const edit_btn = edit_page_link_wrapper._child(".edit_btn");
+		const dismiss_btn = edit_page_link_wrapper._child(".dismiss_btn");
+		const save_btn = edit_page_link_wrapper._child(".save_btn");
+
+		const scale = () => {
+			link_input.style.width = 50 + "px";
+			link_input.style.width = link_input.scrollWidth + (edit_page_link_wrapper.classList.contains("active") ? 6 : 2) + "px";
+		};
+
+		edit_btn.addEventListener("click", () => {
+			edit_page_link_wrapper.classList.toggle("active");
+			scale();
+		});
+
+		dismiss_btn.addEventListener("click", () => {
+			link_input._set_value(page_data.url);
+			edit_page_link_wrapper.classList.toggle("active");
+			scale();
+		});
+
+		save_btn.addEventListener("click", () => {
+			showLoader();
+			xhr({
+				url: STATIC_URLS["ADMIN"] + "/page/save",
+				params: {
+					page: {
+						page_id: page_data.page_id,
+						url: link_input._get_value(),
+					},
+				},
+				success: (res) => {
+					page_data = res;
+
+					edit_page_link_wrapper.classList.toggle("active");
+					scale();
+
+					hideLoader();
+				},
+			});
+		});
+
+		if (link_input) {
+			link_input.addEventListener("input", scale);
+			link_input.addEventListener("change", scale);
+			scale();
+		}
 	}
 
 	const edit_seo_btn = $(".edit_seo_btn");
