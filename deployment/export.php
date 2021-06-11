@@ -6,7 +6,6 @@ $include_paths = [
     ".htaccess", "kernel.php", "routing.php", "ping.php", "robots.txt"
 ];
 
-
 $exclude_paths = [];
 
 if (isset($_GET["vendor"])) {

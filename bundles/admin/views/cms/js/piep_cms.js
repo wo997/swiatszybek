@@ -2118,9 +2118,9 @@ class PiepCMS {
 						}
 						deep_enough = true;
 
-						console.log(res_name);
+						const styles = v_node.styles[res_name];
 
-						let layout_hash = "";
+						let layout_hash = `${styles.gridTemplateColumns.length}_${styles.gridTemplateRows.length}.`;
 						v_node.children.forEach((child) => {
 							const styles = child.styles[res_name];
 							layout_hash += `|${child.id}_${def(styles.gridRowStart, 0)}_${def(styles.gridRowEnd, 0)}_${def(
@@ -2165,7 +2165,7 @@ class PiepCMS {
 
 							if (column) {
 								styles.gridTemplateColumns = "1fr";
-								styles.gridTemplateRows = `auto`.repeat(v_node.children.length);
+								styles.gridTemplateRows = `auto `.repeat(v_node.children.length).trim();
 							} else {
 								const top_styles = v_node.styles[top_res_name];
 								styles.gridTemplateColumns = top_styles.gridTemplateColumns;
