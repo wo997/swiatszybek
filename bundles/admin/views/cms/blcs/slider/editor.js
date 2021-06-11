@@ -56,6 +56,23 @@
 					return;
 				}
 
+				const node = piep_cms.getNode(piep_cms.focus_node_vid);
+				if (!node) {
+					return;
+				}
+
+				/** @type {PiepSliderNode} */
+				// @ts-ignore
+				const wo997_slider = node._child(".wo997_slider");
+				if (!wo997_slider) {
+					return;
+				}
+
+				const slider = wo997_slider._slider;
+
+				/** @type {number} */
+				const slide_id = slider.slide_id;
+
 				const slides = getSlides();
 				let slides_html = "";
 				slides.forEach((slide, index) => {
@@ -64,6 +81,9 @@
 							<input class="field small name" data-tooltip="Pomocnicza nazwa slajdu" />
 							<button class="btn subtle small edit_btn">
 								<i class="fas fa-cog"></i>
+							</button>
+							<button class="btn subtle small publish_btn disabled">
+								<i class="fas fa-eye"></i>
 							</button>
 							<button class="btn subtle small move_btn" ${index === slides.length - 1 ? "disabled" : ""} data-dir="1">
 								<i class="fas fa-chevron-down"></i>
@@ -90,15 +110,36 @@
 					};
 					name_input.addEventListener("input", upd);
 					name_input.addEventListener("change", upd);
+
+					if (index === slide_id) {
+						const edit_btn = e._child(".edit_btn");
+						edit_btn.classList.remove("subtle");
+						edit_btn.classList.add("primary");
+					}
 				});
 			};
 
 			slides_input.addEventListener("value_set", render_slide);
 
+			piep_cms.container.addEventListener("any_piep_slider_change", (ev) => {
+				/** @type {PiepNode} */
+				// @ts-ignore
+				const node = ev.detail.node;
+
+				/** @type {number} */
+				const vid = +node.dataset.vid;
+
+				if (vid !== piep_cms.focus_node_vid) {
+					return;
+				}
+
+				render_slide();
+			});
+
 			menu_wrapper.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 
-				const slides = getSlides();
+				//const slides = getSlides();
 
 				const slide_row = target._parent(".slide_row");
 				const remove_btn = target._parent(".remove_btn");
@@ -167,7 +208,7 @@
 		cannot_nest_in_itself: true,
 		priority: 10,
 		rerender_on: [],
-		render: (v_node) => {
+		render: (v_node, node, piep_cms) => {
 			/** @type {CMSSliderSlide[]} */
 			let slides_data = [];
 			try {
@@ -189,6 +230,26 @@
 			});
 
 			v_node.settings.slider_slides = JSON.stringify(slides);
+
+			if (!node.classList.contains("cms_slides_rdy")) {
+				node.classList.add("cms_slides_rdy");
+				/** @type {PiepSliderNode} */
+				// @ts-ignore
+				const wo997_slider = node._child(".wo997_slider");
+
+				wo997_slider.addEventListener("slide_changed", (ev) => {
+					// @ts-ignore
+					const slide_id = ev.detail.slide_id;
+
+					piep_cms.container.dispatchEvent(
+						new CustomEvent("any_piep_slider_change", {
+							detail: {
+								node,
+							},
+						})
+					);
+				});
+			}
 		},
 		render_html: (v_node) => {
 			return html`

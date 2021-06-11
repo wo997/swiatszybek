@@ -2,18 +2,18 @@
 {
 	const grid_priority = 100;
 
-	/**
-	 *
-	 * @param {vDomNodeData} v_node_data
-	 * @returns
-	 */
-	const gridCellMatcher = (v_node_data) => {
-		const parent = v_node_data.parent_v_nodes[0];
-		if (parent && parent.module_name === "grid") {
-			return true;
-		}
-		return false;
-	};
+	// /**
+	//  *
+	//  * @param {vDomNodeData} v_node_data
+	//  * @returns
+	//  */
+	// const gridCellMatcher = (v_node_data) => {
+	// 	const parent = v_node_data.parent_v_nodes[0];
+	// 	if (parent && parent.module_name === "grid") {
+	// 		return true;
+	// 	}
+	// 	return false;
+	// };
 
 	piep_cms_manager.registerProp({
 		name: "grid_template",
