@@ -173,6 +173,7 @@
 				if (update) {
 					piep_cms.update({ all: true });
 					piep_cms.setBlcMenuFromFocusedNode();
+					piep_cms.pushHistory("manage_slides");
 				}
 
 				const node = piep_cms.getNode(piep_cms.focus_node_vid);
@@ -193,7 +194,7 @@
 					slider.set_slide(slider.slide_nodes.length);
 				}
 
-				if (remove_btn && slide_id === slider.slide_id) {
+				if ((remove_btn && slide_id === slider.slide_id) || slider.slide_id === slider.slide_nodes.length) {
 					slider.set_slide(slider.slide_id - 1);
 				}
 
