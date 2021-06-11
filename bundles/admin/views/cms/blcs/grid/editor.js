@@ -333,36 +333,36 @@
 			settings: {},
 			module_name: "grid",
 			children: [
-				{
-					id: -1,
-					tag: "div",
-					styles: {
-						df: {
-							gridRowStart: "1",
-							gridColumnStart: "1",
-							gridRowEnd: "2",
-							gridColumnEnd: "2",
-						},
-					},
-					attrs: {},
-					classes: ["vertical_container"],
-					children: [],
-				},
-				{
-					id: -1,
-					tag: "div",
-					styles: {
-						df: {
-							gridRowStart: "1",
-							gridColumnStart: "2",
-							gridRowEnd: "2",
-							gridColumnEnd: "3",
-						},
-					},
-					attrs: {},
-					classes: ["vertical_container"],
-					children: [],
-				},
+				// {
+				// 	id: -1,
+				// 	tag: "div",
+				// 	styles: {
+				// 		df: {
+				// 			gridRowStart: "1",
+				// 			gridColumnStart: "1",
+				// 			gridRowEnd: "2",
+				// 			gridColumnEnd: "2",
+				// 		},
+				// 	},
+				// 	attrs: {},
+				// 	classes: ["vertical_container"],
+				// 	children: [],
+				// },
+				// {
+				// 	id: -1,
+				// 	tag: "div",
+				// 	styles: {
+				// 		df: {
+				// 			gridRowStart: "1",
+				// 			gridColumnStart: "2",
+				// 			gridRowEnd: "2",
+				// 			gridColumnEnd: "3",
+				// 		},
+				// 	},
+				// 	attrs: {},
+				// 	classes: ["vertical_container"],
+				// 	children: [],
+				// },
 			],
 		},
 		render: (v_node, node, piep_cms) => {

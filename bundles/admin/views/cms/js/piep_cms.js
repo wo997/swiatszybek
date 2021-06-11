@@ -2114,9 +2114,11 @@ class PiepCMS {
 						// desktop first ofc
 						const res_name = ress[i][0];
 						if (res_name !== this.selected_resolution && !deep_enough) {
-							return;
+							continue;
 						}
 						deep_enough = true;
+
+						//console.log(res_name);
 
 						const styles = v_node.styles[res_name];
 
@@ -2129,13 +2131,15 @@ class PiepCMS {
 						//let layout_hash = `${styles.gridTemplateColumns.split(" ").length}_${styles.gridTemplateRows.split(" ").length}.`;
 						// even tiny changes change children
 						let layout_hash = `${styles.gridTemplateColumns}_${styles.gridTemplateRows}.`;
-						v_node.children.forEach((child) => {
-							const styles = child.styles[res_name];
-							layout_hash += `|${child.id}_${def(styles.gridRowStart, 0)}_${def(styles.gridRowEnd, 0)}_${def(
-								styles.gridColumnStart,
-								0
-							)}_${def(styles.gridColumnEnd, 0)}`;
-						});
+						v_node.children
+							.sort((a, b) => Math.sign(a.id - b.id))
+							.forEach((child) => {
+								const styles = child.styles[res_name];
+								layout_hash += `|${child.id}_${def(styles.gridRowStart, 0)}_${def(styles.gridRowEnd, 0)}_${def(
+									styles.gridColumnStart,
+									0
+								)}_${def(styles.gridColumnEnd, 0)}`;
+							});
 
 						if (layout_change && i > 0) {
 							const top_res_name = ress[i - 1][0];
@@ -2144,7 +2148,10 @@ class PiepCMS {
 							if (column) {
 								if (!grid_flow_vids) {
 									grid_flow_vids = v_node.children
-										.map((child) => ({ id: child.id, weight: child.styles.df.gridRowStart + child.styles.df.gridColumnStart }))
+										.map((child) => ({
+											id: child.id,
+											weight: child.styles[top_res_name].gridRowStart * 100 + child.styles[top_res_name].gridColumnStart,
+										}))
 										.sort((a, b) => Math.sign(a.weight - b.weight))
 										.map((e) => e.id);
 								}
@@ -2162,6 +2169,7 @@ class PiepCMS {
 								v_node.children.forEach((child, index) => {
 									const styles = child.styles[res_name];
 									const top_styles = child.styles[top_res_name];
+									//console.log(res_name, "<", top_res_name);
 									styles.gridRowStart = top_styles.gridRowStart;
 									styles.gridRowEnd = top_styles.gridRowEnd;
 									styles.gridColumnStart = top_styles.gridColumnStart;
@@ -2182,6 +2190,7 @@ class PiepCMS {
 						}
 
 						if (v_node.responsive_settings[res_name].layout_hash !== layout_hash) {
+							//console.log(res_name, 21, v_node.responsive_settings[res_name].layout_hash, 37, layout_hash);
 							v_node.responsive_settings[res_name].layout_hash = layout_hash;
 							layout_change = true;
 						}
