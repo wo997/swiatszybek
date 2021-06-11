@@ -181,13 +181,13 @@
 				const quick_edit_btn = target._parent(".quick_edit_btn");
 				if (quick_edit_btn) {
 					const action = quick_edit_btn.dataset.action;
-					const grid_v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
-					const grid_styles = grid_v_node.styles[piep_cms.selected_resolution];
+					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+					const grid_styles = v_node.styles[piep_cms.selected_resolution];
 					if (action === "horizontal") {
 						/** @type {string[]} */
 						const gtc = grid_styles.gridTemplateColumns.split(" ").reverse();
 						grid_styles.gridTemplateColumns = gtc.join(" ");
-						grid_v_node.children.forEach((child) => {
+						v_node.children.forEach((child) => {
 							const styles = child.styles[piep_cms.selected_resolution];
 							const was_start = +styles.gridColumnStart;
 							const was_end = +styles.gridColumnEnd;
@@ -198,7 +198,7 @@
 						/** @type {string[]} */
 						const gtr = grid_styles.gridTemplateRows.split(" ").reverse();
 						grid_styles.gridTemplateRows = gtr.join(" ");
-						grid_v_node.children.forEach((child) => {
+						v_node.children.forEach((child) => {
 							const styles = child.styles[piep_cms.selected_resolution];
 							const was_start = +styles.gridRowStart;
 							const was_end = +styles.gridRowEnd;
@@ -212,7 +212,7 @@
 						const gtc = grid_styles.gridTemplateRows.split(" ");
 						grid_styles.gridTemplateRows = gtr.join(" ");
 						grid_styles.gridTemplateColumns = gtc.join(" ");
-						grid_v_node.children.forEach((child) => {
+						v_node.children.forEach((child) => {
 							const styles = child.styles[piep_cms.selected_resolution];
 							const was_col_start = +styles.gridColumnStart;
 							const was_col_end = +styles.gridColumnEnd;
@@ -230,7 +230,7 @@
 						const gtc = grid_styles.gridTemplateRows.split(" ").reverse();
 						grid_styles.gridTemplateRows = gtr.join(" ");
 						grid_styles.gridTemplateColumns = gtc.join(" ");
-						grid_v_node.children.forEach((child) => {
+						v_node.children.forEach((child) => {
 							const styles = child.styles[piep_cms.selected_resolution];
 							const was_col_start = +styles.gridColumnStart;
 							const was_col_end = +styles.gridColumnEnd;

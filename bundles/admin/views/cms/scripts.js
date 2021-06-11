@@ -161,7 +161,7 @@ domload(() => {
 		const save_btn = edit_page_link_wrapper._child(".save_btn");
 
 		const scale = () => {
-			link_input.style.width = 50 + "px";
+			link_input.style.width = 20 + "px";
 			link_input.style.width = link_input.scrollWidth + (edit_page_link_wrapper.classList.contains("active") ? 6 : 2) + "px";
 		};
 
