@@ -2120,7 +2120,15 @@ class PiepCMS {
 
 						const styles = v_node.styles[res_name];
 
-						let layout_hash = `${styles.gridTemplateColumns.length}_${styles.gridTemplateRows.length}.`;
+						if (!styles.gridTemplateColumns) {
+							styles.gridTemplateColumns = "";
+						}
+						if (!styles.gridTemplateRows) {
+							styles.gridTemplateRows = "";
+						}
+						//let layout_hash = `${styles.gridTemplateColumns.split(" ").length}_${styles.gridTemplateRows.split(" ").length}.`;
+						// even tiny changes change children
+						let layout_hash = `${styles.gridTemplateColumns}_${styles.gridTemplateRows}.`;
 						v_node.children.forEach((child) => {
 							const styles = child.styles[res_name];
 							layout_hash += `|${child.id}_${def(styles.gridRowStart, 0)}_${def(styles.gridRowEnd, 0)}_${def(

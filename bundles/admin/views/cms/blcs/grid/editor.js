@@ -288,22 +288,22 @@
 		`,
 	});
 
-	piep_cms_manager.registerProp({
-		name: "grid_area",
-		blc_groups: [{ matcher: gridCellMatcher, priority: grid_priority }],
-		type_groups: ["layout"],
-		menu_html: html`
-			<div class="label">Pozycja w siatce</div>
-			row start
-			<input class="field" data-blc_prop="styles.gridRowStart" />
-			column start
-			<input class="field" data-blc_prop="styles.gridColumnStart" />
-			row end
-			<input class="field" data-blc_prop="styles.gridRowEnd" />
-			column end
-			<input class="field" data-blc_prop="styles.gridColumnEnd" />
-		`,
-	});
+	// piep_cms_manager.registerProp({
+	// 	name: "grid_area",
+	// 	blc_groups: [{ matcher: gridCellMatcher, priority: grid_priority }],
+	// 	type_groups: ["layout"],
+	// 	menu_html: html`
+	// 		<div class="label">Pozycja w siatce</div>
+	// 		row start
+	// 		<input class="field" data-blc_prop="styles.gridRowStart" />
+	// 		column start
+	// 		<input class="field" data-blc_prop="styles.gridColumnStart" />
+	// 		row end
+	// 		<input class="field" data-blc_prop="styles.gridRowEnd" />
+	// 		column end
+	// 		<input class="field" data-blc_prop="styles.gridColumnEnd" />
+	// 	`,
+	// });
 
 	piep_cms_manager.registerBlcSchema({
 		id: "grid",
