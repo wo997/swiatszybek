@@ -79,7 +79,7 @@
 					slides_html += html`
 						<div class="slide_row" data-index="${index}">
 							<input class="field small name" data-tooltip="Pomocnicza nazwa slajdu" />
-							<button class="btn subtle small edit_btn">
+							<button class="btn small edit_btn ${index === slide_id ? "primary" : "subtle"}">
 								<i class="fas fa-cog"></i>
 							</button>
 							<button class="btn subtle small publish_btn disabled">
@@ -110,12 +110,6 @@
 					};
 					name_input.addEventListener("input", upd);
 					name_input.addEventListener("change", upd);
-
-					if (index === slide_id) {
-						const edit_btn = e._child(".edit_btn");
-						edit_btn.classList.remove("subtle");
-						edit_btn.classList.add("primary");
-					}
 				});
 			};
 
