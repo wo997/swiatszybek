@@ -175,6 +175,28 @@
 					piep_cms.setBlcMenuFromFocusedNode();
 				}
 
+				const node = piep_cms.getNode(piep_cms.focus_node_vid);
+				if (!node) {
+					return;
+				}
+
+				/** @type {PiepSliderNode} */
+				// @ts-ignore
+				const wo997_slider = node._child(".wo997_slider");
+				if (!wo997_slider) {
+					return;
+				}
+
+				const slider = wo997_slider._slider;
+
+				if (add_btn) {
+					slider.set_slide(slider.slide_nodes.length);
+				}
+
+				if (remove_btn && slide_id === slider.slide_id) {
+					slider.set_slide(slider.slide_id - 1);
+				}
+
 				const edit_btn = target._parent(".edit_btn");
 				if (edit_btn) {
 					const slider_module_node = piep_cms.getNode(piep_cms.focus_node_vid);
