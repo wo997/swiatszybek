@@ -2106,9 +2106,20 @@ class PiepCMS {
 
 				if (v_node.module_name === "grid") {
 					let layout_change = false;
-					const res_names = Object.keys(responsive_breakpoints);
-					for (let i = 0; i < res_names.length; i++) {
-						const res_name = res_names[i];
+					/** @type {number[]} */
+					let grid_flow_vids;
+					const ress = Object.entries(responsive_breakpoints);
+					let deep_enough = false;
+					for (let i = 0; i < ress.length; i++) {
+						// desktop first ofc
+						const res_name = ress[i][0];
+						if (res_name !== this.selected_resolution && !deep_enough) {
+							return;
+						}
+						deep_enough = true;
+
+						console.log(res_name);
+
 						let layout_hash = "";
 						v_node.children.forEach((child) => {
 							const styles = child.styles[res_name];
@@ -2117,43 +2128,55 @@ class PiepCMS {
 								0
 							)}_${def(styles.gridColumnEnd, 0)}`;
 						});
-						if (v_node.responsive_settings[res_name].layout_hash !== layout_hash) {
-							layout_change = true;
 
-							const low_res_name = res_names[i + 1];
-							if (low_res_name) {
-								// TODO would be nice to tell what should go down / top by default
-								// probably need to look at x and y coords where weight = y + x*0.1 and weight pulls down :*
-								const column = responsive_breakpoints[low_res_name] < 1000;
+						if (layout_change && i > 0) {
+							const top_res_name = ress[i - 1][0];
+							const column = ress[i][1] < 1000;
+
+							if (column) {
+								if (!grid_flow_vids) {
+									grid_flow_vids = v_node.children
+										.map((child) => ({ id: child.id, weight: child.styles.df.gridRowStart + child.styles.df.gridColumnStart }))
+										.sort((a, b) => Math.sign(a.weight - b.weight))
+										.map((e) => e.id);
+								}
+
+								v_node.children
+									.sort((a, b) => Math.sign(grid_flow_vids.indexOf(a.id) - grid_flow_vids.indexOf(b.id)))
+									.forEach((child, index) => {
+										const styles = child.styles[res_name];
+										styles.gridRowStart = index + 1 + "";
+										styles.gridRowEnd = index + 2 + "";
+										styles.gridColumnStart = 1 + "";
+										styles.gridColumnEnd = 2 + "";
+									});
+							} else {
 								v_node.children.forEach((child, index) => {
 									const styles = child.styles[res_name];
-									const low_styles = child.styles[low_res_name];
-									low_styles.gridRowStart = styles.gridRowStart;
-									low_styles.gridRowEnd = styles.gridRowEnd;
-									low_styles.gridColumnStart = styles.gridColumnStart;
-									low_styles.gridColumnEnd = styles.gridColumnEnd;
-
-									if (column) {
-										low_styles.gridRowStart = index + 1 + "";
-										low_styles.gridRowEnd = index + 2 + "";
-										low_styles.gridColumnStart = 1 + "";
-										low_styles.gridColumnEnd = 2 + "";
-									}
+									const top_styles = child.styles[top_res_name];
+									styles.gridRowStart = top_styles.gridRowStart;
+									styles.gridRowEnd = top_styles.gridRowEnd;
+									styles.gridColumnStart = top_styles.gridColumnStart;
+									styles.gridColumnEnd = top_styles.gridColumnEnd;
 								});
+							}
 
-								const styles = v_node.styles[res_name];
-								const low_styles = v_node.styles[low_res_name];
+							const styles = v_node.styles[res_name];
 
-								if (column) {
-									low_styles.gridTemplateColumns = "1fr";
-									low_styles.gridTemplateRows = `auto`.repeat(v_node.children.length);
-								} else {
-									low_styles.gridTemplateColumns = styles.gridTemplateColumns;
-									low_styles.gridTemplateRows = styles.gridTemplateRows;
-								}
+							if (column) {
+								styles.gridTemplateColumns = "1fr";
+								styles.gridTemplateRows = `auto`.repeat(v_node.children.length);
+							} else {
+								const top_styles = v_node.styles[top_res_name];
+								styles.gridTemplateColumns = top_styles.gridTemplateColumns;
+								styles.gridTemplateRows = top_styles.gridTemplateRows;
 							}
 						}
-						v_node.responsive_settings[res_name].layout_hash = layout_hash;
+
+						if (v_node.responsive_settings[res_name].layout_hash !== layout_hash) {
+							v_node.responsive_settings[res_name].layout_hash = layout_hash;
+							layout_change = true;
+						}
 					}
 				}
 
