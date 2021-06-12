@@ -40,8 +40,7 @@ class Files
 
         if (!$name) $name = rand(1000, 9999);
 
-        // escape
-        $name = escapeUrl($name);
+        $name_escaped = escapeUrl($name);
 
         $name_suffix = "";
 
@@ -72,8 +71,14 @@ class Files
         }
 
         $name_counter = DB::fetchVal("SELECT MAX(name_counter) FROM file WHERE name = ?", [$name]);
-        $name_counter = $name_counter ? $name_counter + 1 : 1;
-        $file_path = $base_path . $name . "-" . $name_counter . $name_suffix . "." . $file_ext;
+        if ($name_counter) {
+            $name_counter++;
+            $name_counter_str = "-$name_counter";
+        } else {
+            $name_counter_str = "";
+            $name_counter = 1;
+        }
+        $file_path = $base_path . $name_escaped . $name_counter_str . $name_suffix . "." . $file_ext;
 
         // save plain file
         copy($tmp_file_path, $file_path);

@@ -80,6 +80,7 @@ domload(() => {
 				`
 			);
 
+			upload_file_default_name = page_data.general_product.name;
 			preview_url = page_data.general_product.__url;
 		} else if (page_type === "page") {
 			breadcrumbs += html`
@@ -161,8 +162,9 @@ domload(() => {
 		const save_btn = edit_page_link_wrapper._child(".save_btn");
 
 		const scale = () => {
-			link_input.style.width = 20 + "px";
-			link_input.style.width = link_input.scrollWidth + (edit_page_link_wrapper.classList.contains("active") ? 6 : 2) + "px";
+			const active = edit_page_link_wrapper.classList.contains("active");
+			link_input.style.width = (active ? 100 : 0) + "px";
+			link_input.style.width = link_input.scrollWidth + (active ? 6 : 2) + "px";
 		};
 
 		edit_btn.addEventListener("click", () => {

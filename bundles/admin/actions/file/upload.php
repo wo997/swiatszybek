@@ -3,7 +3,11 @@
 for ($i = 0; $i < count($_FILES['files']['tmp_name']); $i++) {
     $tmp_file_path = $_FILES['files']['tmp_name'][$i];
     $original_file_name = $_FILES['files']['name'][$i];
-    $name = def($_POST, "name", date("Y-m-d-H-i"));
+
+    $name = def($_POST, "name");
+    if (!$name) {
+        $name = date("Y-m-d-H-i");
+    }
 
     $file_data = Files::saveUploadedFile($tmp_file_path, $original_file_name, $name);
 

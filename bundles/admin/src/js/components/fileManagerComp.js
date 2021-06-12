@@ -1,5 +1,7 @@
 /* js[admin] */
 
+let upload_file_default_name = "";
+
 /**
  * @typedef {{
  * select_target?: PiepNode
@@ -56,10 +58,6 @@ function FileManagerComp(comp, parent, data = undefined) {
 
 		const data = comp._data;
 		const datatable_params = {};
-		// if (sort) {
-		// 	datatable_params.order = sort.key + " " + sort.order.toUpperCase();
-		// }
-		// datatable_params.filters = filters;
 		datatable_params.row_count = data.pagination_data.row_count;
 		datatable_params.page_id = data.pagination_data.page_id;
 		datatable_params.quick_search = data.quick_search;
@@ -166,19 +164,23 @@ function FileManagerComp(comp, parent, data = undefined) {
 							<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 						</div>
 						<div class="scroll_panel scroll_shadow panel_padding">
-							<form class="drop_files" action="">
-								<label>
-									<input type="file" multiple />
-									<span class="link">
-										<i class="fas fa-file-upload"></i>
-										Wybierz pliki
-									</span>
-								</label>
-								<span style="margin-top:8px"> albo upuść je tutaj </span>
-								<span class="dropitbro">Upuść plik!</span>
-								<span class="upload"></span>
-								<input type="submit" name="submit" />
-							</form>
+							<div class="mtfn">
+								<div class="label">Nazwa pliku</div>
+								<input class="field upload_file_name" />
+								<form class="drop_files mtf" action="">
+									<label>
+										<input type="file" multiple />
+										<span class="link">
+											<i class="fas fa-file-upload"></i>
+											Wybierz pliki
+										</span>
+									</label>
+									<span style="margin-top:8px"> albo upuść je tutaj </span>
+									<span class="dropitbro">Upuść plik!</span>
+									<span class="upload"></span>
+									<input type="submit" name="submit" />
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -244,8 +246,7 @@ function FileManagerComp(comp, parent, data = undefined) {
 					formData.append("copy_name", "1");
 					formData.append("name", comp._upload_modal_options.copy_name);
 				} else {
-					// it would be nice to bring it back
-					// formData.append("name", );
+					formData.append("name", $("#uploadFile .upload_file_name")._get_value());
 				}
 
 				xhr({
@@ -272,6 +273,10 @@ function FileManagerComp(comp, parent, data = undefined) {
 				comp._upload_modal_options = options;
 				comp._render();
 				$("#uploadFile .upload_file_label")._set_content(def(options.label, "Prześlij pliki"));
+				if (upload_file_default_name) {
+					$("#uploadFile .upload_file_name")._set_value(upload_file_default_name);
+				}
+
 				showModal("uploadFile", modal_options);
 			};
 

@@ -1029,9 +1029,11 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.add_image_btn.addEventListener("click", () => {
+				const data = comp._data;
+				upload_file_default_name = data.name;
 				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_callback = (src) => {
-					comp._data.images.push({ img_url: src, product_img_id: -1, selected_product_feature_options: [] });
+					data.images.push({ img_url: src, product_img_id: -1, selected_product_feature_options: [] });
 					comp._render();
 				};
 				select_file_modal._render();
