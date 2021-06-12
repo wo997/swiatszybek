@@ -71,12 +71,14 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 	}
 
 	comp._show = (rebate_code_id, options = {}) => {
+		const data = comp._data;
+
 		showModal("rebateCode", {
 			source: options.source,
 		});
 
 		if (rebate_code_id === -1) {
-			Object.assign(comp._data, {
+			Object.assign(data, {
 				rebate_code_id: -1,
 				code: "",
 				discount_type: "static",
@@ -86,20 +88,19 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 				available_till: "",
 				general_products: [],
 			});
-			comp._render();
 		} else {
 			const rebate_code = rebate_codes.find((r) => r.rebate_code_id === rebate_code_id);
-			Object.assign(comp._data, rebate_code);
-			comp._data.general_products = [];
+			Object.assign(data, rebate_code);
+			data.general_products = [];
 			try {
-				comp._data.general_products = JSON.parse(rebate_code.general_products_json);
+				data.general_products = JSON.parse(rebate_code.general_products_json);
 			} catch (e) {}
-			comp._data.user_ids = [];
+			data.user_ids = [];
 			try {
-				comp._data.user_ids = JSON.parse(rebate_code.users_json).map((e) => +e.user_id);
+				data.user_ids = JSON.parse(rebate_code.users_json).map((e) => +e.user_id);
 			} catch (e) {}
-			comp._render();
 		}
+		comp._render();
 	};
 
 	comp._set_data = (data, options = {}) => {
