@@ -13,11 +13,11 @@ domload(() => {
 				key: "name",
 				width: "1",
 				searchable: "string",
-				render: (data) => {
+				render: (value, data) => {
 					if (data.selected) {
-						return html`<div class="semi_bold text_success"><i class="fas fa-check"></i> ${data.name}</div>`;
+						return html`<div class="semi_bold text_success"><i class="fas fa-check"></i> ${value}</div>`;
 					}
-					return data.name;
+					return value;
 				},
 			},
 			{
@@ -30,7 +30,7 @@ domload(() => {
 				label: "",
 				width: "100px",
 				flex: true,
-				render: (data) => {
+				render: () => {
 					return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
 				},
 			},

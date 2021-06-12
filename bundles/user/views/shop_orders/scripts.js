@@ -13,10 +13,10 @@ domload(() => {
 				label: "Produkty",
 				key: "ordered_products",
 				width: "2",
-				render: (data) => {
-					if (data.ordered_products) {
+				render: (value) => {
+					if (value) {
 						try {
-							const op = JSON.parse(data.ordered_products);
+							const op = JSON.parse(value);
 							if (op.length === 1 && op[0].qty === null) {
 								return "";
 							}
@@ -30,8 +30,8 @@ domload(() => {
 				key: "total_price",
 				width: "140px",
 				mobile_label_before: "Wartość: ",
-				render: (data) => {
-					return html`${data.total_price} zł`;
+				render: (value) => {
+					return html`${value} zł`;
 				},
 			},
 			{
@@ -49,18 +49,16 @@ domload(() => {
 			},
 			{
 				label: "Złożono",
-				mobile_label_before: "Data złożeni: ",
+				mobile_label_before: "Data złożenia: ",
 				key: "ordered_at",
 				width: "108px",
-				render: (data) => {
-					return data.ordered_at.substr(0, 10);
-				},
+				render: renderDatetimeDate,
 			},
 			{
 				label: "Akcja",
 				key: "stock",
 				width: "140px",
-				render: (data) => {
+				render: (value, data) => {
 					//<a class="btn subtle small" href=""> Szczegóły (brak) <i class="fas fa-cog"></i> </a>
 					return html`
 						<a class="btn subtle small" href="/zamowienie/${data.shop_order_id}/${data.reference}">

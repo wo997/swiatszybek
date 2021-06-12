@@ -14,10 +14,10 @@ domload(() => {
 				label: "Produkty",
 				key: "ordered_products",
 				width: "2",
-				render: (data) => {
-					if (data.ordered_products) {
+				render: (value) => {
+					if (value) {
 						try {
-							const op = JSON.parse(data.ordered_products);
+							const op = JSON.parse(value);
 							if (op.length === 1 && op[0].qty === null) {
 								return "";
 							}
@@ -33,8 +33,8 @@ domload(() => {
 				width: "140px",
 				sortable: true,
 				searchable: "number",
-				render: (data) => {
-					return html`${data.total_price} zł`;
+				render: (value) => {
+					return html`${value} zł`;
 				},
 			},
 			{
@@ -77,12 +77,12 @@ domload(() => {
 					});
 				},
 			},
-			{ label: "Złożono", key: "ordered_at", width: "135px", sortable: true, searchable: "date" },
+			{ label: "Złożono", key: "ordered_at", width: "135px", sortable: true, searchable: "date", render: renderDatetimeDefault },
 			{
 				label: "Akcja",
 				key: "stock",
 				width: "140px",
-				render: (data) => {
+				render: (value, data) => {
 					//<a class="btn subtle small" href=""> Szczegóły (brak) <i class="fas fa-cog"></i> </a>
 					return html`
 						<a

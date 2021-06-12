@@ -13,8 +13,8 @@ domload(() => {
 				key: "product_name",
 				width: "1",
 				searchable: "string",
-				render: (data) => {
-					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${data.product_name} </a>`;
+				render: (value, data) => {
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
 				},
 			},
 			{
@@ -22,15 +22,15 @@ domload(() => {
 				key: "emails",
 				width: "2",
 				searchable: "string",
-				render: (data) => {
-					return JSON.parse(data.emails).join(", ");
+				render: (value) => {
+					return JSON.parse(value).join(", ");
 				},
 			},
 			{
 				label: "Akcja",
 				key: "",
 				width: "100px",
-				render: (data) => {
+				render: () => {
 					return html``;
 				},
 			},

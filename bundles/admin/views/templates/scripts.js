@@ -37,13 +37,13 @@ domload(() => {
 			},
 			{ label: "Szablon nadrzędny", key: "parent_template_id", width: "1", searchable: "select", map_name: "template" },
 			{ label: "Typ strony", key: "page_type", width: "1", searchable: "select", map_name: "page_type" },
-			{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true },
-			{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true },
+			{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true, render: renderDatetimeDefault },
+			{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true, render: renderDatetimeDefault },
 			{
 				label: "Akcja",
 				key: "",
 				width: "100px",
-				render: (data) => {
+				render: (value, data) => {
 					return html`<a
 						class="btn subtle small"
 						href="${STATIC_URLS["ADMIN"]}/strona?nr_szablonu=${data.template_id}"

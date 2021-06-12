@@ -42,7 +42,7 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 						width: "1",
 						sortable: true,
 						searchable: "string",
-						render: (data) => {
+						render: (value, data) => {
 							if (data.selected) {
 								return html`<div class="semi_bold text_success"><i class="fas fa-check"></i> ${data.value}</div>`;
 							}
@@ -52,7 +52,7 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 					{
 						label: "Akcja",
 						width: "105px",
-						render: (data) => {
+						render: (value, data) => {
 							let cell = "";
 
 							if (data.selected) {

@@ -13,10 +13,8 @@ domload(() => {
 				key: "general_product_name",
 				width: "1",
 				searchable: "string",
-				render: (data) => {
-					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
-						${data.general_product_name}
-					</a>`;
+				render: (value, data) => {
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
 				},
 			},
 			{ label: "Komentarz", key: "comment", width: "2", searchable: "string" },
@@ -25,8 +23,8 @@ domload(() => {
 				key: "rating",
 				width: "110px",
 				sortable: true,
-				render: (data) => {
-					return html`<span class="rating stars">${data.rating}</span>`;
+				render: (value) => {
+					return html`<span class="rating stars">${value}</span>`;
 				},
 			},
 			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
@@ -35,7 +33,7 @@ domload(() => {
 				label: "Akcja",
 				key: "",
 				width: "100px",
-				render: (data) => {
+				render: () => {
 					return html` <button class="btn subtle small" disabled data-tooltip="Ukryj komentarz"><i class="fas fa-eye-slash"></i></button> `;
 				},
 			},

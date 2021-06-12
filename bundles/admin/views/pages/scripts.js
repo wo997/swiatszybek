@@ -33,8 +33,8 @@ domload(() => {
 	const common_columns = [
 		{ label: "Tytuł", key: "seo_title", width: "0.8", searchable: "string" },
 		{ label: "Opis", key: "seo_description", width: "0.8", searchable: "string" },
-		{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true },
-		{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true },
+		{ label: "Utworzono", key: "created_at", width: "0.6", searchable: "date", sortable: true, render: renderDatetimeDefault },
+		{ label: "Zmodyfikowano", key: "modified_at", width: "0.6", searchable: "date", sortable: true, render: renderDatetimeDefault },
 		{ label: "Szablon", key: "template_id", width: "0.6", searchable: "select", map_name: "template" },
 	];
 
@@ -48,8 +48,8 @@ domload(() => {
 						key: "url",
 						width: "1",
 						searchable: "string",
-						render: (data) => {
-							return `${location.host}${data.url ? "/" : ""}${data.url}`;
+						render: (value) => {
+							return `${location.host}${value ? "/" : ""}${value}`;
 						},
 					},
 					{
@@ -79,7 +79,7 @@ domload(() => {
 						label: "Akcja",
 						key: "",
 						width: "100px",
-						render: (data) => {
+						render: (value, data) => {
 							return html`
 								<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}" data-tooltip="Edytuj">
 									<i class="fas fa-cog"></i>
@@ -137,7 +137,7 @@ domload(() => {
 						label: "Akcja",
 						key: "",
 						width: "100px",
-						render: (data) => {
+						render: (value, data) => {
 							return html`
 								<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}" data-tooltip="Edytuj">
 									<i class="fas fa-cog"></i>
@@ -172,8 +172,8 @@ domload(() => {
 						key: "__category_path_names_csv",
 						width: "1",
 						searchable: "string",
-						render: (data) => {
-							return data.__category_path_names_csv.replace(/,/g, " ― ");
+						render: (value) => {
+							return value.replace(/,/g, " ― ");
 						},
 					},
 					{
@@ -206,7 +206,7 @@ domload(() => {
 						label: "Akcja",
 						key: "",
 						width: "100px",
-						render: (data) => {
+						render: (value, data) => {
 							return html`
 								<a class="btn subtle small" href="${STATIC_URLS["ADMIN"]}/strona?nr_strony=${data.page_id}" data-tooltip="Edytuj">
 									<i class="fas fa-cog"></i>

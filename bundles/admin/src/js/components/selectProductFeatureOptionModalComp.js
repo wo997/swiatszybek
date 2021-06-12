@@ -37,7 +37,7 @@ function SelectProductFeatureOptionModalComp(comp, parent, data = undefined) {
 					{
 						label: "Akcja",
 						width: "135px",
-						render: (data) => {
+						render: () => {
 							return html`<button class="btn primary small select_btn">Wybierz <i class="fas fa-check"></i></button>`;
 						},
 					},

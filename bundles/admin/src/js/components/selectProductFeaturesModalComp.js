@@ -33,7 +33,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						key: "name",
 						width: "1",
 						searchable: "string",
-						render: (data) => {
+						render: (value, data) => {
 							if (data.selected) {
 								return html`<div class="semi_bold text_success"><i class="fas fa-check"></i> ${data.name}</div>`;
 							}
@@ -45,7 +45,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						key: "options",
 						width: "2",
 						searchable: "string",
-						render: (data) => {
+						render: (value, data) => {
 							return data.icon + " " + data.options;
 						},
 					},
@@ -53,7 +53,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						label: "Akcja",
 						width: "207px",
 						flex: true,
-						render: (data) => {
+						render: (value, data) => {
 							let cell = "";
 
 							if (data.selected) {
@@ -84,7 +84,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 						label: "",
 						width: "100px",
 						flex: true,
-						render: (data) => {
+						render: () => {
 							return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
 						},
 					},

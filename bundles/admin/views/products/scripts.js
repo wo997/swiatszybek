@@ -58,8 +58,9 @@ domload(() => {
 					{
 						label: "Zdjęcie",
 						width: "65px",
-						render: (data) =>
-							html`<img data-src="${data.img_url}" class="wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain" />`,
+						key: "img_url",
+						render: (value) =>
+							html`<img data-src="${value}" class="wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain" />`,
 						flex: true,
 					},
 					{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
@@ -91,7 +92,7 @@ domload(() => {
 						label: "Akcja",
 						key: "",
 						width: "100px",
-						render: (data) => {
+						render: (value, data) => {
 							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
 								Edytuj <i class="fas fa-cog"></i>
 							</a>`;
@@ -122,9 +123,10 @@ domload(() => {
 					{
 						label: "Zdjęcie",
 						width: "65px",
-						render: (data) =>
+						key: "img_url",
+						render: (value) =>
 							html`<img
-								data-src="${data.img_url}"
+								data-src="${value}"
 								class="product_img wo997_img"
 								style="width:48px;margin:-4px 0;height:48px;object-fit:contain;"
 							/>`,
@@ -158,7 +160,7 @@ domload(() => {
 						label: "Akcja",
 						key: "",
 						width: "100px",
-						render: (data) => {
+						render: (value, data) => {
 							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
 								Edytuj <i class="fas fa-cog"></i>
 							</a>`;

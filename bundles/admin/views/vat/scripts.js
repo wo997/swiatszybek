@@ -7,12 +7,12 @@ domload(() => {
 	DatatableComp(datatable_comp, undefined, {
 		dataset: vats,
 		columns: [
-			{ label: "Wartość", key: "value", width: "1", render: (data) => `${data.value * 100}%` },
+			{ label: "Wartość", key: "value", width: "1", render: (value) => `${value * 100}%` },
 			{ label: "Opis", key: "description", width: "1" },
 			{
 				label: "Akcja",
 				width: "135px",
-				render: (data) => {
+				render: () => {
 					return html`<button class="btn subtle small edit_btn">Edytuj <i class="fas fa-cog"></i></button>`;
 				},
 			},
@@ -20,7 +20,7 @@ domload(() => {
 		maps: [],
 		primary_key: "vat_id",
 		empty_html: html`Brak stawek VAT`,
-		label: "Produkty",
+		label: "Stawki VAT",
 		after_label: html`<button class="btn primary add_vat_btn">
 			Dodaj stawkę VAT
 			<i class="fas fa-plus"></i>

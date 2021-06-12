@@ -49,11 +49,11 @@ $admin_navigations_tree = [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
             ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/produkty?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt'],
             ["url" => "/produkt"/*, "title" => '<i class="fas fa-cube"></i> Edycja produktu'*/],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
+            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/stawki-vat", "title" => '<i class="fas fa-percent"></i> Stawki VAT'],
         ],
     ],

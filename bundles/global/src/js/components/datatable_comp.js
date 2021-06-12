@@ -12,7 +12,7 @@
  *  width?: string
  *  sortable?: boolean | undefined
  *  searchable?: string
- *  render?(data: any)
+ *  render?(value: any, data: any)
  *  editable?: string
  *  editable_callback?(data)
  *  batch_edit?: boolean

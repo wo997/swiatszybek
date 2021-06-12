@@ -220,7 +220,7 @@ function getDatatableRowHtml(dt, row, opts = {}) {
 				console.error("Map is missing: ", column.map_name);
 			}
 		} else if (column.render) {
-			cell_html += def(column.render(row.row_data), "");
+			cell_html += def(column.render(val, row.row_data), "");
 		} else {
 			cell_html += def(val, "");
 		}
@@ -292,4 +292,18 @@ function getEditableCellHtml(dt, column) {
 		</select>`;
 	}
 	return cell_html;
+}
+
+function renderDatetimeDefault(value) {
+	if (typeof value === "string") {
+		return value.substring(0, 16);
+	}
+	return "";
+}
+
+function renderDatetimeDate(value) {
+	if (typeof value === "string") {
+		return value.substring(0, 10);
+	}
+	return "";
 }

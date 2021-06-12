@@ -16,8 +16,8 @@ domload(() => {
 				width: "1",
 				sortable: true,
 				searchable: "number",
-				render: (data) => {
-					return data.value + (data.value.includes("%") ? "" : " zł");
+				render: (value) => {
+					return value + (value.includes("%") ? "" : " zł");
 				},
 			},
 			{ label: "Ilość", key: "qty", width: "1", sortable: true, searchable: "number" },
@@ -27,7 +27,7 @@ domload(() => {
 				label: "Akcja",
 				key: "stock",
 				width: "100px",
-				render: (data) => {
+				render: (value, data) => {
 					return html`<button class="btn subtle small edit_rebate_code" data-rebate_code_id="${data.rebate_code_id}">
 						Edytuj <i class="fas fa-cog"></i>
 					</button>`;
