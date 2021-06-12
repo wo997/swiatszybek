@@ -52,7 +52,7 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 
 				let description_ok = "";
 				if (data.seo_description.length > 0) {
-					if (comp._nodes.seo_description.scrollHeight > comp._nodes.seo_description.clientHeight) {
+					if (data.seo_description.length > 160 || comp._nodes.seo_description.scrollHeight > comp._nodes.seo_description.clientHeight) {
 						description_ok = html`<span class="text_error" data-tooltip="Zbyt długi"> <i class="fas fa-times"></i> </span>`;
 					} else if (data.seo_description.length < 100) {
 						description_ok = html`<span class="text_warning" data-tooltip="Zbyt krótki">
@@ -66,7 +66,7 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 
 				let title_ok = "";
 				if (data.seo_title.length > 0) {
-					if (comp._nodes.seo_title.scrollWidth > comp._nodes.seo_title.clientWidth) {
+					if (data.seo_title.length > 70 || comp._nodes.seo_title.scrollWidth > comp._nodes.seo_title.clientWidth) {
 						title_ok = html`<span class="text_error" data-tooltip="Zbyt długi"> <i class="fas fa-times"></i> </span>`;
 					} else if (data.seo_title.length < 40) {
 						title_ok = html`<span class="text_warning" data-tooltip="Zbyt krótki">
