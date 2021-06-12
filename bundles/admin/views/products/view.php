@@ -43,7 +43,7 @@
     <div class="btn error_light unselect_categories_btn" style="margin-left:3px" data-tooltip="Pokaż wszystkie produkty">
         <i class="fas fa-times"></i>
     </div>
-    <span class="semi_bold what_categories_label" style="margin-left:7px"></span>
+    <span class="semi_bold what_categories_label"></span>
 </div>
 
 

@@ -2,31 +2,29 @@
 
 /**
  * @typedef {{
- * products: {
- * net_price: number
- * gross_price: number
- * vat_id: number
- * }[]
- * }} AddStockProductsDeliveryModalCompData
+ * products: StockProductData[]
+ * }} StockProductsDeliveryModalCompData
  *
  * @typedef {{
- * _data: AddStockProductsDeliveryModalCompData
- * _set_data(data?: AddStockProductsDeliveryModalCompData, options?: SetCompDataOptions)
+ * _data: StockProductsDeliveryModalCompData
+ * _set_data(data?: StockProductsDeliveryModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  save_btn: PiepNode
  * }
  * _show?(options?: ShowModalParams)
- * } & BaseComp} AddStockProductsDeliveryModalComp
+ * } & BaseComp} StockProductsDeliveryModalComp
  */
 
 /**
- * @param {AddStockProductsDeliveryModalComp} comp
+ * @param {StockProductsDeliveryModalComp} comp
  * @param {*} parent
- * @param {AddStockProductsDeliveryModalCompData} data
+ * @param {StockProductsDeliveryModalCompData} data
  */
-function AddStockProductsDeliveryModalComp(comp, parent, data = undefined) {
+function StockProductsDeliveryModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = {};
+		data = {
+			products: [],
+		};
 	}
 
 	comp._show = (options = {}) => {
@@ -34,7 +32,7 @@ function AddStockProductsDeliveryModalComp(comp, parent, data = undefined) {
 
 		comp._render();
 
-		showModal("AddStockProductsDeliveryModal", {
+		showModal("StockProductsDeliveryModal", {
 			source: options.source,
 		});
 	};
@@ -53,7 +51,7 @@ function AddStockProductsDeliveryModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
-			<div class="scroll_panel scroll_shadow panel_padding"></div>
+			<div class="scroll_panel scroll_shadow panel_ping"></div>
 		`,
 		ready: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
@@ -84,23 +82,23 @@ function AddStockProductsDeliveryModalComp(comp, parent, data = undefined) {
 	});
 }
 
-function getAddStockProductsDeliveryModal() {
-	const ex = $("#AddStockProductsDeliveryModal");
+function getStockProductsDeliveryModal() {
+	const ex = $("#StockProductsDeliveryModal");
 	if (!ex) {
 		registerModalContent(html`
-			<div id="AddStockProductsDeliveryModal" data-expand data-dismissable>
+			<div id="StockProductsDeliveryModal" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: calc(30% + 500px);max-height: calc(20% + 500px);">
-					<add-stock-products-delivery-modal-comp class="flex_stretch"></add-stock-products-delivery-modal-comp>
+					<stock-products-delivery-modal-comp class="flex_stretch"></stock-products-delivery-modal-comp>
 				</div>
 			</div>
 		`);
 	}
 
-	/** @type {AddStockProductsDeliveryModalComp} */
+	/** @type {StockProductsDeliveryModalComp} */
 	// @ts-ignore
-	const add_stock_products_delivery_modal_comp = $("#AddStockProductsDeliveryModal add-stock-products-delivery-modal-comp");
+	const stock_products_delivery_modal_comp = $("#StockProductsDeliveryModal stock-products-delivery-modal-comp");
 	if (!ex) {
-		AddStockProductsDeliveryModalComp(add_stock_products_delivery_modal_comp, undefined);
+		StockProductsDeliveryModalComp(stock_products_delivery_modal_comp, undefined);
 	}
-	return add_stock_products_delivery_modal_comp;
+	return stock_products_delivery_modal_comp;
 }

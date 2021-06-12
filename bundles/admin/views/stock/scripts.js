@@ -34,8 +34,9 @@ domload(() => {
 	datatable_comp.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		if (target._parent(".add_delivery_btn")) {
-			getAddStockProductsDeliveryModal()._show();
+		const add_delivery_btn = target._parent(".add_delivery_btn");
+		if (add_delivery_btn) {
+			getStockProductsDeliveryModal()._show({ source: add_delivery_btn });
 		}
 	});
 });
