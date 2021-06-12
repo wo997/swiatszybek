@@ -140,13 +140,7 @@ function ProductComp(comp, parent, data = undefined) {
 		maps: [
 			{
 				name: "vat",
-				getMap: () => {
-					return [
-						{ label: "23%", val: 1 },
-						{ label: "8%", val: 2 },
-						{ label: "5%", val: 3 },
-					];
-				},
+				getMap: () => vats.map((v) => ({ val: v.vat_id, label: `${v.value * 100}%` })),
 			},
 			{
 				name: "product_variant_option",

@@ -4,6 +4,7 @@
  * @typedef {{
  * vat_id: number
  * value: number
+ * percentage_value: number
  * description: string
  * }} VatModalCompData
  *
@@ -26,7 +27,9 @@
 function VatModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
+			vat_id: -1,
 			value: 0,
+			percentage_value: 0,
 			description: "",
 		};
 	}
@@ -40,18 +43,19 @@ function VatModalComp(comp, parent, data = undefined) {
 
 		data.vat_id = vat_id;
 		if (vat_id === -1) {
-			data.value = 0;
 			data.description = "";
+			data.percentage_value = 0;
 			comp._render();
 		} else {
 			const vat = vats.find((r) => r.vat_id === vat_id);
-			data.value = vat.value;
+			data.percentage_value = vat.value * 100;
 			data.description = vat.description;
 			comp._render();
 		}
 	};
 
 	comp._set_data = (data, options = {}) => {
+		data.value = data.percentage_value * 0.01;
 		setCompData(comp, data, {
 			...options,
 			render: () => {
@@ -65,13 +69,13 @@ function VatModalComp(comp, parent, data = undefined) {
 			<div class="custom_toolbar">
 				<span class="title medium mr2">Dostawa produktów</span>
 				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
-				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
+				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="mtfn">
 					<div class="label">Wartość</div>
 					<div class="glue_children">
-						<input class="field" data-bind="{${data.value}}" data-validate="number|value:{0,100}" />
+						<input class="field" data-bind="{${data.percentage_value}}" data-validate="number|value:{0,100}" />
 						<div class="field_desc">%</div>
 					</div>
 
@@ -93,6 +97,7 @@ function VatModalComp(comp, parent, data = undefined) {
 				}
 
 				const vat = {
+					vat_id: data.vat_id,
 					value: data.value,
 					description: data.description,
 				};

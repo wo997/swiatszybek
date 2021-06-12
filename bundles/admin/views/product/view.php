@@ -64,20 +64,8 @@ if (!$general_product_data) {
 <script>
     <?= preloadProductFeatures() ?>
     <?= preloadProductCategories() ?>
+    <?= preloadVats() ?>
     let general_product_data = <?= json_encode($general_product_data) ?>;
-    let vats = [{
-            vat_id: 1,
-            value: 0.23
-        },
-        {
-            vat_id: 2,
-            value: 0.08
-        },
-        {
-            vat_id: 3,
-            value: 0.05
-        },
-    ];
 </script>
 
 <?php Templates::startSection("header"); ?>

@@ -14,7 +14,11 @@
  */
 let vats = [];
 
-function loadedVats() {}
+function loadedVats() {
+	vats.forEach((v) => {
+		v.value = +v.value; // a decimal is a string lol
+	});
+}
 
 function refreshVats() {
 	xhr({

@@ -7,8 +7,8 @@ domload(() => {
 	DatatableComp(datatable_comp, undefined, {
 		dataset: vats,
 		columns: [
-			{ label: "Wartość", key: "value", width: "1", searchable: "string" },
-			{ label: "Opis", key: "description", width: "1", searchable: "string" },
+			{ label: "Wartość", key: "value", width: "1", render: (data) => `${data.value * 100}%` },
+			{ label: "Opis", key: "description", width: "1" },
 			{
 				label: "Akcja",
 				width: "135px",
