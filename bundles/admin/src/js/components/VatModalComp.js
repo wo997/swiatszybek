@@ -75,7 +75,7 @@ function VatModalComp(comp, parent, data = undefined) {
 				<div class="mtfn">
 					<div class="label">Wartość</div>
 					<div class="glue_children">
-						<input class="field" data-bind="{${data.percentage_value}}" data-validate="number|value:{0,100}" />
+						<input class="field number" data-bind="{${data.percentage_value}}" data-validate="number|value:{0,100}" />
 						<div class="field_desc">%</div>
 					</div>
 
