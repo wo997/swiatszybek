@@ -346,7 +346,7 @@ function traverseFeatures()
                         </div>
                         <div class="tab_content animate_hidden hidden expand_y" data-tab_id="2">
                             <div class="flex_children_width range_filter" data-feature_key="$feature_key">
-                                <div class="flex_column" style="margin-right:var(--form_spacing);">
+                                <div class="flex_column mrf">
                                     Od
                                     <div class="glue_children">
                                         <input class="field inline from" inputmode="numeric">

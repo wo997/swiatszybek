@@ -5,7 +5,6 @@
     </div>
     <div class="cart_menu headerbtn_menu">
         <p class="menu_header">Twój koszyk</p>
-        <hr>
         <div class="case_cart_empty expand_y">
             <div style="margin: 2em 0;text-align: center;">Twój koszyk jest pusty!</div>
         </div>

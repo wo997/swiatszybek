@@ -110,7 +110,7 @@ function addressComp(comp, parent, data = undefined) {
 				<div class="label">Adres e-mail</div>
 				<input class="field pretty_errors" autocomplete="email" data-bind="{${data.email}}" data-validate="email" />
 
-				<div style="height:20px"></div>
+				<div class="mt2"></div>
 
 				<div class="label">Kraj</div>
 				<select class="field pretty_errors" autocomplete="country-name" data-bind="{${data.country}}">

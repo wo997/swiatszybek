@@ -96,11 +96,9 @@ foreach ($general_product_variants as $general_product_variant) {
     $variants_less_html .= "
         <span class=\"label\">$name</span>
         <div class=\"radio_group unselectable\">
-        <div>
-            <div class=\"checkbox_area inline\">
-                <p-checkbox data-value=\"0\"></p-checkbox>
-                <span>Wszystkie</span>
-            </div>
+        <div class=\"checkbox_area\">
+            <p-checkbox data-value=\"0\"></p-checkbox>
+            <span>Wszystkie</span>
         </div>
     ";
     foreach ($general_product_variant["options"] as $variant_option) {
@@ -108,11 +106,10 @@ foreach ($general_product_variants as $general_product_variant) {
         $name = $variant_option["name"];
         $count = isset($comments_options_map[$product_variant_option_id]) ? $comments_options_map[$product_variant_option_id]["count"] : "0";
         $variants_less_html .= "
-            <div>
-                <div class=\"checkbox_area inline\" style=\"margin-top: 7px;\">
-                    <p-checkbox data-value=\"$product_variant_option_id\"></p-checkbox>
-                    <span>$name</span> <span class=\"count\">($count)</span>
-                </div>
+            <br>
+            <div class=\"checkbox_area\" style=\"margin-top: 7px;\">
+                <p-checkbox data-value=\"$product_variant_option_id\"></p-checkbox>
+                <span>$name</span> <span class=\"count\">($count)</span>
             </div>
         ";
     }

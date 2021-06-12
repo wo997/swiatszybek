@@ -47,7 +47,12 @@
 	font-weight: var(--semi_bold);
 }
 
+.product_list_wrapper_top {
+	padding: 0 var(--product_list_padding);
+}
+
 .product_list_pagination.comp {
+	padding: 0 var(--product_list_padding);
 	margin: 30px 0;
 }
 
@@ -162,10 +167,6 @@
 
 .products_all:not(.ready) {
 	visibility: hidden;
-}
-
-.product_list_wrapper_top {
-	padding: 0 var(--product_list_padding);
 }
 
 @media (min-width: 850px) {

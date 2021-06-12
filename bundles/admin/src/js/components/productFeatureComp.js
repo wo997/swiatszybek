@@ -418,11 +418,7 @@ function ProductFeatureComp(comp, parent, data) {
 						<i class="fas fa-times"></i>
 					</button>
 				</div>
-				<datatable-comp
-					style="margin-top:var(--form_spacing)"
-					data-bind="{${data.datatable}}"
-					data-node="{${comp._nodes.datatable}}"
-				></datatable-comp>
+				<datatable-comp class="mtf" data-bind="{${data.datatable}}" data-node="{${comp._nodes.datatable}}"></datatable-comp>
 			</div>
 		`,
 		ready: () => {

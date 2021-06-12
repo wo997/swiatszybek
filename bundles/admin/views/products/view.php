@@ -32,9 +32,7 @@
                 Zarządzaj magazynem
             </span>
         </div>
-    </div>
-
-    <button class="btn primary" onclick="showAddProductModal({source:this});"> Dodaj produkt <i class="fas fa-plus"></i> </button>
+    </div><button class="btn primary ml2" onclick="showAddProductModal({source:this});"> Dodaj produkt <i class="fas fa-plus"></i> </button>
 </div>
 
 <div class="products_view_header_under">

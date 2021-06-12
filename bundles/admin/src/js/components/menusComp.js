@@ -247,9 +247,7 @@ function MenusComp(comp, parent, data = undefined) {
 				<i class="fas fa-angle-double-down"></i>
 			</button>
 
-			<div style="height:20px"></div>
-
-			<div style="position: relative;user-select: none;">
+			<div class="mt2" style="position: relative;user-select: none;">
 				<list-comp data-bind="{${data.menus}}" class="clean multi_master" data-max_level="3" data-multi_row_selector=".menu_wrapper">
 					<sub-menu-comp></sub-menu-comp>
 				</list-comp>

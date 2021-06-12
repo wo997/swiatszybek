@@ -751,8 +751,7 @@ function DatatableComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div style="margin-bottom:10px;display:flex;align-items:center;flex-wrap:wrap">
-				<span class="datatable_label medium bold" html="{${def(data.label, "")}}"></span>
-				<span html="{${data.after_label}}"></span>
+				<span class="datatable_label medium bold mr2" html="{${def(data.label, "")}}"></span><span html="{${data.after_label}}"></span>
 				<div style="flex-grow:1"></div>
 				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:var(--semi_bold)"></div>
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">

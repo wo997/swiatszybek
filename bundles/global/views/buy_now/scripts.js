@@ -375,7 +375,6 @@ function initBuyNowCart() {
 	// @ts-ignore
 	const cart_products_comp = $("cart-products-comp.buy_products");
 	CartProductsComp(cart_products_comp, undefined);
-	cart_products_comp._child("list-comp").classList.remove("open");
 
 	const loadCart = () => {
 		cart_products_comp._data.products = user_cart.products;

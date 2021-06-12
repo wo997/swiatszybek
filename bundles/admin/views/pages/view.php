@@ -48,9 +48,7 @@
                 Kategorie produktów
             </span>
         </div>
-    </div>
-
-    <a href="<?= Request::$static_urls["ADMIN"] ?>/strona" class="btn primary" onclick="getAddPageModal()._show({source:this});return false;">
+    </div><a href="<?= Request::$static_urls["ADMIN"] ?>/strona" class="btn primary ml2" onclick="getAddPageModal()._show({source:this});return false;">
         Utwórz stronę <i class="fas fa-plus"></i>
     </a>
 </div>

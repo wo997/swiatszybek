@@ -21,10 +21,12 @@
 		--box-padding: 6px 8px;
 	}
 	> * {
+		#p & {
+			display: flex;
+		}
 		& {
 			position: relative;
 			padding: var(--box-padding);
-			display: flex;
 			flex-wrap: wrap;
 			min-height: var(--box_height);
 			text-align: center;

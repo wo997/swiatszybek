@@ -184,6 +184,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <div class="label">Skorzystaj z szybkich i bezpiecznych płatności</div>
                 <img src="/src/img/przelewy24-vector-logo.svg" style="width: 130px;margin: 10px 0 10px;">
 
+                <br>
                 <div class="checkbox_area">
                     <p-checkbox class="square accept_regulations"></p-checkbox>
                     <span class="semi_bold">Akceptuję regulamin</span>
