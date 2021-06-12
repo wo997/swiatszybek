@@ -7,57 +7,35 @@ domload(() => {
 	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/stock_product/search",
 		columns: [
-			{ label: "Imię", key: "first_name", width: "1", searchable: "string" },
-			{ label: "Nazwisko", key: "last_name", width: "1", searchable: "string" },
-			{ label: "E-mail", key: "email", width: "1", searchable: "string" },
-			{ label: "Nr telefonu", key: "phone", width: "1", searchable: "string" },
-			{
-				label: "Rola",
-				key: "role_id",
-				width: "1",
-				searchable: "select",
-				map_name: "roles",
-				editable: "select",
-				editable_callback: (data) => {
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "/user/save",
-						params: {
-							user: {
-								user_id: data.user_id,
-								role_id: data.role_id,
-							},
-						},
-						success: (res) => {
-							showNotification(
-								html`<div class="header">Użytkownik ${data.email}</div>
-									<div class="center">Rola: ${user_roles.find((e) => e.role_id === data.role_id).name}</div>`
-							);
-							datatable_comp._backend_search();
-						},
-					});
-				},
-			},
+			{ label: "Produkt", key: "__name", width: "1", searchable: "string" },
+			{ label: "Cena netto", key: "net_price", width: "1", searchable: "string" },
+			{ label: "VAT", key: "vat_id", width: "1", searchable: "string" },
+			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "string" },
+			{ label: "Data dostawy", key: "delivered_at", width: "1", searchable: "date" },
 		],
 		maps: [
-			{
-				name: "roles",
-				getMap: () => {
-					const map = user_roles
-						.filter((role) => role.role_id > 0)
-						.map((role) => {
-							const obj = {
-								val: role.role_id,
-								label: role.name,
-							};
-							return obj;
-						});
-					return map;
-				},
-			},
+			// {
+			// 	name: "product",
+			// 	getMap: () => {
+			// 		return products.map((g) => ({ label: g.__name, val: g.product_id }));
+			// 	},
+			// },
 		],
 		primary_key: "stock_product_id",
 		empty_html: html`Brak produktów`,
 		label: "Produkty",
+		after_label: html`<button class="btn primary add_delivery_btn">
+			Dodaj dostawę
+			<i class="fas fa-plus"></i>
+		</button>`,
 		save_state_name: "admin_stock_products",
+	});
+
+	datatable_comp.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+
+		if (target._parent(".add_delivery_btn")) {
+			getAddStockProductsDeliveryModal()._show();
+		}
 	});
 });

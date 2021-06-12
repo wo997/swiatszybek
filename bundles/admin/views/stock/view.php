@@ -6,12 +6,7 @@
 <title>Magazyn</title>
 
 <script>
-    <?= preloadProductCategories() ?>
-    <?php if (isset($_GET["dodaj"])) { ?>
-        domload(() => {
-            showAddProductModal();
-        })
-    <?php } ?>
+    <?= preloadProducts() ?>
 </script>
 
 <?php Templates::startSection("admin_page_body"); ?>
