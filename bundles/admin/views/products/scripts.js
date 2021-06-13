@@ -156,16 +156,16 @@ domload(() => {
 							});
 						},
 					},
-					{
-						label: "Akcja",
-						key: "",
-						width: "100px",
-						render: (value, data) => {
-							return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
-								Edytuj <i class="fas fa-cog"></i>
-							</a>`;
-						},
-					},
+					// {
+					// 	label: "Akcja",
+					// 	key: "",
+					// 	width: "100px",
+					// 	render: (value, data) => {
+					// 		return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
+					// 			Edytuj <i class="fas fa-cog"></i>
+					// 		</a>`;
+					// 	},
+					// },
 				],
 				primary_key: "product_id",
 				empty_html: html`Brak produktów`,

@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * products: StockProductData[]
+ * select_product?: SelectableCompData
  * }} StockProductsDeliveryModalCompData
  *
  * @typedef {{
@@ -24,6 +25,23 @@ function StockProductsDeliveryModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			products: [],
+		};
+	}
+
+	if (data.select_product === undefined) {
+		data.select_product = {
+			options: {},
+			dataset: products ? products.filter((p) => p.active && p.gp_active).map((p) => ({ value: p.product_id + "", label: p.__name })) : [],
+			custom_select_callback: (value) => {
+				const data = comp._data;
+				console.log(+value);
+				//data.general_products.push({ general_product_id: +value, qty: 1 });
+				comp._render();
+			},
+			get_custom_selection: () => {
+				return [];
+				//return comp._data.general_products.map((g) => g.general_product_id + "");
+			},
 		};
 	}
 
@@ -51,7 +69,15 @@ function StockProductsDeliveryModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
-			<div class="scroll_panel scroll_shadow panel_ping"></div>
+			<div class="scroll_panel scroll_shadow panel_padding">
+				<div class="mtfn">
+					<div class="label">Produkty</div>
+					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
+					<list-comp data-bind="{${data.products}}" class="wireframe space mt1">
+						<!-- <rebate-code_general-product-comp></rebate-code_general-product-comp> -->
+					</list-comp>
+				</div>
+			</div>
 		`,
 		ready: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {

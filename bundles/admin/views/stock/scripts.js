@@ -11,7 +11,7 @@ domload(() => {
 			{ label: "Cena netto", key: "net_price", width: "1", searchable: "string" },
 			{ label: "VAT", key: "vat_id", width: "1", searchable: "string" },
 			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "string" },
-			{ label: "Data dostawy", key: "delivered_at", width: "1", searchable: "date", render: renderDatetimeDefault },
+			{ label: "Dostawa", key: "delivered_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 		],
 		maps: [
 			// {

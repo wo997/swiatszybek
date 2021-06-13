@@ -18,6 +18,17 @@
  * __options_json: string
  * __queue_count: number
  * __url: string
+ * gp_active: number
+ * gp_name: string
+ * gp_product_type: string
+ * gp__avg_rating: string
+ * gp__features_html: string
+ * gp__images_json: string
+ * gp__img_url: string
+ * gp__options_json: string
+ * gp__rating_count: number
+ * gp__search: string
+ * gp__url: string
  * }} ProductData
  */
 

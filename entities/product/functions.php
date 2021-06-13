@@ -22,7 +22,14 @@ function getProductLink($general_product_id, $name, $option_ids = [], $options_n
 
 function getAllProducts()
 {
-    return DB::fetchArr("SELECT * FROM product");
+    return DB::fetchArr("SELECT p.active, p.general_product_id, p.gross_price, p.net_price, p.vat_id, p.stock, p.weight,
+        p.width, p.length, p.height, p.product_id, p.__img_url, p.__name, p.__options_json, p.__queue_count, p.__url,
+        
+        gp.active gp_active, gp.name gp_name, gp.product_type gp_product_type, gp.__avg_rating gp__avg_rating,
+        gp.__features_html gp__features_html, gp.__images_json gp__images_json, gp.__img_url gp__img_url,
+        gp.__options_json gp__options_json, gp.__rating_count gp__rating_count, gp.__search gp__search, gp.__url gp__url
+        
+        FROM product p INNER JOIN general_product gp USING(general_product_id)");
 }
 
 function preloadProducts()
