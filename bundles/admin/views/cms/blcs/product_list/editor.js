@@ -76,7 +76,7 @@
 
 				<div class="label">
 					Kategorie produktów
-					<button class="btn primary small choose_product_categories_btn">Wybierz z listy</button>
+					<button class="btn primary small choose_product_categories_btn">Wybierz</button>
 				</div>
 				<input class="hidden" data-blc_prop="settings.product_list_category_ids_csv" />
 
