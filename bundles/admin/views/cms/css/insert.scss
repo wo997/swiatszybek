@@ -35,6 +35,9 @@
 			background: var(--insert_blc_clr);
 			box-shadow: 0 1px 3px 0 #0006;
 		}
+		.float_multi_insert_visible&:not(.over) {
+			display: none;
+		}
 	}
 
 	.piep_editor_float_multi_insert_bckg {

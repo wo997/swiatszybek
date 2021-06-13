@@ -1361,7 +1361,7 @@ class PiepCMS {
 				});
 
 				// explode positions
-				for (let tries = 0; tries < 4; tries++) {
+				for (let tries = 0; tries < 7; tries++) {
 					let fine = true;
 					const len = popup_blcs.length;
 					for (let a = 0; a < len; a++) {
@@ -1409,6 +1409,8 @@ class PiepCMS {
 				const size = Math.sqrt(max_ds) * 2 + 45 + "px";
 				this.float_multi_insert_bckg.style.width = size;
 				this.float_multi_insert_bckg.style.height = size;
+
+				this.container.classList.add("float_multi_insert_visible");
 			} else if (this.grabbed_v_node) {
 				this.releaseBlock();
 			}
@@ -2905,6 +2907,7 @@ class PiepCMS {
 
 			if (!inside) {
 				this.showing_float_multi_of_blc.classList.remove("hidden");
+				this.container.classList.remove("float_multi_insert_visible");
 				this.float_multi_insert_bckg.classList.add("hidden");
 
 				this.showing_float_multi_of_blc._popup_blcs.forEach((popup_blc) => {
@@ -4417,6 +4420,7 @@ class PiepCMS {
 		this.container.classList.remove("disable_editing");
 		this.container.classList.remove("has_insert_pos");
 		this.float_focuses._empty();
+		this.container.classList.remove("float_multi_insert_visible");
 		this.float_multi_insert_bckg.classList.add("hidden");
 
 		this.content.style.minHeight = "";
