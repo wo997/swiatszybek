@@ -3849,6 +3849,8 @@ class PiepCMS {
 				return;
 			}
 
+			const editor_disabled = blc.classList.contains("editor_disabled");
+
 			const blc_rect = blc.getBoundingClientRect();
 			if (blc_rect.top + blc_rect.height < content_scroll_rect.top || blc_rect.top > content_scroll_rect.top + content_scroll_rect.height) {
 				// whole blc off
@@ -4086,7 +4088,7 @@ class PiepCMS {
 				inside = false;
 			}
 
-			if (near_v_node.module_name === "grid") {
+			if (near_v_node.module_name === "grid" && !editor_disabled) {
 				const cells = blc._children(".cell_float");
 				const cell_map = {};
 				let columns = 0;
@@ -4261,7 +4263,7 @@ class PiepCMS {
 				inside = false;
 			}
 
-			if (blc.classList.contains("editor_disabled")) {
+			if (editor_disabled) {
 				on_sides = false;
 				above_or_below = false;
 			}

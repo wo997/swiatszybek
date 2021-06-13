@@ -7,7 +7,8 @@
 		min-height: 75px;
 		min-width: 75px;
 	}
-	&:not(:hover) .cell_float {
+	&:not(:hover) .cell_float,
+	&.editor_disabled > .cell_float {
 		opacity: 0;
 	}
 }
