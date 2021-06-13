@@ -9,6 +9,12 @@ domload(() => {
 	ProductComp(product_comp, undefined);
 	product_comp.style.visibility = "hidden";
 
+	if (!page_data) {
+		const case_has_page = product_comp._child(".case_has_page");
+		case_has_page.classList.add("inactive");
+		case_has_page.dataset.tooltip = "Zanim opublikujesz produkt musisz utworzyć jego stronę";
+	}
+
 	const main_header_height = $(".main_header").offsetHeight;
 	const sticky_subheaders = product_comp._children(".sticky_subheader");
 	$(".main_admin_scroll").addEventListener("scroll", () => {

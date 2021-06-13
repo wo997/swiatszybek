@@ -54,6 +54,21 @@ product-comp {
 		}
 	}
 
+	.case_has_page {
+		& {
+			display: inline-block;
+		}
+		&.inactive {
+			& {
+				opacity: 0.4;
+				cursor: not-allowed;
+			}
+			* {
+				pointer-events: none;
+			}
+		}
+	}
+
 	.node_all_products {
 		@media (min-width: 1000px) {
 			margin-top: -35px;

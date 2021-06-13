@@ -55,6 +55,8 @@ if (!$general_product_data) {
     Request::redirect(Request::$static_urls["ADMIN"] . "/produkty");
 }
 
+$page_data = DB::fetchRow("SELECT * FROM page p WHERE p.link_what_id = $general_product_id AND p.page_type = 'general_product'");
+
 ?>
 
 <?php Templates::startSection("head_content"); ?>
@@ -66,6 +68,7 @@ if (!$general_product_data) {
     <?= preloadProductCategories() ?>
     <?= preloadVats() ?>
     let general_product_data = <?= json_encode($general_product_data) ?>;
+    let page_data = <?= json_encode($page_data) ?>;
 </script>
 
 <?php Templates::startSection("header"); ?>

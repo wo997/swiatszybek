@@ -825,18 +825,20 @@ function ProductComp(comp, parent, data = undefined) {
 				<div class="label first">Nazwa produktu</div>
 				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
-				<div class="label">Widoczność w sklepie</div>
-				<div class="radio_group boxes hide_checks number flex" data-bind="{${data.active}}">
-					<div class="checkbox_area error">
-						<div>
-							<p-checkbox data-value="0"></p-checkbox>
-							<span class="semi_bold">Nieaktywny <i class="fas fa-eye-slash"></i></span>
+				<div class="case_has_page">
+					<div class="label">Widoczność w sklepie</div>
+					<div class="radio_group boxes hide_checks number flex" data-bind="{${data.active}}">
+						<div class="checkbox_area error">
+							<div>
+								<p-checkbox data-value="0"></p-checkbox>
+								<span class="semi_bold">Nieaktywny <i class="fas fa-eye-slash"></i></span>
+							</div>
 						</div>
-					</div>
-					<div class="checkbox_area success">
-						<div>
-							<p-checkbox data-value="1"></p-checkbox>
-							<span class="semi_bold">Aktywny <i class="fas fa-eye"></i></span>
+						<div class="checkbox_area success">
+							<div>
+								<p-checkbox data-value="1"></p-checkbox>
+								<span class="semi_bold">Aktywny <i class="fas fa-eye"></i></span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -1066,20 +1068,11 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			comp._nodes.edit_page_btn.addEventListener("click", () => {
-				const general_product_id = comp._data.general_product_id;
-				xhr({
-					url: `${STATIC_URLS["ADMIN"]}/page/get`,
-					params: {
-						general_product_id,
-					},
-					success: (res) => {
-						if (res && res.page_id) {
-							window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${res.page_id}`;
-						} else {
-							window.location.href = `${STATIC_URLS["ADMIN"]}/strony?utworz&general_product_id=${general_product_id}`;
-						}
-					},
-				});
+				if (page_data) {
+					window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${page_data.page_id}`;
+				} else {
+					window.location.href = `${STATIC_URLS["ADMIN"]}/strony?utworz&general_product_id=${comp._data.general_product_id}`;
+				}
 			});
 
 			comp._nodes.delete_btn.addEventListener("click", () => {
