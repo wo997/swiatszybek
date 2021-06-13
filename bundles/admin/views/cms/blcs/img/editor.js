@@ -21,6 +21,25 @@
 		`,
 	});
 
+	piep_cms_manager.registerProp({
+		name: "img_ext",
+		blc_groups: [{ module_names: ["img"], priority: 100 }],
+		type_groups: ["advanced"],
+		menu_html: html`
+			<div class="label">Rozszerzenie / Typ zdjęcia</div>
+			<div class="pretty_radio box_align_left" data-blc_prop="settings.img_ext" style="--columns:1">
+				<div class="checkbox_area">
+					<p-checkbox data-value="optimize"></p-checkbox>
+					<span>Skompresowane<br />(wysoka optymalizacja)</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="same"></p-checkbox>
+					<span>Pierwotne<br />(jakość + przezroczystość)</span>
+				</div>
+			</div>
+		`,
+	});
+
 	piep_cms_manager.registerFloatingProp({
 		name: "choose_img_btn",
 		blc_groups: [{ module_names: ["img"], priority: 100 }],
@@ -82,11 +101,12 @@
 			},
 			module_name: "img",
 		},
-		rerender_on: ["settings.img_src"],
+		rerender_on: ["settings.img_src", "settings.img_ext"],
 		render_html: (v_node) => {
 			/** @type {string} */
 			const img_src = v_node.settings.img_src;
-			return html`<img class="wo997_img" data-src="${img_src}" />`;
+			const img_ext = v_node.settings.img_ext;
+			return html`<img class="wo997_img" data-src="${img_src}" ${img_ext === "same" ? "data-same-ext" : ""} />`;
 		},
 	});
 }

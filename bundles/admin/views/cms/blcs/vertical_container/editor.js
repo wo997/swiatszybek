@@ -32,7 +32,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj blok poziomo</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignSelf" style="--columns:4">
+			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:4">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -69,7 +69,7 @@
 		advanced: true,
 		menu_html: html`
 			<div class="label">Wyrównaj blok pionowo</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignSelf" style="--columns:5">
+			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -105,7 +105,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość pionowo</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.justifyContent" style="--columns:4">
+			<div class="pretty_radio" data-blc_prop="styles.justifyContent" style="--columns:4">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -173,7 +173,7 @@
 		type_groups: ["layout"],
 		menu_html: html`
 			<div class="label">Wyrównaj zawartość poziomo</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.alignItems" style="--columns:5;--box-padding: 6px 3px;">
+			<div class="pretty_radio" data-blc_prop="styles.alignItems" style="--columns:5;--box-padding: 6px 3px;">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>

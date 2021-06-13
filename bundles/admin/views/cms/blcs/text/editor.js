@@ -182,7 +182,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.fontWeight" style="--columns:4">
+			<div class="pretty_radio" data-blc_prop="styles.fontWeight" style="--columns:4">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -209,7 +209,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.textAlign" style="--columns:5">
+			<div class="pretty_radio" data-blc_prop="styles.textAlign" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -240,7 +240,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Kursywa (pochylenie czcionki)</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.fontStyle" style="--columns:5">
+			<div class="pretty_radio" data-blc_prop="styles.fontStyle" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>
@@ -263,7 +263,7 @@
 		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Zdobienie czcionki</div>
-			<div class="pretty_radio pretty_blue" data-blc_prop="styles.textDecoration" style="--columns:5">
+			<div class="pretty_radio" data-blc_prop="styles.textDecoration" style="--columns:5">
 				<div class="checkbox_area empty">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>-</span>

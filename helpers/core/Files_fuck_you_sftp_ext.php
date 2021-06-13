@@ -57,8 +57,11 @@ class Files
                 return false;
             }*/
 
-            // necessary for lazy loading and image optimization
-            $name_suffix = "_" . $width . "x" . $height;
+            // svg won't have it lol
+            if ($width && $height) {
+                // necessary for lazy loading and image optimization
+                $name_suffix = "_" . $width . "x" . $height;
+            }
         }
 
         $name_counter = 0;
@@ -454,6 +457,7 @@ class Files
             'application/smil'                                                          => 'smil',
             'text/srt'                                                                  => 'srt',
             'image/svg+xml'                                                             => 'svg',
+            'image/svg'                                                                 => 'svg',
             'application/x-shockwave-flash'                                             => 'swf',
             'application/x-tar'                                                         => 'tar',
             'application/x-gzip-compressed'                                             => 'tgz',

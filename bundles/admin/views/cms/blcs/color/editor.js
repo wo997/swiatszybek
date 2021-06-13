@@ -118,7 +118,7 @@
 	piep_cms_manager.registerProp({
 		name: "color",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Kolor czcionki</div>
 
