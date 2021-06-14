@@ -20,6 +20,11 @@ function registerUnitInputs(parent) {
 		input.classList.add("field");
 		select.classList.add("field", "inline", "blank", "unit_picker");
 
+		// ???
+		// if (input.classList.contains("small")) {
+		// 	select.classList.add("small");
+		// }
+
 		let last_val;
 
 		const valueSet = () => {

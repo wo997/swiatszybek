@@ -116,7 +116,7 @@ function Product_FeatureOptionComp(
 					data-input_delay="200"
 				/>
 				<select
-					class="field inline blank unit_picker"
+					class="field small inline blank unit_picker"
 					data-node="{${comp._nodes.physical_value_unit}}"
 					data-bind="{${data.unit_id}}"
 				></select>
