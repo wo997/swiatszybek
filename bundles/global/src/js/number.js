@@ -26,3 +26,11 @@ function floor(num, decimalPlaces = 0) {
 	num = Math.floor(+(num + "e" + decimalPlaces));
 	return Number(num + "e" + -decimalPlaces);
 }
+
+/**
+ *
+ * @param {number} num
+ */
+function prettyPrice(num) {
+	return num.toFixed(2);
+}

@@ -34,16 +34,16 @@ domload(() => {
 			e._set_content(total_qty);
 		});
 		$$(".cart_products_price").forEach((e) => {
-			e._set_content(user_cart.products_price + " zł");
+			e._set_content(prettyPrice(user_cart.products_price) + " zł");
 		});
 		$$(".cart_delivery_price").forEach((e) => {
-			e._set_content(user_cart.delivery_price + " zł");
+			e._set_content(prettyPrice(user_cart.delivery_price) + " zł");
 		});
 		$$(".cart_total_price").forEach((e) => {
-			e._set_content(user_cart.total_price + " zł");
+			e._set_content(prettyPrice(user_cart.total_price) + " zł");
 		});
 		$$(".cod_fee").forEach((e) => {
-			e._set_content(user_cart.cod_fee + " zł");
+			e._set_content(prettyPrice(user_cart.cod_fee) + " zł");
 		});
 	};
 
