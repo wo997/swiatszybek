@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5793492fceffc23a0f8210d5d048f61c",
+    "content-hash": "07308bb695ba291a4b148676ad675b09",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -350,6 +350,61 @@
                 "oauth2"
             ],
             "time": "2021-02-05T20:50:04+00:00"
+        },
+        {
+            "name": "gusapi/gusapi",
+            "version": "5.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/johnzuk/GusApi.git",
+                "reference": "a9f777f046fbb8d28c482cb6b0b00e77738d70a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/johnzuk/GusApi/zipball/a9f777f046fbb8d28c482cb6b0b00e77738d70a5",
+                "reference": "a9f777f046fbb8d28c482cb6b0b00e77738d70a5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "ext-soap": "*",
+                "php": "^7.1|^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.11",
+                "phpstan/phpstan": "^0.12.58",
+                "phpunit/phpunit": "^7.0 | ^8.0",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GusApi\\": "src/GusApi/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Janusz Żukowicz",
+                    "email": "janusz.zukowicz@gmail.com"
+                }
+            ],
+            "description": "Gus Api Library for PHP",
+            "keywords": [
+                "CEIDG",
+                "GUS",
+                "api",
+                "krs",
+                "library",
+                "nip",
+                "regon",
+                "soap"
+            ],
+            "time": "2021-04-05T18:28:29+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
