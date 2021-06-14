@@ -267,10 +267,11 @@ function renderGeneralProductsList($params)
         $options = json_decode($product["__options_json"], true);
         $product_count = $product["product_count"];
 
-        $display_price = $min_gross_price . " zł";
+        $display_price = $min_gross_price; // . " zł";
         if ($min_gross_price !== $max_gross_price) {
-            $display_price .= " - " . $max_gross_price . "zł";
+            $display_price .= " - " . $max_gross_price; // . " zł";
         }
+        $display_price .= " zł";
 
         $stock_class = "";
         if ($sum_stock > 0) {
@@ -330,6 +331,17 @@ function renderGeneralProductsList($params)
         } else {
             $images_json = "[]";
         }
+
+        // <div class="product_variants">
+        //     <div class="header">
+        //         <span><?= $product_count ></span>
+        //         <i class="fas fa-list-ul"></i>
+        //     </div>
+        //     <?php if ($features_html) : >
+        //         <div class="list smooth_scrollbar"><?= $features_html ></div>
+        //     <?php endif >
+        // </div>
+
 ?>
         <div class="<?= $product_block_class ?>">
             <a href="<?= $link ?>">
@@ -343,15 +355,6 @@ function renderGeneralProductsList($params)
                 <span class="product_rating rating"><span class="stars"><?= $avg_rating ?></span> (<?= $rating_count ?>)</span>
                 <div style="width:100%"></div>
                 <span class="product_stock <?= $stock_class ?>"></span>
-                <div class="product_variants">
-                    <div class="header">
-                        <span><?= $product_count ?></span>
-                        <i class="fas fa-list-ul"></i>
-                    </div>
-                    <?php if ($features_html) : ?>
-                        <div class="list smooth_scrollbar"><?= $features_html ?></div>
-                    <?php endif ?>
-                </div>
             </div>
         </div>
 <?php

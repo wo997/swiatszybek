@@ -34,7 +34,7 @@ function LastViewedProductsComp(comp, parent, data = undefined) {
 
 	createComp(comp, parent, data, {
 		template: html`
-			<list-comp data-bind="{${data.products}}" data-primary="general_product_id" class="striped space open">
+			<list-comp data-bind="{${data.products}}" data-primary="general_product_id" class="striped space">
 				<last-viewed-products_product-comp></last-viewed-products_product-comp>
 			</list-comp>
 		`,
