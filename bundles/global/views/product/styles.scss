@@ -153,12 +153,11 @@
 			padding-left: 10px;
 			z-index: 600;
 			background: #fff;
-			border-bottom: 1px solid #ccc;
-			box-shadow: 0 0px 8px 0 #0002;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			transition: 0.2s transform;
+			box-shadow: 0 -5px 15px 0 #0005;
 		}
 		span {
 			font-weight: var(--semi_bold);

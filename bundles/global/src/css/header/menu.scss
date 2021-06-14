@@ -1,10 +1,19 @@
 /* css[modules/main_menu] */
 
 .mainMenu {
+	.main_menu {
+		border-top: 1px solid #eee;
+	}
 	a {
-		display: flex;
-		padding: 9px 15px;
-		box-shadow: 0 1px 0 0 #eee;
+		& {
+			display: flex;
+			padding: 9px 15px;
+			box-shadow: 0 1px 0 0 #eee;
+			//border-bottom: 1px solid #eee;
+		}
+		// &:first-child {
+		// 	border-top: 1px solid #eee;
+		// }
 	}
 	.expand_btn {
 		& {

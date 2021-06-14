@@ -55,7 +55,7 @@ function requestHeaderModals() {
 			<div class="modal_body" style="max-width: 500px;">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
 				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
-				<div class="scroll_panel scroll_shadow pa1"></div>
+				<div class="scroll_panel scroll_shadow pa1 pt0"></div>
 			</div>
 		</div>
 	`);

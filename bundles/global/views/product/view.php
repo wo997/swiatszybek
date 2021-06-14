@@ -310,12 +310,12 @@ if ($main_img) {
             <span class="mobile">Powiadomienie</span>
         </h3>
 
-        <div class="scroll_panel scroll_shadow panel_padding">
+        <div class="scroll_panel scroll_shadow panel_padding pt0">
             <div>
                 <div style="position:relative">
                     <img src="/src/img/hourglass.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 10px;bottom: 52px;transform: rotate(7deg);width: 68px;">
                     <div style="position:relative;text-align:center">
-                        <div style="padding:10px 0">
+                        <div class="pt2 pb2">
                             Otrzymasz powiadomienie gdy produkt pojawi się w sklepie:
                             <div class="full_product_name semi_bold"><?= $full_product_name ?></div>
                         </div>
