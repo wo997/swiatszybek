@@ -608,6 +608,8 @@ class PiepCMS {
 	}
 
 	initInserting() {
+		this.insert_blc_size = 24;
+
 		this.content_scroll.addEventListener("scroll", () => {
 			if (!this.grabbed_v_node) {
 				return;
@@ -1339,9 +1341,7 @@ class PiepCMS {
 				});
 			}
 
-			/** @type {insertBlc} */
-			// @ts-ignore
-			const insert_blc = mouse.target._parent(".insert_blc");
+			const insert_blc = this.getInsertBlcUnderMouse();
 
 			if (insert_blc && insert_blc.classList.contains("multiple")) {
 				this.float_multi_insert_bckg.classList.remove("hidden");
@@ -2884,6 +2884,25 @@ class PiepCMS {
 		this.text_selection.partial_ranges = [];
 	}
 
+	getInsertBlcUnderMouse() {
+		/** @type {insertBlc} */
+		let insert_blc;
+		{
+			const hh = this.insert_blc_size;
+			const h = hh * 0.5;
+			for (const e of this.insert_blcs._direct_children()) {
+				const r = e.getBoundingClientRect();
+
+				if (Math.abs(mouse.pos.x - r.x - h) < h && Math.abs(mouse.pos.y - r.y - h) < h) {
+					// @ts-ignore
+					insert_blc = e;
+					break;
+				}
+			}
+		}
+		return insert_blc;
+	}
+
 	grabbedBlock() {
 		if (!this.grabbed_v_node || !mouse.target) {
 			return;
@@ -2894,9 +2913,7 @@ class PiepCMS {
 
 		this.grabbed_block_wrapper._set_absolute_pos(left, top);
 
-		/** @type {insertBlc} */
-		// @ts-ignore
-		const insert_blc = mouse.target._parent(".insert_blc");
+		const insert_blc = this.getInsertBlcUnderMouse();
 
 		if (this.showing_float_multi_of_blc) {
 			const float_multi_insert_bckg_rect = this.float_multi_insert_bckg.getBoundingClientRect();
@@ -2942,6 +2959,12 @@ class PiepCMS {
 			} else {
 				this.update({ dom: true, styles: true });
 				this.float_focuses._empty();
+			}
+
+			if (insert_blc) {
+				insert_blc.classList.add("hovered");
+			} else {
+				removeClasses(".hovered", ["hovered"], this.insert_blcs);
 			}
 		}
 
@@ -3759,8 +3782,6 @@ class PiepCMS {
 	displayInsertPositions() {
 		this.insert_blcs._empty();
 
-		const insert_blc_size = 24;
-
 		const content_scroll_rect = piep_cms.content_scroll.getBoundingClientRect();
 
 		const grabbed_blc_schema = piep_cms_manager.getVNodeSchema(this.grabbed_v_node);
@@ -4032,7 +4053,7 @@ class PiepCMS {
 					const comp_pos = getInsertBlcPos(prev_blc, comp_pos_str);
 
 					// useless? covers the prev pos
-					if (Math.abs(comp_pos.left - pos.left) < insert_blc_size && Math.abs(comp_pos.top - pos.top) < insert_blc_size) {
+					if (Math.abs(comp_pos.left - pos.left) < this.insert_blc_size && Math.abs(comp_pos.top - pos.top) < this.insert_blc_size) {
 						return;
 					}
 				}

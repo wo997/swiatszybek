@@ -75,9 +75,6 @@
 	// &::after {
 	// 	bottom: 0;
 	// }
-	&.grabbed_block {
-		cursor: grab;
-	}
 
 	.piep_editor_center_column {
 		display: flex;
@@ -114,10 +111,6 @@
 		.text_container {
 			white-space: pre-wrap;
 		}
-	}
-
-	&.has_insert_pos .insert_blc:not(:hover) {
-		opacity: 0.3;
 	}
 
 	&.disable_editing {

@@ -1,6 +1,20 @@
 /* css[piep_cms] */
 
 .piep_editor {
+	&.grabbed_block {
+		cursor: grab;
+	}
+	&.has_insert_pos {
+		& {
+			cursor: pointer;
+		}
+		.insert_blc {
+			opacity: 0.3;
+		}
+		.insert_blc.hovered {
+			opacity: 0.5;
+		}
+	}
 	.insert_blc {
 		& {
 			--insert_blc_clr: var(--focus-clr);
@@ -10,7 +24,6 @@
 			background: #fff7;
 			border-radius: 4px;
 			transform: translate(-50%, -50%);
-			cursor: pointer;
 			z-index: 1100;
 			display: flex;
 			align-items: center;
@@ -19,6 +32,7 @@
 			border: 2px solid var(--insert_blc_clr);
 			font-weight: var(--bold);
 			// box-shadow: 0 1px 3px 0 #0004;
+			pointer-events: none;
 		}
 		&.over {
 			z-index: 1120;
@@ -30,7 +44,7 @@
 			font-size: 1.1em;
 			--insert_blc_clr: var(--important-clr);
 		}
-		&:hover {
+		&.hovered {
 			color: #fff;
 			background: var(--insert_blc_clr);
 			box-shadow: 0 1px 3px 0 #0006;
@@ -50,9 +64,10 @@
 			border: 1px solid #0002;
 		}
 		.has_insert_pos& {
-			background: #fff7;
-			border-color: #0004;
-			box-shadow: none;
+			background: transparent;
+			//background: #fff7;
+			//border-color: #0004;
+			// box-shadow: none;
 		}
 	}
 }

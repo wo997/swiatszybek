@@ -2,12 +2,13 @@
 
 .module_grid {
 	.cell_float {
-		border: 1px solid #0005;
+		//border: 1px solid #0005;
+		outline: 1px solid #0005;
 		pointer-events: none;
 		min-height: 75px;
 		min-width: 75px;
 	}
-	&:not(:hover) .cell_float,
+	.piep_editor_content:not(:hover) & .cell_float,
 	&.editor_disabled > .cell_float {
 		opacity: 0;
 	}
