@@ -62,6 +62,7 @@
 			border-radius: 150px;
 			transform: translate(-50%, -50%);
 			border: 1px solid #0002;
+			pointer-events: none;
 		}
 		.has_insert_pos& {
 			background: transparent;

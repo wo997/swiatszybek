@@ -1647,11 +1647,6 @@ class PiepCMS {
 				children: [parent_v_node],
 			});
 
-			delete parent_v_node.styles.df.gridRowStart;
-			delete parent_v_node.styles.df.gridColumnStart;
-			delete parent_v_node.styles.df.gridRowEnd;
-			delete parent_v_node.styles.df.gridColumnEnd;
-
 			this.update({ all: true });
 
 			return this.breakTextAtCursor();
@@ -3937,13 +3932,41 @@ class PiepCMS {
 			const insertAboveOrBelow = (dir) => {
 				const near_v_node_data = this.getVNodeDataById(blc_vid);
 
-				let ind = near_v_node_data.index;
-				if (dir === 1) {
-					ind++;
-				}
+				if (flow_direction === "grid" && !near_v_node.classes.includes("vertical_container")) {
+					const insert_v_container = {
+						id: this.getNewBlcId(),
+						tag: "div",
+						styles: {
+							df: {
+								gridRowStart: near_v_node.styles.df.gridRowStart,
+								gridColumnStart: near_v_node.styles.df.gridColumnStart,
+								gridRowEnd: near_v_node.styles.df.gridRowEnd,
+								gridColumnEnd: near_v_node.styles.df.gridColumnEnd,
+							},
+						},
+						attrs: {},
+						classes: ["vertical_container"],
+						children: [near_v_node],
+					};
 
-				const insert_v_node = getInsertVNode();
-				near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
+					const insert_v_node = getInsertVNode();
+					let ind = near_v_node_data.index;
+					if (dir === 1) {
+						insert_v_container.children.push(insert_v_node);
+					} else {
+						insert_v_container.children.unshift(insert_v_node);
+					}
+
+					near_v_node_data.v_nodes.splice(ind, 1, insert_v_container);
+				} else {
+					let ind = near_v_node_data.index;
+					if (dir === 1) {
+						ind++;
+					}
+
+					const insert_v_node = getInsertVNode();
+					near_v_node_data.v_nodes.splice(ind, 0, insert_v_node);
+				}
 			};
 
 			const insertInside = () => {
@@ -4105,7 +4128,11 @@ class PiepCMS {
 			}
 
 			if (flow_direction !== "column") {
-				above_or_below = false;
+				if (flow_direction === "grid" && !near_v_node.classes.includes("vertical_container")) {
+					// sure let it be done
+				} else {
+					above_or_below = false;
+				}
 			}
 
 			if (!isEquivalent(near_v_node_data.v_node.children, [])) {
