@@ -155,6 +155,7 @@ function animateSliders() {
  * release()
  * resize()
  * slide_width: number
+ * visible_slide_count: number
  * slide_id: number
  * just_released: boolean
  * just_grabbed: boolean
@@ -212,12 +213,12 @@ function initSlider(elem) {
 		},
 		resize: () => {
 			const target_width = evalCss(def(node.dataset.slide_width, "100%"), node);
-
 			const slider_width = node.offsetWidth;
-			const visible_slide_count = slider_width / target_width;
-			const slide_width = (target_width * visible_slide_count) / (Math.max(1, Math.round(visible_slide_count)) + slider.edge_offset);
-
+			const temp_visible_slide_count = slider_width / target_width;
+			const slide_width =
+				(target_width * temp_visible_slide_count) / (Math.max(1, Math.round(temp_visible_slide_count)) + slider.edge_offset);
 			slider.slide_width = slide_width;
+			slider.visible_slide_count = Math.round(slider_width / slide_width);
 			node.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
 		},
 		set_slide: (id, options = {}) => {
@@ -432,11 +433,13 @@ function initSlider(elem) {
 		);
 	};
 	nav_prev.addEventListener("click", () => {
-		slider.set_slide(slider.slide_id - 1);
+		slider.slide_width;
+		console.log;
+		slider.set_slide(slider.slide_id - slider.visible_slide_count);
 		animate_nav(prev_svg);
 	});
 	nav_next.addEventListener("click", () => {
-		slider.set_slide(slider.slide_id + 1);
+		slider.set_slide(slider.slide_id + slider.visible_slide_count);
 		animate_nav(next_svg);
 	});
 

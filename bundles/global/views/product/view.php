@@ -264,17 +264,19 @@ if ($main_img) {
 
         <div class="case_can_buy_product" data-tooltip_position="center">
             <div class="label">Ilość:</div>
-            <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
-                <button class="btn subtle sub_qty">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <div class="spinner_wrapper inline">
-                    <input class="field inline val_qty number" value="1" inputmode="numeric">
-                </div>
-                <button class="btn subtle add_qty">
-                    <i class="fas fa-plus"></i>
-                </button>
+            <div class="flex align_center">
+                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
+                    <button class="btn subtle sub_qty">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <div class="spinner_wrapper inline">
+                        <input class="field inline val_qty number" value="1" inputmode="numeric">
+                    </div>
+                    <button class="btn subtle add_qty">
+                        <i class="fas fa-plus"></i>
+                    </button>
 
+                </div>
                 <div class="qty_price_quick"></div>
             </div>
             <br>

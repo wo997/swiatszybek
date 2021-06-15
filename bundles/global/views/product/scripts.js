@@ -106,9 +106,9 @@ domload(() => {
 	const qty_input = $(".main_qty_controls .val_qty");
 	const more_qty = qty_input.addEventListener("change", () => {
 		const qty = qty_input._get_value();
-		$(".main_qty_controls .qty_price_quick")._set_content(
-			single_product && qty !== 1 ? `${numberFromStr(single_product.gross_price) * qty} zł` : ""
-		);
+		$(".main_qty_controls")
+			._next()
+			._set_content(single_product && qty !== 1 ? `${numberFromStr(single_product.gross_price) * qty} zł` : "");
 	});
 
 	const main_buy_btn = $(".main_buy_btn");
