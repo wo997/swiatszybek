@@ -144,7 +144,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_size",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Rozmiar czcionki</div>
 			<input class="field hidden" data-blc_prop="styles.fontSize" />
@@ -179,7 +179,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_weight",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
 			<div class="pretty_radio" data-blc_prop="styles.fontWeight" style="--columns:4">
@@ -206,7 +206,7 @@
 	piep_cms_manager.registerProp({
 		name: "text_align",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Wyrównanie tekstu</div>
 			<div class="pretty_radio" data-blc_prop="styles.textAlign" style="--columns:5">
@@ -237,7 +237,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_style",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Kursywa (pochylenie czcionki)</div>
 			<div class="pretty_radio" data-blc_prop="styles.fontStyle" style="--columns:5">

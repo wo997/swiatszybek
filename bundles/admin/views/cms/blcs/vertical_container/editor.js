@@ -242,6 +242,7 @@
 			},
 			classes: ["vertical_container"],
 			attrs: {},
+			module_name: "vertical_container",
 		},
 	});
 }
