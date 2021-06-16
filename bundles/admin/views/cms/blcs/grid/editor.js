@@ -312,7 +312,7 @@
 		group: "container",
 		standalone: true,
 		cannot_nest_in_itself: true,
-		priority: 10,
+		priority: 20,
 		v_node: {
 			tag: "div",
 			id: -1,
