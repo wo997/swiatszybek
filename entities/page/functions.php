@@ -42,8 +42,12 @@ function traverseVDom($v_dom, $options = [])
         $classes[] = "blc";
         $classes[] = $base_class;
 
+        $module_name = def($v_node, ["module_name"]);
+
         if ($link) {
-            $classes[] = "link";
+            if ($module_name !== "button") {
+                $classes[] = "link";
+            }
         }
 
         if (isset($v_node["text"])) {
@@ -65,7 +69,7 @@ function traverseVDom($v_dom, $options = [])
             }
         }
 
-        $module_name = def($v_node, ["module_name"]);
+
         if ($module_name) {
             if ($module_name === "template_hook") {
                 $template_hook_id = def($v_node, ["settings", "template_hook_id"]);

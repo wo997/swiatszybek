@@ -2569,7 +2569,9 @@ class PiepCMS {
 				}
 
 				if (v_node.settings && v_node.settings.link) {
-					classes.push("link");
+					if (v_node.module_name !== "button") {
+						classes.push("link");
+					}
 				}
 
 				if (node.classList.contains("wo997_bckg_img_shown")) {

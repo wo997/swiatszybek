@@ -29,7 +29,7 @@
 		//     <div></div>
 		// </i>
 		icon: html`<i class="fas fa-hand-pointer"></i>`,
-		label: html`Przycisk (jeszcze nie działa)`,
+		label: html`Przycisk`,
 		group: "module",
 		standalone: true,
 		priority: 50,
