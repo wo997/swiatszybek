@@ -91,7 +91,7 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 					Uzupełnij <i class="fas fa-pen"></i>
 				</button>
 
-				<div style="margin-left:auto">
+				<div class="mla pl2">
 					<p-batch-trait data-trait="list_controls"></p-batch-trait>
 				</div>
 			</div>

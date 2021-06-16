@@ -50,15 +50,11 @@ function Product_FeatureComp(
 		template: html`
 			<div class="variant_header">
 				<div class="title inline semi_bold" data-node="{${comp._nodes.feature_name}}"></div>
-				<button
-					style="margin-left:5px"
-					data-node="{${comp._nodes.add_option_btn}}"
-					class="btn {${data.options.length === 0}?important:primary} small"
-				>
+				<button data-node="{${comp._nodes.add_option_btn}}" class="btn {${data.options.length === 0}?important:primary} small ml1">
 					Dodaj opcje <i class="fas fa-plus"></i>
 				</button>
 
-				<div style="margin-left:auto">
+				<div class="mla pl2">
 					<button data-node="{${comp._nodes.edit_feature_btn}}" class="btn subtle small" data-tooltip="Edytuj cechę produktu">
 						<i class="fas fa-cog"></i>
 					</button>

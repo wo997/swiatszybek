@@ -31,7 +31,7 @@ domload(() => {
 				width: "100px",
 				flex: true,
 				render: () => {
-					return html`<button class="btn subtle small edit_btn" style="margin-left:auto">Edytuj <i class="fas fa-cog"></i></button>`;
+					return html`<button class="btn subtle small edit_btn mla">Edytuj <i class="fas fa-cog"></i></button>`;
 				},
 			},
 		],

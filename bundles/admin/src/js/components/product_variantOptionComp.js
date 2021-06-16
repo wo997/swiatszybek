@@ -38,6 +38,9 @@ function Product_VariantOptionComp(
 		features: [],
 	}
 ) {
+	const set_h = () => {
+		autoHeight(comp._nodes.name);
+	};
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -83,9 +86,7 @@ function Product_VariantOptionComp(
 				}
 
 				if (comp._changed_data.name) {
-					setTimeout(() => {
-						autoHeight(comp._nodes.name);
-					});
+					setTimeout(set_h);
 				}
 			},
 		});
@@ -115,17 +116,8 @@ function Product_VariantOptionComp(
 			</div>
 		`,
 		initialize: () => {
-			comp._nodes.name.addEventListener("input", () => {
-				autoHeight(comp._nodes.name);
-			});
-
-			$(".main_admin_scroll").addEventListener(
-				"scroll",
-				() => {
-					autoHeight(comp._nodes.name);
-				},
-				{ once: true }
-			);
+			comp._nodes.name.addEventListener("input", set_h);
+			window.addEventListener("finished_components_optimization", set_h);
 
 			const so = comp._nodes.select_options;
 			so.addEventListener("change", () => {

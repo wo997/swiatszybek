@@ -9,6 +9,9 @@ function finishComponentsOptimization() {
 	OPTIMIZE_COMPONENTS = false;
 	registerForms();
 	lazyLoadImages();
+	setTimeout(() => {
+		window.dispatchEvent(new CustomEvent("finished_components_optimization"));
+	});
 }
 
 /**

@@ -26,6 +26,7 @@
  *  physical_value_wrapper: PiepNode
  *  physical_value_input: PiepNode
  *  physical_value_unit: PiepNode
+ *  text_value: PiepNode
  * } & ListControlTraitNodes
  * } & BaseComp} Product_FeatureOptionComp
  */
@@ -43,6 +44,10 @@ function Product_FeatureOptionComp(
 		product_feature_id: -1,
 	}
 ) {
+	const set_h = () => {
+		autoHeight(comp._nodes.text_value);
+	};
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -85,6 +90,10 @@ function Product_FeatureOptionComp(
 				if (!OPTIMIZE_COMPONENTS) {
 					modifyProductFeatures();
 				}
+
+				if (comp._changed_data.text_value) {
+					setTimeout(set_h);
+				}
 			},
 		});
 	};
@@ -92,7 +101,14 @@ function Product_FeatureOptionComp(
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="title inline" data-data_type="text_list" html="{${data.value}}"></div>
-			<input class="field small inline" data-data_type="text_value" data-bind="{${data.text_value}}" data-input_delay="200" />
+			<textarea
+				class="field small inline"
+				style="flex-grow: 1;"
+				data-data_type="text_value"
+				data-bind="{${data.text_value}}"
+				data-node="{${comp._nodes.text_value}}"
+				data-input_delay="200"
+			></textarea>
 			<input
 				class="field small inline default_datepicker"
 				data-data_type="datetime_value"
@@ -121,11 +137,14 @@ function Product_FeatureOptionComp(
 					data-bind="{${data.unit_id}}"
 				></select>
 			</div>
-			<div style="margin-left:auto">
+			<div class="mla pl2">
 				<p-batch-trait data-trait="list_controls"></p-batch-trait>
 			</div>
 		`,
 		initialize: () => {
+			comp._nodes.text_value.addEventListener("input", set_h);
+			window.addEventListener("finished_components_optimization", set_h);
+
 			/** @type {ListComp} */
 			// @ts-ignore
 			const list = comp._parent_comp;

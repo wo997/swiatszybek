@@ -121,7 +121,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 				<div class="semi_bold semi_medium" html="{${data.row_index + 1}}"></div>
 				.
 				<div class="semi_bold semi_medium clickable_label ml1" html="{${data.name}}" data-node="{${comp._nodes.label}}"></div>
-				<div style="margin-left:auto">
+				<div class="mla pl2">
 					<button class="btn primary small" data-node="{${comp._nodes.expand_btn}}" data-tooltip="{${data.expanded ? "Zwiń" : "Rozwiń"}}">
 						<i class="fas fa-chevron-right"></i>
 					</button>
