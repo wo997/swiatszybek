@@ -424,7 +424,7 @@ class PiepCMS {
 		};
 
 		this.grabbed_block_wrapper = container_node("piep_editor_grabbed_block_wrapper");
-		this.grabbed_block_wrapper.classList.add("focus_rect");
+		this.grabbed_block_wrapper.classList.add("focus_rect", "global_root");
 		this.add_block_menu = container_node("piep_editor_add_block_menu");
 		this.side_menu = this.container._child(".piep_editor_side_menu");
 		this.paste_html = container_node("piep_editor_paste_html");

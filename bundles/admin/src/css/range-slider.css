@@ -51,7 +51,6 @@
 	place-items: center; /*  Place the number on the center  */
 	font-weight: bold;
 	user-select: none;
-	-webkit-user-select: none;
 }
 
 /*.range-wrap:hover .bubble,

@@ -37,28 +37,33 @@
 			tag: "button",
 			id: -1,
 			children: [
+				// {
+				// 	tag: "p",
+				// 	id: -1,
+				// 	styles: {},
+				// 	classes: [],
+				// 	attrs: {},
+				// 	children: [
 				{
-					tag: "p",
 					id: -1,
-					styles: {},
-					classes: [],
+					tag: "span",
+					text: "Przycisk",
 					attrs: {},
-					children: [
-						{
-							id: -1,
-							tag: "span",
-							text: "Przycisk",
-							attrs: {},
-							classes: [],
-							styles: {},
-						},
-					],
+					classes: [],
+					styles: {},
 				},
+				//	],
+				//},
 			],
 			styles: {
 				df: {},
 			},
-			classes: ["vertical_container", "btn", "primary"],
+			responsive_settings: {
+				df: {
+					width_type: "auto",
+				},
+			},
+			classes: ["btn", "primary"],
 			module_name: "button",
 			attrs: {},
 		},

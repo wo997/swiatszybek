@@ -55,7 +55,6 @@ textarea {
 		text-align: center;
 		cursor: pointer;
 		user-select: none;
-		-webkit-user-select: none;
 		--brighten-factor: 1.1;
 		--disabled-opacity: 0.8;
 		font-weight: var(--semi_bold);
@@ -126,6 +125,7 @@ textarea {
 		bottom: -1px;
 		position: absolute;
 		border-radius: inherit;
+		pointer-events: none;
 	}
 	.no_touch &:hover:not(:disabled):not(.disabled):not(:active)::after {
 		box-shadow: var(--hover-shadow);

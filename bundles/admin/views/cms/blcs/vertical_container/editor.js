@@ -1,6 +1,7 @@
 /* js[piep_cms_dependencies] */
 {
 	const vertical_container_priority = 10;
+	const align_priority = 1;
 
 	/**
 	 *
@@ -21,85 +22,25 @@
 		return v_node_data.v_node.classes.includes("vertical_container");
 	};
 
-	piep_cms_manager.registerProp({
-		name: "align_self_horizontally",
-		blc_groups: [
-			{
-				matcher: inVerticalContainerMatcher,
-				priority: vertical_container_priority,
-			},
-		],
-		type_groups: ["layout"],
-		menu_html: html`
-			<div class="label">Wyrównaj blok poziomo</div>
-			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:4">
-				<div class="checkbox_area empty">
-					<p-checkbox data-value=""></p-checkbox>
-					<span>-</span>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="flex-start"></p-checkbox>
-					<div class="flex_align_self_horizontal_icon" style="align-items:flex-start"></div>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="center"></p-checkbox>
-					<div class="flex_align_self_horizontal_icon" style="align-items:center"></div>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="flex-end"></p-checkbox>
-					<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
-				</div>
-				<!-- <div class="checkbox_area case_advanced">
-					<p-checkbox data-value="stretch"></p-checkbox>
-					<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
-				</div> -->
-			</div>
-		`,
-	});
-
-	piep_cms_manager.registerProp({
-		name: "align_self_vertically",
-		blc_groups: [
-			{
-				matcher: verticalContainerMatcher,
-				priority: vertical_container_priority,
-			},
-		],
-		type_groups: ["layout"],
-		advanced: true,
-		menu_html: html`
-			<div class="label">Wyrównaj blok pionowo</div>
-			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:5">
-				<div class="checkbox_area empty">
-					<p-checkbox data-value=""></p-checkbox>
-					<span>-</span>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="flex-start"></p-checkbox>
-					<div class="flex_align_self_vertical_icon" style="align-items:flex-start"></div>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="center"></p-checkbox>
-					<div class="flex_align_self_vertical_icon" style="align-items:center"></div>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="flex-end"></p-checkbox>
-					<div class="flex_align_self_vertical_icon" style="align-items:flex-end"></div>
-				</div>
-				<div class="checkbox_area">
-					<p-checkbox data-value="stretch"></p-checkbox>
-					<div class="flex_align_self_vertical_icon" style="align-items:stretch"></div>
-				</div>
-			</div>
-		`,
-	});
+	/**
+	 *
+	 * @param {vDomNodeData} v_node_data
+	 * @returns
+	 */
+	const gridCellMatcher = (v_node_data) => {
+		const parent = v_node_data.parent_v_nodes[0];
+		if (parent && parent.module_name === "grid") {
+			return true;
+		}
+		return false;
+	};
 
 	piep_cms_manager.registerProp({
 		name: "justify_content_vertically",
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				priority: vertical_container_priority,
+				priority: align_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -167,7 +108,7 @@
 		blc_groups: [
 			{
 				matcher: verticalContainerMatcher,
-				priority: vertical_container_priority,
+				priority: align_priority,
 			},
 		],
 		type_groups: ["layout"],
@@ -209,6 +150,115 @@
 						<div></div>
 						<div></div>
 					</div>
+				</div>
+			</div>
+		`,
+	});
+
+	piep_cms_manager.registerProp({
+		name: "align_self_horizontally",
+		blc_groups: [
+			{
+				matcher: inVerticalContainerMatcher,
+				priority: align_priority,
+			},
+		],
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="label">Wyrównaj blok poziomo</div>
+			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:4">
+				<div class="checkbox_area empty">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:flex-start"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="center"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:center"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
+				</div>
+				<!-- <div class="checkbox_area case_advanced">
+					<p-checkbox data-value="stretch"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
+				</div> -->
+			</div>
+		`,
+	});
+
+	piep_cms_manager.registerProp({
+		name: "justify_self_horizontally",
+		blc_groups: [
+			{
+				matcher: gridCellMatcher,
+				priority: align_priority,
+			},
+		],
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="label">Wyrównaj blok poziomo</div>
+			<div class="pretty_radio" data-blc_prop="styles.justifySelf" style="--columns:4">
+				<div class="checkbox_area empty">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:flex-start"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="center"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:center"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:flex-end"></div>
+				</div>
+				<!-- <div class="checkbox_area case_advanced">
+					<p-checkbox data-value="stretch"></p-checkbox>
+					<div class="flex_align_self_horizontal_icon" style="align-items:stretch"></div>
+				</div> -->
+			</div>
+		`,
+	});
+
+	piep_cms_manager.registerProp({
+		name: "align_self_vertically",
+		blc_groups: [
+			{
+				matcher: gridCellMatcher,
+				priority: align_priority,
+			},
+		],
+		type_groups: ["layout"],
+		//advanced: true,
+		menu_html: html`
+			<div class="label">Wyrównaj blok pionowo</div>
+			<div class="pretty_radio" data-blc_prop="styles.alignSelf" style="--columns:5">
+				<div class="checkbox_area empty">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-start"></p-checkbox>
+					<div class="flex_align_self_vertical_icon" style="align-items:flex-start"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="center"></p-checkbox>
+					<div class="flex_align_self_vertical_icon" style="align-items:center"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="flex-end"></p-checkbox>
+					<div class="flex_align_self_vertical_icon" style="align-items:flex-end"></div>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="stretch"></p-checkbox>
+					<div class="flex_align_self_vertical_icon" style="align-items:stretch"></div>
 				</div>
 			</div>
 		`,
