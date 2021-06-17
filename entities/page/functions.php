@@ -36,7 +36,15 @@ function traverseVDom($v_dom, $options = [])
         $link = def($v_node, ["settings", "link"]);
         $link_styling = def($v_node, ["settings", "link_styling"]);
 
-        $tag = $link ? "a" : $v_node["tag"];
+        $tag = $v_node["tag"];
+        $link_wrap = false;
+        if ($link) {
+            if ($v_node["tag"] === "div") {
+                $tag = "a";
+            } else {
+                $link_wrap = true;
+            }
+        }
 
         $base_class = "blc_" . $v_node["id"];
         $classes = $v_node["classes"];
@@ -108,21 +116,26 @@ function traverseVDom($v_dom, $options = [])
 
         $classes_csv = join(" ", $classes);
 
-        $content_html .= "<$tag class=\"$classes_csv\"";
+        $put_html = "<$tag class=\"$classes_csv\"";
 
         $attrs = $v_node["attrs"];
-        if ($link) {
-            $attrs["href"] = $link;
-        }
+        // if ($link) {
+        //     $attrs["href"] = $link;
+        // }
         foreach ($attrs as $key => $val) {
-            $content_html .= " $key=\"" . htmlspecialchars($val) . "\"";
+            $put_html .= " $key=\"" . htmlspecialchars($val) . "\"";
         }
 
         if (in_array($tag, SINGLE_HTML_TAGS)) {
-            $content_html .= "/>";
+            $put_html .= "/>";
         } else {
-            $content_html .= ">$body</$tag>";
+            if ($link_wrap) {
+                $body = "<a href='$link'>$body</a>";
+            }
+            $put_html .= ">$body</$tag>";
         }
+
+        $content_html .= $put_html;
 
         if (!$html_only) {
             $width_type = "custom";
