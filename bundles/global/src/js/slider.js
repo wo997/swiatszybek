@@ -299,7 +299,7 @@ function initSlider(elem) {
 		},
 		select_slide: (id) => {
 			slider.slide_nodes.forEach((e, i) => {
-				e.classList.toggle("selected_slide", id === slider.slide_id);
+				e.classList.toggle("selected_slide", i === id);
 			});
 
 			const offset = Math.floor((node.clientWidth / slider.slide_width - 1) / 2 + 0.05);
