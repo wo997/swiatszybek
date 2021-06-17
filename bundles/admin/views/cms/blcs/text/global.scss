@@ -38,7 +38,8 @@
 // 	margin-top: 1.5rem;
 // }
 
-.vertical_container > {
+.vertical_container >,
+ul > {
 	.blc + p.blc,
 	p.blc + .blc,
 	.blc + li.blc,

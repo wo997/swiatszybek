@@ -1,6 +1,10 @@
 /* css[global] */
 
-.module_absolute_container.blc {
-	position: absolute;
-	padding-top: calc(1% * var(--aspect_ratio));
+.module_absolute_container {
+	& > * {
+		position: absolute;
+	}
+	&.blc {
+		padding-top: calc(1% * var(--aspect_ratio));
+	}
 }

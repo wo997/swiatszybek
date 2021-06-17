@@ -2,18 +2,57 @@
 {
 	const priority = 100;
 
-	// /**
-	//  *
-	//  * @param {vDomNodeData} v_node_data
-	//  * @returns
-	//  */
-	// const gridCellMatcher = (v_node_data) => {
-	// 	const parent = v_node_data.parent_v_nodes[0];
-	// 	if (parent && parent.module_name === "grid") {
-	// 		return true;
-	// 	}
-	// 	return false;
-	// };
+	/**
+	 *
+	 * @param {vDomNodeData} v_node_data
+	 * @returns
+	 */
+	const absoluteBlcMatcher = (v_node_data) => {
+		const parent = v_node_data.parent_v_nodes[0];
+		if (parent && parent.module_name === "absolute_container") {
+			return true;
+		}
+		return false;
+	};
+
+	const position_unit_input = html`
+		<input />
+		<select>
+			<option value="" class="novalue">-</option>
+			<option value="%">%</option>
+			<option value="px">px</option>
+			<option value="var(--default_padding)" class="novalue">Domyślny</option>
+			<option value="0" class="novalue">Brak</option>
+			<option value="*" class="case_advanced">*</option>
+		</select>
+	`;
+
+	piep_cms_manager.registerProp({
+		name: "absolute_position",
+		blc_groups: [{ matcher: absoluteBlcMatcher, priority }],
+		type_groups: ["layout"],
+		menu_html: html`
+			<div class="label">Pozycja w kontenerze absolutnym</div>
+			<div class="combo_directions" data-bind_wrapper="margins">
+				<div class="top">
+					<unit-input data-blc_prop="styles.top" data-bind_dir="top"> ${position_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="left">
+					<unit-input data-blc_prop="styles.left" data-bind_dir="left"> ${position_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="right">
+					<unit-input data-blc_prop="styles.right" data-bind_dir="right"> ${position_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+				<div class="bottom">
+					<unit-input data-blc_prop="styles.bottom" data-bind_dir="bottom"> ${position_unit_input} </unit-input>
+					<div class="responsive_info"></div>
+				</div>
+			</div>
+		`,
+	});
 
 	piep_cms_manager.registerBlcSchema({
 		id: "absolute_container",

@@ -1,11 +1,9 @@
 /* css[global] */
 
-// ul.blc {
-// 	padding: 0.5em 0;
-// }
-li.blc {
+ul.blc > * {
 	& {
 		padding-left: 20px;
+		display: block;
 	}
 	&::before {
 		content: "•";

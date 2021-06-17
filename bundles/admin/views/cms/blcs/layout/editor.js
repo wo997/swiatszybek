@@ -445,4 +445,14 @@
 			</div>
 		`,
 	});
+
+	piep_cms_manager.registerProp({
+		name: "transform",
+		type_groups: ["layout"],
+		blc_groups: layout_blc_groups,
+		menu_html: html`
+			<div class="label">Transform</div>
+			<input class="field" data-blc_prop="styles.transform" />
+		`,
+	});
 }

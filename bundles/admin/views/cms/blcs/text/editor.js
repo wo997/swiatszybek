@@ -162,7 +162,7 @@
 					<option value="px">px</option>
 					<option value="em">em</option>
 					<option value="rem">rem</option>
-					<option value=""></option>
+					<option value="*" class="case_advanced">*</option>
 				</select>
 			</unit-input>
 		`,

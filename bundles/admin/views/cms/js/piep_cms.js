@@ -2629,7 +2629,7 @@ class PiepCMS {
 					}
 				}
 
-				if (classes.includes("vertical_container")) {
+				if (classes.includes("vertical_container") || v_node.module_name === "absolute_container") {
 					displayEmptyVerticalContainer(node, children.length === 0);
 				}
 
@@ -3974,6 +3974,16 @@ class PiepCMS {
 			const insertInside = () => {
 				const insert_v_node = getInsertVNode();
 				this.getVNodeById(blc_vid).children.push(insert_v_node);
+
+				if (near_v_node.module_name === "absolute_container") {
+					const st = insert_v_node.styles.df;
+					if (!st.top && !st.bottom) {
+						st.top = "0px";
+					}
+					if (!st.left && !st.right) {
+						st.left = "0px";
+					}
+				}
 			};
 
 			/**
@@ -4132,6 +4142,7 @@ class PiepCMS {
 			if (flow_direction !== "column") {
 				if (flow_direction === "grid" && !near_v_node.classes.includes("vertical_container")) {
 					// sure let it be done
+				} else if (near_v_node.module_name === "absolute_container") {
 				} else {
 					above_or_below = false;
 				}

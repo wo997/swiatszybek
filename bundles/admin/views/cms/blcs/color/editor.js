@@ -131,7 +131,7 @@
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
 			<div class="label"><i class="fas fa-check selected_color"></i> Inny</div>
-			<color-picker class="inline NOalpha"></color-picker>
+			<color-picker class="inline alpha"></color-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
@@ -156,7 +156,7 @@
 			<div class="pretty_radio global_root" style="--columns:6"></div>
 
 			<div class="label"><i class="fas fa-check selected_color"></i> Inny</div>
-			<color-picker class="inline NOalpha"></color-picker>
+			<color-picker class="inline alpha"></color-picker>
 		`,
 		init: (piep_cms, menu_wrapper) => {
 			const themeSettingsChanged = () => {
