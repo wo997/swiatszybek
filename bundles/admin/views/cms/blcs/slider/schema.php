@@ -11,7 +11,7 @@ PiepCMSManager::registerModule([
         }
         ob_start();
 ?>
-    <div class="wo997_slider">
+    <div class="wo997_slider" data-pagination="bullets">
         <div class="wo997_slides_container">
             <div class="wo997_slides_wrapper"><?= $slides_html ?></div>
         </div>

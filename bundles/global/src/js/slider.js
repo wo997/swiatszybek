@@ -147,6 +147,7 @@ function animateSliders() {
  * velocity: number
  * slides_wrapper: PiepNode
  * slide_nodes?: PiepNode[]
+ * slide_count?: number
  * grabbed_at_scroll: number
  * grabbed_input_x: number
  * grabbed_input_y: number
@@ -154,8 +155,8 @@ function animateSliders() {
  * last_input_x: number
  * release()
  * resize()
- * slide_width: number
- * visible_slide_count: number
+ * slide_width?: number
+ * visible_slide_count?: number
  * slide_id: number
  * just_released: boolean
  * just_grabbed: boolean
@@ -184,6 +185,12 @@ function initSlider(elem) {
 	const node = elem;
 
 	node.classList.add("overflow_hidden", "wo997_slider", "wo997_slider_ready");
+
+	const paginationChanged = () => {
+		pagination._direct_children().forEach((e, i) => {
+			e.classList.toggle("active", i === slider.slide_id);
+		});
+	};
 
 	node._slider = {
 		scroll: 0,
@@ -252,6 +259,8 @@ function initSlider(elem) {
 				})
 			);
 			//}, delay);
+
+			paginationChanged();
 		},
 		update: () => {
 			let show_next_mobile = def(node.dataset.show_next_mobile, "0");
@@ -271,12 +280,27 @@ function initSlider(elem) {
 			slider.slide_nodes.forEach((e, index) => {
 				e.dataset.slide_id = index + "";
 			});
+
+			const slide_count = slider.slide_nodes.length;
+			if (slider.slide_count !== slide_count) {
+				let bullets = "";
+
+				if (node.dataset.pagination === "bullets") {
+					//if (slide_count < 7) {
+					for (let i = 0; i < slide_count; i++) {
+						bullets += html`<div class="bullet" data-slide_id="${i}"></div>`;
+					}
+					//    }
+				}
+				pagination._set_content(bullets);
+				slider.slide_count = slide_count;
+				paginationChanged();
+			}
 		},
 		select_slide: (id) => {
-			slider.slides_wrapper._children(".selected_slide").forEach((e) => {
-				e.classList.remove("selected_slide");
+			slider.slide_nodes.forEach((e, i) => {
+				e.classList.toggle("selected_slide", id === slider.slide_id);
 			});
-			slider.slide_nodes[id].classList.add("selected_slide");
 
 			const offset = Math.floor((node.clientWidth / slider.slide_width - 1) / 2 + 0.05);
 
@@ -413,8 +437,19 @@ function initSlider(elem) {
 		html`
 			<div class="nav nav_prev">${ICONS.chevron_left}</div>
 			<div class="nav nav_next">${ICONS.chevron_left}</div>
+			<div class="pagination"></div>
 		`
 	);
+
+	const pagination = node._child(".pagination");
+
+	node.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+		const bullet = target._parent(".bullet");
+		if (bullet) {
+			slider.set_slide(bullet.dataset.slide_id);
+		}
+	});
 
 	const nav_prev = node._child(".nav_prev");
 	const prev_svg = nav_prev._child("svg");
@@ -433,8 +468,6 @@ function initSlider(elem) {
 		);
 	};
 	nav_prev.addEventListener("click", () => {
-		slider.slide_width;
-		console.log;
 		slider.set_slide(slider.slide_id - slider.visible_slide_count);
 		animate_nav(prev_svg);
 	});

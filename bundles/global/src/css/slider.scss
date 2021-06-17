@@ -80,6 +80,36 @@
 		opacity: 0;
 		pointer-events: none;
 	}
+	.pagination {
+		& {
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			gap: 3px;
+			font-size: 12px;
+			height: 20px;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+		}
+		.bullet {
+			& {
+				background: #fffa;
+				width: 1em;
+				height: 1em;
+				border-radius: 1em;
+				box-shadow: 0 1px 6px 0 #000;
+			}
+			&:hover {
+				transform: scale(1.2);
+			}
+			&.active {
+				background: var(--focus-clr);
+			}
+		}
+	}
 }
 
 .wo997_slider.nav_out {

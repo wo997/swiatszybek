@@ -191,10 +191,10 @@
 				const slider = wo997_slider._slider;
 
 				if (add_btn) {
-					slider.set_slide(slider.slide_nodes.length);
+					slider.set_slide(slider.slide_count);
 				}
 
-				if ((remove_btn && slide_id === slider.slide_id) || slider.slide_id === slider.slide_nodes.length) {
+				if ((remove_btn && slide_id === slider.slide_id) || slider.slide_id === slider.slide_count) {
 					slider.set_slide(slider.slide_id - 1);
 				}
 
