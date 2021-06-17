@@ -2570,7 +2570,12 @@ class PiepCMS {
 
 				if (v_node.settings && v_node.settings.link) {
 					if (v_node.module_name !== "button") {
-						classes.push("link");
+						if (!v_node.settings.link_styling) {
+							classes.push("link");
+						}
+						if (v_node.settings.link_styling === "hover_underline") {
+							classes.push("hover_underline");
+						}
 					}
 				}
 

@@ -34,6 +34,7 @@ function traverseVDom($v_dom, $options = [])
         $body = "";
 
         $link = def($v_node, ["settings", "link"]);
+        $link_styling = def($v_node, ["settings", "link_styling"]);
 
         $tag = $link ? "a" : $v_node["tag"];
 
@@ -46,7 +47,12 @@ function traverseVDom($v_dom, $options = [])
 
         if ($link) {
             if ($module_name !== "button") {
-                $classes[] = "link";
+                if (!$link_styling) {
+                    $classes[] = "link";
+                }
+                if ($link_styling === "hover_underline") {
+                    $classes[] = "hover_underline";
+                }
             }
         }
 

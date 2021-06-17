@@ -17,6 +17,22 @@
 		menu_html: html`
 			<div class="label">Link</div>
 			<input class="field trim" data-blc_prop="settings.link" />
+
+			<div class="label">Stylowanie linku</div>
+			<div class="pretty_radio" data-blc_prop="settings.link_styling" style="--columns:3">
+				<div class="checkbox_area">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>Domyślne</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="none"></p-checkbox>
+					<span>Brak</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="hover_underline"></p-checkbox>
+					<span>Podkreślenie</span>
+				</div>
+			</div>
 		`,
 	});
 
