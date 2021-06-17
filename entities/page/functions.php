@@ -119,9 +119,9 @@ function traverseVDom($v_dom, $options = [])
         $put_html = "<$tag class=\"$classes_csv\"";
 
         $attrs = $v_node["attrs"];
-        // if ($link) {
-        //     $attrs["href"] = $link;
-        // }
+        if ($link && !$link_wrap) {
+            $attrs["href"] = $link;
+        }
         foreach ($attrs as $key => $val) {
             $put_html .= " $key=\"" . htmlspecialchars($val) . "\"";
         }
