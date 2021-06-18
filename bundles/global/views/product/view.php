@@ -297,21 +297,21 @@ if ($main_img) {
 
         <p style="font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
 
-        <div class="mt2">
-            <div class="mb1"> <i class="fas fa-shipping-fast"></i> Wysyłka w 24h (w dni robocze)</div>
-            <ul class="product_shipping_info blc"></ul>
-        </div>
-
-        <div class="mt2">
-            <div class="link"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
-        </div>
-
         <div class="expand_y hidden animate_hidden case_notify_available">
             <div style="padding-top:7px">
                 <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
                 <div class="semi_bold selected_product_queue_pretty mr1"></div>
             </div>
         </div>
+
+        <div class="mt2">
+            <div class="mb1"> <i class="fas fa-shipping-fast"></i> Wysyłka w 24h (w dni robocze)</div>
+            <ul class="product_shipping_info blc"></ul>
+        </div>
+
+        <!-- <div class="mt2">
+            <div class="link"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
+        </div> -->
 
         <p class="price_label">
             <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
