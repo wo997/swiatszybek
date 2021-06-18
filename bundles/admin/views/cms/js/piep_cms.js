@@ -651,7 +651,7 @@ class PiepCMS {
 				layout_control.classList.add("grabbed");
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
-				const v_node_styles = this.getVNodeById(this.focus_node_vid).styles;
+				const v_node_styles = this.getFocusVNode().styles;
 				if (!v_node_styles.df) {
 					v_node_styles.df = {};
 				}
@@ -1297,7 +1297,7 @@ class PiepCMS {
 				if (ev.detail === 2) {
 					this.selectTextableContents(vid);
 				} else {
-					const focus_v_node_data = this.getVNodeDataById(this.focus_node_vid);
+					const focus_v_node_data = this.getFocusVNodeData();
 					this.selectTextContainerContents(focus_v_node_data.parent_v_nodes[0].id);
 				}
 				ev.preventDefault();
@@ -2245,7 +2245,7 @@ class PiepCMS {
 		let selection_breadcrumbs_html = "";
 
 		if (this.focus_node_vid !== undefined) {
-			const v_node_data = this.getVNodeDataById(this.focus_node_vid);
+			const v_node_data = this.getFocusVNodeData();
 
 			if (v_node_data) {
 				/** @type {vDomNode[]} */
@@ -2680,6 +2680,14 @@ class PiepCMS {
 			//console.log("REMOVE", r);
 			r.remove();
 		});
+	}
+
+	getFocusVNode(vid) {
+		return this.getVNodeById(this.focus_node_vid);
+	}
+
+	getFocusVNodeData(vid) {
+		return this.getVNodeDataById(this.focus_node_vid);
 	}
 
 	/**
@@ -3263,8 +3271,7 @@ class PiepCMS {
 
 			if (change) {
 				if (this.layout_control_prop === "width") {
-					const v_node = this.getVNodeById(this.focus_node_vid);
-
+					const v_node = this.getFocusVNode();
 					const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
 					if (width_type !== "custom") {
 						v_node.responsive_settings[this.selected_resolution].width_type = "custom";
@@ -4750,6 +4757,7 @@ class PiepCMS {
 
 		if (options.from_blc_menu_name !== "float") {
 			setPropsOfInputs(this.float_menu._children("[data-blc_prop]"));
+			this.container.dispatchEvent(new CustomEvent("set_blc_menu"));
 		}
 		if (options.from_blc_menu_name !== "side") {
 			setPropsOfInputs(this.side_menu._children("[data-blc_prop]"));

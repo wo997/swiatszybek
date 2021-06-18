@@ -28,7 +28,8 @@ function registerUnitInputs(parent) {
 		let last_val;
 
 		const valueSet = () => {
-			const novalue = select.options[select.selectedIndex].classList.contains("novalue");
+			const option = select.options[select.selectedIndex];
+			const novalue = option ? option.classList.contains("novalue") : false;
 			container.classList.toggle("glue_children", !novalue);
 			container.classList.toggle("novalue", novalue);
 			select.classList.toggle("unit_picker", !novalue);
