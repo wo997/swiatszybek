@@ -32,5 +32,11 @@ function floor(num, decimalPlaces = 0) {
  * @param {number} num
  */
 function prettyPrice(num) {
+	if (!num) {
+		return "0";
+	}
+	if (typeof num === "string") {
+		num = +num;
+	}
 	return num.toFixed(2);
 }

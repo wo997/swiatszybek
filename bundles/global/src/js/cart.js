@@ -43,7 +43,8 @@ domload(() => {
 			e._set_content(prettyPrice(user_cart.total_price) + " zł");
 		});
 		$$(".cod_fee").forEach((e) => {
-			e._set_content(prettyPrice(user_cart.cod_fee) + " zł");
+			//e._set_content(prettyPrice(user_cart.cod_fee) + " zł");
+			e._set_content(user_cart.cod_fee + " zł");
 		});
 	};
 
