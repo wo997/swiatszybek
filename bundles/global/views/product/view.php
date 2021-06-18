@@ -357,15 +357,11 @@ if ($main_img) {
     </div>
 </div>
 
-
 <div id="notifyProductAvailable" data-modal data-dismissable>
     <div class="modal_body" style="width: 480px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
-        <h3 class="modal_header">
-            <span class="desktop">Powiadom o dostępności</span>
-            <span class="mobile">Powiadomienie</span>
-        </h3>
+        <h3 class="modal_header">Powiadom o dostępności</h3>
 
         <div class="scroll_panel scroll_shadow panel_padding pt0">
             <div>
@@ -377,13 +373,13 @@ if ($main_img) {
                             <div class="full_product_name semi_bold"><?= $full_product_name ?></div>
                         </div>
 
-                        <div class="label" style="margin-top:10px;">Podaj swój adres e-mail</div>
+                        <div class="label mt2">Podaj swój adres e-mail</div>
                         <input class="field email" data-validate="email" value="<?= htmlspecialchars($user_email) ?>" style="text-align: center;">
                     </div>
                 </div>
 
-                <div style="margin-top:10px;display:flex">
-                    <button class="btn subtle fill" style="margin-right:10px" onclick="hideAllModals()">Anuluj</button>
+                <div class="flex mt2">
+                    <button class="btn subtle fill mr2" onclick="hideAllModals()">Anuluj</button>
                     <button class="btn primary submit_btn fill">Potwierdź</button>
                 </div>
             </div>
@@ -395,9 +391,7 @@ if ($main_img) {
     <div class="modal_body" style="width: 392px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
-        <h3 class="modal_header">
-            Jesteś w kolejce!
-        </h3>
+        <h3 class="modal_header">Jesteś w kolejce!</h3>
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <div style="position:relative;text-align:center;padding: 10px 0">
@@ -515,15 +509,42 @@ if ($main_img) {
     <?php endif ?>
 </div>
 
+<div id="AskProduct" data-modal data-dismissable>
+    <div class="modal_body" style="width: 480px;">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+        <h3 class="modal_header">Zapytanie o produkt</h3>
+
+        <div class="scroll_panel scroll_shadow panel_padding pt0">
+            <div>
+                <form id="contactForm" class="mtfn">
+                    <div class="label">Imię i nazwisko</div>
+                    <input class="field pretty_errors" autocomplete="name" data-name="name" data-validate="">
+
+                    <div class="label">Adres e-mail</div>
+                    <input class="field pretty_errors" autocomplete="email" data-name="email" data-validate="string|email">
+
+                    <div class="label">Tytuł</div>
+                    <input class="field pretty_errors" data-name="subject" data-validate="">
+
+                    <div class="label">Wiadomość</div>
+                    <textarea class="field" style="height:100px" data-name="message" data-validate=""></textarea>
+
+                    <button class="btn primary submit_btn fill mt2" type="submit">Wyślij <i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <?php if (User::getCurrent()->isLoggedIn()) : ?>
     <div id="addComment" data-modal data-dismissable>
         <div class="modal_body" style="width: 600px;">
             <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
-            <h3 class="modal_header">
-                <span class="desktop">Napisz komentarz</span>
-                <span class="mobile">Komentarz</span>
-            </h3>
+            <h3 class="modal_header">Napisz komentarz</h3>
 
             <div class="scroll_panel scroll_shadow panel_padding">
                 <form>

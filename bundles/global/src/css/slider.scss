@@ -83,7 +83,7 @@
 	.pagination {
 		& {
 			position: absolute;
-			bottom: 10px;
+			bottom: 2%;
 			left: 50%;
 			transform: translateX(-50%);
 			display: flex;
@@ -100,7 +100,7 @@
 				width: 1em;
 				height: 1em;
 				border-radius: 1em;
-				box-shadow: 0 1px 6px 0 #000;
+				box-shadow: 0 1px 4px 0 #000c;
 			}
 			&:hover {
 				transform: scale(1.2);

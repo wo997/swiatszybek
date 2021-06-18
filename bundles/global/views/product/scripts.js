@@ -445,20 +445,27 @@ function setVariantData() {
 	data.matched_products.forEach((p) => {
 		const si = product_shipping_info[p.product_id];
 		si.forEach((carrier) => {
-			if (!sis.find((s) => s.carrier_id === carrier.carrier_id)) {
-				carrier.ok = true;
-				sis.push(carrier);
+			const find_c = sis.find((s) => s.carrier_id === carrier.carrier_id);
+			if (find_c) {
+				find_c.price_min = Math.min(find_c.price_min, carrier.price);
+				find_c.price_max = Math.max(find_c.price_max, carrier.price);
 			} else {
-				if (si.price !== carrier.price) {
-					carrier.ok = false;
-				}
+				carrier.price_min = carrier.price;
+				carrier.price_max = carrier.price;
+				sis.push(carrier);
 			}
 		});
 	});
+
 	$(".product_shipping_info")._set_content(
 		sis
-			.filter((si) => si.ok)
-			.map((si) => html`<li>${si.name} - ${si.price} zł</li>`)
+			.map((si) => {
+				let display_price = si.price_min + "";
+				if (si.price_min !== si.price_max) {
+					display_price += " - " + si.price_max;
+				}
+				return html`<li>${si.name} - ${display_price} zł</li>`;
+			})
 			.join("")
 	);
 }
