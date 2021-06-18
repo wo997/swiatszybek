@@ -266,7 +266,7 @@ if ($main_img) {
             foreach ($general_product_variants as $general_product_variant) {
             ?>
                 <span class="label"><?= $general_product_variant["name"] ?></span>
-                <div class="variants radio_group boxes number big_boxes unselectable hide_checks" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "60px") ?>;--columns:<?= def($general_product_variant, "columns", "2") ?>'>
+                <div class="variants radio_group boxes number unselectable hide_checks" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "60px") ?>;--columns:<?= def($general_product_variant, "columns", "2") ?>'>
                     <?php
                     foreach ($general_product_variant["options"] as $variant_option) {
                     ?>
@@ -300,7 +300,7 @@ if ($main_img) {
         <div class="expand_y hidden animate_hidden case_notify_available">
             <div style="padding-top:7px">
                 <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                <div class="semi_bold selected_product_queue_pretty mr1"></div>
+                <div class="semi_bold selected_product_queue_pretty mr1 mt1"></div>
             </div>
         </div>
 
@@ -309,9 +309,9 @@ if ($main_img) {
             <ul class="product_shipping_info blc"></ul>
         </div>
 
-        <!-- <div class="mt2">
-            <div class="link"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
-        </div> -->
+        <div class="mt2">
+            <div class="link ask_product_btn"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
+        </div>
 
         <p class="price_label">
             <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
@@ -363,8 +363,9 @@ if ($main_img) {
 
         <h3 class="modal_header">Powiadom o dostępności</h3>
 
-        <div class="scroll_panel scroll_shadow panel_padding pt0">
-            <div>
+        <div class="scroll_panel scroll_shadow panel_padding">
+            <form>
+                <hr>
                 <div style="position:relative">
                     <img src="/src/img/hourglass.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 10px;bottom: 52px;transform: rotate(7deg);width: 68px;">
                     <div style="position:relative;text-align:center">
@@ -380,9 +381,9 @@ if ($main_img) {
 
                 <div class="flex mt2">
                     <button class="btn subtle fill mr2" onclick="hideAllModals()">Anuluj</button>
-                    <button class="btn primary submit_btn fill">Potwierdź</button>
+                    <button class="btn primary fill">Potwierdź</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -394,19 +395,49 @@ if ($main_img) {
         <h3 class="modal_header">Jesteś w kolejce!</h3>
 
         <div class="scroll_panel scroll_shadow panel_padding">
-            <div style="position:relative;text-align:center;padding: 10px 0">
-                <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 30px;width: 100px;">
-                <div style="position:relative;margin-bottom:10px;">
-                    Oczekuj na powiadomienie pod adresem <span class="email"></span>.
-                    <div style="margin-top:7px">
-                        Zadbamy o to by
-                        <span class="full_product_name"><?= $full_product_name ?></span>
-                        pojawił się w naszym sklepie jak najszybciej!
+            <div>
+                <hr>
+                <div style="position:relative;text-align:center;padding: 10px 0">
+                    <img src="/src/img/check_circle.svg" style="opacity: 0.04;font-size: 6em;position: absolute;right: 5px;bottom: 30px;width: 100px;">
+                    <div style="position:relative;margin-bottom:10px;">
+                        Oczekuj na powiadomienie pod adresem <span class="email"></span>.
+                        <div style="margin-top:7px">
+                            Zadbamy o to by
+                            <span class="full_product_name"><?= $full_product_name ?></span>
+                            pojawił się w naszym sklepie jak najszybciej!
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <button class="btn primary close_btn fill" onclick="hideAllModals()">OK </button>
+                <button class="btn primary close_btn fill" onclick="hideAllModals()">OK </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="AskProduct" data-modal data-dismissable>
+    <div class="modal_body" style="width: 480px;">
+        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
+
+        <h3 class="modal_header">Zapytanie o produkt</h3>
+
+        <div class="scroll_panel scroll_shadow panel_padding">
+            <form id="contactForm">
+                <hr>
+                <div class="label">Imię i nazwisko</div>
+                <input class="field pretty_errors" autocomplete="name" data-name="name" data-validate="">
+
+                <div class="label">Adres e-mail</div>
+                <input class="field pretty_errors" autocomplete="email" data-name="email" data-validate="string|email">
+
+                <div class="label">Tytuł</div>
+                <input class="field pretty_errors" data-name="subject" data-validate="">
+
+                <div class="label">Wiadomość</div>
+                <textarea class="field" style="height:100px" data-name="message" data-validate=""></textarea>
+
+                <button class="btn primary fill mt2" type="submit">Wyślij <i class="fas fa-paper-plane"></i></button>
+            </form>
         </div>
     </div>
 </div>
@@ -509,36 +540,6 @@ if ($main_img) {
     <?php endif ?>
 </div>
 
-<div id="AskProduct" data-modal data-dismissable>
-    <div class="modal_body" style="width: 480px;">
-        <button class="close_modal_btn"><i class="fas fa-times"></i></button>
-
-        <h3 class="modal_header">Zapytanie o produkt</h3>
-
-        <div class="scroll_panel scroll_shadow panel_padding pt0">
-            <div>
-                <form id="contactForm" class="mtfn">
-                    <div class="label">Imię i nazwisko</div>
-                    <input class="field pretty_errors" autocomplete="name" data-name="name" data-validate="">
-
-                    <div class="label">Adres e-mail</div>
-                    <input class="field pretty_errors" autocomplete="email" data-name="email" data-validate="string|email">
-
-                    <div class="label">Tytuł</div>
-                    <input class="field pretty_errors" data-name="subject" data-validate="">
-
-                    <div class="label">Wiadomość</div>
-                    <textarea class="field" style="height:100px" data-name="message" data-validate=""></textarea>
-
-                    <button class="btn primary submit_btn fill mt2" type="submit">Wyślij <i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 <?php if (User::getCurrent()->isLoggedIn()) : ?>
     <div id="addComment" data-modal data-dismissable>
         <div class="modal_body" style="width: 600px;">
@@ -548,7 +549,8 @@ if ($main_img) {
 
             <div class="scroll_panel scroll_shadow panel_padding">
                 <form>
-                    <div class="variants_container">
+                    <hr>
+                    <div class="variants_container mtf">
                         <?= $variants_less_html ?>
                     </div>
 

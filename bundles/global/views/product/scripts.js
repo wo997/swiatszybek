@@ -711,9 +711,8 @@ domload(() => {
 	const notifyProductAvailable = $("#notifyProductAvailable .modal_body");
 	const email_input = notifyProductAvailable._child(".field.email");
 
-	const submit_btn = notifyProductAvailable._child(".submit_btn");
-
-	submit_btn.addEventListener("click", () => {
+	notifyProductAvailable._child("form").addEventListener("submit", (ev) => {
+		ev.preventDefault();
 		const errors = validateInputs([email_input]);
 		if (errors.length > 0) {
 			return;
@@ -733,6 +732,43 @@ domload(() => {
 				hideModal("notifyProductAvailable");
 
 				$("#notifyProductSuccess .email")._set_content(email);
+			},
+		});
+	});
+});
+
+domload(() => {
+	const ask_product_btn = $(".ask_product_btn");
+	ask_product_btn.addEventListener("click", () => {
+		const product_name = single_product ? single_product.__name : general_product_name;
+		AskProduct._child(`[data-name="subject"]`)._set_value(`Zapytanie o produkt`, { quiet: true });
+		AskProduct._child(`[data-name="message"]`)._set_value(product_name, { quiet: true });
+		showModal(`AskProduct`, { source: ask_product_btn });
+	});
+
+	const AskProduct = $("#AskProduct .modal_body");
+
+	AskProduct._child("form").addEventListener("submit", (ev) => {
+		ev.preventDefault();
+		const errors = validateInputs(AskProduct._children("[data-name]"));
+		if (errors.length > 0) {
+			return;
+		}
+
+		showLoader(AskProduct);
+		xhr({
+			url: "/send_contact_form_email",
+			params: Object.fromEntries(AskProduct._children("[data-name]").map((field) => [field.dataset.name, field._get_value()])),
+			success: (res) => {
+				hideLoader(AskProduct);
+				hideModal("AskProduct");
+
+				showNotification(`<div class="header">Sukces</div>Wysłano wiadomość`);
+
+				AskProduct._children("[data-name]").forEach((input) => {
+					input._set_value("", { quiet: true });
+				});
+				clearInputsErrors(AskProduct._children("[data-name]"));
 			},
 		});
 	});

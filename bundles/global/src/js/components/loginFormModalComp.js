@@ -45,14 +45,12 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 		template: html`
 			<button class="close_modal_btn" type="button"><i class="fas fa-times"></i></button>
 
-			<h3 class="modal_header">
-				<img class="user_icon" src="/src/img/user_icon.svg" />
-				Logowanie
-			</h3>
+			<h3 class="modal_header">Logowanie</h3>
 
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<form>
-					<div class="label first">E-mail</div>
+					<hr />
+					<div class="label">E-mail</div>
 					<input
 						data-node="{${comp._nodes.email}}"
 						class="field pretty_errors"

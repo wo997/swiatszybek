@@ -7,7 +7,7 @@
                 <div style='text-align:center;margin:2em 0'>Brak ostatnio<br>przeglądanych produktów</div>
             </div>
             <div class='case_last_viewed_products_not_empty flex_stretch'>
-                <div class='scroll_panel scroll_shadow scroll_padding last_viewed_products_wrapper smooth_scrollbar'>
+                <div class='scroll_panel scroll_shadow scroll_padding last_viewed_products_wrapper smooth_scrollbar pl2 pr2'>
                     <last-viewed-products-comp></last-viewed-products-comp>
                 </div>
             </div>

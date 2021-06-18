@@ -7,7 +7,7 @@ function requestHeaderModals() {
 			<div id="userMenu" data-expand data-dismissable>
 				<div class="modal_body" style="max-width: 500px;">
 					<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-					<h3 class="modal_header"><img class="user_icon" src="/src/img/user_icon.svg" /> Moje konto</h3>
+					<h3 class="modal_header">Moje konto</h3>
 					<div class="scroll_panel scroll_shadow">
 						<div></div>
 					</div>
@@ -28,13 +28,10 @@ function requestHeaderModals() {
 
 	// last viewed products
 	registerModalContent(html`
-		<div id="lastViewedProducts" data-dismissable>
+		<div id="lastViewedProducts" data-expand data-dismissable>
 			<div class="modal_body">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal_header">
-					<img class="product_history_icon" src="/src/img/product_history_icon.svg" />
-					Ostatnie
-				</h3>
+				<h3 class="modal_header">Ostatnio przeglądane</h3>
 				<div class="flex_stretch"></div>
 			</div>
 		</div>
@@ -54,8 +51,8 @@ function requestHeaderModals() {
 		<div id="mainSearch" data-expand data-dismissable>
 			<div class="modal_body" style="max-width: 500px;">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal_header"><img class="search_icon" src="/src/img/search_icon.svg" /> Wyszukiwarka</h3>
-				<div class="scroll_panel scroll_shadow pa1 pt0"></div>
+				<h3 class="modal_header">Wyszukiwarka</h3>
+				<div class="scroll_panel scroll_shadow pl2 pr2"></div>
 			</div>
 		</div>
 	`);
@@ -65,7 +62,7 @@ function requestHeaderModals() {
 		<div id="mainMenu" data-expand data-dismissable>
 			<div class="modal_body" style="max-width: 500px;">
 				<button class="close_modal_btn"><i class="fas fa-times"></i></button>
-				<h3 class="modal_header"><img class="menu_icon" src="/src/img/menu_icon.svg" /> Menu</h3>
+				<h3 class="modal_header">Menu</h3>
 				<div class="scroll_panel scroll_shadow">
 					<div></div>
 				</div>
@@ -77,8 +74,6 @@ function requestHeaderModals() {
 	mm.insertAdjacentHTML("afterbegin", main_header_nav.outerHTML);
 	mm._child(".main_menu > ul").insertAdjacentHTML(
 		"beforeend",
-		//<img class="product_history_icon" src="/src/img/product_history_icon.svg" />
-		//<img class="heart_icon" src="/src/img/heart_icon.svg" />
 		html`
 			<li>
 				<a onclick="showModal('lastViewedProducts',{source:this});return false;"> Ostatnio przeglądane produkty </a>
