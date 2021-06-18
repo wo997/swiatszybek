@@ -77,6 +77,7 @@ function setImageSize(img) {
 	if (!data) {
 		const duration = show_image_duration;
 		img.style.animation = `show ${duration}ms`;
+		unsetImgHeightOnLoad(img);
 		// @ts-ignore
 		img.src = src;
 		setTimeout(() => {
@@ -94,6 +95,18 @@ function setImageSize(img) {
 		img.style.height = `${suppose_height}px`;
 		img.classList.add("had_no_height");
 	}
+}
+
+/**
+ *
+ * @param {PiepNode} img
+ */
+function unsetImgHeightOnLoad(img) {
+	img.addEventListener("load", () => {
+		if (img.classList.contains("had_no_height")) {
+			img.style.height = "";
+		}
+	});
 }
 
 /**
@@ -118,12 +131,10 @@ function onScrollImages(options = {}) {
 		if (isNodeOnScreen(img, lazy_off, lazy_off) && img.dataset.src) {
 			const src = getResponsiveImageRealUrl(img);
 			if (src) {
+				unsetImgHeightOnLoad(img);
 				// @ts-ignore
 				img.src = src;
 				img.classList.add("wo997_img_waiting");
-				if (img.classList.contains("had_no_height")) {
-					img.style.height = "";
-				}
 			}
 		}
 		//  else {

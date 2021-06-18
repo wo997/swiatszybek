@@ -132,7 +132,10 @@ class Cart
                 foreach ($dimensions as $dimension) {
                     $fits = true;
 
-                    if ($dimension["length"] && $dimension["width"] && $dimension["height"]) {
+                    $max_weight_kg = $dimension["weight"];
+                    if ($max_weight_kg && $products_weight_g > $max_weight_kg * 1000) {
+                        $fits = false;
+                    } else if ($dimension["length"] && $dimension["width"] && $dimension["height"]) {
                         $fits = putBoxIntoPackage3D([
                             $dimension["length"],
                             $dimension["width"],

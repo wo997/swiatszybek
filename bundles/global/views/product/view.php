@@ -51,7 +51,7 @@ if ($product_link_base !== Request::$url) {
     Request::redirectPermanent($true_product_link);
 }
 
-$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);
@@ -116,6 +116,51 @@ foreach ($general_product_variants as $general_product_variant) {
     $variants_less_html .= "</div>";
 }
 
+// delivery info
+$product_shipping_info = [];
+foreach ($general_product_products as &$product) {
+    $product_id = $product["product_id"];
+
+    $products_dims = [[$product["length"], $product["width"], $product["height"]]];
+
+    $shipping_info = [];
+
+    foreach (DB::fetchArr("SELECT carrier_id, __full_name, dimensions_json FROM carrier WHERE active ORDER BY delivery_type_id") as $carrier) {
+        $dimensions = json_decode($carrier["dimensions_json"], true);
+
+        $dimension_fits = null;
+
+        foreach ($dimensions as $dimension) {
+            $fits = true;
+
+            $max_weight_kg = $dimension["weight"];
+            if ($max_weight_kg && $product["weight"] > $max_weight_kg * 1000) {
+                $fits = false;
+            } else if ($dimension["length"] && $dimension["width"] && $dimension["height"]) {
+                $fits = putBoxIntoPackage3D([
+                    $dimension["length"],
+                    $dimension["width"],
+                    $dimension["height"],
+                ], $products_dims);
+            }
+
+            if ($fits) {
+                $dimension_fits = $dimension;
+                break;
+            }
+        }
+
+        if (!$dimension_fits) {
+            continue;
+        }
+
+        $shipping_info[] = ["carrier_id" => $carrier["carrier_id"], "name" => $carrier["__full_name"], "price" => $dimension_fits["price"]];
+    }
+
+    $product_shipping_info[$product["product_id"]] = $shipping_info;
+}
+
+
 // user data
 $user_data = DB::fetchRow("SELECT nickname, email FROM user WHERE user_id = ?", [User::getCurrent()->getId()]);
 $user_nickname = $user_data ? $user_data["nickname"] : "";
@@ -139,6 +184,7 @@ $user_email = $user_data ? $user_data["email"] : "";
     const general_product_imgs = <?= $general_product_imgs_json ?>;
     const general_product_variants = <?= json_encode($general_product_variants) ?>;
     const general_product_comments_rows = <?= json_encode($comments_data["rows"]) ?>;
+    const product_shipping_info = <?= json_encode($product_shipping_info) ?>;
 
     <?php if (isset($_GET["komentarz"])) { ?>
         // not yet dude :)
@@ -220,7 +266,7 @@ if ($main_img) {
             foreach ($general_product_variants as $general_product_variant) {
             ?>
                 <span class="label"><?= $general_product_variant["name"] ?></span>
-                <div class="variants radio_group boxes number big_boxes unselectable hide_checks" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "80px") ?>;--columns:<?= def($general_product_variant, "columns", "2") ?>'>
+                <div class="variants radio_group boxes number big_boxes unselectable hide_checks" style='margin-bottom:20px;--box_height:<?= def($general_product_variant, "height", "60px") ?>;--columns:<?= def($general_product_variant, "columns", "2") ?>'>
                     <?php
                     foreach ($general_product_variant["options"] as $variant_option) {
                     ?>
@@ -249,23 +295,32 @@ if ($main_img) {
             <?php } ?>
         </div>
 
-        <p class="price_label">
-            <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
-        </p>
+        <p style="font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
 
-        <p style="font-weight:normal;margin:0;font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
+        <div class="mt2">
+            <div class="mb1"> <i class="fas fa-shipping-fast"></i> Wysyłka w 24h (w dni robocze)</div>
+            <ul class="product_shipping_info blc"></ul>
+        </div>
+
+        <div class="mt2">
+            <div class="link"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
+        </div>
 
         <div class="expand_y hidden animate_hidden case_notify_available">
             <div style="padding-top:7px">
                 <button class="btn primary medium fill" onclick="showModal(`notifyProductAvailable`,{source:this});">Powiadom o dostępności <i class="fas fa-bell"></i></button>
-                <div class="semi_bold selected_product_queue_pretty" style="margin-top:7px"></div>
+                <div class="semi_bold selected_product_queue_pretty mr1"></div>
             </div>
         </div>
+
+        <p class="price_label">
+            <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
+        </p>
 
         <div class="case_can_buy_product" data-tooltip_position="center">
             <div class="label">Ilość:</div>
             <div class="flex align_center">
-                <div class="glue_children qty_controls main_qty_controls" style="margin-right:10px" data-product="single_product">
+                <div class="glue_children qty_controls main_qty_controls mr2" data-product="single_product">
                     <button class="btn subtle sub_qty">
                         <i class="fas fa-minus"></i>
                     </button>

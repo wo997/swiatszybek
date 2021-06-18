@@ -104,7 +104,7 @@ domload(() => {
 	loadCart();
 
 	const qty_input = $(".main_qty_controls .val_qty");
-	const more_qty = qty_input.addEventListener("change", () => {
+	qty_input.addEventListener("change", () => {
 		const qty = qty_input._get_value();
 		$(".main_qty_controls")
 			._next()
@@ -440,6 +440,27 @@ function setVariantData() {
 		});
 		removeClasses(".active", ["inactive"], product_feature_list);
 	}
+
+	const sis = [];
+	data.matched_products.forEach((p) => {
+		const si = product_shipping_info[p.product_id];
+		si.forEach((carrier) => {
+			if (!sis.find((s) => s.carrier_id === carrier.carrier_id)) {
+				carrier.ok = true;
+				sis.push(carrier);
+			} else {
+				if (si.price !== carrier.price) {
+					carrier.ok = false;
+				}
+			}
+		});
+	});
+	$(".product_shipping_info")._set_content(
+		sis
+			.filter((si) => si.ok)
+			.map((si) => html`<li>${si.name} - ${si.price} zł</li>`)
+			.join("")
+	);
 }
 
 domload(() => {
