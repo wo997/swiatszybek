@@ -27,7 +27,16 @@ let feature_data_types;
 let physical_measures;
 let physical_measure_unit_map;
 
-let countries_options_html;
+/**
+ * @typedef {{
+ * code: string
+ * nazwa: string
+ * name: string
+ * }} CountryData
+ */
+
+/** @type {CountryData[]} */
+let ue_countries;
 
 let Picker;
 

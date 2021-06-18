@@ -114,7 +114,10 @@ function addressComp(comp, parent, data = undefined) {
 
 				<div class="label">Kraj</div>
 				<select class="field pretty_errors" autocomplete="country-name" data-bind="{${data.country}}">
-					${countries_options_html}
+					${ue_countries
+						.filter((e) => e.nazwa === "Polska")
+						.map((e) => html`<option value="${e.nazwa}">${e.nazwa}</option>`)
+						.join("")}
 				</select>
 
 				<div class="label">Kod pocztowy</div>

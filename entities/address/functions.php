@@ -1,22 +1,23 @@
 <?php //hook[helper]
 
-function useUECountriesOptionsInJS()
+function preloadUECountries()
 {
-    $options = printUECountriesOptions();
+    $ue_countries_json = json_encode(getUECountries());
+    //$options = printUECountriesOptions();
     return <<<JS
-    countries_options_html = `$options`;
+    ue_countries = $ue_countries_json;
 JS;
 }
 
-function printUECountriesOptions()
-{
-    $html = "";
-    foreach (getUECountries() as $country) {
-        $name = $country["nazwa"];
-        $html .= "<option value=\"$name\">$name</option>\n";
-    }
-    return $html;
-}
+// function printUECountriesOptions()
+// {
+//     $html = "";
+//     foreach (getUECountries() as $country) {
+//         $name = $country["nazwa"];
+//         $html .= "<option value=\"$name\">$name</option>\n";
+//     }
+//     return $html;
+// }
 
 function getUECountries()
 {

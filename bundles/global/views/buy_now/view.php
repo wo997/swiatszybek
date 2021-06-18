@@ -11,7 +11,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 <title>Kup teraz</title>
 
 <script>
-    <?= useUECountriesOptionsInJS() ?>
+    <?= preloadUECountries() ?>
     <?= preloadDeliveryTypes() ?>
 </script>
 
