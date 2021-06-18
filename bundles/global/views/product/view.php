@@ -310,7 +310,7 @@ if ($main_img) {
         </div>
 
         <div class="mt2">
-            <div class="link ask_product_btn"> <i class="fas fa-envelope"></i> Zadaj pytanie sprzedawcy </div>
+            <div class="link ask_product_btn"> <i class="fas fa-envelope"></i> Zapytaj o produkt </div>
         </div>
 
         <p class="price_label">
@@ -419,7 +419,7 @@ if ($main_img) {
     <div class="modal_body" style="width: 480px;">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
 
-        <h3 class="modal_header">Zapytanie o produkt</h3>
+        <h3 class="modal_header">Zapytaj o produkt</h3>
 
         <div class="scroll_panel scroll_shadow panel_padding">
             <form id="contactForm">

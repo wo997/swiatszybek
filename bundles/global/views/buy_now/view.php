@@ -70,14 +70,16 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <p>- Zapisz swoje adresy</p>
             <p>- Możesz wziąć udział w programie partnerskim</p> -->
 
-            <br>
-
             <div class="account_buttons">
                 <div style="display:flex">
                     <button class="btn primary fill" style="margin-right:10px;" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
-                        Zaloguj się <i class='fas fa-user'></i>
+                        Zaloguj się
+                        <!-- <i class='fas fa-user'></i> -->
                     </button>
-                    <a href="/rejestracja" class="btn primary fill"> Rejestracja <i class="fa fa-user-plus"></i> </a>
+                    <a href="/rejestracja" class="btn primary fill">
+                        Rejestracja
+                        <!-- <i class="fa fa-user-plus"></i> -->
+                    </a>
                 </div>
 
                 <button class="btn primary fill buy_without_registration" style="margin-top:10px;">

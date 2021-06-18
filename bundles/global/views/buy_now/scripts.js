@@ -438,17 +438,22 @@ function initRebateCodes() {
 					<h3 class="modal_header">Kod rabatowy</h3>
 
 					<div class="panel_padding">
-						<div class="label first">Wpisz swój kod</div>
-						<input type="text" class="field rebate_code" data-validate="" />
-						<div class="show_errors"></div>
-						<button class="btn primary mtf fill activate_btn">Aktywuj</button>
+						<form>
+							<hr />
+							<div class="label">Wpisz swój kod</div>
+							<input type="text" class="field rebate_code" data-validate="" />
+							<div class="show_errors"></div>
+							<button class="btn primary mtf fill" type="submit">Aktywuj</button>
+						</form>
 					</div>
 				</div>
 			</div>
 		`
 	);
 
-	$("#activateRebateCode .activate_btn").addEventListener("click", () => {
+	$("#activateRebateCode form").addEventListener("submit", (ev) => {
+		ev.preventDefault();
+
 		const rebate_code = $("#activateRebateCode .rebate_code");
 		const errors = validateInputs([rebate_code]);
 		if (errors.length > 0) {
