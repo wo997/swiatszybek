@@ -61,9 +61,10 @@
 		init: (piep_cms, menu_wrapper) => {
 			const btn_style = menu_wrapper._child(".btn_style");
 			piep_cms.container.addEventListener("set_blc_menu", () => {
-				if (menu_wrapper.classList.contains("hidden")) {
-					return;
-				}
+				// might be prone to bugs
+				// if (menu_wrapper.classList.contains("hidden")) {
+				// 	return;
+				// }
 
 				const v_node = piep_cms.getFocusVNode();
 				if (!v_node) {

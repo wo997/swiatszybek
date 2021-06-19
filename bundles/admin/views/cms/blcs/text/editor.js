@@ -8,6 +8,12 @@
 		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
 	];
 
+	/** @type {EditBlcGroup[]} */
+	const text_tag_groups = [
+		{ match_tag: piep_cms_manager.match_tag_text_containers, priority: text_priority },
+		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
+	];
+
 	const irrelevant_text_priority = 5;
 
 	/** @type {EditBlcGroup[]} */
@@ -117,7 +123,7 @@
 	piep_cms_manager.registerProp({
 		name: "text_tag",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		blc_groups: text_tag_groups,
 		menu_html: html`
 			<div class="label">Typ tekstu</div>
 			<div class="pretty_radio global_root box_align_left" data-blc_prop="tag" class="--columns:1">
@@ -282,7 +288,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_tag",
-		blc_groups: text_groups,
+		blc_groups: text_tag_groups,
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid align_left" data-blc_prop="tag" data-tooltip="Typ tekstu">
 				<p-option data-value="h1" style="font-size:var(--size_h1);">

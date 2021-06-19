@@ -19,8 +19,9 @@ class PiepCMSManager {
 		// this.match_tags_containing_text =
 		// 	/^(tt|i|b|big|small|em|strong|dfn|code|samp|kbd|var|cite|abbr|acronym|sub|sup|span|bdo|address|div|a|object|p|h[1-6]|pre|q|ins|del|dt|dd|li|label|option|textarea|fieldset|legend|button|caption|td|th|title|script|style)$/;
 
-		this.match_basic_text_containers = /^(h1|h2|h3|h4|h5|h6|p|button)$/;
-		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p|li|button)$/; // just li added
+		//this.match_basic_text_containers = /^(h1|h2|h3|h4|h5|h6|p|button)$/;
+		this.match_tag_text_containers = /^(h1|h2|h3|h4|h5|h6|p)$/;
+		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p|li|button)$/;
 		this.match_textables = /^(span|b)$/;
 
 		//this.match_text_wrappers = /^(h1|h2|h3|h4|h5|h6|p|ul)$/;
