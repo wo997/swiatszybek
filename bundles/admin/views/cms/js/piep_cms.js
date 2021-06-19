@@ -5082,16 +5082,10 @@ class PiepCMS {
 	 */
 	moveCursorSideways(dir) {
 		if (this.text_selection.length > 0) {
-			if (dir === -1) {
-				if (this.text_selection.direction === 1) {
-					this.text_selection.focus_offset = this.text_selection.anchor_offset;
-					this.text_selection.focus_vid = this.text_selection.anchor_vid;
-				}
-			} else {
-				if (this.text_selection.direction === -1) {
-					this.text_selection.anchor_offset = this.text_selection.focus_offset;
-					this.text_selection.anchor_vid = this.text_selection.focus_vid;
-				}
+			// opposite
+			if (dir * this.text_selection.direction < 0) {
+				this.text_selection.focus_offset = this.text_selection.anchor_offset;
+				this.text_selection.focus_vid = this.text_selection.anchor_vid;
 			}
 			this.collapseSelection();
 			return;
