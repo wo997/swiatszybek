@@ -79,6 +79,146 @@ class PiepCMS {
 		}
 	}
 
+	/**
+	 *
+	 * @param {PiepNode} sel_anchor_node
+	 * @param {number} anchor_offset
+	 * @param {PiepNode} sel_focus_node
+	 * @param {number} focus_offset
+	 *
+	 * Pretty much recalculates selection, have fun
+	 */
+	definiteSelection(sel_anchor_node = undefined, anchor_offset = undefined, sel_focus_node = undefined, focus_offset = undefined) {
+		if (!sel_anchor_node) {
+			sel_anchor_node = this.getNode(this.text_selection.anchor_vid);
+		}
+		if (!anchor_offset) {
+			anchor_offset = this.text_selection.anchor_offset;
+		}
+		if (!sel_focus_node) {
+			sel_focus_node = this.getNode(this.text_selection.focus_vid);
+		}
+		if (!focus_offset) {
+			focus_offset = this.text_selection.focus_offset;
+		}
+
+		const anchor_vid = +sel_anchor_node.dataset.vid;
+		const focus_vid = +sel_focus_node.dataset.vid;
+
+		const is_anchor_textable = sel_anchor_node.classList.contains("textable");
+		const is_focus_textable = sel_focus_node.classList.contains("textable");
+
+		if (is_anchor_textable && is_focus_textable) {
+			const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
+			indices_anchor.push(anchor_offset);
+			const indices_focus = sel_focus_node.dataset.indices.split(",").map((e) => +e);
+			indices_focus.push(focus_offset);
+
+			const single_node = anchor_vid === focus_vid;
+
+			const direction = compareIndices(indices_anchor, indices_focus);
+
+			let total_length = 0;
+
+			/** @type {PiepTextPartialRange[]} */
+			const partial_ranges = [];
+			/** @type {number[]} */
+			const middle_vids = []; // TODO: include full text blocks? separate array, maybe even other items like modules etc
+
+			{
+				const start_offset = direction === 1 ? anchor_offset : focus_offset;
+				const end_offset = direction === 1 ? focus_offset : anchor_offset;
+				const start_vid = direction === 1 ? anchor_vid : focus_vid;
+				const end_vid = direction === 1 ? focus_vid : anchor_vid;
+				const sel_start_node = direction === 1 ? sel_anchor_node : sel_focus_node;
+				const sel_end_node = direction === 1 ? sel_focus_node : sel_anchor_node;
+				const start_len = sel_start_node.textContent.length;
+				const end_len = sel_end_node.textContent.length;
+
+				if (single_node) {
+					if (start_offset === 0 && end_offset === start_len) {
+						middle_vids.push(start_vid);
+						total_length += start_len;
+					} else {
+						const length = end_offset - start_offset;
+						if (length > 0) {
+							total_length += length;
+							partial_ranges.push({
+								vid: start_vid,
+								start: start_offset,
+								end: end_offset,
+							});
+						}
+					}
+				} else {
+					if (start_offset === 0) {
+						middle_vids.push(start_vid);
+					} else {
+						const length = start_len - start_offset;
+						if (length > 0) {
+							total_length += length;
+							partial_ranges.push({
+								vid: start_vid,
+								start: start_offset,
+								end: start_len,
+							});
+						}
+					}
+
+					if (end_offset === end_len) {
+						middle_vids.push(end_vid);
+						total_length += end_len;
+					} else {
+						const length = end_offset;
+						if (length > 0) {
+							total_length += length;
+							partial_ranges.push({
+								vid: end_vid,
+								start: 0,
+								end: end_offset,
+							});
+						}
+					}
+				}
+			}
+
+			if (!single_node) {
+				let next = sel_anchor_node;
+				while (true) {
+					next = this.getDeepSibling(next, ".textable", direction);
+					if (next === sel_focus_node) {
+						break;
+					}
+					if (next) {
+						middle_vids.push(+next.dataset.vid);
+						total_length += next.textContent.length;
+					} else {
+						break;
+					}
+				}
+			}
+
+			this.text_selection = {
+				anchor_vid: +sel_anchor_node.dataset.vid,
+				anchor_offset: anchor_offset,
+				focus_vid: +sel_focus_node.dataset.vid,
+				focus_offset: focus_offset,
+				middle_vids,
+				partial_ranges,
+				direction,
+				length: total_length,
+				single_node,
+			};
+		}
+
+		if (is_anchor_textable && !is_focus_textable) {
+			const anchor_parent = sel_anchor_node._parent();
+			if (anchor_parent.classList.contains("text_container")) {
+				this.selectTextContainerContents(+anchor_parent.dataset.vid);
+			}
+		}
+	}
+
 	initTextSelection() {
 		/** @type {PiepTextSelection} */
 		this.text_selection = undefined;
@@ -120,6 +260,8 @@ class PiepCMS {
 
 					const anchor_offset = sel.anchorOffset;
 					const focus_offset = sel.focusOffset;
+
+					this.definiteSelection(sel_anchor_node, anchor_offset, sel_focus_node, focus_offset);
 
 					const is_anchor_textable = sel_anchor_node.classList.contains("textable");
 					const is_focus_textable = sel_focus_node.classList.contains("textable");
@@ -1542,11 +1684,11 @@ class PiepCMS {
 				}
 				if (ev.key === "ArrowLeft") {
 					ev.preventDefault();
-					this.moveCursorSideways(-1);
+					this.moveCursorSideways(-1, ev.shiftKey);
 				}
 				if (ev.key === "ArrowRight") {
 					ev.preventDefault();
-					this.moveCursorSideways(1);
+					this.moveCursorSideways(1, ev.shiftKey);
 				}
 				// if (ev.key === "Home") {
 				// 	ev.preventDefault();
@@ -1558,11 +1700,11 @@ class PiepCMS {
 				// }
 				if (ev.key === "ArrowUp") {
 					ev.preventDefault();
-					this.moveCursorFromAnywhere(0, -1);
+					this.moveCursorFromAnywhere(0, -1, ev.shiftKey);
 				}
 				if (ev.key === "ArrowDown") {
 					ev.preventDefault();
-					this.moveCursorFromAnywhere(0, 1);
+					this.moveCursorFromAnywhere(0, 1, ev.shiftKey);
 				}
 				if (ev.key === "Enter") {
 					ev.preventDefault();
@@ -5095,9 +5237,10 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {Direction} dir
+	 * @param {boolean} shift
 	 */
-	moveCursorSideways(dir) {
-		if (this.text_selection.length > 0) {
+	moveCursorSideways(dir, shift) {
+		if (this.text_selection.length > 0 && !shift) {
 			// opposite
 			if (dir * this.text_selection.direction < 0) {
 				this.text_selection.focus_offset = this.text_selection.anchor_offset;
@@ -5127,7 +5270,11 @@ class PiepCMS {
 			this.text_selection.focus_offset += dir;
 		}
 
-		this.collapseSelection();
+		if (shift) {
+			this.definiteSelection();
+		} else {
+			this.collapseSelection();
+		}
 		//this.displayTextSelection();
 	}
 
@@ -5135,8 +5282,9 @@ class PiepCMS {
 	 *
 	 * @param {number} dx
 	 * @param {number} dy
+	 * @param {shift}
 	 */
-	moveCursorFromAnywhere(dx, dy) {
+	moveCursorFromAnywhere(dx, dy, shift) {
 		const sel_rect = this.cursor.getBoundingClientRect();
 		const sel_center = getRectCenter(sel_rect);
 
@@ -5267,7 +5415,12 @@ class PiepCMS {
 				this.text_selection.focus_vid = +pretty_textable.dataset.vid;
 				this.text_selection.focus_offset = pretty_pos;
 			}
-			this.collapseSelection();
+
+			if (shift) {
+				this.definiteSelection();
+			} else {
+				this.collapseSelection();
+			}
 		}
 	}
 
