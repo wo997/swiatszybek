@@ -246,9 +246,8 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         }
     }
 
-    // should be make it another action in admin panel? so the admin confirms that action? sure :) no need to create these bulky actions
     if ($status_id === 6) {
-        //  hey this should be added in przelewy24 module?
+        // hey this should be added in przelewy24 module?
         // TODO: just do it
         Przelewy24::get()->refund($shop_order_id);
     }

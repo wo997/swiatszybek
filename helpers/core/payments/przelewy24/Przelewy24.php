@@ -122,8 +122,9 @@ class Przelewy24
 
     public function refund($shop_order_id)
     {
-        return;
         $shop_order = EntityManager::getEntityById("shop_order", $shop_order_id);
+
+        $payment_data = DB::fetchRow("SELECT session_id, payment_order_id FROM payment WHERE shop_order_id = ? AND payment_status_id = 1", [$shop_order_id]);
 
         // TODO: ofc check if refunded already and so on
 
@@ -132,26 +133,27 @@ class Przelewy24
             'refundsUuid' => randomString(35),
             'refunds' => [
                 [
-                    // "orderId" => $zamowienie_data["p24_order_id"],
-                    // "sessionId" => $zamowienie_data["session_id"],
+                    "orderId" => $payment_data["payment_order_id"],
+                    "sessionId" => $payment_data["session_id"],
                     "amount" => round($shop_order->getProp("products_price") * 100),
                     "description" => "Zwrot"
                 ]
             ]
         ]);
 
-        $call_url = "https://" . (secret("p24_testMode") ? "sandbox" : "secure") . ".przelewy24.pl/api/v1/transaction/refund";
+        $call_url = $this->hostLive . "api/v1/transaction/refund";
         $res = self::callUrlJson($call_url, $data_string);
 
         $success = json_decode($res, true)["responseCode"] === 0;
 
         if ($success) {
-            // TODO: create refund object
-            //query("UPDATE zamowienia SET p24_refunded = 1 WHERE zamowienie_id = ?", [$zamowienie_data["zamowienie_id"]]);
+            // TODO: create refund object containing data what as refunded, could be not a whole order but a few things from it
+            // can also just refund some amount of many not exceeding products cost? (otherwise we lose money dont we? delivery) 
         } else {
         }
         $detail = json_encode($res);
-        sendEmail("wojtekwo997@gmail.com", $detail, "zwrot padmate");
+        //var_dump($res, $data_string);
+        sendEmail("wojtekwo997@gmail.com", $data_string . ", " . $detail, "zwrot prolit");
     }
 
 

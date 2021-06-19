@@ -84,15 +84,28 @@ domload(() => {
 				width: "140px",
 				render: (value, data) => {
 					//<a class="btn subtle small" href=""> Szczegóły (brak) <i class="fas fa-cog"></i> </a>
-					return html`
-						<a
-							class="btn subtle small"
-							data-preview_url="/zamowienie/${data.shop_order_id}/${data.reference}"
-							data-tooltip="Link dla klienta"
-						>
-							<i class="fas fa-eye"></i>
-						</a>
-					`;
+					let action_html = "";
+					action_html += html` <a
+						class="btn subtle small"
+						data-preview_url="/zamowienie/${data.shop_order_id}/${data.reference}"
+						data-tooltip="Link dla klienta"
+					>
+						<i class="fas fa-eye"></i>
+					</a>`;
+
+					// if (data.status_id === 6) {
+					// 	action_html += html`
+					// 		<button
+					// 			class="btn subtle small refund_btn"
+					// 			data-shop_order_id="${data.shop_order_id}"
+					// 			data-tooltip="Zwróć pieniądze klientowi"
+					// 		>
+					// 			<i class="fas fa-hand-holding-usd"></i>
+					// 		</button>
+					// 	`;
+					// }
+
+					return action_html;
 				},
 			},
 		],
@@ -148,5 +161,10 @@ domload(() => {
 		if (preview_url) {
 			previewUrl(preview_url.dataset.preview_url);
 		}
+
+		// const refund_btn = target._parent(`.refund_btn`);
+		// if (refund_btn) {
+		// 	console.log(refund_btn.dataset.shop_order_id);
+		// }
 	});
 });
