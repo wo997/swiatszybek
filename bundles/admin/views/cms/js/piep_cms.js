@@ -899,36 +899,34 @@ class PiepCMS {
 						/** @type {vDomNode[]} */
 						const put_v_nodes = [];
 
-						if (range.start > 0) {
-							put_v_nodes.push({
-								id: bef_vid,
+						/**
+						 *
+						 * @param {number} id
+						 * @param {string} text
+						 * @returns
+						 */
+						const getSpan = (id, text) => {
+							return {
+								id,
 								tag: "span",
 								styles: {},
-								text: v_node.text.substring(0, range.start),
+								text,
 								attrs: {},
 								classes: [],
-							});
+								settings: {},
+								responsive_settings: {},
+							};
+						};
+
+						if (range.start > 0) {
+							put_v_nodes.push(getSpan(bef_vid, v_node.text.substring(0, range.start)));
 						}
 
 						const mid_text = v_node.text.substring(range.start, range.end);
-						put_v_nodes.push({
-							id: mid_vid,
-							tag: "span",
-							styles: {},
-							text: mid_text,
-							attrs: {},
-							classes: [],
-						});
+						put_v_nodes.push(getSpan(mid_vid, mid_text));
 
 						if (range.end < v_node.text.length) {
-							put_v_nodes.push({
-								id: aft_vid,
-								tag: "span",
-								styles: {},
-								text: v_node.text.substring(range.end),
-								attrs: {},
-								classes: [],
-							});
+							put_v_nodes.push(getSpan(aft_vid, v_node.text.substring(range.end)));
 						}
 
 						// do the split and spread options
@@ -1021,7 +1019,9 @@ class PiepCMS {
 				setProp();
 			});
 			input.addEventListener("change", () => {
-				setTimeout(setProp);
+				setProp();
+				// ugh? why we did that in the first place?
+				//setTimeout(setProp);
 			});
 		});
 	}
