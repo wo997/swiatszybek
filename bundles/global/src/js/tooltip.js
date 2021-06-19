@@ -71,11 +71,14 @@ domload(() => {
 				left -= tltp.offsetWidth / 2 + offsetX;
 				top -= 0.5 * (nodeRect.height + tltp.offsetHeight) + offsetY;
 			} else if (nodeRectPosition == "right") {
-				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
 				left += nodeRect.width / 2;
-			} else if (nodeRectPosition == "left") {
 				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
+			} else if (nodeRectPosition == "left") {
 				left -= nodeRect.width / 2 + tltp.offsetWidth + offsetX * 2;
+				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
+			} else if (nodeRectPosition == "cursor") {
+				left = mouse.pos.x + offsetX;
+				top = mouse.pos.y + offsetY;
 			}
 
 			const maxLeft = window.innerWidth - 30 - tltp.offsetWidth;

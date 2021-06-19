@@ -117,6 +117,7 @@
 			const value_input = piep_cms.side_menu._child(".prop_font_size unit-input input");
 			value_input.click();
 			value_input.focus();
+			piep_cms.setContentActive(false);
 		});
 	};
 

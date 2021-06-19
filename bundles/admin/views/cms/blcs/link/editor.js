@@ -52,6 +52,7 @@
 					const link_input = piep_cms.side_menu._child(".prop_link input");
 					link_input.click();
 					link_input.focus();
+					piep_cms.setContentActive(false);
 				}
 			});
 		},

@@ -1005,7 +1005,7 @@ class PiepCMS {
 
 				if (blc_menu_name === "float" && this.text_selection) {
 					if (input._parent(this.float_menu)) {
-						this.content_active = true;
+						this.setContentActive(true);
 					}
 				}
 
@@ -1253,12 +1253,25 @@ class PiepCMS {
 		setSelectionByIndex($(".piep_editor_header"), 0);
 	}
 
+	setContentActive(active) {
+		if (active && this.text_selection && !this.content_active) {
+			setTimeout(() => {
+				this.content_active = true;
+			});
+		} else {
+			this.content_active = active;
+			this.content.dataset.tooltip_position = "cursor";
+		}
+		this.content.dataset.tooltip =
+			!active && this.text_selection ? "Kliknij by powrócić do edycji tekstu w miejscu ostatniego zaznaczenia" : "";
+	}
+
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
-			if (!this.content_active) {
+			if (!this.content_active || !this.float_menu.classList.contains("hidden")) {
 				return;
 			}
-			// why? so the change actually happens next time we click something
+			// why? so the selectionchange actually occours next time we click something
 
 			if (this.remove_selection_timeout) {
 				clearTimeout(this.remove_selection_timeout);
@@ -1281,7 +1294,11 @@ class PiepCMS {
 		document.addEventListener("mousedown", (ev) => {
 			const target = $(ev.target);
 
-			this.content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+			if (target._parent(this.float_menu)) {
+				return;
+			}
+			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
+			this.setContentActive(content_active);
 
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
@@ -1308,7 +1325,7 @@ class PiepCMS {
 			}
 
 			const click_blc = target._parent(this.getSelectableBlcSelector());
-			if (click_blc) {
+			if (this.content_active && click_blc) {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node_data = this.getVNodeDataById(click_blc_vid);
 				const click_v_node = click_v_node_data.v_node;
@@ -1935,6 +1952,9 @@ class PiepCMS {
 	}
 
 	manageText() {
+		if (!this.content_active) {
+			return;
+		}
 		// removes empty textables that are not focused btw
 		// also merges textables that are similar and next to each other
 
@@ -4521,7 +4541,6 @@ class PiepCMS {
 
 			this.pushHistory(`moved_blc_${grabbed_block_vid}`);
 
-			this.float_menu_active = true;
 			this.setFocusNode(grabbed_block_vid);
 
 			if (this.grab_block_options.is_new) {
@@ -4543,7 +4562,7 @@ class PiepCMS {
 								partial_ranges: [],
 								single_node: true,
 							};
-							this.content_active = true;
+							this.setContentActive(true);
 							break;
 						}
 						if (v_node.children) {
