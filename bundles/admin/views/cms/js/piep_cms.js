@@ -1001,11 +1001,12 @@ class PiepCMS {
 					considerVid(this.focus_node_vid);
 				}
 
+				this.preRecreateDom();
 				set_prop_of_ids.forEach((vid) => {
 					this.setPropOfVNode(prop_str, vid, input);
 				});
-
 				this.update({ all: true });
+
 				if (this.text_selection) {
 					this.setFocusNode(this.text_selection.focus_vid);
 				}
