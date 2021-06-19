@@ -51,3 +51,9 @@ p-option color-picker {
 .piep_editor_unit_input {
 	margin-left: -1px;
 }
+
+.pretty_btn_active {
+	background: var(--pretty_blue_background);
+	color: var(--pretty_blue);
+	border-color: var(--pretty_blue_background);
+}

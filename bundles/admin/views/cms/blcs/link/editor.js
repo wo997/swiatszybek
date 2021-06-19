@@ -40,11 +40,11 @@
 		name: "link_btn",
 		blc_groups: text_groups,
 		menu_html: html`
-			<button class="btn transparent small link_btn" data-tooltip="Wstaw link">
+			<button class="btn transparent small link_btn">
 				<i class="fas fa-link"></i>
 			</button>
 		`,
-		init: (piep_cms) => {
+		init: (piep_cms, menu_wrapper) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				if (target._parent(".link_btn")) {
@@ -54,6 +54,22 @@
 					link_input.focus();
 					piep_cms.setContentActive(false);
 				}
+			});
+
+			const link_btn = menu_wrapper._child(".link_btn");
+
+			const set_sel = () => {
+				const has_link = !!link_input._get_value();
+				link_btn.classList.toggle("pretty_btn_active", has_link);
+				link_btn.dataset.tooltip = has_link ? "Edytuj / Usuń link" : "Wstaw link";
+			};
+
+			const link_input = piep_cms.side_menu._child(`.prop_link [data-blc_prop="settings.link"]`);
+			link_input.addEventListener("change", set_sel);
+			link_input.addEventListener("input", set_sel);
+
+			piep_cms.container.addEventListener("set_blc_menu", () => {
+				set_sel();
 			});
 		},
 	});

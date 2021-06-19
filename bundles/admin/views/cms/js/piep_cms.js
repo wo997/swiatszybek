@@ -90,15 +90,27 @@ class PiepCMS {
 	 */
 	definiteSelection(sel_anchor_node = undefined, anchor_offset = undefined, sel_focus_node = undefined, focus_offset = undefined) {
 		if (!sel_anchor_node) {
+			if (!this.text_selection) {
+				return;
+			}
 			sel_anchor_node = this.getNode(this.text_selection.anchor_vid);
 		}
 		if (!anchor_offset) {
+			if (!this.text_selection) {
+				return;
+			}
 			anchor_offset = this.text_selection.anchor_offset;
 		}
 		if (!sel_focus_node) {
+			if (!this.text_selection) {
+				return;
+			}
 			sel_focus_node = this.getNode(this.text_selection.focus_vid);
 		}
 		if (!focus_offset) {
+			if (!this.text_selection) {
+				return;
+			}
 			focus_offset = this.text_selection.focus_offset;
 		}
 
