@@ -936,29 +936,19 @@ class PiepCMS {
 							deepAssign(put_v_node.styles, v_node.styles);
 							deepAssign(put_v_node.attrs, v_node.attrs);
 							deepAssign(put_v_node.settings, v_node.settings);
+							deepAssign(put_v_node.responsive_settings, v_node.responsive_settings);
 						});
 						v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
 
 						this.text_selection.middle_vids.push(mid_vid);
 
-						if (this.text_selection.direction === 1) {
-							if (range.vid === this.text_selection.anchor_vid) {
-								this.text_selection.anchor_vid = mid_vid;
-								this.text_selection.anchor_offset = 0;
-							}
-							if (range.vid === this.text_selection.focus_vid) {
-								this.text_selection.focus_vid = mid_vid;
-								this.text_selection.focus_offset = mid_text.length;
-							}
-						} else {
-							if (range.vid === this.text_selection.anchor_vid) {
-								this.text_selection.anchor_vid = mid_vid;
-								this.text_selection.anchor_offset = mid_text.length;
-							}
-							if (range.vid === this.text_selection.focus_vid) {
-								this.text_selection.focus_vid = mid_vid;
-								this.text_selection.focus_offset = 0;
-							}
+						if (range.vid === this.text_selection.anchor_vid) {
+							this.text_selection.anchor_vid = mid_vid;
+							this.text_selection.anchor_offset = this.text_selection.direction === 1 ? 0 : mid_text.length;
+						}
+						if (range.vid === this.text_selection.focus_vid) {
+							this.text_selection.focus_vid = mid_vid;
+							this.text_selection.focus_offset = this.text_selection.direction === 1 ? mid_text.length : 0;
 						}
 					});
 
@@ -1280,10 +1270,10 @@ class PiepCMS {
 			}, 200);
 		});
 
-		document.addEventListener("click", (ev) => {
+		this.content.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
-			if (target._parent("a") && target._parent(this.content)) {
+			if (target._parent("a")) {
 				ev.preventDefault();
 			}
 		});
@@ -1948,7 +1938,6 @@ class PiepCMS {
 		// removes empty textables that are not focused btw
 		// also merges textables that are similar and next to each other
 
-		// TODO: also text containers?
 		let vids = [];
 		/**
 		 * @param {vDomNode[]} v_nodes
@@ -1982,7 +1971,8 @@ class PiepCMS {
 							next_v_node.text !== undefined &&
 							isEquivalent(v_node.styles, next_v_node.styles) &&
 							isEquivalent(v_node.attrs, next_v_node.attrs) &&
-							isEquivalent(v_node.settings, next_v_node.settings)
+							isEquivalent(v_node.settings, next_v_node.settings) &&
+							isEquivalent(v_node.responsive_settings, next_v_node.responsive_settings)
 						) {
 							// remove self and append text to another, ezy?
 							vids.push(vid);
@@ -4873,7 +4863,10 @@ class PiepCMS {
 				.filter((x) => x.visible)
 				.sort((a, b) => Math.sign(b.priority - a.priority))
 				.forEach((x, index) => {
-					this.blc_menu_scroll_panel.append(x.blc_prop_wrapper);
+					const before_node = this.blc_menu_scroll_panel._direct_children()[index];
+					if (x.blc_prop_wrapper !== before_node) {
+						this.blc_menu_scroll_panel.insertBefore(x.blc_prop_wrapper, before_node);
+					}
 				});
 
 			piep_cms_manager.floating_blc_props
@@ -4924,13 +4917,16 @@ class PiepCMS {
 					blc_prop_wrapper.classList.toggle("hidden", !visible);
 
 					return {
-						blc_prop: blc_prop_wrapper,
+						blc_prop_wrapper,
 						priority,
 					};
 				})
 				.sort((a, b) => Math.sign(b.priority - a.priority))
-				.forEach((x) => {
-					this.float_menu.append(x.blc_prop);
+				.forEach((x, index) => {
+					const before_node = this.float_menu._direct_children()[index];
+					if (x.blc_prop_wrapper !== before_node) {
+						this.float_menu.insertBefore(x.blc_prop_wrapper, before_node);
+					}
 				});
 			this.float_menu.append(this.float_menu._child(".unselect_everything"));
 		}
@@ -5151,7 +5147,7 @@ class PiepCMS {
 				}
 				if (dy !== 0) {
 					const dddy = dy * ddy;
-					if (dddy < 1) {
+					if (dddy < 5) {
 						return;
 					}
 					textable_dist += dddy;
@@ -5210,7 +5206,7 @@ class PiepCMS {
 						pos_dist += 0.1 * Math.abs(ddy);
 					} else {
 						const dddy = dy * ddy;
-						if (dddy < 1) {
+						if (dddy < 5) {
 							return false;
 						}
 						pos_dist += dddy;

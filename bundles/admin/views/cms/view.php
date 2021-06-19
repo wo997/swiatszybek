@@ -110,7 +110,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
         <button class="btn subtle undo ml1" data-tooltip="Cofnij zmiany"> <i class="fas fa-undo"></i> </button>
         <button class="btn subtle redo ml1" data-tooltip="Ponów zmiany"> <i class="fas fa-redo"></i> </button>
-        <button class="btn primary preview ml1" data-tooltip="Otwórz stronę w nowej karcie">
+        <button class="btn primary preview ml1">
             Podgląd <i class="fas fa-eye"></i>
         </button>
         <button class="btn primary save ml1"> Zapisz <i class="fas fa-save"></i> </button>
