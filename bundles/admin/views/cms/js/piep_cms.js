@@ -875,7 +875,6 @@ class PiepCMS {
 
 			const setProp = () => {
 				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
-					const new_middle_vids = [];
 					/** @type {PiepTextPartialRange[]} */
 					let partial_ranges;
 					if (this.text_selection.length === 0) {
@@ -893,66 +892,77 @@ class PiepCMS {
 						}
 						const v_node = v_node_data.v_node;
 
-						if (v_node.text.length !== range.end - range.start) {
-							// the selection is not everything in the v_node
-							const bef_vid = this.getNewBlcId();
-							const mid_vid = bef_vid + 1;
-							const aft_vid = bef_vid + 2;
+						const bef_vid = this.getNewBlcId();
+						const mid_vid = bef_vid + 1;
+						const aft_vid = bef_vid + 2;
 
-							/** @type {vDomNode[]} */
-							const put_v_nodes = [];
+						/** @type {vDomNode[]} */
+						const put_v_nodes = [];
 
-							if (range.start > 0) {
-								put_v_nodes.push({
-									id: bef_vid,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(0, range.start),
-									attrs: {},
-									classes: [],
-								});
-							}
-
+						if (range.start > 0) {
 							put_v_nodes.push({
-								id: mid_vid,
+								id: bef_vid,
 								tag: "span",
 								styles: {},
-								text: v_node.text.substring(range.start, range.end),
+								text: v_node.text.substring(0, range.start),
 								attrs: {},
 								classes: [],
 							});
+						}
 
-							if (range.end < v_node.text.length) {
-								put_v_nodes.push({
-									id: aft_vid,
-									tag: "span",
-									styles: {},
-									text: v_node.text.substring(range.end),
-									attrs: {},
-									classes: [],
-								});
-							}
+						const mid_text = v_node.text.substring(range.start, range.end);
+						put_v_nodes.push({
+							id: mid_vid,
+							tag: "span",
+							styles: {},
+							text: mid_text,
+							attrs: {},
+							classes: [],
+						});
 
-							// do the split and spread options
-							put_v_nodes.forEach((put_v_node) => {
-								deepAssign(put_v_node.styles, v_node.styles);
-								deepAssign(put_v_node.attrs, v_node.attrs);
-								deepAssign(put_v_node.settings, v_node.settings);
+						if (range.end < v_node.text.length) {
+							put_v_nodes.push({
+								id: aft_vid,
+								tag: "span",
+								styles: {},
+								text: v_node.text.substring(range.end),
+								attrs: {},
+								classes: [],
 							});
-							v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+						}
 
-							new_middle_vids.push(mid_vid);
+						// do the split and spread options
+						put_v_nodes.forEach((put_v_node) => {
+							deepAssign(put_v_node.styles, v_node.styles);
+							deepAssign(put_v_node.attrs, v_node.attrs);
+							deepAssign(put_v_node.settings, v_node.settings);
+						});
+						v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+
+						this.text_selection.middle_vids.push(mid_vid);
+
+						if (this.text_selection.direction === 1) {
+							if (range.vid === this.text_selection.anchor_vid) {
+								this.text_selection.anchor_vid = mid_vid;
+								this.text_selection.anchor_offset = 0;
+							}
+							if (range.vid === this.text_selection.focus_vid) {
+								this.text_selection.focus_vid = mid_vid;
+								this.text_selection.focus_offset = mid_text.length;
+							}
+						} else {
+							if (range.vid === this.text_selection.anchor_vid) {
+								this.text_selection.anchor_vid = mid_vid;
+								this.text_selection.anchor_offset = mid_text.length;
+							}
+							if (range.vid === this.text_selection.focus_vid) {
+								this.text_selection.focus_vid = mid_vid;
+								this.text_selection.focus_offset = 0;
+							}
 						}
 					});
 
-					// TODO: selection direction might help us choose between first or last middle vnode yay
-					if (this.text_selection.single_node && new_middle_vids.length > 0) {
-						this.text_selection.focus_vid = new_middle_vids[0];
-						this.text_selection.focus_offset = 0;
-					}
-
 					this.text_selection.partial_ranges = [];
-					this.text_selection.middle_vids.push(...new_middle_vids);
 				}
 
 				const set_prop_of_ids = [];
@@ -996,6 +1006,9 @@ class PiepCMS {
 				});
 
 				this.update({ all: true });
+				if (this.text_selection) {
+					this.setFocusNode(this.text_selection.focus_vid);
+				}
 				if (prop_def && prop_def.affects_selection) {
 					this.displaySelectionBreadcrumbs();
 				}
