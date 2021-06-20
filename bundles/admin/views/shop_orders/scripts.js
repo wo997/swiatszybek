@@ -92,6 +92,24 @@ domload(() => {
 					>
 						<i class="fas fa-eye"></i>
 					</a>`;
+					// can print delivery label
+					if ([5, 2, 3, 4].includes(data.status_id)) {
+						const carrier = carriers.find((c) => c.carrier_id === data.carrier_id);
+						if (carrier) {
+							if (carrier.api_key === "inpost") {
+								action_html += html`
+									<button
+										class="btn subtle small print_label_btn"
+										data-url="${STATIC_URLS["ADMIN"]}/carrier/inpost/print_label"
+										data-shop_order_id="${data.shop_order_id}"
+										data-tooltip="Drukuj etykietę InPost"
+									>
+										<i class="fas fa-print"></i>
+									</button>
+								`;
+							}
+						}
+					}
 
 					// if (data.status_id === 6) {
 					// 	action_html += html`
@@ -161,6 +179,19 @@ domload(() => {
 		if (preview_url) {
 			previewUrl(preview_url.dataset.preview_url);
 		}
+
+		// const print_label_btn = target._parent(`.print_label_btn`);
+		// if (print_label_btn) {
+		// 	xhr({
+		// 		url: print_label_btn.dataset.url,
+		// 		params: {
+		// 			shop_order_id: print_label_btn.dataset.shop_order_id,
+		// 		},
+		// 		success: (res) => {
+		// 			console.log(res);
+		// 		},
+		// 	});
+		// }
 
 		// const refund_btn = target._parent(`.refund_btn`);
 		// if (refund_btn) {

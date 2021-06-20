@@ -2,9 +2,15 @@
 
 use Imper86\PhpInpostApi\Enum\ServiceType;
 
+// TODO: WIP
+Request::jsonResponse(["hey" => true]);
+
 $api = getInpostApi();
 
 $shop_order = EntityManager::getEntityById("shop_order", $_POST["shop_order_id"]);
+
+/** @var Entity Address */
+$courier_address = $shop_order->getProp("courier_address");
 
 $inpost_shipment_id = $shop_order->getProp("inpost_shipment_id");
 
@@ -12,15 +18,21 @@ $inpost_settings = getSetting(["general", "carriers", "inpost"], []);
 $organizationId = def($inpost_settings, "organizationId", "");
 
 if (!$inpost_shipment_id) {
+    $receiver = [
+        'name' => $courier_address->getProp("__display_name"),
+        'first_name' => $courier_address->getProp("first_name"),
+        'last_name' => $courier_address->getProp("last_name"),
+        'email' => $courier_address->getProp("email"),
+        'phone' => $courier_address->getProp("phone"),
+    ];
+
+    $company = $courier_address->getProp("company");
+    if ($company) {
+        $receiver['company_name'] = $courier_address->getProp("company");
+    }
+
     $response = $api->organizations()->shipments()->post($organizationId, [
-        'receiver' => [
-            'name' => 'Name',
-            'company_name' => 'Company name',
-            'first_name' => 'Jan',
-            'last_name' => 'Kowalski',
-            'email' => 'test@inpost.pl',
-            'phone' => '111222333',
-        ],
+        'receiver' => $receiver,
         'parcels' => [
             ['template' => 'small'],
         ],
@@ -28,16 +40,17 @@ if (!$inpost_shipment_id) {
             'amount' => 25,
             'currency' => 'PLN',
         ],
-        'cod' => [
-            'amount' => 12.50,
-            'currency' => 'PLN',
-        ],
+        // 'cod' => [
+        //     'amount' => 12.50,
+        //     'currency' => 'PLN',
+        // ],
         'custom_attributes' => [
             'sending_method' => 'dispatch_order',
             'target_point' => 'KRA012',
         ],
         'service' => ServiceType::INPOST_LOCKER_STANDARD,
-        'reference' => 'Test',
+        //'service' => ServiceType::INPOST_COURIER_STANDARD,
+        'reference' => 'Zamowienie #' . $shop_order->getId(),
         //'external_customer_id' => '8877xxx',
     ]);
 
