@@ -13,13 +13,13 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
         $yy = $package_dims[1];
         $zz = $package_dims[2];
         $package_volume = $xx * $yy * $zz;
-        $max_package_dim = max($xx, $yy, $zz);
+        $min_package_dim = min($xx, $yy, $zz);
 
         foreach ($products_dims as $products_dim) {
             $x = $products_dim[0];
             $y = $products_dim[1];
             $z = $products_dim[2];
-            if (max($x, $y, $z) > $max_package_dim) {
+            if (max($x, $y, $z) > $min_package_dim) {
                 // will work in most cases
                 return false;
             }

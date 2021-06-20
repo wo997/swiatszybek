@@ -45,7 +45,6 @@ class Files
         $name_suffix = "";
 
         //if ($file_type == "image") {
-        // TODO: option to save gif as a plain gif lol
         if ($file_type == "image") {
             $info = getimagesize($tmp_file_path);
 
@@ -95,10 +94,7 @@ class Files
             "user_id" => $user_id,
         ]);
 
-        //if ($file_type == "image") {
-        if (in_array($file_ext, self::$minify_extensions)) {
-            self::processImage($file_path);
-        }
+        self::processImage($file_path);
 
         return [
             "file_path" => $file_path,
@@ -108,6 +104,11 @@ class Files
 
     public static function processImage($file_path)
     {
+        $file_ext = self::getFileExtension($file_path);
+        if (!in_array($file_ext, self::$minify_extensions)) {
+            return;
+        }
+
         $size_info = getimagesize($file_path);
 
         $file_extension = self::mime2ext($size_info['mime']);
@@ -285,10 +286,14 @@ class Files
         return $src;
     }
 
-
     public static function deleteUploadedFile($full_file_path)
     {
         $file_path = ltrim($full_file_path, "/");
+
+        if (self::isCoreImg($file_path)) {
+            Request::jsonResponse(["success" => false]);
+        }
+
         $file_name = self::getFileNameWithoutExtension($file_path);
         $file_ext = self::getFileExtension($file_path);
         //$file_type = DB::fetchVal("SELECT file_type FROM file WHERE file_path = ?", [$file_path]);
@@ -310,6 +315,28 @@ class Files
         }
 
         DB::execute("DELETE FROM file WHERE file_path = ?", [$file_path]);
+
+        Request::jsonResponse(["success" => true]);
+    }
+
+    public static function isCoreImg($file_path)
+    {
+        return in_array($file_path, array_values(getSetting(["theme", "core_images"], [])));
+    }
+
+    public static function setCoreImg($tmp_file_path, $key, $name)
+    {
+        $logo_path = getSetting(["theme", "core_images", $key], "");
+
+        if (!$logo_path) {
+            $file_data = Files::saveUploadedFile($tmp_file_path, $tmp_file_path, $name);
+            saveSettings("theme", "core_images", [
+                [
+                    "path" => [$key],
+                    "value" => $file_data["file_path"]
+                ]
+            ]);
+        }
     }
 
     public static function mime2ext($mime)

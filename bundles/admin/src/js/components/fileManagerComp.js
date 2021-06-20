@@ -316,6 +316,9 @@ function FileManagerComp(comp, parent, data = undefined) {
 								file_path: file_wrapper._child(".wo997_img").dataset.src,
 							},
 							success: (res) => {
+								if (res.success === false) {
+									showNotification("Błąd usuwania zdjęcia", { type: "error", one_line: true });
+								}
 								hideLoader(comp);
 								comp._search();
 							},
