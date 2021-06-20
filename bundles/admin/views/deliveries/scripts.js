@@ -71,7 +71,11 @@ domload(() => {
 	deliveries_config_comp._render();
 	deliveries_config_comp.style.display = "";
 
-	$(".main_header .save_btn").addEventListener("click", () => {
+	const save_btn = $(".main_header .save_btn");
+
+	save_btn._parent().insertBefore(deliveries_config_comp._child(`[data-trait="history"]`), save_btn);
+
+	save_btn.addEventListener("click", () => {
 		const data = deliveries_config_comp._data;
 
 		/**

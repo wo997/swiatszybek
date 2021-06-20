@@ -1,17 +1,15 @@
 <?php //route[{ADMIN}/carrier/inpost/print_label]
 
 use Imper86\PhpInpostApi\Enum\ServiceType;
-use Imper86\PhpInpostApi\InpostApi;
 
-$token = 'your token here';
-$organizationId = 'your organization id here';
-$isSandbox = false;
-
-$api = new InpostApi($token, $isSandbox);
+$api = getInpostApi();
 
 $shop_order = EntityManager::getEntityById("shop_order", $_POST["shop_order_id"]);
 
 $inpost_shipment_id = $shop_order->getProp("inpost_shipment_id");
+
+$inpost_settings = getSetting(["general", "carriers", "inpost"], []);
+$organizationId = def($inpost_settings, "organizationId", "");
 
 if (!$inpost_shipment_id) {
     $response = $api->organizations()->shipments()->post($organizationId, [
@@ -45,7 +43,8 @@ if (!$inpost_shipment_id) {
 
     $shipmentData = json_decode($response->getBody()->__toString(), true);
 
-    $shop_order->setProp("inpost_shipment_id", $shipmentData['id']);
+    $inpost_shipment_id = $shipmentData['id'];
+    $shop_order->setProp("inpost_shipment_id", $inpost_shipment_id);
 
     $cnt = 0;
     do {
@@ -59,7 +58,7 @@ if (!$inpost_shipment_id) {
     } while ($shipmentData['status'] === 'confirmed');
 }
 
-$labelResponse = $api->shipments()->label()->get($shop_order->getProp("inpost_shipment_id"), [
+$labelResponse = $api->shipments()->label()->get($inpost_shipment_id, [
     'format' => 'Pdf',
     'type' => 'A6',
 ]);

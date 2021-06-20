@@ -5,7 +5,7 @@
 <?php Templates::startSection("head_content"); ?>
 
 <script>
-    const payments_data = <?= json_encode(getSetting(["general", "payments"], "[]")); ?>
+    const payments_data = <?= json_encode(getSetting(["general", "payments"], [])); ?>
 </script>
 
 <title>Płatności</title>

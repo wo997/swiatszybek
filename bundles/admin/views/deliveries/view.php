@@ -15,14 +15,12 @@
 <?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
-    <span class="title breadcrumbs">
+    <span class="title breadcrumbs mra">
         <div class="crumb">
             Wysyłki
         </div>
     </span>
-    <div class="mla">
-        <button class="btn primary save_btn">Zapisz <i class="fas fa-save"></i></button>
-    </div>
+    <button class="btn primary save_btn ml1">Zapisz <i class="fas fa-save"></i></button>
 </div>
 
 <?php Templates::startSection("admin_page_body"); ?>

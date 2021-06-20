@@ -77,7 +77,14 @@ $admin_navigations_tree = [
         ]
     ],
     ["url" => "/platnosci", "title" => '<i class="fas fa-credit-card"></i> Płatności'],
-    ["url" => "/wysylki", "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki'],
+    [
+        "title" => '<i class="fas fa-shipping-fast"></i> Wysyłki',
+        "sub" => [
+            ["url" => "/wysylki", "title" => '<i class="fas fa-clipboard-list"></i> Przewoźnicy / Ceny'],
+            ["url" => "/integracje-wysylek", "title" => '<i class="fas fa-key"></i> Integracje wysyłek'],
+        ]
+    ],
+
     ["url" => "/dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
     [
         "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
