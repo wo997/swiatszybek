@@ -2396,7 +2396,7 @@ class PiepCMS {
 	 * styles?: boolean
 	 * }} options
 	 */
-	update(options = {}) {
+	update(options) {
 		this.content.style.minHeight = this.content.offsetHeight + "px";
 
 		if (options.all || options.dom) {
@@ -3024,7 +3024,7 @@ class PiepCMS {
 
 		this.removeVNodes(remove_vids);
 
-		this.update();
+		this.update({ all: true });
 		//this.recreateDom();
 
 		this.pushHistory("delete_text");
@@ -5294,7 +5294,7 @@ class PiepCMS {
 	 *
 	 * @param {number} dx
 	 * @param {number} dy
-	 * @param {shift}
+	 * @param {boolean} shift
 	 */
 	moveCursorFromAnywhere(dx, dy, shift) {
 		const sel_rect = this.cursor.getBoundingClientRect();
