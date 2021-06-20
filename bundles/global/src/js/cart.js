@@ -118,7 +118,10 @@ function initBuy() {
 
 		const getMax = () => {
 			const product = getProduct();
-			return product ? Math.min(product.stock, 10) : 100;
+			if (product) {
+				return Math.min(product.stock, 1000);
+			}
+			return 1000;
 		};
 
 		sub_qty.addEventListener("click", () => {
