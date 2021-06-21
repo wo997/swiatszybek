@@ -63,7 +63,6 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						<span>Hasło</span>
 						<button
 							class="btn small transparent"
-							style="margin-left:0"
 							data-node="{${comp._nodes.password_visible_btn}}"
 							data-tooltip="{${data.password_visible ? "Ukryj hasło" : "Pokaż hasło"}}"
 							data-tooltip_position="right"
@@ -79,22 +78,19 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 						autocomplete="current-password"
 					/>
 
-					<div style="margin-top:10px;text-align:center">
+					<!-- <div style="margin-top:10px;text-align:center">
 						<label class="label">
 							<p-checkbox class="inline square" style="margin-right:4px"></p-checkbox>
 							Zapamiętaj mnie
 						</label>
-					</div>
+					</div> -->
 
-					<button class="btn primary medium" style="margin:10px 0; width: 100%" type="submit">
-						Zaloguj się <i class="fa fa-chevron-right"></i>
-					</button>
+					<button class="btn primary medium fill mt2 mb2" type="submit">Zaloguj się <i class="fa fa-chevron-right"></i></button>
 
-					<div style="text-align: center; padding: 10px 0">
+					<div class="center pt2 pb2">
 						<div style="display:inline-flex;flex-direction:column;align-items:stretch">
 							<a href="/rejestracja" class="btn subtle"> Rejestracja <i class="fa fa-user-plus"></i> </a>
-							<div style="height: 10px;"></div>
-							<a href="/resetowanie-hasla" class="btn subtle"> Zresetuj hasło <i class="fa fa-lock-open"></i> </a>
+							<a href="/resetowanie-hasla" class="btn subtle mt2"> Zresetuj hasło <i class="fa fa-lock-open"></i> </a>
 						</div>
 					</div>
 

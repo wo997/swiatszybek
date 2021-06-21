@@ -8,11 +8,15 @@
 		& {
 			cursor: pointer;
 		}
-		.insert_blc {
-			opacity: 0.3;
-		}
-		.insert_blc.hovered {
-			opacity: 0.7;
+		// .insert_blc {
+		// 	opacity: 0.3;
+		// }
+		// .insert_blc.hovered {
+		// 	opacity: 0.7;
+		// }
+		.insert_blc:not(.hovered) {
+			opacity: 0.4;
+			color: transparent;
 		}
 	}
 	.insert_blc {

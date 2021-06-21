@@ -11,10 +11,17 @@
 			cursor: pointer;
 		}
 		.select_blc {
-			opacity: 0.3;
+			// opacity: 0.3;
+			// background: transparent;
+			// color: transparent;
 		}
 		.select_blc.hovered {
-			opacity: 0.7;
+			// opacity: 0.7;
+		}
+		.select_blc:not(.hovered) {
+			opacity: 0.4;
+			//background: transparent;
+			color: transparent;
 		}
 	}
 	.select_blc {
