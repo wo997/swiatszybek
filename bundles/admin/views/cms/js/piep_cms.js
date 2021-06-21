@@ -242,6 +242,9 @@ class PiepCMS {
 		this.content.addEventListener("mousemove", (ev) => {
 			this.select_blc_active = true;
 		});
+		this.container.addEventListener("click", (ev) => {
+			this.select_blc_active = true;
+		});
 
 		document.addEventListener("selectionchange", () => {
 			if (this.removing_selection) {
@@ -841,6 +844,7 @@ class PiepCMS {
 
 	startSelectingBlcs() {
 		this.finishEditingLayout();
+		this.text_selection = undefined;
 
 		this.selecting_blcs = true;
 		this.has_select_pos = false;
@@ -2126,6 +2130,7 @@ class PiepCMS {
 		});
 
 		this.container._child(".show_inspector_btn").addEventListener("click", () => {
+			this.text_selection = undefined;
 			this.toggleInspector();
 		});
 		this.container._child(".hide_inspector_btn").addEventListener("click", () => {
@@ -3382,7 +3387,6 @@ class PiepCMS {
 			}
 
 			if (this.grabbed_v_node) {
-				show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
 				addVidsWidthParent(this.grabbed_block_vid);
 			}
 
@@ -3405,7 +3409,7 @@ class PiepCMS {
 					show_float_menu = false;
 					const label_vid = +v_node_label.dataset.vid;
 					if (label_vid !== this.focus_node_vid) {
-						show_vids.push({ vid: label_vid, opacity: 0.5 });
+						addVidsWidthParent(label_vid);
 					}
 
 					any_picker.hide();
