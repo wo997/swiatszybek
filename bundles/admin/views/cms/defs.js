@@ -119,6 +119,10 @@
  */
 
 /**
+ * @typedef {"topleft" | "topright" | "bottomleft" | "bottomright"} CornerEnum
+ */
+
+/**
  * @typedef {"left" | "right" | "top" | "bottom" | "center"} insertPosEnum
  */
 

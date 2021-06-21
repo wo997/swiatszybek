@@ -3650,25 +3650,27 @@ class PiepCMS {
 			}
 
 			const prop_input = this.side_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
-			const change = set_val_pretty !== prop_input._get_value();
-			scrollIntoView(prop_input);
-			const input = prop_input._child("input");
-			if (input) {
-				input.classList.add("editing_now");
-			}
-
-			if (change) {
-				if (this.layout_control_prop === "width") {
-					const v_node = this.getFocusVNode();
-					const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
-					if (width_type !== "custom") {
-						v_node.responsive_settings[this.selected_resolution].width_type = "custom";
-						this.setBlcMenuFromFocusedNode();
-					}
+			if (prop_input) {
+				const change = set_val_pretty !== prop_input._get_value();
+				scrollIntoView(prop_input);
+				const input = prop_input._child("input");
+				if (input) {
+					input.classList.add("editing_now");
 				}
 
-				prop_input._set_value(set_val_pretty);
-				this.displayNodeLayout();
+				if (change) {
+					if (this.layout_control_prop === "width") {
+						const v_node = this.getFocusVNode();
+						const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
+						if (width_type !== "custom") {
+							v_node.responsive_settings[this.selected_resolution].width_type = "custom";
+							this.setBlcMenuFromFocusedNode();
+						}
+					}
+
+					prop_input._set_value(set_val_pretty);
+					this.displayNodeLayout();
+				}
 			}
 		}
 	}
@@ -3810,6 +3812,7 @@ class PiepCMS {
 		let layout_html = "";
 
 		const edit_node = this.getNode(this.focus_node_vid);
+		const v_node_data = this.getFocusVNodeData();
 
 		const can_edit_layout = edit_node && !edit_node.classList.contains("textable");
 		const edit_node_rect = edit_node ? edit_node.getBoundingClientRect() : undefined;
@@ -3949,12 +3952,10 @@ class PiepCMS {
 			 *
 			 * @param {number} left
 			 * @param {number} top
-			 * @param {string} gener_prop
-			 * @param {string} spec_prop
 			 * @param {DirectionEnum} dir
-			 * @param {string} tooltip
+			 * @returns {Position}
 			 */
-			const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
+			const layoutControlPos = (left, top, dir) => {
 				// prevent overlapping
 				const min_size = 70;
 				if (dir === "top") {
@@ -3970,38 +3971,100 @@ class PiepCMS {
 					left += Math.max(0, min_size - edit_node_rect.width) / 2;
 				}
 
+				return {
+					x: left,
+					y: top + this.content_scroll.scrollTop,
+				};
+			};
+
+			/**
+			 *
+			 * @param {number} left
+			 * @param {number} top
+			 * @param {string} gener_prop
+			 * @param {string} spec_prop
+			 * @param {DirectionEnum} dir
+			 * @param {string} tooltip
+			 */
+			const display_layout_control = (left, top, gener_prop, spec_prop, dir, tooltip) => {
+				const pos = layoutControlPos(left, top, dir);
+
 				layout_html += html`<div
 					class="layout_control ${gener_prop}_control"
 					data-layout_prop="${spec_prop}"
 					data-layout_dir="${dir}"
-					style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+					style="left:${pos.x}px;top:${pos.y}px;"
 					data-tooltip="${tooltip}"
 				></div>`;
 			};
 
-			{
-				// left bottom
-				let left = edit_node_rect.left;
-				let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
-				display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
-			}
-			{
-				// right bottom
-				let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
-				let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
-				display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
-			}
-			{
-				// left top
-				let left = edit_node_rect.left;
-				let top = edit_node_rect.top;
-				display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
-			}
-			{
-				// right top
-				let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
-				let top = edit_node_rect.top;
-				display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
+			/**
+			 *
+			 * @param {number} left
+			 * @param {number} top
+			 * @param {CornerEnum} corner
+			 */
+			const display_grid_control = (left, top, corner) => {
+				layout_html += html`<div
+					class="layout_control grid_area_control"
+					data-layout_prop="grid_area"
+					data-corner="${corner}"
+					style="left:${left}px;top:${top + this.content_scroll.scrollTop}px;"
+					data-tooltip="Dostosuj wymiary / pozycję"
+				></div>`;
+			};
+
+			const parent_v_node = v_node_data.parent_v_nodes[0];
+			if (parent_v_node && parent_v_node.module_name === "grid") {
+				{
+					// left bottom
+					let left = edit_node_rect.left;
+					let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+					display_grid_control(left, top, "bottomleft");
+				}
+				{
+					// right bottom
+					let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+					let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+					display_grid_control(left, top, "bottomright");
+				}
+				{
+					// left top
+					let left = edit_node_rect.left;
+					let top = edit_node_rect.top;
+					display_grid_control(left, top, "topleft");
+				}
+				{
+					// right top
+					let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+					let top = edit_node_rect.top;
+					display_grid_control(left, top, "topright");
+				}
+			} else {
+				{
+					// left bottom
+					let left = edit_node_rect.left;
+					let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+					display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
+				}
+				{
+					// right bottom
+					let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+					let top = edit_node_rect.top + edit_node_rect.height - layout_control_width;
+					display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
+				}
+				{
+					// left top
+					let left = edit_node_rect.left;
+					let top = edit_node_rect.top;
+					display_layout_control(left, top, "width", "width", "left", "Dostosuj szerokość");
+				}
+				{
+					// right top
+					let left = edit_node_rect.left + edit_node_rect.width - layout_control_width;
+					let top = edit_node_rect.top;
+					display_layout_control(left, top, "width", "width", "right", "Dostosuj szerokość");
+				}
 			}
 
 			{
