@@ -45,6 +45,17 @@ class PiepCMS {
 		this.mainLoop();
 
 		piep_cms_manager.editorReady();
+
+		// no zoom? great!
+		this.container.addEventListener(
+			"wheel",
+			(event) => {
+				if (event.ctrlKey && (this.selecting_blcs || this.grabbed_block_vid)) {
+					event.preventDefault();
+				}
+			},
+			true
+		);
 	}
 
 	/**
