@@ -787,8 +787,8 @@ class PiepCMS {
 			.forEach((blc) => {
 				const blc_rect = blc.getBoundingClientRect();
 				if (
-					blc_rect.top + blc_rect.height < content_scroll_rect.top ||
-					blc_rect.top > content_scroll_rect.top + content_scroll_rect.height
+					blc_rect.top + blc_rect.height < content_scroll_rect.top + 20 ||
+					blc_rect.top > content_scroll_rect.top + content_scroll_rect.height - 20
 				) {
 					// whole blc off
 					return;
@@ -840,6 +840,8 @@ class PiepCMS {
 	}
 
 	startSelectingBlcs() {
+		this.finishEditingLayout();
+
 		this.selecting_blcs = true;
 		this.has_select_pos = false;
 		this.container.classList.remove("has_select_pos");
@@ -4025,6 +4027,10 @@ class PiepCMS {
 		this.container.classList.remove("disable_editing");
 
 		this.layout_controls._set_content("");
+
+		if (this.filter_blc_menu._get_value() !== "all") {
+			this.filter_blc_menu._set_value("all");
+		}
 	}
 
 	/**
@@ -4241,7 +4247,10 @@ class PiepCMS {
 			const editor_disabled = blc.classList.contains("editor_disabled");
 
 			const blc_rect = blc.getBoundingClientRect();
-			if (blc_rect.top + blc_rect.height < content_scroll_rect.top || blc_rect.top > content_scroll_rect.top + content_scroll_rect.height) {
+			if (
+				blc_rect.top + blc_rect.height < content_scroll_rect.top + 20 ||
+				blc_rect.top > content_scroll_rect.top + content_scroll_rect.height - 20
+			) {
 				// whole blc off
 				return;
 			}
