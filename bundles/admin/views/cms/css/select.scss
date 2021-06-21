@@ -1,6 +1,22 @@
 /* css[piep_cms] */
 
 .piep_editor {
+	&.selecting_block {
+		.piep_editor_content {
+			pointer-events: none;
+		}
+	}
+	&.has_select_pos {
+		& {
+			cursor: pointer;
+		}
+		.select_blc {
+			opacity: 0.3;
+		}
+		.select_blc.hovered {
+			opacity: 0.7;
+		}
+	}
 	.select_blc {
 		& {
 			--select_blc_clr: var(--focus-clr);

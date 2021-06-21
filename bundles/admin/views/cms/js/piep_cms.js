@@ -778,36 +778,83 @@ class PiepCMS {
 
 		const blcs = this.content._children(this.getSelectableBlcSelector());
 		this.select_blcs._empty();
-		blcs.forEach((blc) => {
-			const blc_rect = blc.getBoundingClientRect();
-			if (blc_rect.top + blc_rect.height < content_scroll_rect.top || blc_rect.top > content_scroll_rect.top + content_scroll_rect.height) {
-				// whole blc off
-				return;
-			}
 
-			const select_blc = getSelectBlc();
+		/** @type {Position[]} */
+		const coords = [];
+		// prioritize lowest level
+		blcs
+			.sort((a, b) => Math.sign(+a.dataset.level - +b.dataset.level))
+			.forEach((blc) => {
+				const blc_rect = blc.getBoundingClientRect();
+				if (
+					blc_rect.top + blc_rect.height < content_scroll_rect.top ||
+					blc_rect.top > content_scroll_rect.top + content_scroll_rect.height
+				) {
+					// whole blc off
+					return;
+				}
 
-			const vid = +blc.dataset.vid;
+				const select_blc = getSelectBlc();
 
-			const v_node = this.getVNodeById(vid);
+				const vid = +blc.dataset.vid;
+				select_blc.dataset.vid = blc.dataset.vid;
 
-			let icon = html`<i class="fas fa-circle"></i>`;
+				const v_node = this.getVNodeById(vid);
 
-			const schema = piep_cms_manager.getVNodeSchema(v_node);
-			if (schema) {
-				icon = schema.icon;
-			}
+				let icon = html`<i class="fas fa-circle" style="transform:scale(0.5)"></i>`;
+				const schema = piep_cms_manager.getVNodeSchema(v_node);
+				if (schema) {
+					icon = schema.icon;
+				}
+				select_blc._set_content(icon);
 
-			select_blc.dataset.vid = blc.dataset.vid;
+				const hh = this.select_blc_size;
+				const h = hh * 0.5;
 
-			let left = blc_rect.left + this.select_blc_size * 0.5;
-			let top = blc_rect.top + this.select_blc_size * 0.5 + this.content_scroll.scrollTop;
+				let left = blc_rect.left + h;
+				let top = blc_rect.top + h + this.content_scroll.scrollTop;
 
-			select_blc._set_content(icon);
-			select_blc._set_absolute_pos(left, top);
+				// not necessary cause nodes are sorted already
+				// let moved = true;
+				// while (moved) {
+				// 	moved = false;
+				coords.forEach((coord) => {
+					if (Math.abs(coord.y - top) >= hh) {
+						// no overlap in y axis
+						return;
+					}
+					if (Math.abs(coord.x - left) < hh) {
+						// overlap detected
+						left = coord.x + hh;
+						// moved = true;
+					}
+				});
+				// }
 
-			this.select_blcs.append(select_blc);
-		});
+				select_blc._set_absolute_pos(left, top);
+
+				coords.push({ x: left, y: top });
+
+				this.select_blcs.append(select_blc);
+			});
+	}
+
+	startSelectingBlcs() {
+		this.selecting_blcs = true;
+		this.has_select_pos = false;
+		this.container.classList.remove("has_select_pos");
+		this.container.classList.add("selecting_block");
+
+		if (this.selecting_blcs) {
+			this.displaySelectBlcs();
+		}
+	}
+
+	finishSelectingBlcs() {
+		this.selecting_blcs = false;
+		this.has_select_pos = false;
+		this.container.classList.remove("has_select_pos", "selecting_block");
+		this.select_blcs._empty();
 	}
 
 	initMultiSelect() {
@@ -815,11 +862,7 @@ class PiepCMS {
 
 		this.selecting_blcs = false;
 		this.right_menu._child(".select_blcs_btn").addEventListener("click", () => {
-			this.selecting_blcs = !this.selecting_blcs;
-
-			if (this.selecting_blcs) {
-				this.displaySelectBlcs();
-			}
+			this.startSelectingBlcs();
 		});
 
 		this.content_scroll.addEventListener("scroll", () => {
@@ -1597,6 +1640,10 @@ class PiepCMS {
 			const select_blc = this.getSelectBlcUnderMouse();
 			if (select_blc) {
 				this.setFocusNode(+select_blc.dataset.vid);
+			}
+			if (true) {
+				// TODO: hot key to allow multi selection
+				this.finishSelectingBlcs();
 			}
 
 			const insert_blc = this.getInsertBlcUnderMouse();
@@ -2847,7 +2894,12 @@ class PiepCMS {
 				setNodeClasses(node, classes);
 
 				// attrs
-				const attrs = { "data-vid": v_node.id + "", "data-index": index + "", "data-indices": curr_indices.join(",") };
+				const attrs = {
+					"data-vid": v_node.id + "",
+					"data-index": index + "",
+					"data-indices": curr_indices.join(","),
+					"data-level": curr_indices.length,
+				};
 				Object.assign(attrs, v_node.attrs);
 
 				Object.entries(attrs).map(([key, val]) => {
@@ -3199,14 +3251,17 @@ class PiepCMS {
 		}
 		const select_blc = this.getSelectBlcUnderMouse();
 		if (this.current_select_blc !== select_blc) {
+			this.has_select_pos = false;
 			this.current_select_blc = select_blc;
 
+			removeClasses(".hovered", ["hovered"], this.select_blcs);
 			if (select_blc) {
 				select_blc.classList.add("hovered");
-			} else {
-				removeClasses(".hovered", ["hovered"], this.select_blcs);
+				this.has_select_pos = true;
 			}
 		}
+
+		this.container.classList.toggle("has_select_pos", this.has_select_pos);
 	}
 
 	grabbedBlock() {
@@ -3266,10 +3321,9 @@ class PiepCMS {
 				this.float_focuses._empty();
 			}
 
+			removeClasses(".hovered", ["hovered"], this.insert_blcs);
 			if (insert_blc) {
 				insert_blc.classList.add("hovered");
-			} else {
-				removeClasses(".hovered", ["hovered"], this.insert_blcs);
 			}
 		}
 
@@ -3297,60 +3351,66 @@ class PiepCMS {
 
 		let show_float_menu = false;
 
-		if (!this.grabbed_v_node && this.focus_node_vid !== undefined) {
-			show_float_menu = true;
-			show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
-		}
-
-		if (this.grabbed_v_node) {
-			show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
-
-			const v_node_data = this.getVNodeDataById(this.grabbed_block_vid);
-			if (v_node_data) {
-				v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
-					if (!parent_v_node.disabled) {
-						show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
-					}
-				});
+		/**
+		 *
+		 * @param {number} vid
+		 */
+		const addVidsWidthParent = (vid) => {
+			const v_node_data = this.getVNodeDataById(vid);
+			if (!v_node_data) {
+				return;
 			}
-		}
-
-		if (this.text_selection !== undefined && !this.grabbed_v_node) {
-			show_float_menu = true;
-		}
-
-		if (!this.layout_control_prop && !this.grabbed_v_node) {
-			const blc = mouse.target ? mouse.target._parent(this.getSelectableBlcSelector()) : undefined;
-			const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
-
-			if (blc) {
-				const blc_vid = +blc.dataset.vid;
-				if (blc_vid) {
-					show_vids.push({ vid: blc_vid, opacity: 1 });
-
-					const v_node_data = this.getVNodeDataById(blc_vid);
-
-					if (v_node_data) {
-						v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
-							if (!parent_v_node.disabled) {
-								show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
-							}
-						});
-					}
+			show_vids.push({ vid, opacity: 1 });
+			v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
+				if (!parent_v_node.disabled) {
+					show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
 				}
+			});
+		};
+
+		if (this.selecting_blcs) {
+			const select_blc = this.getSelectBlcUnderMouse();
+			if (select_blc) {
+				addVidsWidthParent(+select_blc.dataset.vid);
+			}
+		} else {
+			if (!this.grabbed_v_node && this.focus_node_vid !== undefined) {
+				show_float_menu = true;
+				show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
 			}
 
-			if (v_node_label) {
-				show_float_menu = false;
-				const label_vid = +v_node_label.dataset.vid;
-				if (label_vid !== this.focus_node_vid) {
-					show_vids.push({ vid: label_vid, opacity: 0.5 });
+			if (this.grabbed_v_node) {
+				show_vids.push({ vid: this.grabbed_block_vid, opacity: 1 });
+				addVidsWidthParent(this.grabbed_block_vid);
+			}
+
+			if (this.text_selection !== undefined && !this.grabbed_v_node) {
+				show_float_menu = true;
+			}
+
+			if (!this.layout_control_prop && !this.grabbed_v_node) {
+				const blc = mouse.target ? mouse.target._parent(this.getSelectableBlcSelector()) : undefined;
+				const v_node_label = mouse.target ? mouse.target._parent(".v_node_label") : undefined;
+
+				if (blc) {
+					const blc_vid = +blc.dataset.vid;
+					if (blc_vid) {
+						addVidsWidthParent(blc_vid);
+					}
 				}
 
-				any_picker.hide();
-				this.float_menu._children("p-dropdown.dropped").forEach((d) => {
-					d.click();
-				});
+				if (v_node_label) {
+					show_float_menu = false;
+					const label_vid = +v_node_label.dataset.vid;
+					if (label_vid !== this.focus_node_vid) {
+						show_vids.push({ vid: label_vid, opacity: 0.5 });
+					}
+
+					any_picker.hide();
+					this.float_menu._children("p-dropdown.dropped").forEach((d) => {
+						d.click();
+					});
+				}
 			}
 		}
 
