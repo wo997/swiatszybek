@@ -9,7 +9,7 @@ DB::createTable("product_feature_option", [
     ["name" => "double_base", "type" => "VARCHAR(255)", "null" => true],
     ["name" => "unit_id", "type" => "VARCHAR(15)", "null" => true],
     ["name" => "datetime_value", "type" => "DATETIME", "null" => true, "index" => "index"],
-    ["name" => "text_value", "type" => "VARCHAR(255)", "null" => true, "index" => "index"],
+    ["name" => "text_value", "type" => "TEXT", "null" => true],
     ["name" => "pos", "type" => "INT", "index" => "index"],
     ["name" => "extra_json", "type" => "TEXT"],
     ["name" => "just_general_product_id", "previous_name" => "general_product_id", "type" => "INT", "null" => true, "index" => "index"],

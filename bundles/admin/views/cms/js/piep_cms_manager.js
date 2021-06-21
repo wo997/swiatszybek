@@ -79,6 +79,7 @@ class PiepCMSManager {
 		if (!v_node) {
 			return undefined;
 		}
+
 		if (v_node.text !== undefined) {
 			/** @type {BlockSchema} */
 			const span_schema = {
@@ -90,13 +91,20 @@ class PiepCMSManager {
 			};
 			return span_schema;
 		}
-		return this.blcs_schema.find((b) => {
-			if (v_node.classes.includes("vertical_container")) {
-				return b.id === "vertical_container";
-			} else {
-				return b.id === v_node.module_name;
-			}
-		});
+
+		if (v_node.classes.includes("vertical_container")) {
+			return this.blcs_schema.find((b) => b.id === "vertical_container");
+		}
+
+		const module_schema = this.blcs_schema.find((b) => b.id === v_node.module_name);
+		if (module_schema) {
+			return module_schema;
+		}
+
+		const tag_schema = this.blcs_schema.find((b) => b.id === v_node.tag);
+		if (tag_schema) {
+			return tag_schema;
+		}
 	}
 
 	translatePropVal(val) {

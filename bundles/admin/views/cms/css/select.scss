@@ -7,18 +7,21 @@
 			position: absolute;
 			width: 24px;
 			height: 24px;
-			// background: #fff7;
+			background: #fff;
 			border-radius: 4px;
 			transform: translate(-50%, -50%);
 			z-index: 1100;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			// color: var(--select_blc_clr);
-			// border: 2px solid var(--select_blc_clr);
-			background: var(--select_blc_clr);
-			color: #fff;
+			color: var(--select_blc_clr);
+			border: 2px solid var(--select_blc_clr);
 			pointer-events: none;
+		}
+		&.hovered {
+			color: #fff;
+			background: var(--select_blc_clr);
+			box-shadow: 0 1px 3px 0 #0006;
 		}
 	}
 }

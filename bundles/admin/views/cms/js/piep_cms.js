@@ -787,19 +787,32 @@ class PiepCMS {
 
 			const select_blc = getSelectBlc();
 
-			const v_node = this.getVNodeById(+blc.dataset.vid);
+			const vid = +blc.dataset.vid;
+
+			const v_node = this.getVNodeById(vid);
+
+			let icon = html`<i class="fas fa-circle"></i>`;
+
 			const schema = piep_cms_manager.getVNodeSchema(v_node);
+			if (schema) {
+				icon = schema.icon;
+			}
 
-			console.log(schema);
+			select_blc.dataset.vid = blc.dataset.vid;
 
-			select_blc._set_content(schema ? schema.icon : html`<span class="bold">H3</span>`);
-			select_blc._set_absolute_pos(blc_rect.left, blc_rect.top + this.content_scroll.scrollTop);
+			let left = blc_rect.left + this.select_blc_size * 0.5;
+			let top = blc_rect.top + this.select_blc_size * 0.5 + this.content_scroll.scrollTop;
+
+			select_blc._set_content(icon);
+			select_blc._set_absolute_pos(left, top);
 
 			this.select_blcs.append(select_blc);
 		});
 	}
 
 	initMultiSelect() {
+		this.select_blc_size = 24;
+
 		this.selecting_blcs = false;
 		this.right_menu._child(".select_blcs_btn").addEventListener("click", () => {
 			this.selecting_blcs = !this.selecting_blcs;
@@ -1579,6 +1592,11 @@ class PiepCMS {
 						}
 					}
 				});
+			}
+
+			const select_blc = this.getSelectBlcUnderMouse();
+			if (select_blc) {
+				this.setFocusNode(+select_blc.dataset.vid);
 			}
 
 			const insert_blc = this.getInsertBlcUnderMouse();
@@ -2539,7 +2557,7 @@ class PiepCMS {
 			const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
 
 			const map_tag_display_name = {
-				a: "Link",
+				a: "Link", // never used ;)
 				h1: "Nagłówek H1",
 				h2: "Nagłówek H2",
 				h3: "Nagłówek H3",
@@ -3156,6 +3174,41 @@ class PiepCMS {
 		return insert_blc;
 	}
 
+	getSelectBlcUnderMouse() {
+		/** @type {PiepNode} */
+		let select_blc;
+		{
+			const hh = this.select_blc_size;
+			const h = hh * 0.5;
+			for (const e of this.select_blcs._direct_children()) {
+				const r = e.getBoundingClientRect();
+
+				if (Math.abs(mouse.pos.x - r.x - h) < h && Math.abs(mouse.pos.y - r.y - h) < h) {
+					// @ts-ignore
+					select_blc = e;
+					break;
+				}
+			}
+		}
+		return select_blc;
+	}
+
+	selectingBlock() {
+		if (!this.selecting_blcs || !mouse.target) {
+			return;
+		}
+		const select_blc = this.getSelectBlcUnderMouse();
+		if (this.current_select_blc !== select_blc) {
+			this.current_select_blc = select_blc;
+
+			if (select_blc) {
+				select_blc.classList.add("hovered");
+			} else {
+				removeClasses(".hovered", ["hovered"], this.select_blcs);
+			}
+		}
+	}
+
 	grabbedBlock() {
 		if (!this.grabbed_v_node || !mouse.target) {
 			return;
@@ -3165,8 +3218,6 @@ class PiepCMS {
 		let top = mouse.pos.y - this.grabbed_block_wrapper_rect.height * 0.5;
 
 		this.grabbed_block_wrapper._set_absolute_pos(left, top);
-
-		const insert_blc = this.getInsertBlcUnderMouse();
 
 		if (this.showing_float_multi_of_blc) {
 			const float_multi_insert_bckg_rect = this.float_multi_insert_bckg.getBoundingClientRect();
@@ -3188,6 +3239,7 @@ class PiepCMS {
 			}
 		}
 
+		const insert_blc = this.getInsertBlcUnderMouse();
 		if (this.current_insert_blc !== insert_blc) {
 			this.current_insert_blc = insert_blc;
 			this.has_insert_pos = false;
@@ -3620,6 +3672,7 @@ class PiepCMS {
 		this.inspectorMove();
 		this.layoutEditMove();
 		this.addBtnMove();
+		this.selectingBlock();
 
 		const alternative_scroll_panel_left = 0;
 		const alternative_scroll_panel_top = 0 - this.content_scroll.scrollTop;
