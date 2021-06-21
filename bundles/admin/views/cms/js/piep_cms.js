@@ -1435,7 +1435,7 @@ class PiepCMS {
 
 					this.text_selection.focus_vid = first_textable.id;
 					this.text_selection.focus_offset = 0;
-					this.collapseSelection();
+					this.collapseTextSelection();
 
 					this.deleteAction(-1);
 				}
@@ -1449,7 +1449,7 @@ class PiepCMS {
 					// TODO: nice to have that selection even if can't merge
 					this.text_selection.focus_vid = first_textable.id;
 					this.text_selection.focus_offset = 0;
-					this.collapseSelection();
+					this.collapseTextSelection();
 
 					this.deleteAction(-1);
 				}
@@ -1623,7 +1623,7 @@ class PiepCMS {
 									// fixes inaccurate selection on edge cases
 									this.text_selection.focus_vid = +click_blc.dataset.vid;
 									this.text_selection.focus_offset = 0;
-									this.collapseSelection();
+									this.collapseTextSelection();
 								}
 
 								this.setFocusNode(click_v_node.id);
@@ -1646,6 +1646,22 @@ class PiepCMS {
 			const select_blc = this.getSelectBlcUnderMouse();
 			if (select_blc) {
 				this.setFocusNode(+select_blc.dataset.vid);
+				const v_node = this.getFocusVNode();
+				if (v_node.text !== undefined) {
+					this.text_selection = {
+						anchor_offset: v_node.text.length,
+						anchor_vid: v_node.id,
+						focus_offset: v_node.text.length,
+						focus_vid: v_node.id,
+						// @ts-ignore
+						direction: 1,
+						length: 0,
+						middle_vids: [],
+						partial_ranges: [],
+						single_node: true,
+					};
+					this.setContentActive(true);
+				}
 			}
 			if (true) {
 				// TODO: hot key to allow multi selection
@@ -1919,7 +1935,7 @@ class PiepCMS {
 				focus_v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
 			}
 
-			this.collapseSelection();
+			this.collapseTextSelection();
 
 			this.recreateDom();
 			this.displayInspectorTree();
@@ -2000,7 +2016,7 @@ class PiepCMS {
 
 				this.text_selection.focus_vid = focus_v_node.id;
 				this.text_selection.focus_offset = 0;
-				this.collapseSelection();
+				this.collapseTextSelection();
 
 				return ret_vid;
 			}
@@ -2905,7 +2921,7 @@ class PiepCMS {
 					"data-vid": v_node.id + "",
 					"data-index": index + "",
 					"data-indices": curr_indices.join(","),
-					"data-level": curr_indices.length,
+					"data-level": curr_indices.length + "",
 				};
 				Object.assign(attrs, v_node.attrs);
 
@@ -3162,7 +3178,7 @@ class PiepCMS {
 			}
 		});
 
-		this.collapseSelection();
+		this.collapseTextSelection();
 
 		this.removeVNodes(remove_vids);
 
@@ -3203,10 +3219,10 @@ class PiepCMS {
 		this.displayInspectorTree();
 
 		this.text_selection.focus_offset += insert_text.length;
-		this.collapseSelection();
+		this.collapseTextSelection();
 	}
 
-	collapseSelection() {
+	collapseTextSelection() {
 		this.text_selection.anchor_offset = this.text_selection.focus_offset;
 		this.text_selection.anchor_vid = this.text_selection.focus_vid;
 		this.text_selection.length = 0;
@@ -5449,7 +5465,7 @@ class PiepCMS {
 				this.text_selection.focus_offset = this.text_selection.anchor_offset;
 				this.text_selection.focus_vid = this.text_selection.anchor_vid;
 			}
-			this.collapseSelection();
+			this.collapseTextSelection();
 			return;
 		}
 
@@ -5476,7 +5492,7 @@ class PiepCMS {
 		if (shift) {
 			this.definiteSelection();
 		} else {
-			this.collapseSelection();
+			this.collapseTextSelection();
 		}
 		//this.displayTextSelection();
 	}
@@ -5622,7 +5638,7 @@ class PiepCMS {
 			if (shift) {
 				this.definiteSelection();
 			} else {
-				this.collapseSelection();
+				this.collapseTextSelection();
 			}
 		}
 	}
