@@ -3619,7 +3619,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
 				set_val = Math.max(min_percent, set_val);
 
-				if (SHIFT_DOWN) {
+				if (CTRL_DOWN) {
 					if (this.layout_control_prop === "width") {
 						let lowest_diff_val = 100;
 						let closest_val = set_val;
@@ -3643,7 +3643,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist;
 				set_val = Math.max(min_pixels, set_val);
 
-				if (SHIFT_DOWN) {
+				if (CTRL_DOWN) {
 					set_val = round(set_val, -1);
 				}
 				set_val_pretty = floor(set_val) + "px";
