@@ -199,6 +199,9 @@ $modules_html["main_menu_html"] = ob_get_clean();
                 <i class="fas fa-plus"></i>
             </button>
         </div>
+        <button class="btn transparent select_blcs_btn bold" data-tooltip_position="left" data-tooltip="Zaznacz elementy">
+            <i class="fas fa-mouse-pointer"></i>
+        </button>
         <button class="btn transparent show_inspector_btn" data-tooltip_position="left">
             <i class="fas fa-stream"></i>
         </button>
@@ -208,7 +211,6 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn transparent edit_seo_btn bold" data-tooltip_position="left">
             SEO
         </button>
-
 
         <div style="flex-grow:1"> </div>
         <button class="btn transparent advanced_mode_btn" data-tooltip_position="left" data-tooltip="Tryb zaawansowany">

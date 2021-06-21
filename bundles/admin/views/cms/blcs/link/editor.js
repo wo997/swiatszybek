@@ -19,7 +19,7 @@
 			<input class="field trim" data-blc_prop="settings.link" />
 
 			<div class="label">Stylowanie linku</div>
-			<div class="pretty_radio" data-blc_prop="settings.link_styling" style="--columns:3">
+			<div class="pretty_radio" data-blc_prop="settings.link_styling" style="--columns:2">
 				<div class="checkbox_area">
 					<p-checkbox data-value=""></p-checkbox>
 					<span>Domyślne</span>

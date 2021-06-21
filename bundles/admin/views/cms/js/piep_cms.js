@@ -18,7 +18,6 @@ class PiepCMS {
 		this.last_map_vid_render_props = {}; // vid => props
 
 		this.initNodes();
-		this.initConsts();
 
 		piep_cms_manager.setPiepCms(this);
 
@@ -30,6 +29,7 @@ class PiepCMS {
 		this.initAddBlockMenu();
 		this.initLayoutEdit();
 		this.initInserting();
+		this.initMultiSelect();
 		this.initSelectResolution();
 		this.initEditables();
 
@@ -598,6 +598,7 @@ class PiepCMS {
 
 			this.display_text_selection = scroll_node("piep_editor_display_text_selection");
 			this.insert_blcs = scroll_node("piep_editor_insert_blcs");
+			this.select_blcs = scroll_node("piep_editor_select_blcs");
 			this.float_multi_insert_bckg = scroll_node("piep_editor_float_multi_insert_bckg");
 			this.float_multi_insert_bckg.classList.add("hidden");
 		}
@@ -715,8 +716,6 @@ class PiepCMS {
 		this.select_resolution._set_value("df");
 	}
 
-	initConsts() {}
-
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
 		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
@@ -761,6 +760,71 @@ class PiepCMS {
 		});
 	}
 
+	displaySelectBlcs() {
+		/**
+		 *
+		 * @returns {PiepNode}
+		 */
+		const getSelectBlc = () => {
+			const select_blc = document.createElement("DIV");
+			select_blc.classList.add("select_blc");
+			this.insert_blcs.append(select_blc);
+
+			// @ts-ignore
+			return $(select_blc);
+		};
+
+		const content_scroll_rect = piep_cms.content_scroll.getBoundingClientRect();
+
+		const blcs = this.content._children(this.getSelectableBlcSelector());
+		this.select_blcs._empty();
+		blcs.forEach((blc) => {
+			const blc_rect = blc.getBoundingClientRect();
+			if (blc_rect.top + blc_rect.height < content_scroll_rect.top || blc_rect.top > content_scroll_rect.top + content_scroll_rect.height) {
+				// whole blc off
+				return;
+			}
+
+			const select_blc = getSelectBlc();
+
+			const v_node = this.getVNodeById(+blc.dataset.vid);
+			const schema = piep_cms_manager.getVNodeSchema(v_node);
+
+			console.log(schema);
+
+			select_blc._set_content(schema ? schema.icon : html`<span class="bold">H3</span>`);
+			select_blc._set_absolute_pos(blc_rect.left, blc_rect.top + this.content_scroll.scrollTop);
+
+			this.select_blcs.append(select_blc);
+		});
+	}
+
+	initMultiSelect() {
+		this.selecting_blcs = false;
+		this.right_menu._child(".select_blcs_btn").addEventListener("click", () => {
+			this.selecting_blcs = !this.selecting_blcs;
+
+			if (this.selecting_blcs) {
+				this.displaySelectBlcs();
+			}
+		});
+
+		this.content_scroll.addEventListener("scroll", () => {
+			if (!this.selecting_blcs) {
+				return;
+			}
+
+			if (this.select_scroll_timeout) {
+				clearTimeout(this.select_scroll_timeout);
+			}
+
+			this.select_scroll_timeout = setTimeout(() => {
+				this.select_scroll_timeout = undefined;
+				this.displaySelectBlcs();
+			}, 100);
+		});
+	}
+
 	initInserting() {
 		this.insert_blc_size = 24;
 
@@ -774,6 +838,7 @@ class PiepCMS {
 			}
 
 			this.grab_scroll_timeout = setTimeout(() => {
+				this.grab_scroll_timeout = undefined;
 				this.displayInsertPositions();
 			}, 100);
 		});
@@ -3349,7 +3414,7 @@ class PiepCMS {
 				const add_block_menu_rect = this.add_block_menu.getBoundingClientRect();
 
 				const left = add_block_btn_rect.left - add_block_menu_rect.width;
-				const top = add_block_btn_rect.top;
+				const top = add_block_btn_rect.top - 1; // -1 to make it pretty
 
 				this.add_block_menu._set_absolute_pos(left, top);
 			}
@@ -3409,7 +3474,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
 				set_val = Math.max(min_percent, set_val);
 
-				if (ALT_DOWN) {
+				if (SHIFT_DOWN) {
 					if (this.layout_control_prop === "width") {
 						let lowest_diff_val = 100;
 						let closest_val = set_val;
@@ -3433,7 +3498,7 @@ class PiepCMS {
 				let set_val = this.layout_control_base_value + dist;
 				set_val = Math.max(min_pixels, set_val);
 
-				if (ALT_DOWN) {
+				if (SHIFT_DOWN) {
 					set_val = round(set_val, -1);
 				}
 				set_val_pretty = floor(set_val) + "px";

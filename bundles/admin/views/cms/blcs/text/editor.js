@@ -267,7 +267,7 @@
 	piep_cms_manager.registerProp({
 		name: "text_decoration",
 		type_groups: ["appearance"],
-		blc_groups: text_groups,
+		//blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Zdobienie czcionki</div>
 			<div class="pretty_radio" data-blc_prop="styles.textDecoration" style="--columns:5">
@@ -400,7 +400,7 @@
 		{ tag: "h1", label: "Nagłówek", icon: html`<span class="bold">H1</span>` },
 		{ tag: "h2", label: "Nagłówek", icon: html`<span class="bold">H2</span>` },
 		{ tag: "h3", label: "Nagłówek", icon: html`<span class="bold">H3</span>` },
-		{ tag: "p", label: "Paragraf", icon: html`<i class="fas fa-align-center"></i>` },
+		{ tag: "p", label: "Paragraf", icon: html`<i class="fas fa-paragraph"></i>` },
 	].forEach((data) => {
 		piep_cms_manager.registerBlcSchema({
 			id: data.tag,

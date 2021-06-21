@@ -79,11 +79,20 @@ class PiepCMSManager {
 		if (!v_node) {
 			return undefined;
 		}
+		if (v_node.text !== undefined) {
+			/** @type {BlockSchema} */
+			const span_schema = {
+				group: "text",
+				icon: html`<i class="fas fa-font"></i>`,
+				id: "span",
+				label: "Tekst",
+				v_node: undefined,
+			};
+			return span_schema;
+		}
 		return this.blcs_schema.find((b) => {
 			if (v_node.classes.includes("vertical_container")) {
 				return b.id === "vertical_container";
-			} else if (v_node.classes.includes("columns_container")) {
-				return b.id === "columns_container";
 			} else {
 				return b.id === v_node.module_name;
 			}
