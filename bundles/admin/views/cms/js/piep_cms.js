@@ -37,7 +37,7 @@ class PiepCMS {
 
 		this.initPaste();
 		this.initClick();
-		this.initKeyDown();
+		this.initTyping();
 		this.initTextSelection();
 
 		this.initHistory();
@@ -1804,7 +1804,7 @@ class PiepCMS {
 		}
 	}
 
-	initKeyDown() {
+	initTyping() {
 		document.addEventListener("keydown", (ev) => {
 			if (!this.content_active) {
 				return;
@@ -3164,7 +3164,7 @@ class PiepCMS {
 	}
 
 	removeTextInSelection() {
-		if (!this.text_selection) {
+		if (!this.text_selection || this.text_selection.length === 0) {
 			return;
 		}
 
