@@ -18,6 +18,9 @@
 	.bind_directions_icon {
 		width: 30px;
 	}
+    &.selecting_block .piep_editor_layout_controls {
+        display: none;
+    }
 }
 
 .piep_editor_layout_controls {
