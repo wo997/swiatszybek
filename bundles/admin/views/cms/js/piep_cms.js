@@ -932,6 +932,13 @@ class PiepCMS {
 				/** @type {DirectionEnum} */
 				// @ts-ignore
 				this.layout_control_dir = layout_control.dataset.layout_dir;
+				/** @type {CornerEnum} */
+				// @ts-ignore
+				this.layout_corner = layout_control.dataset.corner;
+
+				const v_node_data = this.getFocusVNodeData();
+				const v_node = v_node_data.v_node;
+				//const parent_v_node = v_node_data.parent_v_nodes[0];
 
 				const focus_node = this.getNode(this.focus_node_vid);
 				const focus_node_parent = focus_node._parent();
@@ -943,7 +950,7 @@ class PiepCMS {
 				layout_control.classList.add("grabbed");
 
 				const care_about_resolutions = this.getResolutionsWeCareAbout();
-				const v_node_styles = this.getFocusVNode().styles;
+				const v_node_styles = v_node.styles;
 				if (!v_node_styles.df) {
 					v_node_styles.df = {};
 				}
@@ -981,6 +988,52 @@ class PiepCMS {
 					}
 				}
 				//}
+
+				if (focus_node_parent.classList.contains("module_grid")) {
+					this.after_grab_v_dom = cloneObject(this.v_dom);
+
+					/**
+					 *
+					 * @returns {insertBlc}
+					 */
+					const getInsertBlc = () => {
+						const insert_blc = document.createElement("DIV");
+						insert_blc.classList.add("insert_blc");
+						this.insert_blcs.append(insert_blc);
+
+						// @ts-ignore
+						return $(insert_blc);
+					};
+
+					focus_node_parent._children(".cell_float").forEach((cell) => {
+						// this.layout_corner === "bottomleft"
+						// this.layout_corner === "bottomright"
+						// this.layout_corner === "topleft"
+						// this.layout_corner === "topright"
+
+						const row = +cell.dataset.r;
+						const column = +cell.dataset.c;
+
+						const rect = cell.getBoundingClientRect();
+						const corner_insert_blc = getInsertBlc();
+						corner_insert_blc._set_content(html`<i class="fas fa-plus"></i>`);
+
+						const s = v_node.styles[this.selected_resolution];
+
+						if (this.layout_corner === "bottomright") {
+							if (row + 1 < +s.gridRowStart + 1 || column + 1 < +s.gridColumnStart + 1) {
+								return;
+							}
+							corner_insert_blc._insert_action = () => {
+								const v_node = this.getVNodeById(this.focus_node_vid);
+								const s = v_node.styles[this.selected_resolution];
+								s.gridRowEnd = row + 1 + "";
+								s.gridColumnEnd = column + 1 + "";
+							};
+							corner_insert_blc._set_absolute_pos(rect.left + rect.width, rect.top + rect.height + this.content_scroll.scrollTop);
+						}
+					});
+				}
 
 				/** @type {Position} */
 				this.layout_control_grabbed_pos = cloneObject(mouse.pos);
@@ -2074,7 +2127,7 @@ class PiepCMS {
 		this.filter_blc_menu._set_value("all");
 		this.filter_blc_menu.addEventListener("change", () => {
 			if (this.filter_blc_menu._get_value() === "layout") {
-				this.editLayout();
+				this.startEditingLayout();
 			} else {
 				this.finishEditingLayout();
 			}
@@ -3313,6 +3366,55 @@ class PiepCMS {
 		this.container.classList.toggle("has_select_pos", this.has_select_pos);
 	}
 
+	/**
+	 *
+	 * @param {{
+	 * rewrite_html?: boolean
+	 * }} options
+	 */
+	considerInsertAction(options = {}) {
+		let change = false;
+
+		const insert_blc = this.getInsertBlcUnderMouse();
+		if (this.current_insert_blc !== insert_blc) {
+			this.current_insert_blc = insert_blc;
+			this.has_insert_pos = false;
+
+			this.v_dom.splice(0, this.v_dom.length);
+			deepAssign(this.v_dom, this.after_grab_v_dom);
+
+			if (insert_blc && insert_blc._insert_action) {
+				this.has_insert_pos = true;
+				insert_blc._insert_action();
+
+				change = true;
+				this.update({ all: true });
+
+				if (options.rewrite_html) {
+					// rewrite rendered module contents
+					const inserted_blc = this.getNode(this.grabbed_v_node.id);
+					if (inserted_blc._is_empty()) {
+						const copy_from = this.grabbed_block_wrapper._direct_child();
+						if (copy_from) {
+							inserted_blc.innerHTML = copy_from.innerHTML;
+						}
+					}
+				}
+			} else {
+				change = true;
+				this.update({ all: true });
+				this.float_focuses._empty();
+			}
+
+			removeClasses(".hovered", ["hovered"], this.insert_blcs);
+			if (insert_blc) {
+				insert_blc.classList.add("hovered");
+			}
+		}
+
+		return change;
+	}
+
 	grabbedBlock() {
 		if (!this.grabbed_v_node || !mouse.target) {
 			return;
@@ -3343,38 +3445,7 @@ class PiepCMS {
 			}
 		}
 
-		const insert_blc = this.getInsertBlcUnderMouse();
-		if (this.current_insert_blc !== insert_blc) {
-			this.current_insert_blc = insert_blc;
-			this.has_insert_pos = false;
-
-			this.v_dom.splice(0, this.v_dom.length);
-			deepAssign(this.v_dom, this.after_grab_v_dom);
-
-			if (insert_blc && insert_blc._insert_action) {
-				this.has_insert_pos = true;
-				insert_blc._insert_action();
-
-				this.update({ dom: true, styles: true });
-
-				// rewrite rendered module contents
-				const inserted_blc = this.getNode(this.grabbed_v_node.id);
-				if (inserted_blc._is_empty()) {
-					const copy_from = this.grabbed_block_wrapper._direct_child();
-					if (copy_from) {
-						inserted_blc.innerHTML = copy_from.innerHTML;
-					}
-				}
-			} else {
-				this.update({ dom: true, styles: true });
-				this.float_focuses._empty();
-			}
-
-			removeClasses(".hovered", ["hovered"], this.insert_blcs);
-			if (insert_blc) {
-				insert_blc.classList.add("hovered");
-			}
-		}
+		this.considerInsertAction({ rewrite_html: true });
 
 		this.grabbed_block_wrapper.classList.toggle("visible", !this.has_insert_pos);
 		this.container.classList.toggle("has_insert_pos", this.has_insert_pos);
@@ -3584,6 +3655,10 @@ class PiepCMS {
 	}
 
 	layoutEditMove() {
+		if (!this.editing_layout) {
+			return;
+		}
+
 		const layout_hash = this.content_scroll.offsetWidth + "_" + this.content_scroll.offsetLeft;
 		if (layout_hash !== this.last_content_scroll_layout_hash) {
 			this.last_content_scroll_layout_hash = layout_hash;
@@ -3603,88 +3678,96 @@ class PiepCMS {
 		if (!mouse.down) {
 			this.layout_control_grabbed_index = undefined;
 			removeClasses(".editing_now", ["editing_now"], this.container);
+			this.insert_blcs._empty();
 		}
 
 		if (this.layout_control_prop) {
 			const dx = mouse.pos.x - this.layout_control_grabbed_pos.x;
 			const dy = mouse.pos.y - this.layout_control_grabbed_pos.y + this.content_scroll.scrollTop - this.layout_control_grabbed_scroll_top;
-			let dist = 0;
-			if (this.layout_control_dir === "left") {
-				dist -= dx;
-			} else if (this.layout_control_dir === "right") {
-				dist += dx;
-			} else if (this.layout_control_dir === "top") {
-				dist -= dy;
-			} else if (this.layout_control_dir === "bottom") {
-				dist += dy;
-			}
 
-			let min_percent = 0;
-			let min_pixels = 0;
-			if (this.layout_control_prop === "width") {
-				min_percent = 10;
-				min_pixels = 50;
-			} else if (this.layout_control_prop.includes("margin")) {
-				min_percent = -1000;
-				min_pixels = -100000;
-			}
+			if (this.layout_control_prop === "grid_area") {
+				if (this.considerInsertAction()) {
+					this.displayNodeLayout();
+				}
+			} else {
+				let dist = 0;
+				if (this.layout_control_dir === "left") {
+					dist -= dx;
+				} else if (this.layout_control_dir === "right") {
+					dist += dx;
+				} else if (this.layout_control_dir === "top") {
+					dist -= dy;
+				} else if (this.layout_control_dir === "bottom") {
+					dist += dy;
+				}
 
-			let set_val_pretty;
-			if (this.layout_control_unit === "%") {
-				let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
-				set_val = Math.max(min_percent, set_val);
+				let min_percent = 0;
+				let min_pixels = 0;
+				if (this.layout_control_prop === "width") {
+					min_percent = 10;
+					min_pixels = 50;
+				} else if (this.layout_control_prop.includes("margin")) {
+					min_percent = -1000;
+					min_pixels = -100000;
+				}
 
-				if (CTRL_DOWN) {
-					if (this.layout_control_prop === "width") {
-						let lowest_diff_val = 100;
-						let closest_val = set_val;
-						for (let percentage of piep_cms_manager.pretty_percentages) {
-							const diff = Math.abs(percentage - set_val);
-							if (diff < lowest_diff_val) {
-								lowest_diff_val = diff;
-								closest_val = percentage;
+				let set_val_pretty;
+				if (this.layout_control_unit === "%") {
+					let set_val = this.layout_control_base_value + dist / this.layout_control_percent;
+					set_val = Math.max(min_percent, set_val);
+
+					if (CTRL_DOWN) {
+						if (this.layout_control_prop === "width") {
+							let lowest_diff_val = 100;
+							let closest_val = set_val;
+							for (let percentage of piep_cms_manager.pretty_percentages) {
+								const diff = Math.abs(percentage - set_val);
+								if (diff < lowest_diff_val) {
+									lowest_diff_val = diff;
+									closest_val = percentage;
+								}
 							}
+							set_val = closest_val;
+						} else {
+							set_val = Math.round(set_val);
+							set_val_pretty = set_val + "%";
 						}
-						set_val = closest_val;
 					} else {
 						set_val = Math.round(set_val);
-						set_val_pretty = set_val + "%";
 					}
+					set_val_pretty = floor(set_val, 4) + "%";
 				} else {
-					set_val = Math.round(set_val);
-				}
-				set_val_pretty = floor(set_val, 4) + "%";
-			} else {
-				let set_val = this.layout_control_base_value + dist;
-				set_val = Math.max(min_pixels, set_val);
+					let set_val = this.layout_control_base_value + dist;
+					set_val = Math.max(min_pixels, set_val);
 
-				if (CTRL_DOWN) {
-					set_val = round(set_val, -1);
-				}
-				set_val_pretty = floor(set_val) + "px";
-			}
-
-			const prop_input = this.side_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
-			if (prop_input) {
-				const change = set_val_pretty !== prop_input._get_value();
-				scrollIntoView(prop_input);
-				const input = prop_input._child("input");
-				if (input) {
-					input.classList.add("editing_now");
+					if (CTRL_DOWN) {
+						set_val = round(set_val, -1);
+					}
+					set_val_pretty = floor(set_val) + "px";
 				}
 
-				if (change) {
-					if (this.layout_control_prop === "width") {
-						const v_node = this.getFocusVNode();
-						const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
-						if (width_type !== "custom") {
-							v_node.responsive_settings[this.selected_resolution].width_type = "custom";
-							this.setBlcMenuFromFocusedNode();
-						}
+				const prop_input = this.side_menu._child(`[data-blc_prop="styles.${this.layout_control_prop}"]`);
+				if (prop_input) {
+					const change = set_val_pretty !== prop_input._get_value();
+					scrollIntoView(prop_input);
+					const input = prop_input._child("input");
+					if (input) {
+						input.classList.add("editing_now");
 					}
 
-					prop_input._set_value(set_val_pretty);
-					this.displayNodeLayout();
+					if (change) {
+						if (this.layout_control_prop === "width") {
+							const v_node = this.getFocusVNode();
+							const width_type = this.getVNodeResponsiveProp("responsive_settings", v_node, "width_type");
+							if (width_type !== "custom") {
+								v_node.responsive_settings[this.selected_resolution].width_type = "custom";
+								this.setBlcMenuFromFocusedNode();
+							}
+						}
+
+						prop_input._set_value(set_val_pretty);
+						this.displayNodeLayout();
+					}
 				}
 			}
 		}
@@ -3797,16 +3880,15 @@ class PiepCMS {
 		});
 	}
 
-	editLayout() {
+	startEditingLayout() {
 		this.editing_layout = true;
 
-		if (this.text_selection) {
-			const v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
-			const parent = v_node_data.parent_v_nodes[0];
-			if (parent) {
-				this.setFocusNode(parent.id);
-				this.text_selection = undefined;
-			}
+		const v_node_data = this.getFocusVNodeData();
+		const parent_v_node = v_node_data.parent_v_nodes[0];
+		if (this.text_selection && parent_v_node) {
+			this.setFocusNode(parent_v_node.id);
+			this.text_selection = undefined;
+			return;
 		}
 
 		this.container.classList.add("editing_layout");
@@ -4669,10 +4751,11 @@ class PiepCMS {
 					insert_blc._insert_action = () => {
 						const v_node = this.getVNodeById(blc_vid);
 						const insert_v_container = getInsertVContainer();
-						insert_v_container.styles[this.selected_resolution].gridRowStart = row + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnStart = column + "";
-						insert_v_container.styles[this.selected_resolution].gridRowEnd = row + 1 + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnEnd = column + 1 + "";
+						const s = insert_v_container.styles[this.selected_resolution];
+						s.gridRowStart = row + "";
+						s.gridColumnStart = column + "";
+						s.gridRowEnd = row + 1 + "";
+						s.gridColumnEnd = column + 1 + "";
 
 						v_node.children.push(insert_v_container);
 					};
@@ -4685,10 +4768,11 @@ class PiepCMS {
 					left_insert_blc._insert_action = () => {
 						const v_node = this.getVNodeById(blc_vid);
 						const insert_v_container = getInsertVContainer();
-						insert_v_container.styles[this.selected_resolution].gridRowStart = row + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnStart = column + "";
-						insert_v_container.styles[this.selected_resolution].gridRowEnd = row + 1 + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnEnd = column + 1 + "";
+						const s = insert_v_container.styles[this.selected_resolution];
+						s.gridRowStart = row + "";
+						s.gridColumnStart = column + "";
+						s.gridRowEnd = row + 1 + "";
+						s.gridColumnEnd = column + 1 + "";
 
 						const styles = v_node.styles[this.selected_resolution];
 
@@ -4727,10 +4811,11 @@ class PiepCMS {
 					top_insert_blc._insert_action = () => {
 						const v_node = this.getVNodeById(blc_vid);
 						const insert_v_container = getInsertVContainer();
-						insert_v_container.styles[this.selected_resolution].gridRowStart = row + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnStart = column + "";
-						insert_v_container.styles[this.selected_resolution].gridRowEnd = row + 1 + "";
-						insert_v_container.styles[this.selected_resolution].gridColumnEnd = column + 1 + "";
+						const s = insert_v_container.styles[this.selected_resolution];
+						s.gridRowStart = row + "";
+						s.gridColumnStart = column + "";
+						s.gridRowEnd = row + 1 + "";
+						s.gridColumnEnd = column + 1 + "";
 
 						const styles = v_node.styles[this.selected_resolution];
 
@@ -4741,10 +4826,6 @@ class PiepCMS {
 
 						v_node.children.forEach((child) => {
 							const styles = child.styles[this.selected_resolution];
-							if (!styles) {
-								console.error("TODO: do that shit dude");
-								return;
-							}
 							if (+styles.gridRowStart > row - 1) {
 								styles.gridRowStart = +styles.gridRowStart + 1 + "";
 							}
@@ -4774,10 +4855,11 @@ class PiepCMS {
 						right_insert_blc._insert_action = () => {
 							const v_node = this.getVNodeById(blc_vid);
 							const insert_v_container = getInsertVContainer();
-							insert_v_container.styles[this.selected_resolution].gridRowStart = row + "";
-							insert_v_container.styles[this.selected_resolution].gridColumnStart = column + 1 + "";
-							insert_v_container.styles[this.selected_resolution].gridRowEnd = row + 1 + "";
-							insert_v_container.styles[this.selected_resolution].gridColumnEnd = column + 2 + "";
+							const s = insert_v_container.styles[this.selected_resolution];
+							s.gridRowStart = row + "";
+							s.gridColumnStart = column + 1 + "";
+							s.gridRowEnd = row + 1 + "";
+							s.gridColumnEnd = column + 2 + "";
 
 							const styles = v_node.styles[this.selected_resolution];
 							styles.gridTemplateColumns += " 1fr";
@@ -4794,10 +4876,11 @@ class PiepCMS {
 						bottom_insert_blc._insert_action = () => {
 							const v_node = this.getVNodeById(blc_vid);
 							const insert_v_container = getInsertVContainer();
-							insert_v_container.styles[this.selected_resolution].gridRowStart = row + 1 + "";
-							insert_v_container.styles[this.selected_resolution].gridColumnStart = column + "";
-							insert_v_container.styles[this.selected_resolution].gridRowEnd = row + 2 + "";
-							insert_v_container.styles[this.selected_resolution].gridColumnEnd = column + 1 + "";
+							const s = insert_v_container.styles[this.selected_resolution];
+							s.gridRowStart = row + 1 + "";
+							s.gridColumnStart = column + "";
+							s.gridRowEnd = row + 2 + "";
+							s.gridColumnEnd = column + 1 + "";
 
 							const styles = v_node.styles[this.selected_resolution];
 							styles.gridTemplateRows += " auto";
