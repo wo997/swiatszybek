@@ -2674,7 +2674,13 @@ class PiepCMS {
 		return display_name;
 	}
 
-	displayInspectorTree() {
+	/**
+	 *
+	 * @param {{
+	 * vids?: number[]
+	 * }} options
+	 */
+	displayInspectorTree(options = {}) {
 		let pos = -1;
 		/** @type {number[]} */
 		let included_vids = [];
@@ -2687,50 +2693,52 @@ class PiepCMS {
 				pos++;
 
 				const vid = v_node.id;
-				const text = v_node.text;
 				const children = v_node.children;
-				const display_name = this.getVNodeDisplayName(v_node);
-
 				included_vids.push(vid);
 
-				let node = this.inspector_tree._child(`.v_node_label[data-vid="${vid}"]`);
+				if (!options.vids || options.vids.includes(vid)) {
+					const text = v_node.text;
+					const display_name = this.getVNodeDisplayName(v_node);
 
-				if (!node) {
-					node = $(document.createElement("DIV"));
+					let node = this.inspector_tree._child(`.v_node_label[data-vid="${vid}"]`);
+
+					if (!node) {
+						node = $(document.createElement("DIV"));
+					}
+
+					const before_node = this.inspector_tree._direct_children()[pos];
+					if (node !== before_node) {
+						this.inspector_tree.insertBefore(node, before_node);
+					}
+
+					let info = "";
+
+					if (text !== undefined) {
+						info = text ? escapeHTML(text) : "(pusty)";
+					} else if (children !== undefined) {
+						info = `(${children.length})`;
+					}
+					if (info) {
+						info = html`<span class="info"> - ${info}</span>`;
+					}
+
+					let classes = ["v_node_label", `tblc_${vid}`];
+					if (v_node.disabled) {
+						classes.push("disabled");
+					}
+					if (vid === this.focus_node_vid) {
+						classes.push("selected");
+					}
+
+					setNodeClasses(node, classes);
+
+					node.style.setProperty("--level", level + "");
+
+					node._set_content(html`<span class="name">${display_name}</span> ${info}`);
+
+					node.dataset.tooltip = v_node.disabled ? `Część szablonu` : "";
+					node.dataset.vid = vid + "";
 				}
-
-				const before_node = this.inspector_tree._direct_children()[pos];
-				if (node !== before_node) {
-					this.inspector_tree.insertBefore(node, before_node);
-				}
-
-				let info = "";
-
-				if (text !== undefined) {
-					info = text ? escapeHTML(text) : "(pusty)";
-				} else if (children !== undefined) {
-					info = `(${children.length})`;
-				}
-				if (info) {
-					info = html`<span class="info"> - ${info}</span>`;
-				}
-
-				let classes = ["v_node_label", `tblc_${vid}`];
-				if (v_node.disabled) {
-					classes.push("disabled");
-				}
-				if (vid === this.focus_node_vid) {
-					classes.push("selected");
-				}
-
-				setNodeClasses(node, classes);
-
-				node.style.setProperty("--level", level + "");
-
-				node._set_content(html`<span class="name">${display_name}</span> ${info}`);
-
-				node.dataset.tooltip = v_node.disabled ? `Część szablonu` : "";
-				node.dataset.vid = vid + "";
 
 				if (children) {
 					traverseVDom(children, level + 1);
@@ -2836,7 +2844,13 @@ class PiepCMS {
 		this.styles._set_content(styles_css);
 	}
 
-	recreateDom() {
+	/**
+	 *
+	 * @param {{
+	 * vids?: number[]
+	 * }} options
+	 */
+	recreateDom(options = {}) {
 		this.preRecreateDom();
 
 		/** @type {number[]} */
@@ -2854,144 +2868,145 @@ class PiepCMS {
 				const vid = v_node.id;
 				included_vids.push(vid);
 				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
-				const children = v_node.children;
-				const base_class = this.getNodeSelector(v_node.id).replace(".", "");
-				const text = v_node.text;
 				const curr_indices = [...indices, index];
+				const children = v_node.children;
 
 				let node = this.getNode(vid);
-
 				if (node && node.tagName.toLocaleLowerCase() !== v_node.tag.toLocaleLowerCase()) {
 					node.remove();
 					node = undefined;
 				}
-
 				let just_created = false;
 				if (!node) {
 					node = $(document.createElement(v_node.tag));
 					just_created = true;
 				}
 
-				// classes
-				if (v_node.module_name) {
-					const module_class = `module_${v_node.module_name}`;
-					if (!v_node.classes.includes(module_class)) {
-						v_node.classes.push(module_class);
-					}
-				}
+				if (!options.vids || options.vids.includes(vid)) {
+					const base_class = this.getNodeSelector(v_node.id).replace(".", "");
+					const text = v_node.text;
 
-				let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
-
-				if (text !== undefined) {
-					node._set_content(text);
-
-					let content = text;
-					if (text === "" && v_nodes.length === 1) {
-						content = "<br>";
-					}
-					node._set_content(content);
-
-					classes.push("textable");
-					//console.log("textable", node, text);
-				}
-				if (this.isTextContainer(v_node)) {
-					classes.push("text_container");
-				}
-
-				if (v_node.module_name) {
-					classes.push("any_module");
-				}
-				if (blc_schema) {
-					if (blc_schema.nonclickable) {
-						classes.push("nonclickable");
-					}
-				}
-				if (v_node.disabled) {
-					classes.push("editor_disabled");
-				}
-
-				if (v_node.settings && v_node.settings.link) {
-					if (v_node.module_name !== "button") {
-						if (!v_node.settings.link_styling) {
-							classes.push("link");
-						}
-						if (v_node.settings.link_styling === "hover_underline") {
-							classes.push("hover_underline");
+					// classes
+					if (v_node.module_name) {
+						const module_class = `module_${v_node.module_name}`;
+						if (!v_node.classes.includes(module_class)) {
+							v_node.classes.push(module_class);
 						}
 					}
-				}
 
-				if (node.classList.contains("wo997_bckg_img_shown")) {
-					// performance boost?
-					classes.push("wo997_bckg_img_shown");
-				}
-				setNodeClasses(node, classes);
+					let classes = ["blc", base_class, ...v_node.classes]; // important that a ref was lost
 
-				// attrs
-				const attrs = {
-					"data-vid": v_node.id + "",
-					"data-index": index + "",
-					"data-indices": curr_indices.join(","),
-					"data-level": curr_indices.length + "",
-				};
-				Object.assign(attrs, v_node.attrs);
+					if (text !== undefined) {
+						node._set_content(text);
 
-				Object.entries(attrs).map(([key, val]) => {
-					if (node.getAttribute(key) !== val) {
-						node.setAttribute(key, val);
+						let content = text;
+						if (text === "" && v_nodes.length === 1) {
+							content = "<br>";
+						}
+						node._set_content(content);
+
+						classes.push("textable");
+						//console.log("textable", node, text);
 					}
-				});
-				const attr_names = Object.keys(attrs);
-				for (const attr of node.attributes) {
-					if (attr.name === "class") {
-						continue;
+					if (this.isTextContainer(v_node)) {
+						classes.push("text_container");
 					}
-					// background img is held here so skip it baby
-					if (attr.name !== "style" && !attr_names.includes(attr.name)) {
-						node.removeAttribute(attr.name);
-					}
-				}
 
-				if (blc_schema) {
-					if (blc_schema.render_html || blc_schema.backend_render) {
-						let render_props = {};
-						blc_schema.rerender_on.forEach((prop_str) => {
-							if (prop_str.startsWith("settings.")) {
-								render_props[prop_str] = v_node.settings[prop_str.substring("settings.".length)];
+					if (v_node.module_name) {
+						classes.push("any_module");
+					}
+					if (blc_schema) {
+						if (blc_schema.nonclickable) {
+							classes.push("nonclickable");
+						}
+					}
+					if (v_node.disabled) {
+						classes.push("editor_disabled");
+					}
+
+					if (v_node.settings && v_node.settings.link) {
+						if (v_node.module_name !== "button") {
+							if (!v_node.settings.link_styling) {
+								classes.push("link");
 							}
-						});
-
-						if (just_created || !isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
-							this.last_map_vid_render_props[vid] = render_props;
-							if (blc_schema.render_html) {
-								node._set_content(blc_schema.render_html(v_node));
-							}
-							if (blc_schema.backend_render) {
-								piep_cms_manager.requestRender(vid);
+							if (v_node.settings.link_styling === "hover_underline") {
+								classes.push("hover_underline");
 							}
 						}
+					}
 
-						if (node._is_empty() && v_node.rendered_body !== undefined) {
-							node._set_content(v_node.rendered_body);
+					if (node.classList.contains("wo997_bckg_img_shown")) {
+						// performance boost?
+						classes.push("wo997_bckg_img_shown");
+					}
+					setNodeClasses(node, classes);
+
+					// attrs
+					const attrs = {
+						"data-vid": v_node.id + "",
+						"data-index": index + "",
+						"data-indices": curr_indices.join(","),
+						"data-level": curr_indices.length + "",
+					};
+					Object.assign(attrs, v_node.attrs);
+
+					Object.entries(attrs).map(([key, val]) => {
+						if (node.getAttribute(key) !== val) {
+							node.setAttribute(key, val);
+						}
+					});
+					const attr_names = Object.keys(attrs);
+					for (const attr of node.attributes) {
+						if (attr.name === "class") {
+							continue;
+						}
+						// background img is held here so skip it baby
+						if (attr.name !== "style" && !attr_names.includes(attr.name)) {
+							node.removeAttribute(attr.name);
 						}
 					}
 
-					if (blc_schema.render) {
-						blc_schema.render(v_node, node, this);
+					if (blc_schema) {
+						if (blc_schema.render_html || blc_schema.backend_render) {
+							let render_props = {};
+							blc_schema.rerender_on.forEach((prop_str) => {
+								if (prop_str.startsWith("settings.")) {
+									render_props[prop_str] = v_node.settings[prop_str.substring("settings.".length)];
+								}
+							});
+
+							if (just_created || !isEquivalent(this.last_map_vid_render_props[vid], render_props)) {
+								this.last_map_vid_render_props[vid] = render_props;
+								if (blc_schema.render_html) {
+									node._set_content(blc_schema.render_html(v_node));
+								}
+								if (blc_schema.backend_render) {
+									piep_cms_manager.requestRender(vid);
+								}
+							}
+
+							if (node._is_empty() && v_node.rendered_body !== undefined) {
+								node._set_content(v_node.rendered_body);
+							}
+						}
+
+						if (blc_schema.render) {
+							blc_schema.render(v_node, node, this);
+						}
 					}
-				}
 
-				if (classes.includes("vertical_container") || v_node.module_name === "absolute_container") {
-					displayEmptyVerticalContainer(node, children.length === 0);
-				}
+					if (classes.includes("vertical_container") || v_node.module_name === "absolute_container") {
+						displayEmptyVerticalContainer(node, children.length === 0);
+					}
 
-				if (parent_blc_schema && parent_blc_schema.place_node) {
-					parent_blc_schema.place_node(v_node, node, put_in_node, this);
-				} else {
-					// place it in the DOM yay
-					const before_node = put_in_node._direct_children()[index];
-					if (node._parent() !== put_in_node || node !== before_node) {
-						put_in_node.insertBefore(node, before_node);
+					if (parent_blc_schema && parent_blc_schema.place_node) {
+						parent_blc_schema.place_node(v_node, node, put_in_node, this);
+					} else {
+						// place it in the DOM yay
+						const before_node = put_in_node._direct_children()[index];
+						if (node._parent() !== put_in_node || node !== before_node) {
+							put_in_node.insertBefore(node, before_node);
+						}
 					}
 				}
 
@@ -3226,8 +3241,8 @@ class PiepCMS {
 		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
 
 		// optimisation
-		this.recreateDom();
-		this.displayInspectorTree();
+		this.recreateDom({ vids: [vid] });
+		this.displayInspectorTree({ vids: [vid] });
 
 		this.text_selection.focus_offset += insert_text.length;
 		this.collapseTextSelection();
