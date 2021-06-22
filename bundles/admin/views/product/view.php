@@ -59,17 +59,9 @@ $page_data = DB::fetchRow("SELECT * FROM page p WHERE p.link_what_id = $general_
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Produkt</title>
-
-<script>
-    <?= preloadProductFeatures() ?>
-    <?= preloadProductCategories() ?>
-    <?= preloadVats() ?>
-    let general_product_data = <?= json_encode($general_product_data) ?>;
-    let page_data = <?= json_encode($page_data) ?>;
-</script>
 
 <?php Templates::startSection("header"); ?>
 
@@ -89,5 +81,15 @@ $page_data = DB::fetchRow("SELECT * FROM page p WHERE p.link_what_id = $general_
 <?php Templates::startSection("admin_page_body"); ?>
 
 <product-comp></product-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadProductFeatures() ?>
+    <?= preloadProductCategories() ?>
+    <?= preloadVats() ?>
+    let general_product_data = <?= json_encode($general_product_data) ?>;
+    let page_data = <?= json_encode($page_data) ?>;
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

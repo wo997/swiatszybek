@@ -24,4 +24,6 @@ domload(() => {
 
 	window.addEventListener("last_viewed_products_changed", loadLastViewdProducts);
 	loadLastViewdProducts();
+
+	loadedLastViewedProducts();
 });

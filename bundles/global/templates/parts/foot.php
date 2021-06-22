@@ -1,17 +1,5 @@
-<?php
+<?php ?>
 
-if (defined("ROUTE") && Request::$found) {
-    // TODO: read from bulds info, but doesnt matter rly
-    $has_js = true;
-    $has_css = true;
-} else {
-    $has_css = false;
-    $has_js = false;
-}
-
-?>
-
-<link id="main_stylesheet" href="/builds/global.css?v=<?= version("global") ?>" rel="stylesheet">
 <script src="/builds/global.js?v=<?= version("global") ?>"></script>
 
 <script>
@@ -36,11 +24,11 @@ if (defined("ROUTE") && Request::$found) {
     const IS_ADMIN_URL = <?= Request::$is_admin_url ? 1 : 0 ?>;
     const root_class = IS_ADMIN_URL ? "admin_root" : "global_root";
 
-    user_cart = <?= json_encode(User::getCurrent()->cart->getAllData()) ?>;
-    loadedUserCart();
+    user_cart = <?= json_encode($user_cart) ?>;
+    //loadedUserCart();
 
     last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
-    loadedLastViewedProducts();
+    //loadedLastViewedProducts();
 
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>
         domload(() => {
@@ -89,21 +77,57 @@ if (defined("ROUTE") && Request::$found) {
 <?php endif ?>
 
 <?php if (User::getCurrent()->priveleges["backend_access"]) : ?>
-    <link href="/builds/admin_everywhere.css?v=<?= version("admin_everywhere") ?>" rel="stylesheet">
     <script src="/builds/admin_everywhere.js?v=<?= version("admin_everywhere") ?>"></script>
 <?php endif ?>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
-<link rel="shortcut icon" href="<?= FAVICON_PATH_LOCAL_TN ?>" />
 
 <?php if ($has_js) { ?>
     <script src="/<?= BUILDS_PATH . "views" . ROUTE . ".js" ?>?v=<?= version("views" . ROUTE) ?>"></script>
 <?php } ?>
-<?php if ($has_css) { ?>
-    <link href="/<?= BUILDS_PATH . "views" . ROUTE . ".css" ?>?v=<?= version("views" . ROUTE) ?>" rel="stylesheet">
-<?php } ?>
+
+<?php if (DEBUG_MODE) : ?>
+    <div data-tooltip="Całkowity czas generowania po stronie serwera" style="position:fixed;font-weight:var(--semi_bold);right:5px;bottom:5px;background:#eee;color:#444;padding:7px 10px;border-radius:5px;box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.24);z-index:100">
+        <i class="far fa-clock"></i> <?= round(1000 * (microtime(true) - time)); ?>ms
+    </div>
+<?php endif ?>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<?php
+$main_font = def(Theme::$fonts, Theme::getMainFontFamily());
+if ($main_font) {
+?>
+    <link id="main_font" href="<?= $main_font["link"] ?>" rel="stylesheet">
+<?php
+}
+
+if (Request::$is_admin_url) {
+?>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<?php
+}
+
+?>
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+
+<?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
+    <?php
+    $miscellaneous_version = 1;
+    // tbh these could also build, but chill
+    ?>
+    <script src="/node_modules/vanillajs-datepicker/dist/js/datepicker-full.js?v=<?= $miscellaneous_version ?>"></script>
+    <link rel="stylesheet" href="/node_modules/vanillajs-datepicker/dist/css/datepicker.css?v=<?= $miscellaneous_version ?>">
+    <script src="/node_modules/vanillajs-datepicker/dist/js/locales/pl.js?v=<?= $miscellaneous_version ?>"></script>
+
+    <script src="/bundles/admin/src/js/vanilla-picker.min.js?v=<?= $miscellaneous_version ?>"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        // @ts-ignore
+        Chart.defaults.global.animation.duration = 300;
+    </script>
+<?php endif ?>
+
 
 <?php if (!Request::$is_admin_url) : ?>
-    <?= getSetting(["general", "additional_scripts", "header"], "") ?>
+    <?= getSetting(["general", "additional_scripts", "footer"], "") ?>
 <?php endif ?>

@@ -7,7 +7,12 @@ let modal_container_node = undefined;
 
 let modalObserverTimeout = undefined;
 
-domload(() => {
+let modals_inited = false;
+function initModals() {
+	if (modals_inited) {
+		return;
+	}
+	modals_inited = true;
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		html`
@@ -22,7 +27,9 @@ domload(() => {
 	modal_container_node = modal_wrapper_node._child(".modal_container");
 
 	registerModals();
-});
+}
+
+domload(initModals);
 
 function registerModals() {
 	$$("[data-modal]").forEach((e) => {
@@ -38,10 +45,14 @@ function registerModalContent(html, callback = undefined) {
 		return;
 	}
 
+	if (!modal_container_node) {
+		initModals();
+	}
+
 	const div = document.createElement("DIV");
 	div.insertAdjacentHTML("afterbegin", html);
 	const modal = $(div.children[0]);
-	if (modal_container_node._child("#" + modal.id)) {
+	if ($(`.modal_container #${modal.id}`)) {
 		console.error("modal defined already");
 		return;
 	}

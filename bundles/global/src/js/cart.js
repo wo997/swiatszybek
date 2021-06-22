@@ -1,4 +1,5 @@
 /* js[global] */
+
 function resizeCartCallback() {
 	$$("cart-products-comp").forEach((cart) => {
 		if (cart._parent("header")) {
@@ -50,6 +51,8 @@ domload(() => {
 
 	window.addEventListener("user_cart_changed", loadCart);
 	loadCart();
+
+	loadedUserCart();
 });
 
 /* js[global] */

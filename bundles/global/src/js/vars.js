@@ -43,3 +43,6 @@ let Picker;
 const html = (...v) => {
 	return "";
 };
+
+/** @type {UserCartData} */
+let user_cart;

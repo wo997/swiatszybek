@@ -352,3 +352,37 @@
 	flex-grow: 1;
 	width: 100%;
 }
+
+input,
+select {
+	font-size: 1em;
+	width: 185px; /* default width man */
+}
+
+.btn {
+	font-size: 1em;
+}
+.semi_medium {
+	font-size: 1.1em;
+	font-weight: var(--semi_bold);
+}
+.medium {
+	font-size: 1.2em;
+	font-weight: var(--semi_bold);
+}
+.big {
+	font-size: 1.4em;
+	font-weight: var(--bold);
+}
+
+.normal {
+	font-weight: var(--normal);
+}
+
+.semi_bold {
+	font-weight: var(--semi_bold);
+}
+
+.bold {
+	font-weight: var(--bold);
+}

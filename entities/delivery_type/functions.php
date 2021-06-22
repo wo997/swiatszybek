@@ -10,6 +10,6 @@ function preloadDeliveryTypes()
     $delivery_types = json_encode(getAllDeliveryTypes());
     return <<<JS
     delivery_types = $delivery_types;
-    loadedDeliveryTypes();
+    domload(()=>{loadedDeliveryTypes()});
 JS;
 }

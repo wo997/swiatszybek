@@ -464,23 +464,6 @@ function renderPage($page_id, $data = [])
 
     <div class="main_wrapper global_root">
         <?= $full_dom_data["content_html"] ?>
-
-        <?php foreach ($parent_templates as $parent_template) {
-            $template_release = $parent_template["version"];
-            $template_id = $parent_template["template_id"];
-        ?>
-            <script src="/<?= BUILDS_PATH . "template/js/template_$template_id.js?v=$template_release" ?>"></script>
-        <?php
-        }
-        ?>
-
-        <?php if ($preview_js) : ?>
-            <script>
-                <?= $preview_js ?>
-            </script>
-        <?php else : ?>
-            <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
-        <?php endif ?>
     </div>
 
     <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
@@ -520,6 +503,25 @@ function renderPage($page_id, $data = [])
                 $(".edit_page_menu").classList.remove("hidden");
             });
         </script>
+    <?php endif ?>
+
+    <?php Templates::startSection("foot"); ?>
+
+    <?php foreach ($parent_templates as $parent_template) {
+        $template_release = $parent_template["version"];
+        $template_id = $parent_template["template_id"];
+    ?>
+        <script src="/<?= BUILDS_PATH . "template/js/template_$template_id.js?v=$template_release" ?>"></script>
+    <?php
+    }
+    ?>
+
+    <?php if ($preview_js) : ?>
+        <script>
+            <?= $preview_js ?>
+        </script>
+    <?php else : ?>
+        <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
     <?php endif ?>
 
 <?php include "bundles/global/templates/blank.php";

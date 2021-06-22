@@ -50,12 +50,7 @@
  * }} UserCartData
  */
 
-/** @type {UserCartData} */
-let user_cart;
-
 function loadedUserCart() {
 	window.dispatchEvent(new CustomEvent("user_cart_changed"));
-	setTimeout(() => {
-		resizeCartCallback();
-	});
+	setTimeout(resizeCartCallback);
 }
