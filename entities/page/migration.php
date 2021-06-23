@@ -18,5 +18,6 @@ DB::createTable(
         //["name" => "v_dom_ids_csv", "type" => "TEXT"],
         ["name" => "max_vid", "type" => "INT"],
         ["name" => "used_modules_csv", "type" => "TEXT"],
+        ["name" => "default_seo_description", "type" => "VARCHAR(255)"],
     ]
 );

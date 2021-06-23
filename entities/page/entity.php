@@ -16,6 +16,7 @@ EntityManager::register("page", [
         //"v_dom_ids_csv" => ["type" => "string"],
         "max_vid" => ["type" => "string"],
         "used_modules_csv" => ["type" => "string"],
+        "default_seo_description" => ["type" => "string"],
     ],
 ]);
 
@@ -53,5 +54,7 @@ EventListener::register("set_general_product_entity_active", function ($params) 
 });
 
 EventListener::register("before_save_page_entity", function ($params) {
-    updatePageableMetadata("page", $params["obj"]->getId());
+    $page_id = $params["obj"]->getId();
+    updatePageableMetadata("page", $page_id);
+    updatePageDefaultSeoDescription($page_id);
 });

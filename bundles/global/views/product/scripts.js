@@ -108,7 +108,7 @@ domload(() => {
 		const qty = qty_input._get_value();
 		$(".main_qty_controls")
 			._next()
-			._set_content(single_product && qty !== 1 ? `${numberFromStr(single_product.gross_price) * qty} zł` : "");
+			._set_content(single_product && qty !== 1 ? `${prettyPrice(numberFromStr(single_product.gross_price) * qty)} zł` : "");
 	});
 
 	const main_buy_btn = $(".main_buy_btn");

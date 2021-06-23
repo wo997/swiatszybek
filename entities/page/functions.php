@@ -259,6 +259,10 @@ function updatePageableMetadata($entity_name, $id)
     $v_dom_json = $page->getProp("v_dom_json");
     $v_dom = json_decode($v_dom_json, true);
 
+    if (!$v_dom) {
+        $v_dom = [];
+    }
+
     //$v_dom_ids = [];
     $max_vid = 0;
     $used_modules = [];
@@ -292,6 +296,45 @@ function updatePageableMetadata($entity_name, $id)
     //$page->setProp("v_dom_ids_csv", join(",", $v_dom_ids));
     $page->setProp("max_vid", $max_vid);
     $page->setProp("used_modules_csv", join(",", $used_modules));
+}
+
+
+function updatePageDefaultSeoDescription($page_id)
+{
+    $page = EntityManager::getEntityById("page", $page_id);
+    $v_dom_json = $page->getProp("v_dom_json");
+    $v_dom = json_decode($v_dom_json, true);
+
+    if (!$v_dom) {
+        $v_dom = [];
+    }
+
+    $default_seo_description = "";
+
+    $travVDom = function (&$base_v_nodes) use (&$travVDom, &$default_seo_description) {
+        if ($default_seo_description && !endsWith($default_seo_description, " ")) {
+            $default_seo_description .= " ";
+        }
+
+        foreach ($base_v_nodes as &$base_v_node) {
+            $text = def($base_v_node, ["text"], "");
+            $default_seo_description .= $text;
+            if (strlen($default_seo_description) < 160) {
+                $children = def($base_v_node, ["children"]);
+                if ($children) {
+                    $travVDom($children);
+                    unset($children);
+                }
+            }
+        }
+        unset($base_v_node);
+    };
+
+    if ($v_dom) {
+        $travVDom($v_dom);
+    }
+
+    $page->setProp("default_seo_description", trim($default_seo_description));
 }
 
 
@@ -416,6 +459,13 @@ function renderPage($page_id, $data = [])
             $seo_title = $data["default_seo_title"] . " - " . $shop_name;
         } else {
             $seo_title = $shop_name;
+        }
+    }
+    if (!$seo_description) {
+        if (isset($page_data["default_seo_description"])) {
+            $seo_description = $page_data["default_seo_description"];
+        } else {
+            $seo_description = $shop_name;
         }
     }
 
