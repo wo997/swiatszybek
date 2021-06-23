@@ -155,3 +155,13 @@ domload(() => {
 
 	choose_period._set_value("this_week");
 });
+
+domload(() => {
+	const new_message = $(".new_message");
+	const set_h = () => {
+		autoHeight(new_message);
+	};
+	new_message.addEventListener("input", set_h);
+	new_message.addEventListener("change", set_h);
+	set_h();
+});

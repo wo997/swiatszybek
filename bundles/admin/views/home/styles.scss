@@ -68,8 +68,8 @@ datatable-comp.shop_orders {
 	}
 	.chat_footer {
 		display: flex;
-		height: 40px;
 		flex-shrink: 0;
+		--field_padding_ver: 0.6em;
 	}
 	.chatter {
 		padding: 5px 10px;
@@ -116,5 +116,8 @@ datatable-comp.shop_orders {
 				background: #eee;
 			}
 		}
+	}
+	.new_message {
+		max-height: 83px;
 	}
 }

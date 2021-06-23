@@ -53,7 +53,7 @@
         <div class="chat_container">
             <div class="chat_header">
                 <div class="chatter">
-                    siemka, to my
+                    <?= getSetting(["general", "company", "shop_name"], "") ?>
                 </div>
                 <button class="btn transparent close_btn">
                     <i class="fas fa-times"></i>
@@ -91,7 +91,7 @@
                 </div>
             </div>
             <div class="chat_footer">
-                <input class="field focus_inside spiky">
+                <textarea class="field new_message focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>
                 <button class="btn primary spiky">
                     <i class="fas fa-paper-plane"></i>
                 </button>
