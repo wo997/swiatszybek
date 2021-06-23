@@ -1008,11 +1008,6 @@ class PiepCMS {
 					};
 
 					focus_node_parent._children(".cell_float").forEach((cell) => {
-						// this.layout_corner === "bottomleft"
-						// this.layout_corner === "bottomright"
-						// this.layout_corner === "topleft"
-						// this.layout_corner === "topright"
-
 						const row = +cell.dataset.r;
 						const column = +cell.dataset.c;
 
@@ -1023,7 +1018,7 @@ class PiepCMS {
 						const s = v_node.styles[this.selected_resolution];
 
 						if (this.layout_corner === "bottomright") {
-							if (row + 1 < +s.gridRowStart + 1 || column + 1 < +s.gridColumnStart + 1) {
+							if (row < +s.gridRowStart || column < +s.gridColumnStart) {
 								return;
 							}
 							corner_insert_blc._insert_action = () => {
@@ -1033,6 +1028,42 @@ class PiepCMS {
 								s.gridColumnEnd = column + 1 + "";
 							};
 							corner_insert_blc._set_absolute_pos(rect.left + rect.width, rect.top + rect.height + this.content_scroll.scrollTop);
+						}
+						if (this.layout_corner === "bottomleft") {
+							if (row < +s.gridRowStart || column > +s.gridColumnEnd - 1) {
+								return;
+							}
+							corner_insert_blc._insert_action = () => {
+								const v_node = this.getVNodeById(this.focus_node_vid);
+								const s = v_node.styles[this.selected_resolution];
+								s.gridRowEnd = row + 1 + "";
+								s.gridColumnStart = column + "";
+							};
+							corner_insert_blc._set_absolute_pos(rect.left, rect.top + rect.height + this.content_scroll.scrollTop);
+						}
+						if (this.layout_corner === "topright") {
+							if (row > +s.gridRowEnd - 1 || column < +s.gridColumnStart) {
+								return;
+							}
+							corner_insert_blc._insert_action = () => {
+								const v_node = this.getVNodeById(this.focus_node_vid);
+								const s = v_node.styles[this.selected_resolution];
+								s.gridRowStart = row + "";
+								s.gridColumnEnd = column + 1 + "";
+							};
+							corner_insert_blc._set_absolute_pos(rect.left + rect.width, rect.top + this.content_scroll.scrollTop);
+						}
+						if (this.layout_corner === "topleft") {
+							if (row > +s.gridRowEnd - 1 || column > +s.gridColumnEnd - 1) {
+								return;
+							}
+							corner_insert_blc._insert_action = () => {
+								const v_node = this.getVNodeById(this.focus_node_vid);
+								const s = v_node.styles[this.selected_resolution];
+								s.gridRowStart = row + "";
+								s.gridColumnStart = column + "";
+							};
+							corner_insert_blc._set_absolute_pos(rect.left, rect.top + this.content_scroll.scrollTop);
 						}
 					});
 				}

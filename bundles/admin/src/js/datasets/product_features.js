@@ -72,7 +72,7 @@ function loadedProductFeatures() {
 			}
 
 			const physical_measure_data = physical_measures[feature.physical_measure];
-			if (feature.physical_measure !== "none" && physical_measure_data) {
+			if (feature.data_type === "double_value" && feature.physical_measure !== "none" && physical_measure_data) {
 				const feature_units_names = [];
 				feature.units.forEach((u) => {
 					const measure_unit = physical_measure_unit_map[u.id];
