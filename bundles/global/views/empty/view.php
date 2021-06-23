@@ -2,7 +2,7 @@
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Pusta strona</title>
 

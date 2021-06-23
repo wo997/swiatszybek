@@ -8,7 +8,7 @@ if (Request::getSingleUsageSessionVar("just_logged_in")) {
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Rejestracja</title>
 

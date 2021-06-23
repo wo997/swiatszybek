@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/pulpit] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Pulpit</title>
 

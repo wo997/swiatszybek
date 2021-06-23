@@ -2,7 +2,7 @@
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <script>
     const company_info = <?= json_encode(getSetting(["general", "company"])); ?>

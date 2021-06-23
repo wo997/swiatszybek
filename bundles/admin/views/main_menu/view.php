@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/menu-glowne] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Menu główne</title>
 

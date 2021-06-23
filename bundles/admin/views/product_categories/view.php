@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/kategorie-produktow] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Kategorie produktów</title>
 

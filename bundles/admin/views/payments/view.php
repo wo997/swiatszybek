@@ -2,7 +2,7 @@
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <script>
     const payments_data = <?= json_encode(getSetting(["general", "payments"], [])); ?>

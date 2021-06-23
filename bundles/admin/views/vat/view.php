@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/stawki-vat] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Stawki VAT</title>
 

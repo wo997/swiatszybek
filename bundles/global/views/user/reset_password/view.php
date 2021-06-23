@@ -20,7 +20,7 @@ if (!$user_email) {
 ?>
 
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Resetowanie hasła</title>
 

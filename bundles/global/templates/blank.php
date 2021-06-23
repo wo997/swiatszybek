@@ -8,7 +8,7 @@ Templates::endSection();
 
 <head>
     <?php include "bundles/global/templates/parts/head.php"; ?>
-    <?= def(Templates::$sections, "head_content", ""); ?>
+    <?= def(Templates::$sections, "head", ""); ?>
 </head>
 
 <body class="freeze" id="p">

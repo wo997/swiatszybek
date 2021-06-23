@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/statusy]
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Statusy</title>
 

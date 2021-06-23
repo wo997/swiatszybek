@@ -6,7 +6,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Kup teraz</title>
 

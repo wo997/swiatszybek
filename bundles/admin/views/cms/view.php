@@ -72,7 +72,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Edytor stron</title>
 

@@ -18,7 +18,7 @@ if ($force_payment) {
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Zamówienie #<?= $shop_order->getId() ?></title>
 

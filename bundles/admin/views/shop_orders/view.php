@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/zamowienia] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Zamówienia</title>
 

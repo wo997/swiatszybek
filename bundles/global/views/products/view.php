@@ -432,7 +432,7 @@ foreach ($feature_general_product_count as $x) {
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <link rel="canonical" href="<?= SITE_URL . getProductCategoryLink($category_path) ?>" />
 

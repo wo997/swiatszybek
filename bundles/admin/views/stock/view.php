@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/magazyn] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Magazyn</title>
 

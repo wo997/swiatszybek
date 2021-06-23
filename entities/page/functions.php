@@ -425,7 +425,7 @@ function renderPage($page_id, $data = [])
     $page_release = $page_data["version"];
 ?>
 
-    <?php Templates::startSection("head_content"); ?>
+    <?php Templates::startSection("head"); ?>
 
     <title><?= $seo_title ?></title>
     <meta name="description" content="<?= $seo_description ?>">

@@ -1,7 +1,7 @@
 <?php //route[{USER}/zamowienia]
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Moje zamówienia</title>
 

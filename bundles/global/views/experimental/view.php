@@ -4,7 +4,7 @@ $main_menu = def(PiepCMSManager::$modules, ["main_menu"]);
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Experimental</title>
 

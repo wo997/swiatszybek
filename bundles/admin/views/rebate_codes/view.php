@@ -1,7 +1,7 @@
 <?php //route[{ADMIN}/kody-rabatowe] 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <title>Kody rabatowe</title>
 
