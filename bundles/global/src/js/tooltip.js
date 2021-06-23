@@ -91,7 +91,8 @@ domload(() => {
 			if (top < 10) {
 				top = 10;
 			}
-			const maxTop = window.innerHeight - tltp.offsetHeight - 10 - r.height;
+			//const maxTop = window.innerHeight - trgt.offsetHeight - 10 - r.height;
+			const maxTop = window.innerHeight - tltp.offsetHeight - 10;
 			top = clamp(10, top, maxTop);
 
 			tltp._set_absolute_pos(left, top);

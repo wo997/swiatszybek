@@ -50,7 +50,7 @@ $traverseMenu = function ($parent_id = -1, $level = 0) use (&$traverseMenu, &$tr
 
 <div class="main_search_wrapper">
     <div class="glue_children search_wrapper">
-        <input type="text" class="field" placeholder="Wyszukaj produkt">
+        <input type="text" class="field focus_inside" placeholder="Wyszukaj produkt">
         <button class="btn primary spinner_wrapper" onclick="searchAllProducts()">
             <img class="search_icon" src="/src/img/search_icon.svg">
             <div class="spinner overlay white"></div>

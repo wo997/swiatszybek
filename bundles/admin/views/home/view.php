@@ -5,11 +5,6 @@
 
 <title>Pulpit</title>
 
-<script>
-    <?= "" //preloadOrderStatuses() 
-    ?>
-</script>
-
 <?php Templates::startSection("admin_page_body"); ?>
 
 <div style="max-width: 1000px;margin: auto">
@@ -53,6 +48,60 @@
     </div>
 
     <canvas id="myChart" class="mtf"></canvas>
+
+    <div class="global_root">
+        <div class="chat_container">
+            <div class="chat_header">
+                <div class="chatter">
+                    siemka, to my
+                </div>
+                <button class="btn transparent close_btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="scroll_panel scroll_shadow chat_messages">
+                <div class="message ours">
+                    <div class="message_content">nasze - asasfasfd asd</div>
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                </div>
+
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+                <div class="message others">
+                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                </div>
+            </div>
+            <div class="chat_footer">
+                <input class="field focus_inside spiky">
+                <button class="btn primary spiky">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat_closed" data-tooltip="Otwórz czat" data-tooltip_position="left">
+            <i class="fas fa-envelope"></i>
+        </div>
+    </div>
 </div>
 
 
