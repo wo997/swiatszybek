@@ -1,7 +1,5 @@
 /* js[global] */
 
-const show_image_duration = 300; // TODO: this might be unnecessary, animations can be a part of page builder dude
-
 /**
  *
  * @typedef {{
@@ -75,14 +73,9 @@ function setImageSize(img) {
 	const data = getResponsiveImageData(src);
 
 	if (!data) {
-		const duration = show_image_duration;
-		img.style.animation = `show ${duration}ms`;
 		unsetImgHeightOnLoad(img);
 		// @ts-ignore
 		img.src = src;
-		setTimeout(() => {
-			img.style.animation = "";
-		}, duration);
 		return;
 	}
 
@@ -165,12 +158,6 @@ function onScrollImages(options = {}) {
 		if (isNodeOnScreen(img)) {
 			img.classList.remove("wo997_img_waiting");
 			img.classList.add("wo997_img_shown");
-			const duration = def(options.duration, show_image_duration);
-			img.style.animation = `show ${duration}ms`;
-
-			quickTimeout(() => {
-				img.style.animation = "";
-			}, duration);
 		}
 	});
 }
