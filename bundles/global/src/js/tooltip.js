@@ -2,7 +2,8 @@
 
 /**
  * @type {{
- * target: PiepNode,
+ * target: PiepNode
+ * force_target?: PiepNode
  * dismiss()
  * resizeCallback()
  * last_target: PiepNode
@@ -31,7 +32,8 @@ domload(() => {
 		const tltp = tooltip.target;
 
 		const target = $(event.target);
-		const e = target._parent("[data-tooltip]");
+		let e = tooltip.force_target ? tooltip.force_target : target._parent("[data-tooltip]");
+
 		if (e && e.dataset.tooltip) {
 			let tooltipText = e.dataset.tooltip;
 
@@ -54,54 +56,45 @@ domload(() => {
 				tltp.style.animation = "show 0.15s";
 			}
 
-			const nodeRect = e.getBoundingClientRect();
+			const r = e.getBoundingClientRect();
 
 			const offsetX = 3;
 			const offsetY = 2;
-			let left = nodeRect.left + offsetX + nodeRect.width * 0.5;
-			let top = nodeRect.top + offsetY + nodeRect.height;
+			let left = r.left + offsetX + r.width * 0.5;
+			let top = r.top + offsetY + r.height;
 
-			const nodeRectPosition = e.dataset.tooltip_position;
-			if (nodeRectPosition == "center") {
+			const pos = e.dataset.tooltip_position;
+			if (pos == "center") {
 				left -= tltp.offsetWidth / 2 + offsetX;
-			} else if (nodeRectPosition == "top") {
+			} else if (pos == "top") {
 				left -= tltp.offsetWidth / 2 + offsetX;
-				top -= nodeRect.height + tltp.offsetHeight + offsetY * 2;
-			} else if (nodeRectPosition == "over") {
+				top -= r.height + tltp.offsetHeight + offsetY * 2;
+			} else if (pos == "over") {
 				left -= tltp.offsetWidth / 2 + offsetX;
-				top -= 0.5 * (nodeRect.height + tltp.offsetHeight) + offsetY;
-			} else if (nodeRectPosition == "right") {
-				left += nodeRect.width / 2;
-				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
-			} else if (nodeRectPosition == "left") {
-				left -= nodeRect.width / 2 + tltp.offsetWidth + offsetX * 2;
-				top -= nodeRect.height / 2 + tltp.offsetHeight / 2 + offsetY;
-			} else if (nodeRectPosition == "cursor") {
+				top -= 0.5 * (r.height + tltp.offsetHeight) + offsetY;
+			} else if (pos == "right") {
+				left += r.width / 2;
+				top -= r.height / 2 + tltp.offsetHeight / 2 + offsetY;
+			} else if (pos == "left") {
+				left -= r.width / 2 + tltp.offsetWidth + offsetX * 2;
+				top -= r.height / 2 + tltp.offsetHeight / 2 + offsetY;
+			} else if (pos == "cursor") {
 				left = mouse.pos.x + offsetX;
 				top = mouse.pos.y + offsetY;
 			}
 
 			const maxLeft = window.innerWidth - 30 - tltp.offsetWidth;
 			if (left > maxLeft) {
-				left -= tltp.offsetWidth + offsetX * 2; // + nodeRect.width;
+				left -= tltp.offsetWidth + offsetX * 2;
 			}
-			if (left > maxLeft) {
-				left = maxLeft;
-			}
-			if (left < 10) {
-				left = 10;
-			}
-
+			left = clamp(10, left, maxLeft);
 			if (top < 10) {
 				top = 10;
 			}
-			const maxH = window.innerHeight - tltp.offsetHeight - 10;
-			if (top > maxH) {
-				top = maxH - nodeRect.height;
-			}
+			const maxTop = window.innerHeight - tltp.offsetHeight - 10 - r.height;
+			top = clamp(10, top, maxTop);
 
-			tltp.style.left = left + "px";
-			tltp.style.top = top + "px";
+			tltp._set_absolute_pos(left, top);
 		} else {
 			tltp.style.display = "none";
 		}
@@ -118,15 +111,7 @@ domload(() => {
 		tooltip.dismiss();
 	});
 	window.addEventListener("mousedown", (event) => {
-		// click could be prevented lol
 		tooltip.dismiss();
-		/*if (!event.target._parent(tooltip.last_target)) {
-			tooltip.dismiss();
-		} else {
-			if (tooltip.last_target.hasAttribute("data-tooltip-hide")) {
-				tooltip.dismiss();
-			}
-		}*/
 	});
 
 	window.addEventListener("resize", tooltip.resizeCallback);

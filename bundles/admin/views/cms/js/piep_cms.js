@@ -816,11 +816,14 @@ class PiepCMS {
 				const v_node = this.getVNodeById(vid);
 
 				let icon = html`<i class="fas fa-circle" style="transform:scale(0.5)"></i>`;
+				let tooltip = "";
 				const schema = piep_cms_manager.getVNodeSchema(v_node);
 				if (schema) {
 					icon = schema.icon;
+					tooltip = schema.label;
 				}
 				select_blc._set_content(icon);
+				select_blc.dataset.tooltip = tooltip;
 
 				const hh = this.select_blc_size;
 				const h = hh * 0.5;
@@ -872,6 +875,8 @@ class PiepCMS {
 		this.has_select_pos = false;
 		this.container.classList.remove("has_select_pos", "selecting_block");
 		this.select_blcs._empty();
+
+		tooltip.force_target = undefined;
 	}
 
 	initMultiSelect() {
@@ -3409,6 +3414,7 @@ class PiepCMS {
 		let change = false;
 
 		const insert_blc = this.getInsertBlcUnderMouse();
+		tooltip.force_target = insert_blc;
 		if (this.current_insert_blc !== insert_blc) {
 			this.current_insert_blc = insert_blc;
 			this.has_insert_pos = false;
@@ -3523,6 +3529,7 @@ class PiepCMS {
 
 		if (this.selecting_blcs) {
 			const select_blc = this.getSelectBlcUnderMouse();
+			tooltip.force_target = select_blc;
 			if (select_blc) {
 				addVidsWidthParent(+select_blc.dataset.vid);
 			}
@@ -5143,6 +5150,8 @@ class PiepCMS {
 
 		this.displaySelectionBreadcrumbs();
 		this.setBlcMenuFromFocusedNode();
+
+		tooltip.force_target = undefined;
 	}
 
 	/**
