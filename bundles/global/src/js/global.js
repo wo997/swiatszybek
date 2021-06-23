@@ -1,5 +1,13 @@
 /* js[!global] */
 
+function domload(callback) {
+	document.addEventListener("DOMContentLoaded", callback);
+}
+
+function windowload(callback) {
+	window.addEventListener("load", callback);
+}
+
 /**
  * @typedef {{
  * url: string

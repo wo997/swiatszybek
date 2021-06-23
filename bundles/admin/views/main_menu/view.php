@@ -5,13 +5,6 @@
 
 <title>Menu główne</title>
 
-<script>
-    <?= preloadMenus() ?>
-    <?= preloadProductCategories() ?>
-    <?= preloadGeneralProducts() ?>
-    <?= preloadPages() ?>
-</script>
-
 <?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
@@ -28,5 +21,14 @@
 <?php Templates::startSection("admin_page_body"); ?>
 
 <menus-comp class="main"></menus-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadMenus() ?>
+    <?= preloadProductCategories() ?>
+    <?= preloadGeneralProducts() ?>
+    <?= preloadPages() ?>
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

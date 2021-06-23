@@ -466,7 +466,10 @@ function renderPage($page_id, $data = [])
         <?= $full_dom_data["content_html"] ?>
     </div>
 
-    <?php if (!$preview_params && User::getCurrent()->priveleges["backend_access"]) : ?>
+    <?php
+    $show_top_bar =  !$preview_params && User::getCurrent()->priveleges["backend_access"];
+    ?>
+    <?php if ($show_top_bar) { ?>
         <div class="edit_page_menu hidden">
             <button class="mla xbutton page_published_btn" data-tooltip="Ukryj">
                 <span>Widoczna</span>
@@ -482,7 +485,29 @@ function renderPage($page_id, $data = [])
             </a>
             <?= def($data, ["admin_edit_btn"], "")  ?>
         </div>
+    <?php } ?>
 
+    <?php Templates::startSection("foot"); ?>
+
+    <?php foreach ($parent_templates as $parent_template) {
+        $template_release = $parent_template["version"];
+        $template_id = $parent_template["template_id"];
+    ?>
+
+        <script src="/<?= BUILDS_PATH . "template/js/template_$template_id.js?v=$template_release" ?>"></script>
+    <?php
+    }
+    ?>
+
+    <?php if ($preview_js) : ?>
+        <script>
+            <?= $preview_js ?>
+        </script>
+    <?php else : ?>
+        <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
+    <?php endif ?>
+
+    <?php if ($show_top_bar) { ?>
         <style>
             .no_touch {
                 --body_padding_top: 30px;
@@ -503,26 +528,7 @@ function renderPage($page_id, $data = [])
                 $(".edit_page_menu").classList.remove("hidden");
             });
         </script>
-    <?php endif ?>
-
-    <?php Templates::startSection("foot"); ?>
-
-    <?php foreach ($parent_templates as $parent_template) {
-        $template_release = $parent_template["version"];
-        $template_id = $parent_template["template_id"];
-    ?>
-        <script src="/<?= BUILDS_PATH . "template/js/template_$template_id.js?v=$template_release" ?>"></script>
-    <?php
-    }
-    ?>
-
-    <?php if ($preview_js) : ?>
-        <script>
-            <?= $preview_js ?>
-        </script>
-    <?php else : ?>
-        <script src="/<?= BUILDS_PATH . "page/js/page_$page_id.js?v=$page_release" ?>"></script>
-    <?php endif ?>
+    <?php } ?>
 
 <?php include "bundles/global/templates/blank.php";
 }

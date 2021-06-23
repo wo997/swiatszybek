@@ -25,7 +25,7 @@ if ($global_template_id) {
 
 ?>
 
-<?php Templates::startSection("head_content"); ?>
+<?php Templates::startSection("head"); ?>
 
 <link href="/<?= BUILDS_PATH . "template/css/template_$global_template_id.css?v=$template_release" ?>" rel="stylesheet">
 
@@ -35,6 +35,6 @@ if ($global_template_id) {
     <?= $content_html ?>
 </div>
 
-<script src="/<?= BUILDS_PATH . "template/js/template_$global_template_id.js?v=$template_release" ?>"></script>
-
 <?php include "bundles/global/templates/blank.php"; ?>
+
+<script src="/<?= BUILDS_PATH . "template/js/template_$global_template_id.js?v=$template_release" ?>"></script>

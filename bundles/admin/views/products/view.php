@@ -5,15 +5,6 @@
 
 <title>Produkty</title>
 
-<script>
-    <?= preloadProductCategories() ?>
-    <?php if (isset($_GET["dodaj"])) { ?>
-        domload(() => {
-            showAddProductModal();
-        })
-    <?php } ?>
-</script>
-
 <?php Templates::startSection("admin_page_body"); ?>
 
 <div class="products_view_header">
@@ -50,5 +41,16 @@
 <datatable-comp class="general_products"></datatable-comp>
 
 <datatable-comp class="products"></datatable-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadProductCategories() ?>
+    <?php if (isset($_GET["dodaj"])) { ?>
+        domload(() => {
+            showAddProductModal();
+        })
+    <?php } ?>
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

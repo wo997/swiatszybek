@@ -76,19 +76,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
 <title>Edytor stron</title>
 
-<script>
-    <?= Theme::preloadThemeSettings() ?>
-    let page_data = <?= json_encode($page_data) ?>;
-    let template_data = <?= json_encode($template_data) ?>;
-    let parent_templates = <?= json_encode($parent_templates) ?>;
-    let pageable_data = def(page_data, template_data);
-    <?= preloadProductCategories() ?>
-</script>
-
-<script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . version("piep_cms_dependencies") ?>"></script>
 <link href="/<?= BUILDS_PATH . "piep_cms_dependencies.css?v=" . version("piep_cms_dependencies") ?>" rel="stylesheet">
-
-<script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . version("piep_cms") ?>"></script>
 <link href="/<?= BUILDS_PATH . "piep_cms.css?v=" . version("piep_cms") ?>" rel="stylesheet">
 
 <?php Templates::startSection("admin_page_body"); ?>
@@ -238,5 +226,19 @@ $modules_html["main_menu_html"] = ob_get_clean();
         </div>
     </div>
 </div>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= Theme::preloadThemeSettings() ?>
+    let page_data = <?= json_encode($page_data) ?>;
+    let template_data = <?= json_encode($template_data) ?>;
+    let parent_templates = <?= json_encode($parent_templates) ?>;
+    let pageable_data = def(page_data, template_data);
+    <?= preloadProductCategories() ?>
+</script>
+
+<script src="/<?= BUILDS_PATH . "piep_cms_dependencies.js?v=" . version("piep_cms_dependencies") ?>"></script>
+<script src="/<?= BUILDS_PATH . "piep_cms.js?v=" . version("piep_cms") ?>"></script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

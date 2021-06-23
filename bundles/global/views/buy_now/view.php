@@ -10,11 +10,6 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 
 <title>Kup teraz</title>
 
-<script>
-    <?= preloadUECountries() ?>
-    <?= preloadDeliveryTypes() ?>
-</script>
-
 <script async src="https://geowidget.easypack24.net/js/sdk-for-javascript.js"></script>
 <link rel="stylesheet" href="https://geowidget.easypack24.net/css/easypack.css" />
 
@@ -216,5 +211,12 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <div id="easypack-map"></div>
     </div>
 </div>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadUECountries() ?>
+    <?= preloadDeliveryTypes() ?>
+</script>
 
 <?php include "bundles/global/templates/default.php"; ?>

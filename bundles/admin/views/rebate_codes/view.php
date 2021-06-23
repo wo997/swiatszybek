@@ -5,6 +5,12 @@
 
 <title>Kody rabatowe</title>
 
+<?php Templates::startSection("admin_page_body"); ?>
+
+<datatable-comp class="rebate_codes"></datatable-comp>
+
+<?php Templates::startSection("foot"); ?>
+
 <script>
     <?= preloadGeneralProducts() ?>
     <?= preloadUsers() ?>
@@ -15,9 +21,5 @@
         })
     <?php } ?>
 </script>
-
-<?php Templates::startSection("admin_page_body"); ?>
-
-<datatable-comp class="rebate_codes"></datatable-comp>
 
 <?php include "bundles/admin/templates/default.php"; ?>

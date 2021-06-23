@@ -6,23 +6,6 @@
 
 <title>Strony</title>
 
-<script>
-    <?= preloadProductCategories() ?>
-    <?= preloadGeneralProducts() ?>
-    <?= preloadTemplates() ?>
-    <?php if (isset($_GET["utworz"])) { ?>
-        domload(() => {
-            add_page_modal = getAddPageModal();
-            <?php if (isset($_GET["general_product_id"])) { ?>
-                add_page_modal._data.page_type = "general_product";
-                add_page_modal._data.general_product_id = <?= intval($_GET["general_product_id"]) ?>;
-            <?php } ?>
-            add_page_modal._render();
-            add_page_modal._show();
-        })
-    <?php } ?>
-</script>
-
 <?php Templates::startSection("admin_page_body"); ?>
 
 <div class="pages_view_header">
@@ -58,5 +41,24 @@
 <datatable-comp class="general_products"></datatable-comp>
 
 <datatable-comp class="product_categories"></datatable-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadProductCategories() ?>
+    <?= preloadGeneralProducts() ?>
+    <?= preloadTemplates() ?>
+    <?php if (isset($_GET["utworz"])) { ?>
+        domload(() => {
+            add_page_modal = getAddPageModal();
+            <?php if (isset($_GET["general_product_id"])) { ?>
+                add_page_modal._data.page_type = "general_product";
+                add_page_modal._data.general_product_id = <?= intval($_GET["general_product_id"]) ?>;
+            <?php } ?>
+            add_page_modal._render();
+            add_page_modal._show();
+        })
+    <?php } ?>
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

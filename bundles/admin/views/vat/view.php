@@ -5,12 +5,14 @@
 
 <title>Stawki VAT</title>
 
-<script>
-    <?= preloadVats() ?>
-</script>
-
 <?php Templates::startSection("admin_page_body"); ?>
 
 <datatable-comp class="vats"></datatable-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= preloadVats() ?>
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

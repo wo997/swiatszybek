@@ -53,12 +53,10 @@
 
 
 <?php if (Request::$is_user_url) : ?>
-    <link href="/builds/user.css?v=<?= version("user") ?>" rel="stylesheet">
     <script src="/builds/user.js?v=<?= version("user") ?>"></script>
 <?php endif ?>
 
 <?php if (Request::$is_admin_url) : ?>
-    <link href="/builds/admin.css?v=<?= version("admin")  ?>" rel="stylesheet">
     <script src="/builds/admin.js?v=<?= version("admin")  ?>"></script>
 
     <script>
@@ -126,7 +124,6 @@ if (Request::$is_admin_url) {
         Chart.defaults.global.animation.duration = 300;
     </script>
 <?php endif ?>
-
 
 <?php if (!Request::$is_admin_url) : ?>
     <?= getSetting(["general", "additional_scripts", "footer"], "") ?>
