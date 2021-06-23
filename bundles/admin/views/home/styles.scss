@@ -39,6 +39,7 @@ datatable-comp.shop_orders {
 	&.opened {
 		opacity: 0;
 		transform: scale(0.5);
+		pointer-events: none;
 	}
 }
 
@@ -61,6 +62,7 @@ datatable-comp.shop_orders {
 	&:not(.visible) {
 		opacity: 0;
 		transform: scale(0.2);
+		pointer-events: none;
 	}
 	.chat_messages {
 		flex-grow: 1;
