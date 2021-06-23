@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        <div class="chat_closed" data-tooltip="Otwórz czat" data-tooltip_position="left">
+        <div class="open_chat_btn" data-tooltip="Otwórz czat" data-tooltip_position="left">
             <i class="fas fa-envelope"></i>
         </div>
     </div>
