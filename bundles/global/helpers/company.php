@@ -1,4 +1,4 @@
-<?php
+<?php //hook[helper]
 
 function getShopName()
 {

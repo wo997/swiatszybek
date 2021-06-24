@@ -33,5 +33,3 @@ include_once "bundles/global/helpers/deployment.php";
 include_once "bundles/global/helpers/Theme.php";
 include_once "bundles/global/helpers/Templates.php";
 include_once "bundles/global/helpers/PiepCMSManager.php";
-
-include_once "bundles/global/helpers/company.php";
