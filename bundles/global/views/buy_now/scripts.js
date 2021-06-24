@@ -357,6 +357,10 @@ domload(() => {
 			success: (res) => {
 				hideLoader();
 				// will be redirected to order page and then straight to payment
+
+				if (res && res.success === false) {
+					window.location.reload();
+				}
 			},
 		});
 	});

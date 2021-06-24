@@ -13,6 +13,7 @@ try {
     Request::setSingleUsageSessionVar("force_payment", true);
     Request::redirect($shop_order->getProp("__url"));
 } catch (Exception $e) {
-    var_dump($e);
+    //var_dump($e);
     DB::rollbackTransation();
+    Request::jsonResponse(["success" => false]);
 }

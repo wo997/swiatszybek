@@ -43,10 +43,8 @@ function previewUrl(url, params) {
 		`);
 
 		const preview_url = $("#previewUrl");
-		const select_resolution = preview_url._child(" .select_resolution");
+		const select_resolution = preview_url._child(".select_resolution");
 		const iframe = preview_url._child("iframe");
-
-		preview_url._child(".open_btn").href = url;
 
 		select_resolution.addEventListener("change", () => {
 			const [w, h] = select_resolution._get_value().split("x");
@@ -57,6 +55,7 @@ function previewUrl(url, params) {
 		select_resolution._set_value("");
 	}
 
+	$(`#previewUrl .open_btn`).href = url;
 	$(`#previewUrl .preview_form`).setAttribute("action", url);
 	$(`#previewUrl .preview_form [name="preview_params"]`)._set_value(JSON.stringify(params));
 	showModal("previewUrl");

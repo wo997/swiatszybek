@@ -63,8 +63,7 @@ function confirmOrder($shop_order_data)
 {
     $shop_order = EntityManager::getEntity("shop_order", $shop_order_data);
     if (!$shop_order->is_new) {
-        // someone trying to do nasty things
-        Request::jsonResponse(["success" => false]);
+        throw new Exception("Nasty");
     }
 
     $tries = 0;
@@ -77,6 +76,9 @@ function confirmOrder($shop_order_data)
 
     $user_cart = User::getCurrent()->cart;
     $cart_data = $user_cart->getAllData();
+    if (!$user_cart->getProducts()) {
+        throw new Exception("No products");
+    }
 
     $shop_order->setProp("products_price", $cart_data["products_price"]);
     $shop_order->setProp("delivery_price", $cart_data["delivery_price"]);
