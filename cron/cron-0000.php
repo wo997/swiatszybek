@@ -54,7 +54,7 @@
 //         ";
 //     }
 
-//     $mailTitle = "Raport dnia " . getSetting(["general", "company", "shop_name"], "") . " " . $day;
+//     $mailTitle = "Raport dnia " . getShopName() . " " . $day;
 
 //     foreach (getDailyReportEmailList() as $email) {
 //         sendEmail($email, $message, $mailTitle);

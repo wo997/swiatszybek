@@ -1,5 +1,4 @@
-<?php
-
+<?php //hook[helper]
 
 function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
 {

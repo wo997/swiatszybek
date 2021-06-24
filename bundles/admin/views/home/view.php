@@ -53,7 +53,7 @@
         <div class="chat_container">
             <div class="chat_header">
                 <div class="chatter">
-                    <?= getSetting(["general", "company", "shop_name"], "") ?>
+                    <?= getShopName() ?>
                 </div>
                 <button class="btn transparent close_btn">
                     <i class="fas fa-times"></i>

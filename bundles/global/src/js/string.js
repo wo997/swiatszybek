@@ -1,6 +1,31 @@
 /* js[global] */
 
+function validURL(str) {
+	var pattern = new RegExp(
+		"^(https?:\\/\\/)?" + // protocol
+			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+			"(\\#[-a-z\\d_]*)?$",
+		"i"
+	); // fragment locator
+	return !!pattern.test(str);
+}
+
 // also links.php
+/**
+ *
+ * @param {string} string
+ */
+function escapeUrl(string) {
+	return replacePolishLetters(string.trim())
+		.replace(/[, ]+/g, "-")
+		.replace(/[^(a-zA-Z0-9-)]/g, "")
+		.replace(/-+/g, "-");
+}
+
+// also string.php
 function replacePolishLetters(string) {
 	const pl = ["ę", "Ę", "ó", "Ó", "ą", "Ą", "ś", "Ś", "ł", "Ł", "ż", "Ż", "ź", "Ź", "ć", "Ć", "ń", "Ń"];
 	const en = ["e", "E", "o", "O", "a", "A", "s", "S", "l", "L", "z", "Z", "z", "Z", "c", "C", "n", "N"];

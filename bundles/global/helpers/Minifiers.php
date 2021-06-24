@@ -3,7 +3,7 @@
 use MatthiasMullie\Minify;
 use ScssPhp\ScssPhp\Compiler;
 
-class Assets
+class Minifiers
 {
     public static function minifyCss($css_full)
     {

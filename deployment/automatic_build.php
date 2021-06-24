@@ -124,15 +124,15 @@ if ($build_info != $new_build_info) {
                     if (in_array($ext, ["css", "scss"])) {
                         $content = file_get_contents($path);
                         if ($content) {
-                            $css_full .= "/*path:$path*/\n"; // custom minifier changes it into a comment
-                            $css_full .= Assets::minifyCss($content);
+                            $css_full .= "/*path:$path*/\n";
+                            $css_full .= Minifiers::minifyCss($content);
                         }
                     }
                     if (in_array($ext, ["js"])) {
                         $content = file_get_contents($path);
                         if ($content) {
-                            $js_full .= "/*path:$path*/\n"; // nice debugging option
-                            $js_full .=  Assets::minifyJs($content);
+                            $js_full .= "/*path:$path*/\n";
+                            $js_full .=  Minifiers::minifyJs($content);
                         }
                     }
                 }

@@ -142,31 +142,6 @@ function copyRangeToClipboard(range) {
 	window.getSelection().removeAllRanges();
 }
 
-function validURL(str) {
-	var pattern = new RegExp(
-		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-			"(\\#[-a-z\\d_]*)?$",
-		"i"
-	); // fragment locator
-	return !!pattern.test(str);
-}
-
-// also links.php
-/**
- *
- * @param {string} string
- */
-function escapeUrl(string) {
-	return replacePolishLetters(string.trim())
-		.replace(/[, ]+/g, "-")
-		.replace(/[^(a-zA-Z0-9-)]/g, "")
-		.replace(/-+/g, "-");
-}
-
 /**
  * @typedef {{
  * quiet?: boolean
@@ -533,10 +508,6 @@ function getNodeTextWidth(node) {
 	var range = document.createRange();
 	range.selectNode(textNode);
 	return range.getBoundingClientRect().width;
-}
-
-function clamp(min, val, max) {
-	return Math.max(min, Math.min(val, max));
 }
 
 function isHidden(el) {
