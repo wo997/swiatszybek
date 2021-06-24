@@ -6,10 +6,6 @@
 
 <title>Ustawienia motywu</title>
 
-<script>
-    <?= Theme::preloadThemeSettings() ?>
-</script>
-
 <?php Templates::startSection("header"); ?>
 
 <div class="custom_toolbar">
@@ -23,5 +19,11 @@
 <?php Templates::startSection("admin_page_body"); ?>
 
 <theme-settings-comp class="main"></theme-settings-comp>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    <?= Theme::preloadThemeSettings() ?>
+</script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

@@ -155,9 +155,9 @@ footer {
 }
 
 @mixin desktop {
-	.panel_padding.actual_content {
-		padding: 15px;
-	}
+	// .panel_padding.actual_content {
+	// 	padding: 15px;
+	// }
 	.content > .custom_toolbar {
 		padding-left: 10px;
 	}
