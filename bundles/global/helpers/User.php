@@ -1,7 +1,5 @@
 <?php
 
-// TODO: user will have multiple options to authenticate but these will target to a single user account, really simple
-
 class User
 {
     private static ?User $current_user = null;
