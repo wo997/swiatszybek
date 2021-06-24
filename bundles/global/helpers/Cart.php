@@ -125,6 +125,14 @@ class Cart
 
         if ($anything_to_ship) {
             foreach (DB::fetchArr("SELECT * FROM carrier WHERE active = 1 ORDER BY pos ASC") as $carrier) {
+                if (!$carrier["img_url"]) {
+                    foreach (EventListener::dispatch("get_carrier_img_set", ["api_key" => $carrier["api_key"]]) as $img_set) {
+                        if ($img_set) {
+                            $carrier["img_url"] = $img_set["light"];
+                        }
+                    }
+                }
+
                 $dimensions = json_decode($carrier["dimensions_json"], true);
 
                 $dimension_fits = null;
@@ -181,7 +189,6 @@ class Cart
                     $available_carriers[] = $carrier;
                 }
             }
-        } else {
         }
 
         $this->available_carriers = $available_carriers;
