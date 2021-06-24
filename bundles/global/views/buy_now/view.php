@@ -175,7 +175,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <div class="expand_y animate_hidden hidden case_form_filled">
                 <div class="label big">Potwierdzenie zamówienia</div>
 
-                <div class="label">Dodatkowe informacje do sprzedawcy <span class="optional_label"></span></div>
+                <div class="label">Dodatkowe informacje dla sprzedawcy <span class="optional_label"></span></div>
                 <textarea class="field client_notes" style="min-height: 60px;max-height: 70px;"></textarea>
 
                 <div class="label">Skorzystaj z szybkich i bezpiecznych płatności</div>

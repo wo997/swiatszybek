@@ -41,7 +41,7 @@ domload(() => {
 				label: "Dostawa",
 				key: "carrier_id",
 				map_name: "carrier",
-				width: "120px",
+				width: "150px",
 				searchable: "select",
 			},
 			{
@@ -100,9 +100,8 @@ domload(() => {
 								action_html += html`
 									<button
 										class="btn subtle small print_label_btn"
-										data-url="${STATIC_URLS["ADMIN"]}/carrier/inpost/print_label"
 										data-shop_order_id="${data.shop_order_id}"
-										data-tooltip="Drukuj etykietę InPost"
+										data-tooltip="Drukuj etykietę nadawczą"
 									>
 										<i class="fas fa-print"></i>
 									</button>
@@ -180,18 +179,23 @@ domload(() => {
 			previewUrl(preview_url.dataset.preview_url);
 		}
 
-		// const print_label_btn = target._parent(`.print_label_btn`);
-		// if (print_label_btn) {
-		// 	xhr({
-		// 		url: print_label_btn.dataset.url,
-		// 		params: {
-		// 			shop_order_id: print_label_btn.dataset.shop_order_id,
-		// 		},
-		// 		success: (res) => {
-		// 			console.log(res);
-		// 		},
-		// 	});
-		// }
+		const print_label_btn = target._parent(`.print_label_btn`);
+		if (print_label_btn) {
+			/** @type {DatatableRowComp} */
+			// @ts-ignore
+			const row = print_label_btn._parent(`datatable-row-comp`);
+			showShippingLabelModal(row._data.row_data, { source: print_label_btn });
+			// data-url="${STATIC_URLS["ADMIN"]}/carrier/inpost/print_label"
+			// xhr({
+			// 	url: print_label_btn.dataset.url,
+			// 	params: {
+			// 		shop_order_id: print_label_btn.dataset.shop_order_id,
+			// 	},
+			// 	success: (res) => {
+			// 		console.log(res);
+			// 	},
+			// });
+		}
 
 		// const refund_btn = target._parent(`.refund_btn`);
 		// if (refund_btn) {

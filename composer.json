@@ -12,6 +12,9 @@
         "gkralik/php-uglifyjs": "^1.0",
         "gusapi/gusapi": "^5.3",
         "imper86/php-inpost-api": "^1.1",
-        "t3ko/dpd-pl-api-php": "^0.4.0"
+        "t3ko/dpd-pl-api-php": "^0.4.0",
+        "php-http/curl-client": "^2.2",
+        "guzzlehttp/psr7": "^1.8",
+        "php-http/message": "^1.11"
     }
 }

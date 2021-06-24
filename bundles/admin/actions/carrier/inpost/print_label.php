@@ -1,21 +1,12 @@
 <?php //route[{ADMIN}/carrier/inpost/print_label]
 
-use Imper86\PhpInpostApi\Enum\ServiceType;
-
-// TODO: WIP
-Request::jsonResponse(["hey" => true]);
-
-$api = getInpostApi();
-
 $shop_order = EntityManager::getEntityById("shop_order", $_POST["shop_order_id"]);
+$inpost_shipment_id = def($_POST, "inpost_shipment_id", "");
 
 /** @var Entity Address */
 $courier_address = $shop_order->getProp("courier_address");
 
-$inpost_shipment_id = $shop_order->getProp("inpost_shipment_id");
-
-$inpost_settings = getSetting(["general", "carriers", "inpost"], []);
-$organizationId = def($inpost_settings, "organizationId", "");
+$inpost_api = InPostApi::get();
 
 if (!$inpost_shipment_id) {
     $receiver = [
@@ -31,51 +22,63 @@ if (!$inpost_shipment_id) {
         $receiver['company_name'] = $courier_address->getProp("company");
     }
 
-    $response = $api->organizations()->shipments()->post($organizationId, [
-        'receiver' => $receiver,
-        'parcels' => [
-            ['template' => 'small'],
+    $register_shipment = $inpost_api->call("v1/organizations/{$inpost_api->organizationId}/shipments", "POST", [
+        "receiver" =>  $receiver,
+        //"sender" => $inpost_sender,
+        "parcels" => [
+            "template" => $_POST["package_api_key"]
         ],
-        'insurance' => [
-            'amount' => 25,
-            'currency' => 'PLN',
+        "service" => "inpost_courier_standard",
+        "reference" => "Zamowienie #{$shop_order->getId()}",
+        "insurance" => [
+            "amount" => $_POST["insurance"],
+            "currency" => "PLN"
         ],
-        // 'cod' => [
-        //     'amount' => 12.50,
-        //     'currency' => 'PLN',
-        // ],
-        'custom_attributes' => [
-            'sending_method' => 'dispatch_order',
-            'target_point' => 'KRA012',
-        ],
-        'service' => ServiceType::INPOST_LOCKER_STANDARD,
-        //'service' => ServiceType::INPOST_COURIER_STANDARD,
-        'reference' => 'Zamowienie #' . $shop_order->getId(),
-        //'external_customer_id' => '8877xxx',
+        "end_of_week_collection" => $_POST["end_of_week_collection"]
     ]);
 
-    $shipmentData = json_decode($response->getBody()->__toString(), true);
+    $inpost_shipment_id = def($register_shipment, "id", null);
 
-    $inpost_shipment_id = $shipmentData['id'];
-    $shop_order->setProp("inpost_shipment_id", $inpost_shipment_id);
+    if ($inpost_shipment_id) {
+        $shop_order->setProp("inpost_shipment_id", $inpost_shipment_id);
 
-    $cnt = 0;
-    do {
-        sleep(1);
-        $response = $api->shipments()->get($shipmentData['id']);
-        $shipmentData = json_decode($response->getBody()->__toString(), true);
-        $cnt++;
-        if ($cnt > 10) {
-            Request::jsonResponse(["error" => 1]);
+        usleep(1000 * 200);
+        try {
+            $tries = 0;
+            while (true) {
+                if ($tries++ > 5) throw new Exception("Too many tries");
+
+                $shipment_data = $inpost_api->call("v1/shipments/$id");
+                if (!$shipment) {
+                    continue;
+                }
+                if ($shipment["status"] === "confirmed") {
+                    // success
+                    break;
+                }
+                usleep(300000);
+            }
+        } catch (Exception $e) {
+            echo "<h3>Błąd krytyczny! Spróbuj ponownie później.</h3>";
+            //var_dump($e);
+            die;
         }
-    } while ($shipmentData['status'] === 'confirmed');
+    } else {
+
+        if (isset($register_shipment["message"]) && isset($register_shipment["details"])) {
+            echo "<h4>Błąd:</h4>";
+            echo $register_shipment["message"];
+            echo "<h4>Szczegóły</h4>";
+            var_dump($register_shipment["details"]);
+        } else {
+            var_dump($register_shipment);
+        }
+        echo "<h3>Błąd krytyczny! Spróbuj ponownie później.</h3>";
+        //var_dump($inpostData);
+        die;
+    }
 }
 
-$labelResponse = $api->shipments()->label()->get($inpost_shipment_id, [
-    'format' => 'Pdf',
-    'type' => 'A6',
-]);
-
 header("Content-type:application/pdf");
-echo $labelResponse->getBody()->__toString();
+echo $inpost_api->call("v1/organizations/19102/shipments/labels?shipment_ids[]=$id&format=pdf");
 die;

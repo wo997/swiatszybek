@@ -24,7 +24,7 @@ Files::scanDirectories(
     ],
     function ($path) {
         global $zip;
-        var_dump($path);
+        echo "x";
         $zip->addFile($path);
     }
 );

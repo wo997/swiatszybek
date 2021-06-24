@@ -47,4 +47,4 @@ if ($zip->open('piepsklep.zip') === TRUE) {
 settingator would be nice to use here, for undefined vars etc
 */
 
-include "deployment/warmup_cache.php";
+//include "deployment/warmup_cache.php";
