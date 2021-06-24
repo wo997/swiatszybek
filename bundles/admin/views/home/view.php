@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    <img src="<?= FAVICON_PATH_LOCAL_TN ?>" class="wo997_img chatter_img">
                     <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
                 </div>
                 <div class="message others">
@@ -89,6 +89,7 @@
                     <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
                     <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
                 </div>
+                <hr>
             </div>
             <div class="chat_footer">
                 <textarea class="field new_message focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>

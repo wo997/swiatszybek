@@ -32,6 +32,7 @@ datatable-comp.shop_orders {
 		font-size: 28px;
 		cursor: pointer;
 		transition: transform 0.2s, opacity 0.2s;
+		z-index: 10000;
 	}
 	&:hover {
 		filter: brightness(1.05);
@@ -49,15 +50,15 @@ datatable-comp.shop_orders {
 		bottom: 0;
 		right: 10%;
 		background: #fff;
-		border-top-right-radius: 4px;
-		border-top-left-radius: 4px;
+		border-radius: 4px;
 		box-shadow: 0 1px 6px 0 #0004;
 		display: flex;
 		flex-direction: column;
 		height: 350px;
 		width: 350px;
 		transition: transform 0.2s, opacity 0.2s;
-		transform-origin: 80% 80%;
+		transform-origin: 85% 85%;
+		z-index: 10000;
 	}
 	&:not(.visible) {
 		opacity: 0;
@@ -72,12 +73,13 @@ datatable-comp.shop_orders {
 		--chat_header_height: 34px;
 		background: var(--clr_primary);
 		color: #fff;
-		border-radius: inherit;
 		position: relative;
 		display: flex;
 		height: var(--chat_header_height);
 		align-items: center;
 		flex-shrink: 0;
+		border-top-right-radius: 4px;
+		border-top-left-radius: 4px;
 	}
 	.chat_footer {
 		display: flex;
@@ -98,6 +100,7 @@ datatable-comp.shop_orders {
 		width: 34px;
 		height: 34px;
 		border-radius: 100px;
+		object-fit: contain;
 	}
 	.message {
 		& {
@@ -132,5 +135,24 @@ datatable-comp.shop_orders {
 	}
 	.new_message {
 		max-height: 83px;
+	}
+}
+
+@media (max-width: 800px) {
+	.chat_container {
+		width: calc(100% - 20px);
+		height: calc(100% - 20px);
+		right: 10px;
+		bottom: 10px;
+		transform-origin: 95% 95%;
+	}
+	.open_chat_btn {
+		right: 10px;
+		bottom: 10px;
+		width: 50px;
+		height: 50px;
+	}
+	.chat_footer {
+		padding: 5px;
 	}
 }
