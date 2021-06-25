@@ -500,7 +500,7 @@ if ($main_img) {
 
     <div class="comments_filters expand_y hidden animate_hidden">
         <div class="coms_container">
-            <div class="label first">Wyszukaj w komentarzu:</div>
+            <div class="label mt0">Wyszukaj w komentarzu:</div>
             <input class="field inline phrase">
 
             <div class="variants_container">

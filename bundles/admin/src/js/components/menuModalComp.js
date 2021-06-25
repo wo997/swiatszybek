@@ -217,53 +217,55 @@ function MenuModalComp(comp, parent, data = undefined) {
 				</button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Nazwa menu</div>
-				<input class="field" data-bind="{${data.name}}" data-validate="" />
+				<div class="mtfn">
+					<div class="label">Nazwa menu</div>
+					<input class="field" data-bind="{${data.name}}" data-validate="" />
 
-				<div class="label">Typ linku</div>
-				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.link_what}}" data-validate="">
-					<div class="checkbox_area">
-						<p-checkbox data-value="product_category"></p-checkbox>
-						<span>Kategoria produktów</span>
+					<div class="label">Typ linku</div>
+					<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.link_what}}" data-validate="">
+						<div class="checkbox_area">
+							<p-checkbox data-value="product_category"></p-checkbox>
+							<span>Kategoria produktów</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="general_product"></p-checkbox>
+							<span>Produkt</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="page"></p-checkbox>
+							<span>Strona</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="url"></p-checkbox>
+							<span>Dowolny link</span>
+						</div>
 					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="general_product"></p-checkbox>
-						<span>Produkt</span>
-					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="page"></p-checkbox>
-						<span>Strona</span>
-					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="url"></p-checkbox>
-						<span>Dowolny link</span>
-					</div>
-				</div>
 
-				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
-					<div class="label">Kategoria produktów</div>
-					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
-				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
-					<div class="label">Produkt</div>
-					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
-				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_page}}">
-					<div class="label">Strona</div>
-					<selectable-comp data-bind="{${data.select_page}}" data-validate=""></selectable-comp>
-				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_url}}">
-					<div class="label">Link</div>
-					<input class="field trim" data-bind="{${data.url}}" data-validate="" />
-				</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
+						<div class="label">Kategoria produktów</div>
+						<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
+					</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
+						<div class="label">Produkt</div>
+						<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
+					</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_page}}">
+						<div class="label">Strona</div>
+						<selectable-comp data-bind="{${data.select_page}}" data-validate=""></selectable-comp>
+					</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_url}}">
+						<div class="label">Link</div>
+						<input class="field trim" data-bind="{${data.url}}" data-validate="" />
+					</div>
 
-				<div class="parent_menu_wrapper">
-					<div class="label">Kategoria nadrzędna</div>
-					<select class="field" data-bind="{${data.parent_menu_id}}" data-node="{${comp._nodes.parent_menu}}"></select>
-				</div>
+					<div class="parent_menu_wrapper">
+						<div class="label">Kategoria nadrzędna</div>
+						<select class="field" data-bind="{${data.parent_menu_id}}" data-node="{${comp._nodes.parent_menu}}"></select>
+					</div>
 
-				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń menu <i class="fas fa-trash"></i></button>
+					<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+						<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń menu <i class="fas fa-trash"></i></button>
+					</div>
 				</div>
 			</div>
 		`,

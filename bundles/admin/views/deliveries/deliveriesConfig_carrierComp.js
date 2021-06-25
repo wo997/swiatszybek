@@ -131,7 +131,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 			<div style="flex-grow:1">
 				<div class="expand_y" data-node="{${comp._nodes.expand}}">
 					<div style="background:#fff;padding:10px;border-radius:4px;border:1px solid #ccc;margin-top:10px;">
-						<div class="label first">Nazwa dostawcy / dostawy</div>
+						<div class="label mt0">Nazwa dostawcy / dostawy</div>
 						<input class="field small" data-bind="{${data.name}}" />
 
 						<div class="label">Widoczność w sklepie</div>

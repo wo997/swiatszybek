@@ -138,8 +138,13 @@
 	padding: 10px;
 }
 
-.panel_padding hr {
+.panel_padding > hr:first-child,
+.panel_padding > * > hr:first-child {
 	margin-top: -10px;
+}
+
+hr {
+	flex-shrink: 0;
 }
 
 .close_modal_btn {

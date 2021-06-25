@@ -31,9 +31,19 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 								<option value="pocztex">Pocztex</option>
 							</select>
 
+							<hr class="mtf" />
+
 							<div class="case_inpost expand_y">
+								<form class="case_created" action="${STATIC_URLS["ADMIN"]}/carrier/inpost/print_label" method="post" target="_blank">
+									<input type="hidden" name="inpost_shipment_id" />
+									<div class="label medium mtf">Etykieta nadawcza została już utworzona!</div>
+									<button class="btn primary mtf fill" type="submit">Drukuj <i class="fas fa-print"></i></button>
+									<hr class="mtf" />
+								</form>
+
 								<form action="${STATIC_URLS["ADMIN"]}/carrier/inpost/print_label" method="post" target="_blank">
 									<input type="hidden" name="shop_order_id" />
+									<input type="hidden" name="delivery_type_id" />
 
 									<span class="label">Gabaryt</span>
 									<select class="field" name="package_api_key">
@@ -53,7 +63,7 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 									<p-checkbox onchange="$(this)._next().value=$(this)._get_value()"></p-checkbox>
 									<input name="end_of_week_collection" type="hidden" value="0" />
 
-									<button class="btn primary mtf fill" type="submit">Drukuj <i class="fas fa-print"></i></button>
+									<button class="btn primary mtf fill" type="submit">Utwórz i drukuj <i class="fas fa-print"></i></button>
 								</form>
 							</div>
 						</div>
@@ -61,6 +71,12 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 				</div>
 			</div>
 		`);
+
+		$$("#ShippingLabelModal form").forEach((e) => {
+			e.addEventListener("submit", () => {
+				hideModal("ShippingLabelModal");
+			});
+		});
 	}
 
 	const slm = $("#ShippingLabelModal");
@@ -70,14 +86,20 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 
 	const deliveryChange = () => {
 		expand(case_inpost, carrier_id_input._get_value() === "inpost");
+
+		slm._children(`[name="delivery_type_id"]`).forEach((e) => {
+			e._set_value(delivery_type_id_input._get_value());
+		});
 	};
 	carrier_id_input.addEventListener("change", deliveryChange);
 	delivery_type_id_input.addEventListener("change", deliveryChange);
 
 	const case_inpost = slm._child(".case_inpost");
 	{
+		const case_created = case_inpost._child(".case_created");
 		const package_api_key_input = case_inpost._child(`[name="package_api_key"]`);
 		const insurance_input = case_inpost._child(`[name="insurance"]`);
+		const inpost_shipment_id = case_inpost._child(`[name="inpost_shipment_id"]`);
 
 		delivery_type_id_input._set_value(shop_order_data.delivery_type_id);
 		const carrier = carriers.find((c) => c.carrier_id === shop_order_data.carrier_id);
@@ -89,7 +111,8 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 
 		package_api_key_input._set_value(shop_order_data.package_api_key);
 
-		shop_order_data.inpost_shipment_id;
+		inpost_shipment_id._set_value(shop_order_data.inpost_shipment_id);
+		case_created.classList.toggle("hidden", !shop_order_data.inpost_shipment_id);
 	}
 
 	slm._children(`[name="shop_order_id"]`).forEach((e) => {

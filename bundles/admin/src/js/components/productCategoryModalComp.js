@@ -121,20 +121,22 @@ function ProductCategoryModalComp(comp, parent, data = undefined) {
 				</button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Nazwa kategorii</div>
-				<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="" />
+				<div class="mtfn">
+					<div class="label">Nazwa kategorii</div>
+					<input class="field" data-bind="{${data.name}}" data-node="{${comp._nodes.name}}" data-validate="" />
 
-				<div class="parent_menu_wrapper">
-					<div class="label">Kategoria nadrzędna</div>
-					<select
-						class="field"
-						data-bind="{${data.parent_product_category_id}}"
-						data-node="{${comp._nodes.parent_product_category}}"
-					></select>
-				</div>
+					<div class="parent_menu_wrapper">
+						<div class="label">Kategoria nadrzędna</div>
+						<select
+							class="field"
+							data-bind="{${data.parent_product_category_id}}"
+							data-node="{${comp._nodes.parent_product_category}}"
+						></select>
+					</div>
 
-				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń kategorię <i class="fas fa-trash"></i></button>
+					<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+						<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń kategorię <i class="fas fa-trash"></i></button>
+					</div>
 				</div>
 			</div>
 		`,

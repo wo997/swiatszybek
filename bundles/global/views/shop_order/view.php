@@ -65,7 +65,7 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
 
     <div class="order_container">
         <div class="order_details">
-            <div class="label big first">Status zamówienia</div>
+            <div class="label big mt0">Status zamówienia</div>
             <div class="status_rect" style="color:<?= $order_status->getProp("font_clr") ?>;background:<?= $order_status->getProp("bckg_clr") ?>"><?= $order_status->getProp("name") ?></div>
 
             <?php if ($requires_payment) : ?>
@@ -150,7 +150,7 @@ $payment_time_label = getShopOrderPaymentTimeLabel($payment_time);
         </div>
 
         <div class="order_products">
-            <div class="label big first">Produkty</div>
+            <div class="label big mt0">Produkty</div>
 
             <ul>
                 <?php

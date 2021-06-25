@@ -141,43 +141,45 @@ function AddPageModalComp(comp, parent, data = undefined) {
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Typ strony</div>
-				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
-					<div class="checkbox_area">
-						<p-checkbox data-value="page"></p-checkbox>
-						<span>Zwykła strona</span>
+				<div class="mtfn">
+					<div class="label">Typ strony</div>
+					<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
+						<div class="checkbox_area">
+							<p-checkbox data-value="page"></p-checkbox>
+							<span>Zwykła strona</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="general_product"></p-checkbox>
+							<span>Produkt</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="product_category"></p-checkbox>
+							<span>Kategoria produktów</span>
+						</div>
 					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="general_product"></p-checkbox>
-						<span>Produkt</span>
-					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="product_category"></p-checkbox>
-						<span>Kategoria produktów</span>
-					</div>
-				</div>
 
-				<div class="expand_y" data-node="{${comp._nodes.case_page}}">
-					<div class="label">
-						Link
-						<div class="hover_info">Pozostaw pusty dla strony głównej</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_page}}">
+						<div class="label">
+							Link
+							<div class="hover_info">Pozostaw pusty dla strony głównej</div>
+						</div>
+						<div class="glue_children">
+							<span class="field_desc">${location.host}/</span>
+							<input class="field trim" data-bind="{${data.url}}" />
+						</div>
 					</div>
-					<div class="glue_children">
-						<span class="field_desc">${location.host}/</span>
-						<input class="field trim" data-bind="{${data.url}}" />
+					<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
+						<div class="label">Produkt</div>
+						<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
 					</div>
-				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_general_product}}">
-					<div class="label">Produkt</div>
-					<selectable-comp data-bind="{${data.select_general_product}}" data-validate=""></selectable-comp>
-				</div>
-				<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
-					<div class="label">Kategoria produktów</div>
-					<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
-				</div>
+					<div class="expand_y" data-node="{${comp._nodes.case_product_category}}">
+						<div class="label">Kategoria produktów</div>
+						<selectable-comp data-bind="{${data.select_product_category}}" data-validate=""></selectable-comp>
+					</div>
 
-				<div class="label">Szablon</div>
-				<selectable-comp data-bind="{${data.select_template}}" data-validate=""></selectable-comp>
+					<div class="label">Szablon</div>
+					<selectable-comp data-bind="{${data.select_template}}" data-validate=""></selectable-comp>
+				</div>
 			</div>
 		`,
 		ready: () => {

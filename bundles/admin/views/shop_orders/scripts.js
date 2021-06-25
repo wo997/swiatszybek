@@ -202,4 +202,10 @@ domload(() => {
 		// 	console.log(refund_btn.dataset.shop_order_id);
 		// }
 	});
+
+	document.addEventListener("visibilitychange", () => {
+		if (!document.hidden) {
+			datatable_comp._backend_search();
+		}
+	});
 });

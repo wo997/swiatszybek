@@ -17,6 +17,10 @@ function getShopOrderLink($shop_order_id, $reference)
     return $link;
 }
 
+function extractPolishPhoneNumber($tel)
+{
+    return substr($tel, -9);
+}
 
 /**
  * changeStockFromOrder

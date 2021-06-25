@@ -19,7 +19,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     <h1 class="h1 mobile_view center">Kup teraz</h1>
 
     <div class="buy_products_wrapper">
-        <div class="label big first">
+        <div class="label big mt0">
             Koszyk
             (<span class="cart_product_count"></span>)
 
@@ -58,7 +58,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
         <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
-            <div class="label big first">Wybór konta</div>
+            <div class="label big mt0">Wybór konta</div>
 
             <!-- <p class="semi_bold">Zalety korzystania z konta <?= getShopName() ?></p>
             <p>- Przeglądaj historię zamówień</p>
@@ -84,7 +84,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
 
         <div class="expand_y case_choosen_account <?= !User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
-            <div class="label big first your_address_label">Dane kontaktowe</div>
+            <div class="label big mt0 your_address_label">Dane kontaktowe</div>
             <address-comp class="main_address"></address-comp>
 
             <div class="label big">Dostawa</div>

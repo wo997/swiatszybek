@@ -16,8 +16,10 @@ function showAddProductModal(options = {}) {
 						<button class="btn primary add_btn ml1">Dodaj <i class="fas fa-check"></i></button>
 					</div>
 					<div class="scroll_panel scroll_shadow panel_padding">
-						<span class="label first">Nazwa produktu</span>
-						<input class="field product_name pretty_errors" data-validate="length:{3,}" />
+						<div class="mtfn">
+							<span class="label">Nazwa produktu</span>
+							<input class="field product_name pretty_errors" data-validate="length:{3,}" />
+						</div>
 					</div>
 				</div>
 			</div>

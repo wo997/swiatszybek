@@ -530,7 +530,9 @@ foreach ($feature_general_product_count as $x) {
     <div class="modal_body">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
         <h3 class="modal_header">Kategorie</h3>
-        <div class="scroll_panel scroll_shadow"></div>
+        <div class="scroll_panel scroll_shadow">
+            <hr>
+        </div>
     </div>
 </div>
 
@@ -538,7 +540,9 @@ foreach ($feature_general_product_count as $x) {
     <div class="modal_body">
         <button class="close_modal_btn"><i class="fas fa-times"></i></button>
         <h3 class="modal_header">Filtry</h3>
-        <div class="scroll_panel scroll_shadow panel_padding"></div>
+        <div class="scroll_panel scroll_shadow panel_padding">
+            <hr>
+        </div>
         <div class="footer flex pa1">
             <button class="btn subtle fill clear_filters_btn">Wyczyść<span class="product_filter_count"></span></button>
             <button class="btn primary fill ml1" onclick="hideParentModal(this)">

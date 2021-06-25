@@ -74,27 +74,29 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Nazwa szablonu</div>
-				<input class="field" data-bind="{${data.name}}" />
+				<div class="mtfn">
+					<div class="label">Nazwa szablonu</div>
+					<input class="field" data-bind="{${data.name}}" />
 
-				<div class="label">Typ strony</div>
-				<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
-					<div class="checkbox_area">
-						<p-checkbox data-value="page"></p-checkbox>
-						<span>Zwykła strona</span>
+					<div class="label">Typ strony</div>
+					<div class="radio_group boxes hide_checks semi_bold flex" data-bind="{${data.page_type}}" data-validate="">
+						<div class="checkbox_area">
+							<p-checkbox data-value="page"></p-checkbox>
+							<span>Zwykła strona</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="general_product"></p-checkbox>
+							<span>Produkt</span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="product_category"></p-checkbox>
+							<span>Kategoria produktów</span>
+						</div>
 					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="general_product"></p-checkbox>
-						<span>Produkt</span>
-					</div>
-					<div class="checkbox_area">
-						<p-checkbox data-value="product_category"></p-checkbox>
-						<span>Kategoria produktów</span>
-					</div>
+
+					<div class="label">Szablon nadrzędny</div>
+					<selectable-comp data-bind="{${data.select_parent_template}}" data-validate=""></selectable-comp>
 				</div>
-
-				<div class="label">Szablon nadrzędny</div>
-				<selectable-comp data-bind="{${data.select_parent_template}}" data-validate=""></selectable-comp>
 			</div>
 		`,
 		ready: () => {

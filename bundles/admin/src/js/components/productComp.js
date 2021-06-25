@@ -821,8 +821,8 @@ function ProductComp(comp, parent, data = undefined) {
 				><button class="btn subtle ml1" data-node="{${comp._nodes.edit_page_btn}}">Edytuj stronę <i class="fas fa-file-alt"></i></button>
 			</div>
 
-			<div style="max-width:700px">
-				<div class="label first">Nazwa produktu</div>
+			<div style="max-width:700px" class="mtfn">
+				<div class="label">Nazwa produktu</div>
 				<input class="field" data-bind="{${data.name}}" data-validate="" />
 
 				<div class="case_has_page">

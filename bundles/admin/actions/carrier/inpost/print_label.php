@@ -1,30 +1,25 @@
 <?php //route[{ADMIN}/carrier/inpost/print_label]
 
-$shop_order = EntityManager::getEntityById("shop_order", $_POST["shop_order_id"]);
 $inpost_shipment_id = def($_POST, "inpost_shipment_id", "");
-
-/** @var Entity Address */
-$courier_address = $shop_order->getProp("courier_address");
 
 $inpost_api = InPostApi::get();
 
 if (!$inpost_shipment_id) {
-    $receiver = [
-        'name' => $courier_address->getProp("__display_name"),
-        'first_name' => $courier_address->getProp("first_name"),
-        'last_name' => $courier_address->getProp("last_name"),
-        'email' => $courier_address->getProp("email"),
-        'phone' => $courier_address->getProp("phone"),
-    ];
-
-    $company = $courier_address->getProp("company");
-    if ($company) {
-        $receiver['company_name'] = $courier_address->getProp("company");
+    $shop_order_id = def($_POST, "shop_order_id", "");
+    if (!$shop_order_id) {
+        die;
     }
+    $shop_order = EntityManager::getEntityById("shop_order", $shop_order_id);
 
-    $register_shipment = $inpost_api->call("v1/organizations/{$inpost_api->organizationId}/shipments", "POST", [
-        "receiver" =>  $receiver,
-        //"sender" => $inpost_sender,
+    /** @var Entity Address */
+    $courier_address = $shop_order->getProp("courier_address");
+    /** @var Entity Address */
+    $main_address = $shop_order->getProp("main_address");
+
+    $delivery_type_id = $_POST["delivery_type_id"];
+
+    $register_shipment_data =  [
+        //"sender" => $inpost_sender, (we can make it custom? but leave empty first)
         "parcels" => [
             "template" => $_POST["package_api_key"]
         ],
@@ -34,8 +29,42 @@ if (!$inpost_shipment_id) {
             "amount" => $_POST["insurance"],
             "currency" => "PLN"
         ],
-        "end_of_week_collection" => $_POST["end_of_week_collection"]
-    ]);
+        "end_of_week_collection" => $_POST["end_of_week_collection"],
+        "custom_attributes" => []
+    ];
+
+    if ($delivery_type_id === 1) {
+        // courier
+        $receiver = [
+            'name' => $courier_address->getProp("__display_name"),
+            'first_name' => $courier_address->getProp("first_name"),
+            'last_name' => $courier_address->getProp("last_name"),
+            'email' => $courier_address->getProp("email"),
+            'phone' => extractPolishPhoneNumber($courier_address->getProp("phone")),
+        ];
+
+        $company = $courier_address->getProp("company");
+        if ($company) {
+            $receiver['company_name'] = $courier_address->getProp("company");
+        }
+    } else {
+        // parcel_locker
+        $receiver = [
+            'email' => $main_address->getProp("email"),
+            'phone' => extractPolishPhoneNumber($main_address->getProp("phone")),
+        ];
+
+        $register_shipment_data["service"] = "inpost_locker_standard";
+
+        $register_shipment_data["custom_attributes"]["target_point"] = "WAW53N"; // TODO: $_POST
+    }
+
+    $register_shipment_data["receiver"] = $receiver;
+
+    // var_dump($register_shipment_data);
+    // die;
+
+    $register_shipment = $inpost_api->call("v1/organizations/{$inpost_api->organizationId}/shipments", "POST", $register_shipment_data);
 
     $inpost_shipment_id = def($register_shipment, "id", null);
 
@@ -48,11 +77,11 @@ if (!$inpost_shipment_id) {
             while (true) {
                 if ($tries++ > 5) throw new Exception("Too many tries");
 
-                $shipment_data = $inpost_api->call("v1/shipments/$id");
-                if (!$shipment) {
+                $shipment_data = $inpost_api->call("v1/shipments/$inpost_shipment_id");
+                if (!$shipment_data) {
                     continue;
                 }
-                if ($shipment["status"] === "confirmed") {
+                if ($shipment_data["status"] === "confirmed") {
                     // success
                     break;
                 }
@@ -79,6 +108,14 @@ if (!$inpost_shipment_id) {
     }
 }
 
+EntityManager::saveAll();
+
+// print label
+$label_data = $inpost_api->call("v1/shipments/$inpost_shipment_id/label?format=pdf");
+// ugh?
+//$label_data = $inpost_api->call("v1/organizations/19102/shipments/labels?shipment_ids[]=$inpost_shipment_id&format=pdf");
+//var_dump($label_data);
+//die;
 header("Content-type:application/pdf");
-echo $inpost_api->call("v1/organizations/19102/shipments/labels?shipment_ids[]=$id&format=pdf");
+echo $label_data;
 die;

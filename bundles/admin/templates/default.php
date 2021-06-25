@@ -28,7 +28,7 @@ Templates::endSection();
                 <!-- <hr> -->
 
                 <!-- <div style="padding:0 10px 10px">
-                    <div class="label first">Wyszukaj w panelu admina</div>
+                    <div class="label mt0">Wyszukaj w panelu admina</div>
                     <input class="field" placeholder="W planach...">
                 </div> -->
 

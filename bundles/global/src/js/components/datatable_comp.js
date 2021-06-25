@@ -861,7 +861,7 @@ function DatatableComp(comp, parent, data) {
 
 					const cont = $("#datatableBatchEdit .scroll_panel");
 					cont._set_content(html`
-						<div class="label first">${column.label}</div>
+						<div class="label mt0">${column.label}</div>
 						${getEditableCellHtml(comp, column)}
 
 						<div class="label">Wiersze, które zostaną zmodyfikowane <b>(${modify_rows.length + "/" + data.dataset.length})</b>:</div>

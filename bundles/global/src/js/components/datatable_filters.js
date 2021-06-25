@@ -111,7 +111,7 @@ let filter_menus = [
 	{
 		name: "number",
 		getHtml: (column, data) => html`
-			<span class="label first">
+			<span class="label mt0">
 				<span>Typ wyszukiwania</span>
 			</span>
 			<select class="type field">
@@ -183,7 +183,7 @@ let filter_menus = [
 	{
 		name: "date",
 		getHtml: (column, data) => html`
-			<span class="label first">
+			<span class="label mt0">
 				<span>Typ wyszukiwania</span>
 			</span>
 			<select class="type field">

@@ -158,7 +158,7 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 		template: html`
 			<p-trait data-trait="history"></p-trait>
 			<div>
-				<span class="label medium bold inline first"> Kurierzy (<span html="{${data.couriers.length}}"></span>) </span>
+				<span class="label medium bold inline mt0"> Kurierzy (<span html="{${data.couriers.length}}"></span>) </span>
 				<button class="btn primary small" data-node="{${comp._nodes.add_courier_btn}}" disabled="{${data.couriers.length > 5}}">
 					Dodaj kuriera <i class="fas fa-plus"></i>
 				</button>

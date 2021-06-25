@@ -99,8 +99,8 @@ function PageSeoDataComp(comp, parent, data = undefined) {
 			<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 
 			<div class="scroll_panel scroll_shadow panel_padding" style="overflow:auto">
-				<div style="width: 628px;">
-					<div class="label first">
+				<div style="width: 628px;" class="mtfn">
+					<div class="label">
 						<span>Tytuł strony (title)</span>
 						<span class="is_ok" data-node="{${comp._nodes.title_ok}}"></span>
 					</div>

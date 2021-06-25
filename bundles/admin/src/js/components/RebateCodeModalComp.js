@@ -136,46 +136,48 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first">Kod</div>
-				<input class="field" data-bind="{${data.code}}" data-validate="length:{3,20}" style="text-transform: uppercase;" />
+				<div class="mtfn">
+					<div class="label">Kod</div>
+					<input class="field" data-bind="{${data.code}}" data-validate="length:{3,20}" style="text-transform: uppercase;" />
 
-				<div class="label">Wartość</div>
-				<div class="glue_children">
-					<input class="field" data-bind="{${data.value}}" data-node="{${comp._nodes.value}}" />
-					<select class="field" data-bind="{${data.discount_type}}">
-						<option value="static">Stała kwota (zł)</option>
-						<option value="relative">Kwota proporcjonalna (%)</option>
-					</select>
-				</div>
-
-				<div class="label">Ilość</div>
-				<input class="field" data-bind="{${data.qty}}" data-validate="value:{0,}" />
-
-				<div class="form_columns">
-					<div class="form_column">
-						<div class="label">Dostępny od</div>
-						<input class="field default_datepicker" data-bind="{${data.available_from}}" />
+					<div class="label">Wartość</div>
+					<div class="glue_children">
+						<input class="field" data-bind="{${data.value}}" data-node="{${comp._nodes.value}}" />
+						<select class="field" data-bind="{${data.discount_type}}">
+							<option value="static">Stała kwota (zł)</option>
+							<option value="relative">Kwota proporcjonalna (%)</option>
+						</select>
 					</div>
 
-					<div class="form_column">
-						<div class="label">Dostępny do</div>
-						<input class="field default_datepicker" data-bind="{${data.available_till}}" />
+					<div class="label">Ilość</div>
+					<input class="field" data-bind="{${data.qty}}" data-validate="value:{0,}" />
+
+					<div class="form_columns">
+						<div class="form_column">
+							<div class="label">Dostępny od</div>
+							<input class="field default_datepicker" data-bind="{${data.available_from}}" />
+						</div>
+
+						<div class="form_column">
+							<div class="label">Dostępny do</div>
+							<input class="field default_datepicker" data-bind="{${data.available_till}}" />
+						</div>
 					</div>
-				</div>
 
-				<div class="label">Produkty</div>
-				<selectable-comp data-bind="{${data.select_general_product}}"></selectable-comp>
-				<list-comp data-bind="{${data.general_products}}" class="wireframe space mt1">
-					<rebate-code_general-product-comp></rebate-code_general-product-comp>
-				</list-comp>
+					<div class="label">Produkty</div>
+					<selectable-comp data-bind="{${data.select_general_product}}"></selectable-comp>
+					<list-comp data-bind="{${data.general_products}}" class="wireframe space mt1">
+						<rebate-code_general-product-comp></rebate-code_general-product-comp>
+					</list-comp>
 
-				<div class="label">Użytkownicy</div>
-				<selectable-comp data-bind="{${data.select_user}}"></selectable-comp>
+					<div class="label">Użytkownicy</div>
+					<selectable-comp data-bind="{${data.select_user}}"></selectable-comp>
 
-				<div class="mta pt2" style="text-align: right;">
-					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">
-						<span>Usuń kod rabatowy</span> <i class="fas fa-trash"></i>
-					</button>
+					<div class="mta pt2" style="text-align: right;">
+						<button class="btn error" data-node="{${comp._nodes.delete_btn}}">
+							<span>Usuń kod rabatowy</span> <i class="fas fa-trash"></i>
+						</button>
+					</div>
 				</div>
 			</div>
 		`,

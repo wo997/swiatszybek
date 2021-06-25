@@ -24,7 +24,7 @@
 <?php Templates::startSection("admin_page_body"); ?>
 
 <div id="advancedSettingsForm">
-    <span class="label first">Certyfikat SSL</span>
+    <span class="label mt0">Certyfikat SSL</span>
     <p-checkbox data-name="ssl"></p-checkbox>
 
     <span class="label">Tryb developmentu</span>

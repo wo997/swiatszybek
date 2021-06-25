@@ -188,13 +188,15 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 									<button class="btn subtle" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 								</div>
 								<div class="scroll_panel scroll_shadow panel_padding">
-									<div class="label first">Na podstawie cechy</div>
-									<div class="radio_group hide_checks choose_feature boxes number" style="--columns:2"></div>
+									<div class="mtfn">
+										<div class="label">Na podstawie cechy</div>
+										<div class="radio_group hide_checks choose_feature boxes number" style="--columns:2"></div>
 
-									<div style="display:flex;margin-top: auto;padding-top: 10px;text-align: right;">
-										<!-- <button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button> -->
-										<!-- <button class="btn primary fill fill_empty">Uzupełnij puste</button> -->
-										<button class="btn primary fill fill_all">Uzupełnij</button>
+										<div style="display:flex;margin-top: auto;padding-top: 10px;text-align: right;">
+											<!-- <button class="btn subtle fill fill_all" style="margin-right:10px">Nadpisz wszystko</button> -->
+											<!-- <button class="btn primary fill fill_empty">Uzupełnij puste</button> -->
+											<button class="btn primary fill fill_all">Uzupełnij</button>
+										</div>
 									</div>
 								</div>
 							</div>

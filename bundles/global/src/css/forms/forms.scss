@@ -5,7 +5,10 @@
 }
 
 .label {
-	&:not(.first) {
+	// &:not(.first) {
+	// 	margin-top: calc(var(--form_spacing_factor) * var(--form_spacing));
+	// }
+	& {
 		margin-top: calc(var(--form_spacing_factor) * var(--form_spacing));
 	}
 	& {

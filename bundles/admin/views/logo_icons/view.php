@@ -18,7 +18,7 @@
 
 <?php Templates::startSection("admin_page_body"); ?>
 
-<div class="label mb2 first">
+<div class="label mb2 mt0">
     <span class="medium">Logo sklepu</span>
     <div class="btn primary upload_img_btn" data-upload_name="logo" data-upload_label="Prześlij logo">Prześlij plik <i class="fas fa-cloud-upload-alt"></i></div>
 </div>

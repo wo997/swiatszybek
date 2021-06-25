@@ -48,28 +48,30 @@ function ManageProductListModalComp(comp, parent, data = undefined) {
 				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="label first semi_medium">
-					Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
-					<i
-						class="fas fa-info-circle"
-						data-tooltip="Odpowiedzi pomogą nam dokonać precyzyjnych<br>modyfikacji produktów oraz skrócą Twój czas pracy"
-					></i>
-				</div>
+				<div class="mtfn">
+					<div class="label semi_medium">
+						Pytania pomocnicze (<span html="{${data.questions.filter((q) => q.value).length + "/" + data.questions.length}}"></span>)
+						<i
+							class="fas fa-info-circle"
+							data-tooltip="Odpowiedzi pomogą nam dokonać precyzyjnych<br>modyfikacji produktów oraz skrócą Twój czas pracy"
+						></i>
+					</div>
 
-				<list-comp data-bind="{${data.questions}}" class="wireframe space">
-					<manage-product-list_question-comp></manage-product-list_question-comp>
-				</list-comp>
-				<button
-					data-node="{${comp._nodes.add_btn}}"
-					class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
-					style="margin: 10px auto 0;min-width: 160px;"
-					data-tooltip="{${data.questions.find((q) => !q.value)
-						? "Dane możesz uzupełnić ręcznie, ale zalecamy odpowiedzieć na wszystkie pytania"
-						: ""}}"
-				>
-					Dodaj produkty
-					<i class="fas fa-check"></i>
-				</button>
+					<list-comp data-bind="{${data.questions}}" class="wireframe space">
+						<manage-product-list_question-comp></manage-product-list_question-comp>
+					</list-comp>
+					<button
+						data-node="{${comp._nodes.add_btn}}"
+						class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
+						style="margin: 10px auto 0;min-width: 160px;"
+						data-tooltip="{${data.questions.find((q) => !q.value)
+							? "Dane możesz uzupełnić ręcznie, ale zalecamy odpowiedzieć na wszystkie pytania"
+							: ""}}"
+					>
+						Dodaj produkty
+						<i class="fas fa-check"></i>
+					</button>
+				</div>
 			</div>
 		`,
 		initialize: () => {
