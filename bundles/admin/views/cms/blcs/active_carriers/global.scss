@@ -1,0 +1,12 @@
+/* css[modules/active_carriers] */
+
+.module_active_carriers {
+	img:not(:first-child) {
+		margin-top: 15px;
+	}
+	// img {
+	// 	width: 80px;
+	// 	height: 48px;
+	// 	object-fit: contain;
+	// }
+}

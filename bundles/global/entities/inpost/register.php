@@ -12,5 +12,6 @@ EventListener::register("get_carrier_img_set", function ($params) {
     return [
         "light" => $inpost_black,
         "dark" => $inpost_white,
+        "scale" => 0.9,
     ];
 });

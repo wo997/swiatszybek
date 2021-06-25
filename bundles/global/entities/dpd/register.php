@@ -6,10 +6,12 @@ EventListener::register("get_carrier_img_set", function ($params) {
     }
 
     $core_images = getSetting(["theme", "core_images"], []);
-    $dpd = def($core_images, "carrier_dpd", "");
+    $dpd_light = def($core_images, "carrier_dpd_light", "");
+    $dpd_dark = def($core_images, "carrier_dpd_dark", "");
 
     return [
-        "light" => $dpd,
-        "dark" => $dpd,
+        "light" => $dpd_light,
+        "dark" => $dpd_dark,
+        "scale" => 0.9,
     ];
 });

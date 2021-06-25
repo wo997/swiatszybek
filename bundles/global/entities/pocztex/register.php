@@ -11,5 +11,6 @@ EventListener::register("get_carrier_img_set", function ($params) {
     return [
         "light" => $pocztex,
         "dark" => $pocztex,
+        "scale" => 1.3,
     ];
 });
