@@ -118,7 +118,6 @@
 		icon: html`<i class="fas fa-hand-pointer"></i>`,
 		label: html`Przycisk`,
 		group: "module",
-		standalone: true,
 		priority: 50,
 		v_node: {
 			tag: "button",

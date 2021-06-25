@@ -3002,10 +3002,6 @@ class PiepCMS {
 					if (this.isTextContainer(v_node)) {
 						classes.push("text_container");
 					}
-
-					if (v_node.module_name) {
-						classes.push("any_module");
-					}
 					if (blc_schema) {
 						if (blc_schema.nonclickable) {
 							classes.push("nonclickable");

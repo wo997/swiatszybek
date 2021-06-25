@@ -5,7 +5,6 @@
 		id: "active_carriers",
 		icon: html`<i class="fas fa-shipping-fast"></i>`,
 		label: html`Aktywni przewoźnicy`,
-		standalone: true,
 		group: "module",
 		v_node: {
 			tag: "div",
