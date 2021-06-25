@@ -13,14 +13,14 @@
             <p-checkbox data-value="general_products"></p-checkbox>
             <span>
                 <i class="fas fa-cubes"></i>
-                Przeglądaj produkty
+                Produkty w sklepie
             </span>
         </div>
         <div class="checkbox_area">
             <p-checkbox data-value="products"></p-checkbox>
             <span>
                 <i class="fas fa-sort-numeric-up"></i>
-                Zarządzaj magazynem
+                Wszystkie produkty
             </span>
         </div>
     </div><button class="btn primary ml2" onclick="showAddProductModal({source:this});"> Dodaj produkt <i class="fas fa-plus"></i> </button>

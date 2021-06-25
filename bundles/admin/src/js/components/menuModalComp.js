@@ -262,10 +262,9 @@ function MenuModalComp(comp, parent, data = undefined) {
 						<div class="label">Kategoria nadrzędna</div>
 						<select class="field" data-bind="{${data.parent_menu_id}}" data-node="{${comp._nodes.parent_menu}}"></select>
 					</div>
-
-					<div style="margin-top: auto;padding-top: 10px;text-align: right;">
-						<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń menu <i class="fas fa-trash"></i></button>
-					</div>
+				</div>
+				<div class="mta pt2" style="text-align: right;">
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń menu <i class="fas fa-trash"></i></button>
 				</div>
 			</div>
 		`,

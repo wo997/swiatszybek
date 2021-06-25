@@ -61,7 +61,8 @@ function ProductFeatureModalComp(comp, parent, data = undefined) {
 					data-node="{${comp._nodes.product_feature_comp}}"
 					data-bind="{${data.product_feature}}"
 				></product-feature-comp>
-				<div style="margin-top: auto;padding-top: 10px;text-align: right;">
+
+				<div class="mta pt2" style="text-align: right;">
 					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń cechę produktu <i class="fas fa-trash"></i></button>
 				</div>
 			</div>
