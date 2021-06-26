@@ -179,6 +179,7 @@
  * can_have_aspect_ratio?: boolean
  * cannot_nest_in_itself?: boolean
  * layout_schema: BlcWidthSchema
+ * exclude_from_add_blc_menu?: boolean
  * }} BlockSchema
  *
  * standalone stands for the blc not requiring a parent container that is responsible for width etc

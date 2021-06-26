@@ -1101,7 +1101,7 @@ class PiepCMS {
 		 */
 		const displayGroup = (group, label) => {
 			let blocks_html = "";
-			for (const blc_schema of piep_cms_manager.blcs_schema.filter((b) => b.group === group)) {
+			for (const blc_schema of piep_cms_manager.blcs_schema.filter((b) => !b.exclude_from_add_blc_menu).filter((b) => b.group === group)) {
 				const tooltip = blc_schema.tooltip ? `data-tooltip="${blc_schema.tooltip}"` : "";
 				let classes = "btn subtle block_to_add";
 				if (blc_schema.is_advanced) {
@@ -2505,61 +2505,42 @@ class PiepCMS {
 				}
 
 				const parent = parents[0];
-				// const parent_text_container = parent && this.isTextContainer(parent);
+				// const parent_text_container = parent && this.isTextContainer(parent); // TODO: think about it - is it necessary?
 				// const is_textable = this.isTextable(v_node);
 
 				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
 
-				if (blc_schema.layout_schema === "just_content") {
-					ressdf.width_type = "auto";
-					for (const resn of Object.keys(v_node.styles)) {
-						delete v_node.styles[resn].width;
+				if (blc_schema) {
+					if (blc_schema.layout_schema === "just_content") {
+						ressdf.width_type = "auto";
+						for (const resn of Object.keys(v_node.styles)) {
+							delete v_node.styles[resn].width;
+						}
 					}
-				}
 
-				if (blc_schema.layout_schema === "needs_size") {
-					if (!ressdf.width_type || ressdf.width_type === "auto") {
-						ressdf.width_type = "custom";
+					if (blc_schema.layout_schema === "needs_size") {
+						if (!ressdf.width_type || ressdf.width_type === "auto") {
+							ressdf.width_type = "custom";
+						}
+						for (const resn of Object.keys(v_node.styles)) {
+							delete v_node.styles[resn].width;
+						}
 					}
-					for (const resn of Object.keys(v_node.styles)) {
-						delete v_node.styles[resn].width;
-					}
-				}
 
-				if (blc_schema.layout_schema !== "has_content") {
-					for (const resn of Object.keys(v_node.responsive_settings)) {
-						if (resn !== "df") {
-							delete v_node.responsive_settings[resn].width_type;
+					if (blc_schema.layout_schema !== "has_content") {
+						for (const resn of Object.keys(v_node.responsive_settings)) {
+							if (resn !== "df") {
+								delete v_node.responsive_settings[resn].width_type;
+							}
+						}
+					}
+
+					if (blc_schema.layout_schema === "has_content") {
+						if (!ressdf.width_type) {
+							ressdf.width_type = "full";
 						}
 					}
 				}
-
-				if (blc_schema.layout_schema === "has_content") {
-					if (!ressdf.width_type) {
-						ressdf.width_type = "full";
-					}
-				}
-
-				// if (parent_text_container) {
-				// 	for (const resn of Object.keys(v_node.responsive_settings)) {
-				// 		if (is_textable) {
-				// 			delete v_node.responsive_settings[resn].width_type;
-				// 		} else {
-				// 			v_node.responsive_settings[resn].width_type = "custom";
-				// 		}
-				// 	}
-				// 	if (is_textable) {
-				// 		for (const resn of Object.keys(v_node.styles)) {
-				// 			delete v_node.styles[resn].width;
-				// 		}
-				// 	} else if (!v_node.styles.df.width) {
-				// 		v_node.styles.df.width = "200px";
-				// 	}
-				// } else {
-				// 	if (!ressdf.width_type) {
-				// 		ressdf.width_type = "full";
-				// 	}
-				// }
 
 				if (parent) {
 					if (parent.tag === "ul" && v_node.tag !== "li") {

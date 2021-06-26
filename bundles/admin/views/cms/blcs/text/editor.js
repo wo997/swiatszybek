@@ -490,4 +490,21 @@
 			},
 		});
 	});
+
+	piep_cms_manager.registerBlcSchema({
+		group: "text",
+		icon: html`<i class="fas fa-font"></i>`,
+		id: "span",
+		label: "Tekst",
+		v_node: {
+			id: -1,
+			tag: "span",
+			text: "",
+			attrs: {},
+			classes: [],
+			styles: {},
+		},
+		layout_schema: "just_content",
+		exclude_from_add_blc_menu: true,
+	});
 }
