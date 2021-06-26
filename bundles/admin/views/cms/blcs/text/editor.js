@@ -438,8 +438,6 @@
 					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
 				}
 
-				piep_cms.collapseTextSelection();
-
 				/** @type {vDomNode} */
 				const insert_v_node = cloneObject(blc_schema.v_node);
 				let index = v_node_data.index;
@@ -448,9 +446,11 @@
 				}
 				v_node_data.v_nodes.splice(index, 0, insert_v_node);
 				piep_cms.setNewIdsOnVNode(insert_v_node);
+
 				piep_cms.update({ all: true });
 
-				piep_cms.displayTextSelection();
+				piep_cms.text_selection = undefined;
+				piep_cms.setFocusNode(insert_v_node.id);
 			});
 		},
 	});
