@@ -190,9 +190,9 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn transparent select_blcs_btn bold" data-tooltip="Zaznacz elementy">
             <i class="fas fa-mouse-pointer"></i>
         </button>
-        <button class="btn transparent show_inspector_btn">
+        <!-- <button class="btn transparent show_inspector_btn">
             <i class="fas fa-stream"></i>
-        </button>
+        </button> -->
         <div class="btn_wrapper clipboard_btn_wrapper">
             <button class="btn transparent clipboard_btn">
                 <i class="fas fa-clipboard-list"></i>

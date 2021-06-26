@@ -21,7 +21,7 @@ class PiepCMS {
 
 		piep_cms_manager.setPiepCms(this);
 
-		this.initInspector();
+		//this.initInspector();
 		this.initSelectionBreadcrumbs();
 		this.initSideMenu();
 		this.initFloatMenu();
@@ -2054,7 +2054,7 @@ class PiepCMS {
 			this.collapseTextSelection();
 
 			this.recreateDom();
-			this.displayInspectorTree();
+			//this.displayInspectorTree();
 
 			this.pushHistory("delete_text");
 		}
@@ -2248,49 +2248,49 @@ class PiepCMS {
 		});
 	}
 
-	initInspector() {
-		this.inspector = this.container._child(".piep_editor_inspector");
-		this.inspector_tree = this.inspector._child(".tree");
-		this.grab_inspector_btn = this.container._child(".grab_inspector_btn");
+	// initInspector() {
+	// 	this.inspector = this.container._child(".piep_editor_inspector");
+	// 	this.inspector_tree = this.inspector._child(".tree");
+	// 	this.grab_inspector_btn = this.container._child(".grab_inspector_btn");
 
-		/** @type {Position} */
-		this.inspector_pos = { x: 1000000, y: 0 };
+	// 	/** @type {Position} */
+	// 	this.inspector_pos = { x: 1000000, y: 0 };
 
-		const edit_theme_btn = this.container._child(".edit_theme_btn");
-		edit_theme_btn.addEventListener("click", () => {
-			getThemeSettingsModal()._show({ source: edit_theme_btn });
-		});
+	// 	const edit_theme_btn = this.container._child(".edit_theme_btn");
+	// 	edit_theme_btn.addEventListener("click", () => {
+	// 		getThemeSettingsModal()._show({ source: edit_theme_btn });
+	// 	});
 
-		this.container._child(".show_inspector_btn").addEventListener("click", () => {
-			this.text_selection = undefined;
-			this.toggleInspector();
-		});
-		this.container._child(".hide_inspector_btn").addEventListener("click", () => {
-			this.toggleInspector(false);
-		});
-		this.grab_inspector_btn.addEventListener("mousedown", () => {
-			if (!this.inspector_grabbed) {
-				this.inspector_grabbed = true;
-				this.inspector.classList.add("grabbed");
-			}
-		});
+	// 	this.container._child(".show_inspector_btn").addEventListener("click", () => {
+	// 		this.text_selection = undefined;
+	// 		this.toggleInspector();
+	// 	});
+	// 	this.container._child(".hide_inspector_btn").addEventListener("click", () => {
+	// 		this.toggleInspector(false);
+	// 	});
+	// 	this.grab_inspector_btn.addEventListener("mousedown", () => {
+	// 		if (!this.inspector_grabbed) {
+	// 			this.inspector_grabbed = true;
+	// 			this.inspector.classList.add("grabbed");
+	// 		}
+	// 	});
 
-		this.toggleInspector(false);
+	// 	this.toggleInspector(false);
 
-		document.addEventListener("click", (ev) => {
-			const target = $(ev.target);
-			const v_node_label = target._parent(".v_node_label");
+	// 	document.addEventListener("click", (ev) => {
+	// 		const target = $(ev.target);
+	// 		const v_node_label = target._parent(".v_node_label");
 
-			if (v_node_label && !v_node_label.classList.contains("disabled")) {
-				const vid = +v_node_label.dataset.vid;
+	// 		if (v_node_label && !v_node_label.classList.contains("disabled")) {
+	// 			const vid = +v_node_label.dataset.vid;
 
-				setSelectionRange(undefined);
-				this.setFocusNode(vid);
+	// 			setSelectionRange(undefined);
+	// 			this.setFocusNode(vid);
 
-				scrollIntoView(this.getNode(vid));
-			}
-		});
-	}
+	// 			scrollIntoView(this.getNode(vid));
+	// 		}
+	// 	});
+	// }
 
 	getNewBlcId() {
 		let max = this.max_vid_inside;
@@ -2704,9 +2704,9 @@ class PiepCMS {
 		if (options.all || options.dom) {
 			this.recreateDom();
 		}
-		if (options.all || options.selection) {
-			this.displayInspectorTree();
-		}
+		// if (options.all || options.selection) {
+		// 	this.displayInspectorTree();
+		// }
 		if (options.all || options.styles) {
 			this.recalculateStyles();
 		}
@@ -2812,87 +2812,87 @@ class PiepCMS {
 		return display_name;
 	}
 
-	/**
-	 *
-	 * @param {{
-	 * vids?: number[]
-	 * }} options
-	 */
-	displayInspectorTree(options = {}) {
-		let pos = -1;
-		/** @type {number[]} */
-		let included_vids = [];
+	// /**
+	//  *
+	//  * @param {{
+	//  * vids?: number[]
+	//  * }} options
+	//  */
+	// displayInspectorTree(options = {}) {
+	// 	let pos = -1;
+	// 	/** @type {number[]} */
+	// 	let included_vids = [];
 
-		/**
-		 * @param {vDomNode[]} v_nodes
-		 */
-		const traverseVDom = (v_nodes, level = 0) => {
-			v_nodes.forEach((v_node, index) => {
-				pos++;
+	// 	/**
+	// 	 * @param {vDomNode[]} v_nodes
+	// 	 */
+	// 	const traverseVDom = (v_nodes, level = 0) => {
+	// 		v_nodes.forEach((v_node, index) => {
+	// 			pos++;
 
-				const vid = v_node.id;
-				const children = v_node.children;
-				included_vids.push(vid);
+	// 			const vid = v_node.id;
+	// 			const children = v_node.children;
+	// 			included_vids.push(vid);
 
-				if (!options.vids || options.vids.includes(vid)) {
-					const text = v_node.text;
-					const display_name = this.getVNodeDisplayName(v_node);
+	// 			if (!options.vids || options.vids.includes(vid)) {
+	// 				const text = v_node.text;
+	// 				const display_name = this.getVNodeDisplayName(v_node);
 
-					let node = this.inspector_tree._child(`.v_node_label[data-vid="${vid}"]`);
+	// 				let node = this.inspector_tree._child(`.v_node_label[data-vid="${vid}"]`);
 
-					if (!node) {
-						node = $(document.createElement("DIV"));
-					}
+	// 				if (!node) {
+	// 					node = $(document.createElement("DIV"));
+	// 				}
 
-					const before_node = this.inspector_tree._direct_children()[pos];
-					if (node !== before_node) {
-						this.inspector_tree.insertBefore(node, before_node);
-					}
+	// 				const before_node = this.inspector_tree._direct_children()[pos];
+	// 				if (node !== before_node) {
+	// 					this.inspector_tree.insertBefore(node, before_node);
+	// 				}
 
-					let info = "";
+	// 				let info = "";
 
-					if (text !== undefined) {
-						info = text ? escapeHTML(text) : "(pusty)";
-					} else if (children !== undefined) {
-						info = `(${children.length})`;
-					}
-					if (info) {
-						info = html`<span class="info"> - ${info}</span>`;
-					}
+	// 				if (text !== undefined) {
+	// 					info = text ? escapeHTML(text) : "(pusty)";
+	// 				} else if (children !== undefined) {
+	// 					info = `(${children.length})`;
+	// 				}
+	// 				if (info) {
+	// 					info = html`<span class="info"> - ${info}</span>`;
+	// 				}
 
-					let classes = ["v_node_label", `tblc_${vid}`];
-					if (v_node.disabled) {
-						classes.push("disabled");
-					}
-					if (vid === this.focus_node_vid) {
-						classes.push("selected");
-					}
+	// 				let classes = ["v_node_label", `tblc_${vid}`];
+	// 				if (v_node.disabled) {
+	// 					classes.push("disabled");
+	// 				}
+	// 				if (vid === this.focus_node_vid) {
+	// 					classes.push("selected");
+	// 				}
 
-					setNodeClasses(node, classes);
+	// 				setNodeClasses(node, classes);
 
-					node.style.setProperty("--level", level + "");
+	// 				node.style.setProperty("--level", level + "");
 
-					node._set_content(html`<span class="name">${display_name}</span> ${info}`);
+	// 				node._set_content(html`<span class="name">${display_name}</span> ${info}`);
 
-					node.dataset.tooltip = v_node.disabled ? `Część szablonu` : "";
-					node.dataset.vid = vid + "";
-				}
+	// 				node.dataset.tooltip = v_node.disabled ? `Część szablonu` : "";
+	// 				node.dataset.vid = vid + "";
+	// 			}
 
-				if (children) {
-					traverseVDom(children, level + 1);
-				}
-			});
-		};
+	// 			if (children) {
+	// 				traverseVDom(children, level + 1);
+	// 			}
+	// 		});
+	// 	};
 
-		traverseVDom(this.v_dom);
+	// 	traverseVDom(this.v_dom);
 
-		displayPlaceholder(this.inspector_tree, pos === -1, ".no_elements", html` <div class="pa2 center no_elements">Brak elementów</div> `);
+	// 	displayPlaceholder(this.inspector_tree, pos === -1, ".no_elements", html` <div class="pa2 center no_elements">Brak elementów</div> `);
 
-		const select_to_remove = ".v_node_label" + included_vids.map((e) => `:not(.tblc_${e})`).join("");
-		this.inspector_tree._children(select_to_remove).forEach((r) => {
-			r.remove();
-		});
-	}
+	// 	const select_to_remove = ".v_node_label" + included_vids.map((e) => `:not(.tblc_${e})`).join("");
+	// 	this.inspector_tree._children(select_to_remove).forEach((r) => {
+	// 		r.remove();
+	// 	});
+	// }
 
 	recalculateStyles() {
 		// order doesn't really matter so far
@@ -3376,7 +3376,7 @@ class PiepCMS {
 
 		// optimisation
 		this.recreateDom({ vids: [vid] });
-		this.displayInspectorTree({ vids: [vid] });
+		//this.displayInspectorTree({ vids: [vid] });
 
 		this.text_selection.focus_offset += insert_text.length;
 		this.collapseTextSelection();
@@ -3894,54 +3894,54 @@ class PiepCMS {
 		return prop_val;
 	}
 
-	inspectorMove() {
-		if (this.inspector_grabbed && !mouse.down) {
-			this.inspector_grabbed = false;
-			this.inspector.classList.remove("grabbed");
-		}
+	// inspectorMove() {
+	// 	if (this.inspector_grabbed && !mouse.down) {
+	// 		this.inspector_grabbed = false;
+	// 		this.inspector.classList.remove("grabbed");
+	// 	}
 
-		const safe_off = 5;
+	// 	const safe_off = 5;
 
-		//const inspector_rect = this.inspector.getBoundingClientRect();
-		const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
+	// 	//const inspector_rect = this.inspector.getBoundingClientRect();
+	// 	const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
 
-		const inspector_width = this.inspector.offsetWidth;
-		const inspector_height = this.inspector.offsetHeight;
-		const inspector_grab_btn_offset = 47;
+	// 	const inspector_width = this.inspector.offsetWidth;
+	// 	const inspector_height = this.inspector.offsetHeight;
+	// 	const inspector_grab_btn_offset = 47;
 
-		const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
+	// 	const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
 
-		if (this.inspector_grabbed) {
-			const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
-			const top = mouse.pos.y - 20;
+	// 	if (this.inspector_grabbed) {
+	// 		const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
+	// 		const top = mouse.pos.y - 20;
 
-			this.inspector_pos.x = this.inspector_pos.x * 0.5 + left * 0.5;
-			this.inspector_pos.y = this.inspector_pos.y * 0.5 + top * 0.5;
-		} else {
-			if (this.inspector_sticks_to_right_size) {
-				this.inspector_pos.x = max_x;
-			}
-		}
+	// 		this.inspector_pos.x = this.inspector_pos.x * 0.5 + left * 0.5;
+	// 		this.inspector_pos.y = this.inspector_pos.y * 0.5 + top * 0.5;
+	// 	} else {
+	// 		if (this.inspector_sticks_to_right_size) {
+	// 			this.inspector_pos.x = max_x;
+	// 		}
+	// 	}
 
-		this.inspector_pos.x = clamp(safe_off, this.inspector_pos.x, max_x);
-		this.inspector_pos.y = clamp(
-			content_wrapper_rect.top + safe_off,
-			this.inspector_pos.y,
-			content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - safe_off
-		);
+	// 	this.inspector_pos.x = clamp(safe_off, this.inspector_pos.x, max_x);
+	// 	this.inspector_pos.y = clamp(
+	// 		content_wrapper_rect.top + safe_off,
+	// 		this.inspector_pos.y,
+	// 		content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - safe_off
+	// 	);
 
-		this.inspector_sticks_to_right_size = this.inspector_pos.x > max_x - 1;
+	// 	this.inspector_sticks_to_right_size = this.inspector_pos.x > max_x - 1;
 
-		this.inspector.style.setProperty("--x", this.inspector_pos.x.toPrecision(5) + "px");
-		this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
-	}
+	// 	this.inspector.style.setProperty("--x", this.inspector_pos.x.toPrecision(5) + "px");
+	// 	this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
+	// }
 
 	mainLoop() {
 		updateMouseTarget();
 
 		this.grabbedBlock();
 		this.showFocus();
-		this.inspectorMove();
+		//this.inspectorMove();
 		this.layoutEditMove();
 		this.addBtnMove();
 		this.selectingBlock();
@@ -5231,19 +5231,19 @@ class PiepCMS {
 					this.setBlcMenuFromFocusedNode();
 				});
 
-				tree_blc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
-				if (tree_blc) {
-					scrollIntoView(tree_blc);
-				}
+				// tree_blc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
+				// if (tree_blc) {
+				// 	scrollIntoView(tree_blc);
+				// }
 			}
 
 			this.displaySelectionBreadcrumbs();
 			this.displayNodeLayout();
 		}
 
-		this.inspector_tree._children(".v_node_label").forEach((e) => {
-			e.classList.toggle("selected", +e.dataset.vid === this.focus_node_vid);
-		});
+		// this.inspector_tree._children(".v_node_label").forEach((e) => {
+		// 	e.classList.toggle("selected", +e.dataset.vid === this.focus_node_vid);
+		// });
 	}
 
 	/**
@@ -5903,21 +5903,21 @@ class PiepCMS {
 		}
 	}
 
-	/**
-	 *
-	 * @param {boolean} open
-	 */
-	toggleInspector(open = undefined) {
-		if (open !== undefined) {
-			this.inspector_open = open;
-		} else {
-			this.inspector_open = !this.inspector_open;
-		}
-		this.inspector.classList.toggle("open", this.inspector_open);
+	// /**
+	//  *
+	//  * @param {boolean} open
+	//  */
+	// toggleInspector(open = undefined) {
+	// 	if (open !== undefined) {
+	// 		this.inspector_open = open;
+	// 	} else {
+	// 		this.inspector_open = !this.inspector_open;
+	// 	}
+	// 	this.inspector.classList.toggle("open", this.inspector_open);
 
-		const show_inspector_btn = this.container._child(".show_inspector_btn");
-		show_inspector_btn.classList.toggle("primary", this.inspector_open);
-		show_inspector_btn.classList.toggle("transparent", !this.inspector_open);
-		show_inspector_btn.dataset.tooltip = this.inspector_open ? "Ukryj drzewko elementów" : "Pokaż drzewko elementów";
-	}
+	// 	const show_inspector_btn = this.container._child(".show_inspector_btn");
+	// 	show_inspector_btn.classList.toggle("primary", this.inspector_open);
+	// 	show_inspector_btn.classList.toggle("transparent", !this.inspector_open);
+	// 	show_inspector_btn.dataset.tooltip = this.inspector_open ? "Ukryj drzewko elementów" : "Pokaż drzewko elementów";
+	// }
 }
