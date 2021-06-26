@@ -119,6 +119,7 @@
 		label: html`Przycisk`,
 		group: "module",
 		priority: 50,
+		inline: true,
 		v_node: {
 			tag: "button",
 			id: -1,

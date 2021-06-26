@@ -1,6 +1,5 @@
 /* css[global] */
 
-// IMPORTANT, the order in which we include files does matter, these are global styles that can be overriden
 .blc {
 	& {
 		min-width: 0;
@@ -11,16 +10,11 @@
 		background-position: center;
 		background-size: cover;
 	}
-	// &.vertical_container,
-	// &.columns_container {
-	// 	max-width: min(100%, var(--container_max_width));
-	// }
 }
 
 .vertical_container {
 	display: flex;
 	flex-direction: column;
-	//align-items: stretch;
 	align-items: center;
 }
 
@@ -32,18 +26,6 @@
 		// align-self: center;
 	}
 }
-
-.columns_container {
-	display: flex;
-	flex-direction: row;
-	min-height: 50px;
-	flex-wrap: wrap;
-	justify-content: center;
-}
-
-// .text_container > * {
-// 	display: inline-block; // inline / inline-block / block basically anything dude
-// }
 
 .module_img > img {
 	display: block;

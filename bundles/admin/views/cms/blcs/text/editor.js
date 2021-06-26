@@ -434,9 +434,10 @@
 
 				// }
 
-				const insert_v_node = blc_schema.v_node;
-				piep_cms.setNewIdsOnVNode(insert_v_node);
+				/** @type {vDomNode} */
+				const insert_v_node = cloneObject(blc_schema.v_node);
 				v_node_data.v_nodes.splice(v_node_data.index, 0, insert_v_node);
+				piep_cms.setNewIdsOnVNode(insert_v_node);
 				piep_cms.update({ all: true });
 
 				// const v_node_data = this.getVNodeDataById(range.vid);

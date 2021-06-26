@@ -2503,16 +2503,33 @@ class PiepCMS {
 				if (!ressdf.bind_borderColors) {
 					ressdf.bind_borderColors = "all";
 				}
-				if (!ressdf.width_type) {
-					ressdf.width_type = "full";
-				}
 
 				const parent = parents[0];
+				const parent_text_container = parent && this.isTextContainer(parent);
+				const is_textable = this.isTextable(v_node);
+
+				if (parent_text_container) {
+					for (const resn of Object.keys(v_node.responsive_settings)) {
+						if (is_textable) {
+							delete v_node.responsive_settings[resn].width_type;
+						} else {
+							v_node.responsive_settings[resn].width_type = "custom";
+						}
+					}
+					if (is_textable) {
+						for (const resn of Object.keys(v_node.styles)) {
+							delete v_node.styles[resn].width;
+						}
+					} else if (!v_node.styles.df.width) {
+						v_node.styles.df.width = "200px";
+					}
+				} else {
+					if (!ressdf.width_type) {
+						ressdf.width_type = "full";
+					}
+				}
 
 				if (parent) {
-					// if (this.isTextContainer(parent)) {
-					// 	ressdf.width_type = "auto";
-					// }
 					if (parent.tag === "ul" && v_node.tag !== "li") {
 						v_node.tag = "li";
 					}

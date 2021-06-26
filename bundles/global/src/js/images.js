@@ -79,9 +79,10 @@ function setImageSize(img) {
 		return;
 	}
 
-	if (!img.offsetWidth && !isHidden(img)) {
-		img.style.width = `${data.w}px`;
-	}
+	// tough, do it by a class maybe?
+	// if (!img.offsetWidth && !isHidden(img)) {
+	// 	img.style.width = `${data.w}px`;
+	// }
 
 	if (!img.style.height && !img.offsetHeight) {
 		const suppose_height = Math.round((img.offsetWidth * data.h) / data.w);

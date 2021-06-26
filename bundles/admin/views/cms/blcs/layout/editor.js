@@ -8,14 +8,11 @@
 		blc_groups: [
 			{
 				matcher: (v_node_data) => {
-					if (v_node_data.v_node.tag.match(piep_cms_manager.match_textables)) {
-						return false;
-					}
 					const parent = v_node_data.parent_v_nodes[0];
-					if (parent && parent.classes.includes("columns_container")) {
-						return false;
+					if (parent && parent.classes.includes("vertical_container")) {
+						return true;
 					}
-					return true;
+					return false;
 				},
 				priority: 15,
 			},
