@@ -24,7 +24,7 @@
 		nonclickable: true,
 		group: "module",
 		is_advanced: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

@@ -8,7 +8,7 @@
 		single_usage: true,
 		nonclickable: true,
 		standalone: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		group: "module",
 		v_node: {
 			tag: "header",

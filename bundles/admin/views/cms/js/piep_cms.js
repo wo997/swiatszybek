@@ -2505,29 +2505,61 @@ class PiepCMS {
 				}
 
 				const parent = parents[0];
-				const parent_text_container = parent && this.isTextContainer(parent);
-				const is_textable = this.isTextable(v_node);
+				// const parent_text_container = parent && this.isTextContainer(parent);
+				// const is_textable = this.isTextable(v_node);
 
-				if (parent_text_container) {
+				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
+
+				if (blc_schema.layout_schema === "just_content") {
+					ressdf.width_type = "auto";
+					for (const resn of Object.keys(v_node.styles)) {
+						delete v_node.styles[resn].width;
+					}
+				}
+
+				if (blc_schema.layout_schema === "needs_size") {
+					if (!ressdf.width_type || ressdf.width_type === "auto") {
+						ressdf.width_type = "custom";
+					}
+					for (const resn of Object.keys(v_node.styles)) {
+						delete v_node.styles[resn].width;
+					}
+				}
+
+				if (blc_schema.layout_schema !== "has_content") {
 					for (const resn of Object.keys(v_node.responsive_settings)) {
-						if (is_textable) {
+						if (resn !== "df") {
 							delete v_node.responsive_settings[resn].width_type;
-						} else {
-							v_node.responsive_settings[resn].width_type = "custom";
 						}
 					}
-					if (is_textable) {
-						for (const resn of Object.keys(v_node.styles)) {
-							delete v_node.styles[resn].width;
-						}
-					} else if (!v_node.styles.df.width) {
-						v_node.styles.df.width = "200px";
-					}
-				} else {
+				}
+
+				if (blc_schema.layout_schema === "has_content") {
 					if (!ressdf.width_type) {
 						ressdf.width_type = "full";
 					}
 				}
+
+				// if (parent_text_container) {
+				// 	for (const resn of Object.keys(v_node.responsive_settings)) {
+				// 		if (is_textable) {
+				// 			delete v_node.responsive_settings[resn].width_type;
+				// 		} else {
+				// 			v_node.responsive_settings[resn].width_type = "custom";
+				// 		}
+				// 	}
+				// 	if (is_textable) {
+				// 		for (const resn of Object.keys(v_node.styles)) {
+				// 			delete v_node.styles[resn].width;
+				// 		}
+				// 	} else if (!v_node.styles.df.width) {
+				// 		v_node.styles.df.width = "200px";
+				// 	}
+				// } else {
+				// 	if (!ressdf.width_type) {
+				// 		ressdf.width_type = "full";
+				// 	}
+				// }
 
 				if (parent) {
 					if (parent.tag === "ul" && v_node.tag !== "li") {

@@ -118,7 +118,7 @@
 		group: "text",
 		priority: 5,
 		inline: true,
-		width_schema: "just_content",
+		layout_schema: "just_content",
 		v_node: {
 			tag: "i",
 			id: -1,

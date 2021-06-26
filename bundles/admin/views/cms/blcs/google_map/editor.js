@@ -23,7 +23,7 @@
 		label: html`Mapa Google`,
 		group: "module",
 		nonclickable: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

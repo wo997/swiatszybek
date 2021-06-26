@@ -275,7 +275,7 @@
 		label: html`Kontener pionowy`,
 		group: "container",
 		standalone: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		priority: 50,
 		v_node: {
 			tag: "div",

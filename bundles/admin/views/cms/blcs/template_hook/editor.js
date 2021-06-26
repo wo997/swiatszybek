@@ -45,7 +45,7 @@
 		page_type: "template",
 		group: "container",
 		standalone: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

@@ -27,7 +27,7 @@
 // 		icon: html`<i class="far fa-image"></i>`,
 // 		label: html`Zdjęcie`,
 // 		priority: 90,
-//      width_schema: "has_content",
+//      layout_schema: "needs_size",
 // 		v_node: {
 // 			tag: "div",
 // 			id: -1,

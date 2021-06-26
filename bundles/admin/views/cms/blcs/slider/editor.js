@@ -220,7 +220,7 @@
 		icon: html`<i class="fas fa-images"></i>`,
 		label: html`Slajder`,
 		group: "module",
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		standalone: true,
 		can_have_aspect_ratio: true,
 		cannot_nest_in_itself: true,

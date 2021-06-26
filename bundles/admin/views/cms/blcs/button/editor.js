@@ -120,7 +120,7 @@
 		group: "module",
 		priority: 50,
 		inline: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		v_node: {
 			tag: "button",
 			id: -1,

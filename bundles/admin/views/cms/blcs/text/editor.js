@@ -77,6 +77,7 @@
 				middle_input_setting_val_user = false;
 			};
 			unit_input.addEventListener("change", change);
+			unit_input.addEventListener("input", change);
 
 			radio_group.addEventListener("change", () => {
 				middle_input._set_value(radio_group._get_value());
@@ -468,7 +469,7 @@
 			icon: data.icon,
 			label: data.label,
 			group: "text",
-			width_schema: "has_content",
+			layout_schema: "has_content",
 			priority: 100,
 			v_node: {
 				tag: data.tag,

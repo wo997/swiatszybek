@@ -8,11 +8,12 @@
 		blc_groups: [
 			{
 				matcher: (v_node_data) => {
-					const parent = v_node_data.parent_v_nodes[0];
-					if (parent && parent.classes.includes("vertical_container")) {
-						return true;
-					}
-					return false;
+					return true;
+					// const parent = v_node_data.parent_v_nodes[0];
+					// if (parent && parent.classes.includes("vertical_container")) {
+					// 	return true;
+					// }
+					// return false;
 				},
 				priority: 15,
 			},
@@ -69,6 +70,31 @@
 				align_self_horizontally_wrapper.classList.toggle("hidden_completely", width_type === "full");
 				width_wrapper.classList.toggle("hidden_completely", width_type !== "custom");
 				min_max_width_wrapper.classList.toggle("hidden_completely", width_type !== "custom");
+			});
+
+			piep_cms.container.addEventListener("set_blc_menu", () => {
+				const v_node = piep_cms.getFocusVNode();
+				if (!v_node) {
+					return;
+				}
+				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
+
+				width_type_input
+					._child(`[data-value="full"]`)
+					._parent()
+					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+				width_type_input
+					._child(`[data-value="default_container"]`)
+					._parent()
+					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+				width_type_input
+					._child(`[data-value="auto"]`)
+					._parent()
+					.classList.toggle("hidden", blc_schema.layout_schema === "needs_size");
+				width_type_input
+					._child(`[data-value="custom"]`)
+					._parent()
+					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
 			});
 		},
 	});

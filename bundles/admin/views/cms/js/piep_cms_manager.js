@@ -88,6 +88,7 @@ class PiepCMSManager {
 				id: "span",
 				label: "Tekst",
 				v_node: undefined,
+				layout_schema: "just_content",
 			};
 			return span_schema;
 		}

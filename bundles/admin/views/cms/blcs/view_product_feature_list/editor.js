@@ -6,7 +6,7 @@
 		icon: html`<i class="fas fa-list-alt"></i>`,
 		label: html`Specyfikacja produktu`,
 		single_usage: true,
-		width_schema: "has_content",
+		layout_schema: "has_content",
 		group: "module",
 		nonclickable: true,
 		page_type: "general_product",
