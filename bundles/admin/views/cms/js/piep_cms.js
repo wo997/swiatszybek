@@ -772,6 +772,10 @@ class PiepCMS {
 				this.updatedSideMenu();
 			}
 		});
+
+		this.right_menu._direct_children().forEach((e) => {
+			e.dataset.tooltip_position = "left";
+		});
 	}
 
 	displaySelectBlcs() {
@@ -1608,6 +1612,9 @@ class PiepCMS {
 		} else {
 			grab();
 		}
+
+		// TODO: think about it baby
+		this.setContentActive(true);
 	}
 
 	/**

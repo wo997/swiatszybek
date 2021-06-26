@@ -18,11 +18,11 @@
 		box-shadow: none;
 		--hover-shadow: none;
 	}
-	.add_block_btn_wrapper {
+	.btn_wrapper {
 		& {
 			cursor: pointer;
 		}
-		.add_block_btn {
+		.btn {
 			pointer-events: none;
 			width: 100%;
 		}

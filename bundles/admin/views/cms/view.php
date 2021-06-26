@@ -182,26 +182,31 @@ $modules_html["main_menu_html"] = ob_get_clean();
     </div>
 
     <div class="piep_editor_right_menu">
-        <div class="add_block_btn_wrapper">
+        <div class="btn_wrapper add_block_btn_wrapper">
             <button class="btn transparent add_block_btn">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
-        <button class="btn transparent select_blcs_btn bold" data-tooltip_position="left" data-tooltip="Zaznacz elementy">
+        <button class="btn transparent select_blcs_btn bold" data-tooltip="Zaznacz elementy">
             <i class="fas fa-mouse-pointer"></i>
         </button>
-        <button class="btn transparent show_inspector_btn" data-tooltip_position="left">
+        <button class="btn transparent show_inspector_btn">
             <i class="fas fa-stream"></i>
         </button>
-        <button class="btn transparent edit_theme_btn" data-tooltip_position="left" data-tooltip="Ustawienia motywu">
+        <div class="btn_wrapper clipboard_btn_wrapper">
+            <button class="btn transparent clipboard_btn">
+                <i class="fas fa-clipboard-list"></i>
+            </button>
+        </div>
+        <button class="btn transparent edit_theme_btn" data-tooltip="Ustawienia motywu">
             <i class="fas fa-paint-brush"></i>
         </button>
-        <button class="btn transparent edit_seo_btn bold" data-tooltip_position="left">
+        <button class="btn transparent edit_seo_btn bold">
             SEO
         </button>
 
         <div style="flex-grow:1"> </div>
-        <button class="btn transparent advanced_mode_btn" data-tooltip_position="left" data-tooltip="Tryb zaawansowany">
+        <button class="btn transparent advanced_mode_btn" data-tooltip="Tryb zaawansowany">
             <i class="fas fa-hammer"></i>
         </button>
         <button class="btn transparent delete_pageable_btn">
