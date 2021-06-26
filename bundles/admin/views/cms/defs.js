@@ -159,6 +159,7 @@
  * page_type?: string
  * nonclickable?: boolean
  * standalone?: boolean
+ * inline?: boolean
  * priority?: number
  * render_html?(v_node?: vDomNode): string
  * render?(v_node: vDomNode, node: PiepNode, piep_cms: PiepCMS)

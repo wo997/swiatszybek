@@ -393,6 +393,36 @@
 			});
 		},
 	});
+
+	piep_cms_manager.registerFloatingProp({
+		name: "insert_inline_btn",
+		blc_groups: [{ match_tag: piep_cms_manager.match_textables, priority: irrelevant_text_priority }],
+		menu_html: html`
+			<p-dropdown class="field small inline pretty_blue center grid" data-tooltip="Wstaw ikonkę, zdjęcie itd.">
+				<p-option data-value="" class="hidden"> <i class="fas fa-plus"></i> </p-option>
+			</p-dropdown>
+		`,
+		init: (piep_cms, menu_wrapper) => {
+			let insert_blcs = "";
+			piep_cms_manager.blcs_schema
+				.filter((s) => s.inline)
+				.sort((a, b) => Math.sign(b.priority - a.priority))
+				.forEach((schema) => {
+					insert_blcs += html`<p-option data-value="${schema.id}" data-tooltip="${schema.label}" style="font-size: 1.4em;">
+						${schema.icon}
+					</p-option>`;
+				});
+
+			registerForms();
+			const dropdown = menu_wrapper._child(`p-dropdown`);
+			dropdown._child(`.options_wrapper`).insertAdjacentHTML("beforeend", insert_blcs);
+
+			dropdown.addEventListener("change", () => {
+				console.log(dropdown._get_value());
+				dropdown._set_value("", { quiet: true });
+			});
+		},
+	});
 }
 
 {

@@ -90,6 +90,7 @@
 		label: html`Zdjęcie`,
 		priority: 90,
 		group: "media",
+		inline: true,
 		v_node: {
 			tag: "div",
 			id: -1,

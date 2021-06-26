@@ -101,6 +101,7 @@
 		label: html`Ikonka`,
 		group: "text",
 		priority: 5,
+		inline: true,
 		v_node: {
 			tag: "i",
 			id: -1,
