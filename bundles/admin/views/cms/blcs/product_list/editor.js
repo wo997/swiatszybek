@@ -6,6 +6,7 @@
 		icon: html`<i class="fas fa-cubes"></i>`,
 		label: html`Lista produktów`,
 		standalone: true,
+		width_schema: "has_content",
 		group: "module",
 		v_node: {
 			tag: "div",

@@ -312,6 +312,7 @@
 		group: "container",
 		standalone: true,
 		cannot_nest_in_itself: true,
+		width_schema: "has_content",
 		priority: 20,
 		v_node: {
 			tag: "div",

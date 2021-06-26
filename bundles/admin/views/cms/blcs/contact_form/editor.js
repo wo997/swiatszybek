@@ -8,6 +8,7 @@
 		group: "module",
 		nonclickable: true,
 		single_usage: true,
+		width_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

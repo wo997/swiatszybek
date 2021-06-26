@@ -63,6 +63,7 @@
 		cannot_nest_in_itself: true,
 		priority: 10,
 		can_have_aspect_ratio: true,
+		width_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

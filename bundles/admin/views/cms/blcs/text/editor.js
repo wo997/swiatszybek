@@ -468,6 +468,7 @@
 			icon: data.icon,
 			label: data.label,
 			group: "text",
+			width_schema: "has_content",
 			priority: 100,
 			v_node: {
 				tag: data.tag,

@@ -91,6 +91,7 @@
 		priority: 90,
 		group: "media",
 		inline: true,
+		width_schema: "needs_width",
 		v_node: {
 			tag: "div",
 			id: -1,

@@ -6,6 +6,7 @@
 		icon: html`<i class="fas fa-shipping-fast"></i>`,
 		label: html`Aktywni przewoźnicy`,
 		group: "module",
+		width_schema: "has_content",
 		v_node: {
 			tag: "div",
 			id: -1,

@@ -8,6 +8,14 @@
  */
 
 /**
+ * @typedef {"needs_width" | "has_content" | "just_content"} BlcWidthSchema
+ *
+ * has_content - containers, text_containers, buttons, other modules
+ * needs_width - images, videos (media?)
+ * just_content - icons, textables
+ */
+
+/**
  * @typedef {{
  * id: number
  * tag: string
@@ -170,6 +178,7 @@
  * group: CmsBlockGroup
  * can_have_aspect_ratio?: boolean
  * cannot_nest_in_itself?: boolean
+ * width_schema: BlcWidthSchema
  * }} BlockSchema
  *
  * standalone stands for the blc not requiring a parent container that is responsible for width etc

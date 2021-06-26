@@ -6,6 +6,7 @@
 		icon: html`<i class="fas fa-cube"></i>`,
 		label: html`Produkt`,
 		single_usage: true,
+		width_schema: "has_content",
 		tooltip: "(Zdjęcia, wybór wariantów, kup teraz)",
 		nonclickable: true,
 		group: "module",
