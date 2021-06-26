@@ -7,8 +7,24 @@
 	 * }[]}
 	 */
 	const icons = [
-		{ classes: ["fas", "fa-chevron-right"], description: "strzałka szewron prawo" },
-		{ classes: ["fas", "fa-chevron-left"], description: "strzałka szewron lewo" },
+		{ classes: ["fas", "fa-chevron-right"], description: "chevron right strzałka szewron prawo " },
+		{ classes: ["fas", "fa-chevron-left"], description: "chevron left strzałka szewron lewo" },
+		{ classes: ["fas", "fa-chevron-up"], description: "chevron up strzałka szewron góra" },
+		{ classes: ["fas", "fa-chevron-down"], description: "chevron down strzałka szewron dół" },
+		{ classes: ["fas", "fa-shopping-cart"], description: "shopping cart koszyk" },
+		{ classes: ["fas", "fa-cart-plus"], description: "shopping cart plus add koszyk dodaj plus" },
+		{ classes: ["fas", "fa-angle-double-right"], description: "angle double right podwójna strzałka prawo" },
+		{ classes: ["fas", "fa-angle-double-left"], description: "angle double left podwójna strzałka lewo" },
+		{ classes: ["fas", "fa-angle-double-up"], description: "angle double up podwójna strzałka góra" },
+		{ classes: ["fas", "fa-angle-double-down"], description: "angle double down podwójna strzałka dół" },
+		{ classes: ["fas", "fa-check"], description: "check podwójna strzałka dół" },
+		{ classes: ["fas", "fa-times"], description: "times krzyżyk razy" },
+		{ classes: ["fas", "fa-ellipsis-h"], description: "ellipsis horizontal wielokropek poziomy" },
+		{ classes: ["fas", "fa-ellipsis-v"], description: "ellipsis vertical wielokropek pionowy" },
+		{ classes: ["fas", "fa-thumbs-up"], description: "thumbs up like polubienie" },
+		{ classes: ["fab", "fa-facebook-f"], description: "facebook" },
+		{ classes: ["fab", "fa-facebook"], description: "facebook" },
+		{ classes: ["fab", "fa-facebook-messenger"], description: "facebook messenger" },
 	];
 
 	piep_cms_manager.registerProp({

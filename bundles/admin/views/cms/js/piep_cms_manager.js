@@ -21,7 +21,7 @@ class PiepCMSManager {
 
 		//this.match_basic_text_containers = /^(h1|h2|h3|h4|h5|h6|p|button)$/;
 		this.match_tag_text_containers = /^(h1|h2|h3|h4|h5|h6|p)$/;
-		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p|li|button)$/;
+		this.match_text_containers = /^(h1|h2|h3|h4|h5|h6|p|li|button)$/; // also php side!
 		this.match_textables = /^(span|b)$/;
 
 		//this.match_text_wrappers = /^(h1|h2|h3|h4|h5|h6|p|ul)$/;

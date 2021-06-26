@@ -64,6 +64,11 @@ function traverseVDom($v_dom, $options = [])
             }
         }
 
+
+        if (preg_match('/^(h1|h2|h3|h4|h5|h6|p|li|button)$/', $tag)) {
+            $classes[] = "text_containers";
+        }
+
         if (isset($v_node["text"])) {
             $classes[] = "textable";
             if ($v_node["text"]) {

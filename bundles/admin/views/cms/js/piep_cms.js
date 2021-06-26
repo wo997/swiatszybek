@@ -1564,14 +1564,8 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {vDomNode} v_node
-	 * @param {{
-	 * is_new?: boolean
-	 * }} options
-	 * @returns
 	 */
-	grabBlockFromVNode(v_node, options = {}) {
-		v_node = cloneObject(v_node);
-
+	setNewIdsOnVNode(v_node) {
 		let next_id = this.getNewBlcId();
 
 		/**
@@ -1587,6 +1581,19 @@ class PiepCMS {
 			}
 		};
 		setIds(v_node);
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 * @param {{
+	 * is_new?: boolean
+	 * }} options
+	 * @returns
+	 */
+	grabBlockFromVNode(v_node, options = {}) {
+		v_node = cloneObject(v_node);
+		this.setNewIdsOnVNode(v_node);
 
 		this.v_dom.push(v_node); // hidden at the end ;) removed right when grab is triggered
 		this.update({ all: true }); // creates the node to grab
@@ -2503,6 +2510,9 @@ class PiepCMS {
 				const parent = parents[0];
 
 				if (parent) {
+					// if (this.isTextContainer(parent)) {
+					// 	ressdf.width_type = "auto";
+					// }
 					if (parent.tag === "ul" && v_node.tag !== "li") {
 						v_node.tag = "li";
 					}

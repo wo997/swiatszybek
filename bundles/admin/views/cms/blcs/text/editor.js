@@ -418,8 +418,89 @@
 			dropdown._child(`.options_wrapper`).insertAdjacentHTML("beforeend", insert_blcs);
 
 			dropdown.addEventListener("change", () => {
-				console.log(dropdown._get_value());
+				const blc_schema_id = dropdown._get_value();
 				dropdown._set_value("", { quiet: true });
+
+				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === blc_schema_id);
+				//console.log(blc_schema);
+
+				const focus_vid = piep_cms.text_selection.focus_vid;
+				const focus_offset = piep_cms.text_selection.focus_offset;
+
+				const v_node_data = piep_cms.getVNodeDataById(focus_vid);
+				const v_node = v_node_data.v_node;
+
+				// if (focus_offset > 0 && focus_offset <v_node.text.length)  {
+
+				// }
+
+				const insert_v_node = blc_schema.v_node;
+				piep_cms.setNewIdsOnVNode(insert_v_node);
+				v_node_data.v_nodes.splice(v_node_data.index, 0, insert_v_node);
+				piep_cms.update({ all: true });
+
+				// const v_node_data = this.getVNodeDataById(range.vid);
+				// 		if (!v_node_data) {
+				// 			return;
+				// 		}
+				// 		const v_node = v_node_data.v_node;
+
+				// 		const bef_vid = this.getNewBlcId();
+				// 		const mid_vid = bef_vid + 1;
+				// 		const aft_vid = bef_vid + 2;
+
+				// 		/** @type {vDomNode[]} */
+				// 		const put_v_nodes = [];
+
+				// 		/**
+				// 		 *
+				// 		 * @param {number} id
+				// 		 * @param {string} text
+				// 		 * @returns
+				// 		 */
+				// 		const getSpan = (id, text) => {
+				// 			return {
+				// 				id,
+				// 				tag: "span",
+				// 				styles: {},
+				// 				text,
+				// 				attrs: {},
+				// 				classes: [],
+				// 				settings: {},
+				// 				responsive_settings: {},
+				// 			};
+				// 		};
+
+				// 		if (range.start > 0) {
+				// 			put_v_nodes.push(getSpan(bef_vid, v_node.text.substring(0, range.start)));
+				// 		}
+
+				// 		const mid_text = v_node.text.substring(range.start, range.end);
+				// 		put_v_nodes.push(getSpan(mid_vid, mid_text));
+
+				// 		if (range.end < v_node.text.length) {
+				// 			put_v_nodes.push(getSpan(aft_vid, v_node.text.substring(range.end)));
+				// 		}
+
+				// 		// do the split and spread options
+				// 		put_v_nodes.forEach((put_v_node) => {
+				// 			deepAssign(put_v_node.styles, v_node.styles);
+				// 			deepAssign(put_v_node.attrs, v_node.attrs);
+				// 			deepAssign(put_v_node.settings, v_node.settings);
+				// 			deepAssign(put_v_node.responsive_settings, v_node.responsive_settings);
+				// 		});
+				// 		v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
+
+				// 		this.text_selection.middle_vids.push(mid_vid);
+
+				// 		if (range.vid === this.text_selection.anchor_vid) {
+				// 			this.text_selection.anchor_vid = mid_vid;
+				// 			this.text_selection.anchor_offset = this.text_selection.direction === 1 ? 0 : mid_text.length;
+				// 		}
+				// 		if (range.vid === this.text_selection.focus_vid) {
+				// 			this.text_selection.focus_vid = mid_vid;
+				// 			this.text_selection.focus_offset = this.text_selection.direction === 1 ? mid_text.length : 0;
+				// 		}
 			});
 		},
 	});
