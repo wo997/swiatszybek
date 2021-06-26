@@ -2245,6 +2245,16 @@ class PiepCMS {
 				this.setFocusNode(undefined);
 				this.text_selection = undefined;
 			}
+
+			const v_node_label = target._parent(".v_node_label:not(.disabled)");
+			if (v_node_label) {
+				const vid = +v_node_label.dataset.vid;
+
+				setSelectionRange(undefined);
+				this.setFocusNode(vid);
+
+				scrollIntoView(this.getNode(vid));
+			}
 		});
 	}
 
@@ -2277,19 +2287,6 @@ class PiepCMS {
 
 	// 	this.toggleInspector(false);
 
-	// 	document.addEventListener("click", (ev) => {
-	// 		const target = $(ev.target);
-	// 		const v_node_label = target._parent(".v_node_label");
-
-	// 		if (v_node_label && !v_node_label.classList.contains("disabled")) {
-	// 			const vid = +v_node_label.dataset.vid;
-
-	// 			setSelectionRange(undefined);
-	// 			this.setFocusNode(vid);
-
-	// 			scrollIntoView(this.getNode(vid));
-	// 		}
-	// 	});
 	// }
 
 	getNewBlcId() {
@@ -2737,10 +2734,10 @@ class PiepCMS {
 					html`<i class="fas fa-home"></i> ` +
 					crumb_v_nodes
 						.map((crumb_v_node) => {
-							const disabled = crumb_v_node.disabled ? "disabled" : "";
+							const disabled = crumb_v_node.disabled ? " disabled" : "";
 							const tooltip = disabled ? `data-tooltip="Część szablonu"` : "";
 
-							return html`<span class="v_node_label ${disabled}" data-vid="${crumb_v_node.id}" ${tooltip}>
+							return html`<span class="v_node_label${disabled}" data-vid="${crumb_v_node.id}" ${tooltip}>
 								<i class="fas fa-chevron-right"></i>
 								<span>${this.getVNodeDisplayName(crumb_v_node)}</span>
 							</span>`;
@@ -2773,36 +2770,38 @@ class PiepCMS {
 		if (!display_name) {
 			const tag = v_node.tag;
 			// piep_cms_manager.getVNodeSchema didnt use it cause of naming probably, kontener etc
-			const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node.module_name);
+			const blc_schema = piep_cms_manager.getVNodeSchema(v_node); //.blcs_schema.find((b) => b.id === v_node.module_name);
 
-			const map_tag_display_name = {
-				a: "Link", // never used ;)
-				h1: "Nagłówek H1",
-				h2: "Nagłówek H2",
-				h3: "Nagłówek H3",
-				h4: "Nagłówek H4",
-				h5: "Nagłówek H5",
-				h6: "Nagłówek H6",
-				div: "Kontener",
-				p: "Paragraf",
-				span: "Tekst",
-				ul: "Lista",
-				li: "Element listy",
-			};
+			// const map_tag_display_name = {
+			// 	a: "Link", // never used ;)
+			// 	h1: "Nagłówek H1",
+			// 	h2: "Nagłówek H2",
+			// 	h3: "Nagłówek H3",
+			// 	h4: "Nagłówek H4",
+			// 	h5: "Nagłówek H5",
+			// 	h6: "Nagłówek H6",
+			// 	div: "Kontener",
+			// 	p: "Paragraf",
+			// 	span: "Tekst",
+			// 	ul: "Lista",
+			// 	li: "Element listy",
+			// };
 
 			if (v_node.settings && v_node.settings.template_hook_name) {
 				display_name = v_node.settings.template_hook_name;
-			} else if (v_node.module_name) {
-				if (blc_schema) {
-					display_name = blc_schema.label;
-				}
-			} else if (map_tag_display_name[tag]) {
-				display_name = map_tag_display_name[tag];
+			} else if (blc_schema) {
+				display_name = blc_schema.label;
 			}
 
-			if (v_node.classes.includes("vertical_container")) {
-				display_name = "Kontener";
-			}
+			// else if (v_node.module_name) {
+
+			// } else if (map_tag_display_name[tag]) {
+			// 	//display_name = map_tag_display_name[tag];
+			// }
+
+			// if (v_node.classes.includes("vertical_container")) {
+			// 	display_name = "Kontener";
+			// }
 		}
 
 		if (v_node.settings && v_node.settings.link) {

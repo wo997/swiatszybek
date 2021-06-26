@@ -13,10 +13,10 @@
 	}
 	.btn {
 		border-radius: 0;
-		padding-left: 0;
-		padding-right: 0;
 		box-shadow: none;
 		--hover-shadow: none;
+		--field_padding_ver: 0.6em;
+		--field_padding_hor: 0;
 	}
 	.btn_wrapper {
 		& {
@@ -27,4 +27,14 @@
 			width: 100%;
 		}
 	}
+	.btn i {
+		font-size: 1.3em;
+		color: #555;
+	}
+	// & > {
+	// 	.btn_wrapper,
+	// 	.btn {
+	// 		margin-bottom: 3px;
+	// 	}
+	// }
 }
