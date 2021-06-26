@@ -422,7 +422,6 @@
 				dropdown._set_value("", { quiet: true });
 
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === blc_schema_id);
-				//console.log(blc_schema);
 
 				const focus_vid = piep_cms.text_selection.focus_vid;
 				const focus_offset = piep_cms.text_selection.focus_offset;
@@ -430,78 +429,28 @@
 				const v_node_data = piep_cms.getVNodeDataById(focus_vid);
 				const v_node = v_node_data.v_node;
 
-				// if (focus_offset > 0 && focus_offset <v_node.text.length)  {
+				if (focus_offset > 0 && focus_offset < v_node.text.length) {
+					/** @type {vDomNode} */
+					const insert_v_node = cloneObject(v_node);
+					insert_v_node.id = piep_cms.getNewBlcId();
+					insert_v_node.text = v_node.text.substring(focus_offset);
+					v_node.text = v_node.text.substring(0, focus_offset);
+					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
+				}
 
-				// }
+				piep_cms.collapseTextSelection();
 
 				/** @type {vDomNode} */
 				const insert_v_node = cloneObject(blc_schema.v_node);
-				v_node_data.v_nodes.splice(v_node_data.index, 0, insert_v_node);
+				let index = v_node_data.index;
+				if (focus_offset === v_node.text.length) {
+					index++;
+				}
+				v_node_data.v_nodes.splice(index, 0, insert_v_node);
 				piep_cms.setNewIdsOnVNode(insert_v_node);
 				piep_cms.update({ all: true });
 
-				// const v_node_data = this.getVNodeDataById(range.vid);
-				// 		if (!v_node_data) {
-				// 			return;
-				// 		}
-				// 		const v_node = v_node_data.v_node;
-
-				// 		const bef_vid = this.getNewBlcId();
-				// 		const mid_vid = bef_vid + 1;
-				// 		const aft_vid = bef_vid + 2;
-
-				// 		/** @type {vDomNode[]} */
-				// 		const put_v_nodes = [];
-
-				// 		/**
-				// 		 *
-				// 		 * @param {number} id
-				// 		 * @param {string} text
-				// 		 * @returns
-				// 		 */
-				// 		const getSpan = (id, text) => {
-				// 			return {
-				// 				id,
-				// 				tag: "span",
-				// 				styles: {},
-				// 				text,
-				// 				attrs: {},
-				// 				classes: [],
-				// 				settings: {},
-				// 				responsive_settings: {},
-				// 			};
-				// 		};
-
-				// 		if (range.start > 0) {
-				// 			put_v_nodes.push(getSpan(bef_vid, v_node.text.substring(0, range.start)));
-				// 		}
-
-				// 		const mid_text = v_node.text.substring(range.start, range.end);
-				// 		put_v_nodes.push(getSpan(mid_vid, mid_text));
-
-				// 		if (range.end < v_node.text.length) {
-				// 			put_v_nodes.push(getSpan(aft_vid, v_node.text.substring(range.end)));
-				// 		}
-
-				// 		// do the split and spread options
-				// 		put_v_nodes.forEach((put_v_node) => {
-				// 			deepAssign(put_v_node.styles, v_node.styles);
-				// 			deepAssign(put_v_node.attrs, v_node.attrs);
-				// 			deepAssign(put_v_node.settings, v_node.settings);
-				// 			deepAssign(put_v_node.responsive_settings, v_node.responsive_settings);
-				// 		});
-				// 		v_node_data.v_nodes.splice(v_node_data.index, 1, ...put_v_nodes);
-
-				// 		this.text_selection.middle_vids.push(mid_vid);
-
-				// 		if (range.vid === this.text_selection.anchor_vid) {
-				// 			this.text_selection.anchor_vid = mid_vid;
-				// 			this.text_selection.anchor_offset = this.text_selection.direction === 1 ? 0 : mid_text.length;
-				// 		}
-				// 		if (range.vid === this.text_selection.focus_vid) {
-				// 			this.text_selection.focus_vid = mid_vid;
-				// 			this.text_selection.focus_offset = this.text_selection.direction === 1 ? mid_text.length : 0;
-				// 		}
+				piep_cms.displayTextSelection();
 			});
 		},
 	});
