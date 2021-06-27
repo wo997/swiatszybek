@@ -440,7 +440,7 @@ class PiepCMS {
 				const width = 2;
 				const height = Math.max(focus_range_rect.height, 20);
 				this.cursor._set_absolute_pos(
-					focus_range_rect.left + (focus_range_rect.width - width) * 0.5,
+					focus_range_rect.left + (this.text_selection.direction === 1 ? focus_range_rect.width : 0) - width * 0.5,
 					focus_range_rect.top + this.content_scroll.scrollTop
 				);
 				this.cursor.style.width = width + "px";
@@ -3468,7 +3468,7 @@ class PiepCMS {
 
 	showFocus() {
 		/** @type {ShowFocusToNodeData[]} */
-		const show_vids = [];
+		const show_focuses = [];
 
 		let show_float_menu = false;
 
@@ -3481,10 +3481,10 @@ class PiepCMS {
 			if (!v_node_data) {
 				return;
 			}
-			show_vids.push({ vid, opacity: 1 });
+			show_focuses.push({ vid, opacity: 1 });
 			v_node_data.parent_v_nodes.forEach((parent_v_node, index) => {
 				if (!parent_v_node.disabled) {
-					show_vids.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
+					show_focuses.push({ vid: parent_v_node.id, opacity: Math.pow(0.5, index + 1) });
 				}
 			});
 		};
@@ -3498,7 +3498,7 @@ class PiepCMS {
 		} else {
 			if (!this.grabbed_v_node && this.focus_node_vid !== undefined) {
 				show_float_menu = true;
-				show_vids.push({ vid: this.focus_node_vid, opacity: 1 });
+				show_focuses.push({ vid: this.focus_node_vid, opacity: 1 });
 			}
 
 			if (this.grabbed_v_node) {
@@ -3531,7 +3531,7 @@ class PiepCMS {
 			}
 		}
 
-		this.showFocusToNodes(show_vids);
+		this.showFocusToNodes(show_focuses);
 
 		this.float_menu.classList.toggle("hidden", !show_float_menu);
 
