@@ -72,14 +72,16 @@
 				if (target._parent(".remove_blc_btn")) {
 					if (piep_cms.text_selection) {
 						piep_cms.removeTextInSelection();
-						piep_cms.pushHistory(`remove_blc_${piep_cms.text_selection.focus_vid}`);
+						const fvid = piep_cms.text_selection.focus_vid;
+						piep_cms.text_selection = undefined;
+						piep_cms.update({ all: true });
+						piep_cms.pushHistory(`remove_blc_${fvid}`);
 					} else {
 						piep_cms.removeVNodes([piep_cms.focus_node_vid]);
 						piep_cms.update({ all: true });
-						piep_cms.setFocusNode(undefined);
-
 						piep_cms.pushHistory(`remove_blc_${piep_cms.focus_node_vid}`);
 					}
+					piep_cms.setFocusNode(undefined);
 				}
 			});
 		},

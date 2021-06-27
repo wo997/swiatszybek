@@ -125,6 +125,7 @@ class PiepCMS {
 		const anchor_text_container = sel_anchor_node._parent(".text_container");
 		// const focus_text_container = sel_focus_node._parent(".text_container");
 		// let ftc = focus_text_container;
+		let focus_textable = true;
 		while (sel_focus_node) {
 			if (!sel_focus_node._parent(".text_container", { skip: 1 })._parent(anchor_text_container, { skip: 1 })) {
 				break;
@@ -134,6 +135,7 @@ class PiepCMS {
 			// in case focus_text_container is nested in anchor_text_container
 			sel_focus_node = sel_focus_node._parent(".in_text_container", { skip: 1 });
 			focus_offset = 0;
+			focus_textable = false;
 		}
 
 		if (is_anchor_in_text_container && is_focus_in_text_container) {
@@ -214,13 +216,21 @@ class PiepCMS {
 				let next = sel_anchor_node;
 				while (true) {
 					next = this.getDeepSibling(next, ".in_text_container", direction);
-					if (next === sel_focus_node) {
+					const end = next === sel_focus_node;
+					if (end && focus_textable) {
 						break;
 					}
 					if (next) {
+						if (next.classList.contains("textable")) {
+							total_length += next.textContent.length;
+						} else {
+							total_length += 1;
+						}
 						middle_vids.push(+next.dataset.vid);
-						total_length += next.textContent.length;
 					} else {
+						break;
+					}
+					if (end) {
 						break;
 					}
 				}
@@ -2313,13 +2323,13 @@ class PiepCMS {
 	}
 
 	manageText() {
-		if (!this.content_active) {
-			return;
-		}
+		// if (!this.content_active) {
+		// 	return;
+		// }
 		// removes empty textables that are not focused btw
 		// also merges textables that are similar and next to each other
 
-		let vids = [];
+		let remove_vids = [];
 		/**
 		 * @param {vDomNode[]} v_nodes
 		 */
@@ -2334,7 +2344,8 @@ class PiepCMS {
 
 				if (this.isTextContainer(v_node)) {
 					if (children.length === 0) {
-						vids.push(vid);
+						console.log(111);
+						remove_vids.push(vid);
 						continue;
 					}
 				}
@@ -2342,7 +2353,7 @@ class PiepCMS {
 				if (!single_node && v_node.text !== undefined) {
 					if (text === "") {
 						if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
-							vids.push(vid);
+							remove_vids.push(vid);
 						}
 						continue;
 					} else if (i + 1 < len) {
@@ -2356,7 +2367,7 @@ class PiepCMS {
 							isEquivalent(v_node.responsive_settings, next_v_node.responsive_settings)
 						) {
 							// remove self and append text to another, ezy?
-							vids.push(vid);
+							remove_vids.push(vid);
 							if (this.text_selection) {
 								if (this.text_selection.focus_vid === next_v_node.id) {
 									this.text_selection.focus_offset += text.length;
@@ -2377,12 +2388,12 @@ class PiepCMS {
 
 		traverseVDom(this.v_dom);
 
-		const anything = this.removeVNodes(vids);
+		const anything = this.removeVNodes(remove_vids);
 		if (anything) {
 			// just in case we needed to collapse somethin
-			vids = [];
+			remove_vids = [];
 			traverseVDom(this.v_dom);
-			this.removeVNodes(vids);
+			this.removeVNodes(remove_vids);
 
 			this.update({ dom: true, selection: true });
 		}
@@ -3270,9 +3281,9 @@ class PiepCMS {
 		/** @type {number[]} */
 		const remove_vids = [];
 		for (const mid_vid of this.text_selection.middle_vids) {
-			if (mid_vid === this.text_selection.focus_vid) {
-				const v_node = this.getVNodeById(mid_vid);
-				v_node.text = ""; // just empty the guy who is selected, remove others
+			const v_node = this.getVNodeById(mid_vid);
+			if (v_node.text !== undefined && mid_vid === this.text_selection.focus_vid) {
+				v_node.text = ""; // just empty the guy who is selected, remove others, so we can keep typing anyway
 				this.text_selection.focus_offset = 0;
 			} else {
 				remove_vids.push(mid_vid);
@@ -3281,8 +3292,11 @@ class PiepCMS {
 
 		this.text_selection.partial_ranges.forEach((range) => {
 			const v_node = this.getVNodeById(range.vid);
-			v_node.text = v_node.text.substring(0, range.start) + v_node.text.substring(range.end);
+			if (v_node.text === undefined) {
+				return;
+			}
 
+			v_node.text = v_node.text.substring(0, range.start) + v_node.text.substring(range.end);
 			if (this.text_selection.focus_vid === range.vid && this.text_selection.direction === 1) {
 				this.text_selection.focus_offset += range.start - range.end;
 			}

@@ -38,7 +38,7 @@
 // 	border: 1px solid #0005;
 // }
 .piep_editor_content:hover {
-	.blc:not(.editor_disabled):not(.textable) {
+	.blc:not(.editor_disabled):not(.in_text_container) {
 		outline: 1px solid #0005;
 	}
 }
