@@ -116,6 +116,7 @@ class PiepCMS {
 		let anchor_vid = +sel_anchor_node.dataset.vid;
 		let focus_vid = +sel_focus_node.dataset.vid;
 
+		const native_sel_focus_node = sel_focus_node;
 		// const is_anchor_textable = sel_anchor_node.classList.contains("textable");
 		// const is_focus_textable = sel_focus_node.classList.contains("textable");
 
@@ -165,7 +166,11 @@ class PiepCMS {
 			 * @returns {boolean}
 			 */
 			const validContext = (node) => {
-				return !anchor_text_container._parent(node._parent(".text_container", { skip: 1 }), { skip: 1 });
+				const node_text_container = node._parent(".text_container", { skip: 1 });
+				return (
+					!anchor_text_container._parent(node_text_container, { skip: 1 }) &&
+					!node_text_container._parent(anchor_text_container, { skip: 1 })
+				);
 			};
 
 			{
@@ -194,38 +199,38 @@ class PiepCMS {
 						}
 					}
 				} else {
-					const focus_valid = validContext(sel_focus_node);
+					const focus_valid = validContext(native_sel_focus_node);
 
-					if (start_offset === 0) {
-						if ((direction === -1 && focus_valid) || focus_textable) {
+					if (direction === 1 || focus_valid) {
+						if (start_offset === 0) {
 							middle_vids.push(start_vid);
-						}
-					} else if (direction === 1 || focus_valid) {
-						const length = start_len - start_offset;
-						if (length > 0) {
-							total_length += length;
-							partial_ranges.push({
-								vid: start_vid,
-								start: start_offset,
-								end: start_len,
-							});
+						} else {
+							const length = start_len - start_offset;
+							if (length > 0) {
+								total_length += length;
+								partial_ranges.push({
+									vid: start_vid,
+									start: start_offset,
+									end: start_len,
+								});
+							}
 						}
 					}
 
-					if (end_offset === end_len) {
-						if ((direction === 1 && focus_valid) || focus_textable) {
+					if (direction === -1 || focus_valid) {
+						if (end_offset === end_len) {
 							middle_vids.push(end_vid);
 							total_length += end_len;
-						}
-					} else if (direction === -1 || focus_valid) {
-						const length = end_offset;
-						if (length > 0) {
-							total_length += length;
-							partial_ranges.push({
-								vid: end_vid,
-								start: 0,
-								end: end_offset,
-							});
+						} else {
+							const length = end_offset;
+							if (length > 0) {
+								total_length += length;
+								partial_ranges.push({
+									vid: end_vid,
+									start: 0,
+									end: end_offset,
+								});
+							}
 						}
 					}
 				}
