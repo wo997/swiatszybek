@@ -155,6 +155,15 @@ class PiepCMS {
 			/** @type {number[]} */
 			const middle_vids = [];
 
+			/**
+			 *
+			 * @param {PiepNode} node
+			 * @returns {boolean}
+			 */
+			const invalidContext = (node) => {
+				return !!anchor_text_container._parent(node._parent(".text_container", { skip: 1 }), { skip: 1 });
+			};
+
 			{
 				const start_offset = direction === 1 ? anchor_offset : focus_offset;
 				const end_offset = direction === 1 ? focus_offset : anchor_offset;
@@ -181,11 +190,13 @@ class PiepCMS {
 						}
 					}
 				} else {
+					const focus_valid = !invalidContext(sel_focus_node);
+
 					if (start_offset === 0) {
-						if (direction === -1 || focus_textable) {
+						if ((direction === -1 || focus_textable) && focus_valid) {
 							middle_vids.push(start_vid);
 						}
-					} else {
+					} else if (direction === 1 || focus_valid) {
 						const length = start_len - start_offset;
 						if (length > 0) {
 							total_length += length;
@@ -198,11 +209,11 @@ class PiepCMS {
 					}
 
 					if (end_offset === end_len) {
-						if (direction === 1 || focus_textable) {
+						if ((direction === 1 || focus_textable) && focus_valid) {
 							middle_vids.push(end_vid);
 							total_length += end_len;
 						}
-					} else {
+					} else if (direction === -1 || focus_valid) {
 						const length = end_offset;
 						if (length > 0) {
 							total_length += length;
@@ -225,6 +236,9 @@ class PiepCMS {
 						break;
 					}
 					if (next) {
+						if (invalidContext(next)) {
+							break;
+						}
 						if (next.classList.contains("textable")) {
 							total_length += next.textContent.length;
 						} else {
