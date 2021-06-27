@@ -203,9 +203,14 @@ domload(() => {
 		// }
 	});
 
+	let care_about_refresh = false;
+	window.addEventListener("shipping_label_open", () => {
+		care_about_refresh = true;
+	});
 	document.addEventListener("visibilitychange", () => {
-		if (!document.hidden) {
+		if (!document.hidden && care_about_refresh) {
 			datatable_comp._backend_search();
+			care_about_refresh = false;
 		}
 	});
 });

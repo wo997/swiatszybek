@@ -75,6 +75,7 @@ function showShippingLabelModal(shop_order_data, options = {}) {
 		$$("#ShippingLabelModal form").forEach((e) => {
 			e.addEventListener("submit", () => {
 				hideModal("ShippingLabelModal");
+				window.dispatchEvent(new CustomEvent("shipping_label_open"));
 			});
 		});
 	}

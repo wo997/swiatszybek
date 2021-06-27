@@ -219,8 +219,8 @@ function getPhysicalMeasures()
                     "name" => "V",
                     "multiply" => 1
                 ], [
-                    "id" => "KV",
-                    "name" => "KV",
+                    "id" => "kV",
+                    "name" => "kV",
                     "multiply" => 1000
                 ], [
                     "id" => "MV",
@@ -238,8 +238,8 @@ function getPhysicalMeasures()
                     "name" => "W",
                     "multiply" => 1
                 ], [
-                    "id" => "KW",
-                    "name" => "KW",
+                    "id" => "kW",
+                    "name" => "kW",
                     "multiply" => 1000
                 ], [
                     "id" => "MW",
