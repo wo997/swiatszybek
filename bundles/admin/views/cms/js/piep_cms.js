@@ -113,14 +113,28 @@ class PiepCMS {
 	 * Pretty much recalculates selection, have fun
 	 */
 	definiteSelection(sel_anchor_node, anchor_offset, sel_focus_node, focus_offset) {
-		const anchor_vid = +sel_anchor_node.dataset.vid;
-		const focus_vid = +sel_focus_node.dataset.vid;
+		let anchor_vid = +sel_anchor_node.dataset.vid;
+		let focus_vid = +sel_focus_node.dataset.vid;
 
 		// const is_anchor_textable = sel_anchor_node.classList.contains("textable");
 		// const is_focus_textable = sel_focus_node.classList.contains("textable");
 
 		const is_anchor_in_text_container = sel_anchor_node.classList.contains("in_text_container");
 		const is_focus_in_text_container = sel_focus_node.classList.contains("in_text_container");
+
+		const anchor_text_container = sel_anchor_node._parent(".text_container");
+		// const focus_text_container = sel_focus_node._parent(".text_container");
+		// let ftc = focus_text_container;
+		while (sel_focus_node) {
+			if (!sel_focus_node._parent(".text_container", { skip: 1 })._parent(anchor_text_container, { skip: 1 })) {
+				break;
+			} else {
+				// console.log(sel_focus_node, anchor_text_container);
+			}
+			// in case focus_text_container is nested in anchor_text_container
+			sel_focus_node = sel_focus_node._parent(".in_text_container", { skip: 1 });
+			focus_offset = 0;
+		}
 
 		if (is_anchor_in_text_container && is_focus_in_text_container) {
 			const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
@@ -345,6 +359,7 @@ class PiepCMS {
                         width:${r.width}px;
                         height:${r.height}px;"
 				></div>`;
+				return;
 			}
 
 			/** @type {DOMRect[]} */
@@ -445,15 +460,19 @@ class PiepCMS {
 		if (this.text_selection) {
 			const focus_node = this.getNode(this.text_selection.focus_vid);
 			if (focus_node) {
-				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-				const focus_range_rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
-
-				//const width = Math.max(focus_range_rect.width, 2);
+				/** @type {DOMRect} */
+				let rect;
+				if (focus_node.classList.contains("textable")) {
+					const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+					rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
+				} else {
+					rect = focus_node.getBoundingClientRect();
+				}
 				const width = 2;
-				const height = Math.max(focus_range_rect.height, 20);
+				const height = Math.max(rect.height, 20);
 				this.cursor._set_absolute_pos(
-					focus_range_rect.left + (this.text_selection.direction === 1 ? focus_range_rect.width : 0) - width * 0.5,
-					focus_range_rect.top + this.content_scroll.scrollTop
+					rect.left + (this.text_selection.direction === 1 ? rect.width : 0) - width * 0.5,
+					rect.top + this.content_scroll.scrollTop
 				);
 				this.cursor.style.width = width + "px";
 				this.cursor.style.height = height + "px";
