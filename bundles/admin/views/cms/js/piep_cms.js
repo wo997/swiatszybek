@@ -127,14 +127,14 @@ class PiepCMS {
 		// let ftc = focus_text_container;
 		let focus_textable = true;
 		while (sel_focus_node) {
-			if (!sel_focus_node._parent(".text_container", { skip: 1 })._parent(anchor_text_container, { skip: 1 })) {
+			const tc = sel_focus_node._parent(".text_container", { skip: 1 });
+			if (tc && !tc._parent(anchor_text_container, { skip: 1 })) {
 				break;
 			} else {
 				// console.log(sel_focus_node, anchor_text_container);
 			}
 			// in case focus_text_container is nested in anchor_text_container
 			sel_focus_node = sel_focus_node._parent(".in_text_container", { skip: 1 });
-			focus_offset = 0;
 			focus_textable = false;
 		}
 
@@ -148,6 +148,10 @@ class PiepCMS {
 
 			const direction = compareIndices(indices_anchor, indices_focus);
 
+			if (!focus_textable) {
+				focus_offset = direction === 1 ? 1 : 0;
+			}
+
 			let total_length = 0;
 
 			/** @type {PiepTextPartialRange[]} */
@@ -160,8 +164,8 @@ class PiepCMS {
 			 * @param {PiepNode} node
 			 * @returns {boolean}
 			 */
-			const invalidContext = (node) => {
-				return !!anchor_text_container._parent(node._parent(".text_container", { skip: 1 }), { skip: 1 });
+			const validContext = (node) => {
+				return !anchor_text_container._parent(node._parent(".text_container", { skip: 1 }), { skip: 1 });
 			};
 
 			{
@@ -171,8 +175,8 @@ class PiepCMS {
 				const end_vid = direction === 1 ? focus_vid : anchor_vid;
 				const sel_start_node = direction === 1 ? sel_anchor_node : sel_focus_node;
 				const sel_end_node = direction === 1 ? sel_focus_node : sel_anchor_node;
-				const start_len = sel_start_node.textContent.length;
-				const end_len = sel_end_node.textContent.length;
+				const start_len = sel_start_node.classList.contains("textable") ? sel_start_node.textContent.length : 1;
+				const end_len = sel_end_node.classList.contains("textable") ? sel_end_node.textContent.length : 1;
 
 				if (single_node) {
 					if (start_offset === 0 && end_offset === start_len) {
@@ -190,10 +194,10 @@ class PiepCMS {
 						}
 					}
 				} else {
-					const focus_valid = !invalidContext(sel_focus_node);
+					const focus_valid = validContext(sel_focus_node);
 
 					if (start_offset === 0) {
-						if ((direction === -1 || focus_textable) && focus_valid) {
+						if ((direction === -1 && focus_valid) || focus_textable) {
 							middle_vids.push(start_vid);
 						}
 					} else if (direction === 1 || focus_valid) {
@@ -209,7 +213,7 @@ class PiepCMS {
 					}
 
 					if (end_offset === end_len) {
-						if ((direction === 1 || focus_textable) && focus_valid) {
+						if ((direction === 1 && focus_valid) || focus_textable) {
 							middle_vids.push(end_vid);
 							total_length += end_len;
 						}
@@ -236,7 +240,7 @@ class PiepCMS {
 						break;
 					}
 					if (next) {
-						if (invalidContext(next)) {
+						if (!validContext(next)) {
 							break;
 						}
 						if (next.classList.contains("textable")) {
@@ -490,18 +494,18 @@ class PiepCMS {
 			if (focus_node) {
 				/** @type {DOMRect} */
 				let rect;
+				let add_width = false;
 				if (focus_node.classList.contains("textable")) {
 					const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
 					rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
 				} else {
 					rect = focus_node.getBoundingClientRect();
+					add_width = this.text_selection.focus_offset === 1;
 				}
 				const width = 2;
 				const height = Math.max(rect.height, 20);
-				this.cursor._set_absolute_pos(
-					rect.left + (this.text_selection.direction === 1 ? rect.width : 0) - width * 0.5,
-					rect.top + this.content_scroll.scrollTop
-				);
+
+				this.cursor._set_absolute_pos(rect.left + (add_width ? rect.width : 0) - width * 0.5, rect.top + this.content_scroll.scrollTop);
 				this.cursor.style.width = width + "px";
 				this.cursor.style.height = height + "px";
 			}
@@ -3297,11 +3301,20 @@ class PiepCMS {
 		const remove_vids = [];
 		for (const mid_vid of this.text_selection.middle_vids) {
 			const v_node = this.getVNodeById(mid_vid);
-			if (v_node.text !== undefined && mid_vid === this.text_selection.focus_vid) {
+			const focused = mid_vid === this.text_selection.focus_vid;
+			if (v_node.text !== undefined && focused) {
 				v_node.text = ""; // just empty the guy who is selected, remove others, so we can keep typing anyway
 				this.text_selection.focus_offset = 0;
 			} else {
 				remove_vids.push(mid_vid);
+				if (focused) {
+					const next_textable = this.getDeepSibling(this.getNode(mid_vid), ".in_text_container", this.text_selection.direction);
+					if (next_textable) {
+						this.text_selection.focus_vid = +next_textable.dataset.vid;
+						const next_len = next_textable.classList.contains("textable") ? next_textable.textContent.length : 1;
+						this.text_selection.focus_offset = this.text_selection.direction === 1 ? 0 : next_len;
+					}
+				}
 			}
 		}
 
@@ -3325,6 +3338,11 @@ class PiepCMS {
 		//this.recreateDom();
 
 		this.pushHistory("delete_text");
+
+		// just in case, never fires?
+		if (this.text_selection && !this.getVNodeById(this.text_selection.focus_vid)) {
+			this.text_selection = undefined;
+		}
 	}
 
 	/**
@@ -5757,16 +5775,18 @@ class PiepCMS {
 		const vid = this.text_selection.focus_vid;
 		const v_node = this.getVNodeById(vid);
 
-		if (!v_node || v_node.text === undefined) {
+		if (!v_node) {
 			return;
 		}
 
-		const edge = dir === 1 ? focus_offset >= v_node.text.length : focus_offset <= 0;
+		const len = v_node.text === undefined ? 1 : v_node.text.length;
+		const edge = dir === 1 ? focus_offset >= len : focus_offset <= 0;
 		if (edge) {
 			const next_textable = this.getDeepSibling(focus_node, ".in_text_container", dir);
 			if (next_textable) {
 				this.text_selection.focus_vid = +next_textable.dataset.vid;
-				this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
+				const next_len = next_textable.classList.contains("textable") ? next_textable.textContent.length : 1;
+				this.text_selection.focus_offset = dir === 1 ? 0 : next_len;
 			}
 		} else {
 			this.text_selection.focus_offset += dir;
