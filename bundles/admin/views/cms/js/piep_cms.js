@@ -182,7 +182,9 @@ class PiepCMS {
 					}
 				} else {
 					if (start_offset === 0) {
-						middle_vids.push(start_vid);
+						if (direction === -1 || focus_textable) {
+							middle_vids.push(start_vid);
+						}
 					} else {
 						const length = start_len - start_offset;
 						if (length > 0) {
@@ -196,8 +198,10 @@ class PiepCMS {
 					}
 
 					if (end_offset === end_len) {
-						middle_vids.push(end_vid);
-						total_length += end_len;
+						if (direction === 1 || focus_textable) {
+							middle_vids.push(end_vid);
+							total_length += end_len;
+						}
 					} else {
 						const length = end_offset;
 						if (length > 0) {
@@ -614,8 +618,6 @@ class PiepCMS {
 	renderHistory() {
 		this.undo_btn.toggleAttribute("disabled", this.history_steps_back >= this.edit_history.length - 1);
 		this.redo_btn.toggleAttribute("disabled", this.history_steps_back === 0);
-
-		//this.displayTextSelection();
 	}
 
 	initSelectResolution() {
@@ -3241,7 +3243,6 @@ class PiepCMS {
 	 * @returns {PiepNode | undefined}
 	 */
 	getDeepSibling(node, selector, direction, options = {}) {
-		/** @type {PiepNode} */
 		let parent = node;
 		while (parent) {
 			const next = direction === 1 ? parent._next() : parent._prev();
@@ -5762,7 +5763,6 @@ class PiepCMS {
 		} else {
 			this.collapseTextSelection();
 		}
-		//this.displayTextSelection();
 	}
 
 	/**
