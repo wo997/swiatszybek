@@ -335,6 +335,18 @@ class PiepCMS {
 				return;
 			}
 
+			if (!node.classList.contains("textable")) {
+				const r = node.getBoundingClientRect();
+				selection_html += html`<div
+					class="${class_name}"
+					style="
+                        left:${r.left}px;
+                        top:${r.top + this.content_scroll.scrollTop}px;
+                        width:${r.width}px;
+                        height:${r.height}px;"
+				></div>`;
+			}
+
 			/** @type {DOMRect[]} */
 			let rects = [];
 			/** @type {Position} */
