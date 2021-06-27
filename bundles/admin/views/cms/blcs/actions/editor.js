@@ -30,9 +30,9 @@
 		blc_groups: [
 			{
 				matcher: (v_node_data, piep_cms) => {
-					if (piep_cms.isTextable(v_node_data.v_node)) {
-						return false;
-					}
+					// if (piep_cms.isTextable(v_node_data.v_node)) {
+					// 	return false;
+					// }
 					const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node_data.v_node.module_name);
 					if (blc_schema && blc_schema.single_usage) {
 						return false;
@@ -60,7 +60,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_blc_btn",
-		blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
+		//blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
 		menu_html: html`
 			<button class="btn transparent small remove_blc_btn" data-tooltip="Usuń blok">
 				<i class="fas fa-trash"></i>
@@ -70,21 +70,16 @@
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				if (target._parent(".remove_blc_btn")) {
-					const remove_vids = [piep_cms.focus_node_vid];
+					if (piep_cms.text_selection) {
+						piep_cms.removeTextInSelection();
+						piep_cms.pushHistory(`remove_blc_${piep_cms.text_selection.focus_vid}`);
+					} else {
+						piep_cms.removeVNodes([piep_cms.focus_node_vid]);
+						piep_cms.update({ all: true });
+						piep_cms.setFocusNode(undefined);
 
-					for (const vid of piep_cms.getAllTextSelectionVids()) {
-						const v_node_data = piep_cms.getVNodeDataById(vid);
-						if (v_node_data) {
-							const parent = v_node_data.parent_v_nodes[0];
-							remove_vids.push(parent.id);
-						}
+						piep_cms.pushHistory(`remove_blc_${piep_cms.focus_node_vid}`);
 					}
-
-					piep_cms.removeVNodes(remove_vids.filter(onlyUnique));
-					piep_cms.update({ all: true });
-					piep_cms.setFocusNode(undefined);
-
-					piep_cms.pushHistory(`remove_blc_${piep_cms.focus_node_vid}`);
 				}
 			});
 		},

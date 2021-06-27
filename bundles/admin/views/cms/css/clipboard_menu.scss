@@ -1,0 +1,19 @@
+/* css[piep_cms] */
+
+.piep_editor_clipboard_menu {
+	& {
+		position: absolute;
+		box-shadow: -2px 3px 6px -2px #0003;
+		padding: 10px;
+		border: 1px solid #ccc;
+		z-index: 2600;
+		background: #fff;
+		transition: opacity 0.15s;
+		border-top-left-radius: 4px;
+		border-bottom-left-radius: 4px;
+	}
+	&:not(.visible) {
+		pointer-events: none;
+		opacity: 0;
+	}
+}
