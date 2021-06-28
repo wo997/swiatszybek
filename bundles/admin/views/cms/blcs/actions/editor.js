@@ -12,9 +12,7 @@
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
 				if (target._parent(".move_blc_btn")) {
-					setTimeout(() => {
-						piep_cms.grabBlock({ type: "move" });
-					});
+					piep_cms.grabBlock({ type: "move" });
 				}
 			});
 		},
@@ -35,7 +33,7 @@
 					if (!v_node) {
 						return;
 					}
-					piep_cms.clipboard.pushItem([v_node]);
+					piep_cms.clipboard.pushItem(v_node);
 				}
 			});
 		},

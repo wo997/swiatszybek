@@ -27,9 +27,9 @@ class PiepCMSClipboard {
 	getClipboardItems() {
 		/** @type {CmsClipboarItem[]} */
 		let piep_cms_clipboard;
-		const piep_cms_clipboard_json = localStorage.getItem("piep_cms_clipboard_json");
+		const piep_cms_clipboard_x_json = localStorage.getItem("piep_cms_clipboard_x_json");
 		try {
-			piep_cms_clipboard = JSON.parse(piep_cms_clipboard_json);
+			piep_cms_clipboard = JSON.parse(piep_cms_clipboard_x_json);
 		} catch (e) {}
 
 		if (!piep_cms_clipboard) {
@@ -41,16 +41,16 @@ class PiepCMSClipboard {
 
 	/**
 	 *
-	 * @param {vDomNode[]} v_nodes
+	 * @param {vDomNode} v_node
 	 */
-	pushItem(v_nodes) {
+	pushItem(v_node) {
 		const piep_cms_clipboard = this.getClipboardItems();
-		piep_cms_clipboard.unshift({ v_nodes });
+		piep_cms_clipboard.unshift({ v_node });
 		const max = 10;
 		if (piep_cms_clipboard.length > max) {
 			piep_cms_clipboard.splice(max, piep_cms_clipboard.length - max);
 		}
-		localStorage.setItem("piep_cms_clipboard_json", JSON.stringify(piep_cms_clipboard));
+		localStorage.setItem("piep_cms_clipboard_x_json", JSON.stringify(piep_cms_clipboard));
 		this.update();
 	}
 
@@ -203,14 +203,23 @@ class PiepCMSClipboard {
 
 		this.clipboard_items_wrapper._empty();
 
-		this.getClipboardItems().forEach((e) => {
+		const ci = this.getClipboardItems();
+		ci.forEach((e) => {
 			const item = $(document.createElement("DIV"));
 
 			item.classList.add("clipboard_item", "global_root");
 
+			item.addEventListener("click", () => {
+				this.piep_cms.grabBlockFromVNode(e.v_node);
+			});
+
 			this.clipboard_items_wrapper.append(item);
-			traverseVDom(item, e.v_nodes);
+			traverseVDom(item, [e.v_node]);
 		});
+
+		if (ci.length === 0) {
+			this.clipboard_items_wrapper._set_content(html` <div class="semi_bold">Brak elementów w schowku</div> `);
+		}
 	}
 
 	mouseMove() {

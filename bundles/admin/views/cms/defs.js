@@ -194,7 +194,7 @@
 
 /**
  * @typedef {{
- * v_nodes: vDomNode[]
+ * v_node: vDomNode
  * }} CmsClipboarItem
  */
 

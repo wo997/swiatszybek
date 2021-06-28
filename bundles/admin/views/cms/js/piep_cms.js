@@ -1560,9 +1560,6 @@ class PiepCMS {
 		} else {
 			grab();
 		}
-
-		// TODO: think about it baby
-		this.setContentActive(true);
 	}
 
 	/**
@@ -1655,6 +1652,13 @@ class PiepCMS {
 			if (this.remove_selection_timeout) {
 				clearTimeout(this.remove_selection_timeout);
 				this.remove_selection_timeout = undefined;
+			}
+
+			if (this.text_selection) {
+				if (!target._parent(this.side_menu) && !target._parent(this.content_wrapper)) {
+					this.text_selection = undefined;
+					this.setContentActive(false);
+				}
 			}
 
 			if (this.content_active && this.text_selection && ev.detail > 1) {
