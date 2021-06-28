@@ -108,6 +108,11 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		comp._reload_data();
 		comp._render();
 
+		const clear_filters_btn = comp._nodes.datatable._child(".node_clear_filters_btn");
+		if (clear_filters_btn) {
+			clear_filters_btn.click();
+		}
+
 		showModal("selectProductFeatureOptions", {
 			source: options.source,
 		});

@@ -113,6 +113,10 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._show = (options = {}) => {
+		const clear_filters_btn = comp._nodes.datatable._child(".node_clear_filters_btn");
+		if (clear_filters_btn) {
+			clear_filters_btn.click();
+		}
 		comp._refresh_dataset();
 
 		setTimeout(() => {
@@ -132,7 +136,7 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Wybierz cechy dla: <span class="product_name"></span></span>
+				<span class="title medium">Wybierz cechy</span>
 				<button class="btn subtle mla" data-node="{${comp._nodes.close_btn}}" onclick="hideParentModal(this)">
 					Zamknij <i class="fas fa-times"></i>
 				</button>

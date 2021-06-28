@@ -514,17 +514,23 @@ function initProductCommentsCallback() {
 	const addComment = $("#addComment .modal_body");
 	const search_btn = $(".product_comments .search_btn");
 	const add_comment_btn_top = $(".add_comment_btn_top");
-	const coms_container = $(".product_comments .coms_container");
+	//const coms_container = $(".product_comments .coms_container");
 
 	let filters_open = false;
 
 	ListComp(comments_list, undefined, general_product_comments_rows);
 
+	const comment_count = +$(".product_comments .results_info_count").innerText;
+
+	if (comment_count < 10) {
+		show_filters.classList.add("hidden");
+	}
+
 	/** @type {PaginationComp} */
 	// @ts-ignore
 	const comments_pagination = $(`pagination-comp.comments`);
 	PaginationComp(comments_pagination, undefined, {
-		total_rows: +$(".product_comments .results_info_count").innerText,
+		total_rows: comment_count,
 		page_id: 0,
 		row_count: 10,
 		row_count_options: [10, 15, 30],
