@@ -269,6 +269,9 @@ body.just_desktop {
 }
 
 .admin_shortcuts {
+	& {
+		padding: 5px 0;
+	}
 	.header {
 		font-weight: var(--bold);
 	}

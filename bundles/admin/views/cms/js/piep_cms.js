@@ -1901,7 +1901,7 @@ class PiepCMS {
 						const focus_vid = this.text_selection.focus_vid;
 						const focus_node = this.getNode(focus_vid);
 
-						if (focus_node && focus_node.classList.contains("textable")) {
+						if (focus_node && focus_node.classList.contains("in_text_container")) {
 							this.removeTextInSelection();
 							this.insertText(ev.key);
 							this.pushHistory("insert_text");
@@ -3363,21 +3363,38 @@ class PiepCMS {
 		//const focus_node = this.getNode(this.text_selection.focus_vid);
 		const focus_offset = this.text_selection.focus_offset;
 		const vid = this.text_selection.focus_vid;
-		const v_node = this.getVNodeById(vid);
+		const v_node_data = this.getVNodeDataById(vid);
+		const v_node = v_node_data.v_node;
 
 		if (!v_node) {
 			return;
 		}
 
+		const modified_vids = [vid];
+
 		const text = v_node.text;
 		if (text === undefined) {
-			return;
+			let new_vid = this.getNewBlcId();
+			const new_span = {
+				id: new_vid,
+				tag: "span",
+				styles: {},
+				text: insert_text,
+				attrs: {},
+				classes: [],
+				settings: {},
+				responsive_settings: {},
+			};
+			v_node_data.v_nodes.splice(v_node_data.index + this.text_selection.focus_offset, 0, new_span);
+			modified_vids.push(new_span.id);
+			this.text_selection.focus_vid = new_span.id;
+			this.text_selection.focus_offset = 0; // changed on bottom anyway
+		} else {
+			v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
 		}
 
-		v_node.text = text.substr(0, focus_offset) + insert_text + text.substr(focus_offset);
-
 		// optimisation
-		this.recreateDom({ vids: [vid] });
+		this.recreateDom({ vids: modified_vids });
 		//this.displayInspectorTree({ vids: [vid] });
 
 		this.text_selection.focus_offset += insert_text.length;

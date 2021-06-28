@@ -45,7 +45,8 @@ class InPostApi
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Host: api-shipx-pl.easypack24.net",
             "Content-Type: application/json",
-            "Authorization: Bearer " . $this->apiToken
+            "Authorization: Bearer {$this->apiToken}",
+            "Accept-Language: pl_PL"
         ]);
         if ($type == "POST") {
             curl_setopt($ch, CURLOPT_POST, 1);
