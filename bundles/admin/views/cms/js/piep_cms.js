@@ -8,6 +8,8 @@ class PiepCMS {
 	constructor(container) {
 		this.container = container;
 
+		this.clipboard = new PiepCMSClipboard(this);
+
 		/** @type {vDomNode[]} */
 		this.v_dom = [];
 		/** @type {PiepCMSEditHistory[]} */
@@ -27,7 +29,7 @@ class PiepCMS {
 		this.initFloatMenu();
 		this.initRightMenu();
 		this.initAddBlockMenu();
-		this.initClipboardMenu();
+		this.clipboard.init();
 		this.initLayoutEdit();
 		this.initInserting();
 		this.initMultiSelect();
@@ -1034,36 +1036,6 @@ class PiepCMS {
 				// }
 			}
 		});
-	}
-
-	initClipboardMenu() {
-		document.addEventListener("visibilitychange", () => {
-			if (!document.hidden) {
-				this.updateClipboard();
-			}
-		});
-
-		this.updateClipboard();
-	}
-
-	updateClipboard() {
-		let menu_html = "";
-
-		let piep_cms_clipboard;
-		const piep_cms_clipboard_json = localStorage.getItem("piep_cms_clipboard_json");
-		try {
-			piep_cms_clipboard = JSON.parse(piep_cms_clipboard_json);
-		} catch (e) {}
-
-		if (!piep_cms_clipboard) {
-			piep_cms_clipboard = [];
-		}
-
-		menu_html += JSON.stringify(piep_cms_clipboard);
-
-		//menu_html += html` <div>adadadada dsaad xxx</div> `;
-
-		this.clipboard_menu._set_content(menu_html);
 	}
 
 	initAddBlockMenu() {
@@ -3692,49 +3664,6 @@ class PiepCMS {
 		}
 	}
 
-	clipboardBtnMove() {
-		let show_clipboard_menu = false;
-		const was_visible = this.clipboard_menu.classList.contains("visible");
-
-		if (mouse.target) {
-			const hover = !!mouse.target._parent(this.clipboard_btn_wrapper) || !!mouse.target._parent(this.clipboard_menu);
-			if (this.selected_resolution === "df" && hover && !this.grabbed_v_node) {
-				show_clipboard_menu = true;
-
-				if (this.hide_clipboard_menu_timeout) {
-					clearTimeout(this.hide_clipboard_menu_timeout);
-					this.hide_clipboard_menu_timeout = undefined;
-				}
-			} else {
-				if (!this.hide_clipboard_menu_timeout && was_visible) {
-					this.hide_clipboard_menu_timeout = setTimeout(() => {
-						show_clipboard_menu = false;
-						this.hide_clipboard_menu_timeout = undefined;
-						this.clipboard_menu.classList.remove("visible");
-					}, 300);
-				}
-			}
-		}
-
-		if (show_clipboard_menu) {
-			if (!was_visible) {
-				// display
-				this.clipboard_menu.classList.add("visible");
-				this.clipboard_menu._set_absolute_pos(0, 0);
-
-				const clipboard_btn_rect = this.clipboard_btn.getBoundingClientRect();
-				const clipboard_menu_rect = this.clipboard_menu.getBoundingClientRect();
-
-				const left = clipboard_btn_rect.left - clipboard_menu_rect.width;
-				const top = clipboard_btn_rect.top; // - 1; // -1 to make it pretty
-
-				this.clipboard_menu._set_absolute_pos(left, top);
-			}
-		}
-
-		this.clipboard_btn.style.setProperty("--btn-background-clr", show_clipboard_menu ? "#eee" : "");
-	}
-
 	addBlcBtnMove() {
 		let show_add_block_menu = false;
 		const was_visible = this.add_block_menu.classList.contains("visible");
@@ -4032,7 +3961,7 @@ class PiepCMS {
 		//this.inspectorMove();
 		this.layoutEditMove();
 		this.addBlcBtnMove();
-		this.clipboardBtnMove();
+		this.clipboard.mouseMove();
 		this.selectingBlock();
 
 		const alternative_scroll_panel_left = 0;

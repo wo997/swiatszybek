@@ -27,20 +27,6 @@
 				<i class="fas fa-copy"></i>
 			</button>
 		`,
-		blc_groups: [
-			{
-				matcher: (v_node_data, piep_cms) => {
-					// if (piep_cms.isTextable(v_node_data.v_node)) {
-					// 	return false;
-					// }
-					const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === v_node_data.v_node.module_name);
-					if (blc_schema && blc_schema.single_usage) {
-						return false;
-					}
-					return true;
-				},
-			},
-		],
 		init: (piep_cms) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
@@ -49,10 +35,7 @@
 					if (!v_node) {
 						return;
 					}
-					setTimeout(() => {
-						// otherwise would be released immediately
-						piep_cms.grabBlockFromVNode(v_node);
-					});
+					piep_cms.clipboard.pushItem([v_node]);
 				}
 			});
 		},

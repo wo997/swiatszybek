@@ -4,7 +4,6 @@
 	& {
 		position: absolute;
 		box-shadow: -2px 3px 6px -2px #0003;
-		padding: 10px;
 		border: 1px solid #ccc;
 		z-index: 2600;
 		background: #fff;
@@ -12,8 +11,38 @@
 		border-top-left-radius: 4px;
 		border-bottom-left-radius: 4px;
 	}
+	.clipboard_items {
+		max-height: 70vh;
+		padding: 10px;
+	}
 	&:not(.visible) {
 		pointer-events: none;
 		opacity: 0;
+	}
+	.clipboard_item {
+		& {
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			cursor: pointer;
+			max-height: 400px;
+			overflow: hidden;
+			width: min(500px, 80vw);
+		}
+		* {
+			pointer-events: none !important;
+		}
+		&:hover {
+			background: #eee;
+		}
+		.we_wont_render {
+			padding: 10px;
+			border: 2px solid #47a;
+			border-radius: 4px;
+			font-weight: var(--semi_bold);
+		}
+		&:not(:first-child) {
+			margin-top: 10px;
+		}
 	}
 }

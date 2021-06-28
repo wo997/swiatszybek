@@ -193,5 +193,11 @@
  */
 
 /**
+ * @typedef {{
+ * v_nodes: vDomNode[]
+ * }} CmsClipboarItem
+ */
+
+/**
  * @typedef {"side" | "float"} PiepCMSMenuName
  */
