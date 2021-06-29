@@ -39,4 +39,16 @@
 	// 		margin-bottom: 3px;
 	// 	}
 	// }
+
+	.clipboard_btn i {
+		transition: 0.15s all;
+		transform: scale(1.1);
+	}
+	.clipboard_btn {
+		&.jump {
+			i {
+				transform: scale(1.5);
+			}
+		}
+	}
 }

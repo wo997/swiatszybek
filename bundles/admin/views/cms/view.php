@@ -195,7 +195,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
         </button> -->
         <div class="btn_wrapper clipboard_btn_wrapper">
             <button class="btn transparent clipboard_btn">
-                <i class="fas fa-clipboard-list" style="transform:scale(1.1)"></i>
+                <i class="fas fa-clipboard-list"></i>
             </button>
         </div>
         <button class="btn transparent edit_theme_btn" data-tooltip="Ustawienia motywu">

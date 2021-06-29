@@ -21,7 +21,7 @@
 	piep_cms_manager.registerFloatingProp({
 		name: "copy_blc_btn",
 		menu_html: html`
-			<button class="btn transparent small copy_blc_btn" data-tooltip="Skopiuj blok">
+			<button class="btn transparent small copy_blc_btn" data-tooltip="Dodaj do schowka">
 				<i class="fas fa-copy"></i>
 			</button>
 		`,
@@ -34,6 +34,10 @@
 						return;
 					}
 					piep_cms.clipboard.pushItem(v_node);
+					piep_cms.clipboard_btn.classList.add("jump");
+					setTimeout(() => {
+						piep_cms.clipboard_btn.classList.remove("jump");
+					}, 300);
 				}
 			});
 		},
