@@ -220,7 +220,7 @@ class PiepCMSClipboard {
 					if (blc_schema) {
 						if (blc_schema.backend_render || blc_schema.place_node) {
 							node._set_content(html`<div class="we_wont_render">${blc_schema.icon} ${blc_schema.label}</div>`);
-							care_about_children = false;
+							//care_about_children = false;
 						} else {
 							if (blc_schema.render_html) {
 								if (blc_schema.render_html) {
