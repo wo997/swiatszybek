@@ -27,6 +27,10 @@ class PiepCMSClipboard {
 		this.clipboard_items_wrapper = this.container._child(".clipboard_items_wrapper");
 		this.clipboard_item_actions = this.container._child(".clipboard_item_actions");
 
+		this.animate_copy_icon = $(document.createElement("i"));
+		this.animate_copy_icon.classList.add("fas", "fa-copy", "animate_copy_icon");
+		this.piep_cms.container.append(this.animate_copy_icon);
+
 		this.clipboard_item_actions.classList.add("hidden");
 
 		document.addEventListener("visibilitychange", () => {
@@ -53,6 +57,37 @@ class PiepCMSClipboard {
 		});
 
 		this.update();
+	}
+
+	/**
+	 *
+	 * @param {PiepNode} src
+	 */
+	animate(src) {
+		const src_rect = src.getBoundingClientRect();
+		const clipboard_btn_wrapper_rect = this.piep_cms.clipboard_btn_wrapper.getBoundingClientRect();
+
+		animate(
+			this.animate_copy_icon,
+			`
+                0% {
+                    transform: translate(${src_rect.left + src_rect.width * 0.5}px,
+                    ${src_rect.top + src_rect.height * 0.5}px) translate(-50%, -50%);
+                }
+                100% {
+                    transform: translate(${clipboard_btn_wrapper_rect.left + clipboard_btn_wrapper_rect.width * 0.5}px,
+                    ${clipboard_btn_wrapper_rect.top + clipboard_btn_wrapper_rect.height * 0.5}px) translate(-50%, -50%);
+                }
+            `,
+			300
+		);
+
+		setTimeout(() => {
+			this.piep_cms.clipboard_btn.classList.add("jump");
+		}, 200);
+		setTimeout(() => {
+			this.piep_cms.clipboard_btn.classList.remove("jump");
+		}, 350);
 	}
 
 	getClipboardItems() {

@@ -28,16 +28,14 @@
 		init: (piep_cms) => {
 			piep_cms.container.addEventListener("click", (ev) => {
 				const target = $(ev.target);
-				if (target._parent(".copy_blc_btn")) {
+				const copy_blc_btn = target._parent(".copy_blc_btn");
+				if (copy_blc_btn) {
 					const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
 					if (!v_node) {
 						return;
 					}
 					piep_cms.clipboard.pushItem(v_node);
-					piep_cms.clipboard_btn.classList.add("jump");
-					setTimeout(() => {
-						piep_cms.clipboard_btn.classList.remove("jump");
-					}, 300);
+					piep_cms.clipboard.animate(copy_blc_btn);
 				}
 			});
 		},
