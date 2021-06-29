@@ -111,15 +111,15 @@ class PiepCMSClipboard {
                     ${clipboard_btn_wrapper_rect.top + clipboard_btn_wrapper_rect.height * 0.5}px) translate(-50%, -50%);
                 }
             `,
-			300
+			400
 		);
 
 		setTimeout(() => {
 			this.piep_cms.clipboard_btn.classList.add("jump");
-		}, 200);
+		}, 300);
 		setTimeout(() => {
 			this.piep_cms.clipboard_btn.classList.remove("jump");
-		}, 350);
+		}, 450);
 	}
 
 	getClipboardItems() {
