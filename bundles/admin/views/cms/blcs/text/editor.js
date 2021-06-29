@@ -424,34 +424,7 @@
 
 				const blc_schema = piep_cms_manager.blcs_schema.find((b) => b.id === blc_schema_id);
 
-				const focus_vid = piep_cms.text_selection.focus_vid;
-				const focus_offset = piep_cms.text_selection.focus_offset;
-
-				const v_node_data = piep_cms.getVNodeDataById(focus_vid);
-				const v_node = v_node_data.v_node;
-
-				if (focus_offset > 0 && focus_offset < v_node.text.length) {
-					/** @type {vDomNode} */
-					const insert_v_node = cloneObject(v_node);
-					insert_v_node.id = piep_cms.getNewBlcId();
-					insert_v_node.text = v_node.text.substring(focus_offset);
-					v_node.text = v_node.text.substring(0, focus_offset);
-					v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
-				}
-
-				/** @type {vDomNode} */
-				const insert_v_node = cloneObject(blc_schema.v_node);
-				let index = v_node_data.index;
-				if (focus_offset === v_node.text.length) {
-					index++;
-				}
-				v_node_data.v_nodes.splice(index, 0, insert_v_node);
-				piep_cms.setNewIdsOnVNode(insert_v_node);
-
-				piep_cms.update({ all: true });
-
-				piep_cms.text_selection = undefined;
-				piep_cms.setFocusNode(insert_v_node.id);
+				piep_cms.insertVNodeAtCursor(blc_schema.v_node);
 			});
 		},
 	});

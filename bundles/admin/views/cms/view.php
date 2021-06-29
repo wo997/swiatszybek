@@ -104,7 +104,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn primary save ml1"> Zapisz <i class="fas fa-save"></i> </button>
     </div>
 
-    <div class="piep_editor_side_menu">
+    <div class="piep_editor_side_menu keeps_text_selection">
         <div class="filter_blc_menu radio_group hide_checks">
             <div class="checkbox_area">
                 <div>
@@ -174,7 +174,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
     <div class="piep_editor_center_column">
         <div class="piep_editor_selection_breadcrumbs"></div>
-        <div class="piep_editor_content_wrapper">
+        <div class="piep_editor_content_wrapper keeps_text_selection">
             <div class="piep_editor_content_scroll scroll_panel">
                 <div class="piep_editor_content global_root"></div>
             </div>
@@ -214,7 +214,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
         </button>
     </div>
 
-    <div class="piep_editor_inspector">
+    <!-- <div class="piep_editor_inspector">
         <div class="container">
             <div class="flex align_center header">
                 <div class="medium mra">Drzewko elementów</div>
@@ -229,7 +229,7 @@ $modules_html["main_menu_html"] = ob_get_clean();
 
             <div class="tree scroll_panel scroll_shadow"></div>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <?php Templates::startSection("foot"); ?>

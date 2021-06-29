@@ -11,13 +11,44 @@ class PiepCMSClipboard {
 
 	init() {
 		this.container = this.piep_cms.clipboard_menu;
-		this.container._set_content(html` <div class="clipboard_items scroll_panel scroll_shadow"><div></div></div> `);
+		this.container.classList.add("keeps_text_selection");
+		this.container._set_content(
+			html`
+				<div class="clipboard_items scroll_panel scroll_shadow">
+					<div class="clipboard_items_wrapper"></div>
+					<div class="clipboard_item_actions">
+						<button class="btn transparent" data-type="cursor"><i class="fas fa-font"></i> Wstaw w pozycji kursora</button>
+						<button class="btn transparent" data-type="block"><i class="square_icon"></i> Skopiuj jako blok</button>
+					</div>
+				</div>
+			`
+		);
 		this.clipboard_items = this.container._child(".clipboard_items");
-		this.clipboard_items_wrapper = this.clipboard_items._child("div");
+		this.clipboard_items_wrapper = this.container._child(".clipboard_items_wrapper");
+		this.clipboard_item_actions = this.container._child(".clipboard_item_actions");
+
+		this.clipboard_item_actions.classList.add("hidden");
 
 		document.addEventListener("visibilitychange", () => {
 			if (!document.hidden) {
 				this.update();
+			}
+		});
+
+		this.clipboard_item_actions.addEventListener("click", (ev) => {
+			const target = $(ev.target);
+
+			const type = target._parent(`[data-type]`);
+			if (type) {
+				const clipboard_item = this.getClipboardItems()[+this.clipboard_item_active.dataset.index];
+
+				this.container.classList.remove("visible");
+
+				if (type.dataset.type === "cursor") {
+					this.piep_cms.insertVNodeAtCursor(clipboard_item.v_node);
+				} else {
+					this.piep_cms.grabBlockFromVNode(clipboard_item.v_node);
+				}
 			}
 		});
 
@@ -204,14 +235,11 @@ class PiepCMSClipboard {
 		this.clipboard_items_wrapper._empty();
 
 		const ci = this.getClipboardItems();
-		ci.forEach((e) => {
+		ci.forEach((e, index) => {
 			const item = $(document.createElement("DIV"));
 
 			item.classList.add("clipboard_item", "global_root");
-
-			item.addEventListener("click", () => {
-				this.piep_cms.grabBlockFromVNode(e.v_node);
-			});
+			item.dataset.index = index + "";
 
 			this.clipboard_items_wrapper.append(item);
 			traverseVDom(item, [e.v_node]);
@@ -223,31 +251,58 @@ class PiepCMSClipboard {
 	}
 
 	mouseMove() {
-		let show_clipboard_menu = false;
-		const was_visible = this.container.classList.contains("visible");
+		let show_menu = false;
+		const was_menu_visible = this.container.classList.contains("visible");
+		const hover_menu =
+			mouse.target && (!!mouse.target._parent(this.piep_cms.clipboard_btn_wrapper) || !!mouse.target._parent(this.container));
 
-		if (mouse.target) {
-			const hover = !!mouse.target._parent(this.piep_cms.clipboard_btn_wrapper) || !!mouse.target._parent(this.piep_cms.clipboard_menu);
-			if (this.piep_cms.selected_resolution === "df" && hover && !this.piep_cms.grabbed_v_node) {
-				show_clipboard_menu = true;
-
-				if (this.hide_clipboard_menu_timeout) {
-					clearTimeout(this.hide_clipboard_menu_timeout);
+		if (this.piep_cms.selected_resolution === "df" && hover_menu && !this.piep_cms.grabbed_v_node) {
+			show_menu = true;
+			if (this.hide_clipboard_menu_timeout) {
+				clearTimeout(this.hide_clipboard_menu_timeout);
+				this.hide_clipboard_menu_timeout = undefined;
+			}
+		} else {
+			if (!this.hide_clipboard_menu_timeout && was_menu_visible) {
+				this.hide_clipboard_menu_timeout = setTimeout(() => {
+					show_menu = false;
 					this.hide_clipboard_menu_timeout = undefined;
-				}
-			} else {
-				if (!this.hide_clipboard_menu_timeout && was_visible) {
-					this.hide_clipboard_menu_timeout = setTimeout(() => {
-						show_clipboard_menu = false;
-						this.hide_clipboard_menu_timeout = undefined;
-						this.piep_cms.clipboard_menu.classList.remove("visible");
-					}, 300);
+					this.container.classList.remove("visible");
+				}, 300);
+			}
+		}
+
+		if (mouse.target && !mouse.target._parent(this.clipboard_item_actions)) {
+			const clipboard_item = mouse.target._parent(".clipboard_item");
+
+			removeClasses(".active", ["active"], this.clipboard_items);
+			if (clipboard_item) {
+				clipboard_item.classList.add("active");
+			}
+			this.clipboard_item_actions.classList.toggle("hidden", !clipboard_item);
+
+			if (this.clipboard_item_active !== clipboard_item) {
+				this.clipboard_item_active = clipboard_item;
+				if (clipboard_item) {
+					this.clipboard_item_actions._set_absolute_pos(0, 0);
+
+					const clipboard_items_wrapper_rect = this.clipboard_items_wrapper.getBoundingClientRect();
+					const clipboard_item_rect = clipboard_item.getBoundingClientRect();
+
+					this.clipboard_item_actions._set_absolute_pos(
+						clipboard_item_rect.left +
+							clipboard_item_rect.width -
+							clipboard_items_wrapper_rect.left -
+							this.clipboard_item_actions.offsetWidth +
+							10,
+						clipboard_item_rect.top - clipboard_items_wrapper_rect.top + 10
+					);
 				}
 			}
 		}
 
-		if (show_clipboard_menu) {
-			if (!was_visible) {
+		if (show_menu) {
+			if (!was_menu_visible) {
 				// display
 				this.container.classList.add("visible");
 				this.container._set_absolute_pos(0, 0);
@@ -264,6 +319,6 @@ class PiepCMSClipboard {
 			}
 		}
 
-		this.piep_cms.clipboard_btn.style.setProperty("--btn-background-clr", show_clipboard_menu ? "#eee" : "");
+		this.piep_cms.clipboard_btn.style.setProperty("--btn-background-clr", show_menu ? "#eee" : "");
 	}
 }

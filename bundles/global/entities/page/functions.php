@@ -539,6 +539,10 @@ function renderPage($page_id, $data = [])
                 <i class="fas fa-file-alt"></i>
             </a>
             <?= def($data, ["admin_edit_btn"], "")  ?>
+            <a href="<?= Request::$static_urls["ADMIN"] ?>/pulpit" class="xbutton">
+                <span>Panel admina</span>
+                <i class="fas fa-th-large"></i>
+            </a>
         </div>
     <?php } ?>
 

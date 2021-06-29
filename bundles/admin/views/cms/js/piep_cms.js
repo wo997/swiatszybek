@@ -666,6 +666,9 @@ class PiepCMS {
 			this.add_block_btn_wrapper.dataset.tooltip = is_df ? "" : "Dodawanie bloków jest możliwe tylko w widoku dla komputerów";
 			this.add_block_btn.classList.toggle("disabled", !is_df);
 
+			this.clipboard_btn_wrapper.dataset.tooltip = is_df ? "" : "Dodawanie bloków jest możliwe tylko w widoku dla komputerów";
+			this.clipboard_btn.classList.toggle("disabled", !is_df);
+
 			this.update({ all: true });
 			this.setBlcMenuFromFocusedNode();
 
@@ -1639,8 +1642,11 @@ class PiepCMS {
 			if (target._parent(this.float_menu)) {
 				return;
 			}
+			const keeps_text_selection = target._parent(".keeps_text_selection");
 			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
-			this.setContentActive(content_active);
+			if (content_active || !keeps_text_selection) {
+				this.setContentActive(content_active);
+			}
 
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
@@ -1655,7 +1661,7 @@ class PiepCMS {
 			}
 
 			if (this.text_selection) {
-				if (!target._parent(this.side_menu) && !target._parent(this.content_wrapper)) {
+				if (!keeps_text_selection) {
 					this.text_selection = undefined;
 					this.setContentActive(false);
 				}
@@ -3516,6 +3522,47 @@ class PiepCMS {
 		}
 
 		return change;
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 */
+	insertVNodeAtCursor(v_node) {
+		if (!this.text_selection) {
+			return;
+		}
+
+		const focus_vid = this.text_selection.focus_vid;
+		const focus_offset = this.text_selection.focus_offset;
+
+		const v_node_data = this.getVNodeDataById(focus_vid);
+		const focus_v_node = v_node_data.v_node;
+
+		if (focus_offset > 0 && focus_offset < focus_v_node.text.length) {
+			/** @type {vDomNode} */
+			const insert_v_node = cloneObject(focus_v_node);
+			insert_v_node.id = this.getNewBlcId();
+			insert_v_node.text = focus_v_node.text.substring(focus_offset);
+			focus_v_node.text = focus_v_node.text.substring(0, focus_offset);
+			v_node_data.v_nodes.splice(v_node_data.index + 1, 0, insert_v_node);
+		}
+
+		/** @type {vDomNode} */
+		const insert_v_node = cloneObject(v_node);
+		let index = v_node_data.index;
+		if (focus_offset === focus_v_node.text.length) {
+			index++;
+		}
+		v_node_data.v_nodes.splice(index, 0, insert_v_node);
+		this.setNewIdsOnVNode(insert_v_node);
+
+		this.update({ all: true });
+
+		this.text_selection = undefined;
+		this.setFocusNode(insert_v_node.id);
+
+		this.setContentActive(true);
 	}
 
 	grabbedBlock() {
