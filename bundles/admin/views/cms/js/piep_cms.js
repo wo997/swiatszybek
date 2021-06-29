@@ -1376,7 +1376,10 @@ class PiepCMS {
 			const pasted_text = ev.clipboardData.getData("text/plain");
 
 			const match_vids = /blc_\d*/g;
-			const pasted_last_clipboard_item = isEquivalent(pasted_html.match(match_vids), this.clipboard.getLastCopiedHTML().match(match_vids));
+			const last_copied_html = this.clipboard.getLastCopiedHTML();
+			const pasted_last_clipboard_item = last_copied_html
+				? isEquivalent(pasted_html.match(match_vids), last_copied_html.match(match_vids))
+				: false;
 
 			this.removeTextInSelection();
 
@@ -1498,9 +1501,9 @@ class PiepCMS {
 
 			const first_insert_v_node = insert[0];
 			if (first_insert_v_node) {
-				//console.log(prev_v_node, first_insert_v_node);
+				console.log(prev_v_node, first_insert_v_node);
 				if (this.isTextContainer(prev_v_node) && this.isTextContainer(first_insert_v_node)) {
-					//console.log("YEAH");
+					console.log("YEAH");
 					const first_textable = first_insert_v_node.children[0];
 
 					this.text_selection.focus_vid = first_textable.id;
@@ -1910,7 +1913,7 @@ class PiepCMS {
 						if (lower_key === "c") {
 							ev.preventDefault();
 							this.copyTextSelection({ restore_selection: true });
-							this.clipboard.copyToClipboardWhateverIsSelected(this.cursor);
+							this.clipboard.copyWhateverIsSelected(this.cursor);
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();

@@ -65,16 +65,29 @@ class PiepCMSClipboard {
 	 * @param {PiepNode} src
 	 * @returns
 	 */
-	copyToClipboardWhateverIsSelected(src = undefined) {
+	copyWhateverIsSelected(src = undefined) {
+		const piep_cms = this.piep_cms;
+
 		const v_node = piep_cms.getVNodeById(this.piep_cms.focus_node_vid);
+
 		if (!v_node) {
 			return false;
 		}
-		this.copyItem(v_node);
+
+		if (piep_cms.text_selection) {
+			const v_node_data = piep_cms.getVNodeDataById(this.piep_cms.text_selection.focus_vid);
+			const v_node = v_node_data.v_node;
+			const parent_v_node = v_node_data.parent_v_nodes[0];
+			if (parent_v_node && piep_cms.isTextContainer(parent_v_node)) {
+				this.copyItem(parent_v_node);
+			}
+		} else {
+			this.copyItem(v_node);
+		}
+
 		if (src) {
 			this.animate(src);
 		}
-
 		return true;
 	}
 
