@@ -84,12 +84,13 @@ class PiepCMSManager {
 			return this.blcs_schema.find((b) => b.id === "vertical_container");
 		}
 
-		const module_schema = this.blcs_schema.find((b) => b.id === v_node.module_name);
-		if (module_schema) {
+		const module_name = v_node.module_name;
+		if (module_name) {
+			const module_schema = this.blcs_schema.find((b) => b.id === module_name);
 			return module_schema;
 		}
 
-		const tag_schema = this.blcs_schema.find((b) => b.v_node.tag === v_node.tag);
+		const tag_schema = this.blcs_schema.find((b) => b.v_node.tag === v_node.tag && !b.v_node.module_name);
 		if (tag_schema) {
 			return tag_schema;
 		}

@@ -33,6 +33,8 @@ class PiepCMSClipboard {
 
 		this.clipboard_item_actions.classList.add("hidden");
 
+		this.initPaste();
+
 		document.addEventListener("visibilitychange", () => {
 			if (!document.hidden) {
 				this.update();
@@ -68,19 +70,42 @@ class PiepCMSClipboard {
 	copyWhateverIsSelected(src = undefined) {
 		const piep_cms = this.piep_cms;
 
-		const v_node = piep_cms.getVNodeById(this.piep_cms.focus_node_vid);
+		const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
 
 		if (!v_node) {
 			return false;
 		}
 
-		if (piep_cms.text_selection) {
-			const v_node_data = piep_cms.getVNodeDataById(this.piep_cms.text_selection.focus_vid);
-			const v_node = v_node_data.v_node;
-			const parent_v_node = v_node_data.parent_v_nodes[0];
-			if (parent_v_node && piep_cms.isTextContainer(parent_v_node)) {
-				this.copyItem(parent_v_node);
+		const text_selection = piep_cms.text_selection;
+		if (text_selection) {
+			const all_vids = piep_cms.getAllTextSelectionVids();
+			if (text_selection.direction === -1) {
+				all_vids.reverse();
 			}
+
+			/** @type {vDomNode} */
+			const temporary_wrapper = {
+				tag: "div",
+				id: -1,
+				children: [],
+				styles: {},
+				classes: ["temporary_wrapper"],
+				attrs: {},
+			};
+
+			all_vids.forEach((vid) => {
+				const v_node = piep_cms.getVNodeDataById(vid);
+				if (!v_node) {
+					return;
+				}
+				const parent_v_node = v_node.parent_v_nodes[0];
+				if (parent_v_node && !temporary_wrapper.children.map((c) => c.id).includes(parent_v_node.id)) {
+					temporary_wrapper.children.push(parent_v_node);
+				}
+			});
+
+			console.log(temporary_wrapper);
+			this.copyItem(temporary_wrapper);
 		} else {
 			this.copyItem(v_node);
 		}
@@ -89,6 +114,175 @@ class PiepCMSClipboard {
 			this.animate(src);
 		}
 		return true;
+	}
+
+	initPaste() {
+		const piep_cms = this.piep_cms;
+		piep_cms.container.addEventListener("paste", (ev) => {
+			if (!piep_cms.content_active || !piep_cms.text_selection) {
+				return;
+			}
+
+			ev.preventDefault();
+
+			const pasted_html = ev.clipboardData.getData("text/html");
+			const pasted_text = ev.clipboardData.getData("text/plain");
+
+			const match_vids = /blc_\d*/g;
+			const last_copied_html = piep_cms.clipboard.getLastCopiedHTML();
+			const pasted_last_clipboard_item = last_copied_html
+				? isEquivalent(pasted_html.match(match_vids), last_copied_html.match(match_vids))
+				: false;
+
+			piep_cms.removeTextInSelection();
+
+			if (pasted_text && !pasted_html) {
+				// maybe do the split dude, but it's unnecessary now
+				piep_cms.insertText(pasted_text.replace(/[\n\r]/g, ""));
+				return;
+			}
+
+			if (!pasted_html) {
+				return;
+			}
+
+			piep_cms.paste_html._set_content(pasted_html);
+
+			/** @type {vDomNode[]} */
+			const insert = [];
+
+			const next_vid = piep_cms.breakTextAtCursor();
+
+			let new_id = piep_cms.getNewBlcId();
+
+			if (pasted_last_clipboard_item) {
+				const first_clipboard_item = piep_cms.clipboard.getClipboardItems()[0];
+				if (first_clipboard_item) {
+					insert.push(first_clipboard_item.v_node);
+					piep_cms.setNewIdsOnVNode(first_clipboard_item.v_node);
+				}
+			} else {
+				const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
+
+				/**
+				 *
+				 * @param {PiepNode} node
+				 */
+				const traverseNode = (node) => {
+					if (node.childNodes) {
+						node.childNodes.forEach((child) => {
+							if (child.nodeType === Node.TEXT_NODE) {
+								// span wants to go into last text block, find it!
+
+								const plain_text = child.textContent.replace(/[\n\r]/g, "");
+								let success = false;
+
+								const insert_span = {
+									id: new_id++,
+									classes: [],
+									attrs: {},
+									styles: {},
+									tag: "span",
+									text: plain_text,
+								};
+
+								/**
+								 *
+								 * @param {vDomNode[]} v_nodes
+								 */
+								const traverseInsert = (v_nodes) => {
+									const last_v_node = v_nodes[v_nodes.length - 1];
+									if (!last_v_node) {
+										return;
+									}
+									if (available_text_blocks.includes(last_v_node.tag)) {
+										last_v_node.children.push(insert_span);
+										success = true;
+									} else if (last_v_node.children) {
+										traverseInsert(last_v_node.children);
+									}
+								};
+								traverseInsert(insert);
+
+								if (!success) {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
+								}
+							} else if (child.nodeType === Node.ELEMENT_NODE) {
+								const sub_node = $(child);
+
+								const tag = sub_node.tagName.toLowerCase();
+								if (tag === "br") {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [] });
+								} else if (tag === "ul" || tag === "ol") {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
+								} else if (tag === "li") {
+									/**
+									 *
+									 * @param {vDomNode[]} v_nodes
+									 */
+									const traverseInsert = (v_nodes) => {
+										const last_v_node = v_nodes[v_nodes.length - 1];
+										if (!last_v_node) {
+											return;
+										}
+										if (last_v_node.tag === "ul") {
+											last_v_node.children.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "li", children: [] });
+										} else if (last_v_node.children) {
+											traverseInsert(last_v_node.children);
+										}
+									};
+									traverseInsert(insert);
+								} else if (available_text_blocks.includes(tag)) {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag, children: [] });
+								}
+
+								traverseNode(sub_node);
+							}
+						});
+					}
+				};
+
+				traverseNode(piep_cms.paste_html);
+			}
+
+			const next_v_node_data = piep_cms.getVNodeDataById(next_vid);
+			const next_v_node = next_v_node_data.v_node;
+			const prev_v_node = next_v_node_data.v_nodes[next_v_node_data.index - 1];
+			next_v_node_data.v_nodes.splice(next_v_node_data.index, 0, ...insert);
+
+			piep_cms.update({ all: true });
+
+			const first_insert_v_node = insert[0];
+			if (first_insert_v_node) {
+				console.log(prev_v_node, first_insert_v_node);
+				if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
+					console.log("YEAH");
+					const first_textable = first_insert_v_node.children[0];
+
+					piep_cms.text_selection.focus_vid = first_textable.id;
+					piep_cms.text_selection.focus_offset = 0;
+					piep_cms.collapseTextSelection();
+
+					piep_cms.deleteAction(-1);
+				}
+			}
+
+			const last_insert_v_node = insert[insert.length - 1];
+			if (last_insert_v_node) {
+				if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
+					const first_textable = first_insert_v_node.children[0];
+
+					// TODO: nice to have that selection even if can't merge
+					piep_cms.text_selection.focus_vid = first_textable.id;
+					piep_cms.text_selection.focus_offset = 0;
+					piep_cms.collapseTextSelection();
+
+					piep_cms.deleteAction(-1);
+				}
+			}
+
+			piep_cms.manageText();
+		});
 	}
 
 	/**
@@ -125,9 +319,9 @@ class PiepCMSClipboard {
 	getClipboardItems() {
 		/** @type {CmsClipboarItem[]} */
 		let piep_cms_clipboard;
-		const piep_cms_clipboard_x_json = localStorage.getItem("piep_cms_clipboard_x_json");
+		const piep_cms_clipboard_2137_json = localStorage.getItem("piep_cms_clipboard_2137_json");
 		try {
-			piep_cms_clipboard = JSON.parse(piep_cms_clipboard_x_json);
+			piep_cms_clipboard = JSON.parse(piep_cms_clipboard_2137_json);
 		} catch (e) {}
 
 		if (!piep_cms_clipboard) {
@@ -143,17 +337,16 @@ class PiepCMSClipboard {
 	 */
 	copyItem(v_node) {
 		const piep_cms_clipboard = this.getClipboardItems();
-		piep_cms_clipboard.unshift({ v_node });
+		piep_cms_clipboard.unshift({ v_node: cloneObject(v_node) }); // lose ref to prevent bugs
 		const max = 10;
 		if (piep_cms_clipboard.length > max) {
 			piep_cms_clipboard.splice(max, piep_cms_clipboard.length - max);
 		}
-		localStorage.setItem("piep_cms_clipboard_x_json", JSON.stringify(piep_cms_clipboard));
+		localStorage.setItem("piep_cms_clipboard_2137_json", JSON.stringify(piep_cms_clipboard));
 		this.update();
 	}
 
 	setLastCopiedHTML(copied_html) {
-		console.log(copied_html);
 		localStorage.setItem("piep_cms_clipboard_last_html", copied_html);
 	}
 
@@ -172,8 +365,6 @@ class PiepCMSClipboard {
 	 * }} options
 	 */
 	recreateDom(options = {}) {
-		//this.preRecreateDom();
-
 		/**
 		 *
 		 * @param {PiepNode} put_in_node
@@ -190,6 +381,27 @@ class PiepCMSClipboard {
 				const node = $(document.createElement(render_tag));
 
 				let care_about_children = true;
+
+				if (!v_node.attrs) {
+					v_node.attrs = {};
+				}
+				if (!v_node.settings) {
+					v_node.settings = {};
+				}
+				if (!v_node.settings) {
+					v_node.settings = {};
+				}
+				if (!v_node.responsive_settings) {
+					v_node.responsive_settings = {};
+				}
+				for (const res_name of Object.keys(responsive_breakpoints)) {
+					if (!v_node.styles[res_name]) {
+						v_node.styles[res_name] = {};
+					}
+					if (!v_node.responsive_settings[res_name]) {
+						v_node.responsive_settings[res_name] = {};
+					}
+				}
 
 				if (!options.vids || options.vids.includes(vid)) {
 					const text = v_node.text;
@@ -222,7 +434,6 @@ class PiepCMSClipboard {
 						node._set_content(content);
 
 						classes.push("textable");
-						//console.log("textable", node, text);
 					}
 
 					// attrs
@@ -264,16 +475,7 @@ class PiepCMSClipboard {
 							care_about_children = false;
 						} else {
 							if (blc_schema.render_html) {
-								if (blc_schema.render_html) {
-									node._set_content(blc_schema.render_html(v_node));
-								}
-								if (blc_schema.backend_render) {
-									piep_cms_manager.requestRender(vid);
-								}
-
-								if (node._is_empty() && v_node.rendered_body !== undefined) {
-									node._set_content(v_node.rendered_body);
-								}
+								node._set_content(blc_schema.render_html(v_node));
 							}
 
 							if (blc_schema.render) {
@@ -296,13 +498,6 @@ class PiepCMSClipboard {
 				}
 
 				if (care_about_children && children) {
-					// clean up text nodes if any existed - that might be... an unnecessary step?
-					node.childNodes.forEach((c) => {
-						if (c.nodeType === Node.TEXT_NODE) {
-							c.remove();
-						}
-					});
-
 					traverseVDom(node, children);
 				}
 			});

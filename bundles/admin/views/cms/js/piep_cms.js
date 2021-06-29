@@ -38,7 +38,6 @@ class PiepCMS {
 
 		this.focus_node_vid = -1;
 
-		this.initPaste();
 		this.initClick();
 		this.initTyping();
 		this.initTextSelection();
@@ -133,8 +132,6 @@ class PiepCMS {
 			const tc = sel_focus_node._parent(".text_container", { skip: 1 });
 			if (tc && !tc._parent(anchor_text_container, { skip: 1 })) {
 				break;
-			} else {
-				// console.log(sel_focus_node, anchor_text_container);
 			}
 			// in case focus_text_container is nested in anchor_text_container
 			sel_focus_node = sel_focus_node._parent(".in_text_container", { skip: 1 });
@@ -318,7 +315,6 @@ class PiepCMS {
 			this.text_selection = undefined;
 
 			const sel = document.getSelection();
-			//console.log(cloneObject(sel));
 
 			if (sel.anchorNode && sel.focusNode) {
 				const sel_anchor_node = $(sel.anchorNode)._parent(".blc");
@@ -1184,7 +1180,6 @@ class PiepCMS {
 		const all_props_to_set = [prop_str];
 		bind_dirs.forEach((bind_dir) => {
 			const bind_input = bind_wrapper._child(`[data-bind_dir="${bind_dir}"]`);
-			//console.log(bind_input, val);
 			bind_input._set_value(val, { quiet: true });
 			const prop_to_set = bind_input.dataset.blc_prop.split(".")[1];
 			if (prop_to_set) {
@@ -1304,9 +1299,10 @@ class PiepCMS {
 					});
 				};
 
-				if (piep_cms_manager.text_container_props.includes(prop_str)) {
-					if (this.text_selection) {
-						this.getAllTextSelectionVids().forEach((vid) => {
+				if (this.text_selection) {
+					const all_vids = this.getAllTextSelectionVids();
+					if (piep_cms_manager.text_container_props.includes(prop_str)) {
+						all_vids.forEach((vid) => {
 							const v_node = this.getVNodeDataById(vid);
 							if (!v_node) {
 								return;
@@ -1316,10 +1312,8 @@ class PiepCMS {
 								considerVid(parent_v_node.id);
 							}
 						});
-					}
-				} else {
-					if (this.text_selection) {
-						considerVid(...this.getAllTextSelectionVids());
+					} else {
+						considerVid(...all_vids);
 					}
 				}
 
@@ -1361,174 +1355,6 @@ class PiepCMS {
 				// ugh? why we did that in the first place?
 				//setTimeout(setProp);
 			});
-		});
-	}
-
-	initPaste() {
-		this.container.addEventListener("paste", (ev) => {
-			if (!this.content_active || !this.text_selection) {
-				return;
-			}
-
-			ev.preventDefault();
-
-			const pasted_html = ev.clipboardData.getData("text/html");
-			const pasted_text = ev.clipboardData.getData("text/plain");
-
-			const match_vids = /blc_\d*/g;
-			const last_copied_html = this.clipboard.getLastCopiedHTML();
-			const pasted_last_clipboard_item = last_copied_html
-				? isEquivalent(pasted_html.match(match_vids), last_copied_html.match(match_vids))
-				: false;
-
-			this.removeTextInSelection();
-
-			if (pasted_text && !pasted_html) {
-				// maybe do the split dude, but it's unnecessary now
-				this.insertText(pasted_text.replace(/[\n\r]/g, ""));
-				return;
-			}
-
-			if (!pasted_html) {
-				return;
-			}
-
-			this.paste_html._set_content(pasted_html);
-
-			/** @type {vDomNode[]} */
-			const insert = [];
-
-			const next_vid = this.breakTextAtCursor();
-
-			let new_id = this.getNewBlcId();
-
-			if (pasted_last_clipboard_item) {
-				const first_clipboard_item = this.clipboard.getClipboardItems()[0];
-				if (first_clipboard_item) {
-					insert.push(first_clipboard_item.v_node);
-					this.setNewIdsOnVNode(first_clipboard_item.v_node);
-				}
-			} else {
-				const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
-
-				/**
-				 *
-				 * @param {PiepNode} node
-				 */
-				const traverseNode = (node) => {
-					if (node.childNodes) {
-						node.childNodes.forEach((child) => {
-							if (child.nodeType === Node.TEXT_NODE) {
-								// span wants to go into last text block, find it!
-
-								const plain_text = child.textContent.replace(/[\n\r]/g, "");
-								let success = false;
-
-								const insert_span = {
-									id: new_id++,
-									classes: [],
-									attrs: {},
-									styles: {},
-									tag: "span",
-									text: plain_text,
-								};
-
-								/**
-								 *
-								 * @param {vDomNode[]} v_nodes
-								 */
-								const traverseInsert = (v_nodes) => {
-									const last_v_node = v_nodes[v_nodes.length - 1];
-									if (!last_v_node) {
-										return;
-									}
-									if (available_text_blocks.includes(last_v_node.tag)) {
-										last_v_node.children.push(insert_span);
-										success = true;
-									} else if (last_v_node.children) {
-										traverseInsert(last_v_node.children);
-									}
-								};
-								traverseInsert(insert);
-
-								if (!success) {
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
-								}
-							} else if (child.nodeType === Node.ELEMENT_NODE) {
-								const sub_node = $(child);
-
-								const tag = sub_node.tagName.toLowerCase();
-								if (tag === "br") {
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [] });
-								} else if (tag === "ul" || tag === "ol") {
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
-								} else if (tag === "li") {
-									/**
-									 *
-									 * @param {vDomNode[]} v_nodes
-									 */
-									const traverseInsert = (v_nodes) => {
-										const last_v_node = v_nodes[v_nodes.length - 1];
-										if (!last_v_node) {
-											return;
-										}
-										if (last_v_node.tag === "ul") {
-											last_v_node.children.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "li", children: [] });
-										} else if (last_v_node.children) {
-											traverseInsert(last_v_node.children);
-										}
-									};
-									traverseInsert(insert);
-								} else if (available_text_blocks.includes(tag)) {
-									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag, children: [] });
-								}
-
-								traverseNode(sub_node);
-							}
-						});
-					}
-				};
-
-				traverseNode(this.paste_html);
-			}
-
-			const next_v_node_data = this.getVNodeDataById(next_vid);
-			const next_v_node = next_v_node_data.v_node;
-			const prev_v_node = next_v_node_data.v_nodes[next_v_node_data.index - 1];
-			next_v_node_data.v_nodes.splice(next_v_node_data.index, 0, ...insert);
-
-			this.update({ all: true });
-
-			const first_insert_v_node = insert[0];
-			if (first_insert_v_node) {
-				console.log(prev_v_node, first_insert_v_node);
-				if (this.isTextContainer(prev_v_node) && this.isTextContainer(first_insert_v_node)) {
-					console.log("YEAH");
-					const first_textable = first_insert_v_node.children[0];
-
-					this.text_selection.focus_vid = first_textable.id;
-					this.text_selection.focus_offset = 0;
-					this.collapseTextSelection();
-
-					this.deleteAction(-1);
-				}
-			}
-
-			const last_insert_v_node = insert[insert.length - 1];
-			if (last_insert_v_node) {
-				if (this.isTextContainer(next_v_node) && this.isTextContainer(last_insert_v_node)) {
-					const first_textable = first_insert_v_node.children[0];
-
-					// TODO: nice to have that selection even if can't merge
-					this.text_selection.focus_vid = first_textable.id;
-					this.text_selection.focus_offset = 0;
-					this.collapseTextSelection();
-
-					this.deleteAction(-1);
-				}
-			}
-
-			this.manageText();
 		});
 	}
 
@@ -1700,8 +1526,6 @@ class PiepCMS {
 				const click_blc_vid = +click_blc.dataset.vid;
 				const click_v_node_data = this.getVNodeDataById(click_blc_vid);
 				const click_v_node = click_v_node_data.v_node;
-
-				//console.log(click_blc);
 
 				// let selection propagate basically
 				setTimeout(() => {
@@ -2594,8 +2418,6 @@ class PiepCMS {
 						}
 						deep_enough = true;
 
-						//console.log(res_name);
-
 						const styles = v_node.styles[res_name];
 
 						if (!styles.gridTemplateColumns) {
@@ -2645,7 +2467,6 @@ class PiepCMS {
 								v_node.children.forEach((child, index) => {
 									const styles = child.styles[res_name];
 									const top_styles = child.styles[top_res_name];
-									//console.log(res_name, "<", top_res_name);
 									styles.gridRowStart = top_styles.gridRowStart;
 									styles.gridRowEnd = top_styles.gridRowEnd;
 									styles.gridColumnStart = top_styles.gridColumnStart;
@@ -2666,7 +2487,6 @@ class PiepCMS {
 						}
 
 						if (v_node.responsive_settings[res_name].layout_hash !== layout_hash) {
-							//console.log(res_name, 21, v_node.responsive_settings[res_name].layout_hash, 37, layout_hash);
 							v_node.responsive_settings[res_name].layout_hash = layout_hash;
 							layout_change = true;
 						}
@@ -3051,7 +2871,6 @@ class PiepCMS {
 						node._set_content(content);
 
 						classes.push("textable");
-						//console.log("textable", node, text);
 					}
 					if (put_in_node.classList.contains("text_container")) {
 						classes.push("in_text_container");
@@ -3184,7 +3003,6 @@ class PiepCMS {
 
 		const select_blcs_to_remove = ".blc" + included_vids.map((e) => `:not(.blc_${e})`).join("");
 		this.content._children(select_blcs_to_remove).forEach((r) => {
-			//console.log("REMOVE", r);
 			r.remove();
 		});
 	}
@@ -3622,7 +3440,8 @@ class PiepCMS {
 		let all_ids = [];
 
 		if (this.text_selection) {
-			all_ids.push(...this.text_selection.partial_ranges.map((e) => e.vid));
+			all_ids.push(this.text_selection.anchor_vid);
+			//all_ids.push(...this.text_selection.partial_ranges.map((e) => e.vid)); // dropped to just maintain the order
 			all_ids.push(...this.text_selection.middle_vids);
 			all_ids.push(this.text_selection.focus_vid);
 		}
