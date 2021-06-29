@@ -3309,6 +3309,25 @@ class PiepCMS {
 		this.container.classList.toggle("has_select_pos", this.has_select_pos);
 	}
 
+	findAndRemoveTemporaryWrapper() {
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 */
+		const traverseVDom = (v_nodes) => {
+			for (let i = 0; i < v_nodes.length; i++) {
+				const v_node = v_nodes[i];
+				if (v_node.classes.includes("temporary_wrapper")) {
+					v_nodes.splice(i, 1, ...v_node.children);
+					return;
+				}
+				if (v_node.children) {
+					traverseVDom(v_node.children);
+				}
+			}
+		};
+		traverseVDom(this.v_dom);
+	}
+
 	/**
 	 *
 	 * @param {{
@@ -3331,13 +3350,15 @@ class PiepCMS {
 				this.has_insert_pos = true;
 				insert_blc._insert_action();
 
+				this.findAndRemoveTemporaryWrapper();
+
 				change = true;
 				this.update({ all: true });
 
 				if (options.rewrite_html) {
 					// rewrite rendered module contents
 					const inserted_blc = this.getNode(this.grabbed_v_node.id);
-					if (inserted_blc._is_empty()) {
+					if (inserted_blc && inserted_blc._is_empty()) {
 						const copy_from = this.grabbed_block_wrapper._direct_child();
 						if (copy_from) {
 							inserted_blc.innerHTML = copy_from.innerHTML;

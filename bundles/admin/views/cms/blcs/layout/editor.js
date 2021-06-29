@@ -79,22 +79,24 @@
 				}
 				const blc_schema = piep_cms_manager.getVNodeSchema(v_node);
 
-				width_type_input
-					._child(`[data-value="full"]`)
-					._parent()
-					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
-				width_type_input
-					._child(`[data-value="default_container"]`)
-					._parent()
-					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
-				width_type_input
-					._child(`[data-value="auto"]`)
-					._parent()
-					.classList.toggle("hidden", blc_schema.layout_schema === "needs_size");
-				width_type_input
-					._child(`[data-value="custom"]`)
-					._parent()
-					.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+				if (blc_schema) {
+					width_type_input
+						._child(`[data-value="full"]`)
+						._parent()
+						.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+					width_type_input
+						._child(`[data-value="default_container"]`)
+						._parent()
+						.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+					width_type_input
+						._child(`[data-value="auto"]`)
+						._parent()
+						.classList.toggle("hidden", blc_schema.layout_schema === "needs_size");
+					width_type_input
+						._child(`[data-value="custom"]`)
+						._parent()
+						.classList.toggle("hidden", blc_schema.layout_schema === "just_content");
+				}
 			});
 		},
 	});

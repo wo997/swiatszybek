@@ -94,11 +94,11 @@ class PiepCMSClipboard {
 			};
 
 			all_vids.forEach((vid) => {
-				const v_node = piep_cms.getVNodeDataById(vid);
-				if (!v_node) {
+				const v_node_data = piep_cms.getVNodeDataById(vid);
+				if (!v_node_data) {
 					return;
 				}
-				const parent_v_node = v_node.parent_v_nodes[0];
+				const parent_v_node = cloneObject(v_node_data.parent_v_nodes[0]);
 				if (parent_v_node && !temporary_wrapper.children.map((c) => c.id).includes(parent_v_node.id)) {
 					temporary_wrapper.children.push(parent_v_node);
 				}
