@@ -1378,8 +1378,7 @@ class PiepCMS {
 		 * @param {vDomNode} v_node
 		 */
 		const setIds = (v_node) => {
-			v_node.id = next_id;
-			next_id++;
+			v_node.id = next_id++;
 			if (v_node.children) {
 				v_node.children.forEach((child) => {
 					setIds(child);

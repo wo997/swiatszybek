@@ -142,9 +142,19 @@ class PiepCMSClipboard {
 
 			const match_vids = /blc_\d*/g;
 			const last_copied_html = piep_cms.clipboard.getLastCopiedHTML();
-			const pasted_last_clipboard_item = last_copied_html
-				? isEquivalent(pasted_html.match(match_vids), last_copied_html.match(match_vids))
-				: false;
+			/**
+			 *
+			 * @param {string} html_str
+			 * @returns
+			 */
+			const getHTMLToken = (html_str) => {
+				const matches = html_str.match(match_vids);
+				if (!matches) {
+					return "";
+				}
+				return matches.join("");
+			};
+			const pasted_last_clipboard_item = last_copied_html ? getHTMLToken(pasted_html).includes(getHTMLToken(last_copied_html)) : false;
 
 			piep_cms.removeTextInSelection();
 
@@ -170,8 +180,10 @@ class PiepCMSClipboard {
 			if (pasted_last_clipboard_item) {
 				const first_clipboard_item = piep_cms.clipboard.getClipboardItems()[0];
 				if (first_clipboard_item) {
-					insert.push(first_clipboard_item.v_node);
-					piep_cms.setNewIdsOnVNode(first_clipboard_item.v_node);
+					/** @type {vDomNode} */
+					const insert_v_node = cloneObject(first_clipboard_item.v_node);
+					piep_cms.setNewIdsOnVNode(insert_v_node);
+					insert.push(insert_v_node);
 				}
 			} else {
 				const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
@@ -264,34 +276,34 @@ class PiepCMSClipboard {
 
 			piep_cms.update({ all: true });
 
-			const first_insert_v_node = insert[0];
-			if (first_insert_v_node) {
-				console.log(prev_v_node, first_insert_v_node);
-				if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
-					console.log("YEAH");
-					const first_textable = first_insert_v_node.children[0];
+			// const first_insert_v_node = insert[0];
+			// if (first_insert_v_node) {
+			// 	console.log(prev_v_node, first_insert_v_node);
+			// 	if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
+			// 		console.log("YEAH");
+			// 		const first_textable = first_insert_v_node.children[0];
 
-					piep_cms.text_selection.focus_vid = first_textable.id;
-					piep_cms.text_selection.focus_offset = 0;
-					piep_cms.collapseTextSelection();
+			// 		piep_cms.text_selection.focus_vid = first_textable.id;
+			// 		piep_cms.text_selection.focus_offset = 0;
+			// 		piep_cms.collapseTextSelection();
 
-					piep_cms.deleteAction(-1);
-				}
-			}
+			// 		piep_cms.deleteAction(-1);
+			// 	}
+			// }
 
-			const last_insert_v_node = insert[insert.length - 1];
-			if (last_insert_v_node) {
-				if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
-					const first_textable = first_insert_v_node.children[0];
+			// const last_insert_v_node = insert[insert.length - 1];
+			// if (last_insert_v_node) {
+			// 	if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
+			// 		const first_textable = first_insert_v_node.children[0];
 
-					// TODO: nice to have that selection even if can't merge
-					piep_cms.text_selection.focus_vid = first_textable.id;
-					piep_cms.text_selection.focus_offset = 0;
-					piep_cms.collapseTextSelection();
+			// 		// TODO: nice to have that selection even if can't merge
+			// 		piep_cms.text_selection.focus_vid = first_textable.id;
+			// 		piep_cms.text_selection.focus_offset = 0;
+			// 		piep_cms.collapseTextSelection();
 
-					piep_cms.deleteAction(-1);
-				}
-			}
+			// 		piep_cms.deleteAction(-1);
+			// 	}
+			// }
 
 			piep_cms.manageText();
 		});

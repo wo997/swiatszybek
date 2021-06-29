@@ -412,7 +412,14 @@ function ProductComp(comp, parent, data = undefined) {
 	comp._set_data = (data, options = {}) => {
 		data.products_dt.dataset.forEach((row_data) => {
 			// warmup
-			const vat = vats.find((e) => e.vat_id === row_data.vat_id);
+			let vat = vats.find((e) => e.vat_id === row_data.vat_id);
+			if (!vat) {
+				const default_vat = vats[0];
+				if (default_vat) {
+					row_data.vat_id = default_vat.vat_id;
+					vat = vats.find((e) => e.vat_id === row_data.vat_id);
+				}
+			}
 			const vat_val = vat ? vat.value : 0;
 			row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
 		});
