@@ -47,6 +47,7 @@
 
 				return !!(v_node.tag.match(piep_cms_manager.match_text_containers) || v_node.tag.match(piep_cms_manager.match_textables));
 			},
+			priority: text_priority,
 		},
 	];
 

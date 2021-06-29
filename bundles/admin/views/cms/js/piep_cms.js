@@ -1299,9 +1299,11 @@ class PiepCMS {
 					});
 				};
 
+				const is_text_container_prop = piep_cms_manager.text_container_props.includes(prop_str);
+
 				if (this.text_selection) {
 					const all_vids = this.getAllTextSelectionVids();
-					if (piep_cms_manager.text_container_props.includes(prop_str)) {
+					if (is_text_container_prop) {
 						all_vids.forEach((vid) => {
 							const v_node_data = this.getVNodeDataById(vid);
 							if (v_node_data && !this.isTextContainer(v_node_data.v_node)) {
@@ -1314,11 +1316,8 @@ class PiepCMS {
 					} else {
 						considerVid(...all_vids);
 					}
-				}
-
-				if (set_prop_of_ids.length === 0 && this.focus_node_vid !== undefined) {
-					considerVid(this.focus_node_vid);
-					if (piep_cms_manager.text_container_props.includes(prop_str)) {
+				} else if (this.focus_node_vid !== undefined) {
+					if (is_text_container_prop) {
 						const v_node_data = this.getVNodeDataById(this.focus_node_vid);
 						if (v_node_data && !this.isTextContainer(v_node_data.v_node)) {
 							const parent_v_node = v_node_data.parent_v_nodes[0];
@@ -1326,6 +1325,8 @@ class PiepCMS {
 								considerVid(parent_v_node.id);
 							}
 						}
+					} else {
+						considerVid(this.focus_node_vid);
 					}
 				}
 
