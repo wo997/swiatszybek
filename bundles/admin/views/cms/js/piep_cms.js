@@ -1375,6 +1375,9 @@ class PiepCMS {
 			const pasted_html = ev.clipboardData.getData("text/html");
 			const pasted_text = ev.clipboardData.getData("text/plain");
 
+			const match_vids = /blc_\d*/g;
+			const pasted_last_clipboard_item = isEquivalent(pasted_html.match(match_vids), this.clipboard.getLastCopiedHTML().match(match_vids));
+
 			this.removeTextInSelection();
 
 			if (pasted_text && !pasted_html) {
@@ -1390,66 +1393,43 @@ class PiepCMS {
 			this.paste_html._set_content(pasted_html);
 
 			/** @type {vDomNode[]} */
-			let insert = [];
+			const insert = [];
 
 			const next_vid = this.breakTextAtCursor();
 
 			let new_id = this.getNewBlcId();
 
-			const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
+			if (pasted_last_clipboard_item) {
+				const first_clipboard_item = this.clipboard.getClipboardItems()[0];
+				if (first_clipboard_item) {
+					insert.push(first_clipboard_item.v_node);
+					this.setNewIdsOnVNode(first_clipboard_item.v_node);
+				}
+			} else {
+				const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
 
-			/**
-			 *
-			 * @param {PiepNode} node
-			 */
-			const traverseNode = (node) => {
-				if (node.childNodes) {
-					node.childNodes.forEach((child) => {
-						if (child.nodeType === Node.TEXT_NODE) {
-							// span wants to go into last text block, find it!
+				/**
+				 *
+				 * @param {PiepNode} node
+				 */
+				const traverseNode = (node) => {
+					if (node.childNodes) {
+						node.childNodes.forEach((child) => {
+							if (child.nodeType === Node.TEXT_NODE) {
+								// span wants to go into last text block, find it!
 
-							const plain_text = child.textContent.replace(/[\n\r]/g, "");
-							let success = false;
+								const plain_text = child.textContent.replace(/[\n\r]/g, "");
+								let success = false;
 
-							const insert_span = {
-								id: new_id++,
-								classes: [],
-								attrs: {},
-								styles: {},
-								tag: "span",
-								text: plain_text,
-							};
+								const insert_span = {
+									id: new_id++,
+									classes: [],
+									attrs: {},
+									styles: {},
+									tag: "span",
+									text: plain_text,
+								};
 
-							/**
-							 *
-							 * @param {vDomNode[]} v_nodes
-							 */
-							const traverseInsert = (v_nodes) => {
-								const last_v_node = v_nodes[v_nodes.length - 1];
-								if (!last_v_node) {
-									return;
-								}
-								if (available_text_blocks.includes(last_v_node.tag)) {
-									last_v_node.children.push(insert_span);
-									success = true;
-								} else if (last_v_node.children) {
-									traverseInsert(last_v_node.children);
-								}
-							};
-							traverseInsert(insert);
-
-							if (!success) {
-								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
-							}
-						} else if (child.nodeType === Node.ELEMENT_NODE) {
-							const sub_node = $(child);
-
-							const tag = sub_node.tagName.toLowerCase();
-							if (tag === "br") {
-								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [] });
-							} else if (tag === "ul" || tag === "ol") {
-								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
-							} else if (tag === "li") {
 								/**
 								 *
 								 * @param {vDomNode[]} v_nodes
@@ -1459,24 +1439,55 @@ class PiepCMS {
 									if (!last_v_node) {
 										return;
 									}
-									if (last_v_node.tag === "ul") {
-										last_v_node.children.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "li", children: [] });
+									if (available_text_blocks.includes(last_v_node.tag)) {
+										last_v_node.children.push(insert_span);
+										success = true;
 									} else if (last_v_node.children) {
 										traverseInsert(last_v_node.children);
 									}
 								};
 								traverseInsert(insert);
-							} else if (available_text_blocks.includes(tag)) {
-								insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag, children: [] });
+
+								if (!success) {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [insert_span] });
+								}
+							} else if (child.nodeType === Node.ELEMENT_NODE) {
+								const sub_node = $(child);
+
+								const tag = sub_node.tagName.toLowerCase();
+								if (tag === "br") {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "p", children: [] });
+								} else if (tag === "ul" || tag === "ol") {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "ul", children: [] });
+								} else if (tag === "li") {
+									/**
+									 *
+									 * @param {vDomNode[]} v_nodes
+									 */
+									const traverseInsert = (v_nodes) => {
+										const last_v_node = v_nodes[v_nodes.length - 1];
+										if (!last_v_node) {
+											return;
+										}
+										if (last_v_node.tag === "ul") {
+											last_v_node.children.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag: "li", children: [] });
+										} else if (last_v_node.children) {
+											traverseInsert(last_v_node.children);
+										}
+									};
+									traverseInsert(insert);
+								} else if (available_text_blocks.includes(tag)) {
+									insert.push({ id: new_id++, classes: [], attrs: {}, styles: {}, tag, children: [] });
+								}
+
+								traverseNode(sub_node);
 							}
+						});
+					}
+				};
 
-							traverseNode(sub_node);
-						}
-					});
-				}
-			};
-
-			traverseNode(this.paste_html);
+				traverseNode(this.paste_html);
+			}
 
 			const next_v_node_data = this.getVNodeDataById(next_vid);
 			const next_v_node = next_v_node_data.v_node;
@@ -1487,7 +1498,9 @@ class PiepCMS {
 
 			const first_insert_v_node = insert[0];
 			if (first_insert_v_node) {
+				//console.log(prev_v_node, first_insert_v_node);
 				if (this.isTextContainer(prev_v_node) && this.isTextContainer(first_insert_v_node)) {
+					//console.log("YEAH");
 					const first_textable = first_insert_v_node.children[0];
 
 					this.text_selection.focus_vid = first_textable.id;
@@ -1501,7 +1514,7 @@ class PiepCMS {
 			const last_insert_v_node = insert[insert.length - 1];
 			if (last_insert_v_node) {
 				if (this.isTextContainer(next_v_node) && this.isTextContainer(last_insert_v_node)) {
-					const first_textable = next_v_node.children[0];
+					const first_textable = first_insert_v_node.children[0];
 
 					// TODO: nice to have that selection even if can't merge
 					this.text_selection.focus_vid = first_textable.id;
@@ -1563,6 +1576,25 @@ class PiepCMS {
 		} else {
 			grab();
 		}
+	}
+
+	/**
+	 * Returns true if there is any selection
+	 *
+	 * @param {PiepNode} src
+	 * @returns
+	 */
+	copyToClipboardWhateverIsSelected(src = undefined) {
+		const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
+		if (!v_node) {
+			return false;
+		}
+		piep_cms.clipboard.copyItem(v_node);
+		if (src) {
+			piep_cms.clipboard.animate(src);
+		}
+
+		return true;
 	}
 
 	/**
@@ -1857,6 +1889,7 @@ class PiepCMS {
 
 		range.setStart(getTextNode(this.getNode(start_vid)), start_offset);
 		range.setEnd(getTextNode(this.getNode(end_vid)), end_offset);
+		this.clipboard.setLastCopiedHTML([...range.cloneContents().children].map((c) => c.outerHTML).join(""));
 		copyRangeToClipboard(range);
 
 		if (options.restore_selection) {
@@ -1896,6 +1929,7 @@ class PiepCMS {
 						if (lower_key === "c") {
 							ev.preventDefault();
 							this.copyTextSelection({ restore_selection: true });
+							this.copyToClipboardWhateverIsSelected(this.cursor);
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();
@@ -2377,7 +2411,6 @@ class PiepCMS {
 
 				if (this.isTextContainer(v_node)) {
 					if (children.length === 0) {
-						console.log(111);
 						remove_vids.push(vid);
 						continue;
 					}

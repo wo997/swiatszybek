@@ -109,7 +109,7 @@ class PiepCMSClipboard {
 	 *
 	 * @param {vDomNode} v_node
 	 */
-	pushItem(v_node) {
+	copyItem(v_node) {
 		const piep_cms_clipboard = this.getClipboardItems();
 		piep_cms_clipboard.unshift({ v_node });
 		const max = 10;
@@ -118,6 +118,15 @@ class PiepCMSClipboard {
 		}
 		localStorage.setItem("piep_cms_clipboard_x_json", JSON.stringify(piep_cms_clipboard));
 		this.update();
+	}
+
+	setLastCopiedHTML(copied_html) {
+		console.log(copied_html);
+		localStorage.setItem("piep_cms_clipboard_last_html", copied_html);
+	}
+
+	getLastCopiedHTML() {
+		return localStorage.getItem("piep_cms_clipboard_last_html");
 	}
 
 	update() {
