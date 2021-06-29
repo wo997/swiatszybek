@@ -1303,13 +1303,12 @@ class PiepCMS {
 					const all_vids = this.getAllTextSelectionVids();
 					if (piep_cms_manager.text_container_props.includes(prop_str)) {
 						all_vids.forEach((vid) => {
-							const v_node = this.getVNodeDataById(vid);
-							if (!v_node) {
-								return;
-							}
-							const parent_v_node = v_node.parent_v_nodes[0];
-							if (parent_v_node) {
-								considerVid(parent_v_node.id);
+							const v_node_data = this.getVNodeDataById(vid);
+							if (v_node_data && !this.isTextContainer(v_node_data.v_node)) {
+								const parent_v_node = v_node_data.parent_v_nodes[0];
+								if (parent_v_node) {
+									considerVid(parent_v_node.id);
+								}
 							}
 						});
 					} else {
@@ -1319,6 +1318,15 @@ class PiepCMS {
 
 				if (set_prop_of_ids.length === 0 && this.focus_node_vid !== undefined) {
 					considerVid(this.focus_node_vid);
+					if (piep_cms_manager.text_container_props.includes(prop_str)) {
+						const v_node_data = this.getVNodeDataById(this.focus_node_vid);
+						if (v_node_data && !this.isTextContainer(v_node_data.v_node)) {
+							const parent_v_node = v_node_data.parent_v_nodes[0];
+							if (parent_v_node) {
+								considerVid(parent_v_node.id);
+							}
+						}
+					}
 				}
 
 				this.preRecreateDom();
@@ -2903,6 +2911,7 @@ class PiepCMS {
 						// performance boost?
 						classes.push("wo997_bckg_img_shown");
 					}
+
 					setNodeClasses(node, classes);
 
 					// attrs
@@ -5203,8 +5212,13 @@ class PiepCMS {
 			}
 			const v_node = v_node_data.v_node;
 
-			if (this.isTextable(v_node)) {
-				from_v_nodes.push(v_node_data.parent_v_nodes[0]);
+			// if (!this.isTextContainer(v_node) && this.isTextable(v_node)) {
+			// 	from_v_nodes.push(v_node_data.parent_v_nodes[0]);
+			// }
+
+			const parent_v_node = v_node_data.parent_v_nodes[0];
+			if (!this.isTextContainer(v_node) && this.isTextContainer(parent_v_node)) {
+				from_v_nodes.push(parent_v_node);
 			}
 
 			from_v_nodes.push(v_node);
@@ -5230,19 +5244,26 @@ class PiepCMS {
 					let prop_val;
 					let v_node_ref = v_node;
 
+					const is_text_container = this.isTextContainer(v_node);
 					// ignore textable styles of text container if there is any selection
 					if (this.text_selection) {
-						if (this.isTextContainer(v_node) && piep_cms_manager.textable_props.includes(prop_str)) {
+						if (is_text_container && piep_cms_manager.textable_props.includes(prop_str)) {
 							continue;
 						}
 					}
 
 					// only textables propagate things like text container tag name or text alignment
-					if (this.isTextable(v_node)) {
-						if (is_text_container_prop) {
+					if (!is_text_container) {
+						const parent_v_node = this.getVNodeDataById(v_node.id).parent_v_nodes[0];
+						if (this.isTextContainer(parent_v_node) && is_text_container_prop) {
 							continue;
 						}
 					}
+					// if (this.isTextable(v_node)) {
+					// 	if (is_text_container_prop) {
+					// 		continue;
+					// 	}
+					// }
 
 					if (prop_str.startsWith("styles.")) {
 						const prop_key = prop_str.substring("styles.".length);

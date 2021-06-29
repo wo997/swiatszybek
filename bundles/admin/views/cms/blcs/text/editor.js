@@ -2,6 +2,22 @@
 {
 	const text_priority = 15;
 
+	/**
+	 *
+	 * @param {vDomNodeData} v_node_data
+	 * @returns
+	 */
+	const inTextContainerMatcher = (v_node_data) => {
+		const parent_v_node = v_node_data.parent_v_nodes[0];
+		return parent_v_node && piep_cms.isTextContainer(parent_v_node);
+	};
+
+	/** @type {EditBlcGroup[]} */
+	const in_text_container_groups = [
+		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
+		{ matcher: inTextContainerMatcher, priority: text_priority },
+	];
+
 	/** @type {EditBlcGroup[]} */
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
@@ -9,9 +25,29 @@
 	];
 
 	/** @type {EditBlcGroup[]} */
-	const text_tag_groups = [
-		{ match_tag: piep_cms_manager.match_tag_text_containers, priority: text_priority },
+	const some_text_groups = [
+		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
 		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
+		{ module_names: ["fa_icon"], priority: text_priority },
+	];
+
+	/** @type {EditBlcGroup[]} */
+	const text_tag_groups = [
+		{
+			matcher: (v_node_data) => {
+				const v_node = v_node_data.v_node;
+
+				if (v_node.tag === "button") {
+					return false;
+				}
+				const parent_v_node = v_node_data.parent_v_nodes[0];
+				if (parent_v_node && parent_v_node.tag === "button") {
+					return false;
+				}
+
+				return !!(v_node.tag.match(piep_cms_manager.match_text_containers) || v_node.tag.match(piep_cms_manager.match_textables));
+			},
+		},
 	];
 
 	const irrelevant_text_priority = 5;
@@ -152,7 +188,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_size",
 		type_groups: ["appearance"],
-		//blc_groups: text_groups,
+		blc_groups: some_text_groups,
 		menu_html: html`
 			<div class="label">Rozmiar czcionki</div>
 			<input class="field hidden" data-blc_prop="styles.fontSize" />
@@ -187,7 +223,7 @@
 	piep_cms_manager.registerProp({
 		name: "font_weight",
 		type_groups: ["appearance"],
-		//blc_groups: text_groups,
+		blc_groups: text_groups,
 		menu_html: html`
 			<div class="label">Grubość czcionki</div>
 			<div class="pretty_radio" data-blc_prop="styles.fontWeight" style="--columns:4">
@@ -288,6 +324,53 @@
 		`,
 	});
 
+	piep_cms_manager.registerProp({
+		name: "vertical_align",
+		type_groups: ["appearance"],
+		blc_groups: [{ matcher: inTextContainerMatcher, priority: text_priority }],
+		menu_html: html`
+			<div class="label">Wyrównanie pionowe fragmentu tekstu</div>
+			<div class="pretty_radio" data-blc_prop="styles.verticalAlign" style="--columns:3">
+				<div class="checkbox_area empty">
+					<p-checkbox data-value=""></p-checkbox>
+					<span>-</span>
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="baseline"></p-checkbox>
+					Linia tekstu
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="bottom"></p-checkbox>
+					Dół
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="middle"></p-checkbox>
+					Środek
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="top"></p-checkbox>
+					Góra
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="sub"></p-checkbox>
+					Indeks dolny
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="super"></p-checkbox>
+					Indeks górny
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="text-bottom"></p-checkbox>
+					Dół tekstu
+				</div>
+				<div class="checkbox_area">
+					<p-checkbox data-value="text-top"></p-checkbox>
+					Góra tekstu
+				</div>
+			</div>
+		`,
+	});
+
 	piep_cms_manager.registerFloatingProp({
 		name: "text_tag",
 		blc_groups: text_tag_groups,
@@ -315,7 +398,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "font_size",
-		blc_groups: text_groups,
+		blc_groups: some_text_groups,
 		menu_html: html`
 			<p-dropdown
 				class="field small inline pretty_blue center static_label grid"
@@ -356,7 +439,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "text_align",
-		blc_groups: text_groups,
+		blc_groups: in_text_container_groups,
 		menu_html: html`
 			<p-dropdown class="field small inline pretty_blue center grid" data-blc_prop="styles.textAlign" data-tooltip="Wyrównanie tekstu">
 				<p-option data-value=""> <i class="fas fa-align-left"></i> </p-option>

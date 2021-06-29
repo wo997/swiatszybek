@@ -6,6 +6,7 @@
 	const text_groups = [
 		{ match_tag: piep_cms_manager.match_text_containers, priority: text_priority },
 		{ match_tag: piep_cms_manager.match_textables, priority: text_priority },
+		{ module_names: ["fa_icon"], priority: text_priority },
 	];
 
 	/**

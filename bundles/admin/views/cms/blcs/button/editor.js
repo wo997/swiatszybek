@@ -103,7 +103,7 @@
 					}
 				});
 
-				piep_cms.update({ dom: true });
+				piep_cms.update({ all: true });
 			});
 		},
 	});
