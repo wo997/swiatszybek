@@ -30,7 +30,7 @@
 		{ classes: ["fab", "fa-twitter"], description: "twitter" },
 		{ classes: ["fab", "fa-twitter-square"], description: "twitter" },
 		{ classes: ["fab", "fa-youtube"], description: "youtube" },
-		{ classes: ["fab", "fa-youtube"], description: "youtube" },
+		{ classes: ["fab", "fa-youtube-square"], description: "youtube" },
 	];
 
 	piep_cms_manager.registerProp({

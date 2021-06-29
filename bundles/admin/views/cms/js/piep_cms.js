@@ -1932,7 +1932,7 @@ class PiepCMS {
 		const text = focus_v_node.text;
 		if (text !== undefined) {
 			const parent_v_node = focus_v_node_data.parent_v_nodes[0];
-			if (this.isTextContainer(parent_v_node)) {
+			if (parent_v_node && this.isTextContainer(parent_v_node)) {
 				const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
 				const move_v_nodes_on_right_down = focus_v_node_data.v_nodes.splice(
 					focus_v_node_data.index,
@@ -5217,7 +5217,7 @@ class PiepCMS {
 			// }
 
 			const parent_v_node = v_node_data.parent_v_nodes[0];
-			if (!this.isTextContainer(v_node) && this.isTextContainer(parent_v_node)) {
+			if (parent_v_node && !this.isTextContainer(v_node) && this.isTextContainer(parent_v_node)) {
 				from_v_nodes.push(parent_v_node);
 			}
 
@@ -5255,7 +5255,7 @@ class PiepCMS {
 					// only textables propagate things like text container tag name or text alignment
 					if (!is_text_container) {
 						const parent_v_node = this.getVNodeDataById(v_node.id).parent_v_nodes[0];
-						if (this.isTextContainer(parent_v_node) && is_text_container_prop) {
+						if (parent_v_node && this.isTextContainer(parent_v_node) && is_text_container_prop) {
 							continue;
 						}
 					}

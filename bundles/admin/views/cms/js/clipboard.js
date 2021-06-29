@@ -572,13 +572,16 @@ class PiepCMSClipboard {
 					const clipboard_items_wrapper_rect = this.clipboard_items_wrapper.getBoundingClientRect();
 					const clipboard_item_rect = clipboard_item.getBoundingClientRect();
 
+					const padding = 10;
 					this.clipboard_item_actions._set_absolute_pos(
 						clipboard_item_rect.left +
-							clipboard_item_rect.width -
-							clipboard_items_wrapper_rect.left -
-							this.clipboard_item_actions.offsetWidth +
-							10,
-						clipboard_item_rect.top - clipboard_items_wrapper_rect.top + 10
+							0.5 * (clipboard_item_rect.width - this.clipboard_item_actions.offsetWidth) -
+							clipboard_items_wrapper_rect.left +
+							padding,
+						clipboard_item_rect.top +
+							0.5 * (clipboard_item_rect.height - this.clipboard_item_actions.offsetHeight) -
+							clipboard_items_wrapper_rect.top +
+							padding
 					);
 				}
 			}
