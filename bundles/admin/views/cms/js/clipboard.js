@@ -60,6 +60,25 @@ class PiepCMSClipboard {
 	}
 
 	/**
+	 * Returns true if there is any selection
+	 *
+	 * @param {PiepNode} src
+	 * @returns
+	 */
+	copyToClipboardWhateverIsSelected(src = undefined) {
+		const v_node = piep_cms.getVNodeById(this.piep_cms.focus_node_vid);
+		if (!v_node) {
+			return false;
+		}
+		this.copyItem(v_node);
+		if (src) {
+			this.animate(src);
+		}
+
+		return true;
+	}
+
+	/**
 	 *
 	 * @param {PiepNode} src
 	 */

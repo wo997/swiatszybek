@@ -1579,25 +1579,6 @@ class PiepCMS {
 	}
 
 	/**
-	 * Returns true if there is any selection
-	 *
-	 * @param {PiepNode} src
-	 * @returns
-	 */
-	copyToClipboardWhateverIsSelected(src = undefined) {
-		const v_node = piep_cms.getVNodeById(piep_cms.focus_node_vid);
-		if (!v_node) {
-			return false;
-		}
-		piep_cms.clipboard.copyItem(v_node);
-		if (src) {
-			piep_cms.clipboard.animate(src);
-		}
-
-		return true;
-	}
-
-	/**
 	 *
 	 * @param {number} vid
 	 */
@@ -1929,7 +1910,7 @@ class PiepCMS {
 						if (lower_key === "c") {
 							ev.preventDefault();
 							this.copyTextSelection({ restore_selection: true });
-							this.copyToClipboardWhateverIsSelected(this.cursor);
+							this.clipboard.copyToClipboardWhateverIsSelected(this.cursor);
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();

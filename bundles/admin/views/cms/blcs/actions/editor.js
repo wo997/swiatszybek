@@ -30,9 +30,7 @@
 				const target = $(ev.target);
 				const copy_blc_btn = target._parent(".copy_blc_btn");
 				if (copy_blc_btn) {
-					if (piep_cms.copyToClipboardWhateverIsSelected(copy_blc_btn)) {
-						piep_cms.clipboard.animate(copy_blc_btn);
-					}
+					piep_cms.clipboard.copyToClipboardWhateverIsSelected(copy_blc_btn);
 				}
 			});
 		},

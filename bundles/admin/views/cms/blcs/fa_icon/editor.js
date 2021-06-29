@@ -25,6 +25,12 @@
 		{ classes: ["fab", "fa-facebook-f"], description: "facebook" },
 		{ classes: ["fab", "fa-facebook"], description: "facebook" },
 		{ classes: ["fab", "fa-facebook-messenger"], description: "facebook messenger" },
+		{ classes: ["fab", "fa-instagram-square"], description: "instagram" },
+		{ classes: ["fab", "fa-instagram"], description: "instagram" },
+		{ classes: ["fab", "fa-twitter"], description: "twitter" },
+		{ classes: ["fab", "fa-twitter-square"], description: "twitter" },
+		{ classes: ["fab", "fa-youtube"], description: "youtube" },
+		{ classes: ["fab", "fa-youtube"], description: "youtube" },
 	];
 
 	piep_cms_manager.registerProp({

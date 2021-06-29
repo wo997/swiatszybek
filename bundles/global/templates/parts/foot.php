@@ -105,7 +105,7 @@ if (Request::$is_admin_url) {
 
 ?>
 
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.0/css/all.css">
 
 <?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
     <?php
