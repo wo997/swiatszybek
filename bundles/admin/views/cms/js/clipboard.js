@@ -93,18 +93,30 @@ class PiepCMSClipboard {
 				attrs: {},
 			};
 
+			const fuck_ids = [];
+
 			all_vids.forEach((vid) => {
 				const v_node_data = piep_cms.getVNodeDataById(vid);
 				if (!v_node_data) {
 					return;
 				}
-				const parent_v_node = cloneObject(v_node_data.parent_v_nodes[0]);
-				if (parent_v_node && !temporary_wrapper.children.map((c) => c.id).includes(parent_v_node.id)) {
-					temporary_wrapper.children.push(parent_v_node);
+				const parent_v_node = v_node_data.parent_v_nodes[0];
+				if (parent_v_node && !fuck_ids.includes(parent_v_node.id)) {
+					fuck_ids.push(parent_v_node.id);
+					/** @type {vDomNode} */
+					const pvn = cloneObject(parent_v_node);
+					temporary_wrapper.children.push(pvn);
+
+					pvn.children = pvn.children.filter((c) => all_vids.includes(c.id));
+					pvn.children.forEach((c) => {
+						const partial_range = text_selection.partial_ranges.find((e) => e.vid === c.id);
+						if (partial_range) {
+							c.text = c.text.substring(partial_range.start, partial_range.end);
+						}
+					});
 				}
 			});
 
-			console.log(temporary_wrapper);
 			this.copyItem(temporary_wrapper);
 		} else {
 			this.copyItem(v_node);
