@@ -223,7 +223,7 @@ class PiepCMSClipboard {
 				}
 				return matches.join("");
 			};
-			const pasted_last_clipboard_item = last_copied_html ? getHTMLToken(pasted_html).includes(getHTMLToken(last_copied_html)) : false;
+			const pasted_last_clipboard_item = last_copied_html ? getHTMLToken(last_copied_html).includes(getHTMLToken(pasted_html)) : false;
 			piep_cms.removeTextInSelection();
 
 			if (pasted_text && !pasted_html) {
