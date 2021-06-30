@@ -89,29 +89,9 @@
 				const classes_str = icon_input._get_value();
 				const classes = classes_str.split(" ");
 				icons.forEach((i) => {
-					const first_class = i.classes[0];
-					const second_class = i.classes[1];
-					if (first_class === classes[0]) {
-						if (!v_node.classes.includes(first_class)) {
-							v_node.classes.push(first_class);
-						}
-					} else {
-						const ind = v_node.classes.indexOf(first_class);
-						if (ind !== -1) {
-							v_node.classes.splice(ind, 1);
-						}
-					}
-					if (second_class === classes[1]) {
-						if (!v_node.classes.includes(second_class)) {
-							v_node.classes.push(second_class);
-						}
-					} else {
-						const ind = v_node.classes.indexOf(second_class);
-						if (ind !== -1) {
-							v_node.classes.splice(ind, 1);
-						}
-					}
+					piep_cms.removeClasses(v_node, ...i.classes);
 				});
+				piep_cms.addClasses(v_node, ...classes);
 				piep_cms.update({ dom: true });
 			});
 		},

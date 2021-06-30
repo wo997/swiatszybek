@@ -1391,6 +1391,33 @@ class PiepCMS {
 	/**
 	 *
 	 * @param {vDomNode} v_node
+	 * @param  {...string} classes
+	 */
+	addClasses(v_node, ...classes) {
+		classes.forEach((c) => {
+			if (!v_node.classes.includes(c)) {
+				v_node.classes.push(c);
+			}
+		});
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
+	 * @param  {...string} classes
+	 */
+	removeClasses(v_node, ...classes) {
+		classes.forEach((c) => {
+			const ind = v_node.classes.indexOf(c);
+			if (ind !== -1) {
+				v_node.classes.splice(ind, 1);
+			}
+		});
+	}
+
+	/**
+	 *
+	 * @param {vDomNode} v_node
 	 * @param {{
 	 * is_new?: boolean
 	 * }} options

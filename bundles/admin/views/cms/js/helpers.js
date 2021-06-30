@@ -104,10 +104,9 @@ function compareIndices(indices_a, indices_b) {
  * @param {string[]} classes
  */
 function setNodeClasses(node, classes) {
-	classes.forEach((c) => {
-		node.classList.add(c);
-	});
-	node.classList.forEach((c) => {
+	node.classList.add(...classes);
+	// hacky but worky ;)
+	[...node.classList].forEach((c) => {
 		if (!classes.includes(c)) {
 			node.classList.remove(c);
 		}
