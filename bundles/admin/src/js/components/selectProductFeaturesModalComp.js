@@ -119,11 +119,15 @@ function SelectProductFeaturesModalComp(comp, parent, data = undefined) {
 		}
 		comp._refresh_dataset();
 
-		setTimeout(() => {
-			showModal("selectProductFeatures", {
-				source: options.source,
-			});
+		showModal("selectProductFeatures", {
+			source: options.source,
 		});
+
+		const bind_quick_search = comp._child(".bind_quick_search");
+		if (bind_quick_search) {
+			bind_quick_search.click();
+			bind_quick_search.focus();
+		}
 	};
 
 	comp._set_data = (data, options = {}) => {

@@ -116,6 +116,12 @@ function SelectProductFeatureOptionsModalComp(comp, parent, data = undefined) {
 		showModal("selectProductFeatureOptions", {
 			source: options.source,
 		});
+
+		const bind_quick_search = comp._child(".bind_quick_search");
+		if (bind_quick_search) {
+			bind_quick_search.click();
+			bind_quick_search.focus();
+		}
 	};
 
 	comp._set_data = (data, options = {}) => {

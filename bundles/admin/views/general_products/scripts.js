@@ -5,19 +5,23 @@ domload(() => {
 	let current_categories = [];
 
 	try {
-		const search_products_categories = localStorage.getItem("search_products_categories");
-		const search_products_now = localStorage.getItem("search_products_now");
+		const search_general_products_categories = localStorage.getItem("search_general_products_categories");
+		const search_general_products_now = localStorage.getItem("search_general_products_now");
 
-		if (search_products_now) {
-			if (Date.now() - numberFromStr(search_products_now) < 1000 * 60 * 3) {
-				if (search_products_categories) {
-					current_categories = JSON.parse(search_products_categories);
+		if (search_general_products_now) {
+			if (Date.now() - numberFromStr(search_general_products_now) < 1000 * 60 * 3) {
+				if (search_general_products_categories) {
+					current_categories = JSON.parse(search_general_products_categories);
 				}
 			}
 		}
 	} catch (e) {
 		console.error(e);
 	}
+
+	/** @type {DatatableComp} */
+	// @ts-ignore
+	const datatable = $("datatable-comp.general_products");
 
 	const getCategoriesParam = () => {
 		let ignore_cat_ids = [];
@@ -41,62 +45,59 @@ domload(() => {
 		return current_categories.filter((cid) => !ignore_cat_ids.includes(cid));
 	};
 
-	/** @type {DatatableComp} */
-	// @ts-ignore
-	const datatable = $("datatable-comp.products");
-
 	DatatableComp(datatable, undefined, {
-		search_url: STATIC_URLS["ADMIN"] + "/product/search",
+		search_url: STATIC_URLS["ADMIN"] + "/general_product/search",
 		columns: [
 			{
 				label: "Zdjęcie",
 				width: "65px",
 				key: "img_url",
 				render: (value) =>
-					html`<img data-src="${value}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain;" />`,
+					html`<img data-src="${value}" class="wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain" />`,
 				flex: true,
 			},
-			{ label: "Produkt", key: "product_name", db_key: "p.__name", width: "1", sortable: true, searchable: "string" },
+			{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
 			{
-				label: "W magazynie",
-				key: "stock",
+				label: "Aktywny",
+				key: "active",
+				db_key: "gp.active",
 				width: "1",
-				sortable: true,
-				searchable: "number",
-				editable: "number",
+				searchable: "boolean",
+				editable: "checkbox",
 				editable_callback: (data) => {
 					xhr({
-						url: STATIC_URLS["ADMIN"] + "/product/save",
+						url: STATIC_URLS["ADMIN"] + "/general_product/save",
 						params: {
-							product: {
-								product_id: data.product_id,
-								stock: data.stock,
+							general_product: {
+								general_product_id: data.general_product_id,
+								active: data.active,
 							},
 						},
 						success: (res) => {
-							showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
+							showNotification(`${data.name}: ${data.active ? "aktywny" : "nieaktywny"}`, { type: "success", one_line: true });
 							datatable._backend_search();
 						},
 					});
 				},
 			},
-			// {
-			// 	label: "Akcja",
-			// 	key: "",
-			// 	width: "100px",
-			// 	render: (value, data) => {
-			// 		return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
-			// 			Edytuj <i class="fas fa-cog"></i>
-			// 		</a>`;
-			// 	},
-			// },
+			{ label: "W magazynie", key: "stock_all", width: "1", sortable: true, searchable: "number" },
+			{
+				label: "Akcja",
+				key: "",
+				width: "100px",
+				render: (value, data) => {
+					return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
+						Edytuj <i class="fas fa-cog"></i>
+					</a>`;
+				},
+			},
 		],
-		primary_key: "product_id",
-		label: "Wszystkie produkty",
+		primary_key: "general_product_id",
+		label: "Produkty w sklepie",
 		after_label: html` <button class="btn subtle show_categories" data-tooltip="html"></button> `,
 		empty_html: html`Brak produktów`,
 		selectable: true,
-		save_state_name: "admin_products",
+		save_state_name: "admin_general_products",
 		getRequestParams: () => ({
 			category_ids: getCategoriesParam(),
 		}),
@@ -112,8 +113,8 @@ domload(() => {
 		const chng = current_categories !== category_ids;
 		if (chng) {
 			current_categories = category_ids;
-			localStorage.setItem("search_products_categories", JSON.stringify(current_categories));
-			localStorage.setItem("search_products_now", Date.now() + "");
+			localStorage.setItem("search_general_products_categories", JSON.stringify(current_categories));
+			localStorage.setItem("search_general_products_now", Date.now() + "");
 			datatable._backend_search();
 		}
 

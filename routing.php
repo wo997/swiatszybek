@@ -48,9 +48,9 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-cube"></i> Produkty',
         "sub" => [
-            ["url" => "/produkty", "title" => '<i class="fas fa-store"></i> Produkty w sklepie'],
-            ["url" => "/produkty?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt do sklepu'],
-            ["url" => "/produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
+            ["url" => "/produkty-w-sklepie", "title" => '<i class="fas fa-store"></i> Produkty w sklepie'],
+            ["url" => "/produkty-w-sklepie?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt do sklepu'],
+            ["url" => "/wszystkie-produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
             ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/produkt"/*, "title" => '<i class="fas fa-cube"></i> Edycja produktu'*/],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],

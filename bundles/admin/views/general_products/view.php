@@ -1,13 +1,13 @@
-<?php //route[{ADMIN}/wszystkie-produkty]
+<?php //route[{ADMIN}/produkty-w-sklepie] 
 ?>
 
 <?php Templates::startSection("head"); ?>
 
-<title>Wszystkie produkty</title>
+<title>Produkty w sklepie</title>
 
 <?php Templates::startSection("admin_page_body"); ?>
 
-<datatable-comp class="products"></datatable-comp>
+<datatable-comp class="general_products"></datatable-comp>
 
 <?php Templates::startSection("foot"); ?>
 
