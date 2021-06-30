@@ -17,8 +17,16 @@ class PiepCMSClipboard {
 				<div class="clipboard_items scroll_panel scroll_shadow">
 					<div class="clipboard_items_wrapper"></div>
 					<div class="clipboard_item_actions">
-						<button class="btn transparent" data-type="cursor"><i class="fas fa-font"></i> Wstaw w pozycji kursora</button>
-						<button class="btn transparent" data-type="block"><i class="square_icon"></i> Skopiuj jako blok</button>
+						<button class="btn transparent" data-type="block" data-tooltip="Skopiuj jako blok">
+							<i class="square_icon"></i>
+						</button>
+						<button class="btn transparent" data-type="cursor" data-tooltip="Wstaw w pozycji kursora">
+							<!-- <i class="fas fa-font"></i> -->
+							<i class="fas fa-i-cursor"></i>
+						</button>
+						<button class="btn transparent" data-type="delete" data-tooltip="Usuń element">
+							<i class="fas fa-trash"></i>
+						</button>
 					</div>
 				</div>
 			`
@@ -44,16 +52,22 @@ class PiepCMSClipboard {
 		this.clipboard_item_actions.addEventListener("click", (ev) => {
 			const target = $(ev.target);
 
-			const type = target._parent(`[data-type]`);
-			if (type) {
-				const clipboard_item = this.getClipboardItems()[+this.clipboard_item_active.dataset.index];
+			const btn = target._parent(`[data-type]`);
+			if (btn) {
+				const index = +this.clipboard_item_active.dataset.index;
+				const piep_cms_clipboard = this.getClipboardItems();
+				const clipboard_item = piep_cms_clipboard[index];
 
-				this.container.classList.remove("visible");
-
-				if (type.dataset.type === "cursor") {
+				const type = btn.dataset.type;
+				if (type === "cursor") {
+					this.container.classList.remove("visible");
 					this.piep_cms.insertVNodeAtCursor(clipboard_item.v_node);
-				} else {
+				} else if (type === "block") {
+					this.container.classList.remove("visible");
 					this.piep_cms.grabBlockFromVNode(clipboard_item.v_node);
+				} else if (type === "delete") {
+					piep_cms_clipboard.splice(index, 1);
+					this.save(piep_cms_clipboard);
 				}
 			}
 		});
@@ -369,7 +383,15 @@ class PiepCMSClipboard {
 		if (piep_cms_clipboard.length > max) {
 			piep_cms_clipboard.splice(max, piep_cms_clipboard.length - max);
 		}
-		localStorage.setItem("piep_cms_clipboard_2137_json", JSON.stringify(piep_cms_clipboard));
+		this.save(piep_cms_clipboard);
+	}
+
+	/**
+	 *
+	 * @param {CmsClipboarItem[]} clipboard_items
+	 */
+	save(clipboard_items) {
+		localStorage.setItem("piep_cms_clipboard_2137_json", JSON.stringify(clipboard_items));
 		this.update();
 	}
 
@@ -383,6 +405,7 @@ class PiepCMSClipboard {
 
 	update() {
 		this.recreateDom();
+		lazyLoadImages();
 	}
 
 	/**
@@ -590,11 +613,11 @@ class PiepCMSClipboard {
 					const padding = 10;
 					this.clipboard_item_actions._set_absolute_pos(
 						clipboard_item_rect.left +
-							0.5 * (clipboard_item_rect.width - this.clipboard_item_actions.offsetWidth) -
+							1 * (clipboard_item_rect.width - this.clipboard_item_actions.offsetWidth) -
 							clipboard_items_wrapper_rect.left +
 							padding,
 						clipboard_item_rect.top +
-							0.5 * (clipboard_item_rect.height - this.clipboard_item_actions.offsetHeight) -
+							1 * (clipboard_item_rect.height - this.clipboard_item_actions.offsetHeight) -
 							clipboard_items_wrapper_rect.top +
 							padding
 					);
