@@ -1796,20 +1796,53 @@ class PiepCMS {
 			return;
 		}
 
+		const mergeLines = () => {
+			const next_text_container = this.getDeepSibling(node, ".text_container", dir);
+			if (next_text_container) {
+				const next_text_container_vid = +next_text_container.dataset.vid;
+				const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
+				const next_text_container_v_node = next_text_container_v_node_data.v_node;
+
+				const v_node_parent = v_node_data.parent_v_nodes[0];
+
+				if (next_text_container_v_node && next_text_container_v_node.children && v_node_parent.children) {
+					if (dir === 1) {
+						v_node_parent.children.push(...next_text_container_v_node.children);
+						this.removeVNodes([next_text_container_v_node.id]);
+					} else {
+						next_text_container_v_node.children.push(...v_node_parent.children);
+						this.removeVNodes([v_node_parent.id]);
+					}
+				}
+			}
+		};
+
 		const text = v_node.text;
 
-		if (text === undefined) {
-			this.removeVNodes([v_node.id]);
+		const node = this.getNode(this.text_selection.focus_vid);
+		const near_textable = dir === 1 ? node._next() : node._prev();
 
-			const node = this.getNode(this.text_selection.focus_vid);
-			const near_textable = dir === 1 ? node._next() : node._prev();
+		if (text === undefined) {
+			const miss_selection =
+				(dir === -1 && this.text_selection.focus_offset === 0) || (dir === 1 && this.text_selection.focus_offset === 1);
+
 			if (near_textable) {
+				if (miss_selection) {
+					this.moveCursorSideways(dir, false);
+					return this.deleteAction(dir);
+				}
+				this.removeVNodes([v_node.id]);
 				this.text_selection.focus_vid = +near_textable.dataset.vid;
 				if (near_textable.classList.contains("textable")) {
 					const next_text = near_textable.textContent;
 					this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
 				} else {
 					this.text_selection.focus_offset = dir === 1 ? 0 : 1;
+				}
+			} else {
+				if (!miss_selection) {
+				} else {
+					mergeLines();
 				}
 			}
 		} else {
@@ -1826,28 +1859,9 @@ class PiepCMS {
 						this.text_selection.focus_offset = dir === 1 ? 0 : 1;
 					}
 
-					// recursive yay
-					this.deleteAction(dir);
-					return;
+					return this.deleteAction(dir);
 				} else {
-					const next_text_container = this.getDeepSibling(node, ".text_container", dir);
-					if (next_text_container) {
-						const next_text_container_vid = +next_text_container.dataset.vid;
-						const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
-						const next_text_container_v_node = next_text_container_v_node_data.v_node;
-
-						const v_node_parent = v_node_data.parent_v_nodes[0];
-
-						if (next_text_container_v_node && next_text_container_v_node.children && v_node_parent.children) {
-							if (dir === 1) {
-								v_node_parent.children.push(...next_text_container_v_node.children);
-								this.removeVNodes([next_text_container_v_node.id]);
-							} else {
-								next_text_container_v_node.children.push(...v_node_parent.children);
-								this.removeVNodes([v_node_parent.id]);
-							}
-						}
-					}
+					mergeLines();
 				}
 			} else {
 				if (dir === -1) {

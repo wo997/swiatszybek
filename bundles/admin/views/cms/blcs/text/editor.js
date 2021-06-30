@@ -198,7 +198,7 @@
 				<span class="case_palette">Z listy</span>
 				<span class="edit_theme_btn normal link">Zarządzaj</span>
 			</div>
-			<div class="pretty_radio global_root" style="--columns:6"></div>
+			<div class="pretty_radio global_root" style="--columns:4"></div>
 
 			<div class="label normal">Inny</div>
 			<unit-input>
