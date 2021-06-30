@@ -3391,8 +3391,17 @@ class PiepCMS {
 		if (focus_offset === focus_v_node.text.length) {
 			index++;
 		}
-		v_node_data.v_nodes.splice(index, 0, insert_v_node);
+
 		this.setNewIdsOnVNode(insert_v_node);
+		if (insert_v_node.classes.includes("temporary_wrapper")) {
+			if (insert_v_node.children.length === 1 && this.isTextContainer(insert_v_node.children[0])) {
+				v_node_data.v_nodes.splice(index, 0, ...insert_v_node.children[0].children);
+			} else {
+				v_node_data.v_nodes.splice(index, 0, ...insert_v_node.children);
+			}
+		} else {
+			v_node_data.v_nodes.splice(index, 0, insert_v_node);
+		}
 
 		this.update({ all: true });
 
