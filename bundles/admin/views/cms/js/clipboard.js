@@ -349,33 +349,31 @@ class PiepCMSClipboard {
 
 			piep_cms.update({ all: true });
 
-			// const first_insert_v_node = insert[0];
-			// if (first_insert_v_node) {
-			// 	console.log(prev_v_node, first_insert_v_node);
-			// 	if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
-			// 		console.log("YEAH");
-			// 		const first_textable = first_insert_v_node.children[0];
+			const first_insert_v_node = insert[0];
+			if (first_insert_v_node) {
+				if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
+					const first_textable = first_insert_v_node.children[0];
 
-			// 		piep_cms.text_selection.focus_vid = first_textable.id;
-			// 		piep_cms.text_selection.focus_offset = 0;
-			// 		piep_cms.collapseTextSelection();
+					piep_cms.text_selection.focus_vid = first_textable.id;
+					piep_cms.text_selection.focus_offset = 0;
+					piep_cms.collapseTextSelection();
 
-			// 		piep_cms.deleteAction(-1);
-			// 	}
-			// }
+					piep_cms.deleteAction(-1);
+				}
+			}
 
-			// const last_insert_v_node = insert[insert.length - 1];
-			// if (last_insert_v_node) {
-			// 	if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
-			// 		const first_textable = last_insert_v_node.children[0];
+			const last_insert_v_node = insert[insert.length - 1];
+			if (last_insert_v_node) {
+				if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
+					const first_textable = next_v_node.children[0];
 
-			// 		piep_cms.text_selection.focus_vid = first_textable.id;
-			// 		piep_cms.text_selection.focus_offset = 0;
-			// 		piep_cms.collapseTextSelection();
+					piep_cms.text_selection.focus_vid = first_textable.id;
+					piep_cms.text_selection.focus_offset = 0;
+					piep_cms.collapseTextSelection();
 
-			// 		piep_cms.deleteAction(-1);
-			// 	}
-			// }
+					piep_cms.deleteAction(-1);
+				}
+			}
 
 			piep_cms.manageText();
 		});
