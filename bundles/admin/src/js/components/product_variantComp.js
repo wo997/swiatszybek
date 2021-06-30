@@ -214,8 +214,10 @@ function Product_VariantComp(comp, parent, data = { product_variant_id: -1, gene
 				let fill_options_html = "";
 				comp._data.features.forEach((fea) => {
 					const feature = product_features.find((f) => f.product_feature_id === fea.product_feature_id);
-					const options = product_feature_options.filter((p) => p.product_feature_id === fea.product_feature_id);
-					if (feature) {
+					const options = product_feature_options.filter(
+						(p) => p.product_feature_id === fea.product_feature_id && p.just_general_product_id === comp._data.general_product_id
+					);
+					if (feature && options.length > 1) {
 						fill_options_html += html`
 							<div class="checkbox_area" data-tooltip="${options.map((opt) => opt.value).join(", ")}">
 								<p-checkbox data-value="${feature.product_feature_id}"></p-checkbox>
