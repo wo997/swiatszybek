@@ -5663,8 +5663,17 @@ class PiepCMS {
 			const next_textable = this.getDeepSibling(focus_node, ".in_text_container", dir);
 			if (next_textable) {
 				this.text_selection.focus_vid = +next_textable.dataset.vid;
-				const next_len = next_textable.classList.contains("textable") ? next_textable.textContent.length : 1;
-				this.text_selection.focus_offset = dir === 1 ? 0 : next_len;
+				const is_next_textable = next_textable.classList.contains("textable");
+				if (is_next_textable) {
+					this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
+				} else {
+					const glued = (dir === 1 && next_textable === focus_node._next()) || (dir === -1 && next_textable === focus_node._prev());
+					if (glued) {
+						this.text_selection.focus_offset = dir === 1 ? 1 : 0; // swap the order for quicker movement
+					} else {
+						this.text_selection.focus_offset = dir === 1 ? 0 : 1;
+					}
+				}
 			}
 		} else {
 			this.text_selection.focus_offset += dir;
