@@ -1,6 +1,12 @@
 /* css[global] */
 
 datatable-comp {
+	.dt_header {
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+	}
 	.table_body,
 	.table_header {
 		border: 1px solid #ccc;

@@ -17,6 +17,7 @@
  * _nodes: {
  *      edit_btn: PiepNode
  *      save_btn: PiepNode
+ *      clear_btn: PiepNode
  * }
  * _show(options: SelectProductCategoriesOptions, modal_options?: ShowModalParams)
  * _select_product_categories_options: SelectProductCategoriesOptions
@@ -120,7 +121,10 @@ function SelectProductCategoriesModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
-					<button class="btn primary small" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
+					<button class="btn subtle small" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
+					<button class="btn error_light small" data-node="{${comp._nodes.clear_btn}}">
+						Odznacz wszystko <i class="fas fa-eraser"></i>
+					</button>
 					<list-comp data-bind="{${data.categories}}" class="mt2" data-primary="product_category_id">
 						<product-category-picker-node-comp></product-category-picker-node-comp>
 					</list-comp>
@@ -143,6 +147,12 @@ function SelectProductCategoriesModalComp(comp, parent, data = undefined) {
 				if (comp._select_product_categories_options.close_callback) {
 					comp._select_product_categories_options.close_callback(comp._data.selection);
 				}
+			});
+
+			comp._nodes.clear_btn.addEventListener("click", () => {
+				comp._data.selection = [];
+				comp._refresh_dataset();
+				comp._render();
 			});
 		},
 	});
