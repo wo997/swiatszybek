@@ -23,7 +23,6 @@ class PiepCMS {
 
 		piep_cms_manager.setPiepCms(this);
 
-		//this.initInspector();
 		this.initSelectionBreadcrumbs();
 		this.initSideMenu();
 		this.initFloatMenu();
@@ -114,19 +113,41 @@ class PiepCMS {
 	 * Pretty much recalculates selection, have fun
 	 */
 	definiteSelection(sel_anchor_node, anchor_offset, sel_focus_node, focus_offset) {
+		const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
+		indices_anchor.push(anchor_offset);
+		const indices_focus = sel_focus_node.dataset.indices.split(",").map((e) => +e);
+		indices_focus.push(focus_offset);
+
+		const direction = compareIndices(indices_anchor, indices_focus);
+
+		if (!sel_anchor_node.classList.contains("textable")) {
+			if (direction === 1) {
+				sel_anchor_node = sel_anchor_node._prev();
+				anchor_offset = sel_anchor_node.textContent.length;
+			} else {
+				sel_anchor_node = sel_anchor_node._next();
+				anchor_offset = 0;
+			}
+		}
+		if (!sel_focus_node.classList.contains("textable")) {
+			if (direction === -1) {
+				sel_focus_node = sel_focus_node._prev();
+				focus_offset = sel_anchor_node.textContent.length;
+			} else {
+				sel_focus_node = sel_focus_node._next();
+				focus_offset = 0;
+			}
+		}
+
 		let anchor_vid = +sel_anchor_node.dataset.vid;
 		let focus_vid = +sel_focus_node.dataset.vid;
 
 		const native_sel_focus_node = sel_focus_node;
-		// const is_anchor_textable = sel_anchor_node.classList.contains("textable");
-		// const is_focus_textable = sel_focus_node.classList.contains("textable");
 
 		const is_anchor_in_text_container = sel_anchor_node.classList.contains("in_text_container");
 		const is_focus_in_text_container = sel_focus_node.classList.contains("in_text_container");
 
 		const anchor_text_container = sel_anchor_node._parent(".text_container");
-		// const focus_text_container = sel_focus_node._parent(".text_container");
-		// let ftc = focus_text_container;
 		let focus_textable = true;
 		while (sel_focus_node) {
 			const tc = sel_focus_node._parent(".text_container", { skip: 1 });
@@ -139,18 +160,7 @@ class PiepCMS {
 		}
 
 		if (is_anchor_in_text_container && is_focus_in_text_container) {
-			const indices_anchor = sel_anchor_node.dataset.indices.split(",").map((e) => +e);
-			indices_anchor.push(anchor_offset);
-			const indices_focus = sel_focus_node.dataset.indices.split(",").map((e) => +e);
-			indices_focus.push(focus_offset);
-
 			const single_node = anchor_vid === focus_vid;
-
-			const direction = compareIndices(indices_anchor, indices_focus);
-
-			if (!focus_textable) {
-				focus_offset = direction === 1 ? 1 : 0;
-			}
 
 			let total_length = 0;
 
@@ -179,8 +189,8 @@ class PiepCMS {
 				const end_vid = direction === 1 ? focus_vid : anchor_vid;
 				const sel_start_node = direction === 1 ? sel_anchor_node : sel_focus_node;
 				const sel_end_node = direction === 1 ? sel_focus_node : sel_anchor_node;
-				const start_len = sel_start_node.classList.contains("textable") ? sel_start_node.textContent.length : 1;
-				const end_len = sel_end_node.classList.contains("textable") ? sel_end_node.textContent.length : 1;
+				const start_len = sel_start_node.textContent.length;
+				const end_len = sel_end_node.textContent.length;
 
 				if (single_node) {
 					if (start_offset === 0 && end_offset === start_len) {
@@ -264,9 +274,9 @@ class PiepCMS {
 
 			this.text_selection = {
 				anchor_vid: +sel_anchor_node.dataset.vid,
-				anchor_offset: anchor_offset,
+				anchor_offset,
 				focus_vid: +sel_focus_node.dataset.vid,
-				focus_offset: focus_offset,
+				focus_offset,
 				middle_vids,
 				partial_ranges,
 				direction,
@@ -276,13 +286,6 @@ class PiepCMS {
 		} else {
 			this.text_selection = undefined;
 		}
-
-		// if (is_anchor_textable && !is_focus_textable) {
-		// 	const anchor_parent = sel_anchor_node._parent();
-		// 	if (anchor_parent.classList.contains("text_container")) {
-		// 		this.selectTextContainerContents(+anchor_parent.dataset.vid);
-		// 	}
-		// }
 	}
 
 	initTextSelection() {
@@ -488,20 +491,12 @@ class PiepCMS {
 		if (this.text_selection) {
 			const focus_node = this.getNode(this.text_selection.focus_vid);
 			if (focus_node) {
-				/** @type {DOMRect} */
-				let rect;
-				let add_width = false;
-				if (focus_node.classList.contains("textable")) {
-					const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
-					rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
-				} else {
-					rect = focus_node.getBoundingClientRect();
-					add_width = this.text_selection.focus_offset === 1;
-				}
+				const focus_range = getRangeByIndex(focus_node, this.text_selection.focus_offset);
+				const rect = (focus_node.textContent === "" ? focus_node : focus_range).getBoundingClientRect();
 				const width = 2;
 				const height = Math.max(rect.height, 20);
 
-				this.cursor._set_absolute_pos(rect.left + (add_width ? rect.width : 0) - width * 0.5, rect.top + this.content_scroll.scrollTop);
+				this.cursor._set_absolute_pos(rect.left - width * 0.5, rect.top + this.content_scroll.scrollTop);
 				this.cursor.style.width = width + "px";
 				this.cursor.style.height = height + "px";
 			}
@@ -1077,23 +1072,6 @@ class PiepCMS {
 			return;
 		}
 		const v_node = v_node_data.v_node;
-
-		// if (piep_cms_manager.text_container_props.includes(prop_str) && this.isTextable(v_node)) {
-		// 	const parent = v_node_data.parent_v_nodes[0];
-		// 	if (parent) {
-		// 		this.setPropOfVNode(prop_str, parent.id, input);
-		// 		return;
-		// 	}
-		// } else if (piep_cms_manager.textable_props.includes(prop_str) && this.isTextContainer(v_node)) {
-		// 	// to all children
-		// 	const children = v_node_data.v_node.children;
-		// 	if (children) {
-		// 		children.forEach((child) => {
-		// 			this.setPropOfVNode(prop_str, child.id, input);
-		// 		});
-		// 	}
-		// 	return;
-		// }
 
 		/** @type {string} */
 		let val = input._get_value();
@@ -1796,85 +1774,53 @@ class PiepCMS {
 			return;
 		}
 
-		const mergeLines = () => {
-			const next_text_container = this.getDeepSibling(node, ".text_container", dir);
-			if (next_text_container) {
-				const next_text_container_vid = +next_text_container.dataset.vid;
-				const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
-				const next_text_container_v_node = next_text_container_v_node_data.v_node;
-
-				const v_node_parent = v_node_data.parent_v_nodes[0];
-
-				if (next_text_container_v_node && next_text_container_v_node.children && v_node_parent.children) {
-					if (dir === 1) {
-						v_node_parent.children.push(...next_text_container_v_node.children);
-						this.removeVNodes([next_text_container_v_node.id]);
-					} else {
-						next_text_container_v_node.children.push(...v_node_parent.children);
-						this.removeVNodes([v_node_parent.id]);
-					}
-				}
-			}
-		};
-
 		const text = v_node.text;
 
-		const node = this.getNode(this.text_selection.focus_vid);
-		const near_textable = dir === 1 ? node._next() : node._prev();
-
-		if (text === undefined) {
-			const miss_selection =
-				(dir === -1 && this.text_selection.focus_offset === 0) || (dir === 1 && this.text_selection.focus_offset === 1);
-
+		const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
+		if (edge) {
+			const node = this.getNode(this.text_selection.focus_vid);
+			const near_textable = dir === 1 ? node._next(".textable") : node._prev(".textable");
+			const near = dir === 1 ? node._next() : node._prev();
 			if (near_textable) {
-				if (miss_selection) {
-					this.moveCursorSideways(dir, false);
+				this.text_selection.focus_vid = +near_textable.dataset.vid;
+				const next_text = near_textable.textContent;
+				this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
+
+				if (near) {
+					this.removeVNodes([+near.dataset.vid]);
+				} else {
 					return this.deleteAction(dir);
 				}
-				this.removeVNodes([v_node.id]);
-				this.text_selection.focus_vid = +near_textable.dataset.vid;
-				if (near_textable.classList.contains("textable")) {
-					const next_text = near_textable.textContent;
-					this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-				} else {
-					this.text_selection.focus_offset = dir === 1 ? 0 : 1;
-				}
 			} else {
-				if (!miss_selection) {
-				} else {
-					mergeLines();
+				const next_text_container = this.getDeepSibling(node, ".text_container", dir);
+				if (next_text_container) {
+					const next_text_container_vid = +next_text_container.dataset.vid;
+					const next_text_container_v_node_data = this.getVNodeDataById(next_text_container_vid);
+					const next_text_container_v_node = next_text_container_v_node_data.v_node;
+
+					const v_node_parent = v_node_data.parent_v_nodes[0];
+
+					if (next_text_container_v_node && next_text_container_v_node.children && v_node_parent.children) {
+						if (dir === 1) {
+							v_node_parent.children.push(...next_text_container_v_node.children);
+							this.removeVNodes([next_text_container_v_node.id]);
+						} else {
+							next_text_container_v_node.children.push(...v_node_parent.children);
+							this.removeVNodes([v_node_parent.id]);
+						}
+					}
 				}
 			}
 		} else {
-			const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
-			if (edge) {
-				const node = this.getNode(this.text_selection.focus_vid);
-				const near_textable = dir === 1 ? node._next() : node._prev();
-				if (near_textable) {
-					this.text_selection.focus_vid = +near_textable.dataset.vid;
-					if (near_textable.classList.contains("textable")) {
-						const next_text = near_textable.textContent;
-						this.text_selection.focus_offset = dir === 1 ? 0 : next_text.length;
-					} else {
-						this.text_selection.focus_offset = dir === 1 ? 0 : 1;
-					}
-
-					return this.deleteAction(dir);
-				} else {
-					mergeLines();
-				}
-			} else {
-				if (dir === -1) {
-					this.text_selection.focus_offset--;
-				}
-				v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
+			if (dir === -1) {
+				this.text_selection.focus_offset--;
 			}
+			v_node.text = text.substr(0, this.text_selection.focus_offset) + text.substr(this.text_selection.focus_offset + 1);
 		}
 
 		this.collapseTextSelection();
 
 		this.recreateDom();
-		//this.displayInspectorTree();
 
 		this.pushHistory("delete_text");
 	}
@@ -2113,37 +2059,6 @@ class PiepCMS {
 		});
 	}
 
-	// initInspector() {
-	// 	this.inspector = this.container._child(".piep_editor_inspector");
-	// 	this.inspector_tree = this.inspector._child(".tree");
-	// 	this.grab_inspector_btn = this.container._child(".grab_inspector_btn");
-
-	// 	/** @type {Position} */
-	// 	this.inspector_pos = { x: 1000000, y: 0 };
-
-	// 	const edit_theme_btn = this.container._child(".edit_theme_btn");
-	// 	edit_theme_btn.addEventListener("click", () => {
-	// 		getThemeSettingsModal()._show({ source: edit_theme_btn });
-	// 	});
-
-	// 	this.container._child(".show_inspector_btn").addEventListener("click", () => {
-	// 		this.text_selection = undefined;
-	// 		this.toggleInspector();
-	// 	});
-	// 	this.container._child(".hide_inspector_btn").addEventListener("click", () => {
-	// 		this.toggleInspector(false);
-	// 	});
-	// 	this.grab_inspector_btn.addEventListener("mousedown", () => {
-	// 		if (!this.inspector_grabbed) {
-	// 			this.inspector_grabbed = true;
-	// 			this.inspector.classList.add("grabbed");
-	// 		}
-	// 	});
-
-	// 	this.toggleInspector(false);
-
-	// }
-
 	getNewBlcId() {
 		let max = this.max_vid_inside;
 		/**
@@ -2243,6 +2158,7 @@ class PiepCMS {
 			let single_node = current_count === 1;
 			for (let i = 0; i < len; i++) {
 				const v_node = v_nodes[i];
+				const next_v_node = v_nodes[i + 1];
 				const vid = v_node.id;
 				const text = v_node.text;
 				const children = v_node.children;
@@ -2255,7 +2171,7 @@ class PiepCMS {
 				}
 
 				if (!single_node && v_node.text !== undefined) {
-					if (text === "") {
+					if (text === "" && next_v_node && next_v_node.text === "") {
 						if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
 							current_count--;
 							single_node = current_count === 1;
@@ -2263,8 +2179,6 @@ class PiepCMS {
 						}
 						continue;
 					} else if (i + 1 < len) {
-						const next_v_node = v_nodes[i + 1];
-
 						if (
 							next_v_node.text !== undefined &&
 							isEquivalent(v_node.styles, next_v_node.styles) &&
@@ -2310,6 +2224,48 @@ class PiepCMS {
 	preRecreateDom() {
 		/** @type {number[]} */
 		const remove_vids = [];
+
+		let new_vid = this.getNewBlcId();
+		const getSpan = () => {
+			return {
+				id: new_vid++,
+				tag: "span",
+				styles: {},
+				text: "",
+				attrs: {},
+				classes: [],
+			};
+		};
+
+		/**
+		 * @param {vDomNode[]} v_nodes
+		 * @param {boolean} is_parent_text_container
+		 */
+		const traverseTextables = (v_nodes, is_parent_text_container = false) => {
+			for (let i = 0; i < v_nodes.length; i++) {
+				const v_node = v_nodes[i];
+				if (is_parent_text_container) {
+					const prev_v_node = v_nodes[i - 1];
+					const next_v_node = v_nodes[i + 1];
+					if (v_node.text === undefined) {
+						if (!prev_v_node || prev_v_node.text === undefined) {
+							v_nodes.splice(i, 0, getSpan());
+							i++;
+						}
+						if (!next_v_node || next_v_node.text === undefined) {
+							v_nodes.splice(i + 1, 0, getSpan());
+							i++;
+						}
+					}
+				}
+				const children = v_node.children;
+				if (children) {
+					traverseTextables(children, this.isTextContainer(v_node));
+				}
+			}
+		};
+
+		traverseTextables(this.v_dom);
 
 		/**
 		 * @param {vDomNode[]} v_nodes
@@ -2557,9 +2513,6 @@ class PiepCMS {
 		if (options.all || options.dom) {
 			this.recreateDom();
 		}
-		// if (options.all || options.selection) {
-		// 	this.displayInspectorTree();
-		// }
 		if (options.all || options.styles) {
 			this.recalculateStyles();
 		}
@@ -2648,16 +2601,6 @@ class PiepCMS {
 			} else if (blc_schema) {
 				display_name = blc_schema.label;
 			}
-
-			// else if (v_node.module_name) {
-
-			// } else if (map_tag_display_name[tag]) {
-			// 	//display_name = map_tag_display_name[tag];
-			// }
-
-			// if (v_node.classes.includes("vertical_container")) {
-			// 	display_name = "Kontener";
-			// }
 		}
 
 		if (v_node.settings && v_node.settings.link) {
@@ -2666,88 +2609,6 @@ class PiepCMS {
 
 		return display_name;
 	}
-
-	// /**
-	//  *
-	//  * @param {{
-	//  * vids?: number[]
-	//  * }} options
-	//  */
-	// displayInspectorTree(options = {}) {
-	// 	let pos = -1;
-	// 	/** @type {number[]} */
-	// 	let included_vids = [];
-
-	// 	/**
-	// 	 * @param {vDomNode[]} v_nodes
-	// 	 */
-	// 	const traverseVDom = (v_nodes, level = 0) => {
-	// 		v_nodes.forEach((v_node, index) => {
-	// 			pos++;
-
-	// 			const vid = v_node.id;
-	// 			const children = v_node.children;
-	// 			included_vids.push(vid);
-
-	// 			if (!options.vids || options.vids.includes(vid)) {
-	// 				const text = v_node.text;
-	// 				const display_name = this.getVNodeDisplayName(v_node);
-
-	// 				let node = this.inspector_tree._child(`.v_node_label[data-vid="${vid}"]`);
-
-	// 				if (!node) {
-	// 					node = $(document.createElement("DIV"));
-	// 				}
-
-	// 				const before_node = this.inspector_tree._direct_children()[pos];
-	// 				if (node !== before_node) {
-	// 					this.inspector_tree.insertBefore(node, before_node);
-	// 				}
-
-	// 				let info = "";
-
-	// 				if (text !== undefined) {
-	// 					info = text ? escapeHTML(text) : "(pusty)";
-	// 				} else if (children !== undefined) {
-	// 					info = `(${children.length})`;
-	// 				}
-	// 				if (info) {
-	// 					info = html`<span class="info"> - ${info}</span>`;
-	// 				}
-
-	// 				let classes = ["v_node_label", `tblc_${vid}`];
-	// 				if (v_node.disabled) {
-	// 					classes.push("disabled");
-	// 				}
-	// 				if (vid === this.focus_node_vid) {
-	// 					classes.push("selected");
-	// 				}
-
-	// 				setNodeClasses(node, classes);
-
-	// 				node.style.setProperty("--level", level + "");
-
-	// 				node._set_content(html`<span class="name">${display_name}</span> ${info}`);
-
-	// 				node.dataset.tooltip = v_node.disabled ? `Część szablonu` : "";
-	// 				node.dataset.vid = vid + "";
-	// 			}
-
-	// 			if (children) {
-	// 				traverseVDom(children, level + 1);
-	// 			}
-	// 		});
-	// 	};
-
-	// 	traverseVDom(this.v_dom);
-
-	// 	displayPlaceholder(this.inspector_tree, pos === -1, ".no_elements", html` <div class="pa2 center no_elements">Brak elementów</div> `);
-
-	// 	const select_to_remove = ".v_node_label" + included_vids.map((e) => `:not(.tblc_${e})`).join("");
-	// 	this.inspector_tree._children(select_to_remove).forEach((r) => {
-	// 		r.remove();
-	// 	});
-	// }
 
 	recalculateStyles() {
 		// order doesn't really matter so far
@@ -3273,7 +3134,6 @@ class PiepCMS {
 
 		// optimisation
 		this.recreateDom({ vids: modified_vids });
-		//this.displayInspectorTree({ vids: [vid] });
 
 		this.text_selection.focus_offset += insert_text.length;
 		this.collapseTextSelection();
@@ -3863,54 +3723,11 @@ class PiepCMS {
 		return prop_val;
 	}
 
-	// inspectorMove() {
-	// 	if (this.inspector_grabbed && !mouse.down) {
-	// 		this.inspector_grabbed = false;
-	// 		this.inspector.classList.remove("grabbed");
-	// 	}
-
-	// 	const safe_off = 5;
-
-	// 	//const inspector_rect = this.inspector.getBoundingClientRect();
-	// 	const content_wrapper_rect = this.content_wrapper.getBoundingClientRect();
-
-	// 	const inspector_width = this.inspector.offsetWidth;
-	// 	const inspector_height = this.inspector.offsetHeight;
-	// 	const inspector_grab_btn_offset = 47;
-
-	// 	const max_x = content_wrapper_rect.left + content_wrapper_rect.width - inspector_width - safe_off;
-
-	// 	if (this.inspector_grabbed) {
-	// 		const left = mouse.pos.x + inspector_grab_btn_offset - inspector_width;
-	// 		const top = mouse.pos.y - 20;
-
-	// 		this.inspector_pos.x = this.inspector_pos.x * 0.5 + left * 0.5;
-	// 		this.inspector_pos.y = this.inspector_pos.y * 0.5 + top * 0.5;
-	// 	} else {
-	// 		if (this.inspector_sticks_to_right_size) {
-	// 			this.inspector_pos.x = max_x;
-	// 		}
-	// 	}
-
-	// 	this.inspector_pos.x = clamp(safe_off, this.inspector_pos.x, max_x);
-	// 	this.inspector_pos.y = clamp(
-	// 		content_wrapper_rect.top + safe_off,
-	// 		this.inspector_pos.y,
-	// 		content_wrapper_rect.top + content_wrapper_rect.height - inspector_height - safe_off
-	// 	);
-
-	// 	this.inspector_sticks_to_right_size = this.inspector_pos.x > max_x - 1;
-
-	// 	this.inspector.style.setProperty("--x", this.inspector_pos.x.toPrecision(5) + "px");
-	// 	this.inspector.style.setProperty("--y", this.inspector_pos.y.toPrecision(5) + "px");
-	// }
-
 	mainLoop() {
 		updateMouseTarget();
 
 		this.grabbedBlock();
 		this.showFocus();
-		//this.inspectorMove();
 		this.layoutEditMove();
 		this.addBlcBtnMove();
 		this.clipboard.mouseMove();
@@ -5182,9 +4999,6 @@ class PiepCMS {
 
 		const focus_node = this.getNode(vid);
 
-		// /** @type {PiepNode} */
-		// let tree_blc;
-
 		if (just_changed_focus_vid) {
 			this.filterMenu({ scroll_to_top: true });
 		}
@@ -5200,20 +5014,11 @@ class PiepCMS {
 				setTimeout(() => {
 					this.setBlcMenuFromFocusedNode();
 				});
-
-				// tree_blc = this.inspector_tree._child(`.tblc_${this.focus_node_vid}`);
-				// if (tree_blc) {
-				// 	scrollIntoView(tree_blc);
-				// }
 			}
 
 			this.displaySelectionBreadcrumbs();
 			this.displayNodeLayout();
 		}
-
-		// this.inspector_tree._children(".v_node_label").forEach((e) => {
-		// 	e.classList.toggle("selected", +e.dataset.vid === this.focus_node_vid);
-		// });
 	}
 
 	/**
@@ -5723,20 +5528,10 @@ class PiepCMS {
 		const len = v_node.text === undefined ? 1 : v_node.text.length;
 		const edge = dir === 1 ? focus_offset >= len : focus_offset <= 0;
 		if (edge) {
-			const next_textable = this.getDeepSibling(focus_node, ".in_text_container", dir);
+			const next_textable = this.getDeepSibling(focus_node, ".textable", dir);
 			if (next_textable) {
 				this.text_selection.focus_vid = +next_textable.dataset.vid;
-				const is_next_textable = next_textable.classList.contains("textable");
-				if (is_next_textable) {
-					this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
-				} else {
-					const glued = (dir === 1 && next_textable === focus_node._next()) || (dir === -1 && next_textable === focus_node._prev());
-					if (glued) {
-						this.text_selection.focus_offset = dir === 1 ? 1 : 0; // swap the order for quicker movement
-					} else {
-						this.text_selection.focus_offset = dir === 1 ? 0 : 1;
-					}
-				}
+				this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
 			}
 		} else {
 			this.text_selection.focus_offset += dir;
@@ -5897,22 +5692,4 @@ class PiepCMS {
 			}
 		}
 	}
-
-	// /**
-	//  *
-	//  * @param {boolean} open
-	//  */
-	// toggleInspector(open = undefined) {
-	// 	if (open !== undefined) {
-	// 		this.inspector_open = open;
-	// 	} else {
-	// 		this.inspector_open = !this.inspector_open;
-	// 	}
-	// 	this.inspector.classList.toggle("open", this.inspector_open);
-
-	// 	const show_inspector_btn = this.container._child(".show_inspector_btn");
-	// 	show_inspector_btn.classList.toggle("primary", this.inspector_open);
-	// 	show_inspector_btn.classList.toggle("transparent", !this.inspector_open);
-	// 	show_inspector_btn.dataset.tooltip = this.inspector_open ? "Ukryj drzewko elementów" : "Pokaż drzewko elementów";
-	// }
 }

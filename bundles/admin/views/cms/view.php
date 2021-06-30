@@ -190,9 +190,6 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn transparent select_blcs_btn bold" data-tooltip="Zaznacz elementy">
             <i class="fas fa-mouse-pointer"></i>
         </button>
-        <!-- <button class="btn transparent show_inspector_btn">
-            <i class="fas fa-stream"></i>
-        </button> -->
         <div class="btn_wrapper clipboard_btn_wrapper">
             <button class="btn transparent clipboard_btn">
                 <i class="fas fa-clipboard-list"></i>
@@ -213,23 +210,6 @@ $modules_html["main_menu_html"] = ob_get_clean();
             <i class="fas fa-trash"></i>
         </button>
     </div>
-
-    <!-- <div class="piep_editor_inspector">
-        <div class="container">
-            <div class="flex align_center header">
-                <div class="medium mra">Drzewko elementów</div>
-                <button class="btn transparent grab_inspector_btn small" style="width:29px" data-tooltip="Przemieść">
-                    <i class="fas fa-arrows-alt"></i>
-                </button>
-                <button class="btn transparent hide_inspector_btn small" style="width:29px" data-tooltip="Ukryj">
-                    <i class="fas fa-times" style="font-size:1.1em"></i>
-                </button>
-            </div>
-
-
-            <div class="tree scroll_panel scroll_shadow"></div>
-        </div>
-    </div> -->
 </div>
 
 <?php Templates::startSection("foot"); ?>
