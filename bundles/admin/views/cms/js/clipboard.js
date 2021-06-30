@@ -181,9 +181,13 @@ class PiepCMSClipboard {
 				const first_clipboard_item = piep_cms.clipboard.getClipboardItems()[0];
 				if (first_clipboard_item) {
 					/** @type {vDomNode} */
-					const insert_v_node = cloneObject(first_clipboard_item.v_node);
-					piep_cms.setNewIdsOnVNode(insert_v_node);
-					insert.push(insert_v_node);
+					let clipboard_v_node = cloneObject(first_clipboard_item.v_node);
+					piep_cms.setNewIdsOnVNode(clipboard_v_node);
+					if (clipboard_v_node.classes.includes("temporary_wrapper")) {
+						insert.push(...clipboard_v_node.children);
+					} else {
+						insert.push(clipboard_v_node);
+					}
 				}
 			} else {
 				const available_text_blocks = ["h1", "h2", "h3", "p", "li"];
@@ -294,9 +298,8 @@ class PiepCMSClipboard {
 			// const last_insert_v_node = insert[insert.length - 1];
 			// if (last_insert_v_node) {
 			// 	if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
-			// 		const first_textable = first_insert_v_node.children[0];
+			// 		const first_textable = last_insert_v_node.children[0];
 
-			// 		// TODO: nice to have that selection even if can't merge
 			// 		piep_cms.text_selection.focus_vid = first_textable.id;
 			// 		piep_cms.text_selection.focus_offset = 0;
 			// 		piep_cms.collapseTextSelection();
