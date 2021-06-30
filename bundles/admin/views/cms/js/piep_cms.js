@@ -1904,13 +1904,39 @@ class PiepCMS {
 		}
 
 		if (parent_v_node && this.isTextContainer(parent_v_node)) {
-			const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
+			const text = focus_v_node.text;
+
+			let from_index = focus_v_node_data.index;
+
+			if (text === undefined) {
+				if (this.text_selection.focus_offset === 1) {
+					from_index += 1;
+				}
+			}
+
 			const move_v_nodes_on_right_down = focus_v_node_data.v_nodes.splice(
-				focus_v_node_data.index,
+				from_index,
 				focus_v_node_data.v_nodes.length - focus_v_node_data.index
 			);
 
+			if (focus_v_node_data.v_nodes.length === 0) {
+				focus_v_node_data.v_nodes.push({
+					id: new_vid++,
+					tag: "span",
+					styles: {},
+					text: "",
+					attrs: {},
+					classes: [],
+					settings: {},
+					responsive_settings: {},
+				});
+			}
+
+			// console.log({ from_index, top: focus_v_node_data.v_nodes, move_v_nodes_on_right_down });
+
 			const tag = parent_v_node.tag === "li" ? "li" : "p";
+
+			const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
 
 			// place it below the text container, including the v_node
 			parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
@@ -1923,7 +1949,6 @@ class PiepCMS {
 			});
 
 			// text split
-			const text = focus_v_node.text;
 			if (text !== undefined) {
 				/** @type {vDomNode} */
 				// the one that stays on top where v_node has been previously
