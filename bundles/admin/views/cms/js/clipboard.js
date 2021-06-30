@@ -76,6 +76,61 @@ class PiepCMSClipboard {
 	}
 
 	/**
+	 *
+	 * @param {{
+	 * restore_selection?: boolean
+	 * }} options
+	 * @returns
+	 */
+	copyTextSelection(options = {}) {
+		const piep_cms = this.piep_cms;
+		if (!piep_cms.text_selection) {
+			return;
+		}
+
+		const text_selection_copy = cloneObject(piep_cms.text_selection);
+
+		const range = document.createRange();
+
+		/** @type {number} */
+		let start_vid;
+		/** @type {number} */
+		let start_offset;
+		/** @type {number} */
+		let end_vid;
+		/** @type {number} */
+		let end_offset;
+
+		if (piep_cms.text_selection.direction === 1) {
+			start_vid = piep_cms.text_selection.anchor_vid;
+			start_offset = piep_cms.text_selection.anchor_offset;
+			end_vid = piep_cms.text_selection.focus_vid;
+			end_offset = piep_cms.text_selection.focus_offset;
+		} else {
+			start_vid = piep_cms.text_selection.focus_vid;
+			start_offset = piep_cms.text_selection.focus_offset;
+			end_vid = piep_cms.text_selection.anchor_vid;
+			end_offset = piep_cms.text_selection.anchor_offset;
+		}
+
+		const start_node = piep_cms.getNode(start_vid);
+		const end_node = piep_cms.getNode(end_vid);
+		const start_textable = start_node.classList.contains("textable");
+		const end_textable = end_node.classList.contains("textable");
+		range.setStart(start_textable ? getTextNode(start_node) : start_node, start_textable ? start_offset : 0);
+		range.setEnd(end_textable ? getTextNode(end_node) : end_node, end_textable ? end_offset : 0);
+		this.setLastCopiedHTML([...range.cloneContents().children].map((c) => c.outerHTML).join(""));
+		copyRangeToClipboard(range);
+
+		if (options.restore_selection) {
+			setTimeout(() => {
+				piep_cms.text_selection = text_selection_copy;
+				piep_cms.setDummySelection();
+			});
+		}
+	}
+
+	/**
 	 * Returns true if there is any selection
 	 *
 	 * @param {PiepNode} src
@@ -155,7 +210,7 @@ class PiepCMSClipboard {
 			const pasted_text = ev.clipboardData.getData("text/plain");
 
 			const match_vids = /blc_\d*/g;
-			const last_copied_html = piep_cms.clipboard.getLastCopiedHTML();
+			const last_copied_html = this.getLastCopiedHTML();
 			/**
 			 *
 			 * @param {string} html_str
@@ -192,7 +247,7 @@ class PiepCMSClipboard {
 			let new_id = piep_cms.getNewBlcId();
 
 			if (pasted_last_clipboard_item) {
-				const first_clipboard_item = piep_cms.clipboard.getClipboardItems()[0];
+				const first_clipboard_item = this.getClipboardItems()[0];
 				if (first_clipboard_item) {
 					/** @type {vDomNode} */
 					let clipboard_v_node = cloneObject(first_clipboard_item.v_node);

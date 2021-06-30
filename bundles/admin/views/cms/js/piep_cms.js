@@ -1693,56 +1693,6 @@ class PiepCMS {
 		});
 	}
 
-	/**
-	 *
-	 * @param {{
-	 * restore_selection?: boolean
-	 * }} options
-	 * @returns
-	 */
-	copyTextSelection(options = {}) {
-		if (!this.text_selection) {
-			return;
-		}
-
-		const text_selection_copy = cloneObject(this.text_selection);
-
-		const range = document.createRange();
-
-		/** @type {number} */
-		let start_vid;
-		/** @type {number} */
-		let start_offset;
-		/** @type {number} */
-		let end_vid;
-		/** @type {number} */
-		let end_offset;
-
-		if (this.text_selection.direction === 1) {
-			start_vid = this.text_selection.anchor_vid;
-			start_offset = this.text_selection.anchor_offset;
-			end_vid = this.text_selection.focus_vid;
-			end_offset = this.text_selection.focus_offset;
-		} else {
-			start_vid = this.text_selection.focus_vid;
-			start_offset = this.text_selection.focus_offset;
-			end_vid = this.text_selection.anchor_vid;
-			end_offset = this.text_selection.anchor_offset;
-		}
-
-		range.setStart(getTextNode(this.getNode(start_vid)), start_offset);
-		range.setEnd(getTextNode(this.getNode(end_vid)), end_offset);
-		this.clipboard.setLastCopiedHTML([...range.cloneContents().children].map((c) => c.outerHTML).join(""));
-		copyRangeToClipboard(range);
-
-		if (options.restore_selection) {
-			setTimeout(() => {
-				this.text_selection = text_selection_copy;
-				this.setDummySelection();
-			});
-		}
-	}
-
 	initTyping() {
 		document.addEventListener("keydown", (ev) => {
 			if (!this.content_active) {
@@ -1771,8 +1721,8 @@ class PiepCMS {
 					if (ev.ctrlKey) {
 						if (lower_key === "c") {
 							ev.preventDefault();
-							this.copyTextSelection({ restore_selection: true });
 							this.clipboard.copyWhateverIsSelected(this.cursor);
+							this.clipboard.copyTextSelection({ restore_selection: true });
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();
@@ -1784,7 +1734,8 @@ class PiepCMS {
 						}
 						if (lower_key == "x") {
 							ev.preventDefault();
-							this.copyTextSelection();
+							this.clipboard.copyWhateverIsSelected(this.cursor);
+							this.clipboard.copyTextSelection();
 							this.removeTextInSelection();
 						}
 					}
@@ -5742,7 +5693,8 @@ class PiepCMS {
 		const sel_rect = this.cursor.getBoundingClientRect();
 		const sel_center = getRectCenter(sel_rect);
 
-		const textables = this.content._children(".textable:not(.editor_disabled)");
+		//const textables = this.content._children(".textable:not(.editor_disabled)");
+		const textables = this.content._children(".in_text_container:not(.editor_disabled)");
 
 		/** @type {{node:PiepNode, dist: number}[]} */
 		let textables_with_dist = [];
@@ -5809,6 +5761,8 @@ class PiepCMS {
 				let closest_pos = 0;
 				let pos_smallest_dist = 100000000;
 				const text_node = getTextNode(textable);
+
+				// TODO: sometimes there is just no text cmon
 
 				const considerRect = (position_center) => {
 					let pos_dist = 0;
