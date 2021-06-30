@@ -219,13 +219,18 @@ class PiepCMSClipboard {
 			 * @returns
 			 */
 			const getHTMLToken = (html_str) => {
+				if (!html_str) {
+					return "";
+				}
 				const matches = html_str.match(match_vids);
 				if (!matches) {
 					return "";
 				}
 				return matches.join("");
 			};
-			const pasted_last_clipboard_item = last_copied_html ? getHTMLToken(last_copied_html).includes(getHTMLToken(pasted_html)) : false;
+			const last_token = getHTMLToken(last_copied_html);
+			const paste_token = getHTMLToken(pasted_html);
+			const pasted_last_clipboard_item = last_copied_html && last_token && paste_token && last_token.includes(paste_token);
 			piep_cms.removeTextInSelection();
 
 			if (pasted_text && !pasted_html) {
@@ -352,7 +357,7 @@ class PiepCMSClipboard {
 
 			const first_insert_v_node = insert[0];
 			if (first_insert_v_node) {
-				if (piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
+				if (prev_v_node && piep_cms.isTextContainer(prev_v_node) && piep_cms.isTextContainer(first_insert_v_node)) {
 					const first_textable = first_insert_v_node.children[0];
 
 					piep_cms.text_selection.focus_vid = first_textable.id;
@@ -365,7 +370,7 @@ class PiepCMSClipboard {
 
 			const last_insert_v_node = insert[insert.length - 1];
 			if (last_insert_v_node) {
-				if (piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
+				if (next_v_node && piep_cms.isTextContainer(next_v_node) && piep_cms.isTextContainer(last_insert_v_node)) {
 					const first_textable = next_v_node.children[0];
 
 					piep_cms.text_selection.focus_vid = first_textable.id;
