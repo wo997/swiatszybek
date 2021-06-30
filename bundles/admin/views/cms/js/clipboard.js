@@ -230,7 +230,16 @@ class PiepCMSClipboard {
 			};
 			const last_token = getHTMLToken(last_copied_html);
 			const paste_token = getHTMLToken(pasted_html);
-			const pasted_last_clipboard_item = last_copied_html && last_token && paste_token && last_token.includes(paste_token);
+			let pasted_last_clipboard_item = last_copied_html && last_token && paste_token && last_token.includes(paste_token);
+
+			if (!pasted_last_clipboard_item) {
+				// one more chance
+				if (pasted_html.includes(window.location.origin) && pasted_html.includes("wo997_img_shown")) {
+					pasted_last_clipboard_item = true;
+				}
+			}
+
+			//console.log({ last_token, paste_token, pasted_html });
 			piep_cms.removeTextInSelection();
 
 			if (pasted_text && !pasted_html) {
