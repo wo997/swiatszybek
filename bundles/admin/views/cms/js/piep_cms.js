@@ -307,7 +307,6 @@ class PiepCMS {
 				});
 				return;
 			}
-
 			if (this.grabbed_v_node || !this.content_active) {
 				return;
 			}
@@ -315,7 +314,6 @@ class PiepCMS {
 			this.text_selection = undefined;
 
 			const sel = document.getSelection();
-
 			if (sel.anchorNode && sel.focusNode) {
 				const sel_anchor_node = $(sel.anchorNode)._parent(".blc");
 				const sel_focus_node = $(sel.focusNode)._parent(".blc");
@@ -337,11 +335,6 @@ class PiepCMS {
 
 		if (this.text_selection) {
 			this.setFocusNode(this.text_selection.focus_vid);
-
-			// const focus_node_data = this.getVNodeDataById();
-			// if (focus_node_data) {
-			// 	this.setFocusNode(focus_node_data.parent_v_nodes[0].id);
-			// }
 		}
 	}
 
@@ -1337,7 +1330,7 @@ class PiepCMS {
 				this.update({ all: true });
 
 				if (this.text_selection) {
-					this.setFocusNode(this.text_selection.focus_vid);
+					this.onSelectionChange();
 				}
 				if (prop_def && prop_def.affects_selection) {
 					this.displaySelectionBreadcrumbs();
@@ -2024,6 +2017,7 @@ class PiepCMS {
 		this.update({ all: true });
 		this.setFocusNode(undefined);
 		this.initHistory();
+		this.manageText();
 	}
 
 	fixMigrations() {
@@ -3110,7 +3104,7 @@ class PiepCMS {
 				if (next.matches(selector)) {
 					return next;
 				}
-				const next_children = next._children(selector);
+				const next_children = next._direct_children(selector);
 				if (next_children.length > 0) {
 					if (direction === 1) {
 						return next_children[0];
@@ -5125,8 +5119,8 @@ class PiepCMS {
 
 		const focus_node = this.getNode(vid);
 
-		/** @type {PiepNode} */
-		let tree_blc;
+		// /** @type {PiepNode} */
+		// let tree_blc;
 
 		if (just_changed_focus_vid) {
 			this.filterMenu({ scroll_to_top: true });
