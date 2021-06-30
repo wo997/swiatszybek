@@ -1829,10 +1829,19 @@ class PiepCMS {
 		this.pushHistory("delete_text");
 	}
 
+    /**
+     * 
+     * @returns {{
+     * next_container_vid: number
+     * }}
+     */
 	breakTextAtCursor() {
 		if (!this.text_selection) {
-			return;
+			return undefined;
 		}
+
+		/** @type {number} */
+		let next_container_vid;
 
 		const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
 		const focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
@@ -1911,9 +1920,10 @@ class PiepCMS {
 			const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
 
 			// place it below the text container, including the v_node
+			next_container_vid = new_vid++;
 			parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
 				tag,
-				id: new_vid++,
+				id: next_container_vid,
 				styles: {},
 				classes: [],
 				attrs: {},
@@ -1939,12 +1949,10 @@ class PiepCMS {
 			this.text_selection.focus_offset = 0;
 			this.collapseTextSelection();
 
-			return ret_vid;
+			this.pushHistory("insert_text");
+
+			return { next_container_vid };
 		}
-
-		this.pushHistory("insert_text");
-
-		return undefined;
 	}
 
 	scrollToCursor() {
