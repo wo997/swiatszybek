@@ -132,7 +132,7 @@ class PiepCMS {
 		if (!sel_focus_node.classList.contains("textable")) {
 			if (direction === -1) {
 				sel_focus_node = sel_focus_node._prev();
-				focus_offset = sel_anchor_node.textContent.length;
+				focus_offset = sel_focus_node.textContent.length;
 			} else {
 				sel_focus_node = sel_focus_node._next();
 				focus_offset = 0;
@@ -1461,11 +1461,15 @@ class PiepCMS {
 
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
-			if (!this.content_active || !this.float_menu.classList.contains("hidden")) {
+			// if (!this.content_active || !this.float_menu.classList.contains("hidden")) {
+			// 	console.log(2);
+			// 	return;
+			// }
+			if (!this.content_active) {
 				return;
 			}
-			// why? so the selectionchange actually occours next time we click something
 
+			// why? so the selectionchange actually occours next time we click something
 			if (this.remove_selection_timeout) {
 				clearTimeout(this.remove_selection_timeout);
 				this.remove_selection_timeout = undefined;

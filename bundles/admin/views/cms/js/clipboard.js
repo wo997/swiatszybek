@@ -181,6 +181,8 @@ class PiepCMSClipboard {
 						const partial_range = text_selection.partial_ranges.find((e) => e.vid === c.id);
 						if (partial_range) {
 							c.text = c.text.substring(partial_range.start, partial_range.end);
+						} else if (!text_selection.middle_vids.includes(c.id)) {
+							c.text = "";
 						}
 					});
 				}
