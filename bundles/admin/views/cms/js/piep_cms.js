@@ -1919,20 +1919,28 @@ class PiepCMS {
 				focus_v_node_data.v_nodes.length - focus_v_node_data.index
 			);
 
-			if (focus_v_node_data.v_nodes.length === 0) {
-				focus_v_node_data.v_nodes.push({
+			let focus_vid_will_be = focus_v_node.id;
+
+			const getSpan = () => {
+				return {
 					id: new_vid++,
 					tag: "span",
 					styles: {},
 					text: "",
 					attrs: {},
 					classes: [],
-					settings: {},
-					responsive_settings: {},
-				});
+				};
+			};
+
+			if (focus_v_node_data.v_nodes.length === 0) {
+				focus_v_node_data.v_nodes.push(getSpan());
 			}
 
-			// console.log({ from_index, top: focus_v_node_data.v_nodes, move_v_nodes_on_right_down });
+			if (move_v_nodes_on_right_down.length === 0) {
+				const span = getSpan();
+				focus_vid_will_be = span.id;
+				move_v_nodes_on_right_down.push(span);
+			}
 
 			const tag = parent_v_node.tag === "li" ? "li" : "p";
 
@@ -1963,7 +1971,7 @@ class PiepCMS {
 
 			this.update({ all: true });
 
-			this.text_selection.focus_vid = focus_v_node.id;
+			this.text_selection.focus_vid = focus_vid_will_be;
 			this.text_selection.focus_offset = 0;
 			this.collapseTextSelection();
 
@@ -2217,7 +2225,8 @@ class PiepCMS {
 		 */
 		const traverseVDom = (v_nodes) => {
 			const len = v_nodes.length;
-			const single_node = len === 1;
+			let current_count = len;
+			let single_node = current_count === 1;
 			for (let i = 0; i < len; i++) {
 				const v_node = v_nodes[i];
 				const vid = v_node.id;
@@ -2234,6 +2243,8 @@ class PiepCMS {
 				if (!single_node && v_node.text !== undefined) {
 					if (text === "") {
 						if (!(this.text_selection && this.text_selection.focus_vid === vid)) {
+							current_count--;
+							single_node = current_count === 1;
 							remove_vids.push(vid);
 						}
 						continue;
@@ -2248,6 +2259,8 @@ class PiepCMS {
 							isEquivalent(v_node.responsive_settings, next_v_node.responsive_settings)
 						) {
 							// remove self and append text to another, ezy?
+							current_count--;
+							single_node = current_count === 1;
 							remove_vids.push(vid);
 							if (this.text_selection) {
 								if (this.text_selection.focus_vid === next_v_node.id) {
