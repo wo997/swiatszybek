@@ -248,7 +248,7 @@ class PiepCMSClipboard {
 			/** @type {vDomNode[]} */
 			const insert = [];
 
-			const next_vid = piep_cms.breakTextAtCursor();
+			const next_vid = piep_cms.breakTextAtCursor() + 1;
 
 			let new_id = piep_cms.getNewBlcId();
 
