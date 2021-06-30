@@ -118,7 +118,7 @@ class PiepCMSClipboard {
 		const start_textable = start_node.classList.contains("textable");
 		const end_textable = end_node.classList.contains("textable");
 		range.setStart(start_textable ? getTextNode(start_node) : start_node, start_textable ? start_offset : 0);
-		range.setEnd(end_textable ? getTextNode(end_node) : end_node, end_textable ? end_offset : 0);
+		range.setEnd(end_textable ? getTextNode(end_node) : end_node, end_textable ? end_offset : 1);
 		this.setLastCopiedHTML([...range.cloneContents().children].map((c) => c.outerHTML).join(""));
 		copyRangeToClipboard(range);
 
@@ -224,7 +224,6 @@ class PiepCMSClipboard {
 				return matches.join("");
 			};
 			const pasted_last_clipboard_item = last_copied_html ? getHTMLToken(pasted_html).includes(getHTMLToken(last_copied_html)) : false;
-
 			piep_cms.removeTextInSelection();
 
 			if (pasted_text && !pasted_html) {

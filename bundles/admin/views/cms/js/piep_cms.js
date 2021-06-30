@@ -1866,8 +1866,11 @@ class PiepCMS {
 	}
 
 	breakTextAtCursor() {
-		const focus_vid = this.text_selection.focus_vid;
-		const focus_v_node_data = this.getVNodeDataById(focus_vid);
+		if (!this.text_selection) {
+			return;
+		}
+
+		const focus_v_node_data = this.getVNodeDataById(this.text_selection.focus_vid);
 		const focus_v_node = focus_v_node_data ? focus_v_node_data.v_node : undefined;
 		const focus_offset = this.text_selection.focus_offset;
 
@@ -1896,51 +1899,50 @@ class PiepCMS {
 			});
 
 			this.update({ all: true });
-
+			this.displaySelectionBreadcrumbs();
 			return this.breakTextAtCursor();
 		}
 
-		const text = focus_v_node.text;
-		if (text !== undefined) {
-			const parent_v_node = focus_v_node_data.parent_v_nodes[0];
-			if (parent_v_node && this.isTextContainer(parent_v_node)) {
-				const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
-				const move_v_nodes_on_right_down = focus_v_node_data.v_nodes.splice(
-					focus_v_node_data.index,
-					focus_v_node_data.v_nodes.length - focus_v_node_data.index
-				);
+		if (parent_v_node && this.isTextContainer(parent_v_node)) {
+			const parent_v_node_data = this.getVNodeDataById(parent_v_node.id);
+			const move_v_nodes_on_right_down = focus_v_node_data.v_nodes.splice(
+				focus_v_node_data.index,
+				focus_v_node_data.v_nodes.length - focus_v_node_data.index
+			);
 
-				const tag = parent_v_node.tag === "li" ? "li" : "p";
+			const tag = parent_v_node.tag === "li" ? "li" : "p";
 
-				// place it below the text container, including the v_node
-				parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
-					tag,
-					id: new_vid++,
-					styles: {},
-					classes: [],
-					attrs: {},
-					children: move_v_nodes_on_right_down,
-				});
+			// place it below the text container, including the v_node
+			parent_v_node_data.v_nodes.splice(parent_v_node_data.index + 1, 0, {
+				tag,
+				id: new_vid++,
+				styles: {},
+				classes: [],
+				attrs: {},
+				children: move_v_nodes_on_right_down,
+			});
 
+			// text split
+			const text = focus_v_node.text;
+			if (text !== undefined) {
 				/** @type {vDomNode} */
 				// the one that stays on top where v_node has been previously
 				const new_old_v_node = cloneObject(focus_v_node);
 				new_old_v_node.id = new_vid++;
 
-				// text split
 				new_old_v_node.text = text.substr(0, focus_offset);
 				focus_v_node.text = text.substr(focus_offset);
 
 				focus_v_node_data.v_nodes.push(new_old_v_node);
-
-				this.update({ all: true });
-
-				this.text_selection.focus_vid = focus_v_node.id;
-				this.text_selection.focus_offset = 0;
-				this.collapseTextSelection();
-
-				return ret_vid;
 			}
+
+			this.update({ all: true });
+
+			this.text_selection.focus_vid = focus_v_node.id;
+			this.text_selection.focus_offset = 0;
+			this.collapseTextSelection();
+
+			return ret_vid;
 		}
 
 		this.pushHistory("insert_text");

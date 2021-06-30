@@ -2,7 +2,7 @@
 
 .piep_editor {
 	&.selecting_block {
-		.piep_editor_content {
+		.piep_editor_content > * {
 			pointer-events: none;
 		}
 	}
