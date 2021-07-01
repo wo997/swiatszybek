@@ -40,3 +40,18 @@ function preloadProducts()
     loadedProducts();
 JS;
 }
+
+function setProductDefaults($product_id)
+{
+    $product = EntityManager::getEntityById("product", $product_id);
+
+    $name = $product->getProp("name");
+    $img_url = $product->getProp("img_url");
+
+    if ($name) {
+        $product->setProp("__name", $name);
+    }
+    if ($img_url) {
+        $product->setProp("__img_url", $img_url);
+    }
+}

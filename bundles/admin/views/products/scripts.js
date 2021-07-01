@@ -58,8 +58,7 @@ domload(() => {
 			},
 			{
 				label: "Produkt w sklepie",
-				key: "name",
-				db_key: "gp.name",
+				key: "gp_name",
 				width: "1",
 				sortable: true,
 				searchable: "string",
@@ -70,7 +69,7 @@ domload(() => {
 					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
 				},
 			},
-			{ label: "Produkt", db_key: "p.__name", width: "1", sortable: true, searchable: "string" },
+			{ label: "Produkt", key: "__name", width: "1", sortable: true, searchable: "string" },
 			// {
 			// 	label: "W magazynie",
 			// 	key: "stock",
@@ -129,6 +128,7 @@ domload(() => {
 			getProductModal()._show(
 				{
 					product_id: data.product_id,
+					general_product_id: data.general_product_id,
 					active: data.active,
 					gross_price: data.gross_price,
 					height: data.height,
@@ -138,6 +138,10 @@ domload(() => {
 					vat_id: data.vat_id,
 					weight: data.weight,
 					width: data.width,
+					img_url: data.img_url,
+					name: data.name,
+					__img_url: data.__img_url,
+					__name: data.__name,
 				},
 				{ source: edit_btn }
 			);
@@ -187,5 +191,9 @@ domload(() => {
 			},
 			{ source: show_categories }
 		);
+	});
+
+	window.addEventListener("products_changed", () => {
+		datatable._backend_search();
 	});
 });

@@ -2,6 +2,11 @@
 
 /**
  * @typedef {{
+ *  name: string
+ *  img_url: string
+ *  __name?: string
+ *  __img_url?: string
+ *  general_product_id?: number
  *  product_id: number
  *  active: number
  *  net_price: number
@@ -176,6 +181,8 @@ function ProductComp(comp, parent, data = undefined) {
 				length: 0,
 				weight: 0,
 				width: 0,
+				img_url: "",
+				name: "",
 			};
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {

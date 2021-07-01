@@ -12,8 +12,13 @@ DB::createTable("product", [
     ["name" => "length", "type" => "DECIMAL(10,2)"],
     ["name" => "width", "type" => "DECIMAL(10,2)"],
     ["name" => "height", "type" => "DECIMAL(10,2)"],
+
+    ["name" => "img_url", "type" => "VARCHAR(255)"],
     ["name" => "__img_url", "type" => "VARCHAR(255)"],
+
+    ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "__name", "type" => "VARCHAR(255)"],
+
     ["name" => "__options_json", "type" => "TEXT"],
     ["name" => "__url", "type" => "VARCHAR(255)"],
     ["name" => "compare_sales", "type" => "INT", "index" => "index"],

@@ -34,8 +34,11 @@ image-picker {
 		opacity: 0.6;
 	}
 
-	&.selected:not(:hover) .controls {
-		visibility: hidden;
+	&.selected:not(:hover),
+	&.disabled {
+		.controls {
+			visibility: hidden;
+		}
 	}
 
 	&.selected .select_btn {
@@ -51,6 +54,15 @@ image-picker {
 		}
 		img {
 			visibility: hidden;
+		}
+	}
+	&.disabled {
+		& {
+			filter: contrast(0.8);
+			cursor: not-allowed;
+		}
+		> * {
+			pointer-events: none;
 		}
 	}
 }

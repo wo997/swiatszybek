@@ -95,7 +95,7 @@ class EntityManager
      * @param  array $props !entity_props
      * @return Entity
      */
-    public static function getEntity($name, $props) // must be the only place where we create Entities for consistency
+    public static function getEntity($name, $props, $only_new = false) // must be the only place where we create Entities for consistency
     {
         $id = def($props, self::getEntityIdColumn($name), -1);
 
@@ -104,7 +104,7 @@ class EntityManager
             if (isset(self::$objects[$global_id])) {
                 /** @var Entity */
                 $entity = self::$objects[$global_id];
-                $entity->setProps($props);
+                $entity->setProps($props, $only_new);
 
                 return $entity;
             }
@@ -201,7 +201,7 @@ class EntityManager
                     ];
                 }
 
-                $child = self::getEntity($child_entity_name, $child_props);
+                $child = self::getEntity($child_entity_name, $child_props, true);
             }
         }
 
@@ -249,7 +249,7 @@ class EntityManager
                 $child_id = intval(def($child_props, $child_id_column, -1));
                 $child_props[$obj->getIdColumn()] = $obj->getId();
                 if ($child_id == -1) {
-                    $child = self::getEntity($child_entity_name, $child_props);
+                    $child = self::getEntity($child_entity_name, $child_props, true);
                     if ($child) {
                         $children[] = $child;
                     }
@@ -310,7 +310,7 @@ class EntityManager
 
         $children_props = DB::fetchArr("SELECT * FROM " . $child_entity_name . " WHERE " . $obj->getIdColumn() . " = " . $obj->getId());
         foreach ($children_props as $child_props) {
-            $child = self::getEntity($child_entity_name, $child_props);
+            $child = self::getEntity($child_entity_name, $child_props, true);
             if ($child) {
                 $child->addParent($obj);
                 $children[] = $child;
@@ -368,7 +368,7 @@ class EntityManager
                 $other_entity_id = intval(def($other_entity_props, $other_entity_id_column, -1));
                 $other_entity_props[$obj->getIdColumn()] = $obj->getId();
                 if ($other_entity_id == -1) {
-                    $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+                    $other_entity = self::getEntity($other_entity_name, $other_entity_props, true);
                     if ($other_entity) {
                         $other_entities[] = $other_entity;
                     }
@@ -409,7 +409,7 @@ class EntityManager
                 continue;
             }
 
-            $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+            $other_entity = self::getEntity($other_entity_name, $other_entity_props, true);
             if ($other_entity) {
                 $other_entities[] = $other_entity;
             }
@@ -437,7 +437,7 @@ class EntityManager
         $other_entities_props = DB::fetchArr("SELECT *$meta_sql FROM $other_entity_name INNER JOIN $relation_table USING ($other_entity_id_column) WHERE $relation_table." . $obj->getIdColumn() . " = " . $obj->getId());
 
         foreach ($other_entities_props as $other_entity_props) {
-            $other_entity = self::getEntity($other_entity_name, $other_entity_props);
+            $other_entity = self::getEntity($other_entity_name, $other_entity_props, true);
             if ($other_entity) {
                 $other_entities[] = $other_entity;
             }

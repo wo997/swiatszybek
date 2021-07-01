@@ -213,7 +213,11 @@ textarea {
 	}
 	&.invalid {
 		border: 1px solid var(--error-clr) !important;
-		background: #fee;
+		background-color: #fee;
+	}
+	&:disabled {
+		filter: contrast(0.8);
+		cursor: not-allowed;
 	}
 }
 :root {

@@ -125,6 +125,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
     }
 
     foreach ($products as $product) {
+        $product_id = $product->getId();
+
         /** @var Entity[] ProductVariantOption */
         $variant_options = $product->getProp("variant_options");
 
@@ -188,10 +190,13 @@ EventListener::register("before_save_general_product_entity", function ($params)
 
         $product_url = "";
 
-        $product->setProp("__name", $product_name);
-
         $product_url = getProductLink($general_product_id, $general_product->getProp("name"), $specific_option_ids, $specific_option_values);
+
+        // these are the defaults
+        $product->setProp("__name", $product_name);
         $product->setProp("__url", $product_url);
+        // but it can be changed here
+        setProductDefaults($product_id);
     }
 
     $general_product->setProp("__img_url", $main_img_url);

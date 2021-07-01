@@ -21,6 +21,7 @@
  * @param {ProductModalCompData} data
  */
 function ProductModalComp(comp, parent, data = undefined) {
+	/** @type {ProductModalCompData} */
 	const defa = {
 		product_id: -1,
 		active: 1,
@@ -32,6 +33,10 @@ function ProductModalComp(comp, parent, data = undefined) {
 		vat_id: undefined,
 		weight: 0,
 		width: 0,
+		img_url: "",
+		name: "",
+		__img_url: "",
+		__name: "",
 	};
 	if (data === undefined) {
 		data = defa;
@@ -43,6 +48,21 @@ function ProductModalComp(comp, parent, data = undefined) {
 		} else {
 			comp._data = product_data;
 		}
+
+		const data = comp._data;
+
+		comp._child(".case_general_product").classList.toggle("hidden", !data.general_product_id);
+		comp._child(".case_just_product").classList.toggle("hidden", !!data.general_product_id);
+
+		if (!data.general_product_id) {
+			if (!data.img_url) {
+				data.img_url = data.__img_url;
+			}
+			if (!data.name) {
+				data.name = data.__name;
+			}
+		}
+
 		comp._render();
 
 		showModal("ProductModal", {
@@ -108,49 +128,94 @@ function ProductModalComp(comp, parent, data = undefined) {
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Zapisz <i class="fas fa-save"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="desktop_row mtfn">
-					<div>
-						<div class="label">Cena Netto</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.net_price}}" />
-							<div class="field_desc">zł</div>
+				<div class="mtfn" style="max-width: 500px;">
+					<div class="case_general_product">
+						<div class="disabled_container mtf pa2">
+							<div class="label mt0">Nazwa produktu w sklepie</div>
+							<input class="field" data-bind="{${data.__name}}" />
+
+							<div class="label">Zdjęcie produktu w sklepie</div>
+							<image-picker class="field" data-bind="{${data.__img_url}}" style="width: 120px;height: 120px;"> </image-picker>
 						</div>
+						<div class="striped_container mtf pa2">
+							<div class="label mt0">Nazwa (Jeśli inna niż domyślna)</div>
+							<input class="field" data-bind="{${data.name}}" />
 
-						<div class="label">VAT</div>
-						<select class="field number" data-bind="{${data.vat_id}}">
-							${vats.map((v) => html`<option value="${v.vat_id}">${v.value * 100}%</option>`).join("")}
-						</select>
-
-						<div class="label">Cena Brutto</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.gross_price}}" />
-							<div class="field_desc">zł</div>
+							<div class="label">Zdjęcie (Jeśli inne niż domyślne)</div>
+							<image-picker class="field" data-bind="{${data.img_url}}" style="width: 120px;height: 120px;"> </image-picker>
 						</div>
 					</div>
 
-					<div>
-						<div class="label">Waga</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.weight}}" />
-							<div class="field_desc">g</div>
+					<div class="case_just_product">
+						<div class="user_info mtf">
+							Produkt nie jest dostępny w sklepie
+							<div class="hover_info">
+								Aby dodać produkt do sklepu w pierwszej kolejności utwórz "produkt w sklepie" i uzupełnij wszystkie dane, a następnie w
+								tabeli wszystkich produktów powiąż ten produkt.
+							</div>
 						</div>
 
-						<div class="label">Długość</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.length}}" />
-							<div class="field_desc">cm</div>
+						<div class="label">Nazwa</div>
+						<input class="field" data-bind="{${data.name}}" />
+
+						<div class="label">Zdjęcie</div>
+						<image-picker class="field" data-bind="{${data.img_url}}" style="width: 120px;height: 120px;"> </image-picker>
+					</div>
+
+					<div class="desktop_row">
+						<div>
+							<div class="label">Cena Netto</div>
+							<div class="glue_children">
+								<input class="field number" data-bind="{${data.net_price}}" />
+								<div class="field_desc">zł</div>
+							</div>
 						</div>
 
-						<div class="label">Szerokość</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.width}}" />
-							<div class="field_desc">cm</div>
+						<div>
+							<div class="label">VAT</div>
+							<select class="field number" data-bind="{${data.vat_id}}">
+								${vats.map((v) => html`<option value="${v.vat_id}">${v.value * 100}%</option>`).join("")}
+							</select>
 						</div>
 
-						<div class="label">Wysokość</div>
-						<div class="glue_children">
-							<input class="field number" data-bind="{${data.height}}" />
-							<div class="field_desc">cm</div>
+						<div>
+							<div class="label">Cena Brutto</div>
+							<div class="glue_children">
+								<input class="field number" data-bind="{${data.gross_price}}" />
+								<div class="field_desc">zł</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="label">Waga</div>
+					<div class="glue_children">
+						<input class="field number" data-bind="{${data.weight}}" />
+						<div class="field_desc">g</div>
+					</div>
+
+					<div class="desktop_row">
+						<div>
+							<div class="label">Długość</div>
+							<div class="glue_children">
+								<input class="field number" data-bind="{${data.length}}" />
+								<div class="field_desc">cm</div>
+							</div>
+						</div>
+
+						<div>
+							<div class="label">Szerokość</div>
+							<div class="glue_children">
+								<input class="field number" data-bind="{${data.width}}" />
+								<div class="field_desc">cm</div>
+							</div>
+						</div>
+
+						<div>
+							<div class="label">Wysokość</div>
+							<div class="glue_children">
+								<input class="field number" data-bind="{${data.height}}" />
+								<div class="field_desc">cm</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -179,6 +244,8 @@ function ProductModalComp(comp, parent, data = undefined) {
 					vat_id: data.vat_id,
 					weight: data.weight,
 					width: data.width,
+					img_url: data.img_url,
+					name: data.name,
 				};
 
 				showLoader();
@@ -189,7 +256,7 @@ function ProductModalComp(comp, parent, data = undefined) {
 					},
 					success: (res) => {
 						hideLoader();
-						//refreshProducts();
+						window.dispatchEvent(new CustomEvent("products_changed"));
 						hideModal("ProductModal");
 					},
 				});

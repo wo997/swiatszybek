@@ -12,8 +12,13 @@ EntityManager::register("product", [
         "length" => ["type" => "number"],
         "width" => ["type" => "number"],
         "height" => ["type" => "number"],
+
+        "img_url" => ["type" => "string"],
         "__img_url" => ["type" => "string"],
+
+        "name" => ["type" => "string"],
         "__name" => ["type" => "string"],
+
         "__options_json" => ["type" => "string"],
         "__url" => ["type" => "string"],
         "compare_sales" => ["type" => "number"],
@@ -31,27 +36,38 @@ EntityManager::oneToMany("general_product", "products", "product", ["parent_requ
 EventListener::register("before_save_product_entity", function ($params) {
     /** @var Entity Product */
     $product = $params["obj"];
-    /** @var Entity[] ProductVariantOption */
-    $variant_options = $product->getProp("variant_options");
-    $options = [];
-    foreach ($variant_options as $variant_option) {
-        $option_id = $variant_option->getId();
+    $product_id = $product->getId();
 
-        /** @var Entity ProductVariant */
-        $variant = $variant_option->getParent("product_variant");
-        if (!$variant) {
-            continue;
-        }
-        $variant_id = $variant->getId();
+    /** @var Entity GeneralProduct */
+    $general_product = $product->getParent("general_product");
 
-        if (!isset($options[$variant_id])) {
-            $options[$variant_id] = [];
+    if ($general_product) {
+        /** @var Entity[] ProductVariantOption */
+        $variant_options = $product->getProp("variant_options");
+        if ($variant_options) {
+            $options = [];
+            foreach ($variant_options as $variant_option) {
+                $option_id = $variant_option->getId();
+
+                /** @var Entity ProductVariant */
+                $variant = $variant_option->getParent("product_variant");
+                if (!$variant) {
+                    continue;
+                }
+                $variant_id = $variant->getId();
+
+                if (!isset($options[$variant_id])) {
+                    $options[$variant_id] = [];
+                }
+                if (!in_array($option_id, $options[$variant_id])) {
+                    $options[$variant_id][] = $option_id;
+                }
+            }
+            $product->setProp("__options_json", $options ? json_encode($options) : "{}");
         }
-        if (!in_array($option_id, $options[$variant_id])) {
-            $options[$variant_id][] = $option_id;
-        }
+    } else {
+        //setProductDefaults($product_id);
     }
-    $product->setProp("__options_json", $options ? json_encode($options) : "{}");
 });
 
 EventListener::register("set_product_entity_stock", function ($params) {
