@@ -35,6 +35,8 @@ try {
         if (!$page) {
             $general_product->setProp("active", 0);
         }
+    } else {
+        $general_product_id = $general_product->getId();
     }
 
     EntityManager::saveAll();
