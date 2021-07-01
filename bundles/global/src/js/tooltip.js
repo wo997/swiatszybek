@@ -43,7 +43,8 @@ domload(() => {
 
 			// !!! !!! !!! important !!! !!! !!!
 			if (tooltipText === "html") {
-				if (e.scrollWidth > e.offsetWidth || e.scrollHeight > e.clientHeight) {
+				// a bit of not to trigger too often
+				if (e.scrollWidth > e.offsetWidth + 3 || e.scrollHeight > e.clientHeight + 3) {
 					tooltipText = e.innerHTML;
 				} else {
 					return;

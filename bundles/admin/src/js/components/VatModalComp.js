@@ -45,13 +45,12 @@ function VatModalComp(comp, parent, data = undefined) {
 		if (vat_id === -1) {
 			data.description = "";
 			data.percentage_value = 0;
-			comp._render();
 		} else {
 			const vat = vats.find((r) => r.vat_id === vat_id);
 			data.percentage_value = vat.value * 100;
 			data.description = vat.description;
-			comp._render();
 		}
+		comp._render();
 	};
 
 	comp._set_data = (data, options = {}) => {

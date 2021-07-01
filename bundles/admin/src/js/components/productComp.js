@@ -727,7 +727,7 @@ function ProductComp(comp, parent, data = undefined) {
 						});
 						comp._nodes.all_products._add_column({
 							key: "vat_id",
-							label: "Vat",
+							label: "VAT",
 							width: "1",
 							sortable: true,
 							editable: "select",

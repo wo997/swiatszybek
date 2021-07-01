@@ -51,45 +51,57 @@ domload(() => {
 			{
 				label: "Zdjęcie",
 				width: "65px",
-				key: "img_url",
+				key: "__img_url",
 				render: (value) =>
 					html`<img data-src="${value}" class="product_img wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain;" />`,
 				flex: true,
 			},
-			{ label: "Produkt", key: "product_name", db_key: "p.__name", width: "1", sortable: true, searchable: "string" },
 			{
-				label: "W magazynie",
-				key: "stock",
+				label: "Produkt w sklepie",
+				key: "name",
+				db_key: "gp.name",
 				width: "1",
 				sortable: true,
-				searchable: "number",
-				editable: "number",
-				editable_callback: (data) => {
-					xhr({
-						url: STATIC_URLS["ADMIN"] + "/product/save",
-						params: {
-							product: {
-								product_id: data.product_id,
-								stock: data.stock,
-							},
-						},
-						success: (res) => {
-							showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
-							datatable._backend_search();
-						},
-					});
+				searchable: "string",
+				render: (value, data) => {
+					if (!data.general_product_id) {
+						return "—";
+					}
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
 				},
 			},
+			{ label: "Produkt", db_key: "p.__name", width: "1", sortable: true, searchable: "string" },
 			// {
-			// 	label: "Akcja",
-			// 	key: "",
-			// 	width: "100px",
-			// 	render: (value, data) => {
-			// 		return html`<a class="btn subtle small" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}">
-			// 			Edytuj <i class="fas fa-cog"></i>
-			// 		</a>`;
+			// 	label: "W magazynie",
+			// 	key: "stock",
+			// 	width: "1",
+			// 	sortable: true,
+			// 	searchable: "number",
+			// 	editable: "number",
+			// 	editable_callback: (data) => {
+			// 		xhr({
+			// 			url: STATIC_URLS["ADMIN"] + "/product/save",
+			// 			params: {
+			// 				product: {
+			// 					product_id: data.product_id,
+			// 					stock: data.stock,
+			// 				},
+			// 			},
+			// 			success: (res) => {
+			// 				showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
+			// 				datatable._backend_search();
+			// 			},
+			// 		});
 			// 	},
 			// },
+			{
+				label: "Akcja",
+				key: "",
+				width: "100px",
+				render: () => {
+					return html`<a class="btn subtle small edit_btn"> Edytuj <i class="fas fa-cog"></i> </a>`;
+				},
+			},
 		],
 		primary_key: "product_id",
 		label: "Wszystkie produkty",
@@ -105,10 +117,36 @@ domload(() => {
 		}),
 	});
 
+	datatable.addEventListener("click", (ev) => {
+		const target = $(ev.target);
+
+		const edit_btn = target._parent(".edit_btn");
+		if (edit_btn) {
+			/** @type {DatatableRowComp} */
+			// @ts-ignore
+			const dt_row = edit_btn._parent("datatable-row-comp");
+			const data = dt_row._data.row_data;
+			getProductModal()._show(
+				{
+					product_id: data.product_id,
+					active: data.active,
+					gross_price: data.gross_price,
+					height: data.height,
+					length: data.length,
+					net_price: data.net_price,
+					stock: data.stock,
+					vat_id: data.vat_id,
+					weight: data.weight,
+					width: data.width,
+				},
+				{ source: edit_btn }
+			);
+		}
+	});
+
 	const add_product = datatable._child(".add_product");
 	add_product.addEventListener("click", () => {
-		console.log("edit / add product modal");
-		//showAddProductModal({ source: add_product });
+		getProductModal()._show(undefined, { source: add_product });
 	});
 
 	const show_categories = datatable._child(".show_categories");

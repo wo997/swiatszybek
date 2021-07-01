@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}/product/search]  
 
-$from = "product p INNER JOIN general_product gp USING (general_product_id)";
+$from = "product p LEFT JOIN general_product gp USING (general_product_id)";
 $where = "1";
 
 $category_ids = def(json_decode($_POST["datatable_params"], true), "category_ids", []);
@@ -11,7 +11,8 @@ if ($category_ids) {
 }
 
 Request::jsonResponse(paginateData([
-    "select" => "gp.general_product_id, p.product_id, p.__name product_name, p.stock, p.__img_url img_url",
+    "select" => "gp.general_product_id, gp.name,
+        p.product_id, p.__name, p.stock, p.__img_url, p.gross_price, p.height, p.length, p.net_price, p.vat_id, p.weight, p.width",
     "from" => $from,
     "group" => "product_id",
     "order" => "product_id DESC",

@@ -12,6 +12,7 @@
 <?php Templates::startSection("foot"); ?>
 
 <script>
+    <?= preloadVats() ?>
     <?= preloadProductCategories() ?>
     <?php if (isset($_GET["dodaj"])) { ?>
         domload(() => {
