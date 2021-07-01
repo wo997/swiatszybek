@@ -1167,9 +1167,12 @@ class PiepCMS {
 			/** @type {PiepCMSMenuName} */
 			const blc_menu_name = input._parent(this.side_menu) ? "side" : "float";
 			const prop_wrapper = input._parent(".prop_wrapper");
-			const prop_def = (blc_menu_name === "side" ? piep_cms_manager.blc_props : piep_cms_manager.floating_blc_props).find(
-				(b) => b.name === prop_wrapper.dataset.prop
-			);
+			let prop_def;
+			if (blc_menu_name === "side") {
+				prop_def = piep_cms_manager.blc_props.find((b) => b.name === prop_wrapper.dataset.prop);
+			} else {
+				prop_def = piep_cms_manager.floating_blc_props.find((b) => b.name === prop_wrapper.dataset.prop);
+			}
 
 			const setProp = () => {
 				if (this.text_selection && piep_cms_manager.textable_props.includes(prop_str)) {
@@ -3734,13 +3737,10 @@ class PiepCMS {
 			return;
 		}
 		this.last_text_selection = cloneObject(this.text_selection);
-
 		this.manageText();
-
-		if (this.text_selection) {
+		if (this.text_selection && this.text_selection.focus_vid !== this.text_selection.focus_vid) {
 			this.setFocusNode(this.text_selection.focus_vid);
 		}
-
 		this.container.classList.toggle("has_empty_text_selection", this.text_selection && this.text_selection.length === 0);
 	}
 
