@@ -329,7 +329,7 @@ class PiepCMS {
 				}
 			}
 
-			this.detectTextSelectionChange();
+			this.textSelectionChange();
 		});
 	}
 
@@ -1305,7 +1305,7 @@ class PiepCMS {
 				this.update({ all: true });
 
 				if (this.text_selection) {
-					this.detectTextSelectionChange();
+					this.textSelectionChange();
 				}
 				if (prop_def && prop_def.affects_selection) {
 					this.displaySelectionBreadcrumbs();
@@ -1459,7 +1459,6 @@ class PiepCMS {
 	initClick() {
 		document.addEventListener("mouseup", (ev) => {
 			// if (!this.content_active || !this.float_menu.classList.contains("hidden")) {
-			// 	console.log(2);
 			// 	return;
 			// }
 			if (!this.content_active) {
@@ -1472,8 +1471,11 @@ class PiepCMS {
 				this.remove_selection_timeout = undefined;
 			}
 			this.remove_selection_timeout = setTimeout(() => {
-				this.remove_selection_timeout = undefined;
-				this.setDummySelection();
+				// that changes in that short time span
+				if (this.content_active) {
+					this.remove_selection_timeout = undefined;
+					this.setDummySelection();
+				}
 			}, 200);
 		});
 
@@ -1493,9 +1495,12 @@ class PiepCMS {
 			}
 			const keeps_text_selection = target._parent(".keeps_text_selection");
 			const content_active = !!(target._parent(this.content) || target._parent(".v_node_label"));
-			if (content_active || !keeps_text_selection) {
-				this.setContentActive(content_active);
-			}
+			// if (content_active || !keeps_text_selection) {
+			// 	this.setContentActive(content_active);
+			// }
+			// if (!keeps_text_selection) {
+			// }
+			this.setContentActive(content_active);
 
 			const block_to_add_btn = target._parent(".block_to_add");
 			if (block_to_add_btn) {
@@ -3737,8 +3742,11 @@ class PiepCMS {
 			return;
 		}
 		this.last_text_selection = cloneObject(this.text_selection);
+		this.textSelectionChange();
+	}
+	textSelectionChange() {
 		this.manageText();
-		if (this.text_selection && this.text_selection.focus_vid !== this.text_selection.focus_vid) {
+		if (this.text_selection && this.text_selection.focus_vid !== this.focus_node_vid) {
 			this.setFocusNode(this.text_selection.focus_vid);
 		}
 		this.container.classList.toggle("has_empty_text_selection", this.text_selection && this.text_selection.length === 0);
