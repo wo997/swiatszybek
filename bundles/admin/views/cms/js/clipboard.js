@@ -147,6 +147,10 @@ class PiepCMSClipboard {
 
 		const text_selection = piep_cms.text_selection;
 		if (text_selection) {
+			if (text_selection.length === 0) {
+				return false;
+			}
+
 			const all_vids = piep_cms.getAllTextSelectionVids();
 			if (text_selection.direction === -1) {
 				all_vids.reverse();

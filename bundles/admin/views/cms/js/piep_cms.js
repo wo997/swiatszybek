@@ -665,12 +665,14 @@ class PiepCMS {
 	initFloatMenu() {
 		let floating_blc_props_menu_html = "";
 		piep_cms_manager.floating_blc_props.forEach((blc_prop) => {
-			floating_blc_props_menu_html += html`<div
-				class="prop_wrapper prop_${blc_prop.name} ${blc_prop.advanced ? "case_advanced" : ""}"
-				data-prop="${blc_prop.name}"
-			>
-				${blc_prop.menu_html}
-			</div>`;
+			let classes = `prop_wrapper prop_${blc_prop.name}`;
+			if (blc_prop.advanced) {
+				classes += " case_advanced";
+			}
+			if (blc_prop.hide_for_empty_text_selection) {
+				classes += " hide_for_empty_text_selection";
+			}
+			floating_blc_props_menu_html += html`<div class="${classes}" data-prop="${blc_prop.name}">${blc_prop.menu_html}</div>`;
 		});
 		this.float_menu._set_content(floating_blc_props_menu_html);
 		registerForms();
@@ -1829,12 +1831,12 @@ class PiepCMS {
 		this.pushHistory("delete_text");
 	}
 
-    /**
-     * 
-     * @returns {{
-     * next_container_vid: number
-     * }}
-     */
+	/**
+	 *
+	 * @returns {{
+	 * next_container_vid: number
+	 * }}
+	 */
 	breakTextAtCursor() {
 		if (!this.text_selection) {
 			return undefined;
@@ -3735,6 +3737,15 @@ class PiepCMS {
 		return prop_val;
 	}
 
+	detectTextSelectionChange() {
+		if (isEquivalent(this.last_text_selection, this.text_selection)) {
+			return;
+		}
+		this.last_text_selection = cloneObject(this.text_selection);
+
+		this.container.classList.toggle("has_empty_text_selection", this.text_selection && this.text_selection.length === 0);
+	}
+
 	mainLoop() {
 		updateMouseTarget();
 
@@ -3744,6 +3755,7 @@ class PiepCMS {
 		this.addBlcBtnMove();
 		this.clipboard.mouseMove();
 		this.selectingBlock();
+		this.detectTextSelectionChange();
 
 		const alternative_scroll_panel_left = 0;
 		const alternative_scroll_panel_top = 0 - this.content_scroll.scrollTop;

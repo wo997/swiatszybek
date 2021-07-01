@@ -455,6 +455,7 @@
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_format_btn",
 		blc_groups: irrelevant_text_groups,
+		hide_for_empty_text_selection: true,
 		menu_html: html`
 			<button class="btn transparent small remove_format_btn" data-tooltip="Usuń formatowanie">
 				<i class="fas fa-remove-format"></i>

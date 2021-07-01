@@ -94,6 +94,7 @@
 /**
  * @typedef {{
  * name: string
+ * hide_for_empty_text_selection?: boolean
  * } & cmsEditablePropBase} cmsFloatingEditableProp
  */
 

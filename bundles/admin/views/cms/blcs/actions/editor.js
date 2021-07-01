@@ -20,6 +20,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "copy_blc_btn",
+		hide_for_empty_text_selection: true,
 		menu_html: html`
 			<button class="btn transparent small copy_blc_btn" data-tooltip="Dodaj do schowka">
 				<i class="fas fa-copy"></i>
@@ -38,7 +39,7 @@
 
 	piep_cms_manager.registerFloatingProp({
 		name: "remove_blc_btn",
-		//blc_groups: [{ match_tag: piep_cms_manager.match_textables, exclude: true }],
+		hide_for_empty_text_selection: true,
 		menu_html: html`
 			<button class="btn transparent small remove_blc_btn" data-tooltip="Usuń blok">
 				<i class="fas fa-trash"></i>

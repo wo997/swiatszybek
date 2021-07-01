@@ -146,6 +146,12 @@
 		color: #aaa;
 	}
 
+	&.has_empty_text_selection {
+		.hide_for_empty_text_selection {
+			display: none;
+		}
+	}
+
 	&:not(.advanced_mode) {
 		.case_advanced {
 			display: none !important;
