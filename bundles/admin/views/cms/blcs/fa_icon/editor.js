@@ -145,6 +145,9 @@
 				if (!v_node) {
 					return;
 				}
+
+				filter_icons._set_value("");
+
 				let first_class = "";
 				let second_class = "";
 				v_node.classes.forEach((c) => {
@@ -180,6 +183,14 @@
 				piep_cms.addClasses(v_node, ...classes);
 				piep_cms.update({ dom: true });
 			});
+			const filterChange = () => {
+				const filter = filter_icons._get_value();
+				icon_input._direct_children().forEach((e) => {
+					e.classList.toggle("hidden", !e.dataset.description.includes(filter));
+				});
+			};
+			filter_icons.addEventListener("input", filterChange);
+			filter_icons.addEventListener("change", filterChange);
 		},
 	});
 

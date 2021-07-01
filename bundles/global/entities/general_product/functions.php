@@ -381,6 +381,7 @@ JS;
 
 function getGeneralProductDTProducts($general_product_id)
 {
+    // HERE IT FAILS
     $general_product = EntityManager::getEntityById("general_product", $general_product_id);
 
     /** @var Entity[] */
