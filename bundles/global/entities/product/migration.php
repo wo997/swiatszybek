@@ -2,7 +2,7 @@
 
 DB::createTable("product", [
     ["name" => "product_id", "type" => "INT", "index" => "primary"],
-    ["name" => "general_product_id", "type" => "INT", "index" => "index"],
+    ["name" => "general_product_id", "type" => "INT", "index" => "index", "null" => true],
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
     ["name" => "gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
     ["name" => "vat_id", "type" => "INT"],

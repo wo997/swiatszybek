@@ -205,8 +205,14 @@ class EntityManager
             }
         }
 
-        if (def($relation_data, "parent_required", false) && $child->getId() !== $curr_child->getId()) {
-            $curr_child->setWillDelete();
+        if ($relation_data["parent_required"] && $child->getId() !== $curr_child->getId()) {
+            $parent_required_action = $relation_data["parent_required_action"];
+            if ($parent_required_action === "delete") {
+                $curr_child->setWillDelete();
+            }
+            if ($parent_required_action === "unlink") {
+                $curr_child->setProp($obj->getIdColumn(), null);
+            }
         }
 
         $prop_id_column = self::getEntityIdColumn($obj_prop_name);
@@ -228,7 +234,7 @@ class EntityManager
      */
     public static function setOneToManyEntities(Entity $obj, $obj_prop_name, $child_entity_name, $children_props, $relation_data)
     {
-        /** @var Entity[] GeneralProduct */
+        /** @var Entity[] */
         $curr_children = def($obj->getProp($obj_prop_name), []);
 
         $child_id_column = self::getEntityIdColumn($child_entity_name);
@@ -262,8 +268,14 @@ class EntityManager
                 $curr_child->setProps($child_props);
                 $children[] = $curr_child;
             } else {
-                if (def($relation_data, "parent_required", false)) {
-                    $curr_child->setWillDelete();
+                if ($relation_data["parent_required"]) {
+                    $parent_required_action = $relation_data["parent_required_action"];
+                    if ($parent_required_action === "delete") {
+                        $curr_child->setWillDelete();
+                    }
+                    if ($parent_required_action === "unlink") {
+                        $curr_child->setProp($obj->getIdColumn(), null);
+                    }
                 }
             }
         }
@@ -501,13 +513,15 @@ class EntityManager
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
             "prop" => $prop_name,
-            "parent_required" => def($options, "parent_required")
+            "parent_required" => def($options, "parent_required", false),
+            "parent_required_action" => def($options, "parent_required_action", "delete")
         ];
     }
 
     /**
      * @typedef OneRelationOptions {
      *  parent_required?: boolean remove child once the parent is gone
+     *  parent_required_action?: string delete | unlink
      * }
      */
 
@@ -521,7 +535,8 @@ class EntityManager
     {
         self::$entities[$child_name]["parents"][$parent_name] = [
             "prop" => $prop_name,
-            "parent_required" => def($options, "parent_required")
+            "parent_required" => def($options, "parent_required", false),
+            "parent_required_action" => def($options, "parent_required_action", "delete")
         ];
     }
 

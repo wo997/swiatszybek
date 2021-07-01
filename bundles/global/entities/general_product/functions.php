@@ -378,3 +378,29 @@ function preloadGeneralProducts()
     loadedGeneralProducts();
 JS;
 }
+
+function getGeneralProductDTProducts($general_product_id)
+{
+    $general_product = EntityManager::getEntityById("general_product", $general_product_id);
+
+    /** @var Entity[] */
+    $products = $general_product->getProp("products");
+    $pd = [];
+    foreach ($products as $product) {
+        $pd[] = filterArrayKeys($product->getSimpleProps(), [
+            "general_product_id",
+            "net_price",
+            "gross_price",
+            "vat_id",
+            "active",
+            "stock",
+            "weight",
+            "length",
+            "width",
+            "height",
+            "product_id",
+            "variant_options",
+        ]);
+    }
+    return $pd;
+}

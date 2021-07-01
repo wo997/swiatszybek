@@ -27,32 +27,12 @@ if ($general_product_id !== -1) {
 
     if ($general_product) {
         $general_product_data = $general_product->getAllProps();
-
-        /** @var Entity[] */
-        $products = $general_product->getProp("products");
-        $pd = [];
-        foreach ($products as $product) {
-            $pd[] = filterArrayKeys($product->getSimpleProps(), [
-                "general_product_id",
-                "net_price",
-                "gross_price",
-                "vat_id",
-                "active",
-                "stock",
-                "weight",
-                "length",
-                "width",
-                "height",
-                "product_id",
-                "variant_options",
-            ]);
-        }
-        $general_product_data["products"] = $pd;
+        $general_product_data["products"] = getGeneralProductDTProducts($general_product_id);
     }
 }
 
 if (!$general_product_data) {
-    Request::redirect(Request::$static_urls["ADMIN"] . "/produkty");
+    Request::redirect(Request::$static_urls["ADMIN"] . "/produkty-w-sklepie");
 }
 
 $page_data = DB::fetchRow("SELECT * FROM page p WHERE p.link_what_id = $general_product_id AND p.page_type = 'general_product'");
@@ -67,7 +47,7 @@ $page_data = DB::fetchRow("SELECT * FROM page p WHERE p.link_what_id = $general_
 
 <div class="custom_toolbar">
     <span class="title breadcrumbs">
-        <a class="btn transparent crumb" href="/admin/produkty">
+        <a class="btn transparent crumb" href="/admin/produkty-w-sklepie">
             Produkty
         </a>
         <i class="fas fa-chevron-right"></i>

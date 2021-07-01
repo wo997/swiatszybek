@@ -65,22 +65,7 @@ domload(() => {
 			variant.options.sort((a, b) => Math.sign(a.pos - b.pos));
 		});
 
-		data.products_dt.dataset = [];
-		for (const product of general_product_data.products) {
-			product.variant_options.forEach((opt) => {
-				const product_variant_option_id = opt.product_variant_option_id;
-				const product_variant = data.variants.find((v) =>
-					v.options.find((vo) => vo.product_variant_option_id === product_variant_option_id)
-				);
-				if (product_variant) {
-					const vkey = getVariantKeyFromId(product_variant.product_variant_id);
-					product[vkey] = product_variant_option_id;
-				}
-			});
-			delete product.variant_options;
-
-			data.products_dt.dataset.push(product);
-		}
+		data.products_dt.dataset = unpackProductsDT(data.variants, general_product_data.products);
 
 		{
 			const category_ids = general_product_data.categories.map((e) => e.product_category_id);

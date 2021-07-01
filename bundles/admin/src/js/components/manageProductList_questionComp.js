@@ -36,7 +36,7 @@ function ManageProductList_QuestionComp(comp, parent, data = undefined) {
 				setNodeChildren(
 					comp._nodes.options,
 					data.options.map(
-						(o) => html`<div class="option checkbox_area">
+						(o) => html`<div class="option checkbox_area block">
 							<p-checkbox data-value="${o.value}"></p-checkbox>
 							${o.label}
 						</div>`

@@ -1090,7 +1090,7 @@ function ProductComp(comp, parent, data = undefined) {
 				xhr({
 					url: `${STATIC_URLS["ADMIN"]}/general_product/delete/${comp._data.general_product_id}`,
 					success: (res) => {
-						window.location.href = STATIC_URLS["ADMIN"] + "/produkty";
+						window.location.href = STATIC_URLS["ADMIN"] + "/produkty-w-sklepie";
 					},
 				});
 			});
@@ -1167,17 +1167,25 @@ function ProductComp(comp, parent, data = undefined) {
 						product_feature_options: save_product_feature_options,
 					},
 					success: (res) => {
-						if (!res.general_product_id) {
-							alert("Wystąpił błąd krytyczny");
-							return;
-						}
+						const data = comp._data;
 
-						showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
+						// if (!res.general_product_id) {
+						// 	alert("Wystąpił błąd krytyczny");
+						// 	return;
+						// }
+
+						// showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
+						//     one_line: true,
+						// 	type: "success",
+						// });
+
+						showNotification("Zapisano produkt", {
 							one_line: true,
 							type: "success",
 						});
 
-						comp._data.general_product_id = res.general_product_id;
+						data.general_product_id = res.general_product_id;
+						data.products_dt.dataset = unpackProductsDT(data.variants, res.products);
 						comp._render();
 
 						const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
@@ -1251,4 +1259,23 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 		},
 	});
+}
+
+function unpackProductsDT(variants, products) {
+	const res_products = [];
+	for (const product of products) {
+		product.variant_options.forEach((opt) => {
+			const product_variant_option_id = opt.product_variant_option_id;
+			const product_variant = variants.find((v) => v.options.find((vo) => vo.product_variant_option_id === product_variant_option_id));
+			if (product_variant) {
+				const vkey = getVariantKeyFromId(product_variant.product_variant_id);
+				product[vkey] = product_variant_option_id;
+			}
+		});
+		delete product.variant_options;
+
+		res_products.push(product);
+	}
+
+	return res_products;
 }

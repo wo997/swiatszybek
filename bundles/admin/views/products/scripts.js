@@ -93,13 +93,22 @@ domload(() => {
 		],
 		primary_key: "product_id",
 		label: "Wszystkie produkty",
-		after_label: html` <button class="btn subtle show_categories" data-tooltip="html"></button> `,
+		after_label: html`
+			<button class="btn subtle show_categories" data-tooltip="html"></button>
+			<button class="btn primary add_product ml2">Dodaj produkt <i class="fas fa-plus"></i></button>
+		`,
 		empty_html: html`Brak produktów`,
 		selectable: true,
 		save_state_name: "admin_products",
 		getRequestParams: () => ({
 			category_ids: getCategoriesParam(),
 		}),
+	});
+
+	const add_product = datatable._child(".add_product");
+	add_product.addEventListener("click", () => {
+		console.log("edit / add product modal");
+		//showAddProductModal({ source: add_product });
 	});
 
 	const show_categories = datatable._child(".show_categories");
