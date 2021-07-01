@@ -329,16 +329,8 @@ class PiepCMS {
 				}
 			}
 
-			this.onSelectionChange();
+			this.detectTextSelectionChange();
 		});
-	}
-
-	onSelectionChange() {
-		this.manageText();
-
-		if (this.text_selection) {
-			this.setFocusNode(this.text_selection.focus_vid);
-		}
 	}
 
 	/**
@@ -1310,7 +1302,7 @@ class PiepCMS {
 				this.update({ all: true });
 
 				if (this.text_selection) {
-					this.onSelectionChange();
+					this.detectTextSelectionChange();
 				}
 				if (prop_def && prop_def.affects_selection) {
 					this.displaySelectionBreadcrumbs();
@@ -3742,6 +3734,12 @@ class PiepCMS {
 			return;
 		}
 		this.last_text_selection = cloneObject(this.text_selection);
+
+		this.manageText();
+
+		if (this.text_selection) {
+			this.setFocusNode(this.text_selection.focus_vid);
+		}
 
 		this.container.classList.toggle("has_empty_text_selection", this.text_selection && this.text_selection.length === 0);
 	}
