@@ -77,9 +77,9 @@
 		{ classes: ["fas", "fa-angle-down"], description: "angle down strzałka dół" },
 		{ classes: ["fas", "fa-award"], description: "award nagroda" },
 		{ classes: ["fas", "fa-battery-empty"], description: "battery empty pusta bateria rozładowana" },
-		{ classes: ["fas", "fa-battery- full"], description: "battery full pełna bateria naładowana" },
-		{ classes: ["fas", "fa-battery- half"], description: "battery half połowa baterii" },
-		{ classes: ["fas", "fa-battery- quarter"], description: "battery quarter ćwierć baterii" },
+		{ classes: ["fas", "fa-battery-full"], description: "battery full pełna bateria naładowana" },
+		{ classes: ["fas", "fa-battery-half"], description: "battery half połowa baterii" },
+		{ classes: ["fas", "fa-battery-quarter"], description: "battery quarter ćwierć baterii" },
 		{ classes: ["fas", "fa-battery-three-quarters"], description: "battery three quarters trzy czwarte baterii" },
 		{ classes: ["fas", "fa-bell"], description: "bell dzwonek" },
 		{ classes: ["far", "fa-bell"], description: "bell dzwonek" },
@@ -118,21 +118,28 @@
 		type_groups: ["advanced"],
 		menu_html: html`
 			<div class="label">Ikonka</div>
-			<div class="pretty_radio global_root icon" style="--columns:8">
-				${icons
-					.map(
-						(b) => html`
-							<div class="checkbox_area">
-								<p-checkbox data-value="${b.classes.join(" ")}"></p-checkbox>
-								<i class="${b.classes.join(" ")}"></i>
-							</div>
-						`
-					)
-					.join("")}
+			<div class="float_icon mb2">
+				<input class="field filter_icons" placeholder="Filtruj ikonki..." />
+				<i class="fas fa-search"></i>
+			</div>
+			<div class="scroll_panel scroll_shadow" style="max-height: 200px;">
+				<div class="pretty_radio global_root icon_input" style="--columns: 8;--box-padding: 5px 0;font-size: 20px;">
+					${icons
+						.map(
+							(b) => html`
+								<div class="checkbox_area" data-description="${b.description}">
+									<p-checkbox data-value="${b.classes.join(" ")}"></p-checkbox>
+									<i class="${b.classes.join(" ")}"></i>
+								</div>
+							`
+						)
+						.join("")}
+				</div>
 			</div>
 		`,
 		init: (piep_cms, menu_wrapper) => {
-			const icon_input = menu_wrapper._child(".icon");
+			const icon_input = menu_wrapper._child(".icon_input");
+			const filter_icons = menu_wrapper._child(".filter_icons"); // TODO: DO THIS, empty on open btw ;)
 			piep_cms.container.addEventListener("set_blc_menu", () => {
 				const v_node = piep_cms.getFocusVNode();
 				if (!v_node) {
@@ -153,6 +160,11 @@
 					}
 				});
 				icon_input._set_value(first_class + " " + second_class, { quiet: true });
+
+				const checked = icon_input._child(".checked");
+				if (checked) {
+					scrollIntoView(checked, { duration: 0 });
+				}
 			});
 			icon_input.addEventListener("change", () => {
 				const v_node = piep_cms.getFocusVNode();
