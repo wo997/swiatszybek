@@ -5135,7 +5135,7 @@ class PiepCMS {
 			}
 		}
 
-		/** @type {vDomNode[]} */
+		/** @type {{v_node: vDomNode, type: "normal" | "parent_text_container"}[]} */
 		const from_v_nodes = [];
 
 		from_vids.filter(onlyUnique).forEach((vid) => {
@@ -5150,14 +5150,12 @@ class PiepCMS {
 			// }
 
 			const parent_v_node = v_node_data.parent_v_nodes[0];
-			if (parent_v_node && !this.isTextContainer(v_node) && this.isTextContainer(parent_v_node)) {
-				from_v_nodes.push(parent_v_node);
+			if (parent_v_node && this.isTextContainer(parent_v_node) && !this.isTextContainer(v_node)) {
+				from_v_nodes.push({ v_node: parent_v_node, type: "parent_text_container" });
 			}
 
-			from_v_nodes.push(v_node);
+			from_v_nodes.push({ v_node, type: "normal" });
 		});
-
-		// console.log(from_vids);
 
 		/**
 		 *
@@ -5173,32 +5171,16 @@ class PiepCMS {
 				}
 
 				const prop_str = input.dataset.blc_prop;
-				const is_text_container_prop = piep_cms_manager.text_container_props.includes(prop_str);
 				let val = "";
-				for (const v_node of from_v_nodes) {
+				for (const from_v_node of from_v_nodes) {
+					const v_node = from_v_node.v_node;
+
 					let prop_val;
 					let v_node_ref = v_node;
 
-					const is_text_container = this.isTextContainer(v_node);
-					// ignore textable styles of text container if there is any selection
-					if (this.text_selection) {
-						if (is_text_container && piep_cms_manager.textable_props.includes(prop_str)) {
-							continue;
-						}
+					if (xor(from_v_node.type === "parent_text_container", piep_cms_manager.text_container_props.includes(prop_str))) {
+						continue;
 					}
-
-					// only textables propagate things like text container tag name or text alignment
-					if (!is_text_container) {
-						const parent_v_node = this.getVNodeDataById(v_node.id).parent_v_nodes[0];
-						if (parent_v_node && this.isTextContainer(parent_v_node) && is_text_container_prop) {
-							continue;
-						}
-					}
-					// if (this.isTextable(v_node)) {
-					// 	if (is_text_container_prop) {
-					// 		continue;
-					// 	}
-					// }
 
 					if (prop_str.startsWith("styles.")) {
 						const prop_key = prop_str.substring("styles.".length);
@@ -5207,10 +5189,6 @@ class PiepCMS {
 						const res_styles = styles[this.selected_resolution];
 						if (res_styles) {
 							prop_val = res_styles[prop_key];
-						}
-
-						if (prop_str.includes("styles.marginRight")) {
-							console.log(input, prop_val, res_styles, v_node_ref);
 						}
 
 						for (const res_name of resolutions_above_rev) {
