@@ -18,6 +18,11 @@
 	align-items: center;
 }
 
+.module_template_hook {
+	display: flex;
+	flex-direction: column;
+}
+
 .main_wrapper,
 .piep_editor_content,
 .vertical_container {

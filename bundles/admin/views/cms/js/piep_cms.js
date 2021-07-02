@@ -5157,7 +5157,7 @@ class PiepCMS {
 			from_v_nodes.push(v_node);
 		});
 
-		console.log(from_vids);
+		// console.log(from_vids);
 
 		/**
 		 *
@@ -5207,6 +5207,10 @@ class PiepCMS {
 						const res_styles = styles[this.selected_resolution];
 						if (res_styles) {
 							prop_val = res_styles[prop_key];
+						}
+
+						if (prop_str.includes("styles.marginRight")) {
+							console.log(input, prop_val, res_styles, v_node_ref);
 						}
 
 						for (const res_name of resolutions_above_rev) {

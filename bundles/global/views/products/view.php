@@ -388,7 +388,7 @@ $where_products_0 = $products_ids_csv ? "product_id IN ($products_ids_csv)" : "-
 
 $general_product_ids = DB::fetchCol("SELECT DISTINCT general_product_id
     FROM product
-    WHERE $where_products_0");
+    WHERE $where_products_0 AND general_product_id IS NOT NULL");
 
 $general_products_ids_csv = implode(",", $general_product_ids);
 $where_general_products_0 = $general_products_ids_csv ? "general_product_id IN ($general_products_ids_csv)" : "-1";

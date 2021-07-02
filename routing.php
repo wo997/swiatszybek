@@ -51,11 +51,18 @@ $admin_navigations_tree = [
             ["url" => "/produkty-w-sklepie", "title" => '<i class="fas fa-store"></i> Produkty w sklepie'],
             ["url" => "/produkty-w-sklepie?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt do sklepu'],
             ["url" => "/wszystkie-produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
-            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/produkt"/*, "title" => '<i class="fas fa-cube"></i> Edycja produktu'*/],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
             ["url" => "/stawki-vat", "title" => '<i class="fas fa-percent"></i> Stawki VAT'],
+        ],
+    ],
+    [
+        "title" => '<i class="fas fa-cube"></i> Hajsy itd nie wiem',
+        "sub" => [
+            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
+            ["url" => "/sprzedaz", "title" => '<i class="fas fa-arrow-up"></i> Sprzedaż'],
+            ["url" => "/zakup", "title" => '<i class="fas fa-arrow-down"></i> Zakup'],
         ],
     ],
     [

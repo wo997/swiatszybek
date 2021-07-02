@@ -121,8 +121,8 @@ function SelectProductCategoriesModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div>
-					<button class="btn subtle small" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button>
-					<button class="btn error_light small" data-node="{${comp._nodes.clear_btn}}">
+					<button class="btn subtle small" data-node="{${comp._nodes.edit_btn}}">Edytuj kategorie <i class="fas fa-cog"></i></button
+					><button class="btn error_light small ml2" data-node="{${comp._nodes.clear_btn}}">
 						Odznacz wszystko <i class="fas fa-eraser"></i>
 					</button>
 					<list-comp data-bind="{${data.categories}}" class="mt2" data-primary="product_category_id">
