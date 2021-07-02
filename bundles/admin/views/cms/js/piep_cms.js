@@ -3220,21 +3220,30 @@ class PiepCMS {
 
 	findAndRemoveTemporaryWrapper() {
 		/**
-		 * @param {vDomNode[]} v_nodes
+		 * @param {vDomNode} parent_v_node
 		 */
-		const traverseVDom = (v_nodes) => {
+		const traverseVDom = (parent_v_node) => {
+			const v_nodes = parent_v_node.children;
+			if (!v_nodes) {
+				return;
+			}
 			for (let i = 0; i < v_nodes.length; i++) {
 				const v_node = v_nodes[i];
 				if (v_node.classes.includes("temporary_wrapper")) {
-					v_nodes.splice(i, 1, ...v_node.children);
-					return;
+					if (parent_v_node.module_name === "grid") {
+						this.addClasses(v_node, "vertical_container");
+						this.removeClasses(v_node, "temporary_wrapper");
+					} else {
+						v_nodes.splice(i, 1, ...v_node.children);
+					}
+					return; // cause we assume just 1 to be in here
 				}
-				if (v_node.children) {
-					traverseVDom(v_node.children);
-				}
+				traverseVDom(v_node);
 			}
 		};
-		traverseVDom(this.v_dom);
+		this.v_dom.forEach((v_node) => {
+			traverseVDom(v_node);
+		});
 	}
 
 	/**
