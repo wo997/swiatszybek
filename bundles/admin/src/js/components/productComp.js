@@ -1176,16 +1176,6 @@ function ProductComp(comp, parent, data = undefined) {
 					success: (res) => {
 						const data = comp._data;
 
-						// if (!res.general_product_id) {
-						// 	alert("Wystąpił błąd krytyczny");
-						// 	return;
-						// }
-
-						// showNotification(comp._data.general_product_id === -1 ? "Dodano produkt" : "Zapisano produkt", {
-						//     one_line: true,
-						// 	type: "success",
-						// });
-
 						showNotification("Zapisano produkt", {
 							one_line: true,
 							type: "success",
@@ -1193,7 +1183,7 @@ function ProductComp(comp, parent, data = undefined) {
 
 						data.general_product_id = res.general_product_id;
 						data.products_dt.dataset = unpackProductsDT(data.variants, res.products);
-						comp._render();
+						comp._render({ freeze: true });
 
 						const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
 						history.replaceState(undefined, "", make_sure_url_is_cool);

@@ -182,8 +182,12 @@ class Entity
             $any_parent_just_saved = false;
             foreach ($this->parents as $parent) {
                 if ($parent && !$parent->saved) {
-                    $any_parent_just_saved = true;
-                    $parent->save();
+                    $parent_id = $this->getProp($parent->getIdColumn());
+                    // object might be unlinked <3
+                    if ($parent_id) {
+                        $any_parent_just_saved = true;
+                        $parent->save();
+                    }
                 }
             }
 
@@ -385,8 +389,6 @@ class Entity
                 }
             }
         }
-
-        //var_dump($prop_name);
 
         $this->props[$prop_name] = $val;
     }
