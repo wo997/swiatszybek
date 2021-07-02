@@ -122,12 +122,8 @@ class PiepCMSClipboard {
 		this.setLastCopiedHTML([...range.cloneContents().children].map((c) => c.outerHTML).join(""));
 		copyRangeToClipboard(range);
 
-		if (options.restore_selection) {
-			setTimeout(() => {
-				piep_cms.text_selection = text_selection_copy;
-				piep_cms.setDummySelection();
-			});
-		}
+		piep_cms.text_selection = text_selection_copy;
+		piep_cms.setDummySelection();
 	}
 
 	/**

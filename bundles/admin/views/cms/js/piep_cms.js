@@ -1537,33 +1537,35 @@ class PiepCMS {
 				this.remove_selection_timeout = undefined;
 			}
 
-			const in_text_container = target._parent(".in_text_container");
-			if (in_text_container && !in_text_container.classList.contains("textable")) {
-				const inc_rect = in_text_container.getBoundingClientRect();
+			// if (!this.editing_layout) {
+			// 	const in_text_container = target._parent(".in_text_container");
+			// 	if (in_text_container && !in_text_container.classList.contains("textable")) {
+			// 		const inc_rect = in_text_container.getBoundingClientRect();
 
-				/** @type {Direction} */
-				const dir = mouse.pos.x > inc_rect.left + inc_rect.width * 0.5 ? 1 : -1;
-				const textable = in_text_container._sibling(dir);
-				if (textable) {
-					const textable_vid = +textable.dataset.vid;
-					const offset = dir === -1 ? textable.textContent.length : 0;
-					setTimeout(() => {
-						// don't like it but is necessary?
-						this.text_selection = {
-							anchor_vid: textable_vid,
-							anchor_offset: offset,
-							focus_vid: textable_vid,
-							focus_offset: offset,
-							middle_vids: [],
-							partial_ranges: [],
-							// @ts-ignore
-							direction: 1,
-							length: 0,
-							single_node: true,
-						};
-					});
-				}
-			}
+			// 		/** @type {Direction} */
+			// 		const dir = mouse.pos.x > inc_rect.left + inc_rect.width * 0.5 ? 1 : -1;
+			// 		const textable = in_text_container._sibling(dir);
+			// 		if (textable) {
+			// 			const textable_vid = +textable.dataset.vid;
+			// 			const offset = dir === -1 ? textable.textContent.length : 0;
+			// 			setTimeout(() => {
+			// 				// don't like it but is necessary?
+			// 				this.text_selection = {
+			// 					anchor_vid: textable_vid,
+			// 					anchor_offset: offset,
+			// 					focus_vid: textable_vid,
+			// 					focus_offset: offset,
+			// 					middle_vids: [],
+			// 					partial_ranges: [],
+			// 					// @ts-ignore
+			// 					direction: 1,
+			// 					length: 0,
+			// 					single_node: true,
+			// 				};
+			// 			});
+			// 		}
+			// 	}
+			// }
 
 			if (this.text_selection) {
 				if (!keeps_text_selection) {
@@ -1750,7 +1752,7 @@ class PiepCMS {
 						if (lower_key === "c") {
 							ev.preventDefault();
 							this.clipboard.copyWhateverIsSelected(this.cursor);
-							this.clipboard.copyTextSelection({ restore_selection: true });
+							this.clipboard.copyTextSelection();
 						}
 						if (lower_key == "z") {
 							ev.preventDefault();
@@ -1836,7 +1838,7 @@ class PiepCMS {
 		const edge = dir === 1 ? focus_offset >= text.length : focus_offset <= 0;
 		if (edge) {
 			const node = this.getNode(this.text_selection.focus_vid);
-			const near_textable = dir === 1 ? node._next(".textable") : node._prev(".textable");
+			const near_textable = node._sibling(dir, ".textable");
 			const near = node._sibling(dir);
 			if (near_textable) {
 				this.text_selection.focus_vid = +near_textable.dataset.vid;
@@ -3072,7 +3074,7 @@ class PiepCMS {
 	getDeepSibling(node, selector, dir, options = {}) {
 		let parent = node;
 		while (parent) {
-			const next = node._sibling(dir);
+			const next = parent._sibling(dir);
 			if (next) {
 				if (!this.content.contains(next)) {
 					return undefined;
@@ -5094,7 +5096,6 @@ class PiepCMS {
 		}
 
 		if (vid === undefined) {
-			this.text_selection = undefined;
 			this.cursor.classList.add("hidden");
 		}
 
@@ -5153,6 +5154,8 @@ class PiepCMS {
 
 			from_v_nodes.push(v_node);
 		});
+
+		console.log(from_vids);
 
 		/**
 		 *
