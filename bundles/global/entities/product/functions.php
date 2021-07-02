@@ -29,7 +29,7 @@ function getAllProducts()
         gp.__features_html gp__features_html, gp.__images_json gp__images_json, gp.__img_url gp__img_url,
         gp.__options_json gp__options_json, gp.__rating_count gp__rating_count, gp.__search gp__search, gp.__url gp__url
         
-        FROM product p INNER JOIN general_product gp USING(general_product_id)");
+        FROM product p LEFT JOIN general_product gp USING(general_product_id)");
 }
 
 function preloadProducts()

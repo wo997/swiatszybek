@@ -31,7 +31,30 @@ function StockProductsDeliveryModalComp(comp, parent, data = undefined) {
 	if (data.select_product === undefined) {
 		data.select_product = {
 			options: {},
-			dataset: products ? products.filter((p) => p.active && p.gp_active).map((p) => ({ value: p.product_id + "", label: p.__name })) : [],
+			//dataset: products ? products.filter((p) => p.active && p.gp_active).map((p) => ({ value: p.product_id + "", label: p.__name })) : [],
+			dataset: products
+				? products.map((p) => {
+						const value = p.product_id + "";
+
+						let label = p.__name + "";
+
+						let active = true;
+						if (p.general_product_id) {
+							active = !!p.active && !!p.gp_active;
+						} else {
+							active = !!p.active;
+						}
+
+						if (!active) {
+							label += " (obecnie nieaktywny)";
+						}
+
+						return {
+							value,
+							label,
+						};
+				  })
+				: [],
 			custom_select_callback: (value) => {
 				const data = comp._data;
 				console.log(+value);
