@@ -1597,7 +1597,8 @@ class PiepCMS {
 					if (click_v_node) {
 						if (this.text_selection) {
 							const text_focus_node = this.getNode(this.text_selection.focus_vid);
-							if (click_blc.classList.contains("in_text_container")) {
+							//if (click_blc.classList.contains("in_text_container")) {
+							if (click_blc.classList.contains("textable")) {
 								if (click_blc._prev() === text_focus_node) {
 									// fixes inaccurate selection on edge cases
 									this.text_selection.focus_vid = +click_blc.dataset.vid;
@@ -1607,7 +1608,8 @@ class PiepCMS {
 
 								this.setFocusNode(click_v_node.id);
 								this.pushHistory("set_focus_node");
-							} else if (!click_blc.classList.contains("in_text_container")) {
+							} else {
+								// if (!click_blc.classList.contains("in_text_container")) {
 								if (ev.detail > 1 || !click_blc.classList.contains("text_container")) {
 									this.setFocusNode(click_v_node.id);
 									this.text_selection = undefined;
