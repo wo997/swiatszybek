@@ -1837,7 +1837,7 @@ class PiepCMS {
 		if (edge) {
 			const node = this.getNode(this.text_selection.focus_vid);
 			const near_textable = dir === 1 ? node._next(".textable") : node._prev(".textable");
-			const near = dir === 1 ? node._next() : node._prev();
+			const near = node._sibling(dir);
 			if (near_textable) {
 				this.text_selection.focus_vid = +near_textable.dataset.vid;
 				const next_text = near_textable.textContent;
@@ -3063,16 +3063,16 @@ class PiepCMS {
 	 *
 	 * @param {PiepNode} node
 	 * @param {string} selector
-	 * @param {Direction} direction
+	 * @param {Direction} dir
 	 * @param {{
 	 * include_template?: boolean
 	 * }} options
 	 * @returns {PiepNode | undefined}
 	 */
-	getDeepSibling(node, selector, direction, options = {}) {
+	getDeepSibling(node, selector, dir, options = {}) {
 		let parent = node;
 		while (parent) {
-			const next = direction === 1 ? parent._next() : parent._prev();
+			const next = node._sibling(dir);
 			if (next) {
 				if (!this.content.contains(next)) {
 					return undefined;
@@ -3086,7 +3086,7 @@ class PiepCMS {
 				}
 				const next_children = next._direct_children(selector);
 				if (next_children.length > 0) {
-					if (direction === 1) {
+					if (dir === 1) {
 						return next_children[0];
 					} else {
 						return getLast(next_children);
