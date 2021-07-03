@@ -16,7 +16,7 @@ if (!$general_product_data) {
     Request::notFound();
 }
 
-$page_data = DB::fetchRow("SELECT seo_title, seo_description, page_id FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
+$page_data = DB::fetchRow("SELECT seo_title, seo_description, page_id, active FROM page WHERE link_what_id = $general_product_id AND page_type='general_product'");
 
 if (!$page_data) {
     Request::notFound();
@@ -51,7 +51,7 @@ if ($product_link_base !== Request::$url) {
     Request::redirectPermanent($true_product_link);
 }
 
-$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, net_price, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, __current_gross_price, discount_price, discount_untill, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);
@@ -239,28 +239,6 @@ if ($main_img) {
     <div class="product_offer">
         <h1 class="h1"><?= $general_product_data["name"] ?></h1>
 
-        <!-- <div style="display:none">
-            <div class="label">Sposób wyświetlania cen wariantów (dla admina)</div>
-            <div class="vdo radio_group --columns:1">
-                <div class="checkbox_area">
-                    <p-checkbox data-value="1"></p-checkbox>
-                    Subtelny napis
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="2"></p-checkbox>
-                    Czerwony prostokąt
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="3"></p-checkbox>
-                    Szary prostokąt
-                </div>
-                <div class="checkbox_area">
-                    <p-checkbox data-value="4"></p-checkbox>
-                    Brak
-                </div>
-            </div>
-        </div> -->
-
         <div class="variants_container">
             <?php
             foreach ($general_product_variants as $general_product_variant) {
@@ -314,7 +292,10 @@ if ($main_img) {
         </div>
 
         <p class="price_label">
-            <span>Cena: </span><span class="pln selected_product_price"></span> <span class="selected_product_was_price slash"></span>
+            <!-- <span>Cena: </span> -->
+            <span class="selected_product_price pln"></span>
+            <span class="selected_product_was_price slash"></span>
+            <span class="selected_product_percent_off"></span>
         </p>
 
         <div class="case_can_buy_product" data-tooltip_position="center">
@@ -580,12 +561,12 @@ if ($main_img) {
 <?php
 foreach ($general_product_products as $product) {
     $name = htmlspecialchars($product["__name"]);
-    $gross_price = $product["gross_price"];
+    $__current_gross_price = $product["__current_gross_price"];
     $url = $product["__url"];
     $img_url = SITE_URL . $product["__img_url"];
     $stockSchema = $product["stock"] > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
 
-    if ($product["active"] && floatval($product["gross_price"])) {
+    if ($product["active"] && floatval($product["__current_gross_price"])) {
 ?>
         <script type="application/ld+json">
             {
@@ -611,7 +592,7 @@ foreach ($general_product_products as $product) {
                     "@type": "Offer",
                     "url": "<?= SITE_URL . $url ?>",
                     "priceCurrency": "PLN",
-                    "price": "<?= $gross_price ?>",
+                    "price": "<?= $__current_gross_price ?>",
                     "itemCondition": "https://schema.org/NewCondition",
                     "availability": "<?= $stockSchema ?>",
                     "seller": {
@@ -626,6 +607,18 @@ foreach ($general_product_products as $product) {
 } ?>
 
 <?php
+
+Templates::startSection("foot");
+
+if (!$page_data["active"] && User::getCurrent()->priveleges["backend_access"]) {
+?>
+    <script>
+        domload(() => {
+            $(".main_buy_btn").dataset.tooltip = "Nie można dodać produktu do koszyka jeśli ten jest niepubliczny";
+        })
+    </script>
+<?php
+}
 
 Templates::endSection();
 

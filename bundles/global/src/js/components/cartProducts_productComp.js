@@ -6,7 +6,7 @@
  * name: string
  * qty: number
  * img_url: string
- * gross_price: number
+ * __current_gross_price: number
  * net_price: number
  * url: string
  * no_redirect?: boolean
@@ -28,7 +28,7 @@
  */
 function CartProducts_ProductComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { product_id: -1, img_url: "", name: "", qty: 0, gross_price: 0, net_price: 0, url: "" };
+		data = { product_id: -1, img_url: "", name: "", qty: 0, __current_gross_price: 0, net_price: 0, url: "" };
 	}
 
 	comp._set_data = (data, options = {}) => {
@@ -51,7 +51,7 @@ function CartProducts_ProductComp(comp, parent, data = undefined) {
 		</button>
 
 		<div class="bottom_row">
-			<span class="product_price pln" html="{${data.gross_price + " zł / szt."}}"></span>
+			<span class="product_price pln" html="{${data.__current_gross_price + " zł / szt."}}"></span>
 			<div class="glue_children qty_controls" data-product="user_cart ${data.product_id}">
 				<button class="btn subtle sub_qty">
 					<i class="fas fa-minus"></i>
@@ -64,7 +64,7 @@ function CartProducts_ProductComp(comp, parent, data = undefined) {
 					<i class="fas fa-plus"></i>
 				</button>
 			</div>
-			<span class="product_total_price pln" html="{${(data.gross_price * data.qty).toFixed(2) + " zł"}}"></span>
+			<span class="product_total_price pln" html="{${(data.__current_gross_price * data.qty).toFixed(2) + " zł"}}"></span>
 		</div>`;
 
 	createComp(comp, parent, data, {

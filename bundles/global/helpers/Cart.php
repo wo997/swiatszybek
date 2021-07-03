@@ -12,6 +12,7 @@
 class Cart
 {
     // save these
+    /** @var CartProduct[] */
     private $products;
     /** @var Entity[] RebateCode */
     private $rebate_codes;
@@ -102,9 +103,7 @@ class Cart
                     continue;
                 }
 
-                $cart_product =
-                    /** @var CartProduct */
-                    $this->products[$product_index];
+                $cart_product = $this->products[$product_index];
 
                 $qty = $cart_product["qty"];
 
@@ -248,25 +247,31 @@ class Cart
         $products_data = [];
         if ($cart_product_ids) {
             $product_ids_string = join(",", $cart_product_ids);
-            $product_index = -1;
 
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, p.__img_url img_url, p.__name name, p.__url url, p.stock, 0 as qty
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __current_gross_price, p.__img_url img_url, p.__name name, p.__url url, p.stock, 0 as qty
                 FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             $product_ids_found = array_column($products_data, "product_id");
-            $this->products = array_values(array_filter($this->products, fn ($x) => in_array($x["product_id"], $product_ids_found)));
-            $this->save();
-            // if (count($product_ids_found) !== count($cart_product_ids)) {
-            // }
 
+            $any_change = false;
+            foreach ($this->products as $ind => $product) {
+                if (!in_array($product["product_id"], $product_ids_found)) {
+                    array_splice($this->products, $ind, 1);
+                    array_splice($products_data, $ind, 1);
+                    $any_change = true;
+                }
+            }
+            if ($any_change) {
+                $this->save();
+            }
+
+            $product_index = -1;
             foreach ($products_data as $key => $product_data) {
                 $product_index++;
 
-                $cart_product =
-                    /** @var CartProduct */
-                    $this->products[$product_index];
+                $cart_product = $this->products[$product_index];
 
-                $price = $product_data["gross_price"];
+                $price = $product_data["__current_gross_price"];
 
                 $products_price += $cart_product["qty"] * $price;
 
@@ -335,7 +340,6 @@ class Cart
     public function getProductQty($product_id)
     {
         foreach ($this->products as
-            /** @var CartProduct */
             $product) {
             if ($product["product_id"] == $product_id) {
                 return intval($product["qty"]);
@@ -364,12 +368,10 @@ class Cart
         $product_id = intval($product_id);
         $qty = min(intval($qty), $this->max_single_product_count);
 
-        /** @var CartProduct */
         $match_product_index = -1;
 
         $index = -1;
         foreach ($this->products as
-            /** @var CartProduct */
             $product) {
             $index++;
             if ($product["product_id"] == $product_id) {
@@ -393,7 +395,11 @@ class Cart
                 $product_id = $this->products[$match_product_index]["product_id"];
                 $stock = DB::fetchVal("SELECT stock FROM product WHERE product_id = $product_id");
                 $qty = min($qty, $stock);
-                $this->products[$match_product_index]["qty"] = $qty;
+                if ($qty <= 0) {
+                    array_splice($this->products, $match_product_index, 1);
+                } else {
+                    $this->products[$match_product_index]["qty"] = $qty;
+                }
             }
         }
     }
@@ -492,9 +498,7 @@ class Cart
                     $sum_products = 0;
                     $product_ids = DB::fetchCol("SELECT product_id FROM product WHERE general_product_id = ?", [$general_product_id]);
 
-                    foreach ($this->products as
-                        /** @var CartProduct */
-                        $product) {
+                    foreach ($this->products as $product) {
                         if (in_array($product["product_id"], $product_ids)) {
                             $sum_products += intval($product["qty"]);
                         }

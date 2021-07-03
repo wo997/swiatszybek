@@ -102,7 +102,7 @@ function getGlobalProductsSearch($url)
 
             $min -= 0.000001;
             if ($is_cena) {
-                $where .= " AND gross_price >= $min";
+                $where .= " AND __current_gross_price >= $min";
             } else {
                 $where .= " AND pfo.double_value >= $min";
             }
@@ -118,7 +118,7 @@ function getGlobalProductsSearch($url)
 
             $max += 0.000001;
             if ($is_cena) {
-                $where .= " AND gross_price <= $max";
+                $where .= " AND __current_gross_price <= $max";
             } else {
                 $where .= " AND pfo.double_value <= $max";
             }
@@ -184,9 +184,9 @@ function renderGeneralProductsList($params)
     } else  if ($search_order === "bestsellery") {
         $actual_order = "gp.compare_sales DESC";
     } else if ($search_order === "ceny-rosnaco") {
-        $actual_order = "AVG(gross_price) ASC";
+        $actual_order = "AVG(__current_gross_price) ASC";
     } else if ($search_order === "ceny-malejaco") {
-        $actual_order = "AVG(gross_price) DESC";
+        $actual_order = "AVG(__current_gross_price) DESC";
     } else if ($search_order === "general_product" && $GENERAL_PRODUCT_ID) {
         $actual_order = "gp.general_product_id ASC";
 
@@ -226,7 +226,7 @@ function renderGeneralProductsList($params)
     $pagination_params = [
         "select" => "
         gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
-        MIN(gross_price) min_gross_price, MAX(gross_price) max_gross_price, SUM(stock) as sum_stock,
+        MIN(__current_gross_price) min_gross_price, MAX(__current_gross_price) max_gross_price, SUM(stock) as sum_stock,
         GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
         GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
         COUNT(DISTINCT p.product_id) as product_count,

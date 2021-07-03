@@ -147,14 +147,20 @@ function initBuy() {
 			val_qty.select();
 		});
 		val_qty.addEventListener("change", () => {
-			if (!getProduct()) {
+			const product = getProduct();
+			if (!product) {
 				return;
 			}
 
 			const qty = val_qty._get_value();
-			const bound_val = clamp(getMin(), val_qty._get_value(), getMax());
+			const min = getMin();
+			const max = getMax();
+			if (min >= max) {
+				return;
+			}
+			const bound_val = clamp(min, val_qty._get_value(), max);
 			if (qty !== bound_val) {
-				val_qty._set_value(clamp(getMin(), val_qty._get_value(), getMax()));
+				val_qty._set_value(bound_val);
 				return;
 			}
 
