@@ -73,10 +73,20 @@ product-comp {
 		}
 	}
 
-	.node_all_products {
-		@media (min-width: 1000px) {
-			margin-top: -35px;
+	.bind_product_list_view {
+		& {
+			--box-padding: 7px 10px;
 		}
+		i {
+			font-size: 1.2em;
+			transform: translateY(1px);
+		}
+	}
+
+	.node_all_products {
+		// @media (min-width: 1000px) {
+		// 	margin-top: -35px;
+		// }
 
 		.list_row.inactive {
 			filter: contrast(0.82);

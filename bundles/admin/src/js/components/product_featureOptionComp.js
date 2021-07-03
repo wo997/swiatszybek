@@ -144,6 +144,7 @@ function Product_FeatureOptionComp(
 		initialize: () => {
 			comp._nodes.text_value.addEventListener("input", set_h);
 			window.addEventListener("finished_components_optimization", set_h);
+			set_h();
 
 			/** @type {ListComp} */
 			// @ts-ignore

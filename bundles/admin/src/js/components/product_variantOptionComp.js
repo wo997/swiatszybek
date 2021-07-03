@@ -118,6 +118,7 @@ function Product_VariantOptionComp(
 		initialize: () => {
 			comp._nodes.name.addEventListener("input", set_h);
 			window.addEventListener("finished_components_optimization", set_h);
+			set_h();
 
 			const so = comp._nodes.select_options;
 			so.addEventListener("change", () => {

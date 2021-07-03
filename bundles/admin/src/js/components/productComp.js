@@ -58,9 +58,7 @@
  *      add_variant_btn: PiepNode
  *      delete_btn: PiepNode
  *      products_dt_wrapper: PiepNode
- *      prices_tab: PiepNode
- *      stock_tab: PiepNode
- *      dim_tab: PiepNode
+ *      dt_descriptions: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _add_variant?(options?: {common?: number, callback?()})
@@ -353,7 +351,7 @@ function ProductComp(comp, parent, data = undefined) {
 					data.products_dt.dataset.push(p);
 				});
 
-				comp._render();
+				comp._render({ freeze: true });
 			} else {
 				const manage_product_list_modal_comp = getManageProductListModal();
 				manage_product_list_modal_comp._data.questions = questions;
@@ -406,7 +404,7 @@ function ProductComp(comp, parent, data = undefined) {
 				} else {
 					comp._data.variants.push(variant);
 				}
-				comp._render();
+				comp._render({ freeze: true });
 				hideLoader();
 
 				if (options.callback) {
@@ -595,13 +593,17 @@ function ProductComp(comp, parent, data = undefined) {
 						}
 					});
 
-					comp._nodes.prices_tab.classList.toggle("attention", !!missing_price);
-					comp._nodes.stock_tab.classList.toggle("attention", !!missing_stock);
-					comp._nodes.dim_tab.classList.toggle("attention", !!missing_dim);
+					const prices_tab = comp._child(`[data-value="prices"]`)._parent();
+					const stock_tab = comp._child(`[data-value="stock"]`)._parent();
+					const dim_tab = comp._child(`[data-value="weight_dimensions"]`)._parent();
 
-					comp._nodes.prices_tab.dataset.tooltip = missing_price ? `Nie uzupełniono cen: ${missing_price}` : "";
-					comp._nodes.stock_tab.dataset.tooltip = missing_stock ? `Zerowy stan magazynowy produktów: ${missing_stock}` : "";
-					comp._nodes.dim_tab.dataset.tooltip = missing_dim ? `Nie uzupełniono wymiarów / wag: ${missing_dim}` : "";
+					prices_tab.classList.toggle("attention", !!missing_price);
+					stock_tab.classList.toggle("attention", !!missing_stock);
+					dim_tab.classList.toggle("attention", !!missing_dim);
+
+					prices_tab.dataset.tooltip = missing_price ? `Nie uzupełniono cen: ${missing_price}` : "";
+					stock_tab.dataset.tooltip = missing_stock ? `Zerowy stan magazynowy produktów: ${missing_stock}` : "";
+					dim_tab.dataset.tooltip = missing_dim ? `Nie uzupełniono wymiarów / wag: ${missing_dim}` : "";
 				}
 
 				if (cd.variants || cd.products_dt) {
@@ -709,6 +711,10 @@ function ProductComp(comp, parent, data = undefined) {
 				}
 
 				if (cd.product_list_view) {
+					comp._nodes.dt_descriptions._children(".user_info").forEach((u) => {
+						u.classList.toggle("hidden", u.dataset.tab !== data.product_list_view);
+					});
+
 					if (data.product_list_view === "active") {
 						comp._nodes.all_products._add_column({
 							key: "active",
@@ -722,7 +728,7 @@ function ProductComp(comp, parent, data = undefined) {
 						comp._nodes.all_products._remove_column("active");
 					}
 
-					if (data.product_list_view === "price") {
+					if (data.product_list_view === "prices") {
 						comp._nodes.all_products._add_column({
 							key: "net_price",
 							label: "Cena Netto",
@@ -969,8 +975,6 @@ function ProductComp(comp, parent, data = undefined) {
 						Kliknij przycisk "Dodaj brakujące produkty", a lista produktów uzupełni się automatycznie na podstawie podanych powyżej
 						wariantów.
 						<br />
-						W pierwszej kolejności ustal, które produkty należą do oferty sklepu (zakładka "Aktywne"). Dalej uzupełnij ceny, stany
-						magazynowe itd. <br />
 						<div style="height:7px"></div>
 						Aby szybciej edytować dane tabelki warto rozważyć obsługę przy użyciu klawiatury.<br />
 						Poruszanie się po polach (pierwsze z nich musimy kliknąć):
@@ -1010,11 +1014,11 @@ function ProductComp(comp, parent, data = undefined) {
 							<p-checkbox data-value="active"></p-checkbox>
 							<span> <i class="fas fa-check"></i> Aktywne </span>
 						</div>
-						<div class="checkbox_area" data-node="{${comp._nodes.prices_tab}}">
-							<p-checkbox data-value="price"></p-checkbox>
+						<div class="checkbox_area">
+							<p-checkbox data-value="prices"></p-checkbox>
 							<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
 						</div>
-						<div class="checkbox_area" data-node="{${comp._nodes.stock_tab}}">
+						<div class="checkbox_area">
 							<p-checkbox data-value="stock"></p-checkbox>
 							<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
 						</div>
@@ -1022,20 +1026,36 @@ function ProductComp(comp, parent, data = undefined) {
 							<p-checkbox data-value="discount"></p-checkbox>
 							<span> <i class="fas fa-percentage"></i> Zniżki </span>
 						</div>
-						<div class="checkbox_area" data-node="{${comp._nodes.dim_tab}}">
+						<div class="checkbox_area">
+							<p-checkbox data-value="codes"></p-checkbox>
+							<span> <i class="fas fa-barcode"></i> Kody </span>
+						</div>
+						<div class="checkbox_area" data-tooltipbase="">
 							<p-checkbox data-value="weight_dimensions"></p-checkbox>
 							<span> <i class="fas fa-ruler-vertical"></i> Waga / Wymiary </span>
 						</div>
 					</div>
 
+					<div data-node="{${comp._nodes.dt_descriptions}}" class="inline mt2 mb2">
+						<div data-tab="active" class="user_info">
+							<i class="fas fa-info-circle"></i> Określ, które produkty należą do oferty sklepu.<br />Ważne! Klient nie będzie mógł
+							skorzystać z powiadomienia o dostępności produktu jeśli ten jest nieaktywny. W takim przypadku należy ustawić produkt jako
+							aktywny, pomimo braków w magazynie.
+						</div>
+						<div data-tab="weight_dimensions" class="user_info">
+							<i class="fas fa-info-circle"></i>
+							Dane wykorzystywane są do wyznaczania gabarytu paczki
+						</div>
+					</div>
+
 					<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
 				</div>
-			</div>
 
-			<div style="height:100px"></div>
+				<div style="height:100px"></div>
 
-			<div class="mta pt2" style="text-align: right;">
-				<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
+				<div class="mta pt2" style="text-align: right;">
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
+				</div>
 			</div>
 		`,
 		ready: () => {
@@ -1050,7 +1070,7 @@ function ProductComp(comp, parent, data = undefined) {
 				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_callback = (src) => {
 					data.images.push({ img_url: src, product_img_id: -1, selected_product_feature_options: [] });
-					comp._render();
+					comp._render({ freeze: true });
 				};
 				select_file_modal._render();
 				select_file_modal._show();
@@ -1067,7 +1087,7 @@ function ProductComp(comp, parent, data = undefined) {
 						category_ids: comp._data.category_ids,
 						close_callback: (category_ids) => {
 							comp._data.category_ids = category_ids;
-							comp._render();
+							comp._render({ freeze: true });
 						},
 					},
 					{ source: comp._nodes.add_category_btn }
@@ -1248,11 +1268,11 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_features_changed", () => {
-				comp._render({ force_render: true });
+				comp._render({ force_render: true, freeze: true });
 			});
 
 			window.addEventListener("product_categories_changed", () => {
-				comp._render({ force_render: true });
+				comp._render({ force_render: true, freeze: true });
 			});
 		},
 	});
