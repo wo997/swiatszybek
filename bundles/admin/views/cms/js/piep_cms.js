@@ -91,6 +91,22 @@ class PiepCMS {
 		}
 	}
 
+	setSingleTextableSelection(vid, offset) {
+		this.text_selection = {
+			anchor_vid: vid,
+			anchor_offset: offset,
+			focus_vid: vid,
+			focus_offset: offset,
+			middle_vids: [],
+			partial_ranges: [],
+			// @ts-ignore
+			direction: 1,
+			length: 0,
+			single_node: true,
+		};
+		this.textSelectionChange();
+	}
+
 	updateDefiniteSelection() {
 		if (!this.text_selection) {
 			return;
@@ -896,7 +912,7 @@ class PiepCMS {
 				const v_node = v_node_data.v_node;
 				//const parent_v_node = v_node_data.parent_v_nodes[0];
 
-				const focus_node = this.getNode(this.focus_node_vid);
+				const focus_node = this.getFocusNode();
 				const focus_node_parent = focus_node._parent();
 				const focus_node_rect = focus_node.getBoundingClientRect();
 				const visible_width = focus_node_rect.width;
@@ -1810,9 +1826,27 @@ class PiepCMS {
 				}
 
 				this.scrollToCursor();
+			} else {
+				const focus_node = this.getFocusNode();
+				if (focus_node.classList.contains("in_text_container")) {
+					/**
+					 *
+					 * @param {Direction} dir
+					 */
+					const selectSide = (dir) => {
+						const textable = focus_node._sibling(dir);
+						this.setSingleTextableSelection(+textable.dataset.vid, dir === 1 ? 0 : textable.textContent.length);
+					};
+					if (ev.key === "ArrowLeft") {
+						selectSide(-1);
+						ev.preventDefault();
+					}
+					if (ev.key === "ArrowRight") {
+						selectSide(1);
+						ev.preventDefault();
+					}
+				}
 			}
-
-			this.manageText();
 		});
 	}
 
@@ -2081,7 +2115,6 @@ class PiepCMS {
 		this.update({ all: true });
 		this.setFocusNode(undefined);
 		this.initHistory();
-		this.manageText();
 	}
 
 	fixMigrations() {
@@ -2211,11 +2244,7 @@ class PiepCMS {
 	}
 
 	manageText() {
-		// if (!this.content_active) {
-		// 	return;
-		// }
-		// removes empty textables that are not focused btw
-		// also merges textables that are similar and next to each other
+		// kept separate cause it's recursive? maybe it should't be... but it works!
 
 		let remove_vids = [];
 		/**
@@ -2291,6 +2320,8 @@ class PiepCMS {
 	}
 
 	preRecreateDom() {
+		this.manageText();
+
 		/** @type {number[]} */
 		const remove_vids = [];
 
@@ -2980,6 +3011,10 @@ class PiepCMS {
 		return this.getVNodeDataById(this.focus_node_vid);
 	}
 
+	getFocusNode() {
+		return this.getNode(this.focus_node_vid);
+	}
+
 	/**
 	 *
 	 * @param {number} vid
@@ -3546,7 +3581,7 @@ class PiepCMS {
 					this.showFloatMenuToNode(highest_vid);
 				}
 			} else {
-				const node = this.getNode(this.focus_node_vid);
+				const node = this.getFocusNode();
 				if (!(node && node.classList.contains("textable"))) {
 					this.showFloatMenuToNode(this.focus_node_vid);
 				}
@@ -3809,7 +3844,6 @@ class PiepCMS {
 	}
 	textSelectionChange() {
 		this.last_text_selection = cloneObject(this.text_selection);
-		this.manageText();
 		if (this.text_selection && this.text_selection.focus_vid !== this.focus_node_vid) {
 			this.setFocusNode(this.text_selection.focus_vid);
 		}
@@ -3868,7 +3902,7 @@ class PiepCMS {
 
 		let layout_html = "";
 
-		const edit_node = this.getNode(this.focus_node_vid);
+		const edit_node = this.getFocusNode();
 		const v_node_data = this.getFocusVNodeData();
 
 		const can_edit_layout = edit_node && !edit_node.classList.contains("textable");
@@ -5290,7 +5324,7 @@ class PiepCMS {
 		/** @type {cmsEditableGroupEnum} */
 		const type_group = this.filter_blc_menu._get_value();
 
-		const focus_node = this.getNode(this.focus_node_vid);
+		const focus_node = this.getFocusNode();
 		const v_node = focus_node ? this.getVNodeById(+focus_node.dataset.vid) : undefined;
 
 		const has_selection = !!v_node;
