@@ -271,6 +271,8 @@ function getEditableCellHtml(dt, column) {
 		cell_html += html`<input class="field small" data-bind="${column.key}" />`;
 	} else if (column.editable === "color") {
 		cell_html += html`<color-picker class="small" data-bind="${column.key}"></color-picker>`;
+	} else if (column.editable === "date") {
+		cell_html += html`<input class="field small default_datepicker" data-bind="${column.key}" inputmode="numeric" />`;
 	} else if (column.editable === "select") {
 		let options = "";
 		let number = "";

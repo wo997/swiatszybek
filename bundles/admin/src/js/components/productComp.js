@@ -12,12 +12,15 @@
  *  net_price: number
  *  vat_id: number
  *  gross_price: number
+ *  discount_price: number
+ *  discount_untill: string
  *  stock: number
  *  is_necessary?: boolean
  *  weight: number
  *  length: number
  *  width: number
  *  height: number
+ *  variant_options?: any
  * }} DtProductData
  *
  * @typedef {{
@@ -181,6 +184,8 @@ function ProductComp(comp, parent, data = undefined) {
 				width: 0,
 				img_url: "",
 				name: "",
+				discount_price: 0,
+				discount_untill: "",
 			};
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
@@ -731,9 +736,8 @@ function ProductComp(comp, parent, data = undefined) {
 					if (data.product_list_view === "prices") {
 						comp._nodes.all_products._add_column({
 							key: "net_price",
-							label: "Cena Netto",
+							label: "Cena Netto (zł)",
 							width: "1",
-							sortable: true,
 							searchable: "number",
 							editable: "number",
 							batch_edit: true,
@@ -742,16 +746,14 @@ function ProductComp(comp, parent, data = undefined) {
 							key: "vat_id",
 							label: "VAT",
 							width: "1",
-							sortable: true,
 							editable: "select",
 							map_name: "vat",
 							batch_edit: true,
 						});
 						comp._nodes.all_products._add_column({
 							key: "gross_price",
-							label: "Cena Brutto",
+							label: "Cena Brutto (zł)",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -761,12 +763,31 @@ function ProductComp(comp, parent, data = undefined) {
 						comp._nodes.all_products._remove_column("gross_price");
 					}
 
+					if (data.product_list_view === "discount") {
+						comp._nodes.all_products._add_column({
+							key: "discount_price",
+							label: "Rabatowa Cena Brutto (zł)",
+							width: "1",
+							editable: "number",
+							batch_edit: true,
+						});
+						comp._nodes.all_products._add_column({
+							key: "discount_untill",
+							label: "Rabat do",
+							width: "1",
+							editable: "date",
+							batch_edit: true,
+						});
+					} else {
+						comp._nodes.all_products._remove_column("discount_price");
+						comp._nodes.all_products._remove_column("discount_untill");
+					}
+
 					if (data.product_list_view === "stock") {
 						comp._nodes.all_products._add_column({
 							key: "stock",
 							label: "Stan magazynowy",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -779,7 +800,6 @@ function ProductComp(comp, parent, data = undefined) {
 							key: "weight",
 							label: "Waga (g)",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -787,7 +807,6 @@ function ProductComp(comp, parent, data = undefined) {
 							key: "length",
 							label: "Długość (cm)",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -795,7 +814,6 @@ function ProductComp(comp, parent, data = undefined) {
 							key: "width",
 							label: "Szerokość (cm)",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -803,7 +821,6 @@ function ProductComp(comp, parent, data = undefined) {
 							key: "height",
 							label: "Wysokość (cm)",
 							width: "1",
-							sortable: true,
 							editable: "number",
 							batch_edit: true,
 						});
@@ -1024,7 +1041,7 @@ function ProductComp(comp, parent, data = undefined) {
 						</div>
 						<div class="checkbox_area">
 							<p-checkbox data-value="discount"></p-checkbox>
-							<span> <i class="fas fa-percentage"></i> Zniżki </span>
+							<span> <i class="fas fa-percentage"></i> Rabaty </span>
 						</div>
 						<div class="checkbox_area">
 							<p-checkbox data-value="codes"></p-checkbox>
@@ -1141,6 +1158,7 @@ function ProductComp(comp, parent, data = undefined) {
 					return;
 				}
 
+				/** @type {DtProductData[]} */
 				const save_products = cloneObject(data.products_dt.dataset);
 				save_products.forEach((product) => {
 					product.variant_options = [];
@@ -1148,6 +1166,13 @@ function ProductComp(comp, parent, data = undefined) {
 						const vkey = getVariantKeyFromId(v.product_variant_id);
 						product.variant_options.push(product[vkey]);
 						delete product[vkey];
+
+						if (!product.discount_price) {
+							product.discount_price = null;
+						}
+						if (!product.discount_untill || product.discount_untill === "0000-00-00") {
+							product.discount_untill = null;
+						}
 					});
 				});
 

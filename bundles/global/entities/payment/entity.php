@@ -11,3 +11,5 @@ EntityManager::register("payment", [
         "paid_at" => ["type" => "string"],
     ],
 ]);
+
+EntityManager::oneToOne("payment", "shop_order", "shop_order");

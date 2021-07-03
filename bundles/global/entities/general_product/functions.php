@@ -400,6 +400,8 @@ function getGeneralProductDTProducts($general_product_id)
             "height",
             "product_id",
             "variant_options",
+            "discount_price",
+            "discount_untill"
         ]);
     }
     return $pd;

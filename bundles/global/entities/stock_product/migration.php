@@ -7,6 +7,6 @@ DB::createTable("stock_product", [
     ["name" => "gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
     ["name" => "vat", "type" => "DECIMAL(10,2)"],
     ["name" => "dimension_qty", "type" => "INT"],
-    ["name" => "shop_order_id", "type" => "INT", "index" => "index", "null" => true],
+    //["name" => "shop_order_id", "type" => "INT", "index" => "index", "null" => true],
     ["name" => "delivered_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
 ]);

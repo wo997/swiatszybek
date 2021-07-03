@@ -17,6 +17,8 @@ EntityManager::register("carrier", [
     ],
 ]);
 
+EntityManager::oneToOne("carrier", "delivery_type", "delivery_type");
+
 EventListener::register("before_save_carrier_entity", function ($params) {
     /** @var Entity Carrier */
     $carrier = $params["obj"];

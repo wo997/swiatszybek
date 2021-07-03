@@ -3,11 +3,18 @@
 DB::createTable("product", [
     ["name" => "product_id", "type" => "INT", "index" => "primary"],
     ["name" => "general_product_id", "type" => "INT", "index" => "index", "null" => true],
+
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
-    ["name" => "gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
     ["name" => "vat_id", "type" => "INT"],
+    ["name" => "gross_price", "type" => "DECIMAL(10,2)"],
+
+    ["name" => "discount_price", "type" => "DECIMAL(10,2)", "null" => true],
+    ["name" => "discount_untill", "type" => "DATE", "null" => true],
+
     ["name" => "active", "type" => "TINYINT(1)"],
+
     ["name" => "stock", "type" => "INT"],
+
     ["name" => "weight", "type" => "DECIMAL(10,2)"],
     ["name" => "length", "type" => "DECIMAL(10,2)"],
     ["name" => "width", "type" => "DECIMAL(10,2)"],
@@ -22,4 +29,7 @@ DB::createTable("product", [
     ["name" => "__options_json", "type" => "TEXT"],
     ["name" => "__url", "type" => "VARCHAR(255)"],
     ["name" => "compare_sales", "type" => "INT", "index" => "index"],
+
+    ["name" => "__current_gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
+
 ]);

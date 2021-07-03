@@ -42,6 +42,10 @@ EntityManager::oneToOne("shop_order", "parcel_locker", "parcel_locker");
 
 EntityManager::oneToOne("shop_order", "status", "order_status");
 
+EntityManager::oneToOne("shop_order", "carrier", "carrier");
+
+EntityManager::oneToOne("shop_order", "delivery_type", "delivery_type");
+
 EventListener::register("before_save_shop_order_entity", function ($params) {
     /** @var Entity ShopOrder */
     $shop_order = $params["obj"];

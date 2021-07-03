@@ -22,3 +22,5 @@ EntityManager::register("general_product", [
 EntityManager::manyToMany("comment", "product_variant_option", "comment_to_product_variant_option");
 
 EntityManager::oneToMany("general_product", "comments", "comment");
+
+EntityManager::oneToMany("comment", "user", "user");

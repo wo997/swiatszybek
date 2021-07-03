@@ -3,7 +3,6 @@
 // things that should be here before the app is installed
 
 include_once "bundles/global/helpers/debug.php";
-include_once "bundles/global/helpers/general.php";
 
 include_once "bundles/global/helpers/string.php";
 include_once "bundles/global/helpers/date.php";

@@ -5,6 +5,8 @@ EntityManager::register("product", [
         "general_product_id" => ["type" => "number"],
         "net_price" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
+        "discount_price" => ["type" => "number"],
+        "discount_untill" => ["type" => "string"],
         "vat_id" => ["type" => "number"],
         "active" => ["type" => "number"],
         "stock" => ["type" => "number"],
@@ -22,6 +24,8 @@ EntityManager::register("product", [
         "__options_json" => ["type" => "string"],
         "__url" => ["type" => "string"],
         "compare_sales" => ["type" => "number"],
+
+        "__current_gross_price" => ["type" => "number"],
     ],
 ]);
 
@@ -66,8 +70,12 @@ EventListener::register("before_save_product_entity", function ($params) {
             $product->setProp("__options_json", $options ? json_encode($options) : "{}");
         }
     } else {
-        //setProductDefaults($product_id);
+        setProductDefaults($product_id);
     }
+
+    $discount_price = $product->getProp("discount_price");
+    $gross_price = $product->getProp("gross_price");
+    $product->setProp("__current_gross_price", $discount_price !== NULL ? $discount_price : $gross_price);
 });
 
 EventListener::register("set_product_entity_stock", function ($params) {

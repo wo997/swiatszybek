@@ -375,9 +375,17 @@ class Entity
                     $val = EntityManager::setManyToManyEntities($this, $prop_name, $other_entity_name, $val);
                 }
             }
-        } else if ($prop_type && EntityManager::getEntityData($prop_type)) {
-            $relation_data = def($prop_type, ["parents", $this->name], null);
-            $val = EntityManager::setOneToOneEntity($this, $prop_name, $prop_type, $val, $relation_data);
+        } else if ($prop_type) {
+            $child_entity_data = EntityManager::getEntityData($prop_type);
+            if ($child_entity_data) {
+                $relation_data = def($child_entity_data, ["parents", $this->name], null);
+                if ($relation_data) {
+                    $val = EntityManager::setOneToOneEntity($this, $prop_name, $prop_type, $val, $relation_data);
+                } else {
+                    // just for debugging if we skipped some code ;)
+                    //var_dump([$this->getName(), $prop_type]);
+                }
+            }
         }
 
         if ($quiet === false) {
