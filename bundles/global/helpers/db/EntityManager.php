@@ -257,7 +257,7 @@ class EntityManager
                 $child_id = intval(def($child_props, $child_id_column, -1));
                 $child_props[$obj->getIdColumn()] = $obj->getId();
                 if ($child_id == -1) {
-                    $child = self::getEntity($child_entity_name, $child_props, true);
+                    $child = self::getEntity($child_entity_name, $child_props);
                     if ($child) {
                         $children[] = $child;
                     }
@@ -273,7 +273,7 @@ class EntityManager
             $child_props = def($children_with_id_props, $curr_child->getId(), null);
 
             if ($child_props) {
-                $curr_child->setProps($child_props, true);
+                $curr_child->setProps($child_props);
                 $children[] = $curr_child;
             } else {
                 if ($relation_data["parent_required"]) {
@@ -393,7 +393,7 @@ class EntityManager
             $other_entity_props = def($other_entities_with_id_props, $other_id, null);
 
             if ($other_entity_props) {
-                $curr_other_entity->setProps($other_entity_props, true);
+                $curr_other_entity->setProps($other_entity_props);
                 $other_entities[] = $curr_other_entity;
             } else {
                 $curr_other_entity->willUnlinkFromEntity($obj->getGlobalId());

@@ -19,6 +19,7 @@
 				product_list_count: 30,
 				product_list_layout: "slider",
 				product_list_display_what: "custom",
+				product_list_only_discount: "0",
 			},
 		},
 		rerender_on: [
@@ -26,6 +27,7 @@
 			"settings.product_list_layout",
 			"settings.product_list_sort",
 			"settings.product_list_category_ids_csv",
+			"settings.product_list_only_discount",
 		],
 		backend_render: true,
 	});
@@ -74,6 +76,11 @@
 					<option value="ceny-rosnaco">Ceny rosnąco</option>
 					<option value="ceny-malejaco">Ceny malejąco</option>
 				</select>
+
+				<div class="label">
+					<span class="bold" style="color:var(--clr_buynow)">Tylko PROMOCJE</span>
+				</div>
+				<p-checkbox data-blc_prop="settings.product_list_only_discount"></p-checkbox>
 
 				<div class="label">
 					Kategorie produktów

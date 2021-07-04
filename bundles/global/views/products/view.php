@@ -474,6 +474,11 @@ foreach ($feature_general_product_count as $x) {
                         <i class="fas fa-search"></i>
                     </div>
                     <?= traverseFeatures() ?>
+                    <div class="label">
+                        <!-- <span class="bold" style="color:var(--clr_buynow)">Promocje</span><span class="normal"> - produkty ze zniżką</span> -->
+                        <span class="bold" style="color:var(--clr_buynow)">Tylko PROMOCJE</span>
+                    </div>
+                    <p-checkbox class="only_discount"></p-checkbox>
                 </ul>
                 <div class="prfbf"></div>
             </div>

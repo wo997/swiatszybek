@@ -210,6 +210,12 @@ domload(() => {
 });
 
 domload(() => {
+	$(".only_discount").addEventListener("change", () => {
+		mainSearchProducts();
+	});
+});
+
+domload(() => {
 	search_order_input = $(".search_order");
 	search_order_input.addEventListener("change", () => {
 		product_list_pagination_comp._data.page_id = 0;
@@ -542,6 +548,10 @@ function mainSearchProducts(force = false) {
 	const search_order_val = search_order_input._get_value();
 	if (search_order_val.trim() !== default_search_order) {
 		url_params.append("sortuj", search_order_val);
+	}
+
+	if ($(".only_discount")._get_value()) {
+		url_params.append("promocje", "1");
 	}
 
 	if (options_data.length > 0) {

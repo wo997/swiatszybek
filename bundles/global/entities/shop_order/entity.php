@@ -241,18 +241,18 @@ EventListener::register("after_save_shop_order_entity", function ($params) {
         $email_body .= "<div>Zapraszamy na <a href=\"" . SITE_URL . "\" style=\"{link}\">kolejne zakupy</a>.</div>\n";
     }
 
-    // if ($email_body && $email_title) {
-    //     $company_data = getSetting(["general", "company"], "");
-    //     $emails = [$main_address->getProp("email"), $company_data["main_email"]];
+    if ($email_body && $email_title) {
+        $company_data = getSetting(["general", "company"], "");
+        $emails = [$main_address->getProp("email"), $company_data["main_email"]];
 
-    //     foreach ($emails as $email) {
-    //         sendDefaultEmail($email, $email_body, $email_title, $main_address->getProp("__display_name"));
-    //     }
-    // }
+        foreach ($emails as $email) {
+            sendDefaultEmail($email, $email_body, $email_title, $main_address->getProp("__display_name"));
+        }
+    }
 
-    // if ($status_id === 6) {
-    //     // hey this should be added in przelewy24 module?
-    //     // TODO: just do it
-    //     Przelewy24::get()->refund($shop_order_id);
-    // }
+    if ($status_id === 6) {
+        // hey this should be added in przelewy24 module?
+        // TODO: just do it
+        Przelewy24::get()->refund($shop_order_id);
+    }
 });

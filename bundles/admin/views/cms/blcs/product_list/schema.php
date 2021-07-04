@@ -8,6 +8,8 @@ PiepCMSManager::registerModule([
         $layout = def($params, ["v_node", "settings", "product_list_layout"], "slider");
         $display_what = def($params, ["v_node", "settings", "product_list_display_what"], "custom");
         $count = intval(def($params, ["v_node", "settings", "product_list_count"], ""));
+        $only_discount = intval(def($params, ["v_node", "settings", "product_list_only_discount"], ""));
+
         if (!$count) {
             $count = 30;
         }
@@ -31,6 +33,7 @@ PiepCMSManager::registerModule([
                 "row_count" => $count,
                 "search_order" => $sort,
                 "layout" => $layout,
+                "only_discount" => $only_discount,
             ];
 
             if ($category_ids_csv) {
