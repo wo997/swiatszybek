@@ -2320,8 +2320,6 @@ class PiepCMS {
 	}
 
 	preRecreateDom() {
-		this.manageText();
-
 		/** @type {number[]} */
 		const remove_vids = [];
 
@@ -2805,6 +2803,7 @@ class PiepCMS {
 	 * }} options
 	 */
 	recreateDom(options = {}) {
+		this.manageText();
 		this.preRecreateDom();
 
 		/** @type {number[]} */
