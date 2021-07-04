@@ -76,8 +76,8 @@ $admin_navigations_tree = [
     [
         "title" => '<i class="fas fa-dollar-sign"></i> Finanse',
         "sub" => [
-            ["url" => "/sprzedaz", "title" => '<i class="fas fa-arrow-up"></i> Sprzedaż'],
-            ["url" => "/zakup", "title" => '<i class="fas fa-arrow-down"></i> Zakup'],
+            ["url" => "/sprzedaz", "title" => '<i class="fas fa-arrow-alt-circle-up"></i> Sprzedaż'],
+            ["url" => "/wydatki", "title" => '<i class="fas fa-arrow-alt-circle-down"></i> Wydatki'],
             ["url" => "/stawki-vat", "title" => '<i class="fas fa-percent"></i> Stawki VAT'],
         ],
     ],
