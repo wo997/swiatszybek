@@ -36,6 +36,15 @@ function SelectFileModalComp(comp, parent, data = undefined) {
 		});
 	};
 
+	window.addEventListener("modal_hidden", (event) => {
+		// @ts-ignore
+		if (event.detail.node.id === "selectFile") {
+			comp._data.file_manager.pagination_data.page_id = 0;
+			comp._data.file_manager.quick_search = "";
+			comp._render();
+		}
+	});
+
 	comp._set_data = (data, options = {}) => {
 		setCompData(comp, data, {
 			...options,
@@ -49,9 +58,11 @@ function SelectFileModalComp(comp, parent, data = undefined) {
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<file-manager-comp data-node="{${comp._nodes.file_manager}}" data-bind="{${data.file_manager}}"></file-manager-comp>
 			</div>
+			<div class="pagination_wrapper pa1"></div>
 		`,
 		ready: () => {
 			comp._child(".toolbar_wrapper").appendChild(comp._nodes.file_manager._child(".custom_toolbar"));
+			comp._child(".pagination_wrapper").appendChild(comp._nodes.file_manager._child("pagination-comp"));
 			comp
 				._child(".toolbar_wrapper .custom_toolbar")
 				.insertAdjacentHTML(

@@ -1090,7 +1090,7 @@ function ProductComp(comp, parent, data = undefined) {
 					comp._render({ freeze: true });
 				};
 				select_file_modal._render();
-				select_file_modal._show();
+				select_file_modal._show({ source: comp._nodes.add_image_btn });
 			});
 
 			comp._nodes.add_variant_btn.addEventListener("click", () => {
