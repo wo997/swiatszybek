@@ -5636,10 +5636,18 @@ class PiepCMS {
 			return;
 		}
 
+		const focus_text_container = focus_node._parent();
+
 		const len = v_node.text === undefined ? 1 : v_node.text.length;
 		const edge = dir === 1 ? focus_offset >= len : focus_offset <= 0;
 		if (edge) {
-			const next_textable = this.getDeepSibling(focus_node, ".textable", dir);
+			let next_textable = focus_node;
+			while (true) {
+				next_textable = this.getDeepSibling(next_textable, ".textable:not(.text_container)", dir);
+				if (!next_textable || !next_textable._parent(".text_container")._parent(focus_text_container, { skip: 1 })) {
+					break;
+				}
+			}
 			if (next_textable) {
 				this.text_selection.focus_vid = +next_textable.dataset.vid;
 				this.text_selection.focus_offset = dir === 1 ? 0 : next_textable.textContent.length;
