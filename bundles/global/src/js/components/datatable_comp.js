@@ -233,7 +233,7 @@ function DatatableComp(comp, parent, data) {
 	};
 
 	comp._add_column = (column, index = undefined) => {
-		if (column.name && comp._data.columns.find((c) => c.name === name)) {
+		if (column.name && comp._data.columns.find((c) => c.name === column.name)) {
 			return;
 		}
 		if (comp._data.columns.find((c) => c.key === column.key)) {

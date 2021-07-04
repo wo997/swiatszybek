@@ -409,7 +409,7 @@ function ProductComp(comp, parent, data = undefined) {
 				} else {
 					comp._data.variants.push(variant);
 				}
-				comp._render({ freeze: true });
+				comp._render();
 				hideLoader();
 
 				if (options.callback) {
@@ -1095,7 +1095,7 @@ function ProductComp(comp, parent, data = undefined) {
 				const select_file_modal = getSelectFileModal();
 				select_file_modal._data.file_manager.select_callback = (src) => {
 					data.images.push({ img_url: src, product_img_id: -1, selected_product_feature_options: [] });
-					comp._render({ freeze: true });
+					comp._render();
 				};
 				select_file_modal._render();
 				select_file_modal._show({ source: comp._nodes.add_image_btn });
@@ -1112,7 +1112,7 @@ function ProductComp(comp, parent, data = undefined) {
 						category_ids: comp._data.category_ids,
 						close_callback: (category_ids) => {
 							comp._data.category_ids = category_ids;
-							comp._render({ freeze: true });
+							comp._render();
 						},
 					},
 					{ source: comp._nodes.add_category_btn }
@@ -1301,11 +1301,11 @@ function ProductComp(comp, parent, data = undefined) {
 			});
 
 			window.addEventListener("product_features_changed", () => {
-				comp._render({ force_render: true, freeze: true });
+				comp._render({ force_render: true });
 			});
 
 			window.addEventListener("product_categories_changed", () => {
-				comp._render({ force_render: true, freeze: true });
+				comp._render({ force_render: true });
 			});
 		},
 	});
