@@ -56,6 +56,19 @@ class EntityManager
     }
 
     /**
+     * addObject
+     *
+     * @param  Entity $obj
+     * @return void
+     */
+    public static function addObject($obj)
+    {
+        $global_id = self::getObjectGlobalId($obj->getName(), $obj->getId());
+        $obj->setGlobalId($global_id);
+        self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
+    }
+
+    /**
      * addWarmupObject
      *
      * @param  Entity $entity
@@ -101,26 +114,21 @@ class EntityManager
 
         if (intval($id) >= 0) {
             $global_id = self::getObjectGlobalId($name, $id);
-            if (isset(self::$objects[$global_id])) {
-                /** @var Entity */
-                $entity = self::$objects[$global_id];
+            /** @var Entity */
+            $entity = def(self::$objects, $global_id);
+            if ($entity) {
                 $entity->setProps($props, $only_new);
-
                 return $entity;
             }
         }
 
-
         try {
             $obj = new Entity($name, $props);
         } catch (Exception $e) {
-            //var_dump($e);
-            //die;
+            // var_dump($e);
+            // die;
             return false;
         }
-        $global_id = self::getObjectGlobalId($name, $obj->getId());
-        $obj->setGlobalId($global_id);
-        self::$objects[$global_id] = $obj; // u can restore the data yay :) not used yet bro, think about it
 
         return $obj;
     }
@@ -265,7 +273,7 @@ class EntityManager
             $child_props = def($children_with_id_props, $curr_child->getId(), null);
 
             if ($child_props) {
-                $curr_child->setProps($child_props);
+                $curr_child->setProps($child_props, true);
                 $children[] = $curr_child;
             } else {
                 if ($relation_data["parent_required"]) {
@@ -385,7 +393,7 @@ class EntityManager
             $other_entity_props = def($other_entities_with_id_props, $other_id, null);
 
             if ($other_entity_props) {
-                $curr_other_entity->setProps($other_entity_props);
+                $curr_other_entity->setProps($other_entity_props, true);
                 $other_entities[] = $curr_other_entity;
             } else {
                 $curr_other_entity->willUnlinkFromEntity($obj->getGlobalId());

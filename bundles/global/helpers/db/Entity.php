@@ -79,10 +79,12 @@ class Entity
             if (!$this->curr_props) {
                 throw new Exception("Entity does not exist in the DB");
             }
-            $this->setProps(def($this->curr_props, []));
+            $this->setProps(def($this->curr_props, []), true);
             $this->curr_meta = $this->meta;
             $this->is_new = false;
         }
+
+        EntityManager::addObject($this);
 
         $this->ready = true;
         $this->setProps($props);
@@ -255,7 +257,7 @@ class Entity
                 }
                 $query = rtrim($query, ",");
                 $query .= " WHERE " . $this->id_column . "=" . $this->getId();
-                //var_dump([$query, array_values($changed_props)]);
+                // var_dump([$query, array_values($changed_props)]);
                 DB::execute($query, array_values($changed_props));
                 //return true;
 
@@ -403,6 +405,9 @@ class Entity
 
     public function setProps($arr, $only_new = false)
     {
+        // if ($this->getName() === "shop_order") {
+        //     var_dump([$only_new, $arr]);
+        // }
         if (!is_array($arr)) {
             // something silly just happened
             return;
