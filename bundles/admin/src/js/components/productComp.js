@@ -1056,7 +1056,7 @@ function ProductComp(comp, parent, data = undefined) {
 					<div data-node="{${comp._nodes.dt_descriptions}}" class="inline mt2 mb2">
 						<div data-tab="active" class="user_info">
 							<i class="fas fa-info-circle"></i> Określ, które produkty należą do oferty sklepu.<br />Ważne! Klient nie będzie mógł
-							skorzystać z powiadomienia o dostępności produktu jeśli ten jest nieaktywny. W takim przypadku należy ustawić produkt jako
+							skorzystać z powiadomienia o dostępności produktu jeśli ten jest nieaktywny.<br>W takim przypadku należy ustawić produkt jako
 							aktywny, pomimo braków w magazynie.
 						</div>
 						<div data-tab="weight_dimensions" class="user_info">
