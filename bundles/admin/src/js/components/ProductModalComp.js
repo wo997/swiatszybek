@@ -239,7 +239,7 @@ function ProductModalComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="mta pt2 case_can_delete" style="text-align: right;">
-					<button class="btn error" disabled data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
+					<button class="btn error" data-node="{${comp._nodes.delete_btn}}">Usuń produkt <i class="fas fa-trash"></i></button>
 				</div>
 			</div>
 		`,
@@ -289,21 +289,21 @@ function ProductModalComp(comp, parent, data = undefined) {
 				});
 			});
 
-			// comp._nodes.delete_btn.addEventListener("click", () => {
-			// 	if (!confirm("Czy aby na pewno chcesz usunąć produkt?")) {
-			// 		return;
-			// 	}
+			comp._nodes.delete_btn.addEventListener("click", () => {
+				if (!confirm("Czy aby na pewno chcesz usunąć produkt?")) {
+					return;
+				}
 
-			// 	showLoader();
-			// 	xhr({
-			// 		url: `${STATIC_URLS["ADMIN"]}/product/delete/${comp._data.product_id}`,
-			// 		success: (res) => {
-			// 			hideLoader();
-			// 			//refreshProducts();
-			// 			hideModal("ProductModal");
-			// 		},
-			// 	});
-			// });
+				showLoader();
+				xhr({
+					url: `${STATIC_URLS["ADMIN"]}/product/delete/${comp._data.product_id}`,
+					success: (res) => {
+						hideLoader();
+						window.dispatchEvent(new CustomEvent("products_changed"));
+						hideModal("ProductModal");
+					},
+				});
+			});
 		},
 	});
 }

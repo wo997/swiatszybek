@@ -434,7 +434,7 @@ class Entity
      */
     public function getProp($prop_name)
     {
-        if ($this->shouldFetchProp($prop_name)) {
+        if (!isset($this->props_set[$prop_name])) {
             $prop_type = def(EntityManager::getEntityData($this->name), ["props", $prop_name, "type"]);
             if ($prop_type && endsWith($prop_type, "[]")) {
                 $other_entity_name = substr($prop_type, 0, -2);
@@ -453,6 +453,7 @@ class Entity
 
             if (isset($set)) {
                 $this->dangerouslySetProp($prop_name, $set);
+                $this->curr_props[$prop_name] = $set;
             }
         }
 
@@ -615,16 +616,6 @@ class Entity
             $row_props[$prop] = $val;
         }
         return $row_props;
-    }
-
-    private function shouldFetchProp($prop_name)
-    {
-        if (in_array($prop_name, $this->fetched)) {
-            return false;
-        }
-
-        $this->fetched[] = $prop_name;
-        return true;
     }
 
     public function getIdColumn()

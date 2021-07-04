@@ -136,7 +136,9 @@ class EntityManager
     public static function saveAll()
     {
         array_push(self::$objects, ...self::$warmup_objects);
+        // echo ">>>>>>>>>>";
         foreach (self::$objects as $object) {
+            // echo $object->getGlobalId() . "<br>";
             $object->save();
         }
 
@@ -376,7 +378,7 @@ class EntityManager
                 $other_entity_id = intval(def($other_entity_props, $other_entity_id_column, -1));
                 $other_entity_props[$obj->getIdColumn()] = $obj->getId();
                 if ($other_entity_id == -1) {
-                    $other_entity = self::getEntity($other_entity_name, $other_entity_props, true);
+                    $other_entity = self::getEntity($other_entity_name, $other_entity_props);
                     if ($other_entity) {
                         $other_entities[] = $other_entity;
                     }
@@ -417,7 +419,7 @@ class EntityManager
                 continue;
             }
 
-            $other_entity = self::getEntity($other_entity_name, $other_entity_props, true);
+            $other_entity = self::getEntity($other_entity_name, $other_entity_props);
             if ($other_entity) {
                 $other_entities[] = $other_entity;
             }
@@ -581,7 +583,7 @@ class EntityManager
                 continue;
             }
 
-            $other_id = $other_obj->getProp($other_entity_id_column);
+            $other_id = $other_obj->getId();
             if ($other_id > 0) { // always but prevents bugs
                 $ids[] = $other_id;
             }

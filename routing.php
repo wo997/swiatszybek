@@ -51,18 +51,34 @@ $admin_navigations_tree = [
             ["url" => "/produkty-w-sklepie", "title" => '<i class="fas fa-store"></i> Produkty w sklepie'],
             ["url" => "/produkty-w-sklepie?dodaj", "title" => '<i class="fas fa-plus-circle"></i> Dodaj produkt do sklepu'],
             ["url" => "/wszystkie-produkty", "title" => '<i class="fas fa-cubes"></i> Wszystkie produkty'],
+            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
             ["url" => "/produkt"/*, "title" => '<i class="fas fa-cube"></i> Edycja produktu'*/],
             ["url" => "/kategorie-produktow", "title" => '<i class="fas fa-folder-open"></i> Kategorie'],
             ["url" => "/cechy-produktow", "title" => '<i class="fas fa-star"></i> Cechy'],
-            ["url" => "/stawki-vat", "title" => '<i class="fas fa-percent"></i> Stawki VAT'],
         ],
     ],
     [
-        "title" => '<i class="fas fa-cube"></i> Hajsy itd nie wiem',
+        "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
         "sub" => [
-            ["url" => "/magazyn", "title" => '<i class="fas fa-list-ol"></i> Magazyn'],
+            ["url" => "/strony", "title" => '<i class="fas fa-file-alt pages_icon_1"></i> <i class="fas fa-file-alt pages_icon_2"></i> Wszystkie strony'],
+            ["url" => "/strony?utworz", "title" => '<i class="fas fa-plus-circle"></i> Utwórz stronę'],
+            ["url" => "/szablony", "title" => '<i class="fas fa-pencil-ruler"></i> Szablony'],
+            //["url" => "/strona", "title" => '<i class="fas fa-file-alt"></i> Strona'],
+            ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
+            ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
+            ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
+            //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
+            ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
+            ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-paint-brush"></i> Ustawienia motywu'],
+            ["url" => "/dodatkowe-skrypty", "title" => '<i class="fas fa-code"></i> Dodatkowe skrypty'],
+        ]
+    ],
+    [
+        "title" => '<i class="fas fa-dollar-sign"></i> Finanse',
+        "sub" => [
             ["url" => "/sprzedaz", "title" => '<i class="fas fa-arrow-up"></i> Sprzedaż'],
             ["url" => "/zakup", "title" => '<i class="fas fa-arrow-down"></i> Zakup'],
+            ["url" => "/stawki-vat", "title" => '<i class="fas fa-percent"></i> Stawki VAT'],
         ],
     ],
     [
@@ -92,24 +108,7 @@ $admin_navigations_tree = [
             ["url" => "/integracje-wysylek", "title" => '<i class="fas fa-key"></i> Integracje wysyłek'],
         ]
     ],
-
     ["url" => "/dane-firmy", "title" => '<i class="fas fa-building"></i> Dane firmy'],
-    [
-        "title" => '<i class="fas fa-file-alt"></i> Treść / Wygląd',
-        "sub" => [
-            ["url" => "/strony", "title" => '<i class="fas fa-file-alt pages_icon_1"></i> <i class="fas fa-file-alt pages_icon_2"></i> Wszystkie strony'],
-            ["url" => "/strony?utworz", "title" => '<i class="fas fa-plus-circle"></i> Utwórz stronę'],
-            ["url" => "/szablony", "title" => '<i class="fas fa-pencil-ruler"></i> Szablony'],
-            //["url" => "/strona", "title" => '<i class="fas fa-file-alt"></i> Strona'],
-            ["url" => "/menu-glowne", "title" => '<i class="fas fa-bars"></i> Menu główne'],
-            ["url" => "/pliki-zdjecia", "title" => '<i class="fas fa-images"></i> Pliki / Zdjęcia'],
-            ["url" => "/pliki-zdjecia?przeslij", "title" => '<i class="fas fa-file-upload"></i> Prześlij plik'],
-            //["url" => "/stopka", "title" => '<i class="fas fa-window-maximize" style="transform:rotate(180deg)"></i> Stopka'],
-            ["url" => "/logo-ikony", "title" => '<i class="fas fa-star"></i> Logo / Ikony'],
-            ["url" => "/ustawienia-motywu", "title" => '<i class="fas fa-paint-brush"></i> Ustawienia motywu'],
-            ["url" => "/dodatkowe-skrypty", "title" => '<i class="fas fa-code"></i> Dodatkowe skrypty'],
-        ]
-    ],
     ["url" => "/zaawansowane", "title" => '<i class="fas fa-cog"></i> Zaawansowane'],
     //["url" => "/moduly", "title" => '<i class="fas fa-puzzle-piece"></i> Moduły'],
     //["url" => "/maile", "title" => '<i class="fas fa-envelope"></i> Maile'],
