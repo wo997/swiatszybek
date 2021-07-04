@@ -31,5 +31,5 @@ DB::createTable("product", [
     ["name" => "compare_sales", "type" => "INT", "index" => "index"],
 
     ["name" => "__current_gross_price", "type" => "DECIMAL(10,2)", "index" => "index"],
-
+    ["name" => "__discount_percent", "type" => "TINYINT"],
 ]);

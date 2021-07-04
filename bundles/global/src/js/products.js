@@ -103,22 +103,22 @@ domload(() => {
 	}, 1000);
 });
 
-domload(() => {
-	const resize = () => {
-		$$(".product_list").forEach((e) => {
-			/** @type {number} */
-			let top;
-			e._direct_children()
-				.reverse()
-				.forEach((c) => {
-					//c.classList.toggle("first_row", c.offsetTop < 50);
-					if (top === undefined) {
-						top = c.offsetTop;
-					}
-					c.classList.toggle("last_row", c.offsetTop > top - 50);
-				});
-		});
-	};
-	window.addEventListener("resize", resize);
-	resize();
-});
+// domload(() => {
+// 	const resize = () => {
+// 		$$(".product_list").forEach((e) => {
+// 			/** @type {number} */
+// 			let top;
+// 			e._direct_children()
+// 				.reverse()
+// 				.forEach((c) => {
+// 					//c.classList.toggle("first_row", c.offsetTop < 50);
+// 					if (top === undefined) {
+// 						top = c.offsetTop;
+// 					}
+// 					c.classList.toggle("last_row", c.offsetTop > top - 50);
+// 				});
+// 		});
+// 	};
+// 	window.addEventListener("resize", resize);
+// 	resize();
+// });

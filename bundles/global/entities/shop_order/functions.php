@@ -104,7 +104,13 @@ function confirmOrder($shop_order_data)
         $shop_order->setProp("package_api_key", $fit_dim["api_key"]);
     }
 
-    $shop_order->setProp("ordered_products", $cart_data["products"]); // THESE FIELDS MUST BE THE SAME
+    $products_to_save = [];
+    foreach ($cart_data["products"] as $product) {
+        $product["gross_price"] = $product["__current_gross_price"];
+        $products_to_save[] = $product;
+    }
+
+    $shop_order->setProp("ordered_products", $products_to_save); // THESE FIELDS MUST BE THE SAME
 
     /** @var Entity[] OrderedProduct */
     $ordered_products = $shop_order->getProp("ordered_products");

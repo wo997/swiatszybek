@@ -26,6 +26,7 @@ EntityManager::register("product", [
         "compare_sales" => ["type" => "number"],
 
         "__current_gross_price" => ["type" => "number"],
+        "__discount_percent" => ["type" => "number"],
     ],
 ]);
 
@@ -75,7 +76,13 @@ EventListener::register("before_save_product_entity", function ($params) {
 
     $discount_price = $product->getProp("discount_price");
     $gross_price = $product->getProp("gross_price");
-    $product->setProp("__current_gross_price", $discount_price !== NULL ? $discount_price : $gross_price);
+    $__current_gross_price = $discount_price !== NULL ? $discount_price : $gross_price;
+    $__discount_percent = 0;
+    if (floatval($gross_price) > 0) {
+        $__discount_percent = (1 - $__current_gross_price / $gross_price) * 100;
+    }
+    $product->setProp("__current_gross_price", $__current_gross_price);
+    $product->setProp("__discount_percent", $__discount_percent);
 });
 
 EventListener::register("set_product_entity_stock", function ($params) {

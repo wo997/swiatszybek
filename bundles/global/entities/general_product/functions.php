@@ -227,6 +227,7 @@ function renderGeneralProductsList($params)
         "select" => "
         gp.general_product_id, gp.name, gp.__img_url, gp.__images_json, gp.__options_json, gp.__features_html,
         MIN(__current_gross_price) min_gross_price, MAX(__current_gross_price) max_gross_price, SUM(stock) as sum_stock,
+        MAX(__discount_percent) max_discount_percent,
         GROUP_CONCAT(DISTINCT ptvo.product_variant_option_id SEPARATOR ',') as product_variant_option_ids_csv,
         GROUP_CONCAT(DISTINCT pvotfo.product_feature_option_id SEPARATOR ',') as product_feature_option_ids_csv,
         COUNT(DISTINCT p.product_id) as product_count,
@@ -261,6 +262,7 @@ function renderGeneralProductsList($params)
         $sum_stock = $product["sum_stock"];
         $avg_rating = $product["__avg_rating"];
         $rating_count = $product["__rating_count"];
+        $max_discount_percent = $product["max_discount_percent"];
 
         // TODO: hey, isn't it cute anyway?
         $features_html = ""; // $layout !== "slider" ? $product["__features_html"] : "";
@@ -349,6 +351,9 @@ function renderGeneralProductsList($params)
                     <img data-src="<?= $img_url ?>" class="product_img wo997_img" alt="">
                 </div>
                 <h3 class="product_name check_tooltip"><?= $name ?></h3>
+                <?php if ($max_discount_percent > 0) : ?>
+                    <div class="product_discount">-<?= $max_discount_percent ?>%</div>
+                <?php endif ?>
             </a>
             <div class="product_row">
                 <span class="product_price pln"><?= $display_price ?></span>
