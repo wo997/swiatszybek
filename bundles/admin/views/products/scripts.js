@@ -69,7 +69,16 @@ domload(() => {
 					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
 				},
 			},
-			{ label: "Produkt", key: "__name", width: "1", sortable: true, searchable: "string" },
+			{
+				label: "Produkt",
+				key: "__name",
+				width: "1",
+				sortable: true,
+				searchable: "string",
+				render: (value, data) => {
+					return html`<a class="link edit_btn"> ${value} </a>`;
+				},
+			},
 			// {
 			// 	label: "W magazynie",
 			// 	key: "stock",
@@ -142,6 +151,8 @@ domload(() => {
 					name: data.name,
 					__img_url: data.__img_url,
 					__name: data.__name,
+					discount_price: data.discount_price,
+					discount_untill: data.discount_untill,
 				},
 				{ source: edit_btn }
 			);

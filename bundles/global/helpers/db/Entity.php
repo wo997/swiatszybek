@@ -7,6 +7,7 @@ class Entity
     private $global_id;
     private $props = []; // row props in DB
     private $fetched = []; // stores info of what relations that were fetched already
+    private $props_set = []; // because null wasn't enough
     private $curr_props = null; // in case the object existed in DB
     private $will_delete = false;
     private $parents = []; // map string name -> Entity
@@ -314,6 +315,7 @@ class Entity
      */
     public function dangerouslySetProp($prop_name, $val)
     {
+        $this->props_set[$prop_name] = true;
         $this->props[$prop_name] = $val;
     }
 
@@ -400,7 +402,7 @@ class Entity
             }
         }
 
-        $this->props[$prop_name] = $val;
+        $this->dangerouslySetProp($prop_name, $val);
     }
 
     public function setProps($arr, $only_new = false)
@@ -416,7 +418,7 @@ class Entity
             // if ($this->getProp($prop_name !== $val) {
             //     var_dump();
             // }
-            if ($only_new && $this->getProp($prop_name) !== null) {
+            if ($only_new && isset($this->props_set[$prop_name])) {
                 continue;
             }
 
@@ -450,8 +452,7 @@ class Entity
             }
 
             if (isset($set)) {
-                $this->props[$prop_name] = $set;
-                $this->curr_props[$prop_name] = $set;
+                $this->dangerouslySetProp($prop_name, $set);
             }
         }
 

@@ -34,15 +34,18 @@ function ProductModalComp(comp, parent, data = undefined) {
 		weight: 0,
 		width: 0,
 		img_url: "",
-		name: "",
 		__img_url: "",
+		name: "",
 		__name: "",
+		discount_price: null,
+		discount_untill: null,
 	};
 	if (data === undefined) {
 		data = defa;
 	}
 
 	comp._show = (product_data, options = {}) => {
+		console.log(product_data);
 		if (product_data === undefined) {
 			comp._data = defa;
 		} else {
@@ -187,6 +190,21 @@ function ProductModalComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
+					<div class="desktop_row">
+						<div>
+							<div class="label">Rabatowa Cena Brutto</div>
+							<div class="glue_children">
+								<input class="field" data-bind="{${data.discount_price}}" />
+								<div class="field_desc">zł</div>
+							</div>
+						</div>
+
+						<div>
+							<div class="label">Rabat do</div>
+							<input class="field default_datepicker" data-bind="{${data.discount_untill}}" />
+						</div>
+					</div>
+
 					<div class="label">Waga</div>
 					<div class="glue_children">
 						<input class="field number" data-bind="{${data.weight}}" />
@@ -246,7 +264,16 @@ function ProductModalComp(comp, parent, data = undefined) {
 					width: data.width,
 					img_url: data.img_url,
 					name: data.name,
+					discount_price: data.discount_price,
+					discount_untill: data.discount_untill,
 				};
+
+				if (!product.discount_price) {
+					product.discount_price = null;
+				}
+				if (!product.discount_untill || product.discount_untill === "0000-00-00") {
+					product.discount_untill = null;
+				}
 
 				showLoader();
 				xhr({

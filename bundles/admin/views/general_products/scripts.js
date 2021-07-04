@@ -56,7 +56,19 @@ domload(() => {
 					html`<img data-src="${value}" class="wo997_img" style="width:48px;margin:-4px 0;height:48px;object-fit:contain" />`,
 				flex: true,
 			},
-			{ label: "Produkt", key: "name", width: "1", sortable: true, searchable: "string" },
+			{
+				label: "Produkt w sklepie",
+				key: "name",
+				width: "1",
+				sortable: true,
+				searchable: "string",
+				render: (value, data) => {
+					if (!data.general_product_id) {
+						return "—";
+					}
+					return html`<a class="link" href="${STATIC_URLS["ADMIN"] + "/produkt/" + data.general_product_id}"> ${value} </a>`;
+				},
+			},
 			{
 				label: "Aktywny",
 				key: "active",

@@ -751,6 +751,7 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 						comp._nodes.all_products._add_column({
+							name: "edit_gross_price",
 							key: "gross_price",
 							label: "Cena Brutto (zł)",
 							width: "1",
@@ -760,10 +761,16 @@ function ProductComp(comp, parent, data = undefined) {
 					} else {
 						comp._nodes.all_products._remove_column("net_price");
 						comp._nodes.all_products._remove_column("vat_id");
-						comp._nodes.all_products._remove_column("gross_price");
+						comp._nodes.all_products._remove_column("edit_gross_price");
 					}
 
 					if (data.product_list_view === "discount") {
+						comp._nodes.all_products._add_column({
+							name: "display_gross_price",
+							key: "gross_price",
+							label: "Cena Brutto (zł)",
+							width: "1",
+						});
 						comp._nodes.all_products._add_column({
 							key: "discount_price",
 							label: "Rabatowa Cena Brutto (zł)",
@@ -779,6 +786,7 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
+						comp._nodes.all_products._remove_column("display_gross_price");
 						comp._nodes.all_products._remove_column("discount_price");
 						comp._nodes.all_products._remove_column("discount_untill");
 					}
@@ -1036,12 +1044,12 @@ function ProductComp(comp, parent, data = undefined) {
 							<span> <i class="fas fa-dollar-sign"></i> Ceny </span>
 						</div>
 						<div class="checkbox_area">
-							<p-checkbox data-value="stock"></p-checkbox>
-							<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
-						</div>
-						<div class="checkbox_area">
 							<p-checkbox data-value="discount"></p-checkbox>
 							<span> <i class="fas fa-percentage"></i> Rabaty </span>
+						</div>
+						<div class="checkbox_area">
+							<p-checkbox data-value="stock"></p-checkbox>
+							<span> <i class="fas fa-sort-numeric-up"></i> Magazyn </span>
 						</div>
 						<div class="checkbox_area">
 							<p-checkbox data-value="codes"></p-checkbox>
@@ -1056,8 +1064,8 @@ function ProductComp(comp, parent, data = undefined) {
 					<div data-node="{${comp._nodes.dt_descriptions}}" class="inline mt2 mb2">
 						<div data-tab="active" class="user_info">
 							<i class="fas fa-info-circle"></i> Określ, które produkty należą do oferty sklepu.<br />Ważne! Klient nie będzie mógł
-							skorzystać z powiadomienia o dostępności produktu jeśli ten jest nieaktywny.<br>W takim przypadku należy ustawić produkt jako
-							aktywny, pomimo braków w magazynie.
+							skorzystać z powiadomienia o dostępności produktu jeśli ten jest nieaktywny.<br />W takim przypadku należy ustawić produkt
+							jako aktywny, pomimo braków w magazynie.
 						</div>
 						<div data-tab="weight_dimensions" class="user_info">
 							<i class="fas fa-info-circle"></i>

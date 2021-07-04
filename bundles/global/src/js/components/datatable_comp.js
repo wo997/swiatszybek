@@ -6,6 +6,7 @@
 
 /**
  * @typedef {{
+ *  name?: string
  *  label?: string
  *  key?: string
  *  db_key?: string
@@ -221,13 +222,20 @@ function DatatableComp(comp, parent, data) {
 	};
 
 	comp._remove_column = (key) => {
-		const index = comp._data.columns.findIndex((c) => c.key === key);
+		// care about name first ;)
+		let index = comp._data.columns.findIndex((c) => c.name === key);
+		if (index === -1) {
+			index = comp._data.columns.findIndex((c) => c.key === key);
+		}
 		if (index !== -1) {
 			comp._data.columns.splice(index, 1);
 		}
 	};
 
 	comp._add_column = (column, index = undefined) => {
+		if (column.name && comp._data.columns.find((c) => c.name === name)) {
+			return;
+		}
 		if (comp._data.columns.find((c) => c.key === column.key)) {
 			return;
 		}
