@@ -15,9 +15,3 @@
  * total_gross_price: number
  * }} TransactionProductData
  */
-
-// too many to preload ;)
-// /** @type {TransactionProductData[]} */
-// let transaction_products;
-
-//function loadedTransactionProducts() {}

@@ -773,6 +773,7 @@ function DatatableComp(comp, parent, data) {
 			<div class="dt_header">
 				<span class="datatable_label medium bold mr2" html="{${def(data.label, "")}}"></span>
 				${def(data.after_label, "")}
+				<div class="after_label_placeholder"></div>
 				<div style="flex-grow:1"></div>
 				<div data-node="{${comp._nodes.filters_info}}" style="padding:0 10px;font-weight:var(--semi_bold)"></div>
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">

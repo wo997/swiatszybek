@@ -9,9 +9,12 @@ EntityManager::register("transaction", [
         "paid_at" => ["type" => "string"],
         "net_price" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
+        "transaction_products" => ["type" => "transaction_products"],
     ],
 ]);
 
 EntityManager::oneToOne("transaction", "buyer", "address");
 
 EntityManager::oneToOne("transaction", "seller", "address");
+
+EntityManager::oneToMany("transaction", "transaction_products", "transaction_product");

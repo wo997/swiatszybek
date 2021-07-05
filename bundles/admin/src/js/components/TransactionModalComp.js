@@ -4,7 +4,7 @@
  * @typedef {{
  * products_dt?: DatatableCompData
  * select_product?: SelectableCompData
- * }} TransactionModalCompData
+ * } & TransactionData} TransactionModalCompData
  *
  * @typedef {{
  * _data: TransactionModalCompData
@@ -23,7 +23,12 @@
  */
 function TransactionModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = {};
+		data = {
+			transaction_id: -1,
+			gross_price: 0,
+			net_price: 0,
+			is_expense: 1,
+		};
 	}
 
 	// /**
@@ -89,6 +94,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 		// 		getMap: () => vats.map((v) => ({ val: v.vat_id, label: `${v.value * 100}%` })),
 		// 	},
 		// ],
+		label: "Produkty",
 		empty_html: "Brak produktów",
 		dataset: [],
 		searchable: false,
@@ -179,14 +185,40 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="mtfn">
-					<div class="label">Produkty</div>
-					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
+					<div class="label">Typ transakcji</div>
+					<div class="radio_group boxes hide_checks number flex" data-bind="{${data.is_expense}}">
+						<div class="checkbox_area">
+							<div>
+								<p-checkbox data-value="0"></p-checkbox>
+								<span class="semi_bold">Sprzedaż <i class="fas fa-arrow-alt-circle-up"></i></span>
+							</div>
+						</div>
+						<div class="checkbox_area">
+							<div>
+								<p-checkbox data-value="1"></p-checkbox>
+								<span class="semi_bold">Zakup <i class="fas fa-arrow-alt-circle-down"></i></span>
+							</div>
+						</div>
+					</div>
 
-					<datatable-comp data-bind="{${data.products_dt}}"></datatable-comp>
+					<datatable-comp data-bind="{${data.products_dt}}" class="mtf"></datatable-comp>
+					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
 				</div>
 			</div>
 		`,
 		ready: () => {
+			const after_label_placeholder = comp._child(".bind_products_dt .after_label_placeholder");
+			after_label_placeholder.style.flexGrow = "1";
+			after_label_placeholder.append(comp._child(".bind_select_product"));
+			let next = after_label_placeholder;
+			while (true) {
+				next = next._next();
+				if (!next) {
+					break;
+				}
+				next.classList.add("hidden");
+			}
+
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
 				const errors = validateInputs(comp._children("[data-validate]").filter((e) => !e._parent(".hidden")));
