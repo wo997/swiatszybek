@@ -78,7 +78,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 			options: {
 				single: true,
 			},
-			dataset: general_products ? general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })) : [],
+			dataset: general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })),
 			parent_variable: "general_product_id",
 		};
 	}

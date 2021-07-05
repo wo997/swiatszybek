@@ -12,6 +12,7 @@
  * _nodes: {
  *  save_btn: PiepNode
  *  products_dt: PiepNode
+ *  add_other_product: PiepNode
  * }
  * _show?(options?: ShowModalParams)
  * } & BaseComp} TransactionModalComp
@@ -65,8 +66,17 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	/** @type {DatatableCompData} */
 	const datatable = {
 		columns: [
-			// { key: "name", label: "Nazwa", width: "2" }, // hey display a product maybe? :) we have product_id and general_product_id
-			{ key: "name", label: "Nazwa", width: "2" },
+			{
+				key: "name",
+				label: "Nazwa",
+				width: "3",
+				editable: "string",
+			},
+			{
+				key: "product_id",
+				label: "Id produktu ziom",
+				width: "1",
+			},
 			{
 				key: "net_price",
 				label: "Cena Netto (zł)",
@@ -116,29 +126,27 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	if (data.select_product === undefined) {
 		data.select_product = {
 			options: {},
-			dataset: products
-				? products.map((p) => {
-						const value = p.product_id + "";
+			dataset: products.map((p) => {
+				const value = p.product_id + "";
 
-						let label = p.__name + "";
+				let label = p.__name + "";
 
-						let active = true;
-						if (p.general_product_id) {
-							active = !!p.active && !!p.gp_active;
-						} else {
-							active = !!p.active;
-						}
+				let active = true;
+				if (p.general_product_id) {
+					active = !!p.active && !!p.gp_active;
+				} else {
+					active = !!p.active;
+				}
 
-						if (!active) {
-							label += html` <i class="fas fa-times text_error ml1" data-tooltip="obecnie nieaktywny"></i>`;
-						}
+				if (!active) {
+					label += html` <i class="fas fa-times text_error ml1" data-tooltip="obecnie nieaktywny"></i>`;
+				}
 
-						return {
-							value,
-							label,
-						};
-				  })
-				: [],
+				return {
+					value,
+					label,
+				};
+			}),
 			custom_select_callback: (value) => {
 				const data = comp._data;
 				const product = products.find((p) => p.product_id === +value);
@@ -225,10 +233,12 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
-					<div class="label">
-						<span class="medium bold">Produkty</span
+					<div class="">
+						<span class="label medium bold inline">Produkty</span
 						><selectable-comp data-bind="{${data.select_product}}" class="inline ml2"></selectable-comp
-						><button class="btn subtle ml2" data-tooltip="Zaleca się dodać produkt z listy">Dodaj inny <i class="fas fa-plus"></i></button>
+						><button class="btn subtle ml2" data-node="{${comp._nodes.add_other_product}}" data-tooltip="Zaleca się dodać produkt z listy">
+							Dodaj inny <i class="fas fa-plus"></i>
+						</button>
 					</div>
 
 					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}"></datatable-comp>
@@ -267,6 +277,30 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 			// removeClasses("address-comp .big_boxes", ["big_boxes"], comp);
 			// comp._nodes.products_dt._child(".dt_main_label").classList.remove("bold");
+
+			const default_vat = vats[0] ? vats[0].value : 23;
+
+			comp._nodes.add_other_product.addEventListener("click", () => {
+				const data = comp._data;
+
+				/** @type {TransactionProductData} */
+				const dt_product = {
+					product_id: null,
+					general_product_id: null,
+					current_gross_price: 0,
+					discount_gross_price: null,
+					gross_price: 0,
+					name: "",
+					net_price: 0,
+					qty: 1,
+					total_gross_price: 0,
+					transaction_product_id: -1,
+					vat: default_vat,
+				};
+				data.products_dt.dataset.push(dt_product);
+
+				comp._render();
+			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;

@@ -50,7 +50,7 @@ function rebateCodeModalComp(comp, parent, data = undefined) {
 	if (data.select_general_product === undefined) {
 		data.select_general_product = {
 			options: {},
-			dataset: general_products ? general_products.map((g) => ({ value: g.general_product_id + "", label: g.name })) : [],
+			dataset: general_products.map((g) => ({ value: g.general_product_id + "", label: g.name })),
 			custom_select_callback: (value) => {
 				const data = comp._data;
 				data.general_products.push({ general_product_id: +value, qty: 1 });
