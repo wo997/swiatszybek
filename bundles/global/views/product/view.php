@@ -291,8 +291,9 @@ if ($main_img) {
             <div class="link ask_product_btn"> <i class="fas fa-envelope"></i> Zapytaj o produkt </div>
         </div>
 
-        <p class="price_label">
-            <!-- <span>Cena: </span> -->
+
+        <p class="price_wrapper">
+            <span class="price_label">Cena Brutto </span>
             <span class="selected_product_price pln"></span>
             <span class="selected_product_was_price slash"></span>
             <span class="selected_product_percent_off"></span>

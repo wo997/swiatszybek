@@ -38,7 +38,7 @@ function prettyPrice(num) {
 	if (typeof num === "string") {
 		num = +num;
 	}
-	return num.toFixed(2);
+	return round(num, 2);
 }
 
 function clamp(min, val, max) {

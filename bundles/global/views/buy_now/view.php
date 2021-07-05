@@ -54,7 +54,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
         </div>
     </div>
 
-    <div class="buy_now_form">
+    <form class="buy_now_form" onsubmit="return false">
         <h1 class="h1 desktop_view">Kup teraz</h1>
 
         <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
@@ -194,7 +194,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                 <!-- <div style="margin-top: 15px;">Danych zamówienia nie będzie można już zmienić bez kontaktu z naszym działem obslugi klienta.</div> -->
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <div style="height: 70px"></div>

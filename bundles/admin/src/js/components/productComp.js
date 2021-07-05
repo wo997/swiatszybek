@@ -48,7 +48,7 @@
  *  _getData()
  *  _nodes: {
  *      add_feature_btn: PiepNode
- *      all_products: DatatableComp
+ *      products_dt: DatatableComp
  *      add_products_btn: PiepNode
  *      remove_products_btn: PiepNode
  *      remove_all_products_btn: PiepNode
@@ -482,7 +482,7 @@ function ProductComp(comp, parent, data = undefined) {
 				{ what: "features", where: "variants" },
 			],
 			render: () => {
-				const data = comp._data;
+				const data = comp._data; // actually important
 
 				const cd = comp._changed_data;
 
@@ -709,7 +709,7 @@ function ProductComp(comp, parent, data = undefined) {
 				}
 
 				if (cd.products_dt) {
-					comp._nodes.all_products._nodes.list._direct_children().forEach((r) => {
+					comp._nodes.products_dt._nodes.list._direct_children().forEach((r) => {
 						const product = data.products_dt.dataset.find((e) => e._row_id === +r.dataset.primary);
 						const active = product ? product.active : 0;
 						r.classList.toggle("inactive", !active);
@@ -722,7 +722,7 @@ function ProductComp(comp, parent, data = undefined) {
 					});
 
 					if (data.product_list_view === "active") {
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "active",
 							label: "Aktywny",
 							width: "140px",
@@ -731,11 +731,11 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
-						comp._nodes.all_products._remove_column("active");
+						comp._nodes.products_dt._remove_column("active");
 					}
 
 					if (data.product_list_view === "prices") {
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "net_price",
 							label: "Cena Netto (zł)",
 							width: "1",
@@ -743,7 +743,7 @@ function ProductComp(comp, parent, data = undefined) {
 							editable: "number",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "vat_id",
 							label: "VAT",
 							width: "1",
@@ -751,7 +751,7 @@ function ProductComp(comp, parent, data = undefined) {
 							map_name: "vat",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							name: "edit_gross_price",
 							key: "gross_price",
 							label: "Cena Brutto (zł)",
@@ -760,26 +760,26 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
-						comp._nodes.all_products._remove_column("net_price");
-						comp._nodes.all_products._remove_column("vat_id");
-						comp._nodes.all_products._remove_column("edit_gross_price");
+						comp._nodes.products_dt._remove_column("net_price");
+						comp._nodes.products_dt._remove_column("vat_id");
+						comp._nodes.products_dt._remove_column("edit_gross_price");
 					}
 
 					if (data.product_list_view === "discount") {
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							name: "display_gross_price",
 							key: "gross_price",
 							label: "Cena Brutto (zł)",
 							width: "1",
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "discount_gross_price",
 							label: "Rabatowa Cena Brutto (zł)",
 							width: "1",
 							editable: "number",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "discount_untill",
 							label: "Rabat do",
 							width: "1",
@@ -787,13 +787,13 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
-						comp._nodes.all_products._remove_column("display_gross_price");
-						comp._nodes.all_products._remove_column("discount_gross_price");
-						comp._nodes.all_products._remove_column("discount_untill");
+						comp._nodes.products_dt._remove_column("display_gross_price");
+						comp._nodes.products_dt._remove_column("discount_gross_price");
+						comp._nodes.products_dt._remove_column("discount_untill");
 					}
 
 					if (data.product_list_view === "stock") {
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "stock",
 							label: "Stan magazynowy",
 							width: "1",
@@ -801,32 +801,32 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
-						comp._nodes.all_products._remove_column("stock");
+						comp._nodes.products_dt._remove_column("stock");
 					}
 
 					if (data.product_list_view === "weight_dimensions") {
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "weight",
 							label: "Waga (g)",
 							width: "1",
 							editable: "number",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "length",
 							label: "Długość (cm)",
 							width: "1",
 							editable: "number",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "width",
 							label: "Szerokość (cm)",
 							width: "1",
 							editable: "number",
 							batch_edit: true,
 						});
-						comp._nodes.all_products._add_column({
+						comp._nodes.products_dt._add_column({
 							key: "height",
 							label: "Wysokość (cm)",
 							width: "1",
@@ -834,18 +834,18 @@ function ProductComp(comp, parent, data = undefined) {
 							batch_edit: true,
 						});
 					} else {
-						comp._nodes.all_products._remove_column("weight");
-						comp._nodes.all_products._remove_column("length");
-						comp._nodes.all_products._remove_column("width");
-						comp._nodes.all_products._remove_column("height");
+						comp._nodes.products_dt._remove_column("weight");
+						comp._nodes.products_dt._remove_column("length");
+						comp._nodes.products_dt._remove_column("width");
+						comp._nodes.products_dt._remove_column("height");
 					}
 
-					comp._nodes.all_products._render();
+					comp._nodes.products_dt._render();
 				}
 
 				if (cd.variants) {
 					setTimeout(() => {
-						comp._nodes.all_products._warmup_maps();
+						comp._nodes.products_dt._warmup_maps();
 					});
 				}
 
@@ -1074,7 +1074,7 @@ function ProductComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
-					<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.all_products}}"></datatable-comp>
+					<datatable-comp data-bind="{${data.products_dt}}" data-node="{${comp._nodes.products_dt}}"></datatable-comp>
 				</div>
 
 				<div style="height:100px"></div>
@@ -1265,7 +1265,7 @@ function ProductComp(comp, parent, data = undefined) {
 				}
 			});
 
-			comp._nodes.all_products.addEventListener("editable_change", (ev) => {
+			comp._nodes.products_dt.addEventListener("editable_change", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
 				/** @type {DtProductData} */

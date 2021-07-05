@@ -371,6 +371,11 @@ domload(() => {
 		});
 	}
 
+	buy_now_form._children("button").forEach((e) => {
+		// @ts-ignore
+		e.type = "button";
+	});
+
 	ready = true;
 });
 

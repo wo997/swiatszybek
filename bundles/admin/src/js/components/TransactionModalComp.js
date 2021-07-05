@@ -11,6 +11,7 @@
  * _set_data(data?: TransactionModalCompData, options?: SetCompDataOptions)
  * _nodes: {
  *  save_btn: PiepNode
+ *  products_dt: PiepNode
  * }
  * _show?(options?: ShowModalParams)
  * } & BaseComp} TransactionModalComp
@@ -30,23 +31,6 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			is_expense: 1,
 		};
 	}
-
-	// /**
-	//  * @typedef {{
-	//  * transaction_product_id: number
-	//  * transaction_id?: number
-	//  * product_id?: number
-	//  * general_product_id?: number
-	//  * name: string
-	//  * net_price: number
-	//  * vat: number
-	//  * gross_price: number
-	//  * discount_gross_price?: number
-	//  * current_gross_price: number
-	//  * qty: number
-	//  * total_gross_price: number
-	//  * }} TransactionProductData
-	//  */
 
 	/** @type {DatatableCompData} */
 	const datatable = {
@@ -156,8 +140,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				comp._render();
 			},
 			get_custom_selection: () => {
-				return [];
-				//return comp._data.general_products.map((g) => g.general_product_id + "");
+				return comp._data.products_dt.dataset.map((row_data) => row_data.product_id + "");
 			},
 		};
 	}
@@ -173,9 +156,20 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	};
 
 	comp._set_data = (data, options = {}) => {
+		const cd = comp._changed_data;
+
+		if (cd.products_dt) {
+			data.products_dt.dataset.forEach((row_data) => {
+				row_data.current_gross_price = row_data.discount_gross_price ? row_data.discount_gross_price : row_data.gross_price;
+				row_data.total_gross_price = round(row_data.current_gross_price * row_data.qty, 2);
+			});
+		}
+
 		setCompData(comp, data, {
 			...options,
-			render: () => {},
+			render: () => {
+				const data = comp._data; // actually important
+			},
 		});
 	};
 
@@ -216,7 +210,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
-					<datatable-comp data-bind="{${data.products_dt}}" class="mt5 mb5"></datatable-comp>
+					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}" class="mt5 mb5"></datatable-comp>
 					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
 				</div>
 			</div>
@@ -234,10 +228,12 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				next.classList.add("hidden");
 			}
 
-			comp._children("address-comp .bind_phone, address-comp .bind_email").forEach((e) => {
-				e.classList.add("hidden");
-				e._prev().classList.add("hidden");
-			});
+			// comp._children("address-comp .bind_phone, address-comp .bind_email").forEach((e) => {
+			// 	e.classList.add("hidden");
+			// 	e._prev().classList.add("hidden");
+			// });
+
+			removeClasses("address-comp .big_boxes", ["big_boxes"], comp);
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
@@ -248,20 +244,48 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 				// showLoader();
 				// xhr({
-				// 	url: STATIC_URLS["ADMIN"] + "/page/save",
+				// 	url: STATIC_URLS["ADMIN"] + "/transaction/save",
 				// 	params: {
 				// 		//page,
 				// 	},
 				// 	success: (res) => {
 				// 		hideLoader();
-				// 		if (!res || !res.page_id) {
-				// 			alert("Wystąpił błąd krytyczny");
-				// 			return;
-				// 		}
-
-				// 		window.location.href = `${STATIC_URLS["ADMIN"]}/strona?nr_strony=${res.page_id}`;
 				// 	},
 				// });
+			});
+
+			comp._nodes.products_dt.addEventListener("editable_change", (ev) => {
+				// @ts-ignore
+				const detail = ev.detail;
+				/** @type {TransactionProductData} */
+				const row_data = detail.row_data;
+				const key = detail.key;
+
+				row_data.gross_price = round(row_data.gross_price, 2);
+				row_data.net_price = round(row_data.net_price, 2);
+
+				let set_what = "";
+
+				if (key === "vat") {
+					// anything to rewrite?
+					if (numberFromStr(row_data.gross_price + "")) {
+						set_what = "net_price";
+					} else if (numberFromStr(row_data.net_price + "")) {
+						set_what = "gross_price";
+					}
+				} else {
+					if (key === "gross_price") {
+						set_what = "net_price";
+					} else if (key === "net_price") {
+						set_what = "gross_price";
+					}
+				}
+
+				if (set_what === "net_price") {
+					row_data.net_price = round(row_data.gross_price / (1 + row_data.vat * 0.01), 2);
+				} else if (set_what === "gross_price") {
+					row_data.gross_price = round(row_data.net_price * (1 + row_data.vat * 0.01), 2);
+				}
 			});
 		},
 	});

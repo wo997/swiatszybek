@@ -100,7 +100,7 @@ function confirmOrder($shop_order_data)
     $shop_order->setProp("payment_time", $payment_time);
 
     $fit_dim = $user_cart->getDeliveryFitDimensions();
-    if ($fit_dim) {
+    if ($fit_dim && isset($fit_dim["api_key"])) {
         $shop_order->setProp("package_api_key", $fit_dim["api_key"]);
     }
 
