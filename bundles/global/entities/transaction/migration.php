@@ -9,4 +9,7 @@ DB::createTable("transaction", [
     ["name" => "paid_at", "type" => "DATETIME", "null" => true],
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
     ["name" => "gross_price", "type" => "DECIMAL(10,2)"],
+    ["name" => "__products_json", "type" => "TEXT"],
+    ["name" => "__products_search", "type" => "TEXT"],
+    ["name" => "__search", "type" => "TEXT"],
 ]);

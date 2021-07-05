@@ -2,35 +2,26 @@
 domload(() => {
 	/** @type {DatatableComp} */
 	// @ts-ignore
-	const datatable_comp = $("datatable-comp.sales");
+	const datatable_comp = $("datatable-comp.expenses");
 
 	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/transaction/search",
 		getRequestParams: () => {
 			return {
-				is_expense: 0,
+				is_expense: 1,
 			};
 		},
 		columns: [
-			{ label: "Nabywca", key: "buyer_display_name", width: "1", searchable: "string" },
+			{ label: "Sprzedawca", key: "seller_display_name", width: "1", searchable: "string" },
 			{ label: "NIP", key: "seller_nip", width: "1", searchable: "string" },
-			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "number" },
-			{
-				label: "Produkty",
-				key: "__products_search",
-				width: "1",
-				searchable: "string",
-				render: (value, data) => {
-					return data.__products_json; // JSON.parse(data.__products_json)
-				},
-			},
+			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "string" },
 			{ label: "Data transakcji", key: "created_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 		],
 		primary_key: "stock_product_id",
-		empty_html: html`Brak sprzedaży`,
-		label: "Sprzedaż",
+		empty_html: html`Brak wydatków`,
+		label: "Wydatki",
 		after_label: html`<button class="btn primary add_sale_btn">
-			Dodaj sprzedaż
+			Dodaj zakup
 			<i class="fas fa-plus"></i>
 		</button>`,
 		save_state_name: "admin_sales",

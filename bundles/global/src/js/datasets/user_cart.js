@@ -26,8 +26,9 @@
  * general_product_id: number
  * name: string
  * qty: number
- * gross_price: number
  * net_price: number
+ * gross_price: number
+ * __current_gross_price: number
  * img_url: string
  * url: string
  * stock: number
