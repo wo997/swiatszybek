@@ -771,7 +771,7 @@ function DatatableComp(comp, parent, data) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="dt_header">
-				<span class="datatable_label medium bold mr2" html="{${def(data.label, "")}}"></span>
+				<span class="datatable_label medium bold mr2 dt_main_label" html="{${def(data.label, "")}}"></span>
 				${def(data.after_label, "")}
 				<div class="after_label_placeholder"></div>
 				<div style="flex-grow:1"></div>

@@ -142,7 +142,7 @@ function AddressComp(comp, parent, data = undefined) {
 		// <input class="field pretty_errors" autocomplete="country-name" data-bind="{${data.country}}" /> autocomplete works only for text inputs, interesting
 		initialize: () => {
 			if (comp.classList.contains("optional_phone_email")) {
-				comp._children(`[data-bind="phone"], [data-bind="email"]`).forEach((e) => {
+				comp._children(`.bind_phone, .bind_email`).forEach((e) => {
 					e._prev().insertAdjacentHTML("beforeend", html` <span class="optional_label"></span>`);
 					e.dataset.validate += "|optional";
 				});

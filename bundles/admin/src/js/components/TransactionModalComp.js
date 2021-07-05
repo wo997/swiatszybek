@@ -29,6 +29,36 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			gross_price: 0,
 			net_price: 0,
 			is_expense: 1,
+			buyer: {
+				party: "company",
+				first_name: "",
+				last_name: "",
+				company: "",
+				nip: "",
+				phone: "",
+				email: "",
+				country: "Polska",
+				post_code: "",
+				city: "",
+				street: "",
+				building_number: "",
+				flat_number: "",
+			},
+			seller: {
+				party: "company",
+				first_name: "",
+				last_name: "",
+				company: "",
+				nip: "",
+				phone: "",
+				email: "",
+				country: "Polska",
+				post_code: "",
+				city: "",
+				street: "",
+				building_number: "",
+				flat_number: "",
+			},
 		};
 	}
 
@@ -73,13 +103,6 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				width: "1",
 			},
 		],
-		// maps: [
-		// 	{
-		// 		name: "vat",
-		// 		getMap: () => vats.map((v) => ({ val: v.vat_id, label: `${v.value * 100}%` })),
-		// 	},
-		// ],
-		label: "Produkty",
 		empty_html: "Brak produktów",
 		dataset: [],
 		searchable: false,
@@ -107,7 +130,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						}
 
 						if (!active) {
-							label += " (obecnie nieaktywny)";
+							label += html` <i class="fas fa-times text_error ml1" data-tooltip="obecnie nieaktywny"></i>`;
 						}
 
 						return {
@@ -181,9 +204,13 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
-				<div class="mtfn">
-					<div class="label">Typ transakcji</div>
-					<div class="radio_group boxes hide_checks number flex semi_medium" data-bind="{${data.is_expense}}">
+				<div class="mtfn pb5">
+					<div class="label medium bold">Typ transakcji</div>
+					<div
+						class="radio_group boxes hide_checks number big_boxes"
+						style="--columns:2;max-width: 400px;"
+						data-bind="{${data.is_expense}}"
+					>
 						<div class="checkbox_area">
 							<div>
 								<p-checkbox data-value="0"></p-checkbox>
@@ -198,42 +225,48 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						</div>
 					</div>
 
-					<div class="desktop_row">
-						<div>
-							<div class="label medium">Sprzedawca</div>
-							<address-comp data-bind="{${data.seller}}"></address-comp>
-						</div>
-
-						<div>
-							<div class="label medium">Nabywca</div>
-							<address-comp data-bind="{${data.buyer}}"></address-comp>
-						</div>
+					<div class="label">
+						<span class="medium bold">Produkty</span
+						><selectable-comp data-bind="{${data.select_product}}" class="inline ml2"></selectable-comp
+						><button class="btn subtle ml2" data-tooltip="Zaleca się dodać produkt z listy">Dodaj inny <i class="fas fa-plus"></i></button>
 					</div>
 
-					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}" class="mt5 mb5"></datatable-comp>
-					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
+					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}"></datatable-comp>
+
+					<div class="desktop_row mt5" style="max-width:1000px">
+						<div>
+							<div class="label medium bold">Sprzedawca</div>
+							<address-comp data-bind="{${data.seller}}" class="optional_phone_email"></address-comp>
+						</div>
+
+						<div>
+							<div class="label medium bold">Nabywca</div>
+							<address-comp data-bind="{${data.buyer}}" class="optional_phone_email"></address-comp>
+						</div>
+					</div>
 				</div>
 			</div>
 		`,
 		ready: () => {
-			const after_label_placeholder = comp._child(".bind_products_dt .after_label_placeholder");
-			after_label_placeholder.style.flexGrow = "1";
-			after_label_placeholder.append(comp._child(".bind_select_product"));
-			let next = after_label_placeholder;
-			while (true) {
-				next = next._next();
-				if (!next) {
-					break;
-				}
-				next.classList.add("hidden");
-			}
+			// const after_label_placeholder = comp._child(".bind_products_dt .after_label_placeholder");
+			// after_label_placeholder.style.flexGrow = "1";
+			// after_label_placeholder.append(comp._child(".bind_select_product"));
+			// let next = after_label_placeholder;
+			// while (true) {
+			// 	next = next._next();
+			// 	if (!next) {
+			// 		break;
+			// 	}
+			// 	next.classList.add("hidden");
+			// }
 
 			// comp._children("address-comp .bind_phone, address-comp .bind_email").forEach((e) => {
 			// 	e.classList.add("hidden");
 			// 	e._prev().classList.add("hidden");
 			// });
 
-			removeClasses("address-comp .big_boxes", ["big_boxes"], comp);
+			// removeClasses("address-comp .big_boxes", ["big_boxes"], comp);
+			// comp._nodes.products_dt._child(".dt_main_label").classList.remove("bold");
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;

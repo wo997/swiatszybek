@@ -1,9 +1,18 @@
 /* css[admin] */
 
-// transaction-modal-comp.comp {
-// 	.bind_products_dt {
-// 		.dt_header {
-// 			min-height: 0;
-// 		}
-// 	}
-// }
+transaction-modal-comp.comp {
+	.bind_products_dt {
+		.dt_header {
+			min-height: 0;
+		}
+	}
+
+	.bind_select_product {
+		& {
+			width: 800px;
+		}
+		@media (max-width: 1000px) {
+			width: 100%;
+		}
+	}
+}
