@@ -5,7 +5,7 @@ EntityManager::register("product", [
         "general_product_id" => ["type" => "number"],
         "net_price" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
-        "discount_price" => ["type" => "number"],
+        "discount_gross_price" => ["type" => "number"],
         "discount_untill" => ["type" => "string"],
         "vat_id" => ["type" => "number"],
         "active" => ["type" => "number"],
@@ -74,9 +74,9 @@ EventListener::register("before_save_product_entity", function ($params) {
         setProductDefaults($product_id);
     }
 
-    $discount_price = $product->getProp("discount_price");
+    $discount_gross_price = $product->getProp("discount_gross_price");
     $gross_price = $product->getProp("gross_price");
-    $__current_gross_price = $discount_price !== NULL ? $discount_price : $gross_price;
+    $__current_gross_price = $discount_gross_price !== NULL ? $discount_gross_price : $gross_price;
     $__discount_percent = 0;
     if (floatval($gross_price) > 0) {
         $__discount_percent = (1 - $__current_gross_price / $gross_price) * 100;

@@ -151,7 +151,7 @@ domload(() => {
 					name: data.name,
 					__img_url: data.__img_url,
 					__name: data.__name,
-					discount_price: data.discount_price,
+					discount_gross_price: data.discount_gross_price,
 					discount_untill: data.discount_untill,
 				},
 				{ source: edit_btn }

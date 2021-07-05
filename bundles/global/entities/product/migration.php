@@ -8,7 +8,7 @@ DB::createTable("product", [
     ["name" => "vat_id", "type" => "INT"],
     ["name" => "gross_price", "type" => "DECIMAL(10,2)"],
 
-    ["name" => "discount_price", "type" => "DECIMAL(10,2)", "null" => true],
+    ["name" => "discount_gross_price", "type" => "DECIMAL(10,2)", "null" => true],
     ["name" => "discount_untill", "type" => "DATE", "null" => true],
 
     ["name" => "active", "type" => "TINYINT(1)"],

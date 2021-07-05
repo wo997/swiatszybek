@@ -37,7 +37,7 @@ function ProductModalComp(comp, parent, data = undefined) {
 		__img_url: "",
 		name: "",
 		__name: "",
-		discount_price: null,
+		discount_gross_price: null,
 		discount_untill: null,
 	};
 	if (data === undefined) {
@@ -194,7 +194,7 @@ function ProductModalComp(comp, parent, data = undefined) {
 						<div>
 							<div class="label">Rabatowa Cena Brutto</div>
 							<div class="glue_children">
-								<input class="field" data-bind="{${data.discount_price}}" />
+								<input class="field" data-bind="{${data.discount_gross_price}}" />
 								<div class="field_desc">zł</div>
 							</div>
 						</div>
@@ -264,12 +264,12 @@ function ProductModalComp(comp, parent, data = undefined) {
 					width: data.width,
 					img_url: data.img_url,
 					name: data.name,
-					discount_price: data.discount_price,
+					discount_gross_price: data.discount_gross_price,
 					discount_untill: data.discount_untill,
 				};
 
-				if (!product.discount_price) {
-					product.discount_price = null;
+				if (!product.discount_gross_price) {
+					product.discount_gross_price = null;
 				}
 				if (!product.discount_untill || product.discount_untill === "0000-00-00") {
 					product.discount_untill = null;

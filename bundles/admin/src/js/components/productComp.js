@@ -12,7 +12,7 @@
  *  net_price: number
  *  vat_id: number
  *  gross_price: number
- *  discount_price: number
+ *  discount_gross_price: number
  *  discount_untill: string
  *  stock: number
  *  is_necessary?: boolean
@@ -129,7 +129,7 @@ function ProductComp(comp, parent, data = undefined) {
 		empty_html: "Brak produktów",
 		dataset: [],
 		label: "",
-        searchable: false,
+		searchable: false,
 		selectable: true,
 		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
 		print_row_as_string: (row_data) => {
@@ -185,7 +185,7 @@ function ProductComp(comp, parent, data = undefined) {
 				width: 0,
 				img_url: "",
 				name: "",
-				discount_price: 0,
+				discount_gross_price: 0,
 				discount_untill: "",
 			};
 
@@ -773,7 +773,7 @@ function ProductComp(comp, parent, data = undefined) {
 							width: "1",
 						});
 						comp._nodes.all_products._add_column({
-							key: "discount_price",
+							key: "discount_gross_price",
 							label: "Rabatowa Cena Brutto (zł)",
 							width: "1",
 							editable: "number",
@@ -788,7 +788,7 @@ function ProductComp(comp, parent, data = undefined) {
 						});
 					} else {
 						comp._nodes.all_products._remove_column("display_gross_price");
-						comp._nodes.all_products._remove_column("discount_price");
+						comp._nodes.all_products._remove_column("discount_gross_price");
 						comp._nodes.all_products._remove_column("discount_untill");
 					}
 
@@ -1176,8 +1176,8 @@ function ProductComp(comp, parent, data = undefined) {
 						product.variant_options.push(product[vkey]);
 						delete product[vkey];
 
-						if (!product.discount_price) {
-							product.discount_price = null;
+						if (!product.discount_gross_price) {
+							product.discount_gross_price = null;
 						}
 						if (!product.discount_untill || product.discount_untill === "0000-00-00") {
 							product.discount_untill = null;

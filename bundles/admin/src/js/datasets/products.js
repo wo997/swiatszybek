@@ -5,8 +5,10 @@
  * active: number
  * general_product_id: number
  * net_price: number
- * gross_price: number
  * vat_id: number
+ * gross_price: number
+ * discount_gross_price?: number,
+ * discount_untill?: string,
  * __current_gross_price: number
  * height: string
  * length: string

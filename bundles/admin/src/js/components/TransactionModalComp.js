@@ -35,12 +35,13 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	//  * @typedef {{
 	//  * transaction_product_id: number
 	//  * transaction_id?: number
-	//  * product_id: number
+	//  * product_id?: number
 	//  * general_product_id?: number
 	//  * name: string
 	//  * net_price: number
 	//  * vat: number
 	//  * gross_price: number
+	//  * discount_gross_price?: number
 	//  * current_gross_price: number
 	//  * qty: number
 	//  * total_gross_price: number
@@ -50,6 +51,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	/** @type {DatatableCompData} */
 	const datatable = {
 		columns: [
+			// { key: "name", label: "Nazwa", width: "2" }, // hey display a product maybe? :) we have product_id and general_product_id
 			{ key: "name", label: "Nazwa", width: "2" },
 			{
 				key: "net_price",
@@ -64,29 +66,28 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				editable: "number",
 			},
 			{
-				key: "net_price",
+				key: "gross_price",
 				label: "Cena Brutto (zł)",
 				width: "1",
 				editable: "number",
 			},
-			// {
-			// 	key: "net_price",
-			// 	label: "Cena Netto (zł)",
-			// 	width: "1",
-			// 	searchable: "number",
-			// 	editable: "number",
-			// 	batch_edit: true,
-			// },
-			// {
-			// 	key: "net_price",
-			// 	label: "Cena Netto (zł)",
-			// 	width: "1",
-			// 	searchable: "number",
-			// 	editable: "number",
-			// 	batch_edit: true,
-			// },
-			// { key: "", label: "", width: "1" },
-			// { key: "", label: "", width: "1" },
+			{
+				key: "discount_gross_price",
+				label: "Rabatowa Cena Brutto (zł)",
+				width: "1",
+				editable: "number",
+			},
+			{
+				key: "qty",
+				label: "Ilość",
+				width: "1",
+				editable: "number",
+			},
+			{
+				key: "total_gross_price",
+				label: "Suma Brutto (zł)",
+				width: "1",
+			},
 		],
 		// maps: [
 		// 	{
@@ -138,7 +139,9 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					/** @type {TransactionProductData} */
 					const dt_product = {
 						product_id: product.product_id,
+						general_product_id: product.general_product_id,
 						current_gross_price: product.__current_gross_price,
+						discount_gross_price: product.discount_gross_price,
 						gross_price: product.gross_price,
 						name: product.__name,
 						net_price: product.net_price,

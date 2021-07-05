@@ -13,7 +13,7 @@ if ($category_ids) {
 Request::jsonResponse(paginateData([
     "select" => "gp.general_product_id, gp.name gp_name,
         p.product_id, p.__name, p.stock, p.__img_url, p.gross_price, p.height, p.length, p.net_price, p.vat_id, p.weight, p.width,
-        p.img_url, p.name, p.discount_price, p.discount_untill",
+        p.img_url, p.name, p.discount_gross_price, p.discount_untill",
     "from" => $from,
     "group" => "product_id",
     "order" => "product_id DESC",

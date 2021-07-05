@@ -51,7 +51,7 @@ if ($product_link_base !== Request::$url) {
     Request::redirectPermanent($true_product_link);
 }
 
-$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, __current_gross_price, discount_price, discount_untill, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, __current_gross_price, discount_gross_price, discount_untill, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);

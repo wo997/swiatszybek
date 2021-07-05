@@ -8,6 +8,7 @@ EntityManager::register("transaction_product", [
         "net_price" => ["type" => "number"],
         "vat" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
+        "discount_gross_price" => ["type" => "number"],
         "current_gross_price" => ["type" => "number"],
         "qty" => ["type" => "number"],
         "total_gross_price" => ["type" => "number"],
