@@ -1,4 +1,4 @@
-/* js[view] */
+/* js[admin] */
 
 /**
  * @typedef {{
@@ -33,7 +33,7 @@
  * @param {*} parent
  * @param {AddressCompData} data
  */
-function addressComp(comp, parent, data = undefined) {
+function AddressComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			party: "person",
@@ -126,7 +126,7 @@ function addressComp(comp, parent, data = undefined) {
 				<div class="label">Miejscowość</div>
 				<input class="field pretty_errors" autocomplete="address-level2" data-bind="{${data.city}}" data-validate="" />
 
-				<div class="label">Nazwa ulicy</div>
+				<div class="label">Ulica</div>
 				<input class="field pretty_errors" autocomplete="address-line1" data-bind="{${data.street}}" data-validate="" />
 
 				<div class="form_columns">

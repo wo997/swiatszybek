@@ -1,0 +1,7 @@
+{
+    "include": {
+        "js": [
+            "bundles/admin/src/js/components/AddressComp.js"
+        ]
+    }
+}

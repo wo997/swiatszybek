@@ -189,7 +189,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			<div class="scroll_panel scroll_shadow panel_padding">
 				<div class="mtfn">
 					<div class="label">Typ transakcji</div>
-					<div class="radio_group boxes hide_checks number flex" data-bind="{${data.is_expense}}">
+					<div class="radio_group boxes hide_checks number flex semi_medium" data-bind="{${data.is_expense}}">
 						<div class="checkbox_area">
 							<div>
 								<p-checkbox data-value="0"></p-checkbox>
@@ -199,12 +199,24 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						<div class="checkbox_area">
 							<div>
 								<p-checkbox data-value="1"></p-checkbox>
-								<span class="semi_bold">Zakup <i class="fas fa-arrow-alt-circle-down"></i></span>
+								<span class="semi_bold">Zakup (dostawa) <i class="fas fa-arrow-alt-circle-down"></i></span>
 							</div>
 						</div>
 					</div>
 
-					<datatable-comp data-bind="{${data.products_dt}}" class="mtf"></datatable-comp>
+					<div class="desktop_row">
+						<div>
+							<div class="label medium">Sprzedawca</div>
+							<address-comp data-bind="{${data.seller}}"></address-comp>
+						</div>
+
+						<div>
+							<div class="label medium">Nabywca</div>
+							<address-comp data-bind="{${data.buyer}}"></address-comp>
+						</div>
+					</div>
+
+					<datatable-comp data-bind="{${data.products_dt}}" class="mt5 mb5"></datatable-comp>
 					<selectable-comp data-bind="{${data.select_product}}"></selectable-comp>
 				</div>
 			</div>
@@ -221,6 +233,11 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				}
 				next.classList.add("hidden");
 			}
+
+			comp._children("address-comp .bind_phone, address-comp .bind_email").forEach((e) => {
+				e.classList.add("hidden");
+				e._prev().classList.add("hidden");
+			});
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;

@@ -29,12 +29,12 @@ domload(() => {
 	/** @type {AddressComp} */
 	// @ts-ignore
 	const main_address = $("address-comp.main_address");
-	addressComp(main_address, undefined);
+	AddressComp(main_address, undefined);
 
 	/** @type {AddressComp} */
 	// @ts-ignore
 	const courier_address = $("address-comp.courier_address");
-	addressComp(courier_address, undefined);
+	AddressComp(courier_address, undefined);
 
 	const buy_now_container = $(".buy_now_container");
 	const onBuyNowScroll = () => {

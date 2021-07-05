@@ -14,6 +14,7 @@
 <script>
     <?= preloadProducts() ?>
     <?= preloadVats() ?>
+    <?= preloadUECountries() ?>
 </script>
 
 <?php include "bundles/admin/templates/default.php"; ?>
