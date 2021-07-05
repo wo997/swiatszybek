@@ -79,7 +79,8 @@ function SelectableComp(comp, parent, data = undefined) {
 			data.selection = data.selection.filter((s) => data.dataset.map((d) => d.value).includes(s));
 		}
 
-		if (data.dataset.length === 1 && data.selection.length === 0) {
+		const just_single = data.single && data.dataset.length === 1 && data.selection.length === 0;
+		if (just_single) {
 			data.selection.push(data.dataset[0].value);
 		}
 
@@ -87,6 +88,9 @@ function SelectableComp(comp, parent, data = undefined) {
 			...options,
 			render: () => {
 				const data = comp._data;
+
+				comp.classList.toggle("just_single", just_single);
+
 				let selection_html = "";
 				for (const sel of data.selection) {
 					const datapart = data.dataset.find((e) => e.value === sel);

@@ -37,7 +37,7 @@ function AddPageModalComp(comp, parent, data = undefined) {
 	if (data === undefined) {
 		data = {
 			url: undefined,
-			page_type: "",
+			page_type: "page",
 			link_what_id: undefined,
 			template_id: -1,
 			general_product_id: null,

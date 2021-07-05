@@ -75,4 +75,22 @@ selectable-comp.comp {
 			margin: -4px;
 		}
 	}
+
+	&.just_single {
+		.float_icon {
+			display: none;
+		}
+		.node_selection .btn {
+			display: none;
+		}
+		.node_selection {
+			& {
+				border-top-width: 1px;
+				border-radius: 4px;
+			}
+			.selection {
+				padding: var(--field_padding_ver) var(--field_padding_hor);
+			}
+		}
+	}
 }
