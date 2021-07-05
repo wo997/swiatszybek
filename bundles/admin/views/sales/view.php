@@ -13,6 +13,7 @@
 
 <script>
     <?= preloadProducts() ?>
+    <?= preloadVats() ?>
 </script>
 
 <?php include "bundles/admin/templates/default.php"; ?>

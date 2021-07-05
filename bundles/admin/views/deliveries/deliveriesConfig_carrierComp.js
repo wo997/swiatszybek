@@ -89,6 +89,8 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 				after_label: html`<button class="btn primary small add_dimension_btn">Dodaj gabaryt <i class="fas fa-plus"></i></button>`,
 				pagination_data: { row_count: 15 },
 				deletable: true,
+				searchable: false,
+				paginable: false,
 				sortable: true,
 				require_sort: { key: "pos", order: "asc" },
 			};
@@ -172,11 +174,7 @@ function DeliveriesConfig_CarrierComp(comp, parent, data = undefined) {
 							<input class="field small" data-bind="{${data.google_maps_embed_code}}" />
 						</div>
 
-						<datatable-comp
-							class="mtf small_dataset"
-							data-bind="{${data.dimensions_dt}}"
-							data-node="{${comp._nodes.dimenions_dt}}"
-						></datatable-comp>
+						<datatable-comp class="mtf" data-bind="{${data.dimensions_dt}}" data-node="{${comp._nodes.dimenions_dt}}"></datatable-comp>
 					</div>
 				</div>
 			</div>

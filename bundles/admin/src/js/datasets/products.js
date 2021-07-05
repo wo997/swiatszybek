@@ -4,13 +4,14 @@
  * @typedef {{
  * active: number
  * general_product_id: number
- * gross_price: string
+ * net_price: number
+ * gross_price: number
+ * vat_id: number
+ * __current_gross_price: number
  * height: string
  * length: string
- * net_price: string
  * product_id: number
  * stock: number
- * vat_id: number
  * weight: string
  * width: string
  * __img_url: string

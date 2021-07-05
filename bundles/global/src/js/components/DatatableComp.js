@@ -64,6 +64,7 @@
  *  label?: string
  *  after_label?: string
  *  selectable?: boolean
+ *  paginable?: boolean
  *  selection?: number[]
  *  save_state_name?: string
  *  print_row_as_string?(row_data: any): string
@@ -76,6 +77,7 @@
  *  db_table?: string
  *  sort_on_backend?: boolean
  *  getRequestParams?()
+ *  searchable?: boolean
  * }} DatatableCompData
  *
  * @typedef {{
@@ -91,6 +93,8 @@
  *      clear_filters_btn: PiepNode
  *      filters_info: PiepNode
  *      filter_menu: PiepNode
+ *      quick_search_wrapper: PiepNode
+ *      pagination_data: PiepNode
  *  }
  * _backend_search()
  * _search_request: XMLHttpRequest | undefined
@@ -507,6 +511,10 @@ function DatatableComp(comp, parent, data) {
 			})
 		);
 
+		if (!data.paginable) {
+			data.pagination_data.page_count = 1000;
+		}
+
 		setCompData(comp, data, {
 			...options,
 			pass_list_data: [
@@ -516,6 +524,9 @@ function DatatableComp(comp, parent, data) {
 			],
 			render: () => {
 				const cd = comp._changed_data;
+
+				comp._nodes.quick_search_wrapper.classList.toggle("hidden", !def(data.searchable, true));
+				comp._nodes.pagination_data.classList.toggle("hidden", !def(data.paginable, true));
 
 				let asked_search = false;
 				if (cd.quick_search) {
@@ -589,6 +600,7 @@ function DatatableComp(comp, parent, data) {
 								></button>`;
 							}
 							if (column.batch_edit) {
+								// DT must be selectable ;)
 								const tooltip =
 									data.selection.length > 0
 										? `Edytuj dane zaznaczonych wierszy (${data.selection.length})`
@@ -766,7 +778,7 @@ function DatatableComp(comp, parent, data) {
 				<div class="btn error_light" data-node="{${comp._nodes.clear_filters_btn}}" data-tooltip="Wyczyść wszystkie filtry">
 					<i class="fas fa-times"></i>
 				</div>
-				<div class="float_icon float_icon_search">
+				<div class="float_icon float_icon_search" data-node="{${comp._nodes.quick_search_wrapper}}">
 					<input type="text" placeholder="Szukaj..." class="field inline" data-bind="{${data.quick_search}}" data-input_delay="300" />
 					<i class="fas fa-search"></i>
 				</div>
@@ -797,7 +809,7 @@ function DatatableComp(comp, parent, data) {
 
 			<div data-node="{${comp._nodes.filter_menu}}"></div>
 
-			<pagination-comp data-bind="{${data.pagination_data}}"></pagination-comp>
+			<pagination-comp data-node="{${comp._nodes.pagination_data}}" data-bind="{${data.pagination_data}}"></pagination-comp>
 
 			<style data-node="{${comp._nodes.style}}"></style>
 		`,

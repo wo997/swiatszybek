@@ -31,12 +31,12 @@ domload(() => {
 		save_state_name: "admin_sales",
 	});
 
-	// datatable_comp.addEventListener("click", (ev) => {
-	// 	const target = $(ev.target);
+	datatable_comp.addEventListener("click", (ev) => {
+		const target = $(ev.target);
 
-	// 	const add_sale_btn = target._parent(".add_sale_btn");
-	// 	if (add_sale_btn) {
-	// 		getStockProductsDeliveryModal()._show({ source: add_sale_btn });
-	// 	}
-	// });
+		const add_sale_btn = target._parent(".add_sale_btn");
+		if (add_sale_btn) {
+			getTransactionModal()._show({ source: add_sale_btn });
+		}
+	});
 });

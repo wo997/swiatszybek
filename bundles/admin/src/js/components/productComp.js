@@ -122,13 +122,14 @@ function ProductComp(comp, parent, data = undefined) {
 	// data.product_type = def(data.product_type, "normal");
 
 	/** @type {DatatableCompData} */
-	const table = {
+	const datatable = {
 		columns: [
 			/* dynamic */
 		],
 		empty_html: "Brak produktów",
 		dataset: [],
 		label: "",
+        searchable: false,
 		selectable: true,
 		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
 		print_row_as_string: (row_data) => {
@@ -160,7 +161,7 @@ function ProductComp(comp, parent, data = undefined) {
 		],
 	};
 
-	data.products_dt = def(data.products_dt, table);
+	data.products_dt = def(data.products_dt, datatable);
 	data.unnecessary_product_ids = [];
 
 	comp._add_missing_products = (params = {}) => {

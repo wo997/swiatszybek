@@ -6,6 +6,7 @@ datatable-comp {
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
+		min-height: 2.5em;
 	}
 	.table_body,
 	.table_header {
@@ -120,9 +121,8 @@ datatable-comp {
 		margin: -2px;
 	}
 
-	[data-node="clear_filters_btn"] {
+	.node_clear_filters_btn {
 		& {
-			margin-right: 10px;
 			/*transition: opacity 0.2s;*/
 		}
 		&:not(.active) {
@@ -130,6 +130,10 @@ datatable-comp {
 			pointer-events: none;*/
 			display: none;
 		}
+	}
+
+	.node_quick_search_wrapper {
+		margin-left: 10px;
 	}
 
 	// .table_body .btn + .btn {
@@ -216,12 +220,12 @@ datatable-comp {
 		display: inline-block;
 	}
 
-	&.small_dataset {
-		.float_icon_search,
-		.bind_pagination_data {
-			display: none;
-		}
-	}
+	// &.small_dataset {
+	// 	.float_icon_search,
+	// 	.bind_pagination_data {
+	// 		display: none;
+	// 	}
+	// }
 }
 
 .sortable_width {
