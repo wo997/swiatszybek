@@ -13,7 +13,7 @@ domload(() => {
 		},
 		columns: [
 			{ label: "Nabywca", key: "buyer_display_name", width: "1", searchable: "string" },
-			{ label: "NIP", key: "seller_nip", width: "1", searchable: "string" },
+			{ label: "NIP", key: "buyer_nip", width: "1", searchable: "string" },
 			{ label: "Wartość", key: "gross_price", width: "1", searchable: "number" },
 			{
 				label: "Produkty",
@@ -27,7 +27,7 @@ domload(() => {
 			{ label: "Utworzono", key: "created_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 			{ label: "Opłacono", key: "paid_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 		],
-		primary_key: "stock_product_id",
+		primary_key: "transaction_id",
 		empty_html: html`Brak sprzedaży`,
 		label: "Sprzedaż",
 		after_label: html`<button class="btn primary add_sale_btn">

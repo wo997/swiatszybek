@@ -1,20 +1,39 @@
 <?php //route[{ADMIN}/transaction/search]  
 
+$select = "t.transaction_id, t.gross_price, t.created_at, t.paid_at";
 $where = "1";
-if (isset($_POST["is_expense"])) {
-    $where .= " AND is_expense = " . intval($_POST["is_expense"]);
+$from = "transaction t";
+
+$datatable_params = json_decode($_POST["datatable_params"], true);
+$is_expense = def($datatable_params, "is_expense", null);
+if ($is_expense !== null) {
+    $is_expense = intval($is_expense);
+    $where .= " AND is_expense = $is_expense";
+    if ($is_expense) {
+        $from .= " LEFT JOIN address sa ON sa.address_id = t.seller_id";
+        $select .= ", sa.__display_name seller_display_name, sa.nip seller_nip";
+    } else {
+        $from .= " LEFT JOIN address ba ON ba.address_id = t.buyer_id";
+        $select .= ", ba.__display_name buyer_display_name, ba.nip buyer_nip";
+    }
 }
 
 Request::jsonResponse(paginateData([
-    "select" => "t.transaction_id, t.reference, t.total_price, t.delivery_type_id, t.carrier_id, t.status_id,
-        t.ordered_at, t.package_api_key, t.inpost_shipment_id,
-        ma.__display_name display_address_name, ma.phone, ma.email,
-        JSON_ARRAYAGG(JSON_OBJECT('qty', op.qty, 'name', op.name)) ordered_products",
-    "from" => "transaction so INNER JOIN address ma ON ma.address_id = t.main_address_id
-        LEFT JOIN ordered_product op USING (transaction_id)",
-
+    "select" => $select,
+    "from" => $from,
     "where" => $where,
     "order" => "transaction_id DESC",
     "quick_search_fields" => ["t.reference"],
     "datatable_params" => $_POST["datatable_params"]
 ]));
+
+// "buyer" => ["type" => "address"],
+//         "seller" => ["type" => "address"],
+//         "is_expense" => ["type" => "number"],
+//         "created_at" => ["type" => "string"],
+//         "paid_at" => ["type" => "string"],
+//         "net_price" => ["type" => "number"],
+//         "gross_price" => ["type" => "number"],
+//         "__products_json" => ["type" => "string"],
+//         "__products_search" => ["type" => "string"],
+//         "__search" => ["type" => "string"],

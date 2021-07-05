@@ -14,3 +14,11 @@ EntityManager::register("transaction_product", [
         "total_gross_price" => ["type" => "number"],
     ],
 ]);
+
+EntityManager::register("transaction", [
+    "props" => [
+        "transaction_products" => ["type" => "transaction_product[]"],
+    ],
+]);
+
+EntityManager::oneToMany("transaction", "transaction_products", "transaction_product", ["parent_required" => true]);

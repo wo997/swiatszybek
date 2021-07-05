@@ -92,7 +92,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					return html`<a
 						class="link"
 						target="_blank"
-						data-tooltip="Pokaż w nowej karcie"
+						data-tooltip="Pokaż produkt w nowej karcie"
 						href="${STATIC_URLS["ADMIN"]}/produkt/${product.general_product_id}"
 						>Tak <i class="fas fa-external-link-alt"></i>
 					</a>`;
@@ -336,17 +336,18 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
-				const errors = validateInputs(comp._children("[data-validate]").filter((e) => !e._parent(".hidden")));
-				if (errors.length > 0) {
-					return;
-				}
+				// these arent even scoped lol, avoid this
+				// const errors = validateInputs(comp._children("[data-validate]").filter((e) => !e._parent(".hidden")));
+				// if (errors.length > 0) {
+				// 	return;
+				// }
 
-				if (!comp._nodes.seller._validate() || !comp._nodes.buyer._validate()) {
-					return;
-				}
+				// if (!comp._nodes.seller._validate() || !comp._nodes.buyer._validate()) {
+				// 	return;
+				// }
 
 				/** @type {TransactionData} */
-				const transation = {
+				const transaction = {
 					transaction_id: data.transaction_id,
 					gross_price: data.gross_price,
 					is_expense: data.is_expense,
@@ -360,7 +361,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/transaction/save",
 					params: {
-						transation,
+						transaction,
 					},
 					success: (res) => {
 						hideLoader();

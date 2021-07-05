@@ -13,6 +13,6 @@ Request::jsonResponse(paginateData([
     // LEFT JOIN carrier c USING (carrier_id)
     "group" => "shop_order_id",
     "order" => "shop_order_id DESC",
-    "quick_search_fields" => ["so.reference"],
+    "quick_search_fields" => ["so.reference"], // TODO: more fields!
     "datatable_params" => $_POST["datatable_params"]
 ]));
