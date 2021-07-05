@@ -33,9 +33,7 @@ domload(() => {
 				width: "140px",
 				sortable: true,
 				searchable: "number",
-				render: (value) => {
-					return html`${value} zł`;
-				},
+				render: renderPriceDefault,
 			},
 			{
 				label: "Dostawa",

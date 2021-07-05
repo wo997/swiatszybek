@@ -296,6 +296,10 @@ function getEditableCellHtml(dt, column) {
 	return cell_html;
 }
 
+function renderPriceDefault(value) {
+	return html`${def(value, 0)} zł`;
+}
+
 function renderDatetimeDefault(value) {
 	if (typeof value === "string") {
 		return value.substring(0, 16);

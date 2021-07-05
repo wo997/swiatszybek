@@ -13,8 +13,8 @@ domload(() => {
 		},
 		columns: [
 			{ label: "Nabywca", key: "buyer_display_name", width: "1", searchable: "string" },
-			{ label: "NIP", key: "buyer_nip", width: "1", searchable: "string" },
-			{ label: "Wartość", key: "gross_price", width: "1", searchable: "number" },
+			{ label: "NIP nabywcy", key: "buyer_nip", width: "1", searchable: "string" },
+			{ label: "Wartość", key: "gross_price", width: "1", searchable: "number", render: renderPriceDefault },
 			{
 				label: "Produkty",
 				key: "__products_search",

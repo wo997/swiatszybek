@@ -12,9 +12,9 @@ domload(() => {
 			};
 		},
 		columns: [
-			{ label: "Nabywca", key: "seller_display_name", width: "1", searchable: "string" },
-			{ label: "NIP", key: "seller_nip", width: "1", searchable: "string" },
-			{ label: "Wartość", key: "gross_price", width: "1", searchable: "number" },
+			{ label: "Sprzedawca", key: "seller_display_name", width: "1", searchable: "string" },
+			{ label: "NIP sprzedawcy", key: "seller_nip", width: "1", searchable: "string" },
+			{ label: "Wartość", key: "gross_price", width: "1", searchable: "number", render: renderPriceDefault },
 			{
 				label: "Produkty",
 				key: "__products_search",
@@ -28,8 +28,8 @@ domload(() => {
 			{ label: "Opłacono", key: "paid_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 		],
 		primary_key: "transaction_id",
-		empty_html: html`Brak wydatków`,
-		label: "Sprzedaż",
+		empty_html: html`Brak zakupów`,
+		label: "Zakupy",
 		after_label: html`<button class="btn primary add_expense_btn">
 			Dodaj zakup
 			<i class="fas fa-plus"></i>

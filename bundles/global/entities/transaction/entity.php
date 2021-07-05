@@ -18,3 +18,21 @@ EntityManager::register("transaction", [
 EntityManager::oneToOne("transaction", "buyer", "address");
 
 EntityManager::oneToOne("transaction", "seller", "address");
+
+EventListener::register("before_save_transaction_entity", function ($params) {
+    /** @var Entity Transaction */
+    $transaction = $params["obj"];
+    $transaction_id = $transaction->getId();
+
+    /** @var Entity[] TransactionProduct */
+    $transaction_products = $transaction->getProp("transaction_products");
+
+    $__products_search = "";
+    foreach ($transaction_products as $transaction_product) {
+        $__products_search .= " " . $transaction_product->getProp("name");
+    }
+
+    $search = $__products_search;
+    $transaction->setProp("__products_search", getSearchableString($__products_search));
+    $transaction->setProp("__search", getSearchableString($search));
+});

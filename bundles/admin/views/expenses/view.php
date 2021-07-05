@@ -1,9 +1,9 @@
-<?php //route[{ADMIN}/wydatki] 
+<?php //route[{ADMIN}/zakupy] 
 ?>
 
 <?php Templates::startSection("head"); ?>
 
-<title>Wydatki</title>
+<title>Zakupy</title>
 
 <?php Templates::startSection("admin_page_body"); ?>
 
