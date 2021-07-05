@@ -36,9 +36,8 @@ function AddTemplateModalComp(comp, parent, data = undefined) {
 
 	if (data.select_parent_template === undefined) {
 		data.select_parent_template = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj szablon...",
+			single: true,
 			dataset: [
 				{ value: "-1", label: "Brak - Pusta strona" },
 				...templates.map((t) => ({ value: t.template_id.toString(), label: t.name })),

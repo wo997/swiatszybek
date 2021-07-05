@@ -8,15 +8,12 @@
  *
  * @typedef {{
  * single?: boolean
- * }} SelectableCompOptions
- *
- * @typedef {{
- * options?: SelectableCompOptions
  * dataset: SelectableOptionData[]
  * selection?: string[]
  * parent_variable?: string
  * custom_select_callback?(value: string)
  * get_custom_selection?(): string[]
+ * placeholder?: string
  * }} SelectableCompData
  *
  * @typedef {{
@@ -40,7 +37,7 @@
 function SelectableComp(comp, parent, data = undefined) {
 	data.dataset = def(data.dataset, []);
 	data.selection = def(data.selection, []);
-	data.options = def(data.options, {});
+	data.single = def(data.single, false);
 
 	const refreshSuggestions = () => {
 		const data = comp._data;
@@ -114,7 +111,7 @@ function SelectableComp(comp, parent, data = undefined) {
 
 	comp._receive_selection = (value) => {
 		const data = comp._data;
-		const get = data.options.single ? ([undefined, null].includes(value) ? [] : [value.toString()]) : value.map((e) => e.toString());
+		const get = data.single ? ([undefined, null].includes(value) ? [] : [value.toString()]) : value.map((e) => e.toString());
 		if (data.selection !== get) {
 			// propagate selection to ourselves
 			data.selection = get;
@@ -129,7 +126,7 @@ function SelectableComp(comp, parent, data = undefined) {
 		if (parent) {
 			const parent_data = parent._data;
 			if (parent_data && data.parent_variable) {
-				const val = data.options.single ? def(data.selection[0], null) : data.selection;
+				const val = data.single ? def(data.selection[0], null) : data.selection;
 				if (parent_data[data.parent_variable] !== val) {
 					setTimeout(() => {
 						// propagate selection to the parent yay
@@ -152,7 +149,7 @@ function SelectableComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="float_icon">
-				<input class="field" data-node="{${comp._nodes.input}}" />
+				<input class="field" data-node="{${comp._nodes.input}}" placeholder="{${def(data.placeholder, "")}}" />
 				<i class="fas fa-search"></i>
 				<div data-node="{${comp._nodes.suggestions}}" class="scroll_panel"></div>
 			</div>
@@ -191,7 +188,7 @@ function SelectableComp(comp, parent, data = undefined) {
 						if (data.custom_select_callback) {
 							data.custom_select_callback(value);
 						} else {
-							if (data.options.single) {
+							if (data.single) {
 								data.selection = [];
 							}
 							data.selection.push(suggestion.dataset.value);

@@ -77,9 +77,7 @@ function MenuModalComp(comp, parent, data = undefined) {
 		traverse(product_categories_tree);
 
 		data.select_product_category = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj kategorię produktów...",
 			dataset: category_options,
 			parent_variable: "product_category_id",
 		};
@@ -87,9 +85,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 	if (data.select_general_product === undefined) {
 		data.select_general_product = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj produkt...",
+			single: true,
 			dataset: general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })),
 			parent_variable: "general_product_id",
 		};
@@ -97,9 +94,8 @@ function MenuModalComp(comp, parent, data = undefined) {
 
 	if (data.select_page === undefined) {
 		data.select_page = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj stronę...",
+			single: true,
 			dataset: pages.filter((e) => e.page_type === "page").map((p) => ({ value: p.page_id.toString(), label: p.url + " " + p.seo_title })),
 			parent_variable: "page_id",
 		};

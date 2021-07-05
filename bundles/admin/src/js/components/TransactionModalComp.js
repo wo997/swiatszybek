@@ -74,12 +74,31 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			},
 			{
 				key: "product_id",
-				label: "Id produktu ziom",
+				label: "Czy z listy?",
 				width: "1",
+				render: (product_id) => {
+					const noProduct = () => {
+						return "Nie";
+					};
+					if (!product_id) {
+						return noProduct();
+					}
+					const product = products.find((p) => p.product_id);
+					if (!product) {
+						return noProduct();
+					}
+					return html`<a
+						class="link"
+						target="_blank"
+						data-tooltip="Pokaż w nowej karcie"
+						href="${STATIC_URLS["ADMIN"]}/produkt/${product.general_product_id}"
+						>Tak <i class="fas fa-external-link-alt"></i>
+					</a>`;
+				},
 			},
 			{
 				key: "net_price",
-				label: "Cena Netto (zł)",
+				label: "J.Cena Netto (zł)",
 				width: "1",
 				editable: "number",
 			},
@@ -91,13 +110,13 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			},
 			{
 				key: "gross_price",
-				label: "Cena Brutto (zł)",
+				label: "J. Cena Brutto (zł)",
 				width: "1",
 				editable: "number",
 			},
 			{
 				key: "discount_gross_price",
-				label: "Rabatowa Cena Brutto (zł)",
+				label: "J. Rabatowa Cena Brutto (zł)",
 				width: "1",
 				editable: "number",
 			},
@@ -109,7 +128,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			},
 			{
 				key: "total_gross_price",
-				label: "Suma Brutto (zł)",
+				label: "Wartość Brutto (zł)",
 				width: "1",
 			},
 		],
@@ -125,6 +144,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 	if (data.select_product === undefined) {
 		data.select_product = {
+			placeholder: "Wyszukaj produkty z listy...",
 			options: {},
 			dataset: products.map((p) => {
 				const value = p.product_id + "";
@@ -190,10 +210,13 @@ function TransactionModalComp(comp, parent, data = undefined) {
 		const cd = comp._changed_data;
 
 		if (cd.products_dt) {
+			let total_gross_price = 0;
 			data.products_dt.dataset.forEach((row_data) => {
 				row_data.current_gross_price = row_data.discount_gross_price ? row_data.discount_gross_price : row_data.gross_price;
 				row_data.total_gross_price = round(row_data.current_gross_price * row_data.qty, 2);
+				total_gross_price += row_data.total_gross_price;
 			});
+			data.gross_price = total_gross_price;
 		}
 
 		setCompData(comp, data, {
@@ -236,12 +259,20 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					<div class="">
 						<span class="label medium bold inline">Produkty</span
 						><selectable-comp data-bind="{${data.select_product}}" class="inline ml2"></selectable-comp
-						><button class="btn subtle ml2" data-node="{${comp._nodes.add_other_product}}" data-tooltip="Zaleca się dodać produkt z listy">
+						><button
+							class="btn subtle ml2"
+							data-node="{${comp._nodes.add_other_product}}"
+							data-tooltip="Zalecamy dodać produkt z listy lub go utworzyć jeśli go na niej brak.<br>Opcja 'Dodaj inny' tyczy się produków sprzedawanych jednorazowo oraz usług."
+						>
 							Dodaj inny <i class="fas fa-plus"></i>
 						</button>
 					</div>
 
 					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}"></datatable-comp>
+
+					<div class="products_footer">
+						<div class="medium pln">Cena Brutto: <span html="{${prettyPrice(data.gross_price) + " zł"}}"></span></div>
+					</div>
 
 					<div class="desktop_row mt5" style="max-width:1000px">
 						<div>

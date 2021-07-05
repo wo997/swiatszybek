@@ -65,9 +65,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 		}
 
 		data.select_product_category = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj kategorię produktów...",
+			single: true,
 			dataset: category_options,
 			parent_variable: "product_category_id",
 		};
@@ -75,9 +74,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 
 	if (data.select_general_product === undefined) {
 		data.select_general_product = {
-			options: {
-				single: true,
-			},
+			placeholder: "Wyszukaj produkt...",
+			single: true,
 			dataset: general_products.map((g) => ({ value: g.general_product_id.toString(), label: g.name })),
 			parent_variable: "general_product_id",
 		};
@@ -85,7 +83,8 @@ function AddPageModalComp(comp, parent, data = undefined) {
 
 	if (data.select_template === undefined) {
 		data.select_template = {
-			options: { single: true },
+			placeholder: "Wyszukaj szablon...",
+			single: true,
 			dataset: [],
 			parent_variable: "template_id",
 		};
