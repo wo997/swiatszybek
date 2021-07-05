@@ -1173,6 +1173,8 @@ function DatatableComp(comp, parent, data) {
 							}
 						});
 
+					data.dataset.sort((a, b) => Math.sign(a.pos - b.pos));
+
 					orderBackend();
 
 					comp._render();

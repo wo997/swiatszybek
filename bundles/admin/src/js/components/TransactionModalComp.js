@@ -13,6 +13,8 @@
  *  save_btn: PiepNode
  *  products_dt: PiepNode
  *  add_other_product: PiepNode
+ *  seller: AddressComp
+ *  buyer: AddressComp
  * }
  * _show?(options?: ShowModalParams)
  * } & BaseComp} TransactionModalComp
@@ -145,7 +147,6 @@ function TransactionModalComp(comp, parent, data = undefined) {
 	if (data.select_product === undefined) {
 		data.select_product = {
 			placeholder: "Wyszukaj produkty z listy...",
-			options: {},
 			dataset: products.map((p) => {
 				const value = p.product_id + "";
 
@@ -277,12 +278,12 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					<div class="desktop_row mt5" style="max-width:1000px">
 						<div>
 							<div class="label medium bold">Sprzedawca</div>
-							<address-comp data-bind="{${data.seller}}" class="optional_phone_email"></address-comp>
+							<address-comp data-node="{${comp._nodes.seller}}" data-bind="{${data.seller}}" class="optional_phone_email"></address-comp>
 						</div>
 
 						<div>
 							<div class="label medium bold">Nabywca</div>
-							<address-comp data-bind="{${data.buyer}}" class="optional_phone_email"></address-comp>
+							<address-comp data-node="{${comp._nodes.buyer}}" data-bind="{${data.buyer}}" class="optional_phone_email"></address-comp>
 						</div>
 					</div>
 				</div>
@@ -340,16 +341,33 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					return;
 				}
 
-				// showLoader();
-				// xhr({
-				// 	url: STATIC_URLS["ADMIN"] + "/transaction/save",
-				// 	params: {
-				// 		//page,
-				// 	},
-				// 	success: (res) => {
-				// 		hideLoader();
-				// 	},
-				// });
+				if (!comp._nodes.seller._validate() || !comp._nodes.buyer._validate()) {
+					return;
+				}
+
+				/** @type {TransactionData} */
+				const transation = {
+					transaction_id: data.transaction_id,
+					gross_price: data.gross_price,
+					is_expense: data.is_expense,
+					net_price: data.net_price,
+					buyer: data.buyer,
+					seller: data.seller,
+					transaction_products: data.products_dt.dataset,
+				};
+
+				showLoader();
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/transaction/save",
+					params: {
+						transation,
+					},
+					success: (res) => {
+						hideLoader();
+						window.dispatchEvent(new CustomEvent("transactions_changed"));
+						hideModal("TransactionModal");
+					},
+				});
 			});
 
 			comp._nodes.products_dt.addEventListener("editable_change", (ev) => {

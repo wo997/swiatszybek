@@ -138,6 +138,16 @@ product-comp {
 	// 		border-color: transparent;
 	// 	}
 	// }
+
+	@media (min-width: 1199px) {
+		.node_dt_descriptions {
+			max-width: calc(100% - 400px);
+			margin-bottom: 0 !important;
+		}
+		.node_products_dt {
+			margin-top: -2.5em;
+		}
+	}
 }
 
 .injectable_header {

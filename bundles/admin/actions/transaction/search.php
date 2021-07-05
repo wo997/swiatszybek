@@ -1,5 +1,10 @@
 <?php //route[{ADMIN}/transaction/search]  
 
+$where = "1";
+if (isset($_POST["is_expense"])) {
+    $where .= " AND is_expense = " . intval($_POST["is_expense"]);
+}
+
 Request::jsonResponse(paginateData([
     "select" => "t.transaction_id, t.reference, t.total_price, t.delivery_type_id, t.carrier_id, t.status_id,
         t.ordered_at, t.package_api_key, t.inpost_shipment_id,
@@ -8,7 +13,7 @@ Request::jsonResponse(paginateData([
     "from" => "transaction so INNER JOIN address ma ON ma.address_id = t.main_address_id
         LEFT JOIN ordered_product op USING (transaction_id)",
 
-    "group" => "transaction_id",
+    "where" => $where,
     "order" => "transaction_id DESC",
     "quick_search_fields" => ["t.reference"],
     "datatable_params" => $_POST["datatable_params"]

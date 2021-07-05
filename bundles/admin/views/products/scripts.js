@@ -43,9 +43,9 @@ domload(() => {
 
 	/** @type {DatatableComp} */
 	// @ts-ignore
-	const datatable = $("datatable-comp.products");
+	const datatable_comp = $("datatable-comp.products");
 
-	DatatableComp(datatable, undefined, {
+	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/product/search",
 		columns: [
 			{
@@ -125,7 +125,7 @@ domload(() => {
 		}),
 	});
 
-	datatable.addEventListener("click", (ev) => {
+	datatable_comp.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
 		const edit_btn = target._parent(".edit_btn");
@@ -159,12 +159,12 @@ domload(() => {
 		}
 	});
 
-	const add_product = datatable._child(".add_product");
+	const add_product = datatable_comp._child(".add_product");
 	add_product.addEventListener("click", () => {
 		getProductModal()._show(undefined, { source: add_product });
 	});
 
-	const show_categories = datatable._child(".show_categories");
+	const show_categories = datatable_comp._child(".show_categories");
 
 	/**
 	 *
@@ -176,7 +176,7 @@ domload(() => {
 			current_categories = category_ids;
 			localStorage.setItem("search_products_categories", JSON.stringify(current_categories));
 			localStorage.setItem("search_products_now", Date.now() + "");
-			datatable._backend_search();
+			datatable_comp._backend_search();
 		}
 
 		const all = current_categories.length === 0;
@@ -205,6 +205,6 @@ domload(() => {
 	});
 
 	window.addEventListener("products_changed", () => {
-		datatable._backend_search();
+		datatable_comp._backend_search();
 	});
 });
