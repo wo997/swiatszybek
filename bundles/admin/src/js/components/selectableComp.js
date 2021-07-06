@@ -175,8 +175,9 @@ function SelectableComp(comp, parent, data = undefined) {
 			}
 		},
 		ready: () => {
-			// mechanics
-			document.addEventListener("click", (ev) => {
+			// HEY, leave it as DOCUMENT, so we can click off
+			// mousedown cause has to trigger before change event
+			document.addEventListener("mousedown", (ev) => {
 				const target = $(ev.target);
 				const data = comp._data;
 
