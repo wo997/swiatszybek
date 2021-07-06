@@ -3,6 +3,18 @@
 domload(productBlocksLoaded);
 function productBlocksLoaded() {
 	starsLoaded();
+
+	// images yay
+	$$(".product_img_wrapper:not(.cntrrgstrd)").forEach((e) => {
+		e.classList.add("cntrrgstrd");
+		try {
+			const cnt = JSON.parse(e.dataset.images).length;
+			if (cnt < 2) {
+				return;
+			}
+			e.insertAdjacentHTML("beforeend", html`<div class="img_cnt">${cnt} <i class="far fa-image"></i></div>`);
+		} catch (e) {}
+	});
 }
 
 /**
@@ -27,7 +39,11 @@ domload(() => {
 		const was_focused_product_img_wrapper = curr_focused_product_img_wrapper;
 		if (product_img_wrapper && product_img_wrapper.offsetWidth > 100) {
 			if (curr_focused_product_img_wrapper !== product_img_wrapper && !product_img_wrapper._child(".overlay")) {
+				if (curr_focused_product_img_wrapper) {
+					curr_focused_product_img_wrapper.classList.remove("active");
+				}
 				curr_focused_product_img_wrapper = product_img_wrapper;
+				product_img_wrapper.classList.add("active");
 
 				const images_json = product_img_wrapper.dataset.images;
 				if (images_json) {
@@ -67,6 +83,9 @@ domload(() => {
 				}
 			}
 		} else {
+			if (curr_focused_product_img_wrapper) {
+				curr_focused_product_img_wrapper.classList.remove("active");
+			}
 			curr_focused_product_img_wrapper = undefined;
 			product_focus_unique_id++;
 		}

@@ -324,6 +324,14 @@ if ($main_img) {
                     <div class="spinner overlay white"></div>
                 </div>
             </button>
+
+        </div>
+
+        <div class="case_cannot_buy_product mt2">
+            <div class="user_info">
+                <i class="fas fa-info-circle"></i>
+                Wybierz wariant powyżej, by dodać produkt do koszyka
+            </div>
         </div>
 
         <div class="case_has_products expand_y hidden animate_hidden">

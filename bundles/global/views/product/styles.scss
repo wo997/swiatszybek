@@ -196,10 +196,16 @@
 		transition: opacity 0.2s;
 	}
 	&:not(.can_buy) {
-		& {
+		> * {
 			opacity: 0.5;
+			cursor: not-allowed;
 		}
 	}
+}
+
+.case_cannot_buy_product .user_info {
+	padding: 5px;
+	text-align: center;
 }
 
 .case_has_products.inyourbasket {

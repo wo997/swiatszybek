@@ -384,6 +384,7 @@ function setVariantData() {
 	const can_buy_product = !!(single_product && single_product.stock > 0);
 	const case_can_buy_product = $(".case_can_buy_product");
 	case_can_buy_product.classList.toggle("can_buy", can_buy_product);
+	$(".case_cannot_buy_product").classList.toggle("hidden", can_buy_product);
 
 	expand($(".case_notify_available"), !!(single_product && single_product.stock <= 0));
 
