@@ -288,7 +288,7 @@ if ($main_img) {
         </div>
 
         <div class="mt2">
-            <div class="link ask_product_btn"> <i class="fas fa-envelope"></i> Zapytaj o produkt </div>
+            <div class="link ask_product_btn inline"> <i class="fas fa-envelope"></i> Zapytaj o produkt </div>
         </div>
 
 
