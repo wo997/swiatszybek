@@ -13,6 +13,11 @@ domload(() => {
 		const case_has_page = product_comp._child(".case_has_page");
 		case_has_page.classList.add("inactive");
 		case_has_page.dataset.tooltip = "Zanim opublikujesz produkt musisz utworzyć jego stronę";
+
+		product_comp._nodes.open_btn.classList.add("disabled");
+		product_comp._nodes.open_btn.dataset.tooltip = "Najpierw utwórz stronę";
+
+		product_comp._nodes.edit_page_btn._set_content(html`Utwórz stronę <i class="fas fa-file-alt"></i>`);
 	}
 
 	const main_header_height = $(".main_header").offsetHeight;

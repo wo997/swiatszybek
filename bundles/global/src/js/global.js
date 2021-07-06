@@ -286,7 +286,7 @@ function getValue(input, options = {}) {
 
 	if (!options.plain) {
 		// @ts-ignore
-		if (input.classList.contains("empty_null") && input.value === "") {
+		if (input.classList.contains("empty_null") && input.value.trim() === "") {
 			return null;
 		}
 		if (input.classList.contains("number")) {

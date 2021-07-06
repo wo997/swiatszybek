@@ -9,7 +9,7 @@ DB::createTable("transaction_product", [
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
     ["name" => "vat", "type" => "DECIMAL(10,2)"],
     ["name" => "gross_price", "type" => "DECIMAL(10,2)"],
-    ["name" => "discount_gross_price", "type" => "DECIMAL(10,2)"],
+    ["name" => "discount_gross_price", "type" => "DECIMAL(10,2)", "null" => true],
     ["name" => "current_gross_price", "type" => "DECIMAL(10,2)"],
     ["name" => "qty", "type" => "INT"],
     ["name" => "total_gross_price", "type" => "INT"],

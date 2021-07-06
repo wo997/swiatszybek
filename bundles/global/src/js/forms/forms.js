@@ -26,6 +26,17 @@
 
 domload(() => {
 	registerForms();
+
+	document.addEventListener(
+		"click",
+		(ev) => {
+			const target = $(ev.target);
+			if (target._parent(".disabled")) {
+				ev.stopPropagation();
+			}
+		},
+		{ capture: true }
+	);
 });
 windowload(() => {
 	registerForms();

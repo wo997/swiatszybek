@@ -120,6 +120,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				key: "discount_gross_price",
 				label: "J. Rabatowa Cena Brutto (zł)",
 				width: "1",
+				editable_classes: ["empty_null"],
 				editable: "number",
 			},
 			{
@@ -213,7 +214,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 		if (cd.products_dt) {
 			let total_gross_price = 0;
 			data.products_dt.dataset.forEach((row_data) => {
-				row_data.current_gross_price = row_data.discount_gross_price ? row_data.discount_gross_price : row_data.gross_price;
+				row_data.current_gross_price = def(row_data.discount_gross_price, row_data.gross_price);
 				row_data.total_gross_price = round(row_data.current_gross_price * row_data.qty, 2);
 				total_gross_price += row_data.total_gross_price;
 			});
