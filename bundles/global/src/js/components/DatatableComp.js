@@ -16,6 +16,7 @@
  *  simplify_search?: boolean
  *  render?(value: any, data: any)
  *  editable?: string
+ *  editable_classes?: string[]
  *  editable_callback?(data)
  *  batch_edit?: boolean
  *  map_name?: string

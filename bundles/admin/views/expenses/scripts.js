@@ -18,7 +18,7 @@ domload(() => {
 			{
 				label: "Produkty",
 				key: "__products_search",
-				width: "1",
+				width: "2",
 				searchable: "string",
 				simplify_search: true,
 				render: (value, data) => {

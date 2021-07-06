@@ -262,20 +262,32 @@ function getDatatableRowHtml(dt, row, opts = {}) {
  * @param {DatatableColumnDef} column
  */
 function getEditableCellHtml(dt, column) {
+	const classesStr = () => {
+		return classes.join(" ");
+	};
+	/** @type {string[]} */
+	const classes = [];
+	if (column.editable_classes) {
+		classes.push(...column.editable_classes);
+	}
+
 	let cell_html = "";
 	if (column.editable === "checkbox") {
-		cell_html += html`<p-checkbox data-bind="${column.key}"></p-checkbox>`;
+		cell_html += html`<p-checkbox data-bind="${column.key}" class="${classesStr()}"></p-checkbox>`;
 	} else if (column.editable === "number") {
-		cell_html += html`<input class="field small number" data-bind="${column.key}" inputmode="numeric" />`;
+		classes.push("field", "number");
+		cell_html += html`<input class="${classesStr()}" data-bind="${column.key}" inputmode="numeric" />`;
 	} else if (column.editable === "string") {
-		cell_html += html`<input class="field small" data-bind="${column.key}" />`;
+		classes.push("field");
+		cell_html += html`<input class="${classesStr()}" data-bind="${column.key}" />`;
 	} else if (column.editable === "color") {
-		cell_html += html`<color-picker class="small" data-bind="${column.key}"></color-picker>`;
+		cell_html += html`<color-picker class="${classesStr()}" data-bind="${column.key}"></color-picker>`;
 	} else if (column.editable === "date") {
-		cell_html += html`<input class="field small default_datepicker" data-bind="${column.key}" inputmode="numeric" />`;
+		classes.push("field", "default_datepicker");
+		cell_html += html`<input class="${classesStr()}" data-bind="${column.key}" inputmode="numeric" />`;
 	} else if (column.editable === "select") {
+		classes.push("field");
 		let options = "";
-		let number = "";
 		if (!column.map_name) {
 			console.error("You must define a map for select");
 		}
@@ -284,15 +296,16 @@ function getEditableCellHtml(dt, column) {
 			map.map.forEach((e) => {
 				options += html`<option value="${e.val}">${e.label}</option>`;
 				if (typeof e.val === "number") {
-					number = "number";
+					classes.push("number");
 				}
 			});
 		}
 
-		cell_html += html`<select class="field small ${number}" data-bind="${column.key}">
+		cell_html += html`<select class="${classesStr()}" data-bind="${column.key}">
 			${options}
 		</select>`;
 	}
+
 	return cell_html;
 }
 

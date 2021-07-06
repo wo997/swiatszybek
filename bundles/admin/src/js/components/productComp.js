@@ -777,6 +777,7 @@ function ProductComp(comp, parent, data = undefined) {
 							label: "Rabatowa Cena Brutto (zł)",
 							width: "1",
 							editable: "number",
+							editable_classes: ["empty_null"],
 							batch_edit: true,
 						});
 						comp._nodes.products_dt._add_column({
@@ -784,6 +785,7 @@ function ProductComp(comp, parent, data = undefined) {
 							label: "Rabat do",
 							width: "1",
 							editable: "date",
+							editable_classes: ["empty_null"],
 							batch_edit: true,
 						});
 					} else {
@@ -1175,13 +1177,6 @@ function ProductComp(comp, parent, data = undefined) {
 						const vkey = getVariantKeyFromId(v.product_variant_id);
 						product.variant_options.push(product[vkey]);
 						delete product[vkey];
-
-						if (!product.discount_gross_price) {
-							product.discount_gross_price = null;
-						}
-						if (!product.discount_untill || product.discount_untill === "0000-00-00") {
-							product.discount_untill = null;
-						}
 					});
 				});
 

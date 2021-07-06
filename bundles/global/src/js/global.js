@@ -285,6 +285,10 @@ function getValue(input, options = {}) {
 	}
 
 	if (!options.plain) {
+		// @ts-ignore
+		if (input.classList.contains("empty_null") && input.value === "") {
+			return null;
+		}
 		if (input.classList.contains("number")) {
 			v = numberFromStr(v);
 		}

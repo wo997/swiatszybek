@@ -194,14 +194,14 @@ function ProductModalComp(comp, parent, data = undefined) {
 						<div>
 							<div class="label">Rabatowa Cena Brutto</div>
 							<div class="glue_children">
-								<input class="field" data-bind="{${data.discount_gross_price}}" />
+								<input class="field empty_null" data-bind="{${data.discount_gross_price}}" />
 								<div class="field_desc">zł</div>
 							</div>
 						</div>
 
 						<div>
 							<div class="label">Rabat do</div>
-							<input class="field default_datepicker" data-bind="{${data.discount_untill}}" />
+							<input class="field default_datepicker empty_null" data-bind="{${data.discount_untill}}" />
 						</div>
 					</div>
 
@@ -268,14 +268,8 @@ function ProductModalComp(comp, parent, data = undefined) {
 					discount_untill: data.discount_untill,
 				};
 
-				if (!product.discount_gross_price) {
-					product.discount_gross_price = null;
-				}
-				if (!product.discount_untill || product.discount_untill === "0000-00-00") {
-					product.discount_untill = null;
-				}
-
 				showLoader();
+				console.log(product);
 				xhr({
 					url: STATIC_URLS["ADMIN"] + "/product/save",
 					params: {
