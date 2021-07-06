@@ -13,6 +13,7 @@
  *  width?: string
  *  sortable?: boolean | undefined
  *  searchable?: string
+ *  simplify_search?: boolean
  *  render?(value: any, data: any)
  *  editable?: string
  *  editable_callback?(data)
@@ -43,6 +44,7 @@
  * key: string
  * db_key?: string
  * data: any
+ * simplify_search?: boolean
  * }} DatatableFilterData
  *
  * @typedef {{
@@ -866,6 +868,7 @@ function DatatableComp(comp, parent, data) {
 							key,
 							data: { type: "exact", value: +x.dataset.val, display: dt_cell.innerText },
 							db_key: def(column.db_key, key),
+							simplify_search: def(column.simplify_search, false),
 						});
 					}
 					comp._render();
@@ -1001,11 +1004,17 @@ function DatatableComp(comp, parent, data) {
 								200
 							);
 							filter_menu._child(".apply").addEventListener("click", () => {
+								const data = comp._data;
 								const filter_data = filter_menu_data.apply(filter_menu);
 								if (filter_data) {
-									comp._data.filters = comp._data.filters.filter((f) => f.key !== column.key);
+									data.filters = data.filters.filter((f) => f.key !== column.key);
 									if (filter_data.display) {
-										comp._data.filters.push({ key: column.key, data: filter_data, db_key: def(column.db_key, column.key) });
+										data.filters.push({
+											key: column.key,
+											data: filter_data,
+											db_key: def(column.db_key, column.key),
+											simplify_search: def(column.simplify_search, false),
+										});
 									}
 									data.pagination_data.page_id = 0;
 									comp._render();
@@ -1014,7 +1023,8 @@ function DatatableComp(comp, parent, data) {
 							});
 							filter_menu._child(".clear").addEventListener("click", () => {
 								//filter_menu_data.clear(filter_menu);
-								comp._data.filters = comp._data.filters.filter((f) => f.key !== column.key);
+								const data = comp._data;
+								data.filters = data.filters.filter((f) => f.key !== column.key);
 								comp._render();
 
 								hideFilterMenu();

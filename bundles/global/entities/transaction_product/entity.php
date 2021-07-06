@@ -2,6 +2,7 @@
 
 EntityManager::register("transaction_product", [
     "props" => [
+        "transaction_id" => ["type" => "number"],
         "product_id" => ["type" => "number"],
         "general_product_id" => ["type" => "number"],
         "name" => ["type" => "string"],
@@ -12,6 +13,7 @@ EntityManager::register("transaction_product", [
         "current_gross_price" => ["type" => "number"],
         "qty" => ["type" => "number"],
         "total_gross_price" => ["type" => "number"],
+        "pos" => ["type" => "number"],
     ],
 ]);
 

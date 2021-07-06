@@ -20,8 +20,16 @@ domload(() => {
 				key: "__products_search",
 				width: "1",
 				searchable: "string",
+				simplify_search: true,
 				render: (value, data) => {
-					return data.__products_json; // JSON.parse(data.__products_json)
+					try {
+						const products = JSON.parse(data.__products_json);
+						if (products.length === 1 && products[0].qty === null) {
+							return "";
+						}
+						return products.map((e) => html`<span class="semi_bold">${e.qty ? e.qty + " × " : ""}</span> ${e.name}`).join("<br>");
+					} catch (e) {}
+					return "";
 				},
 			},
 			{ label: "Utworzono", key: "created_at", width: "1", searchable: "date", render: renderDatetimeDefault },

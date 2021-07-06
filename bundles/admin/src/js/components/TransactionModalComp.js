@@ -76,7 +76,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			},
 			{
 				key: "product_id",
-				label: "Czy z listy?",
+				label: "Czy z magazynu?",
 				width: "1",
 				render: (product_id) => {
 					const noProduct = () => {
@@ -146,7 +146,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 	if (data.select_product === undefined) {
 		data.select_product = {
-			placeholder: "Wyszukaj produkty z listy...",
+			placeholder: "Wyszukaj produkty z magazynu...",
 			dataset: products.map((p) => {
 				const value = p.product_id + "";
 
@@ -263,7 +263,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 						><button
 							class="btn subtle ml2"
 							data-node="{${comp._nodes.add_other_product}}"
-							data-tooltip="Zalecamy dodać produkt z listy lub go utworzyć jeśli go na niej brak.<br>Opcja 'Dodaj inny' tyczy się produków sprzedawanych jednorazowo oraz usług."
+							data-tooltip="Jeśli produkt nie jest przechowywany w magazynie, może to być np. usługa."
 						>
 							Dodaj inny <i class="fas fa-plus"></i>
 						</button>

@@ -191,7 +191,7 @@ function paginateData($params = [])
     $filters = def($params, ["datatable_params", "filters"], []);
     if ($filters) {
         foreach ($filters as $filter) {
-            $where .= getFilterCondition($filter["db_key"], $filter["data"]);
+            $where .= getFilterCondition($filter["db_key"], $filter["data"], def($filter, "simplify_search", false));
         }
     }
 
@@ -258,13 +258,16 @@ function paginateData($params = [])
     return $res;
 }
 
-function getFilterCondition($key, $data)
+function getFilterCondition($key, $data, $simplify_search = false)
 {
     $key = clean($key);
     $type = def($data, "type", "");
 
     if ($type === "string") {
         $full_match = def($data, "full_match", 0);
+        if ($simplify_search) {
+            $data["string"] = getSearchableString($data["string"]);
+        }
         $string = DB::escape($data["string"], false);
         if (!$full_match) {
             $string = "%$string%";
@@ -276,8 +279,26 @@ function getFilterCondition($key, $data)
         }
         return " AND NOT $key";
     } else if ($type === "exact") {
+        if ($simplify_search) {
+            $data["value"] = getSearchableString($data["value"]);
+        }
         $string = DB::escape($data["value"]); // can also be a number but leave it a string
         return " AND $key = $string";
+    } else if ($type === "number") {
+        $operator = def($data, "operator", "");
+        $num = def($data, "num", 0);
+        $val = def($data, "val", 0);
+        if ($operator === "=") {
+            return " AND $key = $num";
+        } else if ($operator === ">=") {
+            return " AND $key >= $num";
+        } else if ($operator === "<=") {
+            return " AND $key <= $num";
+        } else if ($operator === "<>") {
+            $more_than = def($data, "more_than", 0);
+            $less_than = def($data, "less_than", 0);
+            return " AND $key BETWEEN $more_than AND $less_than";
+        }
     }
 
     return "";

@@ -1,6 +1,6 @@
 <?php //route[{ADMIN}/transaction/search]  
 
-$select = "t.transaction_id, t.gross_price, t.created_at, t.paid_at";
+$select = "t.transaction_id, t.gross_price, t.created_at, t.paid_at, t.__products_json";
 $where = "1";
 $from = "transaction t";
 
@@ -23,7 +23,7 @@ Request::jsonResponse(paginateData([
     "from" => $from,
     "where" => $where,
     "order" => "transaction_id DESC",
-    "quick_search_fields" => ["t.reference"],
+    "quick_search_fields" => ["t.__search"],
     "datatable_params" => $_POST["datatable_params"]
 ]));
 

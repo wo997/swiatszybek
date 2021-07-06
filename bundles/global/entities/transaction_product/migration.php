@@ -13,4 +13,5 @@ DB::createTable("transaction_product", [
     ["name" => "current_gross_price", "type" => "DECIMAL(10,2)"],
     ["name" => "qty", "type" => "INT"],
     ["name" => "total_gross_price", "type" => "INT"],
+    ["name" => "pos", "type" => "INT"],
 ]);
