@@ -16,7 +16,7 @@
  *  seller: AddressComp
  *  buyer: AddressComp
  * }
- * _show?(options?: ShowModalParams)
+ * _show?(is_expense?: number, options?: ShowModalParams)
  * } & BaseComp} TransactionModalComp
  */
 
@@ -26,44 +26,45 @@
  * @param {TransactionModalCompData} data
  */
 function TransactionModalComp(comp, parent, data = undefined) {
-	if (data === undefined) {
-		data = {
-			transaction_id: -1,
-			gross_price: 0,
-			net_price: 0,
-			is_expense: 1,
-			buyer: {
-				party: "company",
-				first_name: "",
-				last_name: "",
-				company: "",
-				nip: "",
-				phone: "",
-				email: "",
-				country: "Polska",
-				post_code: "",
-				city: "",
-				street: "",
-				building_number: "",
-				flat_number: "",
-			},
-			seller: {
-				party: "company",
-				first_name: "",
-				last_name: "",
-				company: "",
-				nip: "",
-				phone: "",
-				email: "",
-				country: "Polska",
-				post_code: "",
-				city: "",
-				street: "",
-				building_number: "",
-				flat_number: "",
-			},
-		};
-	}
+	/** @type {TransactionData} */
+	const defa = {
+		transaction_id: -1,
+		gross_price: 0,
+		net_price: 0,
+		is_expense: 1,
+		buyer: {
+			party: "company",
+			first_name: "",
+			last_name: "",
+			company: "",
+			nip: "",
+			phone: "",
+			email: "",
+			country: "Polska",
+			post_code: "",
+			city: "",
+			street: "",
+			building_number: "",
+			flat_number: "",
+		},
+		seller: {
+			party: "company",
+			first_name: "",
+			last_name: "",
+			company: "",
+			nip: "",
+			phone: "",
+			email: "",
+			country: "Polska",
+			post_code: "",
+			city: "",
+			street: "",
+			building_number: "",
+			flat_number: "",
+		},
+	};
+
+	data = def(data, defa);
 
 	/** @type {DatatableCompData} */
 	const datatable = {
@@ -198,8 +199,17 @@ function TransactionModalComp(comp, parent, data = undefined) {
 		};
 	}
 
-	comp._show = (options = {}) => {
+	comp._show = (is_expense, options = {}) => {
+		comp._data = cloneObject(defa);
 		const data = comp._data;
+
+		data.is_expense = is_expense;
+		if (is_expense) {
+			data.buyer.company = "asd";
+			// data.buyer = {
+			// };
+		}
+		console.log(data);
 
 		comp._render();
 
@@ -291,26 +301,6 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			</div>
 		`,
 		ready: () => {
-			// const after_label_placeholder = comp._child(".bind_products_dt .after_label_placeholder");
-			// after_label_placeholder.style.flexGrow = "1";
-			// after_label_placeholder.append(comp._child(".bind_select_product"));
-			// let next = after_label_placeholder;
-			// while (true) {
-			// 	next = next._next();
-			// 	if (!next) {
-			// 		break;
-			// 	}
-			// 	next.classList.add("hidden");
-			// }
-
-			// comp._children("address-comp .bind_phone, address-comp .bind_email").forEach((e) => {
-			// 	e.classList.add("hidden");
-			// 	e._prev().classList.add("hidden");
-			// });
-
-			// removeClasses("address-comp .big_boxes", ["big_boxes"], comp);
-			// comp._nodes.products_dt._child(".dt_main_label").classList.remove("bold");
-
 			const default_vat = vats[0] ? vats[0].value : 23;
 
 			comp._nodes.add_other_product.addEventListener("click", () => {

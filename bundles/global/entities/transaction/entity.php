@@ -50,7 +50,7 @@ EventListener::register("before_save_transaction_entity", function ($params) {
         /** @var Entity Address */
         $buyer = $transaction->getProp("buyer");
         if ($buyer) {
-            $buyer .= " " . $buyer->getProp("__display_name");
+            $search .= " " . $buyer->getProp("__display_name");
         }
     }
 

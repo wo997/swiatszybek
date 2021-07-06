@@ -50,7 +50,7 @@ domload(() => {
 
 		const add_expense_btn = target._parent(".add_expense_btn");
 		if (add_expense_btn) {
-			getTransactionModal()._show({ source: add_expense_btn });
+			getTransactionModal()._show(1, { source: add_expense_btn });
 		}
 	});
 
