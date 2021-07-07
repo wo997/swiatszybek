@@ -17,6 +17,7 @@ function getGlobalProductsSearch($url)
     $search_order = def($get_vars, "sortuj", "bestsellery");
 
     $only_discount = def($get_vars, "promocje", "0");
+    $only_in_stock = def($get_vars, "dostepne", "0");
 
     // do the search for product_ids iteratively, not with a big query that would quickly slow down
 
@@ -131,6 +132,17 @@ function getGlobalProductsSearch($url)
     }
     //die;
 
+    // we dont pass it as an argument of renderGeneralProductsList to fetch product_ids count to display
+    if ($only_discount) {
+        $product_ids_csv = $product_ids ? join(",", $product_ids) : "-1";
+        $product_ids = DB::fetchCol("SELECT product_id FROM $from WHERE __discount_percent > 0 AND p.product_id IN ($product_ids_csv)");
+    }
+    if ($only_in_stock) {
+        $product_ids_csv = $product_ids ? join(",", $product_ids) : "-1";
+        $product_ids = DB::fetchCol("SELECT product_id FROM $from WHERE stock > 0 AND p.product_id IN ($product_ids_csv)");
+    }
+
+
     $params = [
         "product_ids" => $product_ids,
         "page_id" => $page_id,
@@ -144,8 +156,6 @@ function getGlobalProductsSearch($url)
         $params["quick_search"] = $search_phrase;
         $params["search_order"] = "relevance";
     }
-
-    $params["only_discount"] = $only_discount;
 
     $products_data = renderGeneralProductsList($params);
     $products_data["total_products"] = count($product_ids);
@@ -178,10 +188,6 @@ function renderGeneralProductsList($params)
         $where .= " AND p.product_id IN (" . ($product_ids ? join(",", $product_ids) : "-1") . ")";
     } else if ($general_product_ids !== null) {
         $where .= " AND gp.general_product_id IN (" . ($general_product_ids ? join(",", $general_product_ids) : "-1") . ")";
-    }
-
-    if (def($params, "only_discount", "0")) {
-        $where .= " AND __discount_percent > 0";
     }
 
     $search_order = def($params, "search_order", "bestsellery");

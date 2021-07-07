@@ -210,8 +210,10 @@ domload(() => {
 });
 
 domload(() => {
-	$(".only_discount").addEventListener("change", () => {
-		mainSearchProducts();
+	$$(".only_in_stock, .only_discount").forEach((e) => {
+		e.addEventListener("change", () => {
+			mainSearchProducts();
+		});
 	});
 });
 
@@ -416,6 +418,7 @@ function productsPopState() {
 		current_url_search = current_url_search.substr(1);
 	}
 	setCategoryFeaturesFromUrl();
+	setOtherFiltersFromUrl();
 	setRangesFromUrl();
 	setSearchPhraseFromUrl();
 	setSearchOrderFromUrl();
@@ -423,6 +426,12 @@ function productsPopState() {
 	updatePrettyCheckboxRanges();
 	updateSearchOrderSelect();
 	mainSearchProducts(true);
+}
+
+function setOtherFiltersFromUrl() {
+	const url_params = new URLSearchParams(current_url_search);
+	$(".only_discount")._set_value(url_params.get("promocje") !== null ? 1 : 0, { quiet: true });
+	$(".only_in_stock")._set_value(url_params.get("dostepne") !== null ? 1 : 0, { quiet: true });
 }
 
 function setCategoryFeaturesFromUrl() {
@@ -552,6 +561,9 @@ function mainSearchProducts(force = false) {
 
 	if ($(".only_discount")._get_value()) {
 		url_params.append("promocje", "1");
+	}
+	if ($(".only_in_stock")._get_value()) {
+		url_params.append("dostepne", "1");
 	}
 
 	if (options_data.length > 0) {

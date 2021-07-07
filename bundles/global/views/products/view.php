@@ -473,12 +473,19 @@ foreach ($feature_general_product_count as $x) {
                         <input class="field search_phrase" placeholder="Nazwa produktu">
                         <i class="fas fa-search"></i>
                     </div>
-                    <?= traverseFeatures() ?>
                     <div class="label">
-                        <!-- <span class="bold" style="color:var(--clr_buynow)">Promocje</span><span class="normal"> - produkty ze zniżką</span> -->
-                        <span class="bold" style="color:var(--clr_buynow)">Tylko PROMOCJE</span>
+                        Wyświetl
                     </div>
-                    <p-checkbox class="only_discount"></p-checkbox>
+                    <div class="checkbox_area mt1">
+                        <p-checkbox class="square only_discount"></p-checkbox>
+                        <span>Tylko<span class="semi_bold" style="color:var(--clr_buynow)"> PROMOCJE</span></span>
+                    </div>
+                    <div class="checkbox_area mt1">
+                        <p-checkbox class="square only_in_stock"></p-checkbox>
+                        <span>Tylko dostępne</span>
+                    </div>
+
+                    <?= traverseFeatures() ?>
                 </ul>
                 <div class="prfbf"></div>
             </div>
