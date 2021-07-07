@@ -761,3 +761,13 @@ domload(() => {
 		});
 	});
 });
+
+domload(() => {
+	const discount_on_products_label = $(".discount_on_products_label");
+	if (!discount_on_products_label) {
+		return;
+	}
+	discount_on_products_label.addEventListener("click", () => {
+		expand(discount_on_products_label._next(), discount_on_products_label.classList.toggle("expanded"));
+	});
+});

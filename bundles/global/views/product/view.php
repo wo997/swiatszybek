@@ -174,61 +174,16 @@ $user_email = $user_data ? $user_data["email"] : "";
 
 $display_variant_option_discount = [];
 
+$discount_products = [];
+$max_discount_all = 0;
 if (User::getCurrent()->priveleges["backend_access"]) {
-    $discount_products = [];
-    // $variant_field_count = count($general_product_variants);
 
     foreach ($general_product_products as $product) {
         if (!$product["discount_gross_price"]) {
             continue;
         }
-
-        $product_variant_option_ids = [];
-        foreach ($product["variants"] as $variant_option_id) {
-            if (in_array($variant_option_id, $variant_option_ids)) {
-                $product_variant_option_ids[] = $variant_option_id;
-            }
-        }
-        $discount_products[] = $product_variant_option_ids;
+        $discount_products[] = $product["__name"];
     }
-
-    $discount_product_count = count($discount_products);
-
-    // while (true) {
-    //     $option_id_hit_map = [];
-    //     foreach ($discount_products as $discount_product) {
-    //         foreach ($discount_product as $variant_option_id) {
-    //             if (!isset($option_id_hit_map[$variant_option_id])) {
-    //                 $option_id_hit_map[$variant_option_id] = 0;
-    //             }
-    //             $option_id_hit_map[$variant_option_id]++;
-    //         }
-    //     }
-    //     //var_dump($option_id_hit_map, $discount_product_count);
-    //     break;
-    // }
-
-    // foreach ($general_product_variants  as $variant) {
-    //     $options = $variant["options"];
-    //     $option_count = count($options);
-    //     foreach ($options as $option) {
-    //         $product_variant_option_id = $option["product_variant_option_id"];
-
-    //         $all = true;
-    //         foreach ($discount_products as $discount_product) {
-    //             // var_dump()
-    //             if (!in_array($product_variant_option_id, $discount_product)) {
-    //                 $all = false;
-    //             }
-    //         }
-    //         var_dump($all);
-
-    //         // var_dump($option_count, def($option_id_hit_map, $product_variant_option_id, 0), "<br>");
-    //         // if (def($option_id_hit_map, $product_variant_option_id, 0) === $option_count) {
-    //         //     var_dump($product_variant_option_id);
-    //         // }
-    //     }
-    // }
 
     foreach ($general_product_variants  as $variant) {
         $options = $variant["options"];
@@ -242,14 +197,14 @@ if (User::getCurrent()->priveleges["backend_access"]) {
                 $product_has_variant_option = in_array($product_variant_option_id, $product["variants"]);
                 $product_has_discount = $product["discount_gross_price"] !== null;
                 if ($product_has_variant_option) {
-                    // lol
-                    // if (!$product_has_discount) {
-                    //     $all = false;
-                    //     break;
-                    // }
+                    if (!$product_has_discount) {
+                        $all = false;
+                        break;
+                    }
                     $max_discount_percent = max($max_discount_percent, $product["__discount_percent"]);
                 }
             }
+            $max_discount_all = max($max_discount_all, $max_discount_percent);
             // var_dump($all, $max_discount_percent);
 
             if ($all && $max_discount_percent) {
@@ -396,12 +351,36 @@ if ($main_img) {
         </div>
 
 
-        <p class="price_wrapper">
+        <div class="price_wrapper">
             <span class="price_label">Cena Brutto </span>
             <span class="selected_product_price pln"></span>
             <span class="selected_product_was_price slash"></span>
             <span class="selected_product_percent_off"></span>
-        </p>
+            <?php
+            // 1 product && any variant option field
+            if ($discount_products && $general_product_variants) {
+            ?>
+                <br>
+                <div class="discount_on_products_label">
+                    Promocja do -<?= $max_discount_all ?>%
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="discount_on_products expand_y hidden animate_hidden">
+                    <div class="label">Dotyczy produktów:</div>
+                    <ul class="blc mt1">
+                        <?php
+                        foreach ($discount_products as $discount_product) {
+                        ?>
+                            <li class="blc"><?= $discount_product ?></li>
+                        <?php
+                        }
+                        ?>
+                    </ul>
+                </div>
+            <?php
+            }
+            ?>
+        </div>
 
         <div class="case_can_buy_product" data-tooltip_position="center">
             <div class="label">Ilość:</div>
