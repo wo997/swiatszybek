@@ -7,7 +7,7 @@
 
 .price_label {
 	display: block;
-	font-size: 1.6em;
+	font-size: 1.4em;
 	font-weight: var(--semi_bold);
 	// font-weight: var(--bold);
 }
@@ -111,8 +111,8 @@
 
 .pvo_discount {
 	position: absolute;
-	right: 0;
-	top: 0;
+	right: -1px;
+	top: -1px;
 	background: var(--clr_buynow);
 	color: #fff;
 	font-weight: var(--normal);

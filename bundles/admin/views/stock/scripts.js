@@ -23,9 +23,9 @@ domload(() => {
 		],
 		primary_key: "stock_product_id",
 		empty_html: html`Brak produktów`,
-		label: "Produkty",
-		after_label: html`<button class="btn primary add_delivery_btn">
-			Dodaj dostawę
+		label: "Magazyn",
+		after_label: html`<button class="btn primary add_products_btn">
+			Dodaj produkty
 			<i class="fas fa-plus"></i>
 		</button>`,
 		save_state_name: "admin_stock_products",
@@ -34,9 +34,9 @@ domload(() => {
 	datatable_comp.addEventListener("click", (ev) => {
 		const target = $(ev.target);
 
-		const add_delivery_btn = target._parent(".add_delivery_btn");
-		if (add_delivery_btn) {
-			getStockProductsDeliveryModal()._show({ source: add_delivery_btn });
+		const add_products_btn = target._parent(".add_products_btn");
+		if (add_products_btn) {
+			getAddStockProductsModal()._show(1, { source: add_products_btn });
 		}
 	});
 });

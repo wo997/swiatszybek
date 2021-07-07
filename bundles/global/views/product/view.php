@@ -176,45 +176,37 @@ $display_variant_option_discount = [];
 
 $discount_products = [];
 $max_discount_all = 0;
-if (User::getCurrent()->priveleges["backend_access"]) {
 
-    foreach ($general_product_products as $product) {
-        if (!$product["discount_gross_price"]) {
-            continue;
-        }
-        $discount_products[] = $product["__name"];
+foreach ($general_product_products as $product) {
+    if (!$product["discount_gross_price"]) {
+        continue;
     }
+    $discount_products[] = $product["__name"];
+}
 
-    foreach ($general_product_variants  as $variant) {
-        $options = $variant["options"];
-        $option_count = count($options);
-        foreach ($options as $option) {
-            $product_variant_option_id = $option["product_variant_option_id"];
+foreach ($general_product_variants  as $variant) {
+    $options = $variant["options"];
+    $option_count = count($options);
+    foreach ($options as $option) {
+        $product_variant_option_id = $option["product_variant_option_id"];
 
-            $all = true;
-            $max_discount_percent = 0;
-            foreach ($general_product_products as $product) {
-                $product_has_variant_option = in_array($product_variant_option_id, $product["variants"]);
-                $product_has_discount = $product["discount_gross_price"] !== null;
-                if ($product_has_variant_option) {
-                    if (!$product_has_discount) {
-                        $all = false;
-                        break;
-                    }
-                    $max_discount_percent = max($max_discount_percent, $product["__discount_percent"]);
+        $all = true;
+        $max_discount_percent = 0;
+        foreach ($general_product_products as $product) {
+            $product_has_variant_option = in_array($product_variant_option_id, $product["variants"]);
+            $product_has_discount = $product["discount_gross_price"] !== null;
+            if ($product_has_variant_option) {
+                if (!$product_has_discount) {
+                    $all = false;
+                    break;
                 }
+                $max_discount_percent = max($max_discount_percent, $product["__discount_percent"]);
             }
-            $max_discount_all = max($max_discount_all, $max_discount_percent);
-            // var_dump($all, $max_discount_percent);
+        }
+        $max_discount_all = max($max_discount_all, $max_discount_percent);
 
-            if ($all && $max_discount_percent) {
-                $display_variant_option_discount[$product_variant_option_id] = $max_discount_percent;
-            }
-
-            // var_dump($option_count, def($option_id_hit_map, $product_variant_option_id, 0), "<br>");
-            // if (def($option_id_hit_map, $product_variant_option_id, 0) === $option_count) {
-            //     var_dump($product_variant_option_id);
-            // }
+        if ($all && $max_discount_percent) {
+            $display_variant_option_discount[$product_variant_option_id] = $max_discount_percent;
         }
     }
 }
@@ -382,7 +374,7 @@ if ($main_img) {
             ?>
         </div>
 
-        <div class="case_cannot_buy_product mb2">
+        <div class="case_cannot_buy_product hidden mb2">
             <div class="user_info">
                 <i class="fas fa-info-circle"></i>
                 Wybierz wariant powyżej, by dodać produkt do koszyka

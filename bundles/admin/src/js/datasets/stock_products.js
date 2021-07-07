@@ -4,9 +4,9 @@
  * @typedef {{
  * stock_product_id: number
  * product_id: number
- * net_price: string
+ * net_price: number
  * vat_id: number
- * gross_price: string
+ * gross_price: number
  * }} StockProductData
  */
 

@@ -101,7 +101,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 			},
 			{
 				key: "net_price",
-				label: "J.Cena Netto (zł)",
+				label: "J. Cena Netto (zł)",
 				width: "1",
 				editable: "number",
 			},
@@ -194,7 +194,8 @@ function TransactionModalComp(comp, parent, data = undefined) {
 				comp._render();
 			},
 			get_custom_selection: () => {
-				return comp._data.products_dt.dataset.map((row_data) => row_data.product_id + "");
+				// allow repetitions
+				return []; // comp._data.products_dt.dataset.map((row_data) => row_data.product_id + "");
 			},
 		};
 	}
@@ -205,11 +206,10 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 		data.is_expense = is_expense;
 		if (is_expense) {
-			data.buyer.company = "asd";
+			// data.buyer.company = "asd";
 			// data.buyer = {
 			// };
 		}
-		console.log(data);
 
 		comp._render();
 
@@ -223,7 +223,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 
 		if (cd.products_dt) {
 			let total_gross_price = 0;
-			data.products_dt.dataset.forEach((row_data) => {
+			data.products_dt.dataset.forEach((/** @type {TransactionProductData} */ row_data) => {
 				row_data.current_gross_price = def(row_data.discount_gross_price, row_data.gross_price);
 				row_data.total_gross_price = round(row_data.current_gross_price * row_data.qty, 2);
 				total_gross_price += row_data.total_gross_price;
