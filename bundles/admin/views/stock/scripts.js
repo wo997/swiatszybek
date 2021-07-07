@@ -9,18 +9,18 @@ domload(() => {
 		columns: [
 			{ label: "Produkt", key: "__name", width: "1", searchable: "string" },
 			{ label: "Cena netto", key: "net_price", width: "1", searchable: "string" },
-			{ label: "VAT", key: "vat_id", width: "1", searchable: "string" },
+			{ label: "VAT", key: "vat", width: "1", searchable: "string" },
 			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "string" },
-			{ label: "Dostawa", key: "delivered_at", width: "1", searchable: "date", render: renderDatetimeDefault },
+			{ label: "Dostawa", key: "added_at", width: "1", searchable: "date", render: renderDatetimeDefault },
 		],
-		maps: [
-			// {
-			// 	name: "product",
-			// 	getMap: () => {
-			// 		return products.map((g) => ({ label: g.__name, val: g.product_id }));
-			// 	},
-			// },
-		],
+		// maps: [
+		// {
+		// 	name: "product",
+		// 	getMap: () => {
+		// 		return products.map((g) => ({ label: g.__name, val: g.product_id }));
+		// 	},
+		// },
+		// ],
 		primary_key: "stock_product_id",
 		empty_html: html`Brak produktów`,
 		label: "Magazyn",
@@ -38,5 +38,9 @@ domload(() => {
 		if (add_products_btn) {
 			getAddStockProductsModal()._show(1, { source: add_products_btn });
 		}
+	});
+
+	window.addEventListener("stock_product_changed", () => {
+		datatable_comp._backend_search();
 	});
 });

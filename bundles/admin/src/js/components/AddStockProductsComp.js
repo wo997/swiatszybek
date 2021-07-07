@@ -63,23 +63,16 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 				editable: "number",
 			},
 			{
-				key: "vat_id",
-				label: "VAT",
+				key: "vat",
+				label: "VAT (%)",
 				width: "1",
-				editable: "select",
-				map_name: "vat",
+				editable: "number",
 			},
 			{
 				key: "gross_price",
 				label: "Cena Brutto (zł)",
 				width: "1",
 				editable: "number",
-			},
-		],
-		maps: [
-			{
-				name: "vat",
-				getMap: () => vats.map((v) => ({ val: v.vat_id, label: `${v.value * 100}%` })),
 			},
 		],
 		empty_html: "Brak produktów",
@@ -126,7 +119,7 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 						product_id: product.product_id,
 						gross_price: product.gross_price,
 						net_price: product.net_price,
-						vat_id: product.vat_id,
+						vat: vats.find((v) => v.vat_id === product.vat_id).value * 100,
 					};
 					data.products_dt.dataset.push(dt_product);
 				}
@@ -199,8 +192,8 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 					</div>
 
 					<div class="">
-						<span class="label medium bold inline">Produkty</span
-						><selectable-comp data-bind="{${data.select_product}}" class="inline ml2"></selectable-comp>
+						<span class="label medium bold inline mr2">Produkty</span
+						><selectable-comp data-bind="{${data.select_product}}" class="inline"></selectable-comp>
 					</div>
 
 					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}"></datatable-comp>
@@ -210,52 +203,39 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 		ready: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
 				const data = comp._data;
-				// these arent even scoped lol, avoid this
+
 				// const errors = validateInputs(comp._children("[data-validate]").filter((e) => !e._parent(".hidden")));
 				// if (errors.length > 0) {
 				// 	return;
 				// }
 
-				// /** @type {TransactionData} */
-				// const transaction = {
-				// 	transaction_id: data.transaction_id,
-				// 	gross_price: data.gross_price,
-				// 	is_expense: data.is_expense,
-				// 	net_price: data.net_price,
-				// 	buyer: data.buyer,
-				// 	seller: data.seller,
-				// 	transaction_products: data.products_dt.dataset,
-				// };
-
-				// showLoader();
-				// xhr({
-				// 	url: STATIC_URLS["ADMIN"] + "/transaction/save",
-				// 	params: {
-				// 		transaction,
-				// 	},
-				// 	success: (res) => {
-				// 		hideLoader();
-				// 		window.dispatchEvent(new CustomEvent("transactions_changed"));
-				// 		hideModal("AddStockProductsModal");
-				// 	},
-				// });
+				showLoader();
+				xhr({
+					url: STATIC_URLS["ADMIN"] + "/stock_product/save_many",
+					params: {
+						stock_products: data.products_dt.dataset,
+					},
+					success: (res) => {
+						hideLoader();
+						window.dispatchEvent(new CustomEvent("stock_product_changed"));
+						hideModal("AddStockProductsModal");
+					},
+				});
 			});
 
 			comp._nodes.products_dt.addEventListener("editable_change", (ev) => {
 				// @ts-ignore
 				const detail = ev.detail;
-				/** @type {DtProductData} */
+				/** @type {TransactionProductData} */
 				const row_data = detail.row_data;
 				const key = detail.key;
-				const vat = vats.find((e) => e.vat_id === row_data.vat_id);
-				const vat_val = vat ? vat.value : 0;
 
 				row_data.gross_price = round(row_data.gross_price, 2);
 				row_data.net_price = round(row_data.net_price, 2);
 
 				let set_what = "";
 
-				if (key === "vat_id") {
+				if (key === "vat") {
 					// anything to rewrite?
 					if (numberFromStr(row_data.gross_price + "")) {
 						set_what = "net_price";
@@ -271,9 +251,9 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 				}
 
 				if (set_what === "net_price") {
-					row_data.net_price = round(row_data.gross_price / (1 + vat_val), 2);
+					row_data.net_price = round(row_data.gross_price / (1 + row_data.vat * 0.01), 2);
 				} else if (set_what === "gross_price") {
-					row_data.gross_price = round(row_data.net_price * (1 + vat_val), 2);
+					row_data.gross_price = round(row_data.net_price * (1 + row_data.vat * 0.01), 2);
 				}
 			});
 		},

@@ -5,7 +5,7 @@
  * stock_product_id: number
  * product_id: number
  * net_price: number
- * vat_id: number
+ * vat: number
  * gross_price: number
  * }} StockProductData
  */

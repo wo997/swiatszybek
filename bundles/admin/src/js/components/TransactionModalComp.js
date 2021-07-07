@@ -269,10 +269,10 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					</div>
 
 					<div class="">
-						<span class="label medium bold inline">Produkty</span
-						><selectable-comp data-bind="{${data.select_product}}" class="inline ml2"></selectable-comp
+						<span class="label medium bold inline mr2">Produkty</span
+						><selectable-comp data-bind="{${data.select_product}}" class="inline mr2"></selectable-comp
 						><button
-							class="btn subtle ml2"
+							class="btn subtle"
 							data-node="{${comp._nodes.add_other_product}}"
 							data-tooltip="Jeśli produkt nie jest przechowywany w magazynie, może to być np. usługa."
 						>
