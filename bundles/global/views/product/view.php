@@ -382,6 +382,13 @@ if ($main_img) {
             ?>
         </div>
 
+        <div class="case_cannot_buy_product mb2">
+            <div class="user_info">
+                <i class="fas fa-info-circle"></i>
+                Wybierz wariant powyżej, by dodać produkt do koszyka
+            </div>
+        </div>
+
         <div class="case_can_buy_product" data-tooltip_position="center">
             <div class="label">Ilość:</div>
             <div class="flex align_center">
@@ -408,13 +415,6 @@ if ($main_img) {
                 </div>
             </button>
 
-        </div>
-
-        <div class="case_cannot_buy_product mt2">
-            <div class="user_info">
-                <i class="fas fa-info-circle"></i>
-                Wybierz wariant powyżej, by dodać produkt do koszyka
-            </div>
         </div>
 
         <div class="case_has_products expand_y hidden animate_hidden">
