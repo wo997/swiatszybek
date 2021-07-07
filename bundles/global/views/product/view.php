@@ -51,7 +51,7 @@ if ($product_link_base !== Request::$url) {
     Request::redirectPermanent($true_product_link);
 }
 
-$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, __current_gross_price, discount_gross_price, discount_untill, product_id, stock,__img_url, __name, __options_json, __queue_count, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
+$general_product_products = DB::fetchArr("SELECT active, general_product_id, gross_price, __current_gross_price, discount_gross_price, discount_untill, product_id, stock,__img_url, __name, __options_json, __queue_count, __discount_percent, __url, '' variants, length, width, height, weight FROM product WHERE general_product_id = $general_product_id AND active = 1");
 
 $general_product_imgs_json = $general_product_data["__images_json"];
 $general_product_imgs = json_decode($general_product_imgs_json, true);
@@ -159,7 +159,7 @@ foreach ($general_product_products as &$product) {
 
     $product_shipping_info[$product["product_id"]] = $shipping_info;
 }
-
+unset($product);
 
 // user data
 $user_data = DB::fetchRow("SELECT nickname, email FROM user WHERE user_id = ?", [User::getCurrent()->getId()]);
@@ -168,6 +168,15 @@ if (!$user_nickname || trim($user_nickname) === "") {
     $user_nickname = "Gość";
 }
 $user_email = $user_data ? $user_data["email"] : "";
+
+if (User::getCurrent()->priveleges["backend_access"]) {
+    foreach ($general_product_products as $product) {
+        if (!$product["discount_gross_price"]) {
+            continue;
+        }
+        var_dump($product["__discount_percent"]); //, $product["variants"]);
+    }
+}
 
 ?>
 

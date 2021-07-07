@@ -60,17 +60,19 @@ function ManageProductListModalComp(comp, parent, data = undefined) {
 					<list-comp data-bind="{${data.questions}}" class="wireframe space">
 						<manage-product-list_question-comp></manage-product-list_question-comp>
 					</list-comp>
-					<button
-						data-node="{${comp._nodes.add_btn}}"
-						class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
-						style="margin: 10px auto 0;min-width: 160px;"
-						data-tooltip="{${data.questions.find((q) => !q.value)
-							? "Dane możesz uzupełnić ręcznie, ale zalecamy odpowiedzieć na wszystkie pytania"
-							: ""}}"
-					>
-						Dodaj produkty
-						<i class="fas fa-check"></i>
-					</button>
+					<div class="mt2 flex justify_center">
+						<button
+							data-node="{${comp._nodes.add_btn}}"
+							class="btn {${data.questions.find((q) => !q.value)}?primary:important}"
+							style="min-width: 160px;"
+							data-tooltip="{${data.questions.find((q) => !q.value)
+								? "Dane możesz uzupełnić ręcznie, ale zalecamy odpowiedzieć na wszystkie pytania"
+								: ""}}"
+						>
+							Dodaj produkty
+							<i class="fas fa-check"></i>
+						</button>
+					</div>
 				</div>
 			</div>
 		`,

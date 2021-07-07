@@ -69,7 +69,18 @@
  * } & BaseComp} ProductComp
  */
 
-const product_copy_keys = ["net_price", "vat", "gross_price", "active", "weight", "length", "width", "height"];
+const product_copy_keys = [
+	"net_price",
+	"vat",
+	"gross_price",
+	"active",
+	"weight",
+	"length",
+	"width",
+	"height",
+	"discount_gross_price",
+	"discount_untill",
+];
 
 /**
  *
@@ -168,7 +179,10 @@ function ProductComp(comp, parent, data = undefined) {
 		const data = comp._data;
 		const add_products = [];
 
-		const all_variant_keys = data.variants.map((variant) => getVariantKeyFromId(variant.product_variant_id));
+		const common_variant_id = data.variants.find((v) => v.common).product_variant_id;
+		const all_variant_keys = data.variants.map(
+			(variant) => variant.product_variant_id !== common_variant_id && getVariantKeyFromId(variant.product_variant_id)
+		);
 
 		data.missing_products_variants.forEach((variants) => {
 			/** @type {DtProductData} */
@@ -675,6 +689,7 @@ function ProductComp(comp, parent, data = undefined) {
 						});
 
 						if (missing_product) {
+							// that be there, some just aint missin?
 							missing_products_variants.push(variant_option_map);
 						}
 					});
