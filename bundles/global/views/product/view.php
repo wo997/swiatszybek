@@ -242,16 +242,17 @@ if (User::getCurrent()->priveleges["backend_access"]) {
                 $product_has_variant_option = in_array($product_variant_option_id, $product["variants"]);
                 $product_has_discount = $product["discount_gross_price"] !== null;
                 if ($product_has_variant_option) {
-                    if (!$product_has_discount) {
-                        $all = false;
-                        break;
-                    }
+                    // lol
+                    // if (!$product_has_discount) {
+                    //     $all = false;
+                    //     break;
+                    // }
                     $max_discount_percent = max($max_discount_percent, $product["__discount_percent"]);
                 }
             }
             // var_dump($all, $max_discount_percent);
 
-            if ($all) {
+            if ($all && $max_discount_percent) {
                 $display_variant_option_discount[$product_variant_option_id] = $max_discount_percent;
             }
 
