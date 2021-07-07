@@ -16,9 +16,9 @@ if (empty(User::getCurrent()->cart->getProducts())) {
 <?php Templates::startSection("body_content"); ?>
 
 <div class="buy_now_container">
-    <h1 class="h1 mobile_view center">Kup teraz</h1>
-
     <div class="buy_products_wrapper">
+        <h1 class="buy_now_h1_mobile h1">Kup teraz</h1>
+
         <div class="label big mt0">
             Koszyk
             (<span class="cart_product_count"></span>)
@@ -55,7 +55,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
     </div>
 
     <form class="buy_now_form" onsubmit="return false">
-        <h1 class="h1 desktop_view">Kup teraz</h1>
+        <h1 class="buy_now_h1_desktop h1">Kup teraz</h1>
 
         <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
             <div class="label big mt0">Wybór konta</div>
@@ -66,8 +66,8 @@ if (empty(User::getCurrent()->cart->getProducts())) {
             <p>- Możesz wziąć udział w programie partnerskim</p> -->
 
             <div class="account_buttons">
-                <div style="display:flex">
-                    <button class="btn primary fill" style="margin-right:10px;" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
+                <div class="flex">
+                    <button class="btn primary fill mr2" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
                         Zaloguj się
                         <!-- <i class='fas fa-user'></i> -->
                     </button>
@@ -77,7 +77,7 @@ if (empty(User::getCurrent()->cart->getProducts())) {
                     </a>
                 </div>
 
-                <button class="btn primary fill buy_without_registration" style="margin-top:10px;">
+                <button class="btn primary fill buy_without_registration mr2">
                     Zakupy bez rejestracji <i class="fas fa-chevron-right"></i>
                 </button>
             </div>

@@ -174,7 +174,7 @@ if (User::getCurrent()->priveleges["backend_access"]) {
         if (!$product["discount_gross_price"]) {
             continue;
         }
-        var_dump($product["__name"], $product["__discount_percent"]); //, $product["variants"]);
+        var_dump($product["__name"], $product["__discount_percent"], $product["variants"], "<br>");
     }
 }
 

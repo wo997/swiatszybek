@@ -36,25 +36,6 @@ domload(() => {
 	const courier_address = $("address-comp.courier_address");
 	AddressComp(courier_address, undefined);
 
-	const buy_now_container = $(".buy_now_container");
-	const onBuyNowScroll = () => {
-		const scroll_top = document.documentElement.scrollTop;
-		let margin_top = 0;
-		if (window.innerWidth >= 1000) {
-			margin_top = clamp(10, 100 - scroll_top, 100);
-			const bottom = buy_now_container.getBoundingClientRect().bottom - window.innerHeight;
-			if (bottom < 0) {
-				margin_top = bottom;
-			}
-			//margin_top += header_height;
-			buy_products_wrapper.style.setProperty("--top", `${margin_top}px`);
-		}
-	};
-
-	document.addEventListener("scroll", onBuyNowScroll, { passive: true });
-	window.addEventListener("resize", onBuyNowScroll, { passive: true });
-	setTimeout(onBuyNowScroll);
-
 	initRebateCodes();
 
 	const buy_now_form = $(".buy_now_form");
