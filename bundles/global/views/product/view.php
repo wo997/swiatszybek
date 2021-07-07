@@ -70,12 +70,15 @@ $general_product_data["cache_rating_count"] = 4;
 
 $general_product_variants = DB::fetchArr("SELECT * FROM product_variant pv WHERE general_product_id = $general_product_id AND pos <> 0 AND common = 0 ORDER BY pv.pos ASC");
 
+$variant_option_ids = [];
 foreach ($general_product_variants as $key => $variant) {
     $product_variant_id = $general_product_variants[$key]["product_variant_id"];
     $general_product_variants[$key]["options"] = DB::fetchArr("SELECT *
         FROM product_variant_option pvo
         WHERE product_variant_id = $product_variant_id AND pos <> 0
         ORDER BY pvo.pos");
+
+    array_push($variant_option_ids, ...array_column($general_product_variants[$key]["options"], "product_variant_option_id"));
 }
 
 // comments
@@ -169,12 +172,94 @@ if (!$user_nickname || trim($user_nickname) === "") {
 }
 $user_email = $user_data ? $user_data["email"] : "";
 
+$display_variant_option_discount = [];
+
 if (User::getCurrent()->priveleges["backend_access"]) {
+    $discount_products = [];
+    // $variant_field_count = count($general_product_variants);
+
     foreach ($general_product_products as $product) {
         if (!$product["discount_gross_price"]) {
             continue;
         }
-        var_dump($product["__name"], $product["__discount_percent"], $product["variants"], "<br>");
+
+        $product_variant_option_ids = [];
+        foreach ($product["variants"] as $variant_option_id) {
+            if (in_array($variant_option_id, $variant_option_ids)) {
+                $product_variant_option_ids[] = $variant_option_id;
+            }
+        }
+        $discount_products[] = $product_variant_option_ids;
+    }
+
+    $discount_product_count = count($discount_products);
+
+    // while (true) {
+    //     $option_id_hit_map = [];
+    //     foreach ($discount_products as $discount_product) {
+    //         foreach ($discount_product as $variant_option_id) {
+    //             if (!isset($option_id_hit_map[$variant_option_id])) {
+    //                 $option_id_hit_map[$variant_option_id] = 0;
+    //             }
+    //             $option_id_hit_map[$variant_option_id]++;
+    //         }
+    //     }
+    //     //var_dump($option_id_hit_map, $discount_product_count);
+    //     break;
+    // }
+
+    // foreach ($general_product_variants  as $variant) {
+    //     $options = $variant["options"];
+    //     $option_count = count($options);
+    //     foreach ($options as $option) {
+    //         $product_variant_option_id = $option["product_variant_option_id"];
+
+    //         $all = true;
+    //         foreach ($discount_products as $discount_product) {
+    //             // var_dump()
+    //             if (!in_array($product_variant_option_id, $discount_product)) {
+    //                 $all = false;
+    //             }
+    //         }
+    //         var_dump($all);
+
+    //         // var_dump($option_count, def($option_id_hit_map, $product_variant_option_id, 0), "<br>");
+    //         // if (def($option_id_hit_map, $product_variant_option_id, 0) === $option_count) {
+    //         //     var_dump($product_variant_option_id);
+    //         // }
+    //     }
+    // }
+
+    foreach ($general_product_variants  as $variant) {
+        $options = $variant["options"];
+        $option_count = count($options);
+        foreach ($options as $option) {
+            $product_variant_option_id = $option["product_variant_option_id"];
+
+            $all = true;
+            $max_discount_percent = 0;
+            foreach ($general_product_products as $product) {
+                $product_has_variant_option = in_array($product_variant_option_id, $product["variants"]);
+                $product_has_discount = $product["discount_gross_price"] !== null;
+                if ($product_has_variant_option) {
+                    if (!$product_has_discount) {
+                        $all = false;
+                        break;
+                    }
+                    $max_discount_percent = max($max_discount_percent, $product["__discount_percent"]);
+                }
+            }
+            // var_dump($all, $max_discount_percent);
+
+            if ($all) {
+                $display_variant_option_discount[$product_variant_option_id] = $max_discount_percent;
+            }
+
+            // var_dump($option_count, def($option_id_hit_map, $product_variant_option_id, 0), "<br>");
+            // if (def($option_id_hit_map, $product_variant_option_id, 0) === $option_count) {
+            //     var_dump($product_variant_option_id);
+            // }
+        }
     }
 }
 
@@ -274,6 +359,15 @@ if ($main_img) {
                                 </div>
                                 <div class="price_diff"></div>
                             </div>
+                            <?php
+                            $discount = def($display_variant_option_discount, $variant_option["product_variant_option_id"], 0);
+                            if ($discount) {
+                            ?>
+                                <div class="pvo_discount">-<?= $discount ?>%</div>
+                            <?php
+                            }
+                            ?>
+
                         </div>
                     <?php
                     }
