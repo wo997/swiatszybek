@@ -179,10 +179,7 @@ function ProductComp(comp, parent, data = undefined) {
 		const data = comp._data;
 		const add_products = [];
 
-		const common_variant_id = data.variants.find((v) => v.common).product_variant_id;
-		const all_variant_keys = data.variants.map(
-			(variant) => variant.product_variant_id !== common_variant_id && getVariantKeyFromId(variant.product_variant_id)
-		);
+		const all_variant_keys = data.variants.map((variant) => variant.options.length >= 2 && getVariantKeyFromId(variant.product_variant_id));
 
 		data.missing_products_variants.forEach((variants) => {
 			/** @type {DtProductData} */
@@ -199,8 +196,8 @@ function ProductComp(comp, parent, data = undefined) {
 				width: 0,
 				img_url: "",
 				name: "",
-				discount_gross_price: 0,
-				discount_untill: "",
+				discount_gross_price: null,
+				discount_untill: null,
 			};
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
