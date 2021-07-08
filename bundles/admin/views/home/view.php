@@ -60,40 +60,47 @@
                 </button>
             </div>
             <div class="scroll_panel scroll_shadow chat_messages">
-                <div class="message ours">
-                    <div class="message_content">nasze - asasfasfd asd</div>
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                </div>
+                <div class="messages_wrapper">
+                    <?php
+                    $user = User::getCurrent();
+                    $user_id = $user->getId();
+                    $messages = DB::fetchArr("SELECT chat_message_id, sender_id, receiver_id, message, sent_at FROM chat_message WHERE client_id = ?", [$user_id]);
+                    var_dump($messages);
+                    ?>
+                    <div class="message ours">
+                        <div class="message_content">nasze - asasfasfd asd</div>
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                    </div>
 
-                <div class="message others">
-                    <img src="<?= FAVICON_PATH_LOCAL_TN ?>" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    <div class="message others">
+                        <img src="<?= FAVICON_PATH_LOCAL_TN ?>" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
+                    <div class="message others">
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
+                    <div class="message others">
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
+                    <div class="message others">
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
+                    <div class="message others">
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
+                    <div class="message others">
+                        <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
+                        <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
+                    </div>
                 </div>
-                <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
-                </div>
-                <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
-                </div>
-                <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
-                </div>
-                <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
-                </div>
-                <div class="message others">
-                    <img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img">
-                    <div class="message_content">ktoś - asfasfd asf asf asfdafsdafasf asfasfd asd</div>
-                </div>
-                <hr>
             </div>
             <div class="chat_footer">
-                <textarea class="field new_message focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>
-                <button class="btn primary spiky">
+                <textarea class="field message_input focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>
+                <button class="btn primary spiky send_message_btn">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>

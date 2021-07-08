@@ -161,20 +161,23 @@ domload(() => {
 
 	const chat_container = $(".chat_container");
 	const open_chat_btn = $(".open_chat_btn");
-	const new_message = chat_container._child(".new_message");
+	const message_input = chat_container._child(".message_input");
 	const close_btn = chat_container._child(".close_btn");
+	const send_message_btn = chat_container._child(".send_message_btn");
 
 	const set_h = () => {
-		autoHeight(new_message);
+		autoHeight(message_input);
 	};
-	new_message.addEventListener("input", set_h);
-	new_message.addEventListener("change", set_h);
+	message_input.addEventListener("input", set_h);
+	message_input.addEventListener("change", set_h);
 	set_h();
 
 	open_chat_btn.addEventListener("click", () => {
 		chat_visible = true;
 		chat_container.classList.add("visible");
 		open_chat_btn.classList.add("opened");
+		message_input.click();
+		message_input.focus();
 	});
 
 	close_btn.addEventListener("click", () => {
@@ -182,4 +185,27 @@ domload(() => {
 		chat_container.classList.remove("visible");
 		open_chat_btn.classList.remove("opened");
 	});
+
+	const sendMessage = () => {
+		const message = message_input._get_value();
+		message_input._set_value("", { quiet: true });
+		xhr({
+			url: "/chat/message/send",
+			params: {
+				message,
+			},
+			success: (res) => {
+				console.log(res);
+			},
+		});
+		set_h();
+	};
+
+	message_input.addEventListener("keydown", (ev) => {
+		if (ev.key == "Enter" && !ev.shiftKey) {
+			sendMessage();
+			ev.preventDefault();
+		}
+	});
+	send_message_btn.addEventListener("click", sendMessage);
 });

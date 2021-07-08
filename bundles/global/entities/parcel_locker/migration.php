@@ -1,7 +1,7 @@
 <?php //hook[migration]
 
 DB::createTable("parcel_locker", [
-    ["name" => "parcel_locker_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "parcel_locker_id", "type" => "INT", "index" => "primary"],
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "country", "type" => "VARCHAR(255)"],
     ["name" => "post_code", "type" => "VARCHAR(255)"],

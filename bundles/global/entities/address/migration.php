@@ -1,7 +1,7 @@
 <?php //hook[migration]
 
 DB::createTable("address", [
-    ["name" => "address_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "address_id", "type" => "INT", "index" => "primary"],
     ["name" => "party", "type" => "VARCHAR(255)"],
     ["name" => "first_name", "type" => "VARCHAR(255)"],
     ["name" => "last_name", "type" => "VARCHAR(255)"],

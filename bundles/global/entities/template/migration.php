@@ -3,7 +3,7 @@
 DB::createTable(
     "template",
     [
-        ["name" => "template_id", "type" => "INT", "index" => "primary", "increment" => true],
+        ["name" => "template_id", "type" => "INT", "index" => "primary"],
         ["name" => "name", "type" => "VARCHAR(255)"],
         ["name" => "v_dom_json", "type" => "MEDIUMTEXT"],
         ["name" => "version", "type" => "INT"],

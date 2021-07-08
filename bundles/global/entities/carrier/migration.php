@@ -1,7 +1,7 @@
 <?php //hook[migration]
 
 DB::createTable("carrier", [
-    ["name" => "carrier_id", "type" => "INT", "index" => "primary", "increment" => true],
+    ["name" => "carrier_id", "type" => "INT", "index" => "primary"],
     ["name" => "api_key", "type" => "VARCHAR(15)", "index" => "index"],
     ["name" => "img_url", "type" => "VARCHAR(255)", "index" => "index"],
     ["name" => "name", "type" => "VARCHAR(255)"],

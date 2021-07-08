@@ -3,7 +3,7 @@
 DB::createTable(
     "file",
     [
-        ["name" => "file_id", "type" => "INT", "index" => "primary", "increment" => true],
+        ["name" => "file_id", "type" => "INT", "index" => "primary"],
         ["name" => "file_path", "type" => "VARCHAR(255)", "index" => "unique"],
         ["name" => "name", "type" => "VARCHAR(255)", "index" => "index"],
         ["name" => "name_counter", "type" => "VARCHAR(255)", "index" => "index"],
