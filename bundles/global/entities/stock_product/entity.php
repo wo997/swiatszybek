@@ -8,6 +8,7 @@ EntityManager::register("stock_product", [
         "vat" => ["type" => "number"], // been bought with that VAT
         "dimension_qty" => ["type" => "number"],
         "added_at" => ["type" => "string"],
+        // "internal_code" => ["type" => "string"], // ugh?
     ],
 ]);
 
