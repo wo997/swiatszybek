@@ -262,14 +262,20 @@ function hideAllModals() {
 	});
 }
 
-function hideModalTopMost() {
-	const o = modal_container_node._direct_children();
-	for (let i = o.length - 1; i >= 0; i--) {
+function getModalTopMost() {
+	const o = modal_container_node._direct_children().reverse();
+	for (let i = 0; i < o.length; i++) {
 		const modal = o[i];
 		if (!modal.classList.contains("hidden")) {
-			hideModal(modal ? modal.id : null);
-			break;
+			return modal;
 		}
+	}
+}
+
+function hideModalTopMost() {
+	const modal = getModalTopMost();
+	if (modal) {
+		hideModal(modal.id);
 	}
 }
 
@@ -288,6 +294,21 @@ function hideParentModal(obj = null) {
 function hideModal(name) {
 	if (name) {
 		let modal = $(`#${name}`);
+
+		const res = {};
+		window.dispatchEvent(
+			new CustomEvent("modal_hide", {
+				detail: {
+					node: modal,
+					res,
+				},
+			})
+		);
+
+		if (res.cancel) {
+			return;
+		}
+
 		if (modal) {
 			modal.style.animation = "hide 0.4s";
 			setTimeout(() => {
@@ -303,14 +324,6 @@ function hideModal(name) {
 				);
 			}, 200);
 		}
-
-		window.dispatchEvent(
-			new CustomEvent("modal_hide", {
-				detail: {
-					node: modal,
-				},
-			})
-		);
 	}
 
 	const visible_modal_count = modal_wrapper_node._children(`.modal_container > *:not(.hidden):not(#${name})`).length;

@@ -53,7 +53,17 @@ window.addEventListener("modal_show", () => {
 	history_comp_focus = undefined;
 });
 
-window.addEventListener("modal_hide", () => {
+window.addEventListener("modal_hide", (ev) => {
+	/** @type {PiepNode} */
+	// @ts-ignore
+	const modal = ev.detail.node;
+	if (modal._child(".history_dirty")) {
+		if (!confirm("Czy aby na pewno chcesz porzucić zmiany?")) {
+			// @ts-ignore
+			ev.detail.res.cancel = true;
+		}
+	}
+
 	history_comp_focus = undefined;
 });
 
@@ -114,9 +124,10 @@ registerCompTrait("history", {
 				comp._setting_data_from_history = false;
 				comp.classList.remove("freeze");
 
-				setTimeout(() => {
-					comp.dispatchEvent(new CustomEvent("history_change"));
-				});
+				// neve used ;)
+				// setTimeout(() => {
+				// 	comp.dispatchEvent(new CustomEvent("history_change"));
+				// });
 			});
 		};
 
@@ -134,6 +145,10 @@ registerCompTrait("history", {
 		});
 		comp._nodes.history_redo.addEventListener("click", () => {
 			comp._history_redo();
+		});
+
+		comp.addEventListener("saved_state", () => {
+			comp.classList.remove("history_dirty");
 		});
 
 		clearCompHistory(comp);
@@ -177,6 +192,10 @@ registerCompTrait("history", {
 			}
 
 			renderCompHistory(comp);
+
+			if (comp._data_history.length > 1) {
+				comp.classList.add("history_dirty");
+			}
 		});
 
 		comp._setting_data_from_history = false;
@@ -197,5 +216,16 @@ document.addEventListener("keydown", (ev) => {
 			ev.preventDefault();
 			history_comp_focus._history_redo();
 		}
+	}
+});
+
+window.addEventListener("beforeunload", (ev) => {
+	for (const history_dirty of $$(".history_dirty")) {
+		if (history_dirty._parent(".hidden")) {
+			continue;
+		}
+		ev.preventDefault();
+		ev.returnValue = "";
+		return "";
 	}
 });

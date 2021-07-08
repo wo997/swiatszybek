@@ -297,6 +297,8 @@ function deliveriesConfigComp(comp, parent, data = undefined) {
 						carrier,
 					},
 					success: (res) => {
+						comp.dispatchEvent(new CustomEvent("saved_state"));
+
 						const data = comp._data;
 						const carrier_data = res.carrier;
 						let target;

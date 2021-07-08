@@ -69,7 +69,11 @@ function ProductFeatureModalComp(comp, parent, data = undefined) {
 		`,
 		initialize: () => {
 			comp._nodes.save_btn.addEventListener("click", () => {
-				comp._nodes.product_feature_comp._save();
+				comp._nodes.product_feature_comp._save({
+					callback: () => {
+						comp.dispatchEvent(new CustomEvent("saved_state"));
+					},
+				});
 			});
 			comp._nodes.delete_btn.addEventListener("click", () => {
 				if (confirm("Czy aby na pewno chcesz usunąć tę cechę?")) {

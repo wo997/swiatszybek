@@ -92,6 +92,7 @@ function ProductCategoriesComp(comp, parent, data = undefined) {
 				product_categories: data,
 			},
 			success: (res) => {
+				comp.dispatchEvent(new CustomEvent("saved_state"));
 				comp.dispatchEvent(new CustomEvent("saved_product_categories"));
 				showNotification("Zapisano kategorie produktów", {
 					one_line: true,

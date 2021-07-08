@@ -1237,6 +1237,8 @@ function ProductComp(comp, parent, data = undefined) {
 					success: (res) => {
 						const data = comp._data;
 
+						comp.dispatchEvent(new CustomEvent("saved_state"));
+
 						showNotification("Zapisano produkt", {
 							one_line: true,
 							type: "success",
@@ -1246,8 +1248,9 @@ function ProductComp(comp, parent, data = undefined) {
 						data.products_dt.dataset = unpackProductsDT(data.variants, res.products);
 						comp._render({ freeze: true });
 
-						const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
-						history.replaceState(undefined, "", make_sure_url_is_cool);
+						// hey, it's been right?
+						// const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
+						// history.replaceState(undefined, "", make_sure_url_is_cool);
 					},
 				});
 			});

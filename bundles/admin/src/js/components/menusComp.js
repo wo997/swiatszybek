@@ -97,6 +97,7 @@ function MenusComp(comp, parent, data = undefined) {
 				menus: data,
 			},
 			success: (res) => {
+				comp.dispatchEvent(new CustomEvent("saved_state"));
 				comp.dispatchEvent(new CustomEvent("saved_menu"));
 				showNotification("Zapisano menu", {
 					one_line: true,

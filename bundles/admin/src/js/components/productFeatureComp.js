@@ -28,7 +28,7 @@
  *  physical_measures_wrapper: PiepNode
  * }
  * _load_data(id: number)
- * _save()
+ * _save(options?: {callback?()})
  * _delete()
  * _select_current_group_id(id: any)
  * } & BaseComp} ProductFeatureComp
@@ -138,7 +138,7 @@ function ProductFeatureComp(comp, parent, data) {
 		refreshProductFeatures();
 	};
 
-	comp._save = () => {
+	comp._save = (options = {}) => {
 		const errors = validateInputs([comp._nodes.name]);
 
 		if (errors.length > 0) {
@@ -186,6 +186,9 @@ function ProductFeatureComp(comp, parent, data) {
 				product_feature,
 			},
 			success: (res) => {
+				if (options.callback) {
+					options.callback();
+				}
 				hideAndSearch();
 				showNotification(comp._data.product_feature_id === -1 ? "Dodano cechę produktu" : "Zapisano cechę produktu", {
 					one_line: true,

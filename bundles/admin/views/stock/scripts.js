@@ -7,7 +7,7 @@ domload(() => {
 	DatatableComp(datatable_comp, undefined, {
 		search_url: STATIC_URLS["ADMIN"] + "/stock_product/search",
 		columns: [
-			{ label: "Produkt", key: "__name", width: "1", searchable: "string" },
+			{ label: "Produkt", key: "__name", width: "3", searchable: "string" },
 			{ label: "Cena netto", key: "net_price", width: "1", searchable: "string" },
 			{ label: "VAT", key: "vat", width: "1", searchable: "string" },
 			{ label: "Cena brutto", key: "gross_price", width: "1", searchable: "string" },
