@@ -37,16 +37,7 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 				label: "Produkt",
 				width: "3",
 				render: (product_id) => {
-					const noProduct = () => {
-						return "—";
-					};
-					if (!product_id) {
-						return noProduct();
-					}
-					const product = products.find((p) => p.product_id);
-					if (!product) {
-						return noProduct();
-					}
+					const product = products.find((p) => p.product_id === product_id);
 					return html`<a
 						class="link"
 						target="_blank"
@@ -55,32 +46,42 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 						>${product.__name}
 					</a>`;
 				},
+				searchable: "select",
+				quick_filter: true,
 			},
 			{
 				key: "net_price",
 				label: "Cena Netto (zł)",
 				width: "1",
 				editable: "number",
+				batch_edit: true,
 			},
 			{
 				key: "vat",
 				label: "VAT (%)",
 				width: "1",
 				editable: "number",
+				batch_edit: true,
 			},
 			{
 				key: "gross_price",
 				label: "Cena Brutto (zł)",
 				width: "1",
 				editable: "number",
+				batch_edit: true,
 			},
 		],
+		print_row_as_string: (row_data) => {
+			const product = products.find((p) => p.product_id === row_data.product_id);
+			return product.__name;
+		},
 		empty_html: "Brak produktów",
 		dataset: [],
 		searchable: false,
 		paginable: false,
 		deletable: true,
 		sortable: true,
+		selectable: true,
 	};
 
 	data.products_dt = def(data.products_dt, datatable);
@@ -169,8 +170,9 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 	createComp(comp, parent, data, {
 		template: html`
 			<div class="custom_toolbar">
-				<span class="title medium">Zarządzaj magazynem</span>
-				<button class="btn subtle mla" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
+				<span class="title medium mra">Zarządzaj magazynem</span>
+				<p-trait data-trait="history"></p-trait>
+				<button class="btn subtle ml1" onclick="hideParentModal(this)">Zamknij <i class="fas fa-times"></i></button>
 				<button class="btn primary ml1" data-node="{${comp._nodes.save_btn}}">Dodaj <i class="fas fa-check"></i></button>
 			</div>
 			<div class="scroll_panel scroll_shadow panel_padding">
@@ -196,7 +198,7 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 						><selectable-comp data-bind="{${data.select_product}}" class="inline"></selectable-comp>
 					</div>
 
-					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}"></datatable-comp>
+					<datatable-comp data-node="{${comp._nodes.products_dt}}" data-bind="{${data.products_dt}}" class="mt2"></datatable-comp>
 				</div>
 			</div>
 		`,

@@ -3,7 +3,8 @@
 add-stock-products-modal-comp.comp {
 	.bind_products_dt {
 		.dt_header {
-			min-height: 0;
+			display: none;
+			// min-height: 0;
 		}
 	}
 

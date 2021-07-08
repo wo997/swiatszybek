@@ -86,7 +86,7 @@ function TransactionModalComp(comp, parent, data = undefined) {
 					if (!product_id) {
 						return noProduct();
 					}
-					const product = products.find((p) => p.product_id);
+					const product = products.find((p) => p.product_id === product_id);
 					if (!product) {
 						return noProduct();
 					}

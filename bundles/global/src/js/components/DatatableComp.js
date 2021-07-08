@@ -552,7 +552,8 @@ function DatatableComp(comp, parent, data) {
 					comp._prev_data.pagination_data.page_id != data.pagination_data.page_id ||
 					comp._prev_data.pagination_data.row_count != data.pagination_data.row_count ||
 					cd.sortable ||
-					cd.deletable;
+					cd.deletable ||
+					cd.dataset;
 
 				if (chng) {
 					let styles_html = "";
