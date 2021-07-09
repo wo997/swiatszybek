@@ -53,8 +53,13 @@
 		pointer-events: none;
 	}
 	.chat_messages {
-		flex-grow: 1;
-		padding: 5px;
+		& {
+			position: relative;
+		}
+		.scroll_panel {
+			flex-grow: 1;
+			padding: 5px;
+		}
 	}
 	.messages_wrapper {
 		display: flex;
@@ -125,6 +130,18 @@
 	}
 	.message_input {
 		max-height: 83px;
+	}
+	.new_messages_btn {
+		& {
+			position: absolute;
+			bottom: 5px;
+			left: 50%;
+			transform: translateX(-50%);
+			transition: 0.2s;
+		}
+		&:not(.visible) {
+			bottom: -35px;
+		}
 	}
 }
 

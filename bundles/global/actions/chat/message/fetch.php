@@ -29,5 +29,10 @@ if (isset($_POST["from_chat_message_id"])) {
     $where .= " AND chat_message_id < " . intval($_POST["to_chat_message_id"]);
 }
 
+
 $messages = DB::fetchArr("SELECT chat_message_id, sender_id, receiver_id, message, sent_at FROM chat_message WHERE $where ORDER BY $order LIMIT $limit");
-Request::jsonResponse($messages);
+
+if (strpos($order, "DESC") !== false) {
+    $messages = array_reverse($messages);
+}
+Request::jsonResponse(["messages" => $messages]);

@@ -11,8 +11,13 @@ domload(() => {
 						<i class="fas fa-times"></i>
 					</button>
 				</div>
-				<div class="scroll_panel scroll_shadow chat_messages">
-					<div class="messages_wrapper"></div>
+				<div class="chat_messages flex_stretch">
+					<div class="scroll_panel scroll_shadow">
+						<div class="messages_wrapper"></div>
+					</div>
+					<button class="btn success small new_messages_btn">
+						Nowe wiadomości (<span class="new_messages_count"></span>) <i class="fas fa-angle-double-down"></i>
+					</button>
 				</div>
 				<div class="chat_footer">
 					<textarea class="field message_input focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>
@@ -39,6 +44,13 @@ domload(() => {
 	const messages_wrapper = chat_container._child(".messages_wrapper");
 	const chatter_label = chat_container._child(".chatter_label");
 	const chat_messages = chat_container._child(".chat_messages");
+	const chat_messages_scroll = chat_messages._child(".scroll_panel");
+	const new_messages_btn = chat_container._child(".new_messages_btn");
+	const new_messages_count_node = chat_container._child(".new_messages_count");
+
+	new_messages_btn.addEventListener("click", () => {
+		scrollIntoView(messages_wrapper._child(".message:last-child"));
+	});
 
 	const set_h = () => {
 		autoHeight(message_input);
@@ -75,7 +87,7 @@ domload(() => {
 			},
 			success: (res) => {
 				// console.log(res);
-				// do nothing ;) long pulling is here to save you buddy
+				// do nothing ;) long polling is here to save you buddy
 			},
 		});
 		set_h();
@@ -103,17 +115,36 @@ domload(() => {
 		</div>`;
 	};
 
+	const appendMessages = (messages) => {
+		let add_html = "";
+		messages.forEach((message) => {
+			if (!message.receiver_id) {
+				add_html += getOursMessageHTML(message);
+			} else {
+				add_html += getOthersMessageHTML(message);
+			}
+		});
+		all_messages.push(...messages);
+		messages_wrapper.insertAdjacentHTML("beforeend", add_html);
+		onMessagesRendered();
+	};
+
 	const onMessagesRendered = () => {
 		lazyLoadImages();
 	};
 
-	let was_scrolled_to_bottom = false;
+	let scrolled_to_bottom = false;
+	let sees_bottom = false;
 	const checkScroll = () => {
-		const is_bottom = chat_messages.scrollTop > chat_messages.scrollHeight - chat_messages.clientHeight - 1;
-		was_scrolled_to_bottom = is_bottom;
-		// console.log(chat_messages.scrollTop, chat_messages.scrollHeight, chat_messages.clientHeight);
+		const bottom = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
+		scrolled_to_bottom = chat_messages_scroll.scrollTop >= bottom - 1;
+		sees_bottom = chat_messages_scroll.scrollTop >= bottom - 20;
+
+		if (sees_bottom) {
+			setNewMessagesCount(0);
+		}
 	};
-	chat_messages.addEventListener("scroll", checkScroll, { passive: true });
+	chat_messages_scroll.addEventListener("scroll", checkScroll, { passive: true });
 
 	let admin_img = "";
 	xhr({
@@ -126,33 +157,33 @@ domload(() => {
 	});
 
 	const all_messages = [];
+	let new_messages_count;
+	const setNewMessagesCount = (cnt) => {
+		if (new_messages_count === cnt) {
+			return;
+		}
+		new_messages_count = cnt;
+		new_messages_btn.classList.toggle("visible", !!cnt);
+		if (new_messages_count) {
+			new_messages_count_node._set_content(new_messages_count);
+		}
+	};
+	setNewMessagesCount(0);
 
 	const initialFetch = () => {
 		xhr({
 			url: "/chat/message/fetch",
 			success: (res) => {
-				let add_html = "";
-				res.forEach((message) => {
-					if (!message.receiver_id) {
-						add_html = getOursMessageHTML(message) + add_html;
-					} else {
-						add_html = getOthersMessageHTML(message) + add_html;
-					}
+				appendMessages(res.messages);
+				setTimeout(() => {
+					chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
 				});
-				all_messages.push(...res.reverse());
-				// all_messages.push(...res);
-				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
-				onMessagesRendered();
-
-				chat_messages.scrollTop = chat_messages.scrollHeight - chat_messages.clientHeight;
-
-				longPulling();
+				longPolling();
 			},
 		});
 	};
 
-	const longPulling = () => {
-		// console.log(all_messages);
+	const longPolling = () => {
 		const last_message = getLast(all_messages);
 		const params = {
 			long_polling: true,
@@ -163,29 +194,18 @@ domload(() => {
 			url: "/chat/message/fetch",
 			params,
 			success: (res) => {
-				const anything = res.length > 0;
+				const messages = res.messages;
+				appendMessages(messages);
+
+				const anything = messages.length > 0;
 				if (anything) {
 					removeClasses(".spinning", ["spinning"], chat_container);
 				}
 
-				let add_html = "";
-				res.forEach((message) => {
-					if (!message.receiver_id) {
-						add_html += getOursMessageHTML(message);
-					} else {
-						add_html += getOthersMessageHTML(message);
-					}
-				});
-				// all_messages.push(...res.reverse());
-
-				all_messages.push(...res);
-				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
-				onMessagesRendered();
-
-				if (was_scrolled_to_bottom) {
-					const bottom = chat_messages.scrollHeight - chat_messages.clientHeight;
-					const diff = bottom - chat_messages.scrollTop;
-					chat_messages.scrollTop = bottom;
+				if (scrolled_to_bottom) {
+					const bottom = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
+					const diff = bottom - chat_messages_scroll.scrollTop;
+					chat_messages_scroll.scrollTop = bottom;
 
 					if (anything) {
 						messages_wrapper._animate(`0% { transform: translateY(${diff}px) } 100% { transform: translateY(0px) }`, 150, {
@@ -193,10 +213,14 @@ domload(() => {
 						});
 					}
 				}
+				if (!sees_bottom && anything) {
+					// say that new messages are on the bottom? lol
+					setNewMessagesCount(new_messages_count + messages.length);
+				}
 
 				setTimeout(() => {
 					// let server rest a bit
-					longPulling();
+					longPolling();
 				}, 1000);
 			},
 		});
