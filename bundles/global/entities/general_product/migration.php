@@ -5,6 +5,7 @@ DB::createTable("general_product", [
     ["name" => "name", "type" => "VARCHAR(255)"],
     ["name" => "active", "type" => "TINYINT(1)", "index" => "index"],
     ["name" => "product_type", "type" => "VARCHAR(15)", "index" => "index"],
+    ["name" => "sell_by", "type" => "VARCHAR(15)", "index" => "index"],
     ["name" => "__img_url", "type" => "VARCHAR(255)"],
     ["name" => "__images_json", "type" => "TEXT"],
     ["name" => "__options_json", "type" => "TEXT"],

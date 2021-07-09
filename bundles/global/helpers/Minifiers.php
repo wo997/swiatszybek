@@ -27,8 +27,13 @@ class Minifiers
             }
         }
 
-        $css_full = (new Compiler())->compile($css_full);
-        $css_full = (new Minify\CSS($css_full))->minify();
+
+        $compiler = new Compiler();
+        $css_full = $compiler->compile($css_full);
+        unset($compiler);
+        $minifier = new Minify\CSS($css_full);
+        $css_full = $minifier->minify();
+        unset($minifier);
 
         preg_match_all("/grid-area:.*?[};]/", $css_full, $matches);
         if ($matches) {

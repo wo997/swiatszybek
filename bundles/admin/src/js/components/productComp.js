@@ -8,6 +8,7 @@
  *  __img_url?: string
  *  general_product_id?: number
  *  product_id: number
+ *  sell_by: string
  *  active: number
  *  net_price: number
  *  vat_id: number
@@ -189,6 +190,7 @@ function ProductComp(comp, parent, data = undefined) {
 				product_id: -1,
 				vat_id: 1,
 				active: 1,
+				sell_by: "qty",
 				stock: 0,
 				height: 0,
 				length: 0,
@@ -919,7 +921,7 @@ function ProductComp(comp, parent, data = undefined) {
 					</div>
 				</div>
 
-				<div class="label">Sprzedawaj na (do wdrożenia)</div>
+				<div class="label">Sprzedawaj na</div>
 				<select class="field" data-bind="{${data.sell_by}}">
 					<option value="qty">Sztuki</option>
 					<option value="weight">Wagę</option>
@@ -1231,13 +1233,12 @@ function ProductComp(comp, parent, data = undefined) {
 								pos: index + 1,
 							})),
 							variants: data.variants,
+							sell_by: data.sell_by,
 						},
 						product_feature_options: save_product_feature_options,
 					},
 					success: (res) => {
 						const data = comp._data;
-
-						comp.dispatchEvent(new CustomEvent("saved_state"));
 
 						showNotification("Zapisano produkt", {
 							one_line: true,
@@ -1251,6 +1252,10 @@ function ProductComp(comp, parent, data = undefined) {
 						// hey, it's been right?
 						// const make_sure_url_is_cool = `${STATIC_URLS["ADMIN"] + "/produkt/" + res.general_product_id}`;
 						// history.replaceState(undefined, "", make_sure_url_is_cool);
+
+						setTimeout(() => {
+							comp.dispatchEvent(new CustomEvent("saved_state"));
+						});
 					},
 				});
 			});

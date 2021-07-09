@@ -3,6 +3,8 @@
 DB::createTable("product", [
     ["name" => "product_id", "type" => "INT", "index" => "primary"],
     ["name" => "general_product_id", "type" => "INT", "index" => "index", "null" => true],
+    ["name" => "active", "type" => "TINYINT(1)"],
+    ["name" => "sell_by", "type" => "VARCHAR(15)", "index" => "index"],
 
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
     ["name" => "vat_id", "type" => "INT"],
@@ -10,8 +12,6 @@ DB::createTable("product", [
 
     ["name" => "discount_gross_price", "type" => "DECIMAL(10,2)", "null" => true],
     ["name" => "discount_untill", "type" => "DATE", "null" => true],
-
-    ["name" => "active", "type" => "TINYINT(1)"],
 
     ["name" => "stock", "type" => "INT"],
 

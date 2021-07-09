@@ -3,6 +3,7 @@
 include "deployment/build.php";
 Theme::saveSettings();
 
+// TODO: kinda pagination necessary dude ;)
 foreach (array_keys(EntityManager::getEntities()) as $entity_name) {
     $id_col = EntityManager::getEntityIdColumn($entity_name);
     foreach (DB::fetchCol("SELECT $id_col FROM $entity_name") as $id) {
@@ -11,6 +12,7 @@ foreach (array_keys(EntityManager::getEntities()) as $entity_name) {
 }
 
 EntityManager::saveAll();
+EntityManager::reset(); // necessary!
 
 foreach (DB::fetchCol("SELECT page_id FROM page") as $page_id) {
     buildPageable("page", $page_id);

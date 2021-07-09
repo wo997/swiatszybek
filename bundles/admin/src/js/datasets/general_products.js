@@ -3,6 +3,7 @@
 /**
  * @typedef {{
  * active: number
+ * sell_by: string
  * general_product_id: number
  * name: string
  * product_type: string

@@ -142,7 +142,6 @@ function getGlobalProductsSearch($url)
         $product_ids = DB::fetchCol("SELECT product_id FROM $from WHERE stock > 0 AND p.product_id IN ($product_ids_csv)");
     }
 
-
     $params = [
         "product_ids" => $product_ids,
         "page_id" => $page_id,
@@ -188,6 +187,10 @@ function renderGeneralProductsList($params)
         $where .= " AND p.product_id IN (" . ($product_ids ? join(",", $product_ids) : "-1") . ")";
     } else if ($general_product_ids !== null) {
         $where .= " AND gp.general_product_id IN (" . ($general_product_ids ? join(",", $general_product_ids) : "-1") . ")";
+    }
+
+    if (def($params, "only_discount")) {
+        $where .= " AND __discount_percent > 0";
     }
 
     $search_order = def($params, "search_order", "bestsellery");

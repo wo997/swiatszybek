@@ -453,7 +453,7 @@ foreach ($feature_general_product_count as $x) {
         <div class="separator"></div>
         <button class="btn transparent filters_btn">Filtry<span class="product_filter_count"></span> <i class="fas fa-sliders-h"></i></button>
     </div>
-    <div class="searching_wrapper">
+    <div class="searching_wrapper separate_scroll">
         <div class="scroll_panel scroll_shadow">
             <div>
                 <div class="search_header first"> <span>Kategorie</span> </div>

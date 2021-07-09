@@ -158,7 +158,7 @@ domload(() => {
 		success: (res) => {
 			admin_img = res.admin_img;
 			chatter_label._set_content(res.chatter_label);
-			chatter_is_typing._set_content(res.chatter_label + " pisze...");
+			chatter_is_typing._set_content(html`${res.chatter_label} pisze <span class="dot-flashing"></span>`);
 			initialFetch();
 		},
 	});
