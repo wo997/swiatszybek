@@ -16,7 +16,7 @@ function initModals() {
 	document.body.insertAdjacentHTML(
 		"beforeend",
 		html`
-			<div id="modal_wrapper">
+			<div id="modal_wrapper" class="separate_scroll">
 				<div class="modal_container"></div>
 			</div>
 		`

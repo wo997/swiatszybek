@@ -29,6 +29,7 @@ domload(() => {
 	if (!main_header) {
 		return;
 	}
+	main_header.classList.add("separate_scroll");
 	main_header_buttons = main_header._child(".header_buttons");
 	main_header_nav = main_header._child("nav");
 

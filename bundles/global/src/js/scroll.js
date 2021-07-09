@@ -176,9 +176,10 @@ function scrollIntoView(elem, params = {}) {
 }
 
 // prevent scroll below
-const non_scrollables_selector = "#modal_wrapper, .float_menu, .headerbtn_menu";
-const scrollables_selector =
-	"#modal_wrapper .scroll_panel:not(.horizontal), .headerbtn_menu .scroll_panel:not(.horizontal), .separate_scroll, .separate_scroll_has_scroll";
+// TODO: add a single class instead? cause that just sucks bad
+const non_scrollables_selector = ".separate_scroll"; //"#modal_wrapper, .float_menu, .headerbtn_menu";
+// const scrollables_selector =
+// 	"#modal_wrapper .scroll_panel:not(.horizontal), .headerbtn_menu .scroll_panel:not(.horizontal), .separate_scroll, .separate_scroll_has_scroll";
 
 // desktop
 document.addEventListener(
@@ -189,7 +190,7 @@ document.addEventListener(
 		}
 
 		const target = $(ev.target);
-		const node = target._parent(scrollables_selector);
+		const node = target._parent(`${non_scrollables_selector} .scroll_panel:not(.horizontal)`); //  target._parent(scrollables_selector);
 		if (node) {
 			if (node.classList.contains("separate_scroll_has_scroll")) {
 				if (node.scrollHeight < node.offsetHeight + 1) {
@@ -220,7 +221,7 @@ document.addEventListener(
 		}
 
 		const target = $(ev.target);
-		const node = target._parent(scrollables_selector);
+		const node = target._parent(`${non_scrollables_selector} .scroll_panel:not(.horizontal)`); //  target._parent(scrollables_selector);
 		if (node) {
 			for (let i = 0; i < documentTouches.length; i++) {
 				if (ev.targetTouches[i] && documentTouches[i]) {
