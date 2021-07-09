@@ -61,6 +61,9 @@ domload(() => {
 
 	const sendMessage = () => {
 		const message = message_input._get_value();
+		if (message.trim() === "") {
+			return showNotification("Pusta wiadomość", { type: "error", one_line: true });
+		}
 		message_input._set_value("", { quiet: true });
 		xhr({
 			url: "/chat/message/send",
@@ -68,7 +71,7 @@ domload(() => {
 				message,
 			},
 			success: (res) => {
-				console.log(res);
+				// console.log(res);
 			},
 		});
 		set_h();
@@ -102,20 +105,62 @@ domload(() => {
 		success: (res) => {
 			admin_img = res.admin_img;
 			chatter_label._set_content(res.chatter_label);
-			xhr({
-				url: "/chat/message/fetch",
-				success: (res) => {
-					let add_html = "";
-					res.forEach((message) => {
-						if (!message.receiver_id) {
-							add_html = getOursMessageHTML(message) + add_html;
-						} else {
-							add_html = getOthersMessageHTML(message) + add_html;
-						}
-					});
-					messages_wrapper.insertAdjacentHTML("beforeend", add_html);
-				},
-			});
+			initialFetch();
 		},
 	});
+
+	const all_messages = [];
+
+	const initialFetch = () => {
+		xhr({
+			url: "/chat/message/fetch",
+			success: (res) => {
+				let add_html = "";
+				res.forEach((message) => {
+					if (!message.receiver_id) {
+						add_html = getOursMessageHTML(message) + add_html;
+					} else {
+						add_html = getOthersMessageHTML(message) + add_html;
+					}
+				});
+				all_messages.push(...res.reverse());
+				// all_messages.push(...res);
+				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
+
+				longPulling();
+			},
+		});
+	};
+
+	const longPulling = () => {
+		// console.log(all_messages);
+		const last_message = getLast(all_messages);
+		const params = {
+			// long_polling: true,
+			from_chat_message_id: last_message ? last_message.chat_message_id : null,
+		};
+
+		xhr({
+			url: "/chat/message/fetch",
+			params,
+			success: (res) => {
+				let add_html = "";
+				res.forEach((message) => {
+					if (!message.receiver_id) {
+						add_html += getOursMessageHTML(message);
+					} else {
+						add_html += getOthersMessageHTML(message);
+					}
+				});
+				// all_messages.push(...res.reverse());
+
+				all_messages.push(...res);
+				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
+
+				setTimeout(() => {
+					longPulling();
+				}, 1000);
+			},
+		});
+	};
 });

@@ -129,5 +129,5 @@ if (Request::$is_admin_url) {
     <?= getSetting(["general", "additional_scripts", "footer"], "") ?>
 <?php endif ?>
 
-<script defer src="/builds/wo997_chat.js?v=<?= version("wo997_chat") ?>"></script>
-<link defer href="/builds/wo997_chat.css?v=<?= version("wo997_chat")  ?>" rel="stylesheet">
+<!-- <script defer src="/builds/wo997_chat.js?v=<?= version("wo997_chat") ?>"></script>
+<link defer href="/builds/wo997_chat.css?v=<?= version("wo997_chat")  ?>" rel="stylesheet"> -->
