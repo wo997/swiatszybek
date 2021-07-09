@@ -80,6 +80,7 @@ domload(() => {
 		}
 		message_input._set_value("", { quiet: true });
 		send_message_btn.classList.add("spinning");
+		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
 		xhr({
 			url: "/chat/message/send",
 			params: {
