@@ -104,14 +104,14 @@ domload(() => {
 		tooltip.last_target = e;
 	};
 	window.addEventListener("mousemove", tacz, { passive: true });
-	window.addEventListener("touchstart", tacz, { passive: true });
+	// window.addEventListener("touchstart", tacz, { passive: true });
 
 	window.addEventListener("mousewheel", () => {
 		tooltip.dismiss();
 	});
-	window.addEventListener("touchmove", () => {
-		tooltip.dismiss();
-	});
+	// window.addEventListener("touchmove", () => {
+	// 	tooltip.dismiss();
+	// });
 	window.addEventListener("mousedown", (event) => {
 		tooltip.dismiss();
 	});
