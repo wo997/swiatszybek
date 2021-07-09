@@ -8,14 +8,18 @@ $where = "client_id = $user_id";
 $order = "chat_message_id DESC";
 if (isset($_POST["from_chat_message_id"])) {
     $from_chat_message_id = def($_POST, "from_chat_message_id", 0);
-    $cnt = 0;
-    // up to 3 seconds and repeat the cycle
-    while ($cnt++ < 3) {
-        $max_chat_message_id = DB::fetchVal("SELECT MAX(chat_message_id) FROM chat_message WHERE $where");
-        if ($max_chat_message_id > $from_chat_message_id) {
-            break;
+
+    if (def($_POST, "long_polling")) {
+        session_write_close();
+        $cnt = 0;
+        // up to N seconds and repeat the cycle from the front
+        while ($cnt++ < 100) {
+            $max_chat_message_id = DB::fetchVal("SELECT MAX(chat_message_id) FROM chat_message WHERE $where");
+            if ($max_chat_message_id > $from_chat_message_id) {
+                break;
+            }
+            sleep(0.2);
         }
-        sleep(1);
     }
     if ($from_chat_message_id) {
         $where .= " AND chat_message_id > " . intval($from_chat_message_id);

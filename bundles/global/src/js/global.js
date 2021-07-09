@@ -24,16 +24,16 @@ function windowload(callback) {
  */
 
 function xhr(params) {
-	var xhr = new XMLHttpRequest();
+	const xhr = new XMLHttpRequest();
 	xhr.open("POST", params.url, true);
 	xhr.setRequestHeader("enctype", "multipart/form-data");
 	xhr.onload = function () {
-		var res = xhr.responseText;
+		let res = xhr.responseText;
 		params.type = def(params.type, "json");
-		var res_json = null;
+		let res_json = null;
 
-		var match_reload_required = "[reload_required]";
-		var reload_required = false;
+		let match_reload_required = "[reload_required]";
+		let reload_required = false;
 		if (res.substring(0, match_reload_required.length) === match_reload_required) {
 			res = res.substring(match_reload_required.length);
 			reload_required = true;

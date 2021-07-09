@@ -16,8 +16,9 @@ domload(() => {
 				</div>
 				<div class="chat_footer">
 					<textarea class="field message_input focus_inside spiky" placeholder="Napisz wiadomość..."></textarea>
-					<button class="btn primary spiky send_message_btn">
+					<button class="btn primary spiky send_message_btn spinner_wrapper">
 						<i class="fas fa-paper-plane"></i>
+						<div class="spinner overlay white"></div>
 					</button>
 				</div>
 			</div>
@@ -37,6 +38,7 @@ domload(() => {
 	const send_message_btn = chat_container._child(".send_message_btn");
 	const messages_wrapper = chat_container._child(".messages_wrapper");
 	const chatter_label = chat_container._child(".chatter_label");
+	const chat_messages = chat_container._child(".chat_messages");
 
 	const set_h = () => {
 		autoHeight(message_input);
@@ -65,6 +67,7 @@ domload(() => {
 			return showNotification("Pusta wiadomość", { type: "error", one_line: true });
 		}
 		message_input._set_value("", { quiet: true });
+		send_message_btn.classList.add("spinning");
 		xhr({
 			url: "/chat/message/send",
 			params: {
@@ -72,6 +75,7 @@ domload(() => {
 			},
 			success: (res) => {
 				// console.log(res);
+				// do nothing ;) long pulling is here to save you buddy
 			},
 		});
 		set_h();
@@ -98,6 +102,18 @@ domload(() => {
 			<div class="message_content">${message.message}</div>
 		</div>`;
 	};
+
+	const onMessagesRendered = () => {
+		lazyLoadImages();
+	};
+
+	let was_scrolled_to_bottom = false;
+	const checkScroll = () => {
+		const is_bottom = chat_messages.scrollTop > chat_messages.scrollHeight - chat_messages.clientHeight - 1;
+		was_scrolled_to_bottom = is_bottom;
+		// console.log(chat_messages.scrollTop, chat_messages.scrollHeight, chat_messages.clientHeight);
+	};
+	chat_messages.addEventListener("scroll", checkScroll, { passive: true });
 
 	let admin_img = "";
 	xhr({
@@ -126,6 +142,9 @@ domload(() => {
 				all_messages.push(...res.reverse());
 				// all_messages.push(...res);
 				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
+				onMessagesRendered();
+
+				chat_messages.scrollTop = chat_messages.scrollHeight - chat_messages.clientHeight;
 
 				longPulling();
 			},
@@ -136,7 +155,7 @@ domload(() => {
 		// console.log(all_messages);
 		const last_message = getLast(all_messages);
 		const params = {
-			// long_polling: true,
+			long_polling: true,
 			from_chat_message_id: last_message ? last_message.chat_message_id : null,
 		};
 
@@ -144,6 +163,11 @@ domload(() => {
 			url: "/chat/message/fetch",
 			params,
 			success: (res) => {
+				const anything = res.length > 0;
+				if (anything) {
+					removeClasses(".spinning", ["spinning"], chat_container);
+				}
+
 				let add_html = "";
 				res.forEach((message) => {
 					if (!message.receiver_id) {
@@ -156,8 +180,22 @@ domload(() => {
 
 				all_messages.push(...res);
 				messages_wrapper.insertAdjacentHTML("beforeend", add_html);
+				onMessagesRendered();
+
+				if (was_scrolled_to_bottom) {
+					const bottom = chat_messages.scrollHeight - chat_messages.clientHeight;
+					const diff = bottom - chat_messages.scrollTop;
+					chat_messages.scrollTop = bottom;
+
+					if (anything) {
+						messages_wrapper._animate(`0% { transform: translateY(${diff}px) } 100% { transform: translateY(0px) }`, 150, {
+							callback: checkScroll,
+						});
+					}
+				}
 
 				setTimeout(() => {
+					// let server rest a bit
 					longPulling();
 				}, 1000);
 			},
