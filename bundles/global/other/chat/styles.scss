@@ -10,7 +10,7 @@
 		border-radius: 100px;
 		width: 60px;
 		height: 60px;
-		box-shadow: 0 3px 8px 0 #0007;
+		box-shadow: 0 3px 9px 0 #0009;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -36,13 +36,13 @@
 		right: 10%;
 		background: #fffd;
 		border-radius: 4px;
-		box-shadow: 0 1px 6px 0 #0004;
+		box-shadow: 0 1px 8px 0 #0005;
 		display: flex;
 		flex-direction: column;
 		height: 400px;
 		width: 380px;
 		transition: transform 0.2s, opacity 0.2s;
-		transform-origin: 85% 85%;
+		transform-origin: 94% 90%;
 		z-index: 10000;
 		backdrop-filter: blur(5px);
 		--chat_header_height: 34px;
@@ -58,7 +58,7 @@
 		}
 		.scroll_panel {
 			flex-grow: 1;
-			padding: 5px;
+			padding: 5px 5px 20px;
 		}
 	}
 	.messages_wrapper {

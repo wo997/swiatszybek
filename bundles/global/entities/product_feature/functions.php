@@ -41,29 +41,6 @@ function getPhysicalMeasures()
                 // ]
             ]
         ],
-        "weight" => [
-            "description" => "Waga",
-            "base_unit" => "kg",
-            "units" => [
-                [
-                    "id" => "mg",
-                    "name" => "mg",
-                    "multiply" => 0.001 * 0.001
-                ], [
-                    "id" => "g",
-                    "name" => "g",
-                    "multiply" => 0.001
-                ], [
-                    "id" => "kg",
-                    "name" => "kg",
-                    "multiply" => 1
-                ], [
-                    "id" => "t",
-                    "name" => "t",
-                    "multiply" => 1000
-                ],
-            ]
-        ],
         "length" => [
             "description" => "Długość",
             "base_unit" => "m",

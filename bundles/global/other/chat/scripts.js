@@ -65,6 +65,7 @@ domload(() => {
 		open_chat_btn.classList.add("opened");
 		message_input.click();
 		message_input.focus();
+		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
 	});
 
 	close_btn.addEventListener("click", () => {
@@ -103,14 +104,14 @@ domload(() => {
 	send_message_btn.addEventListener("click", sendMessage);
 
 	const getOursMessageHTML = (message) => {
-		return html`<div class="message ours">
+		return html`<div class="message ours new">
 			<div class="message_content">${message.message}</div>
 			<img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img" data-tooltip="Wysłano ${message.sent_at}" />
 		</div>`;
 	};
 
 	const getOthersMessageHTML = (message) => {
-		return html`<div class="message others">
+		return html`<div class="message others new">
 			<img data-src="${admin_img}" class="wo997_img chatter_img" data-tooltip="Wysłano ${message.sent_at}" />
 			<div class="message_content">${message.message}</div>
 		</div>`;
@@ -171,14 +172,18 @@ domload(() => {
 	};
 	setNewMessagesCount(0);
 
+	const getNewMessageNodes = () => {
+		const message_nodes = messages_wrapper._children(".message.new");
+		message_nodes.forEach((e) => e.classList.remove("new"));
+		return message_nodes;
+	};
+
 	const initialFetch = () => {
 		xhr({
 			url: "/chat/message/fetch",
 			success: (res) => {
 				appendMessages(res.messages);
-				setTimeout(() => {
-					chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
-				});
+				getNewMessageNodes(); // keep it!
 				longPolling();
 			},
 		});
@@ -201,6 +206,10 @@ domload(() => {
 				const anything = messages.length > 0;
 				if (anything) {
 					removeClasses(".spinning", ["spinning"], chat_container);
+
+					getNewMessageNodes().forEach((e) => {
+						e.style.animation = "show 0.35s";
+					});
 				}
 
 				if (scrolled_to_bottom) {
@@ -209,7 +218,7 @@ domload(() => {
 					chat_messages_scroll.scrollTop = bottom;
 
 					if (anything) {
-						messages_wrapper._animate(`0% { transform: translateY(${diff}px) } 100% { transform: translateY(0px) }`, 150, {
+						messages_wrapper._animate(`0% { transform: translateY(${diff}px) } 100% { transform: translateY(0px) }`, 200, {
 							callback: checkScroll,
 						});
 					}
