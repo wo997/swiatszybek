@@ -58,12 +58,12 @@
 		}
 		.scroll_panel {
 			flex-grow: 1;
-			padding: 5px 5px 20px;
 		}
 	}
 	.messages_wrapper {
 		display: flex;
 		flex-direction: column;
+		padding: 5px;
 	}
 	.chat_header {
 		background: var(--clr_primary);
@@ -141,6 +141,20 @@
 		}
 		&:not(.visible) {
 			bottom: -35px;
+		}
+	}
+	.chatter_is_typing {
+		& {
+			padding: 2px 13px;
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			color: #555;
+			transition: 0.2s all;
+			background: #fff;
+		}
+		&:not(.visible) {
+			opacity: 0;
 		}
 	}
 }

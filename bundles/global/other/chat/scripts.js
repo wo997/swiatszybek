@@ -15,6 +15,7 @@ domload(() => {
 					<div class="scroll_panel scroll_shadow">
 						<div class="messages_wrapper"></div>
 					</div>
+					<div class="chatter_is_typing"></div>
 					<button class="btn success small new_messages_btn">
 						Nowe wiadomości (<span class="new_messages_count"></span>) <i class="fas fa-angle-double-down"></i>
 					</button>
@@ -43,10 +44,13 @@ domload(() => {
 	const send_message_btn = chat_container._child(".send_message_btn");
 	const messages_wrapper = chat_container._child(".messages_wrapper");
 	const chatter_label = chat_container._child(".chatter_label");
+	const chatter_is_typing = chat_container._child(".chatter_is_typing");
 	const chat_messages = chat_container._child(".chat_messages");
 	const chat_messages_scroll = chat_messages._child(".scroll_panel");
 	const new_messages_btn = chat_container._child(".new_messages_btn");
 	const new_messages_count_node = chat_container._child(".new_messages_count");
+
+	chatter_is_typing.classList.add("visible");
 
 	new_messages_btn.addEventListener("click", () => {
 		scrollIntoView(messages_wrapper._child(".message:last-child"));
@@ -65,7 +69,7 @@ domload(() => {
 		open_chat_btn.classList.add("opened");
 		message_input.click();
 		message_input.focus();
-		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
+		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight;
 	});
 
 	close_btn.addEventListener("click", () => {
@@ -81,7 +85,7 @@ domload(() => {
 		}
 		message_input._set_value("", { quiet: true });
 		send_message_btn.classList.add("spinning");
-		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight - chat_messages_scroll.clientHeight;
+		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight;
 		xhr({
 			url: "/chat/message/send",
 			params: {
@@ -154,6 +158,7 @@ domload(() => {
 		success: (res) => {
 			admin_img = res.admin_img;
 			chatter_label._set_content(res.chatter_label);
+			chatter_is_typing._set_content(res.chatter_label + " pisze...");
 			initialFetch();
 		},
 	});
