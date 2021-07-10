@@ -90,6 +90,7 @@ $admin_navigations_tree = [
             //["url" => "/newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
         ]
     ],
+    ["url" => "/czat", "title" => '<i class="fas fa-envelope"></i> Czat z klientem'],
     [
         "title" => '<i class="fas fa-chart-pie"></i> Marketing', "quick_menu" => true,
         "sub" => [

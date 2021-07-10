@@ -243,7 +243,7 @@ function buildPageable($entity_name, $id)
         $page_css .= $page->getProp("custom_css");
         $page_css .= getPageCss($dom_data["styles_css_responsive"]);
         $page_css_minified = Minifiers::minifyCss($page_css);
-        Files::save(BUILDS_PATH . "/{$entity_name}/css/{$entity_name}_$id.css", $page_css_minified);
+        Files::save(BUILDS_PATH . "/{$entity_name}/css/{$entity_name}_$id.css", "@charset \"UTF-8\";\n" . $page_css_minified);
 
         $page_js = $dom_data["scripts_js"];
         $page_js .= $page->getProp("custom_js");

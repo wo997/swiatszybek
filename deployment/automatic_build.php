@@ -137,7 +137,7 @@ if ($build_info != $new_build_info) {
                     }
                 }
                 if ($css_full) {
-                    Files::save(BUILDS_PATH . "$name.css", $css_full);
+                    Files::save(BUILDS_PATH . "$name.css", "@charset \"UTF-8\";\n" . $css_full);
                 }
                 if ($js_full) {
                     Files::save(BUILDS_PATH . "$name.js", $js_full);

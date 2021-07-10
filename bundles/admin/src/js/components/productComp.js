@@ -30,6 +30,7 @@
  *  name: string
  *  active: number
  *  sell_by: string
+ *  base_unit: string
  *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
@@ -65,6 +66,7 @@
  *      products_dt_wrapper: PiepNode
  *      dt_descriptions: PiepNode
  *      case_has_base_unit: PiepNode
+ *      base_unit: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _add_variant?(options?: {common?: number, callback?()})
@@ -128,6 +130,7 @@ function ProductComp(comp, parent, data = undefined) {
 			variants: [],
 			product_list_view: "active",
 			product_type: "normal",
+			base_unit: "",
 		};
 	}
 
@@ -198,6 +201,7 @@ function ProductComp(comp, parent, data = undefined) {
 				name: "",
 				discount_gross_price: null,
 				discount_untill: null,
+				base_unit: "",
 			};
 
 			for (const [variant_id, option_id] of Object.entries(variants)) {
@@ -499,7 +503,12 @@ function ProductComp(comp, parent, data = undefined) {
 
 				if (cd.sell_by) {
 					expand(comp._nodes.case_has_base_unit, data.sell_by !== "qty");
-					comp._nodes;
+
+					const physical_measure = physical_measures[data.sell_by];
+					comp._nodes.base_unit._set_content(
+						physical_measure ? physical_measure.units.map((e) => html`<option value="${e.id}">${e.name}</option>`).join("") : ""
+					);
+					comp._nodes.base_unit._set_value(data.base_unit, { quiet: true });
 				}
 
 				const missing_feature_ids = [];
@@ -935,7 +944,7 @@ function ProductComp(comp, parent, data = undefined) {
 					</div>
 					<div class="checkbox_area">
 						<div>
-							<p-checkbox data-value="virtual"></p-checkbox>
+							<p-checkbox data-value="weight"></p-checkbox>
 							<i class="fas fa-weight-hanging"></i>
 							<span class="semi_bold">Wagę</span>
 						</div>
@@ -951,12 +960,12 @@ function ProductComp(comp, parent, data = undefined) {
 
 				<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_has_base_unit}}">
 					<div class="label">Podstawowa jednostka</div>
-					<select class="field" data-bind="{${data.base_unit}}"></select>
+					<select class="field" data-node="{${comp._nodes.base_unit}}" data-bind="{${data.base_unit}}"></select>
 
-					<div class="label">Minimalna ilość jednostkowa</div>
+					<div class="label">ilość jednostkowa</div>
 					<input class="field empty_null" data-bind="{${data.qty_step}}" />
 
-					<div class="glue_children">
+					<!-- <div class="glue_children">
 						<div class="grow">
 							<div class="label">Ilość min.</div>
 							<input class="field empty_null" data-bind="{${data.qty_min}}" />
@@ -965,7 +974,7 @@ function ProductComp(comp, parent, data = undefined) {
 							<div class="label">Ilość max.</div>
 							<input class="field empty_null" data-bind="{${data.qty_max}}" />
 						</div>
-					</div>
+					</div> -->
 				</div>
 
 				<div class="mt5">
