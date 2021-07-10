@@ -23,3 +23,13 @@ DB::createTable(
         ["name" => "typed_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
     ]
 );
+
+// DB::createTable(
+//     "chat_seen",
+//     [
+//         ["name" => "client_id", "type" => "INT", "index" => "index"],
+//         ["name" => "sender_id", "type" => "INT", "index" => "index"],
+//         ["name" => "receiver_id", "type" => "INT", "null" => true],
+//         ["name" => "chat_message_id", "type" => "INT", "index" => "index"],
+//     ]
+// );

@@ -148,7 +148,7 @@ function getInputValidationErrors(input) {
 	if (input.tagName === "SELECTABLE-COMP") {
 		// @ts-ignore
 		selectable_comp = input;
-		value = selectable_comp._data.options.single ? selectable_comp._data.selection[0] : selectable_comp._data.selection;
+		value = selectable_comp._data.single ? selectable_comp._data.selection[0] : selectable_comp._data.selection;
 	} else {
 		value = input._get_value({ plain: true });
 	}
