@@ -50,8 +50,6 @@ domload(() => {
 	const new_messages_btn = chat_container._child(".new_messages_btn");
 	const new_messages_count_node = chat_container._child(".new_messages_count");
 
-	chatter_is_typing.classList.add("visible");
-
 	new_messages_btn.addEventListener("click", () => {
 		scrollIntoView(messages_wrapper._child(".message:last-child"));
 	});
@@ -63,6 +61,14 @@ domload(() => {
 	message_input.addEventListener("change", set_h);
 	set_h();
 
+	const tempLockBlur = () => {
+		// @ts-ignore
+		chat_container.style.backdropFilter = "unset";
+		setTimeout(() => {
+			// @ts-ignore
+			chat_container.style.backdropFilter = "";
+		}, 200);
+	};
 	open_chat_btn.addEventListener("click", () => {
 		chat_visible = true;
 		chat_container.classList.add("visible");
@@ -70,12 +76,14 @@ domload(() => {
 		message_input.click();
 		message_input.focus();
 		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight;
+		tempLockBlur();
 	});
 
 	close_btn.addEventListener("click", () => {
 		chat_visible = false;
 		chat_container.classList.remove("visible");
 		open_chat_btn.classList.remove("opened");
+		tempLockBlur();
 	});
 
 	const sendMessage = () => {
@@ -227,11 +235,14 @@ domload(() => {
 		});
 	};
 
+	let is_chatter_typing = 0;
+
 	const longPolling = () => {
 		const last_message = getLast(all_messages);
 		const params = {
 			long_polling: true,
 			from_chat_message_id: last_message ? last_message.chat_message_id : null,
+			is_chatter_typing,
 		};
 
 		xhr({
@@ -239,6 +250,9 @@ domload(() => {
 			params,
 			success: (res) => {
 				const messages = res.messages;
+				is_chatter_typing = res.is_chatter_typing;
+				chatter_is_typing.classList.toggle("visible", !!is_chatter_typing);
+
 				appendMessages(messages);
 
 				const anything = messages.length > 0;
@@ -246,7 +260,7 @@ domload(() => {
 					removeClasses(".spinning", ["spinning"], chat_container);
 
 					getNewMessageNodes().forEach((e) => {
-						e.style.animation = "show 0.35s";
+						e._animate(`0% { transform: scale(0.6, 0.3); opacity: 0; } 100% { transform: scale(1, 1); opacity: 1; }`, 300);
 					});
 				}
 

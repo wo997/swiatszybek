@@ -113,6 +113,7 @@
 		&.ours {
 			& {
 				margin-left: auto;
+				transform-origin: 100% 100%;
 			}
 			.message_content {
 				background: var(--clr_primary);
@@ -122,6 +123,7 @@
 		&.others {
 			& {
 				margin-right: auto;
+				transform-origin: 0% 100%;
 			}
 			.message_content {
 				background: #eee;
