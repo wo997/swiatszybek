@@ -110,7 +110,7 @@ domload(() => {
 	const getOursMessageHTML = (message) => {
 		return html`<div class="message ours new">
 			<div class="message_content">${message.message}</div>
-			<img data-src="/uploads/-/2021-06-23-21-45_860x900.png" class="wo997_img chatter_img" data-tooltip="Wysłano ${message.sent_at}" />
+			<img src="/src/img/core/chat/user.svg" class="chatter_img" data-tooltip="Wysłano ${message.sent_at}" />
 		</div>`;
 	};
 

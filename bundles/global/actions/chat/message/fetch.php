@@ -2,7 +2,7 @@
 
 $user = User::getCurrent();
 $user_id = $user->getId();
-$limit = 100;
+$limit = 30;
 
 $where = "client_id = $user_id";
 $order = "chat_message_id DESC";

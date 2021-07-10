@@ -25,10 +25,16 @@
 
 <div id="additionalScriptsForm">
     <span class="label">Skrypty w headerze</span>
-    <textarea type="text" class="field" data-name="header" style="height:500px"></textarea>
+    <textarea type="text" class="field" data-name="header" style="height:400px"></textarea>
 
     <span class="label">Skrypty w footerze</span>
-    <textarea type="text" class="field" data-name="footer" style="height:500px"></textarea>
+    <textarea type="text" class="field" data-name="footer" style="height:400px"></textarea>
+
+    <span class="label">Globalny JS</span>
+    <textarea type="text" class="field" data-name="global_js" style="height:400px"></textarea>
+
+    <span class="label">Globalny CSS</span>
+    <textarea type="text" class="field" data-name="global_css" style="height:400px"></textarea>
 </div>
 
 <?php include "bundles/admin/templates/default.php"; ?>

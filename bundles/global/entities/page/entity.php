@@ -17,6 +17,10 @@ EntityManager::register("page", [
         "max_vid" => ["type" => "string"],
         "used_modules_csv" => ["type" => "string"],
         "default_seo_description" => ["type" => "string"],
+        "custom_css" => ["type" => "string"],
+        "custom_js" => ["type" => "string"],
+        "custom_header" => ["type" => "string"],
+        "custom_footer" => ["type" => "string"],
     ],
 ]);
 

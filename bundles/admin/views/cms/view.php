@@ -201,6 +201,9 @@ $modules_html["main_menu_html"] = ob_get_clean();
         <button class="btn transparent edit_seo_btn bold">
             SEO
         </button>
+        <button class="btn transparent edit_additional_scripts_btn bold" data-tooltip="Dodatkowe skrypty">
+            <i class="fas fa-code"></i>
+        </button>
 
         <div style="flex-grow:1"> </div>
         <button class="btn transparent advanced_mode_btn" data-tooltip="Tryb zaawansowany">

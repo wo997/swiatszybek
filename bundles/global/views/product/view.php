@@ -259,7 +259,7 @@ if ($main_img) {
 
 <div class="product_wrapper">
     <div class="product_imgs">
-        <div class="wo997_slider" data-has_slider_below data-nav_out_from="1000px">
+        <div class="wo997_slider main_slider" data-has_slider_below data-nav_out_from="1000px">
             <div class="wo997_slides_container">
                 <div class="wo997_slides_wrapper">
                     <?php

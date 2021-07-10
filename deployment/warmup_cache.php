@@ -4,6 +4,7 @@ include "deployment/build.php";
 Theme::saveSettings();
 
 // TODO: kinda pagination necessary dude ;)
+// IMPORTANT, test whether resetting and saving actually works properly, backup DB
 foreach (array_keys(EntityManager::getEntities()) as $entity_name) {
     $id_col = EntityManager::getEntityIdColumn($entity_name);
     foreach (DB::fetchCol("SELECT $id_col FROM $entity_name") as $id) {

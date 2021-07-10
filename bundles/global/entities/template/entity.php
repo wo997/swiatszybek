@@ -14,6 +14,10 @@ EntityManager::register("template", [
         //"v_dom_ids_csv" => ["type" => "string"],
         "max_vid" => ["type" => "string"],
         "used_modules_csv" => ["type" => "string"],
+        "custom_css" => ["type" => "string"],
+        "custom_js" => ["type" => "string"],
+        "custom_header" => ["type" => "string"],
+        "custom_footer" => ["type" => "string"],
     ],
 ]);
 

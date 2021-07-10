@@ -1,0 +1,20 @@
+/* css[admin] */
+
+.number_icon {
+	& {
+		display: inline-flex;
+		// border: 2px solid #000;
+		background: #000;
+		color: #fff;
+		border-radius: 99px;
+		width: 1.3em;
+		height: 1.3em;
+		justify-content: center;
+		align-items: center;
+		font-style: normal;
+		font-weight: var(--semi_bold);
+	}
+	&::before {
+		content: "1";
+	}
+}

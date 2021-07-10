@@ -19,5 +19,9 @@ DB::createTable(
         ["name" => "max_vid", "type" => "INT"],
         ["name" => "used_modules_csv", "type" => "TEXT"],
         ["name" => "default_seo_description", "type" => "VARCHAR(255)"],
+        ["name" => "custom_css", "type" => "TEXT"],
+        ["name" => "custom_js", "type" => "TEXT"],
+        ["name" => "custom_header", "type" => "TEXT"],
+        ["name" => "custom_footer", "type" => "TEXT"],
     ]
 );

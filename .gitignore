@@ -1,20 +1,20 @@
-.vscode/
-uploads/
-vendor/
-filmy/
+/.vscode/
+/uploads/
+/vendor/
+/filmy/
 
-dump/
+/dump/
 
 # don't tell anyone
-secrets.php
-settings/
+/secrets.php
+/settings/
 
 # cached files
-sitemap.xml
-topmenu.html
-builds/
-prebuilds/
-local_builds/
+/sitemap.xml
+/topmenu.html
+/builds/
+/prebuilds/
+/local_builds/
 
-piepsklep.zip
-xxx/
+/piepsklep.zip
+/xxx/

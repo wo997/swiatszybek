@@ -214,37 +214,37 @@ domload(() => {
 		page_seo_data_modal._show({ source: edit_seo_btn });
 	});
 
+	page_seo_data_modal._nodes.save_btn.addEventListener("click", () => {
+		const data = page_seo_data_modal._data;
+		showLoader();
+		hideModal("PageSeoData");
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/page/save",
+			params: {
+				page: {
+					page_id: page_data.page_id,
+					seo_title: data.seo_title,
+					seo_description: data.seo_description,
+				},
+			},
+			success: (res) => {
+				page_data = res;
+				updateSEOState();
+
+				showNotification("Zapisano dane SEO strony", {
+					one_line: true,
+					type: "success",
+				});
+				hideLoader();
+			},
+		});
+	});
+
 	const updateSEOState = () => {
 		if (!page_data) {
 			edit_seo_btn.classList.add("hidden");
 			return;
 		}
-
-		page_seo_data_modal._nodes.save_btn.addEventListener("click", () => {
-			const data = page_seo_data_modal._data;
-			showLoader();
-			hideModal("PageSeoData");
-			xhr({
-				url: STATIC_URLS["ADMIN"] + "/page/save",
-				params: {
-					page: {
-						page_id: page_data.page_id,
-						seo_title: data.seo_title,
-						seo_description: data.seo_description,
-					},
-				},
-				success: (res) => {
-					page_data = res;
-					updateSEOState();
-
-					showNotification("Zapisano dane SEO strony", {
-						one_line: true,
-						type: "success",
-					});
-					hideLoader();
-				},
-			});
-		});
 
 		page_seo_data_modal._data.seo_title = page_data.seo_title;
 		page_seo_data_modal._data.seo_description = page_data.seo_description;
@@ -263,6 +263,44 @@ domload(() => {
 	};
 
 	updateSEOState();
+
+	const edit_additional_scripts_modal = getPageableAdditionalScriptsModal();
+	const edit_additional_scripts_btn = $(".edit_additional_scripts_btn");
+
+	edit_additional_scripts_btn.addEventListener("click", () => {
+		showModal("PageableAdditionalScriptsModal", { source: edit_additional_scripts_btn });
+	});
+
+	edit_additional_scripts_modal._child(`[data-name="custom_header"]`)._set_value(pageable_data.custom_header);
+	edit_additional_scripts_modal._child(`[data-name="custom_footer"]`)._set_value(pageable_data.custom_footer);
+	edit_additional_scripts_modal._child(`[data-name="custom_js"]`)._set_value(pageable_data.custom_js);
+	edit_additional_scripts_modal._child(`[data-name="custom_css"]`)._set_value(pageable_data.custom_css);
+	edit_additional_scripts_modal._child(".save_btn").addEventListener("click", () => {
+		showLoader();
+		hideModal("PageableAdditionalScriptsModal");
+
+		xhr({
+			url: STATIC_URLS["ADMIN"] + "/page/save",
+			params: {
+				page: {
+					page_id: page_data.page_id,
+					custom_header: edit_additional_scripts_modal._child(`[data-name="custom_header"]`)._get_value(),
+					custom_footer: edit_additional_scripts_modal._child(`[data-name="custom_footer"]`)._get_value(),
+					custom_js: edit_additional_scripts_modal._child(`[data-name="custom_js"]`)._get_value(),
+					custom_css: edit_additional_scripts_modal._child(`[data-name="custom_css"]`)._get_value(),
+				},
+			},
+			success: (res) => {
+				page_data = res;
+
+				showNotification("Zapisano dodatkowe skrypty", {
+					one_line: true,
+					type: "success",
+				});
+				hideLoader();
+			},
+		});
+	});
 
 	// IMPORT
 	let v_dom_json;

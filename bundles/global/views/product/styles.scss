@@ -1,5 +1,20 @@
 /* css[view] */
 
+.product_imgs .main_slider {
+	& {
+		background: #fff;
+	}
+	&::after {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		box-shadow: inset 0 0 0 1px #0002;
+	}
+}
+
 .price_wrapper {
 	margin: 1.5em 0;
 	line-height: 1.3;

@@ -9,6 +9,7 @@
  *  general_product_id?: number
  *  product_id: number
  *  sell_by: string
+ *  base_unit: string
  *  active: number
  *  net_price: number
  *  vat_id: number
@@ -63,6 +64,7 @@
  *      delete_btn: PiepNode
  *      products_dt_wrapper: PiepNode
  *      dt_descriptions: PiepNode
+ *      case_has_base_unit: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _add_variant?(options?: {common?: number, callback?()})
@@ -129,10 +131,6 @@ function ProductComp(comp, parent, data = undefined) {
 		};
 	}
 
-	// product_list_view: "active",
-	// data.product_type = def(data.product_type, "active");
-	// data.product_type = def(data.product_type, "normal");
-
 	/** @type {DatatableCompData} */
 	const datatable = {
 		columns: [
@@ -143,7 +141,7 @@ function ProductComp(comp, parent, data = undefined) {
 		label: "",
 		searchable: false,
 		selectable: true,
-		pagination_data: { row_count: 15 }, // 5 -> 1000 ms // 15 -> 1400 ms // 50 -> 4600 ms  10 in 400 ms, 35 in 3200 ms
+		pagination_data: { row_count: 15 },
 		print_row_as_string: (row_data) => {
 			return Object.entries(row_data)
 				.filter(([key, option_id]) => getVariantIdFromKey(key))
@@ -498,6 +496,11 @@ function ProductComp(comp, parent, data = undefined) {
 				const data = comp._data; // actually important
 
 				const cd = comp._changed_data;
+
+				if (cd.sell_by) {
+					expand(comp._nodes.case_has_base_unit, data.sell_by !== "qty");
+					comp._nodes;
+				}
 
 				const missing_feature_ids = [];
 				if (cd.product_feature_ids) {
@@ -922,11 +925,48 @@ function ProductComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="label">Sprzedawaj na</div>
-				<select class="field" data-bind="{${data.sell_by}}">
-					<option value="qty">Sztuki</option>
-					<option value="weight">Wagę</option>
-					<option value="length">Długość</option>
-				</select>
+				<div class="radio_group boxes hide_checks flex" data-bind="{${data.sell_by}}">
+					<div class="checkbox_area">
+						<div>
+							<p-checkbox data-value="qty"></p-checkbox>
+							<i class="number_icon"></i>
+							<span class="semi_bold">Sztuki</span>
+						</div>
+					</div>
+					<div class="checkbox_area">
+						<div>
+							<p-checkbox data-value="virtual"></p-checkbox>
+							<i class="fas fa-weight-hanging"></i>
+							<span class="semi_bold">Wagę</span>
+						</div>
+					</div>
+					<div class="checkbox_area">
+						<div>
+							<p-checkbox data-value="length"></p-checkbox>
+							<i class="fas fa-ruler"></i>
+							<span class="semi_bold">Długość</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_has_base_unit}}">
+					<div class="label">Podstawowa jednostka</div>
+					<select class="field" data-bind="{${data.base_unit}}"></select>
+
+					<div class="label">Minimalna ilość jednostkowa</div>
+					<input class="field empty_null" data-bind="{${data.qty_step}}" />
+
+					<div class="glue_children">
+						<div class="grow">
+							<div class="label">Ilość min.</div>
+							<input class="field empty_null" data-bind="{${data.qty_min}}" />
+						</div>
+						<div class="grow ml2">
+							<div class="label">Ilość max.</div>
+							<input class="field empty_null" data-bind="{${data.qty_max}}" />
+						</div>
+					</div>
+				</div>
 
 				<div class="mt5">
 					<div class="sticky_subheader mb2">

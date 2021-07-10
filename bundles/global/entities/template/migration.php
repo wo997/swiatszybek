@@ -15,6 +15,10 @@ DB::createTable(
         //["name" => "v_dom_ids_csv", "type" => "TEXT"],
         ["name" => "max_vid", "type" => "INT"],
         ["name" => "used_modules_csv", "type" => "TEXT"],
-        ["name" => "is_global", "type" => "TINYINT(1)"]
+        ["name" => "is_global", "type" => "TINYINT(1)"],
+        ["name" => "custom_css", "type" => "TEXT"],
+        ["name" => "custom_js", "type" => "TEXT"],
+        ["name" => "custom_header", "type" => "TEXT"],
+        ["name" => "custom_footer", "type" => "TEXT"],
     ]
 );
