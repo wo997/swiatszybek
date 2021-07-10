@@ -78,7 +78,7 @@ function confirmOrder($shop_order_data)
 
     $shop_order->setProp("reference", $reference);
 
-    $user_cart = User::getCurrent()->cart;
+    $user_cart = User::getCurrent()->getCart();
     $cart_data = $user_cart->getAllData();
     if (!$user_cart->getProducts()) {
         throw new Exception("No products");

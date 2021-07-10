@@ -81,6 +81,10 @@ window.addEventListener("modal_show", (event) => {
 });
 
 domload(() => {
+	if (IS_LOGGED) {
+		return;
+	}
+
 	registerModalContent(
 		html`
 			<div id="loginForm" data-dismissable data-expand>

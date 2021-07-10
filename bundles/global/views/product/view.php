@@ -64,7 +64,7 @@ foreach ($general_product_products as &$product) {
 }
 unset($product);
 
-User::getCurrent()->last_viewed_products->add([$general_product_id]);
+User::getCurrent()->getLastViewedProducts()->add([$general_product_id]);
 
 $general_product_data["cache_rating_count"] = 4;
 

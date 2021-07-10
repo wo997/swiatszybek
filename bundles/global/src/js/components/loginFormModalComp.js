@@ -105,6 +105,10 @@ function LoginFormModalComp(comp, parent, data = undefined) {
 				comp._render();
 			});
 
+			comp._nodes.email.addEventListener("change", (e) => {
+				console.log("cipa", e);
+			});
+
 			comp._child("form").addEventListener("submit", (ev) => {
 				ev.preventDefault();
 

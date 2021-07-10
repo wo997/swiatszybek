@@ -41,6 +41,7 @@ cart-products-comp.comp {
 		& {
 			grid-area: 1 / 2 / 2 / 3;
 			font-weight: var(--semi_bold);
+			font-size: 1.1em;
 		}
 	}
 	a.product_name {
@@ -59,8 +60,9 @@ cart-products-comp.comp {
 	}
 
 	.product_price {
-		font-size: 0.85em;
-		color: #666;
+		font-size: 1em;
+		// font-size: 0.85em;
+		// color: #666;
 	}
 
 	.product_price,
@@ -75,6 +77,10 @@ cart-products-comp.comp {
 		input {
 			width: 42px;
 		}
+	}
+
+	.product_total_price {
+		font-weight: var(--semi_bold);
 	}
 
 	&.skinny {

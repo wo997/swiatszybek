@@ -70,7 +70,9 @@ domload(() => {
 			chat_container.style.backdropFilter = "";
 		}, 200);
 	};
-	open_chat_btn.addEventListener("click", () => {
+
+	const openChat = () => {
+		sessionStorage.setItem("is_chat_open", "1");
 		chat_visible = true;
 		chat_container.classList.add("visible");
 		open_chat_btn.classList.add("opened");
@@ -78,9 +80,15 @@ domload(() => {
 		message_input.focus();
 		chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight;
 		tempLockBlur();
-	});
+	};
+
+	open_chat_btn.addEventListener("click", openChat);
+	if (sessionStorage.getItem("is_chat_open")) {
+		openChat();
+	}
 
 	close_btn.addEventListener("click", () => {
+		sessionStorage.setItem("is_chat_open", "");
 		chat_visible = false;
 		chat_container.classList.remove("visible");
 		open_chat_btn.classList.remove("opened");
@@ -281,7 +289,9 @@ domload(() => {
 					setNewMessagesCount(new_messages_count + messages.length);
 				}
 
-				longPolling();
+				setTimeout(longPolling, chat_visible ? 500 : 2000);
+				// setTimeout(longPolling, 10);
+				// longPolling();
 			},
 		});
 	};

@@ -3,8 +3,8 @@
 class User
 {
     private static ?User $current_user = null;
-    public $cart;
-    public $last_viewed_products;
+    private $cart;
+    private $last_viewed_products;
     /** @var Entity User */
     public $entity;
     public $priveleges;
@@ -36,9 +36,22 @@ class User
         if (!$this->entity) {
             return;
         }
+    }
 
-        $this->cart = new Cart($this);
-        $this->last_viewed_products = new LastViewedProducts($this);
+    public function getCart()
+    {
+        if (!$this->cart) {
+            $this->cart = new Cart($this);
+        }
+        return $this->cart;
+    }
+
+    public function getLastViewedProducts()
+    {
+        if (!$this->last_viewed_products) {
+            $this->last_viewed_products = new LastViewedProducts($this);
+        }
+        return $this->last_viewed_products;
     }
 
     public static function getEmailclientUrl($email)

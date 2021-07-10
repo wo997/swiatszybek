@@ -27,7 +27,7 @@
     user_cart = <?= json_encode($user_cart) ?>;
     //loadedUserCart();
 
-    last_viewed_products = <?= json_encode(User::getCurrent()->last_viewed_products->getProductsData()) ?>;
+    last_viewed_products = <?= json_encode(User::getCurrent()->getLastViewedProducts()->getProductsData()) ?>;
     //loadedLastViewedProducts();
 
     <?php if (Request::getSingleUsageSessionVar("just_logged_in")) : ?>

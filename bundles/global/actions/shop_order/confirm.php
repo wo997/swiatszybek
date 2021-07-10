@@ -5,7 +5,7 @@ try {
     // TODO:: filter keys so no vulnerable data is injected?
     $shop_order = confirmOrder(json_decode($_POST["shop_order"], true));
     EntityManager::saveAll();
-    $cart = User::getCurrent()->cart;
+    $cart = User::getCurrent()->getCart();
     $cart->empty();
     $cart->save();
     DB::commitTransaction();

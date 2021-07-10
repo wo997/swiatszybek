@@ -1,6 +1,6 @@
 <?php //route[/kup-teraz]
 
-if (empty(User::getCurrent()->cart->getProducts())) {
+if (empty(User::getCurrent()->getCart()->getProducts())) {
     Request::redirect("/");
 }
 

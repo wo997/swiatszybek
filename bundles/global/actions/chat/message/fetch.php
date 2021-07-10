@@ -1,5 +1,10 @@
 <?php //route[/chat/message/fetch]
 
+// long polling sucks duude
+// set_time_limit(0);
+// session_write_close();
+// ignore_user_abort(true);
+
 $user = User::getCurrent();
 $user_id = $user->getId();
 $limit = 30;
@@ -14,22 +19,25 @@ if (isset($_POST["from_chat_message_id"])) {
 
     $long_polling = def($_POST, "long_polling");
     if ($long_polling) {
-        session_write_close();
         $cnt = 0;
         // up to N seconds and repeat the cycle from the front
         // 10s
-        while ($cnt++ < 40) {
-            forgetLastTypings();
-            $is_chatter_typing = isAdminTyping($user_id);
-            if ($_POST["is_chatter_typing"] != $is_chatter_typing) {
-                break;
-            }
-            $max_chat_message_id = DB::fetchVal("SELECT MAX(chat_message_id) FROM chat_message WHERE $where");
-            if ($max_chat_message_id > $from_chat_message_id) {
-                break;
-            }
-            usleep(250 * 1000);
-        }
+        // while ($cnt++ < 40) {
+        //     if (connection_status() != CONNECTION_NORMAL) {
+        //         die;
+        //     }
+
+        //     forgetLastTypings();
+        //     $is_chatter_typing = isAdminTyping($user_id);
+        //     if ($_POST["is_chatter_typing"] != $is_chatter_typing) {
+        //         break;
+        //     }
+        //     $max_chat_message_id = DB::fetchVal("SELECT MAX(chat_message_id) FROM chat_message WHERE $where");
+        //     if ($max_chat_message_id > $from_chat_message_id) {
+        //         break;
+        //     }
+        //     usleep(250 * 1000);
+        // }
     }
     if ($from_chat_message_id) {
         $where .= " AND chat_message_id > " . intval($from_chat_message_id);

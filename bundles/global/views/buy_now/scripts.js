@@ -462,7 +462,7 @@ function initRebateCodes() {
 					hideModal("activateRebateCode");
 					rebate_code._set_value("");
 				}
-				user_cart = res.user_cart;
+				user_cart = res.data.user_cart;
 				loadedUserCart();
 			},
 		});
@@ -489,7 +489,7 @@ function initRebateCodes() {
 					url: "/cart/deactivate-rebate-code",
 					params: { rebate_code },
 					success: (res) => {
-						user_cart = res.user_cart;
+						user_cart = res.data.user_cart;
 						loadedUserCart();
 					},
 				});

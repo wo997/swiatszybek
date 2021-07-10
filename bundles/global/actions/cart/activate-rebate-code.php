@@ -1,7 +1,7 @@
 <?php //route[/cart/activate-rebate-code]
 
-$cart = User::getCurrent()->cart;
+$cart = User::getCurrent()->getCart();
 $data = $cart->activateRebateCode($_POST["rebate_code"]);
-$data["user_cart"] = $cart->getAllData();
+$data["data"]["user_cart"] = $cart->getAllData();
 $cart->save();
 Request::jsonResponse($data);

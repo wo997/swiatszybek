@@ -9,7 +9,7 @@ if (defined("ROUTE") && Request::$found) {
     $has_js = false;
 }
 
-$user_cart = User::getCurrent()->cart->getAllData();
+$user_cart = User::getCurrent()->getCart()->getAllData();
 
 ?>
 

@@ -83,14 +83,10 @@ class Request
         return $link;
     }
 
-    public static function reload($ask = false)
+    public static function reload()
     {
         if (IS_XHR) {
-            if ($ask) {
-                echo "[reload_required]";
-            } else {
-                self::jsonResponse(["reload" => true]);
-            }
+            self::jsonResponse(["reload" => true]);
         } else {
             ob_clean();
             header("Refresh:0");
