@@ -13,6 +13,7 @@ domload(() => {
 				</div>
 				<div class="chat_messages flex_stretch">
 					<div class="scroll_panel scroll_shadow">
+						<hr />
 						<div class="messages_wrapper"></div>
 					</div>
 					<div class="chatter_is_typing"></div>
