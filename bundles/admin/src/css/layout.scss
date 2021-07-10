@@ -224,6 +224,7 @@ body.just_desktop {
 .navbar_admin .menu_item:hover {
 	--menu_item_clr: #cacaca;
 	color: black;
+	transition: 0;
 }
 .navbar_admin .sub_menu,
 .navbar_admin .menu_item.open {

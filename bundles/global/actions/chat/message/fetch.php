@@ -13,12 +13,15 @@ if (isset($_POST["from_chat_message_id"])) {
         session_write_close();
         $cnt = 0;
         // up to N seconds and repeat the cycle from the front
-        while ($cnt++ < 100) {
+        // 10s
+        while ($cnt++ < 50) {
+            forgetLastTypings();
+            // $max_chat_message_id = DB::fetchVal("SELECT 1 FROM chat_message WHERE $where");
             $max_chat_message_id = DB::fetchVal("SELECT MAX(chat_message_id) FROM chat_message WHERE $where");
             if ($max_chat_message_id > $from_chat_message_id) {
                 break;
             }
-            sleep(0.2);
+            usleep(200 * 1000);
         }
     }
     if ($from_chat_message_id) {

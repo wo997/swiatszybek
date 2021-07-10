@@ -11,3 +11,15 @@ DB::createTable(
         ["name" => "sent_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
     ]
 );
+
+// no indices cause it's smoll
+DB::createTable(
+    "chat_typing",
+    [
+        ["name" => "client_id", "type" => "INT"],
+        ["name" => "sender_id", "type" => "INT"],
+        ["name" => "receiver_id", "type" => "INT", "null" => true],
+        ["name" => "message", "type" => "TEXT"],
+        ["name" => "typed_at", "type" => "DATETIME", "default" => "CURRENT_TIMESTAMP"],
+    ]
+);

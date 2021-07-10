@@ -99,6 +99,39 @@ domload(() => {
 		set_h();
 	};
 
+	let last_typing = null;
+	let typing_interval;
+	const sendTyping = () => {
+		const message = message_input._get_value();
+		xhr({
+			url: "/chat/message/typing",
+			params: {
+				message,
+			},
+			success: (res) => {},
+		});
+	};
+
+	const sendTypingLoop = () => {
+		if (typing_interval) {
+			return;
+		}
+		sendTyping();
+		typing_interval = setInterval(() => {
+			const message = message_input._get_value();
+			if (message === last_typing) {
+				clearInterval(typing_interval);
+				typing_interval = undefined;
+				return;
+			}
+			last_typing = message;
+			sendTyping();
+		}, 1500);
+	};
+
+	message_input.addEventListener("input", sendTypingLoop);
+	message_input.addEventListener("change", sendTypingLoop);
+
 	message_input.addEventListener("keydown", (ev) => {
 		if (ev.key == "Enter" && !ev.shiftKey) {
 			sendMessage();
@@ -233,10 +266,7 @@ domload(() => {
 					setNewMessagesCount(new_messages_count + messages.length);
 				}
 
-				setTimeout(() => {
-					// let server rest a bit
-					longPolling();
-				}, 1000);
+				longPolling();
 			},
 		});
 	};
