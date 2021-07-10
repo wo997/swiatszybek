@@ -10,6 +10,9 @@
  * net_price: number
  * url: string
  * no_redirect?: boolean
+ * sell_by: string
+ * base_unit: string
+ * qty_step: number
  * }} CartProducts_ProductCompData
  *
  * @typedef {{
@@ -28,7 +31,18 @@
  */
 function CartProducts_ProductComp(comp, parent, data = undefined) {
 	if (data === undefined) {
-		data = { product_id: -1, img_url: "", name: "", qty: 0, __current_gross_price: 0, net_price: 0, url: "" };
+		data = {
+			product_id: -1,
+			img_url: "",
+			name: "",
+			qty: 0,
+			__current_gross_price: 0,
+			net_price: 0,
+			url: "",
+			sell_by: "qty",
+			qty_step: 1,
+			base_unit: "",
+		};
 	}
 
 	comp._set_data = (data, options = {}) => {
@@ -51,7 +65,12 @@ function CartProducts_ProductComp(comp, parent, data = undefined) {
 		</button>
 
 		<div class="bottom_row">
-			<span class="product_price pln" html="{${data.__current_gross_price + " zł / szt."}}"></span>
+			<span
+				class="product_price pln"
+				html="{${data.__current_gross_price +
+				" zł / " +
+				(data.sell_by === "qty" ? "szt." : physical_measure_unit_map[data.base_unit].name)}}"
+			></span>
 			<div class="glue_children qty_controls" data-product="user_cart ${data.product_id}">
 				<button class="btn subtle sub_qty">
 					<i class="fas fa-minus"></i>

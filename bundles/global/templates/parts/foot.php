@@ -66,7 +66,7 @@
     </script>
 <?php endif ?>
 
-<?php if (Request::$is_admin_url || Request::$is_user_url) : ?>
+<?php if (TRUE || Request::$is_admin_url || Request::$is_user_url) : ?>
     <script>
         const physical_measures = <?= json_encode(getPhysicalMeasures()) ?>;
         const feature_data_types = <?= json_encode(getFeatureDataTypes()) ?>;

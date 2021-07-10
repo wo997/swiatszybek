@@ -239,6 +239,7 @@ domload(() => {
 			success: (res) => {
 				appendMessages(res.messages);
 				getNewMessageNodes(); // keep it!
+				chat_messages_scroll.scrollTop = chat_messages_scroll.scrollHeight;
 				longPolling();
 			},
 		});

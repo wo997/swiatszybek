@@ -3,7 +3,11 @@
 EntityManager::register("product", [
     "props" => [
         "general_product_id" => ["type" => "number"],
+
         "sell_by" => ["type" => "string"],
+        "base_unit" => ["type" => "string"],
+        "qty_step" => ["type" => "number"],
+
         "net_price" => ["type" => "number"],
         "gross_price" => ["type" => "number"],
         "discount_gross_price" => ["type" => "number"],

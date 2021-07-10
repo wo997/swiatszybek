@@ -98,6 +98,8 @@ domload(() => {
 		data.product_type = general_product_data.product_type;
 
 		data.sell_by = general_product_data.sell_by;
+		data.base_unit = general_product_data.base_unit;
+		data.qty_step = general_product_data.qty_step;
 
 		data.images = general_product_data.images
 			.sort((a, b) => Math.sign(a.pos - b.pos))

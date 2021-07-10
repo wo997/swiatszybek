@@ -248,7 +248,7 @@ class Cart
         if ($cart_product_ids) {
             $product_ids_string = join(",", $cart_product_ids);
 
-            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __current_gross_price, p.__img_url img_url, p.__name name, p.__url url, p.stock, 0 as qty
+            $products_data = DB::fetchArr("SELECT product_id, general_product_id, net_price, gross_price, __current_gross_price, p.__img_url img_url, p.__name name, p.__url url, p.stock, p.sell_by, p.base_unit, p.qty_step, 0 as qty
                 FROM product p INNER JOIN general_product gp USING(general_product_id) WHERE gp.active AND p.active AND product_id IN ($product_ids_string) ORDER BY FIELD(product_id,$product_ids_string)");
 
             $product_ids_found = array_column($products_data, "product_id");

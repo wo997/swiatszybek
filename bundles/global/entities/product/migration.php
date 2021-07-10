@@ -4,7 +4,10 @@ DB::createTable("product", [
     ["name" => "product_id", "type" => "INT", "index" => "primary"],
     ["name" => "general_product_id", "type" => "INT", "index" => "index", "null" => true],
     ["name" => "active", "type" => "TINYINT(1)"],
-    ["name" => "sell_by", "type" => "VARCHAR(15)", "index" => "index"],
+
+    ["name" => "sell_by", "type" => "VARCHAR(15)"],
+    ["name" => "base_unit", "type" => "VARCHAR(15)"],
+    ["name" => "qty_step", "type" => "DECIMAL(10,2)"],
 
     ["name" => "net_price", "type" => "DECIMAL(10,2)"],
     ["name" => "vat_id", "type" => "INT"],

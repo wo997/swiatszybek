@@ -4,6 +4,8 @@
  * @typedef {{
  * active: number
  * sell_by: string
+ * base_unit: string
+ * qty_step: number
  * general_product_id: number
  * net_price: number
  * vat_id: number

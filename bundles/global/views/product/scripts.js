@@ -102,6 +102,12 @@ domload(() => {
 			._set_content(single_product && qty !== 1 ? `${prettyPrice(numberFromStr(single_product.__current_gross_price) * qty)} zł` : "");
 	});
 
+	if (general_product_data.sell_by !== "qty") {
+		$(".main_qty_label")._set_content(
+			`${physical_measures[general_product_data.sell_by].description} (${physical_measure_unit_map[general_product_data.base_unit].name})`
+		);
+	}
+
 	const main_buy_btn = $(".main_buy_btn");
 	main_buy_btn.addEventListener("click", () => {
 		if (adding_product_from_cart) {
@@ -379,7 +385,7 @@ function setVariantData() {
 	$(".selected_product_price").classList.toggle("price_off", !!selected_product_was_price);
 	$(".selected_product_was_price")._set_content(selected_product_was_price);
 	$(".selected_product_percent_off")._set_content(selected_product_percent_off);
-	$(".selected_product_qty")._set_content(`${single_product && single_product.active ? single_product.stock + " szt." : "―"}`);
+	$(".selected_product_stock")._set_content(`${single_product && single_product.active ? single_product.stock + " szt." : "―"}`);
 
 	const can_buy_product = !!(single_product && single_product.stock > 0);
 	const case_can_buy_product = $(".case_can_buy_product");

@@ -157,12 +157,17 @@ function setValue(input, value = null, options = {}) {
 		input.dispatchEvent(new CustomEvent("value_set", { detail: { ...options } }));
 	};
 
+	const is_number = input.classList.contains("number");
+	if (is_number) {
+		value = numberFromStr(value);
+	}
+
 	if (!options.force) {
 		let same = true;
 		if (value !== null && value !== undefined) {
 			const curr = input._get_value({ plain: true });
-			if (input.classList.contains("number")) {
-				same = numberFromStr(curr) === numberFromStr(value) && curr !== undefined;
+			if (value) {
+				same = numberFromStr(curr) === value && curr !== undefined;
 			} else {
 				same = isEquivalent(curr, value);
 			}

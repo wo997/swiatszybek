@@ -10,6 +10,7 @@
  *  product_id: number
  *  sell_by: string
  *  base_unit: string
+ *  qty_step: number
  *  active: number
  *  net_price: number
  *  vat_id: number
@@ -1311,6 +1312,8 @@ function ProductComp(comp, parent, data = undefined) {
 							})),
 							variants: data.variants,
 							sell_by: data.sell_by,
+							base_unit: data.base_unit,
+							qty_step: data.qty_step,
 						},
 						product_feature_options: save_product_feature_options,
 					},

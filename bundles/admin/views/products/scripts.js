@@ -153,6 +153,8 @@ domload(() => {
 					__name: data.__name,
 					discount_gross_price: data.discount_gross_price,
 					discount_untill: data.discount_untill,
+					base_unit: data.discount_untill,
+					sell_by: data.discount_untill,
 				},
 				{ source: edit_btn }
 			);

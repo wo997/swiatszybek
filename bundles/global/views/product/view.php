@@ -227,6 +227,7 @@ foreach ($general_product_variants  as $variant) {
     const general_product_variants = <?= json_encode($general_product_variants) ?>;
     const general_product_comments_rows = <?= json_encode($comments_data["rows"]) ?>;
     const product_shipping_info = <?= json_encode($product_shipping_info) ?>;
+    const general_product_data = <?= json_encode($general_product_data) ?>;
 
     <?php if (isset($_GET["komentarz"])) { ?>
         // not yet dude :)
@@ -324,7 +325,7 @@ if ($main_img) {
             <?php } ?>
         </div>
 
-        <p style="font-size: 1.1em;">Dostępność: <span class="selected_product_qty"></span></p>
+        <p style="font-size: 1.1em;">Dostępność: <span class="selected_product_stock"></span></p>
 
         <div class="expand_y hidden animate_hidden case_notify_available">
             <div style="padding-top:7px">
@@ -382,7 +383,7 @@ if ($main_img) {
         </div>
 
         <div class="case_can_buy_product" data-tooltip_position="center">
-            <div class="label">Ilość:</div>
+            <div class="label main_qty_label">Ilość:</div>
             <div class="flex align_center">
                 <div class="glue_children qty_controls main_qty_controls mr2" data-product="single_product">
                     <button class="btn subtle sub_qty">

@@ -5,7 +5,11 @@ EntityManager::register("general_product", [
         "name" => ["type" => "string"],
         "active" => ["type" => "number"],
         "product_type" => ["type" => "string"],
+
         "sell_by" => ["type" => "string"],
+        "base_unit" => ["type" => "string"],
+        "qty_step" => ["type" => "number"],
+
         "__img_url" => ["type" => "string"],
         "__images_json" => ["type" => "string"],
         "__options_json" => ["type" => "string"],
@@ -194,6 +198,8 @@ EventListener::register("before_save_general_product_entity", function ($params)
         $product_url = getProductLink($general_product_id, $general_product->getProp("name"), $specific_option_ids, $specific_option_values);
 
         $product->setProp("sell_by", $general_product->getProp("sell_by"));
+        $product->setProp("base_unit", $general_product->getProp("base_unit"));
+        $product->setProp("qty_step", $general_product->getProp("qty_step"));
 
         // these are the defaults
         $product->setProp("__name", $product_name);

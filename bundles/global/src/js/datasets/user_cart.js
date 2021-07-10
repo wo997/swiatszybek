@@ -23,7 +23,7 @@
 /**
  * @typedef {{
  * product_id: number
- * general_product_id: number
+ * general_product_id?: number
  * name: string
  * qty: number
  * net_price: number
@@ -32,6 +32,9 @@
  * img_url: string
  * url: string
  * stock: number
+ * sell_by: string
+ * base_unit: string
+ * qty_step: number
  * }} UserCartProductData
  */
 
