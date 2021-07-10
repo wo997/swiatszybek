@@ -698,7 +698,7 @@ if (!$page_data["active"] && User::getCurrent()->priveleges["backend_access"]) {
 ?>
     <script>
         domload(() => {
-            $(".main_buy_btn").dataset.tooltip = "Nie można dodać produktu do koszyka jeśli ten jest niepubliczny";
+            $(".main_buy_btn").insertAdjacentHTML("afterend", "<div class='text_error mt1 bold'>Nie można dodać niepublicznego produktu do koszyka!</div>");
         })
     </script>
 <?php
