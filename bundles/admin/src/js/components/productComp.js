@@ -31,6 +31,7 @@
  *  active: number
  *  sell_by: string
  *  base_unit: string
+ *  qty_step: number
  *  product_feature_option_ids: number[]
  *  product_feature_ids: number[]
  *  features: Product_FeatureCompData[]
@@ -67,6 +68,7 @@
  *      dt_descriptions: PiepNode
  *      case_has_base_unit: PiepNode
  *      base_unit: PiepNode
+ *      unit_qty_info: PiepNode
  *  } & CompWithHistoryNodes
  *  _add_missing_products(params?: {similar_products?: {new_option_id, option_id}[], options_existed?: number[], pls_add_columns?: boolean})
  *  _add_variant?(options?: {common?: number, callback?()})
@@ -131,6 +133,7 @@ function ProductComp(comp, parent, data = undefined) {
 			product_list_view: "active",
 			product_type: "normal",
 			base_unit: "",
+			qty_step: 1,
 		};
 	}
 
@@ -508,7 +511,30 @@ function ProductComp(comp, parent, data = undefined) {
 					comp._nodes.base_unit._set_content(
 						physical_measure ? physical_measure.units.map((e) => html`<option value="${e.id}">${e.name}</option>`).join("") : ""
 					);
+					if (!comp._nodes.base_unit._child(`option[value="${data.base_unit}"]`)) {
+						const first_option = comp._nodes.base_unit._child(`option`);
+						if (first_option) {
+							// @ts-ignore
+							data.base_unit = first_option.value;
+						}
+					}
 					comp._nodes.base_unit._set_value(data.base_unit, { quiet: true });
+				}
+
+				if (cd.sell_by || cd.base_unit || cd.qty_step) {
+					let unit_qty_info_html = "Dozwolone wartości: ";
+					if (data.qty_step) {
+						for (const i of [1, 2, 3, 10, 25]) {
+							if (i > 1) {
+								unit_qty_info_html += ", ";
+							}
+							unit_qty_info_html += `${round(i * data.qty_step, 5)} ${data.base_unit}`;
+						}
+						unit_qty_info_html += ", itd...";
+					} else {
+						unit_qty_info_html = "Dowolna liczba";
+					}
+					comp._nodes.unit_qty_info._set_content(unit_qty_info_html);
 				}
 
 				const missing_feature_ids = [];
@@ -959,11 +985,13 @@ function ProductComp(comp, parent, data = undefined) {
 				</div>
 
 				<div class="expand_y hidden animate_hidden" data-node="{${comp._nodes.case_has_base_unit}}">
-					<div class="label">Podstawowa jednostka</div>
+					<div class="label">Jednostka miary</div>
 					<select class="field" data-node="{${comp._nodes.base_unit}}" data-bind="{${data.base_unit}}"></select>
 
-					<div class="label">ilość jednostkowa</div>
-					<input class="field empty_null" data-bind="{${data.qty_step}}" />
+					<div class="label">Podziałka / Jednostka sprzedaży</div>
+					<input class="field number empty_null" data-bind="{${data.qty_step}}" />
+
+					<div class="user_info mt2" data-node="{${comp._nodes.unit_qty_info}}"></div>
 
 					<!-- <div class="glue_children">
 						<div class="grow">

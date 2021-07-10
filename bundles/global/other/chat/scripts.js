@@ -198,7 +198,7 @@ domload(() => {
 		url: "/chat/init",
 		success: (res) => {
 			admin_img = res.admin_img;
-			chatter_label._set_content(res.chatter_label);
+			chatter_label._set_content(html`<img data-src="${admin_img}" class="wo997_img chatter_img mr1" /> ${res.chatter_label}`);
 			chatter_is_typing._set_content(html`${res.chatter_label} pisze <span class="dot-flashing"></span>`);
 			initialFetch();
 		},
