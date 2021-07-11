@@ -79,29 +79,6 @@ domload(() => {
 					return html`<a class="link edit_btn"> ${value} </a>`;
 				},
 			},
-			// {
-			// 	label: "W magazynie",
-			// 	key: "stock",
-			// 	width: "1",
-			// 	sortable: true,
-			// 	searchable: "number",
-			// 	editable: "number",
-			// 	editable_callback: (data) => {
-			// 		xhr({
-			// 			url: STATIC_URLS["ADMIN"] + "/product/save",
-			// 			params: {
-			// 				product: {
-			// 					product_id: data.product_id,
-			// 					stock: data.stock,
-			// 				},
-			// 			},
-			// 			success: (res) => {
-			// 				showNotification(`${data.product_name}: ${data.stock}szt.`, { type: "success", one_line: true });
-			// 				datatable._backend_search();
-			// 			},
-			// 		});
-			// 	},
-			// },
 			{
 				label: "Akcja",
 				key: "",

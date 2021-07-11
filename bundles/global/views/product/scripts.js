@@ -385,7 +385,13 @@ function setVariantData() {
 	$(".selected_product_price").classList.toggle("price_off", !!selected_product_was_price);
 	$(".selected_product_was_price")._set_content(selected_product_was_price);
 	$(".selected_product_percent_off")._set_content(selected_product_percent_off);
-	$(".selected_product_stock")._set_content(`${single_product && single_product.active ? single_product.stock + " szt." : "―"}`);
+
+	let display_unit = "szt.";
+	if (general_product_data.sell_by !== "qty") {
+		display_unit = physical_measure_unit_map[general_product_data.base_unit].name;
+	}
+
+	$(".selected_product_stock")._set_content(`${single_product && single_product.active ? single_product.stock + " " + display_unit : "―"}`);
 
 	const can_buy_product = !!(single_product && single_product.stock > 0);
 	const case_can_buy_product = $(".case_can_buy_product");

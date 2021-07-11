@@ -505,9 +505,17 @@ class Cart
                     }
 
                     if ($sum_products < $qty) {
-                        $general_product_data = DB::fetchRow("SELECT name, __url FROM general_product WHERE general_product_id = ?", [$general_product_id]);
+                        $general_product_data = DB::fetchRow("SELECT name, __url, sell_by, base_unit FROM general_product WHERE general_product_id = ?", [$general_product_id]);
+
+                        if ($general_product_data["sell_by"] === "qty") {
+                            $display_unit = "szt.";
+                        } else {
+                            $display_unit = getPhysicalMeasureUnitMap()[$general_product_data["base_unit"]]["name"];
+                        }
+                        //getPhysicalMeasures()
+
                         $required_products_html[] = "<a class=\"link\" href=\"" . $general_product_data["__url"] . "\">"
-                            . $general_product_data["name"] . ($qty ? " × $qty szt." : "")
+                            . $general_product_data["name"] . ($qty ? " × $qty $display_unit" : "")
                             . "  </a>";
                     }
                 }
