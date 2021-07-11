@@ -5,7 +5,18 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background: #eee;
+		margin-bottom: 25px;
 	}
+	.no_touch & .gray_hover {
+		&:hover {
+			background: #ddd;
+		}
+		&:not(:hover) {
+			background: #eee;
+		}
+	}
+
 	& > a {
 		& {
 			padding: 10px;
@@ -25,7 +36,7 @@
 	}
 	@media (min-width: 900px) {
 		& {
-			padding: 30px 15px;
+			padding: 20px 15px;
 		}
 	}
 	// @media (min-width: 1100px) {
