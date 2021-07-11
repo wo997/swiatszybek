@@ -1,4 +1,4 @@
-<?php //route[{USER}/dane-adresy]
+<?php //route[{USER}/adresy]
 
 ?>
 
