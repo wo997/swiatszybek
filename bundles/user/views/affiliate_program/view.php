@@ -14,7 +14,7 @@ $affiliate_program_code = $user->getEntity()->getProp("affiliate_program_code");
 
 <div style="max-width:400px" class="mt3 mb3 mla mra">
     <?php if ($affiliate_program_code) : ?>
-        <div class="label medium">Jesteś członkim programu!</div>
+        <div class="label medium">Jesteś członkiem programu!</div>
 
         <div class="label">Link afiliacyjny</div>
         <div class="glue_children copy_code_group">
@@ -34,7 +34,7 @@ $affiliate_program_code = $user->getEntity()->getProp("affiliate_program_code");
         <button class="btn error_light mtf fill reject_btn">Zrezygnuj z programu <i class="fas fa-times"></i></button>
 
     <?php else : ?>
-        <p class="">Nie jesteś jeszcze członkim programu.</p>
+        <p class="">Nie jesteś jeszcze członkiem programu.</p>
         <div class="medium text_buynow">Zapisz się już teraz! </div>
 
         <div class="mt3">W polu poniżej:</div>

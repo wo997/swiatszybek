@@ -204,11 +204,11 @@ function DatatableComp(comp, parent, data) {
 		const state = { now: Date.now() };
 		rewriteState(comp._data, state);
 		const state_json = JSON.stringify(state);
-		localStorage.setItem("datatable_" + data.save_state_name, state_json);
+		sessionStorage.setItem("datatable_" + data.save_state_name, state_json);
 	};
 
 	comp._load_state = (data_obj) => {
-		const state_json = localStorage.getItem("datatable_" + data.save_state_name);
+		const state_json = sessionStorage.getItem("datatable_" + data.save_state_name);
 		if (!state_json) {
 			return;
 		}
