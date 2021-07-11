@@ -8,7 +8,7 @@
     const IS_LOGGED = <?= User::getCurrent()->isLoggedIn() ? "true" : "false" ?>;
     const USER_ID = <?= User::getCurrent()->getId() ?>;
     const IS_ADMIN = <?= User::getCurrent()->priveleges["backend_access"] ? "true" : "false" ?>;
-    const USER_TYPE = "<?= User::getCurrent()->entity->getProp("type") ?>";
+    const USER_TYPE = "<?= User::getCurrent()->getEntity()->getProp("type") ?>";
 
     const WEBP_SUPPORT = <?= WEBP_SUPPORT ?>;
 

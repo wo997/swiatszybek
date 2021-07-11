@@ -1,5 +1,9 @@
 /* css[user] */
 
+#p header.main {
+	box-shadow: none;
+}
+
 .user_nav {
 	& {
 		display: flex;
@@ -10,7 +14,7 @@
 		border-left-width: 0;
 		border-right-width: 0;
 		color: #444;
-		z-index: 600;
+		// z-index: 700;
 	}
 	.no_touch & > .gray_hover {
 		&:hover {

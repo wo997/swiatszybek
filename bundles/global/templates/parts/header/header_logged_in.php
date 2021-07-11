@@ -1,6 +1,6 @@
 <?php
 $display_user = User::getCurrent()->getDisplayName();
-$user_type = User::getCurrent()->entity->getProp("type");
+$user_type = User::getCurrent()->getEntity()->getProp("type");
 if ($user_type == 'google') $display_user = "<img src=\"/img/google.png\" style=\"width: 15px;vertical-align: sub;\"> $display_user";
 else if ($user_type == 'facebook') $display_user = "<i class=\"fab fa-facebook-square\" style=\"font-size: 15px;color: #3b5998;\"></i> $display_user";
 ?>

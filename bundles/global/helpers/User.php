@@ -6,7 +6,7 @@ class User
     private $cart;
     private $last_viewed_products;
     /** @var Entity User */
-    public $entity;
+    private $entity;
     public $priveleges;
     public $display_name;
     private $id;
@@ -36,6 +36,11 @@ class User
         if (!$this->entity) {
             return;
         }
+    }
+
+    public function getEntity()
+    {
+        return $this->entity;
     }
 
     public function getCart()

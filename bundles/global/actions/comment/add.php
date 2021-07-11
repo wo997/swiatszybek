@@ -6,7 +6,7 @@ try {
     $comment_data["comment"] = htmlspecialchars($comment_data["comment"]);
 
     /** @var EntityUser */
-    $user = User::getCurrent()->entity;
+    $user = User::getCurrent()->getEntity();
     $user->setProp("nickname", htmlspecialchars($_POST["nickname"]));
 
     $comment = EntityManager::getEntity("comment", $comment_data);
