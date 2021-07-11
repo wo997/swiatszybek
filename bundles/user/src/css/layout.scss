@@ -6,14 +6,21 @@
 		align-items: center;
 		justify-content: center;
 		background: #eee;
-		margin-bottom: 25px;
+		border: 1px solid #ccc;
+		border-left-width: 0;
+		border-right-width: 0;
+		color: #444;
+		z-index: 600;
 	}
-	.no_touch & .gray_hover {
+	.no_touch & > .gray_hover {
 		&:hover {
 			background: #ddd;
 		}
 		&:not(:hover) {
 			background: #eee;
+		}
+		&.current_route {
+			background: #ddd;
 		}
 	}
 
@@ -48,7 +55,7 @@
 
 .user_page_body {
 	width: 100%;
-	padding: 10px;
+	padding: 35px 10px;
 	max-width: 1100px;
 	margin: auto;
 }
