@@ -87,6 +87,7 @@ $admin_navigations_tree = [
             ["url" => "/uzytkownicy", "title" => '<i class="fas fa-users"></i> Lista użytkowników'],
             ["url" => "/oczekujacy", "title" => '<i class="fas fa-clock"></i> Oczekujący'],
             ["url" => "/komentarze", "title" => '<i class="fas fa-comment"></i> Komentarze'],
+            ["url" => "/linki-afiliacyjne", "title" => '<i class="fas fa-share-square"></i> Linki afiliacyjne'],
             //["url" => "/newsletter", "title" => '<i class="fas fa-newspaper"></i> Newsletter'],
         ]
     ],
