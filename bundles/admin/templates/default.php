@@ -58,7 +58,7 @@ Templates::endSection();
         }
         ?>
         <div class="scroll_panel scroll_shadow main_admin_scroll">
-            <div class="panel_padding actual_content">
+            <div class="panel_padding actual_content grow">
                 <?= def(Templates::$sections, "admin_page_body", ""); ?>
             </div>
             <footer>Piepsklep <?= date("Y") ?></footer>

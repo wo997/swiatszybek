@@ -6,6 +6,7 @@
 		pointer-events: none;
 		flex-shrink: 0;
 		--shadow_clr: #00000015;
+		transition: 0.2s opacity;
 	}
 	&.light {
 		--shadow_clr: #fff5;

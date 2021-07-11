@@ -34,7 +34,7 @@
 		position: fixed;
 		bottom: 0;
 		right: 10%;
-		background: #fffe;
+		background: #fafafaee;
 		border-radius: 4px;
 		box-shadow: 0 2px 8px 0 #0005;
 		display: flex;
@@ -87,18 +87,24 @@
 		font-weight: var(--semi_bold);
 		display: flex;
 		align-items: center;
+		font-size: 1.2em;
 	}
 	.close_btn {
 		margin-left: auto;
 		width: var(--chat_header_height);
 		height: var(--chat_header_height);
 		// --btn-font-clr: #fff;
+		font-size: 1.2em;
 	}
 	.chatter_img {
 		width: 34px;
 		height: 34px;
 		border-radius: 100px;
 		object-fit: contain;
+	}
+	.chatter_label .chatter_img {
+		width: 38px;
+		height: 38px;
 	}
 	.message {
 		& {

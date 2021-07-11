@@ -18,13 +18,20 @@
             Czat z klientem
         </div>
     </span>
-    <div class="mla">
-        <button class="btn primary save_btn">Zapisz <i class="fas fa-save"></i></button>
-    </div>
 </div>
 
 <?php Templates::startSection("admin_page_body"); ?>
 
-Czat tu ziom
+<div class="admin_chat_container">
+    <div class="chat_clients">
+        <div class="scroll_panel scroll_shadow">
+            <div class="clients_wrapper"></div>
+        </div>
+
+    </div>
+    <div class="chat_chat">
+
+    </div>
+</div>
 
 <?php include "bundles/admin/templates/default.php"; ?>

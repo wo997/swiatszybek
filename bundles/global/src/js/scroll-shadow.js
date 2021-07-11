@@ -27,8 +27,11 @@ function registerScrollShadows() {
 			const s = pan[hor ? "scrollLeft" : "scrollTop"];
 			const x = pan[hor ? "scrollWidth" : "scrollHeight"];
 
-			bef.style.opacity = Math.min(s / offset, 1) + "";
-			aft.style.opacity = Math.min((x - h - s) / offset, 1) + "";
+			bef.style.opacity = s > 0 ? "1" : "0";
+			aft.style.opacity = x - h - s > 0 ? "1" : "0";
+
+			// bef.style.opacity = Math.min(s / offset, 1) + "";
+			// aft.style.opacity = Math.min((x - h - s) / offset, 1) + "";
 		};
 
 		pan.addEventListener("scroll", panelScrollCallback);
