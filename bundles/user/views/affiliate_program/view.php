@@ -5,6 +5,8 @@ $user_entity = $user->getEntity();
 $affiliate_program_code = $user_entity->getProp("affiliate_program_code");
 $__affiliate_program_code_url = $user_entity->getProp("__affiliate_program_code_url");
 
+$affiliate_program_events = DB::fetchArr("SELECT added_at, event_name, event_what_id FROM affiliate_program_event WHERE user_id = ? ORDER BY added_at DESC", [$user->getId()]);
+
 ?>
 
 <?php Templates::startSection("head"); ?>
@@ -26,6 +28,8 @@ $__affiliate_program_code_url = $user_entity->getProp("__affiliate_program_code_
                 <i class="fas fa-copy"></i>
             </button>
         </div>
+
+        <div class="affiliate_program_events_container"> </div>
 
         <hr class="mt5">
 
@@ -59,5 +63,11 @@ $__affiliate_program_code_url = $user_entity->getProp("__affiliate_program_code_
         <button class="btn primary mtf fill join_btn">Weź udział <i class="fas fa-chevron-right"></i></button>
     <?php endif ?>
 </div>
+
+<?php Templates::startSection("foot"); ?>
+
+<script>
+    const affiliate_program_events = <?= json_encode($affiliate_program_events) ?>;
+</script>
 
 <?php include "bundles/user/templates/default.php"; ?>

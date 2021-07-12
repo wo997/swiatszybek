@@ -1,1 +1,41 @@
 /* css[view] */
+
+.event_count {
+	& {
+		background: #999;
+		color: #fff;
+		display: inline-flex;
+		width: 1.5em;
+		height: 1.5em;
+		justify-content: center;
+		align-items: center;
+		border-radius: 20px;
+		transform: translateY(1px);
+		font-size: 1.2em;
+		margin-right: 5px;
+	}
+	&.more_than_zero {
+		background: var(--success-clr);
+	}
+}
+
+.affiliate_event {
+	& {
+		margin: 10px 0;
+	}
+	.expand_btn {
+		& {
+			line-height: 1.35;
+		}
+		i {
+			transition: 0.2s;
+		}
+		&.expanded i {
+			transform: rotate(90deg);
+		}
+	}
+
+	ul {
+		margin-left: 20px;
+	}
+}
