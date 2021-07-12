@@ -220,12 +220,24 @@ function initSlider(elem) {
 		},
 		resize: () => {
 			const target_width = evalCss(def(node.dataset.slide_width, "100%"), node);
+			let max_visible_count = +node.dataset.max_visible_count;
+
 			const slider_width = node.offsetWidth;
 			const temp_visible_slide_count = slider_width / target_width;
-			const slide_width =
-				(target_width * temp_visible_slide_count) / (Math.max(1, Math.round(temp_visible_slide_count)) + slider.edge_offset);
+
+			let actual_slide_count = Math.max(1, Math.round(temp_visible_slide_count));
+			if (max_visible_count) {
+				if (slider.edge_offset) {
+					max_visible_count--;
+				}
+
+				actual_slide_count = Math.min(actual_slide_count, max_visible_count);
+			}
+			actual_slide_count += slider.edge_offset;
+			const slide_width = (target_width * temp_visible_slide_count) / actual_slide_count;
+
+			slider.visible_slide_count = Math.ceil(slider_width / slide_width);
 			slider.slide_width = slide_width;
-			slider.visible_slide_count = Math.round(slider_width / slide_width);
 			node.style.setProperty("--slide_width", `${slide_width.toFixed(1)}px`);
 		},
 		set_slide: (id, options = {}) => {

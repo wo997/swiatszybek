@@ -79,9 +79,7 @@ function setImageSize(img) {
 	if (!img.style.height && !img.offsetHeight) {
 		const suppose_height = Math.round((img.offsetWidth * data.h) / data.w);
 		img.addEventListener("load", () => {
-			if (img.classList.contains("had_no_height")) {
-				img.style.height = "";
-			}
+			img.style.height = "";
 		});
 		img.style.height = `${suppose_height}px`;
 	}

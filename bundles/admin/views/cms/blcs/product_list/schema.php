@@ -69,7 +69,7 @@ PiepCMSManager::registerModule([
         ob_start();
         if ($layout === "slider") {
 ?>
-        <div class="wo997_slider" data-slide_width="300px" data-show_next_mobile>
+        <div class="wo997_slider" data-slide_width="300px" data-max_visible_count="5" data-show_next_mobile>
             <div class="wo997_slides_container">
                 <div class="wo997_slides_wrapper">
                     <?= $list_html ?>
