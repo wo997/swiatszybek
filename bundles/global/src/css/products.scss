@@ -67,8 +67,12 @@
 	// font-size: 1.1em;
 	font-size: 1.05em;
 }
-.no_touch .product_block a:hover {
+.no_touch .product_block a:hover .product_name {
 	text-decoration: underline;
+}
+
+.product_under_img {
+	min-height: 7.7em;
 }
 
 .product_row {

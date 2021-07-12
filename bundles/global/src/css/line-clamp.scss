@@ -12,8 +12,8 @@
 		line-clamp: var(--clamp_lines);
 	}
 	&.same_height {
-		line-height: 1.3;
-		height: calc(1.3em * var(--clamp_lines));
+		line-height: var(--default_line_height);
+		height: calc(1em * var(--default_line_height) * var(--clamp_lines));
 	}
 }
 

@@ -373,17 +373,19 @@ function renderGeneralProductsList($params)
                 <div class="product_img_wrapper" data-images="<?= htmlspecialchars($images_json) ?>">
                     <img data-src="<?= $img_url ?>" class="product_img wo997_img" alt="">
                 </div>
-                <h3 class="product_name check_tooltip"><?= $name ?></h3>
-                <?php if ($max_discount_percent > 0) : ?>
-                    <div class="product_discount">-<?= $max_discount_percent ?>%</div>
-                <?php endif ?>
+                <div class="product_under_img">
+                    <h3 class="product_name check_tooltip clamp_lines clamp_2"><?= $name ?></h3>
+                    <?php if ($max_discount_percent > 0) : ?>
+                        <div class="product_discount">-<?= $max_discount_percent ?>%</div>
+                    <?php endif ?>
+                    <div class="product_row">
+                        <span class="product_price pln"><?= $display_price ?></span>
+                        <span class="product_rating rating"><span class="stars"><?= $avg_rating ?></span> (<?= $rating_count ?>)</span>
+                        <div style="width:100%"></div>
+                        <span class="product_stock <?= $stock_class ?>"></span>
+                    </div>
+                </div>
             </a>
-            <div class="product_row">
-                <span class="product_price pln"><?= $display_price ?></span>
-                <span class="product_rating rating"><span class="stars"><?= $avg_rating ?></span> (<?= $rating_count ?>)</span>
-                <div style="width:100%"></div>
-                <span class="product_stock <?= $stock_class ?>"></span>
-            </div>
         </div>
 <?php
     }

@@ -34,6 +34,11 @@ button {
 			--base_font_size: 13px;
 		}
 	}
+	@media (min-width: 1200px) {
+		& {
+			--base_font_size: 14.5px;
+		}
+	}
 }
 
 body,

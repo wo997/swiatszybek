@@ -158,6 +158,7 @@ class PiepCMSManager {
 			url: `${STATIC_URLS["ADMIN"]}/cms/module/render_many`,
 			params: {
 				v_nodes_to_render: this.v_nodes_to_render,
+				ignore_lazy: true,
 			},
 			success: (res) => {
 				this.rendered_nodes = res;

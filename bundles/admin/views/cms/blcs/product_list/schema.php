@@ -16,12 +16,14 @@ PiepCMSManager::registerModule([
         $lazy = def($params, ["v_node", "settings", "lazy"], false);
         $skip = intval(def($params, ["v_node", "settings", "product_list_skip"], "0"));
 
+        $ignore_lazy = isset($_POST["ignore_lazy"]);
+
         if ($count_str === "") {
             $count_str = "45";
         }
         $count = intval($count_str);
 
-        if (!$lazy) {
+        if (!$lazy && !$ignore_lazy) {
             if ($initial_count_str === "") {
                 if ($layout === "slider") {
                     // remember that this may vary
@@ -82,8 +84,8 @@ PiepCMSManager::registerModule([
 
         $list_html = renderGeneralProductsList($params)["html"];
 
-        if ($lazy) {
-            die($list_html);
+        if ($lazy && !$ignore_lazy) {
+            return $list_html;
         }
 
         // array for effi
