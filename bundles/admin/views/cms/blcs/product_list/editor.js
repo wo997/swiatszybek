@@ -40,6 +40,9 @@
 			<span class="label">Maksymalna ilość produktów</span>
 			<input class="field" data-blc_prop="settings.product_list_count" />
 
+			<span class="label">Wstępna ilość produktów (optymalizacja)</span>
+			<input class="field" data-blc_prop="settings.product_list_initial_count" />
+
 			<span class="label">Układ produktów</span>
 			<div class="pretty_radio" data-blc_prop="settings.product_list_layout" style="--columns:2">
 				<div class="checkbox_area">

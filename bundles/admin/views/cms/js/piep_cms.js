@@ -2096,7 +2096,7 @@ class PiepCMS {
 			}
 		});
 
-		this.side_menu._children(".radio_group").forEach((r) => {
+		this.side_menu._children(".radio_group, p-checkbox").forEach((r) => {
 			r.classList.add("freeze");
 		});
 	}
