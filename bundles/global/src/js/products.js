@@ -15,6 +15,74 @@ function productBlocksLoaded() {
 			e.insertAdjacentHTML("beforeend", html`<div class="img_cnt">${cnt} <i class="far fa-image"></i></div>`);
 		} catch (e) {}
 	});
+
+	let num = 0;
+
+	/**
+	 *
+	 * @param {PiepNode} lazy_products
+	 * @param {*} params
+	 */
+	const lazyLoadProducts = (lazy_products, params) => {
+		xhr({
+			url: `/modules/product_list/lazy/?v=${++num}`,
+			params: { params },
+			type: "string",
+			success: (res) => {
+				/**
+				 *
+				 * @param {PiepNode} node
+				 */
+				const put = (node) => {
+					node.insertAdjacentHTML("beforeend", res);
+				};
+				if (lazy_products.classList.contains("product_list")) {
+					put(lazy_products);
+				} else {
+					put(lazy_products._child(".wo997_slides_wrapper"));
+					window.dispatchEvent(new Event("resize"));
+				}
+			},
+		});
+	};
+
+	$$(".lazy_products").forEach((lazy_products) => {
+		const params = JSON.parse(lazy_products.dataset.params);
+		const empty = params[3] == "0";
+		const wait_till_seen = empty || lazy_products.classList.contains("product_list");
+
+		if (wait_till_seen) {
+			const wait = () => {
+				setTimeout(() => {
+					let lazy_off = LAZY_MORE ? window.innerWidth * 0.5 : -10;
+
+					if (lazy_products.getBoundingClientRect().top < window.innerHeight + lazy_off) {
+						return lazyLoadProducts(lazy_products, params);
+					}
+
+					wait();
+				}, 200);
+			};
+
+			wait();
+		} else {
+			// slider is simply hidden, so ignore it untill some action is performed
+			lazy_products.addEventListener(
+				"mouseenter",
+				() => {
+					lazyLoadProducts(lazy_products, params);
+				},
+				{ once: true }
+			);
+			lazy_products.addEventListener(
+				"touchstart",
+				() => {
+					lazyLoadProducts(lazy_products, params);
+				},
+				{ once: true }
+			);
+		}
+	});
 }
 
 /**

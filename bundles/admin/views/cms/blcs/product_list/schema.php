@@ -7,34 +7,50 @@ PiepCMSManager::registerModule([
 
         $layout = def($params, ["v_node", "settings", "product_list_layout"], "slider");
         $display_what = def($params, ["v_node", "settings", "product_list_display_what"], "custom");
-        $count = intval(def($params, ["v_node", "settings", "product_list_count"], ""));
+        $count_str = trim(def($params, ["v_node", "settings", "product_list_count"], ""));
+        $initial_count_str = trim(def($params, ["v_node", "settings", "product_list_initial_count"], ""));
         $only_discount = intval(def($params, ["v_node", "settings", "product_list_only_discount"], ""));
+        $sort = def($params, ["v_node", "settings", "product_list_sort"], "bestsellery");
+        $category_ids_csv = def($params, ["v_node", "settings", "product_list_category_ids_csv"], "");
 
-        if (!$count) {
-            $count = 30;
+        $lazy = def($params, ["v_node", "settings", "lazy"], false);
+        $skip = intval(def($params, ["v_node", "settings", "product_list_skip"], "0"));
+
+        if ($count_str === "") {
+            $count_str = "45";
+        }
+        $count = intval($count_str);
+
+        if (!$lazy) {
+            if ($initial_count_str === "") {
+                if ($layout === "slider") {
+                    // remember that this may vary
+                    // 6 = 5 + 1, 1 is simply an offset
+                    $initial_count_str = "6";
+                    // fuck this shit, just for for 10 straight, NO XD
+                    // $initial_count_str = 10;
+                } else {
+                    $initial_count_str = $count_str;
+                }
+            }
+            $count = intval($initial_count_str);
         }
 
+        $params = [
+            "page_id" => 0,
+            // HEY load all for admin duuuude
+            "row_count" => $count,
+            "layout" => $layout,
+            "skip" => $skip
+        ];
+
         if ($display_what === "general_product") {
-            $params = [
-                "page_id" => 0,
-                "row_count" => $count,
-                "search_order" => "general_product",
-                "general_product_id" => $GENERAL_PRODUCT_ID,
-                "layout" => $layout,
-            ];
-
-            $list_html = renderGeneralProductsList($params)["html"];
+            $params["search_order"] = "general_product";
+            $params["general_product_id"] = $GENERAL_PRODUCT_ID;
         } else if ($display_what === "custom") {
-            $sort = def($params, ["v_node", "settings", "product_list_sort"], "bestsellery");
-            $category_ids_csv = def($params, ["v_node", "settings", "product_list_category_ids_csv"], "");
 
-            $params = [
-                "page_id" => 0,
-                "row_count" => $count,
-                "search_order" => $sort,
-                "layout" => $layout,
-                "only_discount" => $only_discount,
-            ];
+            $params["search_order"] = $sort;
+            $params["only_discount"] = $only_discount;
 
             if ($category_ids_csv) {
                 $product_list_category_ids = explode(",", $category_ids_csv);
@@ -62,14 +78,21 @@ PiepCMSManager::registerModule([
 
                 $params["general_product_ids"] = $general_product_ids;
             }
-
-            $list_html = renderGeneralProductsList($params)["html"];
         }
+
+        $list_html = renderGeneralProductsList($params)["html"];
+
+        if ($lazy) {
+            die($list_html);
+        }
+
+        // array for effi
+        $params_html = "data-params=\"" . htmlspecialchars(json_encode([$layout, $display_what, $count_str, $initial_count_str, $only_discount, $sort, $category_ids_csv])) . "\"";
 
         ob_start();
         if ($layout === "slider") {
 ?>
-        <div class="wo997_slider" data-slide_width="300px" data-max_visible_count="5" data-show_next_mobile>
+        <div class="wo997_slider lazy_products" data-slide_width="300px" data-max_visible_count="5" data-show_next_mobile <?= $params_html ?>>
             <div class="wo997_slides_container">
                 <div class="wo997_slides_wrapper">
                     <?= $list_html ?>
@@ -79,7 +102,7 @@ PiepCMSManager::registerModule([
     <?php
         } else {
     ?>
-        <div class="product_list">
+        <div class="product_list lazy_products" <?= $params_html ?>>
             <?= $list_html ?>
         </div>
 <?php

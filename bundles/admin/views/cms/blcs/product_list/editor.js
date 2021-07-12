@@ -28,6 +28,7 @@
 			"settings.product_list_sort",
 			"settings.product_list_category_ids_csv",
 			"settings.product_list_only_discount",
+			"settings.product_list_initial_count",
 		],
 		backend_render: true,
 	});

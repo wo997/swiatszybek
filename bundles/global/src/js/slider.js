@@ -308,6 +308,9 @@ function initSlider(elem) {
 				slider.slide_count = slide_count;
 				paginationChanged();
 			}
+
+			slider.scroll = slider.slide_id * slider.slide_width;
+			slider.velocity = 0;
 		},
 		select_slide: (id) => {
 			slider.slide_nodes.forEach((e, i) => {
@@ -459,7 +462,7 @@ function initSlider(elem) {
 		const target = $(ev.target);
 		const bullet = target._parent(".bullet");
 		if (bullet) {
-			slider.set_slide(bullet.dataset.slide_id);
+			slider.set_slide(+bullet.dataset.slide_id);
 		}
 	});
 

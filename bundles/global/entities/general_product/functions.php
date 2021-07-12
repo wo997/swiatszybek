@@ -174,6 +174,8 @@ function renderGeneralProductsList($params)
     $general_product_ids = def($params, "general_product_ids", null);
     $layout = def($params, "layout", "slider");
 
+    $skip = def($params, "skip", 0);
+
     $from = "general_product gp
         INNER JOIN product p USING (general_product_id)
         LEFT JOIN product_to_variant_option ptvo USING(product_id)
@@ -270,6 +272,10 @@ function renderGeneralProductsList($params)
 
     // it should be a template to use anywhere tho, well, not rly? sliders will be different by a lot anyway
     foreach ($products_data["rows"] as $product) {
+        if (--$skip >= 0) {
+            continue;
+        }
+
         $id = $product["general_product_id"];
         $name = $product["name"];
         $img_url = $product["__img_url"];
