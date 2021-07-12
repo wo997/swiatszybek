@@ -54,7 +54,7 @@ function productBlocksLoaded() {
 		if (wait_till_seen) {
 			const wait = () => {
 				setTimeout(() => {
-					let lazy_off = LAZY_MORE ? window.innerWidth * 0.5 : -10;
+					let lazy_off = LAZY_MORE ? window.innerHeight * 0.7 : -10;
 
 					if (lazy_products.getBoundingClientRect().top < window.innerHeight + lazy_off) {
 						return lazyLoadProducts(lazy_products, params);
