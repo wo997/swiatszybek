@@ -15,9 +15,21 @@ EventListener::register("request_start", function () {
         if ($different_link_or_first) {
             DB::insert("affiliate_program_event", [
                 "user_id" => $link_from_user_id,
-                "event_name" => "page_visit",
+                "event_name" => "visit",
                 "event_what_id" => null
             ]);
         }
     }
+});
+
+EventListener::register("shop_order_created", function ($params) {
+    $link_from_user_id = def($_SESSION, "link_from_user_id");
+    if (!$link_from_user_id) {
+        return;
+    }
+    DB::insert("affiliate_program_event", [
+        "user_id" => $link_from_user_id,
+        "event_name" => "shop_order",
+        "event_what_id" => $params["shop_order_id"]
+    ]);
 });

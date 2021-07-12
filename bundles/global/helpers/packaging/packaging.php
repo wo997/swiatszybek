@@ -4,7 +4,7 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
 {
     $top = count($products_dims);
 
-    // up to 4 hella quick
+    // up to 4 pretty quick
     if ($top > 4) {
         $part_can_be_full = 0.7; // offset based on the amount? the more the lower it can get, basically gets "wet"
         $products_volume = 0;
@@ -79,12 +79,11 @@ function putBoxIntoPackage3D($package_dims, $products_dims, $contents = [])
         }
     }
 
-    // take every product in every order - by recursion
+    // take every product in every order - recursively
     for ($product_index = 0; $product_index < $top; $product_index++) {
         $products_dims_copy = $products_dims;
         $product_to_put_dims = array_splice($products_dims_copy, $product_index, 1)[0];
 
-        // implemented only for 3d, that's ok
         $outside_for_all_orientations_and_positions = true;
 
         $two_points_to_puts = [];

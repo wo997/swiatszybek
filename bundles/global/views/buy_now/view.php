@@ -60,12 +60,12 @@ if (empty(User::getCurrent()->getCart()->getProducts())) {
         <div class="expand_y choosen_account <?= User::getCurrent()->isLoggedIn() ? "hidden animate_hidden" : "" ?>">
             <div class="label big mt0">Wybór konta</div>
 
-            <!-- <p class="semi_bold">Zalety korzystania z konta <?= getShopName() ?></p>
-            <p>- Przeglądaj historię zamówień</p>
-            <p>- Zapisz swoje adresy</p>
-            <p>- Możesz wziąć udział w programie partnerskim</p> -->
+            <p class="semi_bold">Zalety korzystania z konta <?= getShopName() ?></p>
+            <p>- Dostęp do historii zamówień</p>
+            <p>- Zapisanie adresów</p>
+            <p>- Możesz wziąć udział w programie affiliacyjnym</p>
 
-            <div class="account_buttons">
+            <div class="account_buttons mt3 mb5">
                 <div class="flex">
                     <button class="btn primary fill mr2" onclick="showModal(`loginForm`,{source:this});hideParentModal(this);">
                         Zaloguj się
@@ -77,7 +77,7 @@ if (empty(User::getCurrent()->getCart()->getProducts())) {
                     </a>
                 </div>
 
-                <button class="btn primary fill buy_without_registration mr2">
+                <button class="btn primary fill buy_without_registration mt2">
                     Zakupy bez rejestracji <i class="fas fa-chevron-right"></i>
                 </button>
             </div>

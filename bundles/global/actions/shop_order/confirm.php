@@ -10,6 +10,8 @@ try {
     $cart->save();
     DB::commitTransaction();
 
+    EventListener::dispatch("shop_order_created", ["shop_order_id" => $shop_order->getId()]);
+
     Request::setSingleUsageSessionVar("force_payment", true);
     Request::redirect($shop_order->getProp("__url"));
 } catch (Exception $e) {
