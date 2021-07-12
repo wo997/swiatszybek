@@ -4,6 +4,8 @@ define("time", microtime(true));
 
 require_once 'kernel.php';
 
+EventListener::dispatch("request_start");
+
 // final conclusion - no need to fix in case ssl is inactive, connection is marked as unsafe, but still can enter the page
 $is_https = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off";
 if (getSetting(["general", "advanced", "ssl"])) {
@@ -214,22 +216,15 @@ foreach (def($build_info, "routes") as $route => $file) // new routing
     }
 }
 
-
 if (isset($route_file)) {
-    // hardcoded page example - will be removed in the future
     if (!Request::$is_deployment_url) {
         $current_page_data = [];
-        //  DB::fetchRow(
-        //     "SELECT seo_description, seo_title FROM cms WHERE link LIKE ? ORDER BY LENGTH(link) ASC LIMIT 1",
-        //     [Request::urlParam(0) . "%"] // TODO: WARNING: that seems to be so wrong
-        // );
     }
 
     include $route_file;
     die;
 } else {
     $canSee = "1"; // User::getCurrent()->priveleges["backend_access"] ? "1" : "published = 1";
-    //$current_page_data = []; //DB::fetchRow("SELECT cms_id, seo_description, seo_title, content, published FROM cms WHERE $canSee AND link LIKE ? LIMIT 1", [ltrim(Request::$url, "/")]);
 
     $page_data = DB::fetchRow("SELECT page_id FROM page WHERE $canSee AND url LIKE ? AND page_type = 'page'", [ltrim(Request::$url, "/")]);
 
@@ -237,23 +232,9 @@ if (isset($route_file)) {
         renderPage($page_data["page_id"]);
         die;
     }
-
-    // // if (isset($_POST["v_dom"])) {
-    // //     $current_page_data["v_dom"] = $_POST["v_dom"];
-    // // }
-
-    // if ($current_page_data) {
-    //     $page_id = intval(Request::urlParam(1, -1));
-
-    //     renderPage($page_id);
-
-
-    //     // include "bundles/global/cms_page.php";
-    //     // die;
-    // }
 }
 if (Request::$url == "/") {
-    // TODO: WRONG
+    // TODO: WRONG, yeah idk whats going on, maybe in case someone deleted the home page
     $current_page_data["content"] = "Pusta strona";
     include "bundles/global/cms_page.php";
     die;

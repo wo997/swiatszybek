@@ -2,6 +2,7 @@
 
 DB::createTable("user", [
     ["name" => "affiliate_program_code", "type" => "VARCHAR(255)", "null" => true],
+    ["name" => "__affiliate_program_code_url", "type" => "VARCHAR(255)", "null" => true, "index" => "index"],
 ]);
 
 DB::createTable("affiliate_program_event", [

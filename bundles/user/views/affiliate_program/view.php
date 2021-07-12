@@ -1,7 +1,10 @@
 <?php //route[{USER}/program-afiliacyjny]
 
 $user = User::getCurrent();
-$affiliate_program_code = $user->getEntity()->getProp("affiliate_program_code");
+$user_entity = $user->getEntity();
+$affiliate_program_code = $user_entity->getProp("affiliate_program_code");
+$__affiliate_program_code_url = $user_entity->getProp("__affiliate_program_code_url");
+
 ?>
 
 <?php Templates::startSection("head"); ?>
@@ -18,7 +21,7 @@ $affiliate_program_code = $user->getEntity()->getProp("affiliate_program_code");
 
         <div class="label">Link afiliacyjny</div>
         <div class="glue_children copy_code_group">
-            <input class="field focus_inside" readonly value="<?= SITE_URL . "?ref=" . $affiliate_program_code ?>">
+            <input class="field focus_inside" readonly value="<?= SITE_URL . "?ref=" . $__affiliate_program_code_url ?>">
             <button class="btn primary" data-tooltip="Skopiuj do schowka">
                 <i class="fas fa-copy"></i>
             </button>
@@ -26,7 +29,7 @@ $affiliate_program_code = $user->getEntity()->getProp("affiliate_program_code");
 
         <hr class="mtf">
 
-        <div class="label">Twój kod (min. 3 znaki)</div>
+        <div class="label">Twój kod (cyfry, litery i spacja)</div>
         <input class="field affiliate_program_code" value="<?= $affiliate_program_code ?>">
 
         <button class="btn subtle mtf fill join_btn">Zapisz zmianę <i class="fas fa-chevron-right"></i></button>
