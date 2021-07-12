@@ -138,10 +138,7 @@ windowload(() => {
 	setTimeout(() => {
 		document.body.classList.remove("freeze");
 	}, 250);
-	// setTimeout(() => {
-	// 	LAZY_MORE = true;
-	// }, 4500);
 	setTimeout(() => {
 		LAZY_MORE = true;
-	}, 1000);
+	}, 2000);
 });

@@ -73,34 +73,18 @@ function setImageSize(img) {
 	const data = getResponsiveImageData(src);
 
 	if (!data) {
-		unsetImgHeightOnLoad(img);
-		// @ts-ignore
-		img.src = src;
 		return;
 	}
 
-	// tough, do it by a class maybe?
-	// if (!img.offsetWidth && !isHidden(img)) {
-	// 	img.style.width = `${data.w}px`;
-	// }
-
 	if (!img.style.height && !img.offsetHeight) {
 		const suppose_height = Math.round((img.offsetWidth * data.h) / data.w);
+		img.addEventListener("load", () => {
+			if (img.classList.contains("had_no_height")) {
+				img.style.height = "";
+			}
+		});
 		img.style.height = `${suppose_height}px`;
-		img.classList.add("had_no_height");
 	}
-}
-
-/**
- *
- * @param {PiepNode} img
- */
-function unsetImgHeightOnLoad(img) {
-	img.addEventListener("load", () => {
-		if (img.classList.contains("had_no_height")) {
-			img.style.height = "";
-		}
-	});
 }
 
 /**
@@ -125,7 +109,6 @@ function onScrollImages(options = {}) {
 		if (isNodeOnScreen(img, lazy_off, lazy_off) && img.dataset.src) {
 			const src = getResponsiveImageRealUrl(img);
 			if (src) {
-				unsetImgHeightOnLoad(img);
 				// @ts-ignore
 				img.src = src;
 				img.classList.add("wo997_img_waiting");

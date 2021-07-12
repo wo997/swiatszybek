@@ -27,7 +27,9 @@ $__affiliate_program_code_url = $user_entity->getProp("__affiliate_program_code_
             </button>
         </div>
 
-        <hr class="mtf">
+        <hr class="mt5">
+
+        <div class="label medium">Zarządzanie</div>
 
         <div class="label">Twój kod (cyfry, litery i spacja)</div>
         <input class="field affiliate_program_code" value="<?= $affiliate_program_code ?>">
