@@ -100,9 +100,30 @@ class Request
             $_SESSION["redirect"] = $url;
             self::jsonResponse(["redirect" => $url]);
         } else {
+            if (Request::$url === $url) {
+                return;
+            }
+
             header("Location: $url");
             die;
         }
+    }
+
+
+    /**
+     * PROVIDE PATH ONLY, without host
+     * 
+     * use before the user is redirected to an external host
+     *
+     * @param  mixed $url
+     * @return void
+     */
+    public static function setReturnUrl($url = null)
+    {
+        if ($url === null) {
+            $url = Request::$url;
+        }
+        $_SESSION["return_url"] = $url;
     }
 
     public static function redirectPermanent($url)

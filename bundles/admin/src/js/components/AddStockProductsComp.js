@@ -218,6 +218,7 @@ function AddStockProductsModalComp(comp, parent, data = undefined) {
 						stock_products: data.products_dt.dataset,
 					},
 					success: (res) => {
+						comp.dispatchEvent(new CustomEvent("saved_state"));
 						hideLoader();
 						window.dispatchEvent(new CustomEvent("stock_product_changed"));
 						hideModal("AddStockProductsModal");

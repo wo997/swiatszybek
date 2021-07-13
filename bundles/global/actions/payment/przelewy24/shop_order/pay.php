@@ -1,6 +1,5 @@
 <?php //route[/payment/przelewy24/shop_order/pay]  
 
-
 $shop_order_id = intval(Request::urlParam(4));
 $shop_order = EntityManager::getEntityById("shop_order", $shop_order_id);
 
@@ -61,22 +60,17 @@ $p24->addValue("p24_channel", "2");
 $RET = $p24->trnRegister(false);
 
 $token = def($RET, ["token"]);
+$redirect_url = null;
 if (isset($RET["token"])) {
-    // we dont even need the token dude
-    //$_SESSION["p24_back_url"] = $link; // redirect as we come back? think about it
-    $p24->trnRequest($RET["token"], true);
-    // DB::rollbackTransation();
-    // die;
-    //Request::redirect($url);
-} else {
-    var_dump("connectopn error", $RET);
-    DB::rollbackTransation();
-    die;
+    $redirect_url = $p24->trnRequest($RET["token"], false);
+    EntityManager::saveAll();
+    DB::commitTransaction();
 
-    // fails
-    Request::redirect($shop_order->getProp("__url"));
+    Request::setReturnUrl($shop_order->getProp("__url"));
+} else {
+    // var_dump("connection error", $RET);
+    DB::rollbackTransation();
+    $redirect_url = $shop_order->getProp("__url");
 }
 
-EntityManager::saveAll();
-DB::commitTransaction();
-die;
+Request::redirect($redirect_url);

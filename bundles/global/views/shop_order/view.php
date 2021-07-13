@@ -8,7 +8,6 @@ if (!$shop_order || $shop_order->getProp("reference") !== $reference) {
     Request::redirect("/");
 }
 
-
 $pay_url = "/payment/przelewy24/shop_order/pay/$shop_order_id";
 
 $force_payment = Request::getSingleUsageSessionVar("force_payment");
@@ -23,12 +22,6 @@ if ($force_payment) {
 <title>Zamówienie #<?= $shop_order->getId() ?></title>
 
 <?php Templates::startSection("body_content"); ?>
-
-<?php
-//oplacono
-
-?>
-
 
 <?php
 

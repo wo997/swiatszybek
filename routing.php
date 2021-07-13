@@ -6,6 +6,12 @@ require_once 'kernel.php';
 
 EventListener::dispatch("request_start");
 
+$return_url = def($_SESSION, "return_url");
+if (!IS_XHR && $return_url) {
+    unset($_SESSION["return_url"]);
+    Request::redirect($return_url);
+}
+
 // final conclusion - no need to fix in case ssl is inactive, connection is marked as unsafe, but still can enter the page
 $is_https = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off";
 if (getSetting(["general", "advanced", "ssl"])) {
